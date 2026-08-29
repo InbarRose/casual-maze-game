@@ -11,9 +11,12 @@ import { Camera } from './js/engine/camera.js';
 import { Key } from './js/entities/key.js';
 import { Door } from './js/entities/door.js';
 import { Lever } from './js/entities/lever.js';
-import { Player } from './js/entities/player.js';
 import { LevelLoader } from './js/levels/level-loader.js';
 import { CAMPAIGN_LEVELS } from './js/levels/default-levels.js';
+import { GameLoop } from './js/engine/game-loop.js';
+import { GameRenderer } from './js/engine/renderer.js';
+import { Minimap } from './js/engine/minimap.js';
+import { JsonExporter } from './js/editor/json-exporter.js';
 
 let passed = 0;
 let failed = 0;

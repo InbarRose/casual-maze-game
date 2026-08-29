@@ -13,7 +13,18 @@ export class LevelLoader {
    * @param {URLSearchParams} [params]
    * @returns {object} Canonical Level Object
    */
-  static loadFromParams(params = new URLSearchParams(window.location.search)) {
+  static loadFromParams(params) {
+    if (!params && typeof window !== 'undefined') {
+      let search = window.location.search;
+      if (!search && window.location.hash) {
+        const hash = window.location.hash.substring(1);
+        search = hash.includes('=') ? `?${hash}` : `?id=${hash}`;
+      }
+      params = new URLSearchParams(search);
+    } else if (!params) {
+      params = new URLSearchParams();
+    }
+
     const mode = params.get('mode');
     const id = params.get('id') || '1';
 

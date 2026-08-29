@@ -3,7 +3,8 @@
  * Ties together input, physics/collision, entities, camera, fog, and rendering.
  */
 
-import { KEY_CODES, ELEVATION, globalEvents } from '../core/constants.js';
+import { KEY_CODES, ELEVATION } from '../core/constants.js';
+import { globalEvents } from '../core/events.js';
 import { CollisionEngine } from './collision.js';
 import { Key } from '../entities/key.js';
 import { Door } from '../entities/door.js';
