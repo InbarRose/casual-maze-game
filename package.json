@@ -1,0 +1,10 @@
+{
+  "name": "casual-maze-game",
+  "version": "1.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Casual Maze Game - Top-Down Puzzle Labyrinth Engine",
+  "scripts": {
+    "test": "node test-suite.mjs"
+  }
+}
