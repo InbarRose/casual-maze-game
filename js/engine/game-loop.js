@@ -1,0 +1,507 @@
+/**
+ * Game Loop & State Coordinator
+ * Ties together input, physics/collision, entities, camera, fog, and rendering.
+ */
+
+import { KEY_CODES, ELEVATION, globalEvents } from '../core/constants.js';
+import { CollisionEngine } from './collision.js';
+import { Key } from '../entities/key.js';
+import { Door } from '../entities/door.js';
+import { Lever } from '../entities/lever.js';
+import { Player } from '../entities/player.js';
+import { Camera } from './camera.js';
+import { FogOfWar } from './fog.js';
+import { GameRenderer } from './renderer.js';
+import { Minimap } from './minimap.js';
+import { StorageManager } from '../core/storage.js';
+
+export class GameLoop {
+  /**
+   * @param {object} options
+   * @param {HTMLCanvasElement} options.mainCanvas
+   * @param {HTMLCanvasElement} options.minimapCanvas
+   * @param {object} options.level
+   * @param {object} [options.uiCallbacks]
+   */
+  constructor({ mainCanvas, minimapCanvas, level, uiCallbacks = {} }) {
+    this.mainCanvas = mainCanvas;
+    this.minimapCanvas = minimapCanvas;
+    this.level = JSON.parse(JSON.stringify(level));
+    this.uiCallbacks = uiCallbacks;
+
+    this.isRunning = false;
+    this.isPaused = false;
+    this.isWon = false;
+    this.lastTime = 0;
+    this.elapsedTime = 0; // in milliseconds
+
+    // Subsystems
+    const tileSize = this.level.config.tileSize || 32;
+    this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize);
+    this.fog = this.level.config.fogOfWar
+      ? new FogOfWar(this.level.dimensions.width, this.level.dimensions.height)
+      : null;
+    this.renderer = new GameRenderer(mainCanvas);
+    this.minimap = new Minimap(minimapCanvas);
+
+    // Instantiate Player
+    this.player = new Player(
+      this.level.spawn.x,
+      this.level.spawn.y,
+      this.level.spawn.elevation || 0,
+      tileSize
+    );
+
+    // Instantiate Entities
+    this.entities = [];
+    this.initEntities();
+
+    // Input state
+    this.keysDown = new Set();
+    this.panVelocity = { x: 0, y: 0 };
+    this.isDraggingMinimap = false;
+
+    // Snap camera to spawn
+    this.camera.snapTo(
+      this.player.worldX,
+      this.player.worldY,
+      this.level.dimensions.width,
+      this.level.dimensions.height
+    );
+
+    // Initial fog update
+    this.updateFog();
+
+    // Bind listeners
+    this.bindInputs();
+    this.notifyUI();
+  }
+
+  /**
+   * Instantiate entities from level definition
+   */
+  initEntities() {
+    this.entities = (this.level.entities || []).map(e => {
+      if (e.type === 'key') return new Key(e);
+      if (e.type === 'door') return new Door(e);
+      if (e.type === 'lever') return new Lever(e);
+      return null;
+    }).filter(Boolean);
+  }
+
+  /**
+   * Bind keyboard, mouse, and touch events
+   */
+  bindInputs() {
+    this.handleKeyDown = (e) => {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+        e.preventDefault();
+      }
+      this.keysDown.add(e.code);
+
+      // Handle Instant Actions
+      if (KEY_CODES.MAP.includes(e.code)) {
+        this.toggleFreePan();
+      } else if (KEY_CODES.RESTART.includes(e.code)) {
+        this.restartLevel();
+      } else if (KEY_CODES.INTERACT.includes(e.code)) {
+        this.handleManualInteract();
+      }
+    };
+
+    this.handleKeyUp = (e) => {
+      this.keysDown.delete(e.code);
+    };
+
+    window.addEventListener('keydown', this.handleKeyDown);
+    window.addEventListener('keyup', this.handleKeyUp);
+
+    // Minimap Click & Drag for Free-Pan
+    this.handleMinimapMouseDown = (e) => {
+      this.isDraggingMinimap = true;
+      this.panToMinimapClick(e);
+    };
+
+    this.handleMinimapMouseMove = (e) => {
+      if (this.isDraggingMinimap) {
+        this.panToMinimapClick(e);
+      }
+    };
+
+    this.handleMinimapMouseUp = () => {
+      this.isDraggingMinimap = false;
+    };
+
+    this.minimapCanvas.addEventListener('mousedown', this.handleMinimapMouseDown);
+    window.addEventListener('mousemove', this.handleMinimapMouseMove);
+    window.addEventListener('mouseup', this.handleMinimapMouseUp);
+  }
+
+  /**
+   * Cleanup listeners
+   */
+  destroy() {
+    this.stop();
+    window.removeEventListener('keydown', this.handleKeyDown);
+    window.removeEventListener('keyup', this.handleKeyUp);
+    this.minimapCanvas.removeEventListener('mousedown', this.handleMinimapMouseDown);
+    window.removeEventListener('mousemove', this.handleMinimapMouseMove);
+    window.removeEventListener('mouseup', this.handleMinimapMouseUp);
+  }
+
+  /**
+   * Toggle between player follow and free pan
+   */
+  toggleFreePan() {
+    if (!this.level.config.allowFreePan) return;
+    const nextMode = this.camera.mode === 'follow' ? 'freepan' : 'follow';
+    this.camera.setMode(nextMode);
+    globalEvents.emit('freepan:toggled', { mode: nextMode });
+    if (this.uiCallbacks.onFreePanChange) {
+      this.uiCallbacks.onFreePanChange(nextMode);
+    }
+  }
+
+  /**
+   * Pan camera to minimap point
+   */
+  panToMinimapClick(e) {
+    const { gridX, gridY } = this.minimap.mapClickToGrid(e.clientX, e.clientY, this.level);
+    const tileSize = this.camera.tileSize;
+    this.camera.setMode('freepan');
+    this.camera.x = gridX * tileSize + tileSize / 2;
+    this.camera.y = gridY * tileSize + tileSize / 2;
+    this.camera.clampToBounds(this.level.dimensions.width, this.level.dimensions.height);
+    if (this.uiCallbacks.onFreePanChange) {
+      this.uiCallbacks.onFreePanChange('freepan');
+    }
+  }
+
+  /**
+   * Start the game loop
+   */
+  start() {
+    if (this.isRunning) return;
+    this.isRunning = true;
+    this.lastTime = performance.now();
+    this.loop(this.lastTime);
+  }
+
+  /**
+   * Stop the game loop
+   */
+  stop() {
+    this.isRunning = false;
+  }
+
+  /**
+   * Reset the current level state
+   */
+  restartLevel() {
+    this.player.reset(
+      this.level.spawn.x,
+      this.level.spawn.y,
+      this.level.spawn.elevation || 0
+    );
+    this.initEntities();
+    if (this.fog) {
+      this.fog.reset();
+    }
+    this.isWon = false;
+    this.elapsedTime = 0;
+    this.camera.setMode('follow');
+    this.camera.snapTo(
+      this.player.worldX,
+      this.player.worldY,
+      this.level.dimensions.width,
+      this.level.dimensions.height
+    );
+    this.updateFog();
+    this.notifyUI();
+    globalEvents.emit('game:restarted');
+    if (this.uiCallbacks.onRestart) {
+      this.uiCallbacks.onRestart();
+    }
+  }
+
+  /**
+   * Main animation frame loop
+   */
+  loop(currentTime) {
+    if (!this.isRunning) return;
+
+    const dt = Math.min(0.1, (currentTime - this.lastTime) / 1000);
+    this.lastTime = currentTime;
+
+    if (!this.isPaused && !this.isWon) {
+      this.elapsedTime += dt * 1000;
+      this.update(dt);
+    }
+
+    this.render(dt);
+    requestAnimationFrame((t) => this.loop(t));
+  }
+
+  /**
+   * Game state updates
+   */
+  update(dt) {
+    // 1. Process continuous movement input
+    this.processPlayerMovement();
+
+    // 2. Process Free-Pan manual camera panning
+    if (this.camera.mode === 'freepan') {
+      this.processFreePanMovement(dt);
+    }
+
+    // 3. Update Player
+    const prevGridX = this.player.gridX;
+    const prevGridY = this.player.gridY;
+    const prevElevation = this.player.elevation;
+
+    this.player.update(dt);
+
+    // If player just finished a step onto a new cell
+    if (!this.player.isMoving && (prevGridX !== this.player.gridX || prevGridY !== this.player.gridY || prevElevation !== this.player.elevation)) {
+      this.handleCellArrival();
+    }
+
+    // 4. Update Entities
+    for (const entity of this.entities) {
+      entity.update(dt);
+    }
+
+    // 5. Update Camera
+    this.camera.update(
+      this.player.worldX,
+      this.player.worldY,
+      dt,
+      this.level.dimensions.width,
+      this.level.dimensions.height
+    );
+
+    // 6. Update Fog
+    this.updateFog();
+
+    // 7. Check Victory Condition
+    if (
+      !this.isWon &&
+      this.level.exit &&
+      this.player.gridX === this.level.exit.x &&
+      this.player.gridY === this.level.exit.y
+    ) {
+      this.handleVictory();
+    }
+  }
+
+  /**
+   * Check for input direction and initiate player movement
+   */
+  processPlayerMovement() {
+    if (this.player.isMoving || this.camera.mode === 'freepan') return;
+
+    let dx = 0;
+    let dy = 0;
+
+    for (const code of this.keysDown) {
+      if (KEY_CODES.UP.includes(code)) dy -= 1;
+      else if (KEY_CODES.DOWN.includes(code)) dy += 1;
+      else if (KEY_CODES.LEFT.includes(code)) dx -= 1;
+      else if (KEY_CODES.RIGHT.includes(code)) dx += 1;
+    }
+
+    // Restrict to orthogonal movement
+    if (dx !== 0) dy = 0;
+
+    if (dx === 0 && dy === 0) return;
+
+    const targetX = this.player.gridX + dx;
+    const targetY = this.player.gridY + dy;
+
+    // Check collision & elevation change
+    const check = CollisionEngine.checkMove(
+      this.player.gridX,
+      this.player.gridY,
+      targetX,
+      targetY,
+      this.player.elevation,
+      this.level,
+      this.entities,
+      this.player.inventory
+    );
+
+    if (check.allowed) {
+      // If door was unlocked
+      if (check.doorToUnlock) {
+        check.doorToUnlock.open();
+        this.player.removeKey(check.doorToUnlock.requiresKey);
+        this.renderer.spawnParticles(
+          targetX * this.camera.tileSize + this.camera.tileSize / 2,
+          targetY * this.camera.tileSize + this.camera.tileSize / 2,
+          check.doorToUnlock.color,
+          25
+        );
+        globalEvents.emit('door:unlocked', { doorId: check.doorToUnlock.id });
+        this.notifyUI();
+      }
+
+      this.player.startMove(targetX, targetY, check.nextElevation);
+    }
+  }
+
+  /**
+   * Process manual camera pan when in Free-Pan mode
+   */
+  processFreePanMovement(dt) {
+    let dx = 0;
+    let dy = 0;
+
+    for (const code of this.keysDown) {
+      if (KEY_CODES.UP.includes(code)) dy -= 1;
+      else if (KEY_CODES.DOWN.includes(code)) dy += 1;
+      else if (KEY_CODES.LEFT.includes(code)) dx -= 1;
+      else if (KEY_CODES.RIGHT.includes(code)) dx += 1;
+    }
+
+    if (dx !== 0 || dy !== 0) {
+      const speed = this.camera.panSpeed * dt;
+      this.camera.panBy(
+        dx * speed,
+        dy * speed,
+        this.level.dimensions.width,
+        this.level.dimensions.height
+      );
+    }
+  }
+
+  /**
+   * Handle when player steps onto a new grid cell
+   */
+  handleCellArrival() {
+    const px = this.player.gridX;
+    const py = this.player.gridY;
+
+    // 1. Check Key pickup
+    const key = this.entities.find(e => e.type === 'key' && !e.isCollected && e.x === px && e.y === py);
+    if (key) {
+      key.isCollected = true;
+      this.player.addKey(key.id);
+      this.renderer.spawnParticles(
+        this.player.worldX,
+        this.player.worldY,
+        key.color,
+        30
+      );
+      globalEvents.emit('key:collected', { keyId: key.id, name: key.name, color: key.color });
+      this.notifyUI();
+    }
+
+    // 2. Check Lever step trigger
+    const lever = this.entities.find(e => e.type === 'lever' && e.x === px && e.y === py);
+    if (lever) {
+      lever.toggle(this.level);
+      this.renderer.spawnParticles(
+        this.player.worldX,
+        this.player.worldY,
+        lever.state ? '#34d399' : '#f43f5e',
+        15
+      );
+      this.notifyUI();
+    }
+
+    this.notifyUI();
+  }
+
+  /**
+   * Handle manual interact button (E / Space / Enter)
+   */
+  handleManualInteract() {
+    // Check if player is on or adjacent to a lever
+    const px = this.player.gridX;
+    const py = this.player.gridY;
+
+    const adjacentLevers = this.entities.filter(
+      e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1
+    );
+
+    if (adjacentLevers.length > 0) {
+      const lever = adjacentLevers[0];
+      lever.toggle(this.level);
+      this.renderer.spawnParticles(
+        lever.x * this.camera.tileSize + this.camera.tileSize / 2,
+        lever.y * this.camera.tileSize + this.camera.tileSize / 2,
+        lever.state ? '#34d399' : '#f43f5e',
+        20
+      );
+      this.notifyUI();
+    }
+  }
+
+  /**
+   * Update fog raycasting
+   */
+  updateFog() {
+    if (this.fog && this.level.config.fogOfWar) {
+      this.fog.update(
+        this.player.gridX,
+        this.player.gridY,
+        this.player.elevation,
+        this.level.layers.ground,
+        this.level.layers.overhead,
+        this.level.config.viewRadius
+      );
+    }
+  }
+
+  /**
+   * Handle level completion
+   */
+  handleVictory() {
+    this.isWon = true;
+    this.renderer.spawnParticles(this.player.worldX, this.player.worldY, '#38bdf8', 60);
+
+    const stats = {
+      time: this.elapsedTime,
+      steps: this.player.stepsTaken,
+    };
+
+    StorageManager.saveLevelCompletion(this.level.id, stats);
+    globalEvents.emit('level:completed', { levelId: this.level.id, stats });
+
+    if (this.uiCallbacks.onVictory) {
+      this.uiCallbacks.onVictory(stats);
+    }
+  }
+
+  /**
+   * Notify HUD / UI of state changes
+   */
+  notifyUI() {
+    if (this.uiCallbacks.onStateUpdate) {
+      this.uiCallbacks.onStateUpdate({
+        levelTitle: this.level.title,
+        elevation: this.player.elevation === ELEVATION.OVERHEAD ? 'Bridge (Elevation 1)' : 'Ground Floor',
+        keys: this.entities.filter(e => e.type === 'key' && this.player.inventory.includes(e.id)),
+        steps: this.player.stepsTaken,
+        time: this.elapsedTime,
+        cameraMode: this.camera.mode,
+      });
+    }
+  }
+
+  /**
+   * Render frame
+   */
+  render(dt) {
+    this.renderer.render(
+      this.level,
+      this.player,
+      this.entities,
+      this.camera,
+      this.fog,
+      dt
+    );
+
+    this.minimap.render(this.level, this.player, this.fog, dt);
+  }
+}
