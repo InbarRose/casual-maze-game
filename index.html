@@ -3,259 +3,308 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Casual Maze Game</title>
+  <title>Casual Maze Game — Modular 2D Puzzle Labyrinth Engine</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css" />
   <style>
-    :root {
-      --bg: #0d1117;
-      --card-bg: #161b22;
-      --card-border: #30363d;
-      --accent: #38bdf8;
-      --accent-hover: #0284c7;
-      --text: #f0f6fc;
-      --text-muted: #8b949e;
-      --success: #34d399;
+    .hero-section {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 2.5rem;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+    .main-container {
+      max-width: 860px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 2.5rem 1.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      background-image: 
-        radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 60%),
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 100% 100%, 32px 32px, 32px 32px;
     }
 
-    .container {
-      max-width: 580px;
-      width: 100%;
-      text-align: center;
-    }
-
-    .badge {
-      display: inline-block;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--accent);
-      background: rgba(56, 189, 248, 0.1);
-      border: 1px solid rgba(56, 189, 248, 0.25);
-      padding: 0.35rem 0.75rem;
-      border-radius: 9999px;
-      margin-bottom: 1.25rem;
-    }
-
-    h1 {
-      font-size: 2.5rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-      margin-bottom: 0.75rem;
-      line-height: 1.15;
-    }
-
-    .subtitle {
-      font-size: 1rem;
-      color: var(--text-muted);
-      margin-bottom: 2rem;
-      line-height: 1.5;
-    }
-
-    .card-grid {
+    .hub-grid {
       display: grid;
-      gap: 1rem;
-      margin-bottom: 1.5rem;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+      width: 100%;
+      margin-bottom: 2rem;
     }
 
     .card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 1.25rem;
-      text-align: left;
-      transition: border-color 0.2s, transform 0.15s ease;
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+      box-shadow: var(--shadow-sm);
     }
 
     .card:hover {
       border-color: #58a6ff;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-header-icon {
+      font-size: 1.75rem;
+      margin-bottom: 0.75rem;
+      display: inline-block;
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+      color: var(--text);
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+      margin-bottom: 1.25rem;
+      flex: 1;
+    }
+
+    /* Campaign Levels Carousel / Grid */
+    .campaign-section {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .campaign-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.25rem;
+    }
+
+    .campaign-levels {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .level-pill {
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 0.85rem 0.6rem;
+      text-align: center;
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.35rem;
+      transition: all 0.15s ease;
+    }
+
+    .level-pill:hover {
+      border-color: var(--accent);
+      background: rgba(56, 189, 248, 0.05);
       transform: translateY(-1px);
     }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-family: inherit;
+    .level-pill.completed {
+      border-color: var(--emerald);
+      background: rgba(52, 211, 153, 0.05);
+    }
+
+    .level-number {
+      font-family: var(--font-mono);
       font-weight: 700;
-      font-size: 0.95rem;
-      padding: 0.75rem 1.25rem;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s;
-      width: 100%;
-    }
-
-    .btn-primary {
-      background: var(--accent);
-      color: #04101e;
-    }
-
-    .btn-primary:hover {
-      background: var(--accent-hover);
-    }
-
-    .btn-secondary {
-      background: #21262d;
+      font-size: 1.1rem;
       color: var(--text);
-      border: 1px solid var(--card-border);
     }
 
-    .btn-secondary:hover {
-      background: #30363d;
+    .level-name {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
 
-    .input-group {
-      display: flex;
-      gap: 0.5rem;
-      margin-top: 0.75rem;
+    .level-status {
+      font-size: 0.7rem;
+      font-family: var(--font-mono);
+      color: var(--emerald);
     }
 
-    .input-field {
-      flex: 1;
-      background: #0d1117;
-      border: 1px solid var(--card-border);
-      color: var(--text);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem;
-      padding: 0.65rem 0.9rem;
-      border-radius: 8px;
-      outline: none;
-    }
-
-    .input-field:focus {
-      border-color: var(--accent);
-    }
-
-    .file-dropzone {
+    .dropzone {
       border: 2px dashed var(--card-border);
-      border-radius: 8px;
+      border-radius: var(--radius-md);
       padding: 1.25rem;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s;
-      margin-top: 0.75rem;
       color: var(--text-muted);
       font-size: 0.875rem;
+      background: var(--bg);
     }
 
-    .file-dropzone:hover, .file-dropzone.dragover {
+    .dropzone:hover, .dropzone.dragover {
       border-color: var(--accent);
       color: var(--text);
-      background: rgba(56, 189, 248, 0.03);
-    }
-
-    .card-title {
-      font-size: 1rem;
-      font-weight: 700;
-      margin-bottom: 0.25rem;
-    }
-
-    .card-desc {
-      font-size: 0.85rem;
-      color: var(--text-muted);
+      background: rgba(56, 189, 248, 0.04);
     }
 
     footer {
       margin-top: 2rem;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: var(--text-muted);
-      font-family: 'JetBrains Mono', monospace;
+      font-family: var(--font-mono);
+      display: flex;
+      gap: 1.5rem;
+      align-items: center;
     }
   </style>
 </head>
-<body>
+<body class="bg-grid">
 
-  <div class="container">
-    <div class="badge">Experimental Build</div>
-    <h1>Casual Maze Game</h1>
-    <p class="subtitle">Explore puzzle labyrinths, unlock doors, cross multi-level bridges, or design and share your own.</p>
+  <div class="main-container">
+    <header class="hero-section">
+      <div class="badge badge-gold" style="margin-bottom: 1rem;">Modular Puzzle Engine</div>
+      <h1 style="font-size: 2.75rem; line-height: 1.1; margin-bottom: 0.8rem;">Casual Maze Game</h1>
+      <p style="font-size: 1.05rem;">
+        Traverse multi-elevation bridges &amp; tunnels, uncover hidden paths through dynamic fog of war, trigger puzzle switches, and design custom labyrinths.
+      </p>
+    </header>
 
-    <div class="card-grid">
-      <!-- Play Level 1 -->
-      <div class="card">
-        <div class="card-title">Campaign Mode</div>
-        <div class="card-desc">Start from the beginning and progress through the core maze sequence.</div>
-        <div style="margin-top: 0.75rem;">
-          <a href="maze.html?id=1" class="btn btn-primary">Start Level 1</a>
+    <!-- Campaign Section -->
+    <section class="campaign-section">
+      <div class="campaign-header">
+        <div>
+          <h2 style="font-size: 1.25rem; font-weight: 700;">Campaign Labyrinths</h2>
+          <p style="font-size: 0.85rem;">Play through crafted puzzle levels exploring each core engine mechanic.</p>
         </div>
+        <a href="maze.html?id=1" class="btn btn-primary btn-sm">Play Level 1</a>
       </div>
 
-      <!-- Jump to ID -->
+      <div class="campaign-levels" id="campaign-list">
+        <!-- Injected via JavaScript -->
+        <a href="maze.html?id=1" class="level-pill">
+          <span class="level-number">01</span>
+          <span class="level-name">Training Hall</span>
+        </a>
+        <a href="maze.html?id=2" class="level-pill">
+          <span class="level-number">02</span>
+          <span class="level-name">The Overpass</span>
+        </a>
+        <a href="maze.html?id=3" class="level-pill">
+          <span class="level-number">03</span>
+          <span class="level-name">Lever Crypt</span>
+        </a>
+        <a href="maze.html?id=4" class="level-pill">
+          <span class="level-number">04</span>
+          <span class="level-name">Sky Bridges</span>
+        </a>
+        <a href="maze.html?id=5" class="level-pill">
+          <span class="level-number">05</span>
+          <span class="level-name">Sunken Vault</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Navigation Hub Grid -->
+    <div class="hub-grid">
+      <!-- Random / Custom Seed Jump -->
       <div class="card">
-        <div class="card-title">Jump to Specific Maze ID</div>
-        <div class="card-desc">Enter any valid maze level number or custom seed.</div>
-        <form class="input-group" onsubmit="handleIdJump(event)">
-          <input type="number" id="maze-id-input" class="input-field" placeholder="e.g. 42" min="1" required />
-          <button type="submit" class="btn btn-secondary" style="width: auto; padding: 0.65rem 1.25rem;">Play</button>
+        <div>
+          <span class="card-header-icon">🎲</span>
+          <div class="card-title">Seeded Generator</div>
+          <div class="card-desc">Jump to any numeric level or custom seed to generate an endless procedural maze puzzle.</div>
+        </div>
+        <form class="input-group" onsubmit="handleIdJump(event)" style="display: flex; gap: 0.5rem;">
+          <input type="text" id="maze-id-input" class="input-field" placeholder="e.g. 42 or vault-9" style="flex: 1;" required />
+          <button type="submit" class="btn btn-secondary">Play</button>
         </form>
       </div>
 
       <!-- Import JSON -->
       <div class="card">
-        <div class="card-title">Import Custom Maze</div>
-        <div class="card-desc">Load and play a <code>maze_file.json</code> created by you or a friend.</div>
-        <div class="file-dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
-          Click to upload or drag &amp; drop <code>.json</code> here
+        <div>
+          <span class="card-header-icon">📂</span>
+          <div class="card-title">Import Custom Maze</div>
+          <div class="card-desc">Load and play any <code>maze_file.json</code> created with the level architect.</div>
         </div>
-        <input type="file" id="file-input" accept=".json" style="display: none;" onchange="handleFileUpload(event)" />
+        <div>
+          <div class="dropzone" id="dropzone" onclick="document.getElementById('file-input').click()">
+            Click or drag &amp; drop <code>.json</code> here
+          </div>
+          <input type="file" id="file-input" accept=".json" style="display: none;" onchange="handleFileUpload(event)" />
+        </div>
       </div>
 
       <!-- Editor Mode -->
       <div class="card">
-        <div class="card-title">Maze Architect</div>
-        <div class="card-desc">Design custom puzzles with levers, multi-elevation ramps, keys, and doors.</div>
-        <div style="margin-top: 0.75rem;">
-          <a href="editor.html" class="btn btn-secondary">Open Level Editor</a>
+        <div>
+          <span class="card-header-icon">📐</span>
+          <div class="card-title">Maze Architect</div>
+          <div class="card-desc">Design custom puzzles with levers, multi-elevation ramps, keys, color-locked gates, and bridges.</div>
+        </div>
+        <div>
+          <a href="editor.html" class="btn btn-primary" style="width: 100%;">Open Level Editor</a>
         </div>
       </div>
     </div>
 
-    <footer>casual-maze-game.inbarrose.com</footer>
+    <footer>
+      <span>casual-maze-game.inbarrose.com</span>
+      <span>•</span>
+      <a href="editor.html">Editor</a>
+      <span>•</span>
+      <a href="maze.html?id=1">Play</a>
+    </footer>
   </div>
 
-  <script>
-    function handleIdJump(e) {
-      e.preventDefault();
-      const id = document.getElementById('maze-id-input').value.trim();
-      if (id) {
-        window.location.href = `maze.html?id=${encodeURIComponent(id)}`;
-      }
-    }
+  <div class="toast-container" id="toast-container"></div>
 
-    function handleFileUpload(e) {
+  <script type="module">
+    import { StorageManager } from './js/core/storage.js';
+
+    // Load progress and mark completed levels
+    const progress = StorageManager.loadCampaignProgress();
+    const campaignPills = document.querySelectorAll('#campaign-list .level-pill');
+    campaignPills.forEach((pill, idx) => {
+      const levelId = String(idx + 1);
+      const record = progress[levelId];
+      if (record && record.completed) {
+        pill.classList.add('completed');
+        const statusSpan = document.createElement('span');
+        statusSpan.className = 'level-status';
+        statusSpan.textContent = `★ ${record.bestTime ? (record.bestTime / 1000).toFixed(1) + 's' : 'Done'}`;
+        pill.appendChild(statusSpan);
+      }
+    });
+
+    window.handleIdJump = function(e) {
+      e.preventDefault();
+      const input = document.getElementById('maze-id-input');
+      const val = input.value.trim();
+      if (val) {
+        window.location.href = `maze.html?id=${encodeURIComponent(val)}`;
+      }
+    };
+
+    window.handleFileUpload = function(e) {
       const file = e.target.files[0];
       if (!file) return;
       processMazeFile(file);
-    }
+    };
 
     const dropzone = document.getElementById('dropzone');
     dropzone.addEventListener('dragover', (e) => {
@@ -276,11 +325,13 @@
       reader.onload = (event) => {
         try {
           const json = JSON.parse(event.target.result);
-          // Store in session storage so maze.html can render it immediately
-          sessionStorage.setItem('custom_maze_data', JSON.stringify(json));
+          if (!json.dimensions || !json.layers || !json.layers.ground) {
+            throw new Error('Missing required schema fields (dimensions, layers.ground)');
+          }
+          StorageManager.saveCustomMaze(json);
           window.location.href = 'maze.html?mode=custom';
         } catch (err) {
-          alert('Invalid JSON file format. Please check the file and try again.');
+          alert('Invalid maze file format: ' + (err.message || 'Please check the JSON.'));
         }
       };
       reader.readAsText(file);
