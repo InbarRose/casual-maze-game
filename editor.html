@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Maze Architect — Casual Maze Game Level Editor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/editor.css" />
+</head>
+<body>
+
+  <div class="editor-layout">
+    <!-- Top Header Toolbar -->
+    <header class="editor-header">
+      <div class="header-left">
+        <a href="index.html" class="btn btn-secondary btn-sm">← Hub</a>
+        <input type="text" id="level-title-input" class="editor-title-input" value="Custom Labyrinth" title="Click to rename" />
+      </div>
+
+      <div class="header-right">
+        <button id="btn-undo" class="btn btn-secondary btn-sm" title="Undo (Ctrl+Z)">↺</button>
+        <button id="btn-redo" class="btn btn-secondary btn-sm" title="Redo (Ctrl+Y)">↻</button>
+        <button id="btn-settings" class="btn btn-secondary btn-sm">⚙ Properties</button>
+        <button id="btn-clear" class="btn btn-secondary btn-sm">🗑 Clear</button>
+        <button id="btn-import-json" class="btn btn-secondary btn-sm">📂 Import</button>
+        <input type="file" id="editor-file-input" accept=".json" style="display: none;" />
+        <button id="btn-copy-json" class="btn btn-secondary btn-sm">📋 Copy JSON</button>
+        <button id="btn-export-json" class="btn btn-secondary btn-sm">💾 Export</button>
+        <button id="btn-playtest" class="btn btn-primary btn-sm">▶ Play Test</button>
+      </div>
+    </header>
+
+    <!-- Left Sidebar Palette -->
+    <aside class="editor-sidebar">
+      <!-- Layer Switcher -->
+      <div>
+        <div class="sidebar-section-title">Active Layer</div>
+        <div class="layer-tabs">
+          <button type="button" class="layer-tab active" id="tab-layer-ground">Ground (0)</button>
+          <button type="button" class="layer-tab" id="tab-layer-overhead">Overhead (1)</button>
+        </div>
+      </div>
+
+      <!-- Tools -->
+      <div>
+        <div class="sidebar-section-title">Draw Tools</div>
+        <div class="palette-grid">
+          <button type="button" class="palette-btn active" data-tool="pencil">
+            <span class="palette-icon">✏️</span> Pencil
+          </button>
+          <button type="button" class="palette-btn" data-tool="fill">
+            <span class="palette-icon">🪣</span> Fill
+          </button>
+          <button type="button" class="palette-btn" data-tool="eraser">
+            <span class="palette-icon">🧹</span> Eraser
+          </button>
+          <button type="button" class="palette-btn" data-tool="select">
+            <span class="palette-icon">🔍</span> Inspect
+          </button>
+        </div>
+      </div>
+
+      <!-- Tile Palette -->
+      <div>
+        <div class="sidebar-section-title">Tiles</div>
+        <div class="palette-grid">
+          <button type="button" class="palette-btn" data-tile="1">
+            <span class="palette-icon">🧱</span> Wall
+          </button>
+          <button type="button" class="palette-btn" data-tile="0">
+            <span class="palette-icon">⬜</span> Floor
+          </button>
+          <button type="button" class="palette-btn" data-tile="B_EW">
+            <span class="palette-icon">🌉</span> Bridge EW
+          </button>
+          <button type="button" class="palette-btn" data-tile="B_NS">
+            <span class="palette-icon">🌉</span> Bridge NS
+          </button>
+        </div>
+      </div>
+
+      <!-- Elevation Ramps -->
+      <div>
+        <div class="sidebar-section-title">Ramps (Elevation 0 ➔ 1)</div>
+        <div class="palette-grid">
+          <button type="button" class="palette-btn" data-tile="R_N">
+            <span class="palette-icon">▲</span> Ramp N
+          </button>
+          <button type="button" class="palette-btn" data-tile="R_S">
+            <span class="palette-icon">▼</span> Ramp S
+          </button>
+          <button type="button" class="palette-btn" data-tile="R_E">
+            <span class="palette-icon">▶</span> Ramp E
+          </button>
+          <button type="button" class="palette-btn" data-tile="R_W">
+            <span class="palette-icon">◀</span> Ramp W
+          </button>
+        </div>
+      </div>
+
+      <!-- Entities & Markers -->
+      <div>
+        <div class="sidebar-section-title">Entities &amp; Markers</div>
+        <div class="palette-grid">
+          <button type="button" class="palette-btn" data-entity="spawn">
+            <span class="palette-icon">🟢</span> Spawn
+          </button>
+          <button type="button" class="palette-btn" data-entity="exit">
+            <span class="palette-icon">🔵</span> Exit
+          </button>
+          <button type="button" class="palette-btn" data-entity="key">
+            <span class="palette-icon">🔑</span> Key
+          </button>
+          <button type="button" class="palette-btn" data-entity="door">
+            <span class="palette-icon">🚪</span> Door
+          </button>
+          <button type="button" class="palette-btn" data-entity="lever">
+            <span class="palette-icon">🕹️</span> Lever
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Center Canvas Viewport -->
+    <main class="editor-viewport">
+      <canvas id="editor-canvas"></canvas>
+
+      <div class="viewport-overlay-controls">
+        <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In">+</button>
+        <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out">-</button>
+        <button id="btn-zoom-fit" class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:0.2rem 0.5rem;">Fit</button>
+      </div>
+    </main>
+
+    <!-- Bottom Status Bar -->
+    <footer class="editor-status-bar">
+      <span id="status-coord">X: --, Y: --</span>
+      <span id="status-layer">Layer: GROUND</span>
+      <span>Middle-Click / Space+Drag to Pan • Wheel to Zoom</span>
+    </footer>
+  </div>
+
+  <!-- Level Properties Modal -->
+  <div class="modal-backdrop" id="settings-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">Labyrinth Properties</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="settings-btn-close">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="entity-props-form">
+          <div class="form-row">
+            <label for="set-id">Level ID</label>
+            <input type="text" id="set-id" class="input-field" placeholder="e.g. vault_of_shadows" />
+          </div>
+          <div class="form-row">
+            <label for="set-title">Title</label>
+            <input type="text" id="set-title" class="input-field" placeholder="Labyrinth Name" />
+          </div>
+          <div class="form-row">
+            <label for="set-author">Author</label>
+            <input type="text" id="set-author" class="input-field" placeholder="Your Name" />
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-row">
+              <label for="set-width">Width (Tiles)</label>
+              <input type="number" id="set-width" class="input-field" min="9" max="99" />
+            </div>
+            <div class="form-row">
+              <label for="set-height">Height (Tiles)</label>
+              <input type="number" id="set-height" class="input-field" min="9" max="99" />
+            </div>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-row">
+              <label for="set-theme">Visual Theme</label>
+              <select id="set-theme" class="select-field">
+                <option value="dungeon">Dungeon</option>
+                <option value="emerald">Emerald Cavern</option>
+                <option value="sunset">Sunset Citadel</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="set-radius">Fog View Radius</label>
+              <input type="number" id="set-radius" class="input-field" min="3" max="20" />
+            </div>
+          </div>
+          <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+            <input type="checkbox" id="set-fog" style="width: 18px; height: 18px; cursor: pointer;" />
+            <label for="set-fog" style="cursor: pointer;">Enable Fog of War</label>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" id="settings-btn-save">Save Properties</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Entity Inspector Modal -->
+  <div class="modal-backdrop" id="entity-inspector-modal">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3 id="inspector-title" style="font-size: 1.15rem;">Configure Entity</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="inspector-btn-close">✕</button>
+      </div>
+      <div class="modal-body" id="inspector-body">
+        <!-- Injected via entity-inspector.js -->
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="btn btn-danger" id="inspector-btn-delete">Delete Entity</button>
+        <button type="button" class="btn btn-primary" id="inspector-btn-save">Apply Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script type="module">
+    import { EditorUI } from './js/editor/editor-ui.js';
+    window.editorUI = new EditorUI();
+  </script>
+</body>
+</html>
