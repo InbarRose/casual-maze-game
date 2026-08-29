@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Play Labyrinth — Casual Maze Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/game.css" />
+</head>
+<body style="overflow: hidden;">
+
+  <div class="game-viewport">
+    <!-- Main 2D Canvas -->
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Top HUD Overlay -->
+    <header class="game-hud-top">
+      <div class="hud-group">
+        <a href="index.html" class="btn btn-secondary btn-sm">← Hub</a>
+        <div class="hud-card">
+          <span class="hud-title" id="hud-level-title">Loading...</span>
+          <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
+        </div>
+      </div>
+
+      <div class="hud-group">
+        <!-- Inventory Keys -->
+        <div class="hud-card" id="hud-inventory-card" style="display: none;">
+          <span style="font-size: 0.8rem; color: var(--text-muted);">Keys:</span>
+          <div class="inventory-list" id="hud-keys-list"></div>
+        </div>
+
+        <!-- Timer & Steps -->
+        <div class="hud-card">
+          <div class="hud-stat">⏱ <strong id="hud-timer">00:00.0</strong></div>
+          <div class="hud-stat">👣 <strong id="hud-steps">0</strong></div>
+        </div>
+
+        <!-- Controls Toggles -->
+        <button id="btn-freepan" class="btn btn-secondary btn-sm" title="Toggle Free-Pan Mode (M)">
+          🗺 <span class="hide-mobile">Map Pan [M]</span>
+        </button>
+        <button id="btn-restart" class="btn btn-secondary btn-sm btn-icon" title="Restart Level (R)">
+          🔄
+        </button>
+      </div>
+    </header>
+
+    <!-- Free-Pan Active Banner -->
+    <div class="freepan-banner" id="freepan-banner">
+      Free-Pan Mode — WASD / Drag to Explore • Press [M] to Center
+    </div>
+
+    <!-- Minimap HUD -->
+    <aside class="minimap-container">
+      <canvas id="minimap-canvas" width="180" height="180"></canvas>
+      <span class="minimap-hint">Click / Drag to Pan</span>
+    </aside>
+
+    <!-- Bottom Controls Hint Bar -->
+    <div class="controls-hint-bar">
+      <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>Arrows</kbd> Move</span>
+      <span>•</span>
+      <span><kbd>E</kbd> / <kbd>Space</kbd> Interact</span>
+      <span>•</span>
+      <span><kbd>M</kbd> Free Pan</span>
+      <span>•</span>
+      <span><kbd>R</kbd> Restart</span>
+    </div>
+
+    <!-- Mobile Virtual Controls -->
+    <div class="virtual-controls">
+      <button class="dpad-btn dpad-up" id="vbtn-up" aria-label="Up">▲</button>
+      <button class="dpad-btn dpad-left" id="vbtn-left" aria-label="Left">◀</button>
+      <button class="dpad-btn dpad-center" id="vbtn-act" aria-label="Interact">USE</button>
+      <button class="dpad-btn dpad-right" id="vbtn-right" aria-label="Right">▶</button>
+      <button class="dpad-btn dpad-down" id="vbtn-down" aria-label="Down">▼</button>
+    </div>
+
+    <!-- Victory Modal -->
+    <div class="modal-backdrop" id="victory-modal">
+      <div class="modal-dialog victory-card">
+        <div class="modal-body">
+          <span class="victory-icon">🏆</span>
+          <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Labyrinth Conquered!</h2>
+          <p id="victory-subtitle" style="font-size: 0.95rem;">You successfully escaped the maze.</p>
+
+          <div class="victory-stats-grid">
+            <div class="stat-box">
+              <div class="stat-val" id="vic-time">0.0s</div>
+              <div class="stat-lbl">Time Elapsed</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-val" id="vic-steps">0</div>
+              <div class="stat-lbl">Steps Taken</div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer" style="justify-content: center;">
+          <a href="index.html" class="btn btn-secondary">Level Select</a>
+          <button id="btn-replay" class="btn btn-secondary">Replay</button>
+          <button id="btn-next-level" class="btn btn-primary">Next Level →</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div class="toast-container" id="toast-container"></div>
+  </div>
+
+  <script type="module">
+    import { LevelLoader } from './js/levels/level-loader.js';
+    import { GameLoop } from './js/engine/game-loop.js';
+    import { globalEvents } from './js/core/events.js';
+
+    // Canvas elements
+    const mainCanvas = document.getElementById('game-canvas');
+    const minimapCanvas = document.getElementById('minimap-canvas');
+
+    // UI elements
+    const levelTitleEl = document.getElementById('hud-level-title');
+    const elevationEl = document.getElementById('hud-elevation');
+    const timerEl = document.getElementById('hud-timer');
+    const stepsEl = document.getElementById('hud-steps');
+    const inventoryCardEl = document.getElementById('hud-inventory-card');
+    const keysListEl = document.getElementById('hud-keys-list');
+    const freepanBanner = document.getElementById('freepan-banner');
+    const btnFreePan = document.getElementById('btn-freepan');
+    const btnRestart = document.getElementById('btn-restart');
+    const victoryModal = document.getElementById('victory-modal');
+    const btnReplay = document.getElementById('btn-replay');
+    const btnNextLevel = document.getElementById('btn-next-level');
+
+    // Resize Handler
+    function resizeCanvas() {
+      mainCanvas.width = window.innerWidth;
+      mainCanvas.height = window.innerHeight;
+      if (window.gameLoop) {
+        window.gameLoop.camera.resize(mainCanvas.width, mainCanvas.height);
+      }
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Load Level
+    let currentLevel;
+    try {
+      currentLevel = LevelLoader.loadFromParams();
+    } catch (err) {
+      console.error('[Maze] Failed to load level:', err);
+      alert('Failed to load level data: ' + err.message);
+      window.location.href = 'index.html';
+    }
+
+    // Format timer
+    function formatTime(ms) {
+      const totalSec = ms / 1000;
+      const mins = Math.floor(totalSec / 60);
+      const secs = Math.floor(totalSec % 60);
+      const tenths = Math.floor((ms % 1000) / 100);
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${tenths}`;
+    }
+
+    // Initialize Game Loop
+    const gameLoop = new GameLoop({
+      mainCanvas,
+      minimapCanvas,
+      level: currentLevel,
+      uiCallbacks: {
+        onStateUpdate: (state) => {
+          levelTitleEl.textContent = state.levelTitle;
+          elevationEl.textContent = state.elevation;
+          if (state.elevation.includes('Bridge')) {
+            elevationEl.classList.add('overhead');
+          } else {
+            elevationEl.classList.remove('overhead');
+          }
+
+          timerEl.textContent = formatTime(state.time);
+          stepsEl.textContent = state.steps;
+
+          // Render inventory keys
+          if (state.keys.length > 0) {
+            inventoryCardEl.style.display = 'flex';
+            keysListEl.innerHTML = '';
+            for (const key of state.keys) {
+              const pill = document.createElement('span');
+              pill.className = 'key-pill';
+              pill.style.borderColor = key.color;
+              pill.innerHTML = `<span style="color:${key.color};">🔑</span> ${key.name || 'Key'}`;
+              keysListEl.appendChild(pill);
+            }
+          } else {
+            inventoryCardEl.style.display = 'none';
+          }
+        },
+        onFreePanChange: (mode) => {
+          if (mode === 'freepan') {
+            freepanBanner.classList.add('active');
+            btnFreePan.classList.add('btn-primary');
+            btnFreePan.classList.remove('btn-secondary');
+          } else {
+            freepanBanner.classList.remove('active');
+            btnFreePan.classList.remove('btn-primary');
+            btnFreePan.classList.add('btn-secondary');
+          }
+        },
+        onVictory: (stats) => {
+          document.getElementById('vic-time').textContent = `${(stats.time / 1000).toFixed(1)}s`;
+          document.getElementById('vic-steps').textContent = stats.steps;
+          victoryModal.classList.add('active');
+
+          // Check if there is a next campaign level
+          const currentIdNum = parseInt(currentLevel.id, 10);
+          if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 5) {
+            btnNextLevel.style.display = 'inline-flex';
+            btnNextLevel.onclick = () => {
+              window.location.href = `maze.html?id=${currentIdNum + 1}`;
+            };
+          } else {
+            btnNextLevel.style.display = 'none';
+          }
+        },
+      }
+    });
+
+    window.gameLoop = gameLoop;
+    gameLoop.start();
+
+    // Button event listeners
+    btnFreePan.addEventListener('click', () => gameLoop.toggleFreePan());
+    btnRestart.addEventListener('click', () => gameLoop.restartLevel());
+    btnReplay.addEventListener('click', () => {
+      victoryModal.classList.remove('active');
+      gameLoop.restartLevel();
+    });
+
+    // Mobile Virtual Controls Binding
+    function bindVirtualButton(btnId, keyCode) {
+      const btn = document.getElementById(btnId);
+      if (!btn) return;
+
+      const triggerDown = (e) => {
+        e.preventDefault();
+        window.dispatchEvent(new KeyboardEvent('keydown', { code: keyCode, bubbles: true }));
+      };
+      const triggerUp = (e) => {
+        e.preventDefault();
+        window.dispatchEvent(new KeyboardEvent('keyup', { code: keyCode, bubbles: true }));
+      };
+
+      btn.addEventListener('touchstart', triggerDown, { passive: false });
+      btn.addEventListener('touchend', triggerUp, { passive: false });
+      btn.addEventListener('mousedown', triggerDown);
+      btn.addEventListener('mouseup', triggerUp);
+    }
+
+    bindVirtualButton('vbtn-up', 'ArrowUp');
+    bindVirtualButton('vbtn-down', 'ArrowDown');
+    bindVirtualButton('vbtn-left', 'ArrowLeft');
+    bindVirtualButton('vbtn-right', 'ArrowRight');
+    bindVirtualButton('vbtn-act', 'KeyE');
+
+    // Toast Notifications Listener
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    globalEvents.on('key:collected', (data) => {
+      showToast(`Acquired ${data.name || 'Key'}!`, 'success');
+    });
+
+    globalEvents.on('door:unlocked', () => {
+      showToast(`Door unlocked!`, 'success');
+    });
+
+    globalEvents.on('tile:toggled', () => {
+      showToast(`Mechanism activated!`, 'info');
+    });
+  </script>
+</body>
+</html>
