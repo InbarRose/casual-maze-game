@@ -95,27 +95,35 @@ export class GameLoop {
    */
   bindInputs() {
     this.handleKeyDown = (e) => {
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code)) {
+      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code) || ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
         e.preventDefault();
       }
       this.keysDown.add(e.code);
+      if (e.key) this.keysDown.add(e.key);
 
       // Handle Instant Actions
-      if (KEY_CODES.MAP.includes(e.code)) {
+      const isMap = KEY_CODES.MAP.includes(e.code) || (e.key && KEY_CODES.MAP.includes(e.key));
+      const isRestart = KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key));
+      const isInteract = KEY_CODES.INTERACT.includes(e.code) || (e.key && KEY_CODES.INTERACT.includes(e.key));
+
+      if (isMap) {
         this.toggleFreePan();
-      } else if (KEY_CODES.RESTART.includes(e.code)) {
+      } else if (isRestart) {
         this.restartLevel();
-      } else if (KEY_CODES.INTERACT.includes(e.code)) {
+      } else if (isInteract) {
         this.handleManualInteract();
       }
     };
 
     this.handleKeyUp = (e) => {
       this.keysDown.delete(e.code);
+      if (e.key) this.keysDown.delete(e.key);
     };
 
-    window.addEventListener('keydown', this.handleKeyDown);
-    window.addEventListener('keyup', this.handleKeyUp);
+    if (typeof window !== 'undefined') {
+      window.addEventListener('keydown', this.handleKeyDown);
+      window.addEventListener('keyup', this.handleKeyUp);
+    }
 
     // Minimap Click & Drag for Free-Pan
     this.handleMinimapMouseDown = (e) => {
@@ -133,9 +141,13 @@ export class GameLoop {
       this.isDraggingMinimap = false;
     };
 
-    this.minimapCanvas.addEventListener('mousedown', this.handleMinimapMouseDown);
-    window.addEventListener('mousemove', this.handleMinimapMouseMove);
-    window.addEventListener('mouseup', this.handleMinimapMouseUp);
+    if (this.minimapCanvas && typeof this.minimapCanvas.addEventListener === 'function') {
+      this.minimapCanvas.addEventListener('mousedown', this.handleMinimapMouseDown);
+    }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('mousemove', this.handleMinimapMouseMove);
+      window.addEventListener('mouseup', this.handleMinimapMouseUp);
+    }
   }
 
   /**
@@ -143,11 +155,15 @@ export class GameLoop {
    */
   destroy() {
     this.stop();
-    window.removeEventListener('keydown', this.handleKeyDown);
-    window.removeEventListener('keyup', this.handleKeyUp);
-    this.minimapCanvas.removeEventListener('mousedown', this.handleMinimapMouseDown);
-    window.removeEventListener('mousemove', this.handleMinimapMouseMove);
-    window.removeEventListener('mouseup', this.handleMinimapMouseUp);
+    if (typeof window !== 'undefined') {
+      window.removeEventListener('keydown', this.handleKeyDown);
+      window.removeEventListener('keyup', this.handleKeyUp);
+      window.removeEventListener('mousemove', this.handleMinimapMouseMove);
+      window.removeEventListener('mouseup', this.handleMinimapMouseUp);
+    }
+    if (this.minimapCanvas && typeof this.minimapCanvas.removeEventListener === 'function') {
+      this.minimapCanvas.removeEventListener('mousedown', this.handleMinimapMouseDown);
+    }
   }
 
   /**

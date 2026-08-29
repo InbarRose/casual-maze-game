@@ -24,6 +24,14 @@ export class Camera {
     this.panSpeed = 480; // pixels per second when panning
   }
 
+  get width() {
+    return this.viewportWidth;
+  }
+
+  get height() {
+    return this.viewportHeight;
+  }
+
   /**
    * Resize viewport dimensions
    * @param {number} width

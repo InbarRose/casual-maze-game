@@ -50,14 +50,14 @@ export const OPPOSITE_DIRECTIONS = Object.freeze({
 });
 
 export const KEY_CODES = Object.freeze({
-  UP: ['ArrowUp', 'KeyW', 'KeyK'],
-  DOWN: ['ArrowDown', 'KeyS', 'KeyJ'],
-  LEFT: ['ArrowLeft', 'KeyA', 'KeyH'],
-  RIGHT: ['ArrowRight', 'KeyD', 'KeyL'],
-  INTERACT: ['Space', 'KeyE', 'Enter'],
-  MAP: ['KeyM'],
-  RESTART: ['KeyR'],
-  PAUSE: ['Escape', 'KeyP'],
+  UP: ['ArrowUp', 'KeyW', 'KeyK', 'w', 'W', 'k', 'K', 'Up'],
+  DOWN: ['ArrowDown', 'KeyS', 'KeyJ', 's', 'S', 'j', 'J', 'Down'],
+  LEFT: ['ArrowLeft', 'KeyA', 'KeyH', 'a', 'A', 'h', 'H', 'Left'],
+  RIGHT: ['ArrowRight', 'KeyD', 'KeyL', 'd', 'D', 'l', 'L', 'Right'],
+  INTERACT: ['Space', 'KeyE', 'Enter', 'e', 'E', ' ', 'Enter'],
+  MAP: ['KeyM', 'm', 'M'],
+  RESTART: ['KeyR', 'r', 'R'],
+  PAUSE: ['Escape', 'KeyP', 'p', 'P', 'Esc'],
 });
 
 export const DEFAULTS = Object.freeze({

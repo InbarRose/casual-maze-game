@@ -69,7 +69,11 @@ export class Door {
     ctx.shadowBlur = this.isOpen ? 0 : 6;
 
     ctx.beginPath();
-    ctx.roundRect(x, y, w, h, tileSize * 0.12);
+    if (typeof ctx.roundRect === 'function') {
+      ctx.roundRect(x, y, w, h, tileSize * 0.12);
+    } else {
+      ctx.rect(x, y, w, h);
+    }
     ctx.fill();
     ctx.stroke();
 

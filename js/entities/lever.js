@@ -85,7 +85,11 @@ export class Lever {
     ctx.strokeStyle = '#475569';
     ctx.lineWidth = Math.max(1, tileSize * 0.04);
     ctx.beginPath();
-    ctx.roundRect(cx - baseW / 2, cy + tileSize * 0.1, baseW, baseH, tileSize * 0.08);
+    if (typeof ctx.roundRect === 'function') {
+      ctx.roundRect(cx - baseW / 2, cy + tileSize * 0.1, baseW, baseH, tileSize * 0.08);
+    } else {
+      ctx.rect(cx - baseW / 2, cy + tileSize * 0.1, baseW, baseH);
+    }
     ctx.fill();
     ctx.stroke();
 
