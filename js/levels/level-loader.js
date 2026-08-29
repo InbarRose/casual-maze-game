@@ -13,7 +13,7 @@ export class LevelLoader {
    * @param {URLSearchParams} [params]
    * @returns {object} Canonical Level Object
    */
-  static loadFromParams(params) {
+  static async loadFromParams(params) {
     if (!params && typeof window !== 'undefined') {
       let search = window.location.search;
       if (!search && window.location.hash) {
@@ -36,7 +36,20 @@ export class LevelLoader {
       console.warn('[LevelLoader] Custom maze requested but none found in session storage. Falling back to Level 1.');
     }
 
-    // Check campaign levels
+    // Try fetching JSON file first from /levels directory
+    if (typeof fetch === 'function') {
+      try {
+        const res = await fetch(`levels/level_${id}.json`);
+        if (res.ok) {
+          const json = await res.json();
+          return this.normalizeLevel(json);
+        }
+      } catch (e) {
+        // Fall back to embedded campaign level or procedural generator
+      }
+    }
+
+    // Check campaign levels fallback
     const campaignMatch = CAMPAIGN_LEVELS.find(lvl => String(lvl.id) === String(id));
     if (campaignMatch) {
       return this.normalizeLevel(JSON.parse(JSON.stringify(campaignMatch)));

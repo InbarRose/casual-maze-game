@@ -1,0 +1,32 @@
+[
+  {
+    "id": "1",
+    "title": "The Training Hall",
+    "file": "levels/level_1.json",
+    "theme": "dungeon"
+  },
+  {
+    "id": "2",
+    "title": "The Overpass",
+    "file": "levels/level_2.json",
+    "theme": "emerald"
+  },
+  {
+    "id": "3",
+    "title": "The Lever Crypt",
+    "file": "levels/level_3.json",
+    "theme": "sunset"
+  },
+  {
+    "id": "4",
+    "title": "Sky Bridges & Crossroads",
+    "file": "levels/level_4.json",
+    "theme": "dungeon"
+  },
+  {
+    "id": "5",
+    "title": "The Sunken Vault",
+    "file": "levels/level_5.json",
+    "theme": "dungeon"
+  }
+]

@@ -148,7 +148,7 @@
     // Load Level
     let currentLevel;
     try {
-      currentLevel = LevelLoader.loadFromParams();
+      currentLevel = await LevelLoader.loadFromParams();
     } catch (err) {
       console.error('[Maze] Failed to load level:', err);
       alert('Failed to load level data: ' + err.message);

@@ -59,19 +59,24 @@ bus.emit('test:once');
 bus.emit('test:once');
 assert(onceCount === 1, 'EventBus once triggered exactly once');
 
-// 3. Test Campaign Levels & Loader
-console.log('\n[3] Testing Level Loader & Campaign Levels...');
-assert(CAMPAIGN_LEVELS.length === 5, `Campaign contains 5 levels (found: ${CAMPAIGN_LEVELS.length})`);
+import fs from 'fs';
 
-for (let i = 0; i < CAMPAIGN_LEVELS.length; i++) {
-  const lvl = CAMPAIGN_LEVELS[i];
-  const norm = LevelLoader.normalizeLevel(lvl);
-  assert(norm.dimensions.width > 0 && norm.dimensions.height > 0, `Level ${lvl.id} has valid dimensions`);
-  assert(norm.layers.ground.length === norm.dimensions.height, `Level ${lvl.id} ground layer matches height`);
-  assert(norm.layers.ground[0].length === norm.dimensions.width, `Level ${lvl.id} ground layer matches width`);
-  assert(norm.spawn && norm.spawn.x !== undefined, `Level ${lvl.id} has valid spawn point`);
-  assert(norm.exit && norm.exit.x !== undefined, `Level ${lvl.id} has valid exit point`);
+for (let i = 1; i <= 5; i++) {
+  const jsonPath = `./levels/level_${i}.json`;
+  assert(fs.existsSync(jsonPath), `File ${jsonPath} exists on disk`);
+  const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  const norm = LevelLoader.normalizeLevel(raw);
+  assert(norm.dimensions.width > 0 && norm.dimensions.height > 0, `JSON Level ${i} has valid dimensions`);
+  assert(norm.layers.ground.length === norm.dimensions.height, `JSON Level ${i} ground layer matches height`);
+  assert(norm.layers.ground[0].length === norm.dimensions.width, `JSON Level ${i} ground layer matches width`);
+  assert(norm.spawn && norm.spawn.x !== undefined, `JSON Level ${i} has valid spawn point`);
+  assert(norm.exit && norm.exit.x !== undefined, `JSON Level ${i} has valid exit point`);
 }
+
+const manifestPath = './levels/manifest.json';
+assert(fs.existsSync(manifestPath), 'levels/manifest.json exists');
+const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+assert(Array.isArray(manifest) && manifest.length === 5, 'manifest.json lists 5 levels');
 
 // 4. Test Procedural Level Generator
 console.log('\n[4] Testing Procedural Maze Generator...');
