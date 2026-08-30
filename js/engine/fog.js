@@ -29,11 +29,13 @@ export class FogOfWar {
   }
 
   /**
-   * Reset all tiles to unexplored
+   * Reset all tiles to unexplored, or explored if mapRevealed is true
+   * @param {boolean} [mapRevealed=false]
    */
-  reset() {
+  reset(mapRevealed = false) {
+    const initialState = mapRevealed ? FOG_STATE.EXPLORED : FOG_STATE.UNEXPLORED;
     for (let y = 0; y < this.height; y++) {
-      this.grid[y].fill(FOG_STATE.UNEXPLORED);
+      this.grid[y].fill(initialState);
     }
   }
 

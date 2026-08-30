@@ -60,10 +60,19 @@ export const KEY_CODES = Object.freeze({
   PAUSE: ['Escape', 'KeyP', 'p', 'P', 'Esc'],
 });
 
+export const KEY_COLORS = Object.freeze({
+  GOLD: '#fbbf24',
+  RED: '#f43f5e',
+  BLUE: '#38bdf8',
+  GREEN: '#34d399',
+  PURPLE: '#a855f7',
+});
+
 export const DEFAULTS = Object.freeze({
   TILE_SIZE: 32,
   VIEW_RADIUS: 6,
   FOG_OF_WAR: true,
+  MAP_REVEALED: false,
   ALLOW_FREE_PAN: true,
   CAMERA_LERP: 0.12,
   PLAYER_SPEED: 4.8, // tiles per second during smooth walk

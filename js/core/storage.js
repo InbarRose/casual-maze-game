@@ -5,6 +5,7 @@
 const STORAGE_KEYS = {
   CUSTOM_MAZE: 'casual_maze_custom_data',
   PROGRESS: 'casual_maze_campaign_progress',
+  TUTORIAL_PROGRESS: 'casual_maze_tutorial_progress',
   SETTINGS: 'casual_maze_user_settings',
   EDITOR_AUTOSAVE: 'casual_maze_editor_autosave',
   SAVED_PROJECTS: 'casual_maze_saved_projects',
@@ -46,8 +47,14 @@ export class StorageManager {
    */
   static saveLevelCompletion(levelId, stats) {
     try {
-      const progress = this.loadCampaignProgress();
       const idKey = String(levelId);
+      const isTutorial = idKey.startsWith('tutorial_') || idKey.startsWith('t');
+      
+      if (isTutorial) {
+        return this.saveTutorialProgress(idKey, stats);
+      }
+
+      const progress = this.loadCampaignProgress();
       const existing = progress[idKey];
 
       if (!existing || stats.time < existing.bestTime) {
@@ -77,6 +84,48 @@ export class StorageManager {
       return raw ? JSON.parse(raw) : {};
     } catch (e) {
       console.error('[StorageManager] Failed to load campaign progress:', e);
+      return {};
+    }
+  }
+
+  /**
+   * Save tutorial level completion
+   * @param {string|number} levelId
+   * @param {{ time: number, steps: number }} stats
+   */
+  static saveTutorialProgress(levelId, stats) {
+    try {
+      const progress = this.loadTutorialProgress();
+      const idKey = String(levelId);
+      const existing = progress[idKey];
+
+      if (!existing || stats.time < existing.bestTime) {
+        progress[idKey] = {
+          completed: true,
+          bestTime: Math.min(stats.time, existing ? existing.bestTime : Infinity),
+          bestSteps: Math.min(stats.steps, existing ? existing.bestSteps : Infinity),
+          lastPlayed: Date.now(),
+        };
+      }
+
+      localStorage.setItem(STORAGE_KEYS.TUTORIAL_PROGRESS, JSON.stringify(progress));
+      return true;
+    } catch (e) {
+      console.error('[StorageManager] Failed to save tutorial progress:', e);
+      return false;
+    }
+  }
+
+  /**
+   * Load tutorial progress
+   * @returns {Record<string, { completed: boolean, bestTime: number, bestSteps: number }>}
+   */
+  static loadTutorialProgress() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.TUTORIAL_PROGRESS);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      console.error('[StorageManager] Failed to load tutorial progress:', e);
       return {};
     }
   }
