@@ -18,6 +18,28 @@ import { GameRenderer } from './js/engine/renderer.js';
 import { Minimap } from './js/engine/minimap.js';
 import { JsonExporter } from './js/editor/json-exporter.js';
 import { DebugLogger } from './js/engine/debug-logger.js';
+import { StorageManager } from './js/core/storage.js';
+import { LevelValidator } from './js/editor/level-validator.js';
+
+// Polyfill localStorage & sessionStorage for Node test environment
+if (typeof globalThis.localStorage === 'undefined') {
+  const store = new Map();
+  globalThis.localStorage = {
+    getItem: (k) => store.get(k) ?? null,
+    setItem: (k, v) => store.set(k, String(v)),
+    removeItem: (k) => store.delete(k),
+    clear: () => store.clear(),
+  };
+}
+if (typeof globalThis.sessionStorage === 'undefined') {
+  const store = new Map();
+  globalThis.sessionStorage = {
+    getItem: (k) => store.get(k) ?? null,
+    setItem: (k, v) => store.set(k, String(v)),
+    removeItem: (k) => store.delete(k),
+    clear: () => store.clear(),
+  };
+}
 
 let passed = 0;
 let failed = 0;
@@ -281,7 +303,139 @@ const jsonExport = logger.exportJSON();
 const parsed = JSON.parse(jsonExport);
 assert(parsed.sessionId && parsed.events.length === 6, 'DebugLogger exportJSON produces valid parseable JSON');
 
+// 9. Test LevelValidator Subsystem
+console.log('\n[9] Testing LevelValidator Subsystem...');
+// 9a. Test valid campaign levels
+for (let i = 1; i <= 5; i++) {
+  const lvl = CAMPAIGN_LEVELS[i - 1];
+  const report = LevelValidator.validate(lvl);
+  assert(report.valid === true, `Campaign Level ${i} passes validation (valid=true, errors=0)`);
+  assert(report.stats.exitReached === true, `Campaign Level ${i} exit is reachable via BFS`);
+}
+
+// 9b. Test invalid spawn inside wall
+const badSpawnLevel = {
+  dimensions: { width: 7, height: 7 },
+  spawn: { x: 0, y: 0, elevation: 0 },
+  exit: { x: 5, y: 5 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+    ],
+    overhead: Array.from({ length: 7 }, () => Array(7).fill(0)),
+  },
+  entities: [],
+};
+const badSpawnReport = LevelValidator.validate(badSpawnLevel);
+assert(badSpawnReport.valid === false && badSpawnReport.errors.some(e => e.message.includes('wall')), 'LevelValidator catches spawn placed inside solid wall');
+
+// 9c. Test blocked / unreachable exit
+const blockedExitLevel = {
+  dimensions: { width: 7, height: 7 },
+  spawn: { x: 1, y: 1, elevation: 0 },
+  exit: { x: 5, y: 5 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 1, 0, 0, 0, 1],
+      [1, 0, 1, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1], // Full dividing wall
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+    ],
+    overhead: Array.from({ length: 7 }, () => Array(7).fill(0)),
+  },
+  entities: [],
+};
+const blockedReport = LevelValidator.validate(blockedExitLevel);
+assert(blockedReport.valid === false && blockedReport.errors.some(e => e.message.includes('UNREACHABLE')), 'LevelValidator flags walled-off exit as UNREACHABLE');
+
+// 9d. Test door missing matching key
+const missingKeyDoorLevel = {
+  dimensions: { width: 7, height: 7 },
+  spawn: { x: 1, y: 1, elevation: 0 },
+  exit: { x: 5, y: 1 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+    ],
+    overhead: Array.from({ length: 7 }, () => Array(7).fill(0)),
+  },
+  entities: [
+    { id: 'door_ghost', type: 'door', x: 3, y: 1, requiresKey: 'key_nonexistent' }
+  ],
+};
+const missingKeyReport = LevelValidator.validate(missingKeyDoorLevel);
+assert(missingKeyReport.valid === false && missingKeyReport.errors.some(e => e.message.includes('no such key exists')), 'LevelValidator catches door requiring non-existent key');
+
+// 9e. Test lever with out-of-bounds target
+const badLeverLevel = {
+  dimensions: { width: 7, height: 7 },
+  spawn: { x: 1, y: 1, elevation: 0 },
+  exit: { x: 5, y: 1 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+    ],
+    overhead: Array.from({ length: 7 }, () => Array(7).fill(0)),
+  },
+  entities: [
+    { id: 'lever_1', type: 'lever', x: 2, y: 1, targets: [{ x: 99, y: 99 }] }
+  ],
+};
+const badLeverReport = LevelValidator.validate(badLeverLevel);
+assert(badLeverReport.valid === false && badLeverReport.errors.some(e => e.message.includes('out-of-bounds')), 'LevelValidator catches out-of-bounds lever target');
+
+// 10. Test StorageManager Multi-Project & Draft Persistence
+console.log('\n[10] Testing StorageManager Multi-Project & Draft Persistence...');
+const projectData = {
+  id: 'test_project_alpha',
+  title: 'Test Project Alpha',
+  author: 'Architect Tester',
+  dimensions: { width: 15, height: 15 },
+  layers: { ground: [], overhead: [] },
+  entities: [],
+};
+
+const savedId = StorageManager.saveProject(projectData);
+assert(savedId === 'test_project_alpha', 'StorageManager.saveProject returns project ID');
+
+const projectList = StorageManager.listProjects();
+assert(Array.isArray(projectList) && projectList.some(p => p.id === 'test_project_alpha'), 'StorageManager.listProjects contains saved project');
+
+const loadedProject = StorageManager.loadProject('test_project_alpha');
+assert(loadedProject && loadedProject.title === 'Test Project Alpha', 'StorageManager.loadProject retrieves matching project');
+
+StorageManager.saveEditorDraft(projectData);
+const loadedDraft = StorageManager.loadEditorDraft();
+assert(loadedDraft && loadedDraft.id === 'test_project_alpha' && loadedDraft._lastSaved > 0, 'StorageManager.saveEditorDraft & loadEditorDraft persist draft with timestamp');
+
+const deleted = StorageManager.deleteProject('test_project_alpha');
+assert(deleted === true, 'StorageManager.deleteProject returns true');
+const afterDeleteList = StorageManager.listProjects();
+assert(!afterDeleteList.some(p => p.id === 'test_project_alpha'), 'Deleted project no longer in listProjects');
+
 console.log(`\n=== TEST SUMMARY: ${passed} PASSED, ${failed} FAILED ===`);
 if (failed > 0) {
   process.exit(1);
 }
+
