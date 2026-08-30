@@ -18,6 +18,7 @@ export class Door {
     this.color = config.color || '#fbbf24';
     this.isOpen = !!config.isOpen;
     this.elevation = config.elevation ?? 0;
+    this.orientation = config.orientation || 'auto'; // 'auto' | 'horizontal' | 'vertical'
 
     // Animation progress: 0 = fully closed, 1 = fully open
     this.openProgress = this.isOpen ? 1 : 0;
@@ -43,7 +44,7 @@ export class Door {
   }
 
   /**
-   * Render door gate / bars
+   * Render door gate / bars with orientation awareness
    * @param {CanvasRenderingContext2D} ctx
    * @param {number} screenX
    * @param {number} screenY
@@ -52,59 +53,76 @@ export class Door {
   render(ctx, screenX, screenY, tileSize) {
     if (this.openProgress >= 1) return; // Fully opened, don't draw obstruction
 
-    const pad = tileSize * 0.08;
+    const pad = tileSize * 0.06;
     const w = tileSize - pad * 2;
     const h = tileSize - pad * 2;
     const x = screenX + pad;
     const y = screenY + pad;
 
     ctx.save();
-    ctx.globalAlpha = 1 - this.openProgress * 0.8;
+    ctx.globalAlpha = 1 - this.openProgress * 0.85;
 
-    // Frame
-    ctx.fillStyle = '#1e293b';
+    // Frame Body & Shadow
+    ctx.fillStyle = '#0f172a';
     ctx.strokeStyle = this.color;
-    ctx.lineWidth = Math.max(2, tileSize * 0.06);
+    ctx.lineWidth = Math.max(2, tileSize * 0.07);
     ctx.shadowColor = this.color;
-    ctx.shadowBlur = this.isOpen ? 0 : 6;
+    ctx.shadowBlur = this.isOpen ? 0 : 8;
 
     ctx.beginPath();
     if (typeof ctx.roundRect === 'function') {
-      ctx.roundRect(x, y, w, h, tileSize * 0.12);
+      ctx.roundRect(x, y, w, h, tileSize * 0.14);
     } else {
       ctx.rect(x, y, w, h);
     }
     ctx.fill();
     ctx.stroke();
 
-    // Bars
+    // Directional Gate Bars
+    const isHorizontal = this.orientation === 'horizontal';
     const barCount = 3;
-    const barSpacing = w / (barCount + 1);
-    ctx.strokeStyle = '#64748b';
-    ctx.lineWidth = Math.max(1.5, tileSize * 0.05);
+    ctx.strokeStyle = '#475569';
+    ctx.lineWidth = Math.max(1.5, tileSize * 0.055);
 
-    for (let i = 1; i <= barCount; i++) {
-      ctx.beginPath();
-      ctx.moveTo(x + i * barSpacing, y + pad);
-      ctx.lineTo(x + i * barSpacing, y + h - pad);
-      ctx.stroke();
+    if (isHorizontal) {
+      // Horizontal crossbars
+      const spacing = h / (barCount + 1);
+      for (let i = 1; i <= barCount; i++) {
+        ctx.beginPath();
+        ctx.moveTo(x + pad, y + i * spacing);
+        ctx.lineTo(x + w - pad, y + i * spacing);
+        ctx.stroke();
+      }
+    } else {
+      // Vertical portcullis bars
+      const spacing = w / (barCount + 1);
+      for (let i = 1; i <= barCount; i++) {
+        ctx.beginPath();
+        ctx.moveTo(x + i * spacing, y + pad);
+        ctx.lineTo(x + i * spacing, y + h - pad);
+        ctx.stroke();
+      }
     }
 
-    // Keyhole emblem in center
+    // Glowing Keyhole Gemstone Emblem in center
     ctx.fillStyle = this.color;
+    ctx.shadowColor = this.color;
+    ctx.shadowBlur = 10;
     const cx = x + w / 2;
     const cy = y + h / 2;
-    const r = tileSize * 0.12;
+    const r = tileSize * 0.13;
 
+    // Circular lock head
     ctx.beginPath();
-    ctx.arc(cx, cy - r * 0.3, r, 0, Math.PI * 2);
+    ctx.arc(cx, cy - r * 0.35, r, 0, Math.PI * 2);
     ctx.fill();
 
+    // Keyway slot
     ctx.beginPath();
-    ctx.moveTo(cx - r * 0.5, cy);
-    ctx.lineTo(cx + r * 0.5, cy);
-    ctx.lineTo(cx + r * 0.2, cy + r * 1.3);
-    ctx.lineTo(cx - r * 0.2, cy + r * 1.3);
+    ctx.moveTo(cx - r * 0.45, cy);
+    ctx.lineTo(cx + r * 0.45, cy);
+    ctx.lineTo(cx + r * 0.22, cy + r * 1.35);
+    ctx.lineTo(cx - r * 0.22, cy + r * 1.35);
     ctx.closePath();
     ctx.fill();
 

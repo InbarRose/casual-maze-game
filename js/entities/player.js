@@ -155,8 +155,9 @@ export class Player {
    */
   render(ctx, screenX, screenY, tileSize) {
     const isOverhead = this.elevation === ELEVATION.OVERHEAD;
-    const radius = tileSize * 0.35;
-    const shadowOffset = isOverhead ? tileSize * 0.28 : tileSize * 0.1;
+    const radius = tileSize * 0.36;
+    const stepBob = this.isMoving ? Math.sin(this.moveProgress * Math.PI) * (tileSize * 0.08) : 0;
+    const shadowOffset = (isOverhead ? tileSize * 0.28 : tileSize * 0.1) + stepBob * 0.5;
     const pulse = Math.sin(this.pulseTimer) * 0.15 + 0.85;
 
     ctx.save();
@@ -167,7 +168,7 @@ export class Player {
     ctx.ellipse(
       screenX,
       screenY + shadowOffset,
-      radius * (isOverhead ? 0.9 : 0.8),
+      radius * (isOverhead ? 0.95 : 0.85),
       radius * 0.4,
       0,
       0,
@@ -175,59 +176,73 @@ export class Player {
     );
     ctx.fill();
 
-    // 2. Elevation Ring / Aura
+    // Apply movement step bobbing to avatar body
+    const py = screenY - stepBob;
+
+    // 2. Elevation Levitation Ring
     if (isOverhead) {
-      ctx.strokeStyle = `rgba(56, 189, 248, ${0.4 * pulse})`;
-      ctx.lineWidth = Math.max(2, tileSize * 0.06);
+      ctx.strokeStyle = `rgba(56, 189, 248, ${0.5 * pulse})`;
+      ctx.lineWidth = Math.max(2, tileSize * 0.07);
       ctx.beginPath();
-      ctx.arc(screenX, screenY, radius * 1.3, 0, Math.PI * 2);
+      ctx.arc(screenX, py, radius * 1.35, 0, Math.PI * 2);
       ctx.stroke();
     }
 
-    // 3. Player Body (Glow + Sphere)
+    // 3. Player Body (Stylized Orb & Inner Crest)
     ctx.shadowColor = isOverhead ? '#38bdf8' : '#34d399';
-    ctx.shadowBlur = 12 * pulse;
+    ctx.shadowBlur = 14 * pulse;
 
     const grad = ctx.createRadialGradient(
-      screenX - radius * 0.3,
-      screenY - radius * 0.3,
+      screenX - radius * 0.35,
+      py - radius * 0.35,
       radius * 0.1,
       screenX,
-      screenY,
+      py,
       radius
     );
 
     if (isOverhead) {
-      grad.addColorStop(0, '#bae6fd');
-      grad.addColorStop(0.7, '#0284c7');
-      grad.addColorStop(1, '#0369a1');
+      grad.addColorStop(0, '#e0f2fe');
+      grad.addColorStop(0.6, '#0284c7');
+      grad.addColorStop(1, '#075985');
     } else {
-      grad.addColorStop(0, '#a7f3d0');
-      grad.addColorStop(0.7, '#10b981');
-      grad.addColorStop(1, '#047857');
+      grad.addColorStop(0, '#d1fae5');
+      grad.addColorStop(0.6, '#10b981');
+      grad.addColorStop(1, '#065f46');
     }
 
     ctx.fillStyle = grad;
     ctx.beginPath();
-    ctx.arc(screenX, screenY, radius, 0, Math.PI * 2);
+    ctx.arc(screenX, py, radius, 0, Math.PI * 2);
     ctx.fill();
 
+    // Outer Rim Stroke
     ctx.shadowBlur = 0;
     ctx.strokeStyle = '#ffffff';
-    ctx.lineWidth = Math.max(1.5, tileSize * 0.05);
+    ctx.lineWidth = Math.max(1.5, tileSize * 0.055);
     ctx.stroke();
 
-    // 4. Directional Visor / Pointer
+    // 4. Directional Explorer Visor / Headlamp Pointer
     let dirX = 0;
     let dirY = 0;
-    if (this.facing === 'north') dirY = -radius * 0.65;
-    else if (this.facing === 'south') dirY = radius * 0.65;
-    else if (this.facing === 'east') dirX = radius * 0.65;
-    else if (this.facing === 'west') dirX = -radius * 0.65;
+    if (this.facing === 'north') dirY = -radius * 0.68;
+    else if (this.facing === 'south') dirY = radius * 0.68;
+    else if (this.facing === 'east') dirX = radius * 0.68;
+    else if (this.facing === 'west') dirX = -radius * 0.68;
 
+    // Glowing headlamp
     ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#ffffff';
+    ctx.shadowBlur = 8;
     ctx.beginPath();
-    ctx.arc(screenX + dirX, screenY + dirY, radius * 0.28, 0, Math.PI * 2);
+    ctx.arc(screenX + dirX, py + dirY, radius * 0.32, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Center visor iris pupil
+    ctx.fillStyle = isOverhead ? '#0284c7' : '#059669';
+    ctx.shadowBlur = 0;
+    ctx.beginPath();
+    ctx.arc(screenX + dirX, py + dirY, radius * 0.16, 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
