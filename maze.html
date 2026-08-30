@@ -34,10 +34,13 @@
           💡 <span class="hide-mobile">Hint</span>
         </button>
 
-        <!-- Inventory Keys -->
-        <div class="hud-card" id="hud-inventory-card" style="display: none;">
-          <span style="font-size: 0.8rem; color: var(--text-muted);">Keys:</span>
-          <div class="inventory-list" id="hud-keys-list"></div>
+        <!-- Inventory Keys & Held Items -->
+        <div class="hud-card hud-inventory-card" id="hud-inventory-card" title="Player Inventory">
+          <span class="inventory-icon">🎒</span>
+          <span class="inventory-label hide-mobile">Holding:</span>
+          <div class="inventory-list" id="hud-keys-list">
+            <span class="inventory-empty-slot">Empty</span>
+          </div>
         </div>
 
         <!-- Timer & Steps -->
@@ -267,24 +270,26 @@
           timerEl.textContent = formatTime(state.time);
           stepsEl.textContent = state.steps;
 
-          // Render inventory keys only when the inventory actually changes
+          // Render inventory items in top HUD bar
           const currentKeyIds = (state.inventory || []).join(',');
           if (currentKeyIds !== lastRenderedKeyIds) {
             lastRenderedKeyIds = currentKeyIds;
+            keysListEl.innerHTML = '';
             if (state.inventory && state.inventory.length > 0) {
-              inventoryCardEl.style.display = 'flex';
-              keysListEl.innerHTML = '';
               for (const keyId of state.inventory) {
                 const key = currentLevel.entities.find(e => e.id === keyId) || { name: 'Key', color: '#fbbf24' };
                 const pill = document.createElement('div');
                 pill.className = 'key-pill';
                 pill.style.borderColor = key.color || '#fbbf24';
-                pill.innerHTML = `<span style="color:${key.color || '#fbbf24'};">🔑</span> ${key.name || 'Key'}`;
+                pill.style.boxShadow = `0 0 8px ${key.color ? key.color + '40' : 'rgba(251,191,36,0.25)'}`;
+                pill.innerHTML = `<span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 6px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
                 keysListEl.appendChild(pill);
               }
             } else {
-              inventoryCardEl.style.display = 'none';
-              keysListEl.innerHTML = '';
+              const emptySpan = document.createElement('span');
+              emptySpan.className = 'inventory-empty-slot';
+              emptySpan.textContent = 'Empty';
+              keysListEl.appendChild(emptySpan);
             }
           }
         },
@@ -334,9 +339,9 @@
               };
             }
           } else {
-            // Check if there is a next campaign level
+            // Check if there is a next campaign level (Levels 1 to 10 across all zones)
             const currentIdNum = parseInt(currentLevel.id, 10);
-            if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 5) {
+            if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 10) {
               btnNextLevel.style.display = 'inline-flex';
               btnNextLevel.textContent = `Level ${currentIdNum + 1} →`;
               btnNextLevel.onclick = () => {

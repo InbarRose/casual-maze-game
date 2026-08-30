@@ -27,11 +27,18 @@ This document outlines the standard operating procedures, architectural principl
 
 ### D. Protected Branch Workflow
 * **Branch-First Development**: Agents must work on dedicated task/feature branches (e.g. `feat/<name>`, `fix/<name>`, `docs/<name>`) to protect the stability of the production `main` branch.
-* **Branch Lifecycle**:
-  1. Create and switch to a descriptive branch before writing code (`git checkout -b <type>/<description>`).
-  2. Make small, focused, atomic commits.
-  3. Validate all automated tests with `npm test`.
-  4. Merge into `main` or provide PR branch when verified.
+* **Ruleset Protection on `main`**: Direct pushes to `main` and force-pushes are blocked by GitHub repository rulesets. All changes must go through a validated Pull Request.
+
+### E. GitHub MCP Server Integration & PR Lifecycle
+Agents are equipped with the **GitHub MCP Server** (`ServerName: 'github'`) to automate GitHub operations:
+* **Feature Development & PR Workflow**:
+  1. **Branch**: Create and switch to a descriptive branch (`git checkout -b <type>/<short-desc>`).
+  2. **Atomic Commits**: Make small, incremental, single-purpose commits.
+  3. **Local Validation**: Run `npm test` and verify all tests pass (`0 failed`).
+  4. **Push**: Push the branch to remote (`git push origin <branch>`).
+  5. **Open PR via GitHub MCP**: Call `call_mcp_tool` (`github:create_pull_request`) targeting `main` with a clear summary, test report, and linked issue if applicable.
+  6. **CI Verification**: Monitor GitHub Actions CI status using MCP tools or status checks to ensure the build stays green.
+* **Issue Tracking**: Query open issues (`github:list_issues`), file bug/feature reports (`github:create_issue`), and add comments to keep project status synchronized.
 
 ---
 
@@ -133,9 +140,10 @@ Agents must actively maintain project state documentation:
 
 Before concluding any task or reporting back to the user, ensure:
 - [ ] Task was developed on a dedicated branch to protect `main`.
-- [ ] Changes are modular and atomic.
+- [ ] Changes are modular, focused, and atomic.
 - [ ] Zero server dependencies added (remains 100% static on GitHub Pages).
 - [ ] New logic or entity types are covered by tests in `test-suite.mjs`.
 - [ ] `npm test` runs and passes with `0 failed`.
 - [ ] Relevant documentation (`docs/PROJECT_MANAGEMENT.md`, `PROJECT_CONTEXT.md`, or `docs/adr/`) is updated.
 - [ ] Work is committed with conventional, atomic git commit messages.
+- [ ] Branch is pushed and Pull Request is opened via GitHub MCP targeting `main` for review.

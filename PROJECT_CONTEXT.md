@@ -103,6 +103,7 @@ casual-maze-game/
 {
   "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
   "id": "vault_of_shadows",
+  "zone": "zone_1",
   "title": "The Sunken Vault",
   "author": "Inbar Rose",
   "version": 1,

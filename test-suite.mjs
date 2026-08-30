@@ -2,7 +2,7 @@
  * Test Suite for Casual Maze Game Engine
  */
 
-import { TILES, ELEVATION, FOG_STATE, ENTITY_TYPES } from './js/core/constants.js';
+import { TILES, ELEVATION, FOG_STATE, ENTITY_TYPES, THEMES, ZONES } from './js/core/constants.js';
 import { PRNG } from './js/core/prng.js';
 import { EventBus } from './js/core/events.js';
 import { CollisionEngine } from './js/engine/collision.js';
@@ -84,7 +84,7 @@ assert(onceCount === 1, 'EventBus once triggered exactly once');
 
 import fs from 'fs';
 
-for (let i = 1; i <= 5; i++) {
+for (let i = 1; i <= 10; i++) {
   const jsonPath = `./levels/level_${i}.json`;
   assert(fs.existsSync(jsonPath), `File ${jsonPath} exists on disk`);
   const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
@@ -111,7 +111,8 @@ for (let i = 1; i <= 6; i++) {
 const manifestPath = './levels/manifest.json';
 assert(fs.existsSync(manifestPath), 'levels/manifest.json exists');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-assert(Array.isArray(manifest) && manifest.length === 11, 'manifest.json lists 11 levels (6 tutorial + 5 campaign)');
+assert(Array.isArray(manifest) && manifest.length === 16, 'manifest.json lists 16 levels (6 tutorial + 10 campaign across zones)');
+assert(manifest.every(m => m.zone !== undefined), 'manifest.json all entries have zone property');
 
 // 4. Test Collision Engine & Elevation Mechanics
 console.log('\n[4] Testing Collision Engine & Elevation Mechanics...');
@@ -369,11 +370,11 @@ assert(parsed.sessionId && parsed.events.length === 6, 'DebugLogger exportJSON p
 // 9. Test LevelValidator Subsystem
 console.log('\n[9] Testing LevelValidator Subsystem...');
 // 9a. Test valid campaign levels
-for (let i = 1; i <= 5; i++) {
+for (let i = 1; i <= 10; i++) {
   const lvl = CAMPAIGN_LEVELS[i - 1];
   const report = LevelValidator.validate(lvl);
-  assert(report.valid === true, `Campaign Level ${i} passes validation (valid=true, errors=0)`);
-  assert(report.stats.exitReached === true, `Campaign Level ${i} exit is reachable via BFS`);
+  assert(report.valid === true, `Campaign Level ${i} (${lvl.title}) passes validation (valid=true, errors=0)`);
+  assert(report.stats.exitReached === true, `Campaign Level ${i} (${lvl.title}) exit is reachable via BFS`);
 }
 
 // 9b. Test valid tutorial levels
@@ -476,6 +477,72 @@ const badLeverLevel = {
 const badLeverReport = LevelValidator.validate(badLeverLevel);
 assert(badLeverReport.valid === false && badLeverReport.errors.some(e => e.message.includes('out-of-bounds')), 'LevelValidator catches out-of-bounds lever target');
 
+// 9f. Test Bypassed Gate Warning (gate that can be ignored to reach the exit)
+const bypassedDoorLevel = {
+  dimensions: { width: 9, height: 9 },
+  spawn: { x: 1, y: 1, elevation: 0 },
+  exit: { x: 7, y: 7 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 0, 1, 0, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ],
+    overhead: Array.from({ length: 9 }, () => Array(9).fill(0))
+  },
+  entities: [
+    { id: 'key_side', type: 'key', x: 1, y: 3, color: '#fbbf24', name: 'Side Key' },
+    { id: 'door_side', type: 'door', x: 3, y: 3, requiresKey: 'key_side', color: '#fbbf24' }
+  ]
+};
+const bypassedReport = LevelValidator.validate(bypassedDoorLevel);
+assert(bypassedReport.valid === true, 'Bypassed door level is solvable');
+assert(bypassedReport.warnings.some(w => w.message.includes('bypassed')), 'LevelValidator warns when a locked gate can be bypassed without unlocking');
+
+// 9g. Test Key-Behind-Door Deadlock (key required to open door is placed behind that very door)
+const deadlockDoorLevel = {
+  dimensions: { width: 7, height: 7 },
+  spawn: { x: 1, y: 1, elevation: 0 },
+  exit: { x: 5, y: 1 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1]
+    ],
+    overhead: Array.from({ length: 7 }, () => Array(7).fill(0))
+  },
+  entities: [
+    { id: 'door_blocker', type: 'door', x: 2, y: 1, requiresKey: 'key_trapped', color: '#f43f5e' },
+    { id: 'key_trapped', type: 'key', x: 4, y: 1, color: '#f43f5e', name: 'Trapped Key' }
+  ]
+};
+const deadlockReport = LevelValidator.validate(deadlockDoorLevel);
+assert(deadlockReport.valid === false, 'Key-behind-door deadlock is flagged as invalid');
+assert(deadlockReport.errors.some(e => e.message.includes('unreachable before unlocking this door')), 'LevelValidator catches key placed behind the locked door');
+
+// 9h. Test Tutorial 2 Strict Solvability & Key Dependencies
+const tut2 = TUTORIAL_LEVELS[1];
+const tut2Report = LevelValidator.validate(tut2);
+assert(tut2Report.valid === true, 'Redesigned Tutorial 2 passes validation');
+assert(tut2Report.warnings.length === 0, 'Redesigned Tutorial 2 has 0 bypass warnings');
+// Verify red door cannot be bypassed
+const tut2NoRed = LevelValidator.analyzeReachability(tut2, new Map(tut2.entities.filter(e => e.type === 'key').map(k => [k.id, k])), tut2.entities.filter(e => e.type === 'door'), new Set(['door_red_t2']));
+assert(tut2NoRed.exitReached === false, 'Tutorial 2 exit is unreachable if red gate is kept locked');
+// Verify blue door cannot be bypassed
+const tut2NoBlue = LevelValidator.analyzeReachability(tut2, new Map(tut2.entities.filter(e => e.type === 'key').map(k => [k.id, k])), tut2.entities.filter(e => e.type === 'door'), new Set(['door_blue_t2']));
+assert(tut2NoBlue.exitReached === false, 'Tutorial 2 exit is unreachable if blue gate is kept locked');
+
 // 10. Test StorageManager Multi-Project & Draft Persistence
 console.log('\n[10] Testing StorageManager Multi-Project & Draft Persistence...');
 const projectData = {
@@ -520,8 +587,25 @@ assert(updatedTutProg.tutorial_2 && updatedTutProg.tutorial_2.completed === true
 console.log('\n[11] Testing LevelLoader Parameter Parsing & Normalization...');
 const normalizedTut1 = LevelLoader.normalizeLevel(TUTORIAL_LEVELS[0]);
 assert(normalizedTut1.id === 'tutorial_1', 'normalizeLevel preserves tutorial ID');
+assert(normalizedTut1.zone === 'tutorial', 'normalizeLevel preserves tutorial zone');
 assert(normalizedTut1.config.mapRevealed === true, 'normalizeLevel preserves config.mapRevealed');
 assert(normalizedTut1.help && normalizedTut1.help.title === 'Navigation Basics', 'normalizeLevel preserves help metadata');
+
+// 12. Test Thematic Visual Tilesets & Zone Registry
+console.log('\n[12] Testing Thematic Visual Tilesets & Zone Registry...');
+const themeKeys = ['dungeon', 'jungle', 'lava', 'snow', 'cave', 'sunset'];
+for (const tk of themeKeys) {
+  const t = THEMES[tk];
+  assert(t !== undefined, `Theme ${tk} exists in THEMES`);
+  assert(t.bg && t.wall && t.wallTop && t.floor && t.bridgeOverhead && t.bridgeRailing, `Theme ${tk} has all required visual style tokens`);
+}
+
+const zoneKeys = ['tutorial', 'zone_1', 'zone_2', 'zone_3', 'zone_4', 'zone_5'];
+for (const zk of zoneKeys) {
+  const z = ZONES[zk];
+  assert(z !== undefined, `Zone ${zk} exists in ZONES registry`);
+  assert(z.id && z.title && z.badge && z.theme && z.desc, `Zone ${zk} has valid metadata schema`);
+}
 
 console.log(`\n=== TEST SUMMARY: ${passed} PASSED, ${failed} FAILED ===`);
 if (failed > 0) {

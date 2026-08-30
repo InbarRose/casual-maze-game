@@ -2,6 +2,7 @@
   {
     "id": "tutorial_1",
     "category": "tutorial",
+    "zone": "tutorial",
     "title": "First Steps",
     "file": "levels/tutorial_1.json",
     "theme": "dungeon"
@@ -9,6 +10,7 @@
   {
     "id": "tutorial_2",
     "category": "tutorial",
+    "zone": "tutorial",
     "title": "Keys & Colored Gates",
     "file": "levels/tutorial_2.json",
     "theme": "dungeon"
@@ -16,6 +18,7 @@
   {
     "id": "tutorial_3",
     "category": "tutorial",
+    "zone": "tutorial",
     "title": "Mechanisms & Levers",
     "file": "levels/tutorial_3.json",
     "theme": "sunset"
@@ -23,13 +26,15 @@
   {
     "id": "tutorial_4",
     "category": "tutorial",
+    "zone": "tutorial",
     "title": "Bridges & Elevation",
     "file": "levels/tutorial_4.json",
-    "theme": "emerald"
+    "theme": "jungle"
   },
   {
     "id": "tutorial_5",
     "category": "tutorial",
+    "zone": "tutorial",
     "title": "The Shrouded Path",
     "file": "levels/tutorial_5.json",
     "theme": "dungeon"
@@ -37,6 +42,7 @@
   {
     "id": "tutorial_6",
     "category": "tutorial",
+    "zone": "tutorial",
     "title": "Master's Trial",
     "file": "levels/tutorial_6.json",
     "theme": "sunset"
@@ -44,6 +50,7 @@
   {
     "id": "1",
     "category": "campaign",
+    "zone": "zone_1",
     "title": "The Training Hall",
     "file": "levels/level_1.json",
     "theme": "dungeon"
@@ -51,20 +58,23 @@
   {
     "id": "2",
     "category": "campaign",
+    "zone": "zone_1",
     "title": "The Overpass",
     "file": "levels/level_2.json",
-    "theme": "emerald"
+    "theme": "dungeon"
   },
   {
     "id": "3",
     "category": "campaign",
+    "zone": "zone_1",
     "title": "The Lever Crypt",
     "file": "levels/level_3.json",
-    "theme": "sunset"
+    "theme": "dungeon"
   },
   {
     "id": "4",
     "category": "campaign",
+    "zone": "zone_1",
     "title": "Sky Bridges & Crossroads",
     "file": "levels/level_4.json",
     "theme": "dungeon"
@@ -72,8 +82,49 @@
   {
     "id": "5",
     "category": "campaign",
+    "zone": "zone_1",
     "title": "The Sunken Vault",
     "file": "levels/level_5.json",
     "theme": "dungeon"
+  },
+  {
+    "id": "6",
+    "category": "campaign",
+    "zone": "zone_2",
+    "title": "The Canopy Crossing",
+    "file": "levels/level_6.json",
+    "theme": "jungle"
+  },
+  {
+    "id": "7",
+    "category": "campaign",
+    "zone": "zone_2",
+    "title": "The Vine Crypt",
+    "file": "levels/level_7.json",
+    "theme": "jungle"
+  },
+  {
+    "id": "8",
+    "category": "campaign",
+    "zone": "zone_2",
+    "title": "Heart of the Overgrowth",
+    "file": "levels/level_8.json",
+    "theme": "jungle"
+  },
+  {
+    "id": "9",
+    "category": "campaign",
+    "zone": "zone_3",
+    "title": "The Magma Chasm",
+    "file": "levels/level_9.json",
+    "theme": "lava"
+  },
+  {
+    "id": "10",
+    "category": "campaign",
+    "zone": "zone_3",
+    "title": "The Obsidian Vault",
+    "file": "levels/level_10.json",
+    "theme": "lava"
   }
 ]
