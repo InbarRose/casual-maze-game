@@ -112,10 +112,15 @@ casual-maze-game/
   },
   "config": {
     "fogOfWar": true,
+    "mapRevealed": false,
     "viewRadius": 6,
     "allowFreePan": true,
     "tileSize": 32,
     "theme": "dungeon"
+  },
+  "help": {
+    "title": "Level Objective",
+    "message": "Actionable guidance or hint displayed in player HUD banner."
   },
   "spawn": {
     "x": 2,
