@@ -120,6 +120,12 @@ export class LevelLoader {
         overhead: this.normalizeGrid(raw.layers?.overhead, width, height, 0),
       },
       entities: Array.isArray(raw.entities) ? raw.entities.map(e => ({ ...e })) : [],
+      testSpawn: raw.testSpawn ? {
+        x: Number(raw.testSpawn.x ?? raw.spawn?.x ?? 1),
+        y: Number(raw.testSpawn.y ?? raw.spawn?.y ?? 1),
+        elevation: Number(raw.testSpawn.elevation ?? 0),
+      } : undefined,
+      testInventory: Array.isArray(raw.testInventory) ? [...raw.testInventory] : undefined,
     };
 
     return normalized;

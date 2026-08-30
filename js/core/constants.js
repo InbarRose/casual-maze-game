@@ -68,6 +68,25 @@ export const KEY_COLORS = Object.freeze({
   PURPLE: '#a855f7',
 });
 
+export const KEY_COLOR_PRESETS = Object.freeze([
+  { id: 'gold', name: 'Golden Key', color: '#fbbf24', label: 'Gold' },
+  { id: 'red', name: 'Ruby Key', color: '#f43f5e', label: 'Ruby (Red)' },
+  { id: 'blue', name: 'Sapphire Key', color: '#38bdf8', label: 'Sapphire (Blue)' },
+  { id: 'green', name: 'Emerald Key', color: '#34d399', label: 'Emerald (Green)' },
+  { id: 'purple', name: 'Amethyst Key', color: '#a855f7', label: 'Amethyst (Purple)' },
+]);
+
+export const LEVER_TILE_OPTIONS = Object.freeze([
+  { value: 0, label: 'Floor (Open / Walkable)' },
+  { value: 1, label: 'Wall (Solid Barrier)' },
+  { value: 'B_EW', label: 'Bridge EW' },
+  { value: 'B_NS', label: 'Bridge NS' },
+  { value: 'R_N', label: 'Ramp North' },
+  { value: 'R_S', label: 'Ramp South' },
+  { value: 'R_E', label: 'Ramp East' },
+  { value: 'R_W', label: 'Ramp West' },
+]);
+
 export const DEFAULTS = Object.freeze({
   TILE_SIZE: 32,
   VIEW_RADIUS: 6,

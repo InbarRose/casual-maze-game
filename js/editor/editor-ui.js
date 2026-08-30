@@ -33,6 +33,8 @@ export class EditorUI {
     this.initKeyboardShortcuts();
     this.initProjectsModal();
     this.initValidationModal();
+    this.initPlaytestModal();
+    this.initGuideModal();
     this.pushHistory();
     this.updateValidationState();
   }
@@ -116,6 +118,23 @@ export class EditorUI {
         this.editorCanvas.startTargetPickMode(lever);
         this.showToast('Click any tile on canvas to link to this lever!', 'info');
       },
+      onTestToggle: (lever) => {
+        lever.state = !lever.state;
+        for (const target of (lever.targets || [])) {
+          if (target.action === 'toggle_tile' || !target.action) {
+            const layerName = target.layer === 'overhead' ? 'overhead' : 'ground';
+            const layer = this.level.layers[layerName];
+            if (layer && layer[target.y] && layer[target.y][target.x] !== undefined) {
+              layer[target.y][target.x] = lever.state ? (target.stateA ?? 0) : (target.stateB ?? 1);
+            }
+          }
+        }
+        this.pushHistory();
+        this.autoSave();
+        this.updateValidationState();
+        this.editorCanvas.render();
+        this.showToast(`Mechanism "${lever.name || lever.id}" toggled to ${lever.state ? 'ACTIVE' : 'INACTIVE'}!`, 'info');
+      },
     });
   }
 
@@ -130,7 +149,22 @@ export class EditorUI {
       });
     }
 
-    // 2. Layer Switcher Tabs
+    // 2. Visual Theme & Tileset Quick Switcher
+    const quickTheme = document.getElementById('quick-theme-select');
+    if (quickTheme) {
+      quickTheme.value = this.level.config.theme || 'dungeon';
+      quickTheme.addEventListener('change', () => {
+        this.level.config.theme = quickTheme.value;
+        const setTheme = document.getElementById('set-theme');
+        if (setTheme) setTheme.value = quickTheme.value;
+        this.pushHistory();
+        this.autoSave();
+        this.editorCanvas.render();
+        this.showToast(`Tileset switched to ${quickTheme.options[quickTheme.selectedIndex].text}!`, 'info');
+      });
+    }
+
+    // 3. Layer Switcher Tabs
     const tabGround = document.getElementById('tab-layer-ground');
     const tabOverhead = document.getElementById('tab-layer-overhead');
     const statusLayer = document.getElementById('status-layer');
@@ -147,7 +181,7 @@ export class EditorUI {
     tabGround.addEventListener('click', () => setLayer(LAYERS.GROUND));
     tabOverhead.addEventListener('click', () => setLayer(LAYERS.OVERHEAD));
 
-    // 3. Palette Buttons Binding
+    // 4. Palette Buttons Binding
     const paletteButtons = document.querySelectorAll('.palette-btn[data-tool], .palette-btn[data-tile], .palette-btn[data-entity]');
     paletteButtons.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -157,6 +191,8 @@ export class EditorUI {
         const tool = btn.dataset.tool;
         const tile = btn.dataset.tile;
         const entity = btn.dataset.entity;
+        const color = btn.dataset.color;
+        const name = btn.dataset.name;
 
         if (tool) {
           this.editorCanvas.setTool(tool);
@@ -165,13 +201,16 @@ export class EditorUI {
           const parsedTile = !isNaN(Number(tile)) ? Number(tile) : tile;
           this.editorCanvas.setSelectedTile(parsedTile);
         } else if (entity) {
-          this.editorCanvas.setSelectedEntity(entity);
+          this.editorCanvas.setSelectedEntity(entity, color ? { color, name } : null);
         }
       });
     });
 
-    // 4. Header Actions
+    // 5. Header Actions
     document.getElementById('btn-playtest')?.addEventListener('click', () => this.playTest());
+    document.getElementById('btn-playtest-opts')?.addEventListener('click', () => this.openPlaytestModal());
+    document.getElementById('btn-guide')?.addEventListener('click', () => this.openGuideModal());
+
     document.getElementById('btn-export-json')?.addEventListener('click', () => {
       const report = LevelValidator.validate(this.level);
       if (!report.valid) {
@@ -289,6 +328,10 @@ export class EditorUI {
         document.getElementById('tab-layer-overhead')?.click();
       } else if (e.key.toLowerCase() === 'v') {
         this.openValidationModal();
+      } else if (e.key.toLowerCase() === 't') {
+        this.openPlaytestModal();
+      } else if (e.key.toLowerCase() === 'h' || e.key === '?') {
+        this.openGuideModal();
       }
     });
   }
@@ -690,12 +733,14 @@ export class EditorUI {
     this.editorCanvas.centerInViewport();
     const titleInput = document.getElementById('level-title-input');
     if (titleInput) titleInput.value = this.level.title;
+    const quickTheme = document.getElementById('quick-theme-select');
+    if (quickTheme && this.level.config?.theme) quickTheme.value = this.level.config.theme;
     this.pushHistory();
     this.autoSave();
     this.updateValidationState();
   }
 
-  playTest() {
+  playTest(customTestParams = null) {
     const report = LevelValidator.validate(this.level);
     if (!report.valid) {
       if (!confirm('⚠️ This maze has validation errors and may be unsolvable. Do you want to playtest anyway?')) {
@@ -703,8 +748,140 @@ export class EditorUI {
         return;
       }
     }
-    StorageManager.saveCustomMaze(this.level);
+
+    const payload = JSON.parse(JSON.stringify(this.level));
+    if (customTestParams) {
+      if (customTestParams.testSpawn) {
+        payload.testSpawn = customTestParams.testSpawn;
+      }
+      if (customTestParams.testInventory) {
+        payload.testInventory = customTestParams.testInventory;
+      }
+    } else if (this.level.testSpawn) {
+      payload.testSpawn = this.level.testSpawn;
+    }
+
+    StorageManager.saveCustomMaze(payload);
     window.location.href = 'maze.html?mode=custom';
+  }
+
+  /* =========================================================
+   * PLAYTEST OPTIONS & INVENTORY PRELOAD MODAL
+   * ========================================================= */
+  initPlaytestModal() {
+    const modal = document.getElementById('playtest-modal');
+    const btnClose = document.getElementById('playtest-btn-close');
+    const btnCancel = document.getElementById('playtest-btn-cancel');
+    const btnLaunch = document.getElementById('playtest-btn-launch');
+    const btnSelectAll = document.getElementById('btn-inv-select-all');
+    const btnClear = document.getElementById('btn-inv-clear');
+
+    btnClose?.addEventListener('click', () => modal?.classList.remove('active'));
+    btnCancel?.addEventListener('click', () => modal?.classList.remove('active'));
+
+    btnSelectAll?.addEventListener('click', () => {
+      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]');
+      chks?.forEach(c => { c.checked = true; });
+    });
+
+    btnClear?.addEventListener('click', () => {
+      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]');
+      chks?.forEach(c => { c.checked = false; });
+    });
+
+    btnLaunch?.addEventListener('click', () => {
+      const radChoice = modal?.querySelector('input[name="test-spawn-choice"]:checked')?.value;
+      let testSpawn = null;
+
+      if (radChoice === 'custom') {
+        const x = parseInt(document.getElementById('test-spawn-x')?.value, 10) || this.level.spawn?.x || 1;
+        const y = parseInt(document.getElementById('test-spawn-y')?.value, 10) || this.level.spawn?.y || 1;
+        const elev = parseInt(document.getElementById('test-spawn-elev')?.value, 10) || 0;
+        testSpawn = { x, y, elevation: elev };
+      }
+
+      // Collect checked test inventory keys
+      const testInventory = [];
+      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]:checked');
+      chks?.forEach(c => {
+        testInventory.push(c.value);
+      });
+
+      modal?.classList.remove('active');
+      this.playTest({ testSpawn, testInventory });
+    });
+  }
+
+  openPlaytestModal() {
+    const modal = document.getElementById('playtest-modal');
+    if (!modal) return;
+
+    // Set default spawn label
+    const lblDefault = document.getElementById('lbl-spawn-default');
+    if (lblDefault && this.level.spawn) {
+      lblDefault.textContent = `(${this.level.spawn.x}, ${this.level.spawn.y}) • ${this.level.spawn.elevation === 1 ? 'Overhead' : 'Ground'}`;
+    }
+
+    // Set custom coordinates inputs
+    const inputX = document.getElementById('test-spawn-x');
+    const inputY = document.getElementById('test-spawn-y');
+    const selElev = document.getElementById('test-spawn-elev');
+
+    const sourceSpawn = this.level.testSpawn || this.level.spawn || { x: 1, y: 1, elevation: 0 };
+    if (inputX) inputX.value = sourceSpawn.x;
+    if (inputY) inputY.value = sourceSpawn.y;
+    if (selElev) selElev.value = sourceSpawn.elevation || 0;
+
+    const radCustom = document.getElementById('rad-spawn-custom');
+    const radDefault = document.getElementById('rad-spawn-default');
+    if (this.level.testSpawn && radCustom) {
+      radCustom.checked = true;
+    } else if (radDefault) {
+      radDefault.checked = true;
+    }
+
+    // Render key inventory checklist
+    const container = document.getElementById('test-inventory-checklist');
+    if (container) {
+      container.innerHTML = '';
+      const existingKeys = (this.level.entities || []).filter(e => e.type === 'key');
+
+      if (existingKeys.length === 0) {
+        container.innerHTML = '<span style="font-size:0.75rem; color:var(--text-muted); padding:0.4rem;">No keys placed in labyrinth yet.</span>';
+      } else {
+        existingKeys.forEach(k => {
+          const card = document.createElement('label');
+          card.className = 'key-chk-card';
+          card.innerHTML = `
+            <input type="checkbox" value="${k.id}" />
+            <span style="color:${k.color || '#fbbf24'};">🔑</span>
+            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${this.escapeHtml(k.name || k.id)}</span>
+          `;
+          container.appendChild(card);
+        });
+      }
+    }
+
+    modal.classList.add('active');
+  }
+
+  /* =========================================================
+   * ARCHITECT HANDBOOK & GUIDE MODAL
+   * ========================================================= */
+  initGuideModal() {
+    const modal = document.getElementById('guide-modal');
+    const btnClose = document.getElementById('guide-btn-close');
+    const btnDismiss = document.getElementById('guide-btn-dismiss');
+
+    btnClose?.addEventListener('click', () => modal?.classList.remove('active'));
+    btnDismiss?.addEventListener('click', () => modal?.classList.remove('active'));
+  }
+
+  openGuideModal() {
+    const modal = document.getElementById('guide-modal');
+    if (modal) {
+      modal.classList.add('active');
+    }
   }
 
   autoSave() {

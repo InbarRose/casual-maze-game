@@ -5,6 +5,8 @@
   "private": true,
   "description": "Casual Maze Game - Top-Down Puzzle Labyrinth Engine",
   "scripts": {
+    "start": "npx live-server --port=8000 --cors",
+    "serve": "npx serve -l 8000 .",
     "test": "node test-suite.mjs"
   }
 }

@@ -2,7 +2,7 @@
  * Test Suite for Casual Maze Game Engine
  */
 
-import { TILES, ELEVATION, FOG_STATE, ENTITY_TYPES, THEMES, ZONES } from './js/core/constants.js';
+import { TILES, ELEVATION, FOG_STATE, ENTITY_TYPES, THEMES, ZONES, KEY_COLOR_PRESETS, LEVER_TILE_OPTIONS } from './js/core/constants.js';
 import { PRNG } from './js/core/prng.js';
 import { EventBus } from './js/core/events.js';
 import { CollisionEngine } from './js/engine/collision.js';
@@ -11,6 +11,7 @@ import { Camera } from './js/engine/camera.js';
 import { Key } from './js/entities/key.js';
 import { Door } from './js/entities/door.js';
 import { Lever } from './js/entities/lever.js';
+import { Player } from './js/entities/player.js';
 import { LevelLoader } from './js/levels/level-loader.js';
 import { CAMPAIGN_LEVELS, TUTORIAL_LEVELS } from './js/levels/default-levels.js';
 import { GameLoop } from './js/engine/game-loop.js';
@@ -606,6 +607,88 @@ for (const zk of zoneKeys) {
   assert(z !== undefined, `Zone ${zk} exists in ZONES registry`);
   assert(z.id && z.title && z.badge && z.theme && z.desc, `Zone ${zk} has valid metadata schema`);
 }
+
+// 13. Test Editor Enhancements, Color Presets, Lever Target State Transitions & Playtest Suite
+console.log('\n[13] Testing Editor Enhancements, Color Presets, Lever Target State Transitions & Playtest Suite...');
+
+// 13a. Key color presets & lever tile options
+assert(KEY_COLOR_PRESETS.length === 5, 'KEY_COLOR_PRESETS contains 5 standard palette colors');
+assert(KEY_COLOR_PRESETS.some(p => p.id === 'red'), 'KEY_COLOR_PRESETS contains Ruby Red');
+assert(KEY_COLOR_PRESETS.some(p => p.id === 'blue'), 'KEY_COLOR_PRESETS contains Sapphire Blue');
+assert(KEY_COLOR_PRESETS.some(p => p.id === 'green'), 'KEY_COLOR_PRESETS contains Emerald Green');
+assert(KEY_COLOR_PRESETS.some(p => p.id === 'purple'), 'KEY_COLOR_PRESETS contains Amethyst Purple');
+assert(KEY_COLOR_PRESETS.some(p => p.id === 'gold'), 'KEY_COLOR_PRESETS contains Gold');
+
+assert(LEVER_TILE_OPTIONS.length >= 8, 'LEVER_TILE_OPTIONS defines Floor, Wall, Bridges and Ramps');
+
+// 13b. Test normalizeLevel with testSpawn & testInventory
+const rawLevelWithTestParams = {
+  id: 'custom_test_level',
+  dimensions: { width: 11, height: 11 },
+  spawn: { x: 1, y: 1, elevation: 0 },
+  testSpawn: { x: 5, y: 5, elevation: 1 },
+  testInventory: ['key_red', 'key_blue'],
+  layers: { ground: [], overhead: [] },
+  entities: [
+    { id: 'key_red', type: 'key', x: 2, y: 2, color: '#f43f5e', name: 'Ruby Key' },
+    { id: 'key_blue', type: 'key', x: 3, y: 3, color: '#38bdf8', name: 'Sapphire Key' },
+  ],
+};
+const normTestLvl = LevelLoader.normalizeLevel(rawLevelWithTestParams);
+assert(normTestLvl.testSpawn && normTestLvl.testSpawn.x === 5 && normTestLvl.testSpawn.y === 5 && normTestLvl.testSpawn.elevation === 1, 'normalizeLevel preserves testSpawn coordinates and elevation');
+assert(Array.isArray(normTestLvl.testInventory) && normTestLvl.testInventory.length === 2 && normTestLvl.testInventory.includes('key_red'), 'normalizeLevel preserves testInventory array');
+
+// 13c. Test Player initialization with custom inventory and test spawn
+const testPlayer = new Player(normTestLvl.testSpawn.x, normTestLvl.testSpawn.y, normTestLvl.testSpawn.elevation, 32, normTestLvl.testInventory);
+assert(testPlayer.gridX === 5 && testPlayer.gridY === 5, 'Player initialized at testSpawn coordinates (5, 5)');
+assert(testPlayer.elevation === 1, 'Player initialized at testSpawn elevation 1 (Overhead)');
+assert(testPlayer.inventory.length === 2 && testPlayer.inventory.includes('key_red') && testPlayer.inventory.includes('key_blue'), 'Player initialized with testInventory keys');
+
+testPlayer.reset(normTestLvl.testSpawn.x, normTestLvl.testSpawn.y, normTestLvl.testSpawn.elevation, normTestLvl.testInventory);
+assert(testPlayer.inventory.includes('key_blue') && testPlayer.gridX === 5, 'Player reset preserves test starting inventory and spawn position');
+
+// 13d. Test Multi-Target Lever Mechanism with State A & State B Transitions
+const multiTargetLevel = {
+  dimensions: { width: 7, height: 7 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 1, 0, 0, 0, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1]
+    ],
+    overhead: [
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0, 0, 0]
+    ]
+  }
+};
+
+const multiTargetLever = new Lever({
+  id: 'multi_lever',
+  x: 1,
+  y: 1,
+  state: false,
+  targets: [
+    { action: 'toggle_tile', layer: 'ground', x: 2, y: 1, stateA: 0, stateB: 1 },
+    { action: 'toggle_tile', layer: 'overhead', x: 4, y: 1, stateA: 'B_EW', stateB: 0 }
+  ]
+});
+
+assert(multiTargetLevel.layers.ground[1][2] === 1, 'Target 1 initially Wall (1)');
+assert(multiTargetLevel.layers.overhead[1][4] === 0, 'Target 2 initially Empty (0)');
+
+multiTargetLever.toggle(multiTargetLevel);
+assert(multiTargetLever.state === true, 'Lever toggled to active');
+assert(multiTargetLevel.layers.ground[1][2] === 0, 'Target 1 transitioned to Floor (0) in State A');
+assert(multiTargetLevel.layers.overhead[1][4] === 'B_EW', 'Target 2 transitioned to Bridge B_EW in State A');
+
+multiTargetLever.toggle(multiTargetLevel);
+assert(multiTargetLever.state === false, 'Lever toggled back to inactive');
+assert(multiTargetLevel.layers.ground[1][2] === 1, 'Target 1 reverted to Wall (1) in State B');
+assert(multiTargetLevel.layers.overhead[1][4] === 0, 'Target 2 reverted to Empty (0) in State B');
 
 console.log(`\n=== TEST SUMMARY: ${passed} PASSED, ${failed} FAILED ===`);
 if (failed > 0) {

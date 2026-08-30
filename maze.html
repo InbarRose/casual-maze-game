@@ -208,6 +208,15 @@
     if (isCustomMode) {
       const hudBtnEditor = document.getElementById('hud-btn-editor');
       if (hudBtnEditor) hudBtnEditor.style.display = 'inline-flex';
+      if ((currentLevel.testSpawn || (currentLevel.testInventory && currentLevel.testInventory.length > 0)) && tutorialBadgeEl) {
+        tutorialBadgeEl.style.display = 'inline-block';
+        tutorialBadgeEl.style.background = 'rgba(244, 63, 94, 0.2)';
+        tutorialBadgeEl.style.borderColor = 'var(--rose)';
+        tutorialBadgeEl.style.color = 'var(--rose)';
+        const spawnLabel = currentLevel.testSpawn ? ` (${currentLevel.testSpawn.x}, ${currentLevel.testSpawn.y})` : '';
+        const invLabel = currentLevel.testInventory?.length ? ` + ${currentLevel.testInventory.length} Key${currentLevel.testInventory.length > 1 ? 's' : ''}` : '';
+        tutorialBadgeEl.textContent = `🧪 Test Spawn${spawnLabel}${invLabel}`;
+      }
     }
 
     if (isTutorial && tutorialBadgeEl) {

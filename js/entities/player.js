@@ -12,7 +12,7 @@ export class Player {
    * @param {number} [startElevation=0]
    * @param {number} [tileSize=32]
    */
-  constructor(startX = 1, startY = 1, startElevation = 0, tileSize = 32) {
+  constructor(startX = 1, startY = 1, startElevation = 0, tileSize = 32, initialInventory = []) {
     this.gridX = startX;
     this.gridY = startY;
     this.fromGridX = startX;
@@ -27,7 +27,7 @@ export class Player {
     this.worldX = startX * tileSize + tileSize / 2;
     this.worldY = startY * tileSize + tileSize / 2;
 
-    this.inventory = []; // Array of key IDs e.g. ["key_gold_1"]
+    this.inventory = Array.isArray(initialInventory) ? [...initialInventory] : []; // Array of key IDs e.g. ["key_gold_1"]
     this.facing = 'south'; // 'north' | 'south' | 'east' | 'west'
 
     this.isMoving = false;
@@ -44,8 +44,9 @@ export class Player {
    * @param {number} spawnX
    * @param {number} spawnY
    * @param {number} elevation
+   * @param {string[]} [initialInventory=[]]
    */
-  reset(spawnX, spawnY, elevation = 0) {
+  reset(spawnX, spawnY, elevation = 0, initialInventory = []) {
     this.gridX = spawnX;
     this.gridY = spawnY;
     this.fromGridX = spawnX;
@@ -58,7 +59,7 @@ export class Player {
     this.worldX = spawnX * this.tileSize + this.tileSize / 2;
     this.worldY = spawnY * this.tileSize + this.tileSize / 2;
 
-    this.inventory = [];
+    this.inventory = Array.isArray(initialInventory) ? [...initialInventory] : [];
     this.facing = 'south';
     this.isMoving = false;
     this.moveProgress = 0;
