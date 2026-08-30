@@ -173,9 +173,53 @@ export class LevelValidator {
         });
       }
 
-      // Check if any keys or doors are unreachable
+      // Check Key-Before-Gate Dependencies & Unreachable Keys
+      for (const door of doorEntities) {
+        if (door.requiresKey && keyEntities.has(door.requiresKey)) {
+          if (!reachability.reachableKeys.has(door.requiresKey)) {
+            errors.push({
+              message: `Door "${door.id}" at (${door.x}, ${door.y}) requires key "${door.requiresKey}", but the key is unreachable before unlocking this door (key is behind the door or blocked).`,
+              entityId: door.id,
+              x: door.x,
+              y: door.y,
+            });
+          }
+        }
+      }
+
+      // Check for Bypassed / Redundant Doors (doors that can be ignored to reach the exit)
+      if (reachability.exitReached) {
+        for (const door of doorEntities) {
+          if (door.requiresKey && keyEntities.has(door.requiresKey)) {
+            const bypassCheck = this.analyzeReachability(level, keyEntities, doorEntities, new Set([door.id]));
+            if (bypassCheck.exitReached) {
+              warnings.push({
+                message: `Door "${door.id}" (${door.color || 'gate'}) at (${door.x}, ${door.y}) can be bypassed without unlocking it to beat the level.`,
+                entityId: door.id,
+                x: door.x,
+                y: door.y,
+              });
+            }
+          }
+        }
+      }
+
+      // Check for Unused Keys
+      const keysUsedByDoors = new Set(doorEntities.map(d => d.requiresKey).filter(Boolean));
       for (const [keyId, keyEntity] of keyEntities.entries()) {
-        if (!reachability.reachableKeys.has(keyId)) {
+        if (!keysUsedByDoors.has(keyId)) {
+          warnings.push({
+            message: `Key "${keyEntity.name || keyId}" at (${keyEntity.x}, ${keyEntity.y}) is not required by any door.`,
+            entityId: keyId,
+            x: keyEntity.x,
+            y: keyEntity.y,
+          });
+        }
+      }
+
+      // Check for Unreachable Keys (that weren't already flagged in door error)
+      for (const [keyId, keyEntity] of keyEntities.entries()) {
+        if (!reachability.reachableKeys.has(keyId) && !keysUsedByDoors.has(keyId)) {
           warnings.push({
             message: `Key "${keyEntity.name || keyId}" at (${keyEntity.x}, ${keyEntity.y}) is unreachable.`,
             entityId: keyId,
@@ -206,8 +250,12 @@ export class LevelValidator {
 
   /**
    * BFS Pathfinding simulating player movement, elevation changes, and key unlocks
+   * @param {object} level
+   * @param {Map<string, object>} keyEntities
+   * @param {Array<object>} doorEntities
+   * @param {Set<string>} [lockedDoorIds] Set of door IDs forbidden to unlock
    */
-  static analyzeReachability(level, keyEntities, doorEntities) {
+  static analyzeReachability(level, keyEntities, doorEntities, lockedDoorIds = new Set()) {
     const { width, height } = level.dimensions;
     const spawn = level.spawn;
     const exit = level.exit;
@@ -222,10 +270,18 @@ export class LevelValidator {
 
     const collectedKeys = new Set();
     const reachableKeys = new Set();
-    const visitedStates = new Set(); // state key: x,y,elevation,keysSortedString
+    const visitedStates = new Set();
 
     let exitReached = false;
     const reachableTiles = new Set(); // "x,y"
+
+    // Construct entity list where lockedDoorIds are forced closed with a non-existent key
+    const testEntities = (level.entities || []).map(e => {
+      if (e.type === ENTITY_TYPES.DOOR && lockedDoorIds.has(e.id)) {
+        return { ...e, isOpen: false, requiresKey: '__NEVER_UNLOCKABLE__' };
+      }
+      return { ...e };
+    });
 
     // Multi-pass BFS: whenever a new key is collected, previously blocked doors might now open
     let keysChanged = true;
@@ -281,7 +337,7 @@ export class LevelValidator {
             ny,
             elevation,
             level,
-            level.entities || [],
+            testEntities,
             Array.from(collectedKeys)
           );
 

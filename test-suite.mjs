@@ -477,6 +477,72 @@ const badLeverLevel = {
 const badLeverReport = LevelValidator.validate(badLeverLevel);
 assert(badLeverReport.valid === false && badLeverReport.errors.some(e => e.message.includes('out-of-bounds')), 'LevelValidator catches out-of-bounds lever target');
 
+// 9f. Test Bypassed Gate Warning (gate that can be ignored to reach the exit)
+const bypassedDoorLevel = {
+  dimensions: { width: 9, height: 9 },
+  spawn: { x: 1, y: 1, elevation: 0 },
+  exit: { x: 7, y: 7 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 0, 1, 0, 1, 0, 1],
+      [1, 0, 1, 0, 0, 0, 1, 0, 1],
+      [1, 0, 1, 1, 1, 1, 1, 0, 1],
+      [1, 0, 0, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1, 1, 1]
+    ],
+    overhead: Array.from({ length: 9 }, () => Array(9).fill(0))
+  },
+  entities: [
+    { id: 'key_side', type: 'key', x: 1, y: 3, color: '#fbbf24', name: 'Side Key' },
+    { id: 'door_side', type: 'door', x: 3, y: 3, requiresKey: 'key_side', color: '#fbbf24' }
+  ]
+};
+const bypassedReport = LevelValidator.validate(bypassedDoorLevel);
+assert(bypassedReport.valid === true, 'Bypassed door level is solvable');
+assert(bypassedReport.warnings.some(w => w.message.includes('bypassed')), 'LevelValidator warns when a locked gate can be bypassed without unlocking');
+
+// 9g. Test Key-Behind-Door Deadlock (key required to open door is placed behind that very door)
+const deadlockDoorLevel = {
+  dimensions: { width: 7, height: 7 },
+  spawn: { x: 1, y: 1, elevation: 0 },
+  exit: { x: 5, y: 1 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1],
+      [1, 1, 1, 1, 1, 1, 1]
+    ],
+    overhead: Array.from({ length: 7 }, () => Array(7).fill(0))
+  },
+  entities: [
+    { id: 'door_blocker', type: 'door', x: 2, y: 1, requiresKey: 'key_trapped', color: '#f43f5e' },
+    { id: 'key_trapped', type: 'key', x: 4, y: 1, color: '#f43f5e', name: 'Trapped Key' }
+  ]
+};
+const deadlockReport = LevelValidator.validate(deadlockDoorLevel);
+assert(deadlockReport.valid === false, 'Key-behind-door deadlock is flagged as invalid');
+assert(deadlockReport.errors.some(e => e.message.includes('unreachable before unlocking this door')), 'LevelValidator catches key placed behind the locked door');
+
+// 9h. Test Tutorial 2 Strict Solvability & Key Dependencies
+const tut2 = TUTORIAL_LEVELS[1];
+const tut2Report = LevelValidator.validate(tut2);
+assert(tut2Report.valid === true, 'Redesigned Tutorial 2 passes validation');
+assert(tut2Report.warnings.length === 0, 'Redesigned Tutorial 2 has 0 bypass warnings');
+// Verify red door cannot be bypassed
+const tut2NoRed = LevelValidator.analyzeReachability(tut2, new Map(tut2.entities.filter(e => e.type === 'key').map(k => [k.id, k])), tut2.entities.filter(e => e.type === 'door'), new Set(['door_red_t2']));
+assert(tut2NoRed.exitReached === false, 'Tutorial 2 exit is unreachable if red gate is kept locked');
+// Verify blue door cannot be bypassed
+const tut2NoBlue = LevelValidator.analyzeReachability(tut2, new Map(tut2.entities.filter(e => e.type === 'key').map(k => [k.id, k])), tut2.entities.filter(e => e.type === 'door'), new Set(['door_blue_t2']));
+assert(tut2NoBlue.exitReached === false, 'Tutorial 2 exit is unreachable if blue gate is kept locked');
+
 // 10. Test StorageManager Multi-Project & Draft Persistence
 console.log('\n[10] Testing StorageManager Multi-Project & Draft Persistence...');
 const projectData = {

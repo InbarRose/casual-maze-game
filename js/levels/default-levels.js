@@ -3811,7 +3811,7 @@ export const TUTORIAL_LEVELS = [
     },
     help: {
       title: "Color Keys & Gates",
-      message: "Doors are locked! Walk over colored keys to collect them into your inventory. Red keys unlock Red doors, and Blue keys unlock Blue doors."
+      message: "Gates block your path! Collect the Ruby Key in the side corridor to unlock the Red Gate, then find the Sapphire Key to open the Blue Gate to the exit."
     },
     spawn: { x: 1, y: 1, elevation: 0 },
     exit: { x: 9, y: 9 },
@@ -3820,13 +3820,13 @@ export const TUTORIAL_LEVELS = [
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
         [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
         [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
-        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
         [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
-        [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
-        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
-        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1],
         [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
       ],
       overhead: [
@@ -3847,15 +3847,15 @@ export const TUTORIAL_LEVELS = [
       {
         id: "key_red_t2",
         type: "key",
-        x: 1,
-        y: 5,
+        x: 3,
+        y: 3,
         color: "#f43f5e",
         name: "Ruby Key"
       },
       {
         id: "door_red_t2",
         type: "door",
-        x: 5,
+        x: 1,
         y: 5,
         requiresKey: "key_red_t2",
         color: "#f43f5e"
@@ -3863,8 +3863,8 @@ export const TUTORIAL_LEVELS = [
       {
         id: "key_blue_t2",
         type: "key",
-        x: 9,
-        y: 1,
+        x: 7,
+        y: 3,
         color: "#38bdf8",
         name: "Sapphire Key"
       },
@@ -3872,7 +3872,7 @@ export const TUTORIAL_LEVELS = [
         id: "door_blue_t2",
         type: "door",
         x: 7,
-        y: 9,
+        y: 7,
         requiresKey: "key_blue_t2",
         color: "#38bdf8"
       }
