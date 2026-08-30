@@ -25,6 +25,14 @@ This document outlines the standard operating procedures, architectural principl
 * **Test Command**: Always run `npm test` before concluding any task and ensure all tests pass (`0 failed`).
 * **Manual Verification**: When modifying UI, CSS, canvas layout, touch controls, or editor tools, verify them with a local static server (`python -m http.server 8000`) or direct browser testing.
 
+### D. Protected Branch Workflow
+* **Branch-First Development**: Agents must work on dedicated task/feature branches (e.g. `feat/<name>`, `fix/<name>`, `docs/<name>`) to protect the stability of the production `main` branch.
+* **Branch Lifecycle**:
+  1. Create and switch to a descriptive branch before writing code (`git checkout -b <type>/<description>`).
+  2. Make small, focused, atomic commits.
+  3. Validate all automated tests with `npm test`.
+  4. Merge into `main` or provide PR branch when verified.
+
 ---
 
 ## 2. Codebase Architecture & File Structure
@@ -124,6 +132,7 @@ Agents must actively maintain project state documentation:
 ## 5. Agent Checklist for Tasks
 
 Before concluding any task or reporting back to the user, ensure:
+- [ ] Task was developed on a dedicated branch to protect `main`.
 - [ ] Changes are modular and atomic.
 - [ ] Zero server dependencies added (remains 100% static on GitHub Pages).
 - [ ] New logic or entity types are covered by tests in `test-suite.mjs`.
