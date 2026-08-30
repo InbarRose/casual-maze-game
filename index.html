@@ -225,37 +225,93 @@
       </div>
     </section>
 
-    <!-- Campaign Section -->
+    <!-- Zone 1: Whispering Dungeon -->
     <section class="campaign-section">
       <div class="campaign-header">
         <div>
-          <h2 style="font-size: 1.25rem; font-weight: 700;">Campaign Labyrinths</h2>
-          <p style="font-size: 0.85rem;">Play through crafted puzzle levels exploring each core engine mechanic.</p>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text);">🏰 Zone 1: Whispering Dungeon</h2>
+            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: var(--accent); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 1</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Ancient stone corridors exploring multi-elevation crossings, lever mechanisms, and locked crypts.</p>
         </div>
-        <a href="maze.html?id=1" class="btn btn-secondary btn-sm">Play Campaign 1</a>
+        <a href="maze.html?id=1" class="btn btn-secondary btn-sm">Enter Zone 1</a>
       </div>
 
-      <div class="campaign-levels" id="campaign-list">
-        <!-- Injected via JavaScript -->
-        <a href="maze.html?id=1" class="level-pill">
+      <div class="campaign-levels" id="zone-1-list">
+        <a href="maze.html?id=1" class="level-pill" data-id="1">
           <span class="level-number">01</span>
           <span class="level-name">Training Hall</span>
         </a>
-        <a href="maze.html?id=2" class="level-pill">
+        <a href="maze.html?id=2" class="level-pill" data-id="2">
           <span class="level-number">02</span>
           <span class="level-name">The Overpass</span>
         </a>
-        <a href="maze.html?id=3" class="level-pill">
+        <a href="maze.html?id=3" class="level-pill" data-id="3">
           <span class="level-number">03</span>
           <span class="level-name">Lever Crypt</span>
         </a>
-        <a href="maze.html?id=4" class="level-pill">
+        <a href="maze.html?id=4" class="level-pill" data-id="4">
           <span class="level-number">04</span>
           <span class="level-name">Sky Bridges</span>
         </a>
-        <a href="maze.html?id=5" class="level-pill">
+        <a href="maze.html?id=5" class="level-pill" data-id="5">
           <span class="level-number">05</span>
           <span class="level-name">Sunken Vault</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Zone 2: Emerald Jungle -->
+    <section class="campaign-section">
+      <div class="campaign-header">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #34d399;">🌴 Zone 2: Emerald Jungle</h2>
+            <span class="badge" style="background: rgba(52, 211, 153, 0.15); color: #34d399; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 2</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Lush canopy mazes with rope bridge walkways, dense foliage barriers, and multiple colored gates.</p>
+        </div>
+        <a href="maze.html?id=6" class="btn btn-secondary btn-sm">Enter Zone 2</a>
+      </div>
+
+      <div class="campaign-levels" id="zone-2-list">
+        <a href="maze.html?id=6" class="level-pill" data-id="6">
+          <span class="level-number">06</span>
+          <span class="level-name">Canopy Crossing</span>
+        </a>
+        <a href="maze.html?id=7" class="level-pill" data-id="7">
+          <span class="level-number">07</span>
+          <span class="level-name">Vine Crypt</span>
+        </a>
+        <a href="maze.html?id=8" class="level-pill" data-id="8">
+          <span class="level-number">08</span>
+          <span class="level-name">Heart of Jungle</span>
+        </a>
+      </div>
+    </section>
+
+    <!-- Zone 3: Molten Core -->
+    <section class="campaign-section">
+      <div class="campaign-header">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #fb923c;">🌋 Zone 3: Molten Core</h2>
+            <span class="badge" style="background: rgba(249, 115, 22, 0.15); color: #fb923c; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 3</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Intense volcanic vaults with obsidian bridges spanning over magma channels and dynamic switch gates.</p>
+        </div>
+        <a href="maze.html?id=9" class="btn btn-secondary btn-sm">Enter Zone 3</a>
+      </div>
+
+      <div class="campaign-levels" id="zone-3-list">
+        <a href="maze.html?id=9" class="level-pill" data-id="9">
+          <span class="level-number">09</span>
+          <span class="level-name">Magma Chasm</span>
+        </a>
+        <a href="maze.html?id=10" class="level-pill" data-id="10">
+          <span class="level-number">10</span>
+          <span class="level-name">Obsidian Vault</span>
         </a>
       </div>
     </section>
@@ -342,11 +398,11 @@
       }
     });
 
-    // 2. Load Campaign Progress
+    // 2. Load Campaign / Zone Progress
     const campaignProgress = StorageManager.loadCampaignProgress();
-    const campaignPills = document.querySelectorAll('#campaign-list .level-pill');
-    campaignPills.forEach((pill, idx) => {
-      const levelId = String(idx + 1);
+    const zonePills = document.querySelectorAll('#zone-1-list .level-pill, #zone-2-list .level-pill, #zone-3-list .level-pill');
+    zonePills.forEach(pill => {
+      const levelId = pill.getAttribute('data-id');
       const record = campaignProgress[levelId];
       if (record && record.completed) {
         pill.classList.add('completed');
