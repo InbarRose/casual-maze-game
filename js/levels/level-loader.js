@@ -74,11 +74,23 @@ export class LevelLoader {
       cleanId = targetId;
     }
 
-    // 1. Try fetching JSON file from /levels directory
+    // 1. Try fetching JSON file from /levels subdirectories
     if (typeof fetch === 'function') {
       const fileNames = isTutorialMode
-        ? [`levels/tutorial_${cleanId}.json`, `./levels/tutorial_${cleanId}.json`]
-        : [`levels/level_${cleanId}.json`, `./levels/level_${cleanId}.json`];
+        ? [
+            `levels/tutorial/tutorial_${cleanId}.json`,
+            `./levels/tutorial/tutorial_${cleanId}.json`,
+            `levels/tutorial_${cleanId}.json`
+          ]
+        : [
+            `levels/zone_1/level_${cleanId}.json`,
+            `levels/zone_2/level_${cleanId}.json`,
+            `levels/zone_3/level_${cleanId}.json`,
+            `./levels/zone_1/level_${cleanId}.json`,
+            `./levels/zone_2/level_${cleanId}.json`,
+            `./levels/zone_3/level_${cleanId}.json`,
+            `levels/level_${cleanId}.json`
+          ];
 
       for (const fileName of fileNames) {
         try {
