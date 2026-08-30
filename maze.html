@@ -22,12 +22,18 @@
         <a href="index.html" class="btn btn-secondary btn-sm">← Hub</a>
         <a href="editor.html" class="btn btn-secondary btn-sm" id="hud-btn-editor" style="display: none;">🛠️ Editor</a>
         <div class="hud-card">
+          <span class="tutorial-badge" id="hud-tutorial-badge" style="display: none;">🎓 Tutorial</span>
           <span class="hud-title" id="hud-level-title">Loading...</span>
           <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
         </div>
       </div>
 
       <div class="hud-group">
+        <!-- Tutorial Hint Button -->
+        <button id="btn-hint" class="btn btn-secondary btn-sm" title="Toggle Tutorial Objective & Hint" style="display: none;">
+          💡 <span class="hide-mobile">Hint</span>
+        </button>
+
         <!-- Inventory Keys -->
         <div class="hud-card" id="hud-inventory-card" style="display: none;">
           <span style="font-size: 0.8rem; color: var(--text-muted);">Keys:</span>
@@ -49,6 +55,20 @@
         </button>
       </div>
     </header>
+
+    <!-- Floating Tutorial Objective & Hint Card -->
+    <aside class="tutorial-hint-card" id="tutorial-hint-card" style="display: none;">
+      <div class="tutorial-hint-header">
+        <div class="tutorial-hint-title">
+          <span>🎓</span>
+          <span id="hint-title-text">Tutorial Objective</span>
+        </div>
+        <button type="button" class="tutorial-hint-toggle" id="btn-toggle-hint" title="Minimize/Expand Hint">➖</button>
+      </div>
+      <div class="tutorial-hint-body" id="hint-body-text">
+        Follow the corridor to the glowing exit portal.
+      </div>
+    </aside>
 
     <!-- Free-Pan Active Banner -->
     <div class="freepan-banner" id="freepan-banner">
@@ -125,6 +145,7 @@
     // UI elements
     const levelTitleEl = document.getElementById('hud-level-title');
     const elevationEl = document.getElementById('hud-elevation');
+    const tutorialBadgeEl = document.getElementById('hud-tutorial-badge');
     const timerEl = document.getElementById('hud-timer');
     const stepsEl = document.getElementById('hud-steps');
     const inventoryCardEl = document.getElementById('hud-inventory-card');
@@ -136,6 +157,11 @@
     const btnReplay = document.getElementById('btn-replay');
     const btnNextLevel = document.getElementById('btn-next-level');
     const btnDownloadLog = document.getElementById('btn-download-log');
+    const btnHint = document.getElementById('btn-hint');
+    const tutorialHintCard = document.getElementById('tutorial-hint-card');
+    const hintTitleText = document.getElementById('hint-title-text');
+    const hintBodyText = document.getElementById('hint-body-text');
+    const btnToggleHint = document.getElementById('btn-toggle-hint');
 
     let lastRenderedKeyIds = '';
 
@@ -169,12 +195,58 @@
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${tenths}`;
     }
 
-    // Check if in custom playtest mode
+    // Check if in custom playtest mode or tutorial mode
     const urlParams = new URLSearchParams(window.location.search);
     const isCustomMode = urlParams.get('mode') === 'custom' || currentLevel.id === 'custom' || currentLevel.id.startsWith('project_');
+    const isTutorial = currentLevel.id.startsWith('tutorial_') || urlParams.get('mode') === 'tutorial' || urlParams.has('tutorial');
+    const tutorialMatch = currentLevel.id.match(/^tutorial_(\d+)$/i) || (urlParams.get('tutorial') ? [, urlParams.get('tutorial')] : null);
+    const currTutNum = tutorialMatch ? parseInt(tutorialMatch[1], 10) : null;
+
     if (isCustomMode) {
       const hudBtnEditor = document.getElementById('hud-btn-editor');
       if (hudBtnEditor) hudBtnEditor.style.display = 'inline-flex';
+    }
+
+    if (isTutorial && tutorialBadgeEl) {
+      tutorialBadgeEl.style.display = 'inline-block';
+      if (currTutNum) {
+        tutorialBadgeEl.textContent = `🎓 Tutorial ${currTutNum}/6`;
+      }
+    }
+
+    // Initialize Tutorial Hint Banner if help metadata exists
+    if (currentLevel.help && (currentLevel.help.title || currentLevel.help.message)) {
+      if (btnHint) btnHint.style.display = 'inline-flex';
+      if (tutorialHintCard) {
+        tutorialHintCard.style.display = 'block';
+        hintTitleText.textContent = currentLevel.help.title || 'Tutorial Objective';
+        hintBodyText.textContent = currentLevel.help.message || '';
+      }
+    }
+
+    // Toggle hint card expansion/collapse
+    if (btnToggleHint && tutorialHintCard) {
+      btnToggleHint.addEventListener('click', () => {
+        const isMin = tutorialHintCard.classList.toggle('minimized');
+        btnToggleHint.textContent = isMin ? '➕' : '➖';
+      });
+    }
+
+    // Toggle hint card from HUD
+    if (btnHint && tutorialHintCard) {
+      btnHint.addEventListener('click', () => {
+        if (tutorialHintCard.style.display === 'none') {
+          tutorialHintCard.style.display = 'block';
+          tutorialHintCard.classList.remove('minimized');
+          if (btnToggleHint) btnToggleHint.textContent = '➖';
+        } else if (tutorialHintCard.classList.contains('minimized')) {
+          tutorialHintCard.classList.remove('minimized');
+          if (btnToggleHint) btnToggleHint.textContent = '➖';
+        } else {
+          tutorialHintCard.classList.add('minimized');
+          if (btnToggleHint) btnToggleHint.textContent = '➕';
+        }
+      });
     }
 
     // Initialize Game Loop
@@ -206,7 +278,8 @@
                 const key = currentLevel.entities.find(e => e.id === keyId) || { name: 'Key', color: '#fbbf24' };
                 const pill = document.createElement('div');
                 pill.className = 'key-pill';
-                pill.innerHTML = `<span style="color:${key.color};">🔑</span> ${key.name || 'Key'}`;
+                pill.style.borderColor = key.color || '#fbbf24';
+                pill.innerHTML = `<span style="color:${key.color || '#fbbf24'};">🔑</span> ${key.name || 'Key'}`;
                 keysListEl.appendChild(pill);
               }
             } else {
@@ -231,18 +304,41 @@
           document.getElementById('vic-steps').textContent = stats.steps;
           victoryModal.classList.add('active');
 
+          const victorySubtitle = document.getElementById('victory-subtitle');
+
           if (isCustomMode) {
             btnNextLevel.style.display = 'inline-flex';
             btnNextLevel.textContent = '🛠️ Back to Editor';
             btnNextLevel.onclick = () => {
               window.location.href = 'editor.html';
             };
+          } else if (isTutorial && currTutNum) {
+            if (victorySubtitle) {
+              victorySubtitle.textContent = `Tutorial ${currTutNum} conquered! Great job mastering this mechanic.`;
+            }
+            if (currTutNum < 6) {
+              btnNextLevel.style.display = 'inline-flex';
+              btnNextLevel.textContent = `Tutorial ${currTutNum + 1} →`;
+              btnNextLevel.onclick = () => {
+                window.location.href = `maze.html?tutorial=${currTutNum + 1}`;
+              };
+            } else {
+              // Completed all tutorials!
+              if (victorySubtitle) {
+                victorySubtitle.textContent = `🎓 All Tutorials Completed! You are now a Master Maze Explorer.`;
+              }
+              btnNextLevel.style.display = 'inline-flex';
+              btnNextLevel.textContent = '🌟 Start Campaign →';
+              btnNextLevel.onclick = () => {
+                window.location.href = `maze.html?id=1`;
+              };
+            }
           } else {
             // Check if there is a next campaign level
             const currentIdNum = parseInt(currentLevel.id, 10);
             if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 5) {
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = 'Next Level →';
+              btnNextLevel.textContent = `Level ${currentIdNum + 1} →`;
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?id=${currentIdNum + 1}`;
               };

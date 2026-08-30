@@ -53,6 +53,9 @@ export class GameLoop {
     this.fog = this.level.config.fogOfWar
       ? new FogOfWar(this.level.dimensions.width, this.level.dimensions.height)
       : null;
+    if (this.fog && this.level.config.mapRevealed) {
+      this.fog.reset(true);
+    }
     this.renderer = new GameRenderer(mainCanvas);
     this.minimap = new Minimap(minimapCanvas);
 
@@ -233,7 +236,7 @@ export class GameLoop {
     );
     this.initEntities();
     if (this.fog) {
-      this.fog.reset();
+      this.fog.reset(!!this.level.config.mapRevealed);
     }
     this.isWon = false;
     this.elapsedTime = 0;
@@ -604,6 +607,7 @@ export class GameLoop {
     if (this.uiCallbacks.onStateUpdate) {
       this.uiCallbacks.onStateUpdate({
         levelTitle: this.level.title,
+        help: this.level.help || null,
         elevation: this.player.elevation === ELEVATION.OVERHEAD ? 'Bridge (Elevation 1)' : 'Ground Floor',
         keys: this.entities.filter(e => e.type === 'key' && this.player.inventory.includes(e.id)),
         steps: this.player.stepsTaken,

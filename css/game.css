@@ -310,3 +310,87 @@
   text-transform: uppercase;
   margin-top: 0.2rem;
 }
+
+/* Tutorial Hint Card */
+.tutorial-hint-card {
+  position: absolute;
+  top: 4.8rem;
+  left: 1rem;
+  max-width: 380px;
+  background: rgba(22, 27, 34, 0.92);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: var(--radius-md);
+  padding: 0.85rem 1rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 105;
+  transition: all 0.25s ease;
+  animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.tutorial-hint-card.minimized {
+  max-width: 200px;
+  padding: 0.4rem 0.7rem;
+}
+
+.tutorial-hint-card.minimized .tutorial-hint-body {
+  display: none;
+}
+
+.tutorial-hint-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  user-select: none;
+}
+
+.tutorial-hint-title {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: var(--accent);
+}
+
+.tutorial-hint-toggle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 0.15rem;
+  font-size: 0.8rem;
+  line-height: 1;
+  border-radius: var(--radius-sm);
+  transition: color 0.15s;
+}
+
+.tutorial-hint-toggle:hover {
+  color: var(--text);
+}
+
+.tutorial-hint-body {
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--text);
+  margin-top: 0.45rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 0.45rem;
+}
+
+.tutorial-badge {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: var(--radius-full);
+  background: rgba(251, 191, 36, 0.15);
+  border: 1px solid rgba(251, 191, 36, 0.35);
+  color: var(--gold);
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
