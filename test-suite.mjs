@@ -153,6 +153,37 @@ assert(!moveIntoLockedDoor.allowed && moveIntoLockedDoor.reason === 'door_locked
 const moveIntoDoorWithKey = CollisionEngine.checkMove(1, 1, 2, 1, ELEVATION.GROUND, testLevel, testLevel.entities, ['key_1']);
 assert(moveIntoDoorWithKey.allowed && moveIntoDoorWithKey.doorToUnlock !== null, 'Door unlocked when possessing key');
 
+// Test multi-colored doors & keys (Red, Blue, Green)
+const multiDoorLevel = {
+  dimensions: { width: 5, height: 5 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1],
+      [1, 0, 0, 0, 1],
+      [1, 0, 0, 0, 1],
+      [1, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1],
+    ],
+    overhead: Array.from({ length: 5 }, () => Array(5).fill(0)),
+  },
+  entities: []
+};
+const multiKeyEntities = [
+  new Key({ id: 'key_red', x: 0, y: 0, color: '#f43f5e', name: 'Ruby Key' }),
+  new Key({ id: 'key_blue', x: 0, y: 0, color: '#38bdf8', name: 'Sapphire Key' }),
+  new Key({ id: 'key_green', x: 0, y: 0, color: '#34d399', name: 'Emerald Key' }),
+  new Door({ id: 'door_red', x: 2, y: 1, requiresKey: 'key_red', color: '#f43f5e' }),
+  new Door({ id: 'door_blue', x: 3, y: 1, requiresKey: 'key_blue', color: '#38bdf8' }),
+];
+const redDoorWithoutKey = CollisionEngine.checkMove(1, 1, 2, 1, ELEVATION.GROUND, multiDoorLevel, multiKeyEntities, ['key_blue']);
+assert(!redDoorWithoutKey.allowed && redDoorWithoutKey.reason === 'door_locked', 'Red door is NOT unlocked by possessing only Sapphire (Blue) Key');
+
+const redDoorWithCorrectKey = CollisionEngine.checkMove(1, 1, 2, 1, ELEVATION.GROUND, multiDoorLevel, multiKeyEntities, ['key_red']);
+assert(redDoorWithCorrectKey.allowed && redDoorWithCorrectKey.doorToUnlock.id === 'door_red', 'Red door successfully unlocked by Ruby Key');
+
+const blueDoorWithCorrectKey = CollisionEngine.checkMove(2, 1, 3, 1, ELEVATION.GROUND, multiDoorLevel, multiKeyEntities, ['key_red', 'key_blue']);
+assert(blueDoorWithCorrectKey.allowed && blueDoorWithCorrectKey.doorToUnlock.id === 'door_blue', 'Blue door successfully unlocked with matching inventory');
+
 // Test Bridge B_EW on Ground (E-W allowed, N-S blocked)
 const bridgeEWGroundE = CollisionEngine.checkMove(4, 1, 5, 1, ELEVATION.GROUND, testLevel);
 assert(bridgeEWGroundE.allowed, 'B_EW allows Eastward crossing under bridge on Ground');
@@ -250,13 +281,33 @@ lever.toggle(leverLevel);
 assert(lever.state === false, 'Lever toggled back to state false');
 assert(leverLevel.layers.ground[1][2] === 1, 'Target tile reverted to Wall (1)');
 
-// 6. Test Fog of War Raycasting
-console.log('\n[6] Testing Fog of War...');
+// 6. Test Fog of War Raycasting & Level Design Toggles
+console.log('\n[6] Testing Fog of War & Level Design Toggles...');
 const fog = new FogOfWar(10, 10);
 assert(fog.getVisibility(5, 5) === FOG_STATE.UNEXPLORED, 'Initial fog tile is UNEXPLORED');
 fog.update(5, 5, 0, testLevel.layers.ground, testLevel.layers.overhead, 3);
 assert(fog.getVisibility(5, 5) === FOG_STATE.VISIBLE, 'Player position is VISIBLE');
 assert(fog.isExplored(5, 5), 'Player position is marked explored');
+
+// Test mapRevealed mode
+const fogRevealed = new FogOfWar(10, 10);
+fogRevealed.reset(true); // mapStartsRevealed = true
+assert(fogRevealed.getVisibility(0, 0) === FOG_STATE.EXPLORED, 'mapRevealed mode initializes tiles to EXPLORED (1)');
+assert(fogRevealed.getVisibility(9, 9) === FOG_STATE.EXPLORED, 'mapRevealed mode marks entire maze explored');
+fogRevealed.update(2, 2, 0, testLevel.layers.ground, testLevel.layers.overhead, 2);
+assert(fogRevealed.getVisibility(2, 2) === FOG_STATE.VISIBLE, 'Active LoS tile is VISIBLE (2) in mapRevealed mode');
+
+// Test viewRadius field-of-view distance
+const fogFovSmall = new FogOfWar(15, 15);
+const openGround = Array.from({ length: 15 }, () => Array(15).fill(0));
+const emptyOver = Array.from({ length: 15 }, () => Array(15).fill(0));
+fogFovSmall.update(7, 7, 0, openGround, emptyOver, 2);
+assert(fogFovSmall.getVisibility(7, 9) === FOG_STATE.VISIBLE, 'Tile at distance 2 is VISIBLE with viewRadius 2');
+assert(fogFovSmall.getVisibility(7, 11) === FOG_STATE.UNEXPLORED, 'Tile at distance 4 is UNEXPLORED with viewRadius 2');
+
+const fogFovLarge = new FogOfWar(15, 15);
+fogFovLarge.update(7, 7, 0, openGround, emptyOver, 5);
+assert(fogFovLarge.getVisibility(7, 11) === FOG_STATE.VISIBLE, 'Tile at distance 4 is VISIBLE with viewRadius 5');
 
 // 7. Test Camera Viewport Math
 console.log('\n[7] Testing Camera Viewport Culling...');
@@ -453,6 +504,24 @@ const deleted = StorageManager.deleteProject('test_project_alpha');
 assert(deleted === true, 'StorageManager.deleteProject returns true');
 const afterDeleteList = StorageManager.listProjects();
 assert(!afterDeleteList.some(p => p.id === 'test_project_alpha'), 'Deleted project no longer in listProjects');
+
+// Test Tutorial Progress Storage
+StorageManager.saveTutorialProgress('tutorial_1', { time: 4200, steps: 12 });
+const loadedTutProg = StorageManager.loadTutorialProgress();
+assert(loadedTutProg.tutorial_1 && loadedTutProg.tutorial_1.completed === true, 'StorageManager.saveTutorialProgress & loadTutorialProgress persist completion');
+assert(loadedTutProg.tutorial_1.bestTime === 4200, 'StorageManager persists tutorial bestTime');
+
+// Test saveLevelCompletion routing for tutorial levels
+StorageManager.saveLevelCompletion('tutorial_2', 3800, 10);
+const updatedTutProg = StorageManager.loadTutorialProgress();
+assert(updatedTutProg.tutorial_2 && updatedTutProg.tutorial_2.completed === true, 'StorageManager.saveLevelCompletion automatically routes tutorial_X to tutorial storage');
+
+// 11. Test LevelLoader Fallback & Query Parser
+console.log('\n[11] Testing LevelLoader Parameter Parsing & Normalization...');
+const normalizedTut1 = LevelLoader.normalizeLevel(TUTORIAL_LEVELS[0]);
+assert(normalizedTut1.id === 'tutorial_1', 'normalizeLevel preserves tutorial ID');
+assert(normalizedTut1.config.mapRevealed === true, 'normalizeLevel preserves config.mapRevealed');
+assert(normalizedTut1.help && normalizedTut1.help.title === 'Navigation Basics', 'normalizeLevel preserves help metadata');
 
 console.log(`\n=== TEST SUMMARY: ${passed} PASSED, ${failed} FAILED ===`);
 if (failed > 0) {
