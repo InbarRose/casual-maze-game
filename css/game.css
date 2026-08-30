@@ -94,26 +94,65 @@
   color: var(--accent);
 }
 
-/* Key Inventory Pills */
+/* Player Inventory HUD Bar & Item Slots */
+.hud-inventory-card {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(22, 27, 34, 0.9);
+  border: 1px solid var(--card-border);
+  transition: all 0.2s ease;
+}
+
+.inventory-icon {
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.inventory-label {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 .inventory-list {
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  flex-wrap: nowrap;
+}
+
+.inventory-empty-slot {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+  opacity: 0.65;
+  padding: 0.1rem 0.35rem;
 }
 
 .key-pill {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.2rem 0.55rem;
-  background: rgba(255, 255, 255, 0.08);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 0.2rem 0.6rem;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius-full);
-  font-size: 0.75rem;
+  font-size: 0.78rem;
   font-family: var(--font-mono);
   font-weight: 700;
   color: var(--text);
   animation: keyAcquire 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  backdrop-filter: blur(4px);
+  white-space: nowrap;
+}
+
+.key-pill .key-name {
+  font-size: 0.75rem;
+  font-weight: 600;
 }
 
 @keyframes keyAcquire {
