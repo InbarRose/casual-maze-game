@@ -7,6 +7,10 @@
   "scripts": {
     "start": "npx live-server --port=8000 --cors",
     "serve": "npx serve -l 8000 .",
-    "test": "node tests/run-all.mjs"
+    "test": "node tests/run-all.mjs",
+    "test:unit": "node tests/run-all.mjs --suite=unit",
+    "test:journeys": "node tests/run-all.mjs --suite=journey",
+    "validate:syntax": "node tests/validate-syntax.mjs",
+    "validate:static": "node tests/validate-static.mjs"
   }
 }
