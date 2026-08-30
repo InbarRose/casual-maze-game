@@ -6,27 +6,19 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.4.0` (Completed & Verified)
+### Current Version: `v1.5.0` (Completed & Verified)
 
-- [x] **Zone / Group Hierarchy**: Structured levels into themed zones (Tutorial Academy, Zone 1: Whispering Dungeon, Zone 2: Emerald Jungle, Zone 3: Molten Core, Zone 4: Glacial Expanse, Zone 5: Amethyst Caverns) with Tier badges and progress tracking.
-- [x] **Thematic Visual Tileset Engine (6 Themes)**:
-  - 🏰 `dungeon`: Classic stone masonry, slate floors, steel railings, torchlight accents.
-  - 🌴 `jungle`: Overgrown moss walls, foliage dirt floors, wooden rope bridges with vine railings, emerald glow.
-  - 🌋 `lava`: Obsidian basalt brick, molten channels, iron grating over lava, fire amber railings, ruby portal.
-  - ❄️ `snow`: Chiseled glacial ice, permafrost floors, frozen crystal bridges, icicle railings, cyan aurora glow.
-  - 🔮 `cave`: Deep subterranean amethyst stone, shale floors, crystal slab bridges, purple void glow.
-  - 🌅 `sunset`: Terracotta sandstone citadel, warm polished floors, brass bridges, golden sunburst glow.
-- [x] **Directional Graphics & Enhanced Object Rendering**:
-  - Orientation-aware gates (horizontal security crossbars vs vertical portcullis bars) with glowing rune keyholes.
-  - Directional bridges (`B_EW` vs `B_NS`) with theme-adaptive planks, structural railings, support posts, and drop shadows.
-  - Directional ramps with stepped incline shading and glowing accent chevron arrows.
-  - Shimmering gemstone keys and heavy industrial switches with status LEDs.
-  - Animated multi-layer swirling dimensional exit portals with orbiting particles.
-  - Stylized explorer player avatars with directional headlamps/visors and elevation levitation auras.
-- [x] **Campaign Expansion (16 Levels Total)**: Added Zone 2 Levels 6–8 and Zone 3 Levels 9–10, all verified 100% BFS solvable.
-- [x] **Editor Live Theme Preview**: Real-time canvas rendering of all 6 themes and template organization in the Editor.
-- [x] **Hub Zone Showcases**: Redesigned Hub UI with dedicated Zone sections, Tier badges, and level completion tracking.
-- [x] **Automated Test Suite**: 215 automated assertions in `test-suite.mjs` (0 failed).
+- [x] **Editor Quick Tileset / Theme Switcher**: Instant live switching and previewing across all 6 visual themes (Dungeon, Emerald Jungle, Molten Core, Glacial Expanse, Amethyst Caverns, Sunset Citadel) directly from the sidebar.
+- [x] **Multi-Colored Keys & Doors Studio**: Direct palette buttons and swatch pickers for Gold, Ruby Red, Sapphire Blue, Emerald Green, and Amethyst Purple with automatic key matching.
+- [x] **Advanced Lever Configuration & Mechanism Studio**:
+  - Initial state toggle (Unpulled / Pulled).
+  - Multi-target wiring with layer selection and customizable State A / State B tile transitions (Floor, Wall, Bridges, Ramps).
+  - Live "⚡ Toggle Preview" in-editor mechanism test trigger.
+- [x] **Architect Handbook & Mouse-Over Tooltips**: Comprehensive interactive Guide modal and rich tooltips on every tool, layer, tile, ramp, and entity.
+- [x] **Advanced Playtest Suite (Custom Test Spawn & Inventory Preload)**:
+  - Playtest configuration modal with custom test spawn coordinates and layer selection.
+  - Starting inventory preloading with checklist to test late-stage puzzle gates directly.
+- [x] **Automated Test Suite**: 244 automated assertions in `test-suite.mjs` (0 failed).
 
 ---
 
@@ -40,7 +32,10 @@ This document tracks project milestones, current release status, active developm
 - [x] **Undo / Redo History**: Implement an action stack (`Ctrl+Z` / `Ctrl+Y`) inside `editor.html`.
 - [x] **Level Validator in Editor**: Warn creators if a maze has unreachable keys, missing spawns, or no path to the exit before export.
 - [x] **Level Design Toggles**: Fog of war, field-of-view radius, and mapRevealed memory mode toggles in Settings modal.
-- [x] **Theme Live Previewing**: Real-time visual tileset rendering on the editor canvas.
+- [x] **Theme Live Previewing & Quick Switcher**: Real-time visual tileset rendering on the editor canvas with quick dropdown selector.
+- [x] **Multi-Color Key & Door Studio**: Palette presets and color swatches for keys and gates.
+- [x] **Lever Target Configuration & In-Editor Preview**: Custom State A/B tile transitions and live toggle testing.
+- [x] **Playtest Custom Spawn & Inventory Preloader**: Test specific chambers with pre-assigned keys.
 - [ ] **Level Auto-Fix**: One-click quick-fixes for common validation warnings (e.g. adding missing ramp).
 
 ### Campaign & Gameplay Expansion

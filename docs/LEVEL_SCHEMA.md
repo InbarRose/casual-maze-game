@@ -175,9 +175,21 @@ Levels are defined as static JSON files conforming to the following structure:
       "layer": "ground",
       "x": 10,
       "y": 4,
-      "stateA": 1,
-      "stateB": 0
+      "stateA": 0,
+      "stateB": 1
     }
   ]
 }
 ```
+
+---
+
+### Playtest Session Properties (Optional / Runtime)
+
+When playtesting custom drafts from the editor, transient runtime properties can be attached:
+
+| Property | Type | Description |
+| --- | --- | --- |
+| `testSpawn` | `{ x: number, y: number, elevation: number }` | Overrides starting position and elevation for focused chamber testing. |
+| `testInventory` | `string[]` | Preloaded array of key IDs placed in the player's backpack upon start. |
+

@@ -733,12 +733,14 @@ export class EditorUI {
     this.editorCanvas.centerInViewport();
     const titleInput = document.getElementById('level-title-input');
     if (titleInput) titleInput.value = this.level.title;
+    const quickTheme = document.getElementById('quick-theme-select');
+    if (quickTheme && this.level.config?.theme) quickTheme.value = this.level.config.theme;
     this.pushHistory();
     this.autoSave();
     this.updateValidationState();
   }
 
-  playTest() {
+  playTest(customTestParams = null) {
     const report = LevelValidator.validate(this.level);
     if (!report.valid) {
       if (!confirm('⚠️ This maze has validation errors and may be unsolvable. Do you want to playtest anyway?')) {
@@ -746,8 +748,140 @@ export class EditorUI {
         return;
       }
     }
-    StorageManager.saveCustomMaze(this.level);
+
+    const payload = JSON.parse(JSON.stringify(this.level));
+    if (customTestParams) {
+      if (customTestParams.testSpawn) {
+        payload.testSpawn = customTestParams.testSpawn;
+      }
+      if (customTestParams.testInventory) {
+        payload.testInventory = customTestParams.testInventory;
+      }
+    } else if (this.level.testSpawn) {
+      payload.testSpawn = this.level.testSpawn;
+    }
+
+    StorageManager.saveCustomMaze(payload);
     window.location.href = 'maze.html?mode=custom';
+  }
+
+  /* =========================================================
+   * PLAYTEST OPTIONS & INVENTORY PRELOAD MODAL
+   * ========================================================= */
+  initPlaytestModal() {
+    const modal = document.getElementById('playtest-modal');
+    const btnClose = document.getElementById('playtest-btn-close');
+    const btnCancel = document.getElementById('playtest-btn-cancel');
+    const btnLaunch = document.getElementById('playtest-btn-launch');
+    const btnSelectAll = document.getElementById('btn-inv-select-all');
+    const btnClear = document.getElementById('btn-inv-clear');
+
+    btnClose?.addEventListener('click', () => modal?.classList.remove('active'));
+    btnCancel?.addEventListener('click', () => modal?.classList.remove('active'));
+
+    btnSelectAll?.addEventListener('click', () => {
+      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]');
+      chks?.forEach(c => { c.checked = true; });
+    });
+
+    btnClear?.addEventListener('click', () => {
+      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]');
+      chks?.forEach(c => { c.checked = false; });
+    });
+
+    btnLaunch?.addEventListener('click', () => {
+      const radChoice = modal?.querySelector('input[name="test-spawn-choice"]:checked')?.value;
+      let testSpawn = null;
+
+      if (radChoice === 'custom') {
+        const x = parseInt(document.getElementById('test-spawn-x')?.value, 10) || this.level.spawn?.x || 1;
+        const y = parseInt(document.getElementById('test-spawn-y')?.value, 10) || this.level.spawn?.y || 1;
+        const elev = parseInt(document.getElementById('test-spawn-elev')?.value, 10) || 0;
+        testSpawn = { x, y, elevation: elev };
+      }
+
+      // Collect checked test inventory keys
+      const testInventory = [];
+      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]:checked');
+      chks?.forEach(c => {
+        testInventory.push(c.value);
+      });
+
+      modal?.classList.remove('active');
+      this.playTest({ testSpawn, testInventory });
+    });
+  }
+
+  openPlaytestModal() {
+    const modal = document.getElementById('playtest-modal');
+    if (!modal) return;
+
+    // Set default spawn label
+    const lblDefault = document.getElementById('lbl-spawn-default');
+    if (lblDefault && this.level.spawn) {
+      lblDefault.textContent = `(${this.level.spawn.x}, ${this.level.spawn.y}) • ${this.level.spawn.elevation === 1 ? 'Overhead' : 'Ground'}`;
+    }
+
+    // Set custom coordinates inputs
+    const inputX = document.getElementById('test-spawn-x');
+    const inputY = document.getElementById('test-spawn-y');
+    const selElev = document.getElementById('test-spawn-elev');
+
+    const sourceSpawn = this.level.testSpawn || this.level.spawn || { x: 1, y: 1, elevation: 0 };
+    if (inputX) inputX.value = sourceSpawn.x;
+    if (inputY) inputY.value = sourceSpawn.y;
+    if (selElev) selElev.value = sourceSpawn.elevation || 0;
+
+    const radCustom = document.getElementById('rad-spawn-custom');
+    const radDefault = document.getElementById('rad-spawn-default');
+    if (this.level.testSpawn && radCustom) {
+      radCustom.checked = true;
+    } else if (radDefault) {
+      radDefault.checked = true;
+    }
+
+    // Render key inventory checklist
+    const container = document.getElementById('test-inventory-checklist');
+    if (container) {
+      container.innerHTML = '';
+      const existingKeys = (this.level.entities || []).filter(e => e.type === 'key');
+
+      if (existingKeys.length === 0) {
+        container.innerHTML = '<span style="font-size:0.75rem; color:var(--text-muted); padding:0.4rem;">No keys placed in labyrinth yet.</span>';
+      } else {
+        existingKeys.forEach(k => {
+          const card = document.createElement('label');
+          card.className = 'key-chk-card';
+          card.innerHTML = `
+            <input type="checkbox" value="${k.id}" />
+            <span style="color:${k.color || '#fbbf24'};">🔑</span>
+            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${this.escapeHtml(k.name || k.id)}</span>
+          `;
+          container.appendChild(card);
+        });
+      }
+    }
+
+    modal.classList.add('active');
+  }
+
+  /* =========================================================
+   * ARCHITECT HANDBOOK & GUIDE MODAL
+   * ========================================================= */
+  initGuideModal() {
+    const modal = document.getElementById('guide-modal');
+    const btnClose = document.getElementById('guide-btn-close');
+    const btnDismiss = document.getElementById('guide-btn-dismiss');
+
+    btnClose?.addEventListener('click', () => modal?.classList.remove('active'));
+    btnDismiss?.addEventListener('click', () => modal?.classList.remove('active'));
+  }
+
+  openGuideModal() {
+    const modal = document.getElementById('guide-modal');
+    if (modal) {
+      modal.classList.add('active');
+    }
   }
 
   autoSave() {
