@@ -25,9 +25,8 @@ export class LevelLoader {
     }
 
     const mode = params.get('mode');
-    const id = params.get('id') || params.get('tutorial') || '1';
 
-    if (mode === 'custom') {
+    if (mode === 'custom' || params.has('custom')) {
       const customData = StorageManager.loadCustomMaze();
       if (customData) {
         return this.normalizeLevel(customData);
@@ -35,33 +34,82 @@ export class LevelLoader {
       console.warn('[LevelLoader] Custom maze requested but none found in session storage. Falling back to Level 1.');
     }
 
-    const isTutorialMode = mode === 'tutorial' || params.has('tutorial') || String(id).startsWith('tutorial_') || /^t\d+$/i.test(String(id));
-    const cleanId = String(id).replace(/^(tutorial_|t)/i, '');
+    // Comprehensive Tutorial Parameter Detection:
+    // 1. ?tutorial=X or ?tut=X or ?t=X
+    // 2. ?id=tutorial_X or ?id=tutorial-X or ?id=tutorialX or ?id=tX
+    // 3. ?tutorial_X or ?tutorial-X or ?tX (bare boolean flag)
+    // 4. ?mode=tutorial&id=X
+    let rawTutorialId = params.get('tutorial') ?? params.get('tut') ?? params.get('t');
+    let rawId = params.get('id');
+
+    // Check bare query keys (e.g. ?tutorial_1 or ?t1 or ?tutorial-1)
+    if (rawTutorialId === null && rawId === null) {
+      for (const key of params.keys()) {
+        const lowerKey = key.toLowerCase();
+        if (/^(tutorial[_-]?\d+|t\d+)$/i.test(lowerKey)) {
+          rawTutorialId = lowerKey;
+          break;
+        } else if (/^\d+$/.test(lowerKey)) {
+          rawId = lowerKey;
+          break;
+        }
+      }
+    }
+
+    const isTutorialMode = mode === 'tutorial' ||
+      rawTutorialId !== null ||
+      params.has('tutorial') ||
+      (rawId && /^(tutorial[_-]?\d+|t\d+)$/i.test(String(rawId)));
+
+    let cleanId = '1';
+    let targetId = '1';
+
+    if (isTutorialMode) {
+      const candidate = String(rawTutorialId ?? rawId ?? '1');
+      const numMatch = candidate.match(/\d+/);
+      cleanId = numMatch ? numMatch[0] : '1';
+      targetId = `tutorial_${cleanId}`;
+    } else {
+      targetId = String(rawId ?? '1');
+      cleanId = targetId;
+    }
 
     // 1. Try fetching JSON file from /levels directory
     if (typeof fetch === 'function') {
-      try {
-        const fileName = isTutorialMode ? `levels/tutorial_${cleanId}.json` : `levels/level_${id}.json`;
-        const res = await fetch(fileName);
-        if (res.ok) {
-          const json = await res.json();
-          return this.normalizeLevel(json);
+      const fileNames = isTutorialMode
+        ? [`levels/tutorial_${cleanId}.json`, `./levels/tutorial_${cleanId}.json`]
+        : [`levels/level_${cleanId}.json`, `./levels/level_${cleanId}.json`];
+
+      for (const fileName of fileNames) {
+        try {
+          const res = await fetch(fileName);
+          if (res.ok) {
+            const json = await res.json();
+            return this.normalizeLevel(json);
+          }
+        } catch (e) {
+          // Try next path or fall back to embedded levels
         }
-      } catch (e) {
-        // Fall back to embedded levels
       }
     }
 
     // 2. Check tutorial fallback levels if tutorial
     if (isTutorialMode) {
-      const tutorialMatch = TUTORIAL_LEVELS.find(lvl => String(lvl.id) === `tutorial_${cleanId}` || String(lvl.id) === String(id) || String(lvl.id) === cleanId);
+      const tutorialMatch = TUTORIAL_LEVELS.find(lvl =>
+        lvl.id === targetId ||
+        lvl.id === `tutorial_${cleanId}` ||
+        String(lvl.id) === String(cleanId)
+      );
       if (tutorialMatch) {
         return this.normalizeLevel(JSON.parse(JSON.stringify(tutorialMatch)));
       }
     }
 
     // 3. Check campaign fallback levels
-    const campaignMatch = CAMPAIGN_LEVELS.find(lvl => String(lvl.id) === String(id));
+    const campaignMatch = CAMPAIGN_LEVELS.find(lvl =>
+      String(lvl.id) === String(targetId) ||
+      String(lvl.id) === String(cleanId)
+    );
     if (campaignMatch) {
       return this.normalizeLevel(JSON.parse(JSON.stringify(campaignMatch)));
     }
