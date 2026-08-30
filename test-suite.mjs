@@ -2,7 +2,7 @@
  * Test Suite for Casual Maze Game Engine
  */
 
-import { TILES, ELEVATION, FOG_STATE, ENTITY_TYPES } from './js/core/constants.js';
+import { TILES, ELEVATION, FOG_STATE, ENTITY_TYPES, THEMES, ZONES } from './js/core/constants.js';
 import { PRNG } from './js/core/prng.js';
 import { EventBus } from './js/core/events.js';
 import { CollisionEngine } from './js/engine/collision.js';
@@ -84,7 +84,7 @@ assert(onceCount === 1, 'EventBus once triggered exactly once');
 
 import fs from 'fs';
 
-for (let i = 1; i <= 5; i++) {
+for (let i = 1; i <= 10; i++) {
   const jsonPath = `./levels/level_${i}.json`;
   assert(fs.existsSync(jsonPath), `File ${jsonPath} exists on disk`);
   const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
@@ -111,7 +111,8 @@ for (let i = 1; i <= 6; i++) {
 const manifestPath = './levels/manifest.json';
 assert(fs.existsSync(manifestPath), 'levels/manifest.json exists');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-assert(Array.isArray(manifest) && manifest.length === 11, 'manifest.json lists 11 levels (6 tutorial + 5 campaign)');
+assert(Array.isArray(manifest) && manifest.length === 16, 'manifest.json lists 16 levels (6 tutorial + 10 campaign across zones)');
+assert(manifest.every(m => m.zone !== undefined), 'manifest.json all entries have zone property');
 
 // 4. Test Collision Engine & Elevation Mechanics
 console.log('\n[4] Testing Collision Engine & Elevation Mechanics...');
@@ -369,11 +370,11 @@ assert(parsed.sessionId && parsed.events.length === 6, 'DebugLogger exportJSON p
 // 9. Test LevelValidator Subsystem
 console.log('\n[9] Testing LevelValidator Subsystem...');
 // 9a. Test valid campaign levels
-for (let i = 1; i <= 5; i++) {
+for (let i = 1; i <= 10; i++) {
   const lvl = CAMPAIGN_LEVELS[i - 1];
   const report = LevelValidator.validate(lvl);
-  assert(report.valid === true, `Campaign Level ${i} passes validation (valid=true, errors=0)`);
-  assert(report.stats.exitReached === true, `Campaign Level ${i} exit is reachable via BFS`);
+  assert(report.valid === true, `Campaign Level ${i} (${lvl.title}) passes validation (valid=true, errors=0)`);
+  assert(report.stats.exitReached === true, `Campaign Level ${i} (${lvl.title}) exit is reachable via BFS`);
 }
 
 // 9b. Test valid tutorial levels
@@ -520,8 +521,25 @@ assert(updatedTutProg.tutorial_2 && updatedTutProg.tutorial_2.completed === true
 console.log('\n[11] Testing LevelLoader Parameter Parsing & Normalization...');
 const normalizedTut1 = LevelLoader.normalizeLevel(TUTORIAL_LEVELS[0]);
 assert(normalizedTut1.id === 'tutorial_1', 'normalizeLevel preserves tutorial ID');
+assert(normalizedTut1.zone === 'tutorial', 'normalizeLevel preserves tutorial zone');
 assert(normalizedTut1.config.mapRevealed === true, 'normalizeLevel preserves config.mapRevealed');
 assert(normalizedTut1.help && normalizedTut1.help.title === 'Navigation Basics', 'normalizeLevel preserves help metadata');
+
+// 12. Test Thematic Visual Tilesets & Zone Registry
+console.log('\n[12] Testing Thematic Visual Tilesets & Zone Registry...');
+const themeKeys = ['dungeon', 'jungle', 'lava', 'snow', 'cave', 'sunset'];
+for (const tk of themeKeys) {
+  const t = THEMES[tk];
+  assert(t !== undefined, `Theme ${tk} exists in THEMES`);
+  assert(t.bg && t.wall && t.wallTop && t.floor && t.bridgeOverhead && t.bridgeRailing, `Theme ${tk} has all required visual style tokens`);
+}
+
+const zoneKeys = ['tutorial', 'zone_1', 'zone_2', 'zone_3', 'zone_4', 'zone_5'];
+for (const zk of zoneKeys) {
+  const z = ZONES[zk];
+  assert(z !== undefined, `Zone ${zk} exists in ZONES registry`);
+  assert(z.id && z.title && z.badge && z.theme && z.desc, `Zone ${zk} has valid metadata schema`);
+}
 
 console.log(`\n=== TEST SUMMARY: ${passed} PASSED, ${failed} FAILED ===`);
 if (failed > 0) {
