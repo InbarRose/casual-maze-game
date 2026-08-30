@@ -6,8 +6,11 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.1.0` (Completed & Verified)
+### Current Version: `v1.2.0` (Completed & Verified)
 
+- [x] **Editor Projects & In-Progress Saving**: Multi-slot project manager in `localStorage` (`StorageManager.saveProject`, `listProjects`, `loadProject`, `deleteProject`), auto-saving working drafts, remixing campaign templates (Levels 1–5), and seamless return-to-editor flow from playtest mode.
+- [x] **In-Editor Level Validator**: BFS reachability and solvability analyzer (`LevelValidator.validate`) checking spawn/exit validity, elevation bridge/ramp traversal, key-door sequencing, entity bounds, and real-time toolbar status badges with diagnostics modal.
+- [x] **Stroke-Batched Undo & Redo**: Atomic stroke history stack with `Ctrl+Z`, `Ctrl+Y`, `Ctrl+Shift+Z`, tool shortcuts (`P`, `F`, `E`, `S`, `1`, `2`, `V`), and disabled button states.
 - [x] **Debug Telemetry & Replay Logger**: Integrated `DebugLogger` capturing timestamps, movement attempts with rejection reasons, elevation changes, key pickups, door unlocks, and lever state transitions with one-click JSON download at level completion.
 - [x] **Multi-Elevation Collision Overhaul**: Fixed overhead void checking to prevent players from floating through walls/doors, strictly enforced directional ramp transitions (`RAMP_N`, `RAMP_S`, `RAMP_E`, `RAMP_W`), and aligned campaign level bridges and ramps.
 - [x] **Key Notice HUD Cleanup**: Debounced HUD key rendering to avoid recreating DOM pills and re-triggering bounce animations on every move.
@@ -19,7 +22,7 @@ This document tracks project milestones, current release status, active developm
 - [x] **Campaign & Static Level Architecture**:
   - 5 handcrafted campaign levels (`levels/level_1.json` through `level_5.json` + fallback `default-levels.js`).
   - Strict static level validation and schema normalization.
-- [x] **Automated Test Suite**: 69 automated tests in `test-suite.mjs` verifying math, collisions, entities, loader, telemetry logger, and JSON level integrity.
+- [x] **Automated Test Suite**: 86 automated tests in `test-suite.mjs` verifying math, collisions, entities, loader, telemetry logger, level validator, storage projects, and JSON level integrity.
 - [x] **Static Deployment**: Hosted on GitHub Pages at `casual-maze-game.inbarrose.com` via `CNAME`.
 
 ---
@@ -32,8 +35,9 @@ This document tracks project milestones, current release status, active developm
 - [ ] **Mobile Virtual Controls Polish**: Enhance touch response haptics/styling and add gesture-based minimap pinch-to-zoom.
 
 ### Editor Enhancements
-- [ ] **Undo / Redo History**: Implement an action stack (`Ctrl+Z` / `Ctrl+Y`) inside `editor.html`.
-- [ ] **Level Validator in Editor**: Warn creators if a maze has unreachable keys, missing spawns, or no path to the exit before export.
+- [x] **Undo / Redo History**: Implement an action stack (`Ctrl+Z` / `Ctrl+Y`) inside `editor.html`.
+- [x] **Level Validator in Editor**: Warn creators if a maze has unreachable keys, missing spawns, or no path to the exit before export.
+- [ ] **Level Auto-Fix**: One-click quick-fixes for common validation warnings (e.g. adding missing ramp).
 
 ### Campaign & Gameplay Expansion
 - [ ] **Timer & Score HUD**: Optional speedrun timer and step counter persisted to `localStorage`.

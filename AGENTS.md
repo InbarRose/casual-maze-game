@@ -14,8 +14,9 @@ This document outlines the standard operating procedures, architectural principl
   * HTML5 Canvas 2D API for all grid, entity, and fog rendering.
 * **No Runtime Dependencies**: Never introduce `npm` packages or build tools that require a Node/Express server runtime in production. The browser must directly load HTML, CSS, and JS.
 
-### B. Small, Atomic Changes
-* **Frequent Commits**: Keep edits small, focused, and single-purpose so the user can review and commit frequently.
+### B. Small, Atomic Changes & Auto-Commits
+* **Frequent Commits**: Keep edits small, focused, and single-purpose so changes can be reviewed and tracked cleanly.
+* **Auto-Commit Standard**: Agents must automatically commit verified, passing work to Git using conventional commit messages (e.g. `feat(editor): ...`, `fix(engine): ...`, `test: ...`, `docs: ...`). Do not leave unstaged/uncommitted files at task completion.
 * **No Giant Monolithic Refactors**: If implementing a feature or refactoring, break the work down into atomic incremental steps (e.g., model/constants -> logic/engine -> UI/integration -> tests).
 * **Documentation Integrity**: Preserve all existing non-conflicting comments, docstrings, and schema types unless deliberately deprecating them.
 
@@ -128,3 +129,4 @@ Before concluding any task or reporting back to the user, ensure:
 - [ ] New logic or entity types are covered by tests in `test-suite.mjs`.
 - [ ] `npm test` runs and passes with `0 failed`.
 - [ ] Relevant documentation (`docs/PROJECT_MANAGEMENT.md`, `PROJECT_CONTEXT.md`, or `docs/adr/`) is updated.
+- [ ] Work is committed with conventional, atomic git commit messages.
