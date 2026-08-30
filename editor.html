@@ -17,12 +17,17 @@
     <header class="editor-header">
       <div class="header-left">
         <a href="index.html" class="btn btn-secondary btn-sm">← Hub</a>
+        <button id="btn-projects" class="btn btn-secondary btn-sm">📁 Projects</button>
+        <button id="btn-save-project" class="btn btn-secondary btn-sm" title="Quick Save to Browser">💾 Save</button>
         <input type="text" id="level-title-input" class="editor-title-input" value="Custom Labyrinth" title="Click to rename" />
       </div>
 
       <div class="header-right">
         <button id="btn-undo" class="btn btn-secondary btn-sm" title="Undo (Ctrl+Z)">↺</button>
         <button id="btn-redo" class="btn btn-secondary btn-sm" title="Redo (Ctrl+Y)">↻</button>
+        <button id="btn-validate" class="btn btn-secondary btn-sm validation-badge" title="Check Solvability & Integrity">
+          <span id="val-badge-icon">✅</span> <span id="val-badge-text">Valid</span>
+        </button>
         <button id="btn-settings" class="btn btn-secondary btn-sm">⚙ Properties</button>
         <button id="btn-clear" class="btn btn-secondary btn-sm">🗑 Clear</button>
         <button id="btn-import-json" class="btn btn-secondary btn-sm">📂 Import</button>
@@ -213,6 +218,70 @@
       <div class="modal-footer" style="justify-content: space-between;">
         <button type="button" class="btn btn-danger" id="inspector-btn-delete">Delete Entity</button>
         <button type="button" class="btn btn-primary" id="inspector-btn-save">Apply Changes</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Projects & Templates Modal -->
+  <div class="modal-backdrop" id="projects-modal">
+    <div class="modal-dialog" style="max-width: 620px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">📁 Maze Projects &amp; Templates</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="projects-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.25rem;">
+        
+        <!-- Save Current Form -->
+        <div class="projects-section">
+          <div class="sidebar-section-title">Save Active Labyrinth</div>
+          <div style="display: flex; gap: 0.5rem;">
+            <input type="text" id="project-save-name" class="input-field" placeholder="Project Name" style="flex: 1;" />
+            <button type="button" class="btn btn-primary" id="btn-save-as-project">Save Project</button>
+          </div>
+        </div>
+
+        <!-- Saved Projects List -->
+        <div class="projects-section">
+          <div class="sidebar-section-title">Saved Projects (Browser Storage)</div>
+          <div class="saved-projects-list" id="saved-projects-container">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Campaign Starter Templates -->
+        <div class="projects-section">
+          <div class="sidebar-section-title">Campaign Starter Templates</div>
+          <div class="template-grid" id="campaign-templates-container">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
+        <!-- Blank Presets -->
+        <div class="projects-section">
+          <div class="sidebar-section-title">Start From Blank Preset</div>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-preset-small">Small (15×15)</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-preset-medium">Standard (21×21)</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="btn-preset-large">Large (31×31)</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Level Validation Diagnostics Modal -->
+  <div class="modal-backdrop" id="validation-modal">
+    <div class="modal-dialog" style="max-width: 540px;">
+      <div class="modal-header">
+        <h3 id="val-modal-title" style="font-size: 1.15rem;">Level Validation Report</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="val-btn-close">✕</button>
+      </div>
+      <div class="modal-body" id="val-modal-body" style="display: flex; flex-direction: column; gap: 1rem;">
+        <!-- Injected via editor-ui.js -->
+      </div>
+      <div class="modal-footer" style="justify-content: space-between;">
+        <button type="button" class="btn btn-secondary" id="val-btn-recheck">🔄 Re-Check</button>
+        <button type="button" class="btn btn-primary" id="val-btn-dismiss">Close</button>
       </div>
     </div>
   </div>

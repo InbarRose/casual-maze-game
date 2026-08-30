@@ -20,6 +20,7 @@
     <header class="game-hud-top">
       <div class="hud-group">
         <a href="index.html" class="btn btn-secondary btn-sm">← Hub</a>
+        <a href="editor.html" class="btn btn-secondary btn-sm" id="hud-btn-editor" style="display: none;">🛠️ Editor</a>
         <div class="hud-card">
           <span class="hud-title" id="hud-level-title">Loading...</span>
           <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
@@ -168,6 +169,14 @@
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${tenths}`;
     }
 
+    // Check if in custom playtest mode
+    const urlParams = new URLSearchParams(window.location.search);
+    const isCustomMode = urlParams.get('mode') === 'custom' || currentLevel.id === 'custom' || currentLevel.id.startsWith('project_');
+    if (isCustomMode) {
+      const hudBtnEditor = document.getElementById('hud-btn-editor');
+      if (hudBtnEditor) hudBtnEditor.style.display = 'inline-flex';
+    }
+
     // Initialize Game Loop
     const gameLoop = new GameLoop({
       mainCanvas,
@@ -187,16 +196,16 @@
           stepsEl.textContent = state.steps;
 
           // Render inventory keys only when the inventory actually changes
-          const currentKeyIds = state.keys.map(k => k.id).sort().join(',');
+          const currentKeyIds = (state.inventory || []).join(',');
           if (currentKeyIds !== lastRenderedKeyIds) {
             lastRenderedKeyIds = currentKeyIds;
-            if (state.keys.length > 0) {
+            if (state.inventory && state.inventory.length > 0) {
               inventoryCardEl.style.display = 'flex';
               keysListEl.innerHTML = '';
-              for (const key of state.keys) {
-                const pill = document.createElement('span');
+              for (const keyId of state.inventory) {
+                const key = currentLevel.entities.find(e => e.id === keyId) || { name: 'Key', color: '#fbbf24' };
+                const pill = document.createElement('div');
                 pill.className = 'key-pill';
-                pill.style.borderColor = key.color;
                 pill.innerHTML = `<span style="color:${key.color};">🔑</span> ${key.name || 'Key'}`;
                 keysListEl.appendChild(pill);
               }
@@ -222,15 +231,24 @@
           document.getElementById('vic-steps').textContent = stats.steps;
           victoryModal.classList.add('active');
 
-          // Check if there is a next campaign level
-          const currentIdNum = parseInt(currentLevel.id, 10);
-          if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 5) {
+          if (isCustomMode) {
             btnNextLevel.style.display = 'inline-flex';
+            btnNextLevel.textContent = '🛠️ Back to Editor';
             btnNextLevel.onclick = () => {
-              window.location.href = `maze.html?id=${currentIdNum + 1}`;
+              window.location.href = 'editor.html';
             };
           } else {
-            btnNextLevel.style.display = 'none';
+            // Check if there is a next campaign level
+            const currentIdNum = parseInt(currentLevel.id, 10);
+            if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 5) {
+              btnNextLevel.style.display = 'inline-flex';
+              btnNextLevel.textContent = 'Next Level →';
+              btnNextLevel.onclick = () => {
+                window.location.href = `maze.html?id=${currentIdNum + 1}`;
+              };
+            } else {
+              btnNextLevel.style.display = 'none';
+            }
           }
         },
       }

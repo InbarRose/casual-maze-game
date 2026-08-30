@@ -162,6 +162,7 @@ export class EditorCanvas {
 
     if (e.button === 0) {
       this.isMouseDown = true;
+      this.hasModifiedStroke = false;
       const { gridX, gridY } = this.clientToGrid(e.clientX, e.clientY);
       this.applyToolAt(gridX, gridY);
     }
@@ -186,7 +187,7 @@ export class EditorCanvas {
       this.onHoverCoord(gridX, gridY);
     }
 
-    if (this.isMouseDown && this.currentTool === 'pencil') {
+    if (this.isMouseDown && (this.currentTool === 'pencil' || this.currentTool === 'eraser')) {
       this.applyToolAt(gridX, gridY);
     } else {
       this.render();
@@ -194,8 +195,14 @@ export class EditorCanvas {
   }
 
   handleMouseUp() {
+    if (this.isMouseDown && this.hasModifiedStroke) {
+      if (this.onTilePaint) {
+        this.onTilePaint();
+      }
+    }
     this.isMouseDown = false;
     this.isPanning = false;
+    this.hasModifiedStroke = false;
   }
 
   handleWheel(e) {
@@ -280,18 +287,25 @@ export class EditorCanvas {
 
     // Fill Bucket Tool
     if (this.currentTool === 'fill') {
-      this.floodFill(gridX, gridY, this.selectedTile);
-      if (this.onTilePaint) this.onTilePaint();
-      this.render();
+      const initialVal = this.level.layers[this.activeLayer][gridY][gridX];
+      if (initialVal !== this.selectedTile) {
+        this.floodFill(gridX, gridY, this.selectedTile);
+        if (this.onTilePaint) this.onTilePaint();
+        this.render();
+      }
       return;
     }
 
     // Eraser Tool
     if (this.currentTool === 'eraser') {
-      this.level.layers[this.activeLayer][gridY][gridX] = 0;
-      this.level.entities = (this.level.entities || []).filter(e => !(e.x === gridX && e.y === gridY));
-      if (this.onTilePaint) this.onTilePaint();
-      this.render();
+      const curr = this.level.layers[this.activeLayer][gridY][gridX];
+      const hasEnt = (this.level.entities || []).some(e => e.x === gridX && e.y === gridY);
+      if (curr !== 0 || hasEnt) {
+        this.level.layers[this.activeLayer][gridY][gridX] = 0;
+        this.level.entities = (this.level.entities || []).filter(e => !(e.x === gridX && e.y === gridY));
+        this.hasModifiedStroke = true;
+        this.render();
+      }
       return;
     }
 
@@ -299,7 +313,7 @@ export class EditorCanvas {
     const currentVal = this.level.layers[this.activeLayer][gridY][gridX];
     if (currentVal !== this.selectedTile) {
       this.level.layers[this.activeLayer][gridY][gridX] = this.selectedTile;
-      if (this.onTilePaint) this.onTilePaint();
+      this.hasModifiedStroke = true;
       this.render();
     }
   }
