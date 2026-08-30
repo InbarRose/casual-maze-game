@@ -59,12 +59,19 @@ export class GameLoop {
     this.renderer = new GameRenderer(mainCanvas);
     this.minimap = new Minimap(minimapCanvas);
 
+    // Determine effective spawn coordinates (custom test spawn takes precedence in playtest mode)
+    const effectiveSpawnX = this.level.testSpawn?.x ?? this.level.spawn?.x ?? 1;
+    const effectiveSpawnY = this.level.testSpawn?.y ?? this.level.spawn?.y ?? 1;
+    const effectiveElevation = this.level.testSpawn?.elevation ?? this.level.spawn?.elevation ?? 0;
+    const initialInventory = Array.isArray(this.level.testInventory) ? [...this.level.testInventory] : [];
+
     // Instantiate Player
     this.player = new Player(
-      this.level.spawn.x,
-      this.level.spawn.y,
-      this.level.spawn.elevation || 0,
-      tileSize
+      effectiveSpawnX,
+      effectiveSpawnY,
+      effectiveElevation,
+      tileSize,
+      initialInventory
     );
 
     // Instantiate Entities
@@ -229,10 +236,16 @@ export class GameLoop {
    * Reset the current level state
    */
   restartLevel() {
+    const effectiveSpawnX = this.level.testSpawn?.x ?? this.level.spawn?.x ?? 1;
+    const effectiveSpawnY = this.level.testSpawn?.y ?? this.level.spawn?.y ?? 1;
+    const effectiveElevation = this.level.testSpawn?.elevation ?? this.level.spawn?.elevation ?? 0;
+    const initialInventory = Array.isArray(this.level.testInventory) ? [...this.level.testInventory] : [];
+
     this.player.reset(
-      this.level.spawn.x,
-      this.level.spawn.y,
-      this.level.spawn.elevation || 0
+      effectiveSpawnX,
+      effectiveSpawnY,
+      effectiveElevation,
+      initialInventory
     );
     this.initEntities();
     if (this.fog) {
@@ -253,9 +266,9 @@ export class GameLoop {
     this.logger = new DebugLogger(this.level);
     this.logger.log('game:restarted', {
       spawn: {
-        x: this.level.spawn.x,
-        y: this.level.spawn.y,
-        elevation: this.level.spawn.elevation || 0,
+        x: effectiveSpawnX,
+        y: effectiveSpawnY,
+        elevation: effectiveElevation,
       },
     }, 0);
 

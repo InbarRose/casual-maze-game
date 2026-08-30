@@ -33,6 +33,8 @@ export class EditorUI {
     this.initKeyboardShortcuts();
     this.initProjectsModal();
     this.initValidationModal();
+    this.initPlaytestModal();
+    this.initGuideModal();
     this.pushHistory();
     this.updateValidationState();
   }
@@ -116,6 +118,23 @@ export class EditorUI {
         this.editorCanvas.startTargetPickMode(lever);
         this.showToast('Click any tile on canvas to link to this lever!', 'info');
       },
+      onTestToggle: (lever) => {
+        lever.state = !lever.state;
+        for (const target of (lever.targets || [])) {
+          if (target.action === 'toggle_tile' || !target.action) {
+            const layerName = target.layer === 'overhead' ? 'overhead' : 'ground';
+            const layer = this.level.layers[layerName];
+            if (layer && layer[target.y] && layer[target.y][target.x] !== undefined) {
+              layer[target.y][target.x] = lever.state ? (target.stateA ?? 0) : (target.stateB ?? 1);
+            }
+          }
+        }
+        this.pushHistory();
+        this.autoSave();
+        this.updateValidationState();
+        this.editorCanvas.render();
+        this.showToast(`Mechanism "${lever.name || lever.id}" toggled to ${lever.state ? 'ACTIVE' : 'INACTIVE'}!`, 'info');
+      },
     });
   }
 
@@ -130,7 +149,22 @@ export class EditorUI {
       });
     }
 
-    // 2. Layer Switcher Tabs
+    // 2. Visual Theme & Tileset Quick Switcher
+    const quickTheme = document.getElementById('quick-theme-select');
+    if (quickTheme) {
+      quickTheme.value = this.level.config.theme || 'dungeon';
+      quickTheme.addEventListener('change', () => {
+        this.level.config.theme = quickTheme.value;
+        const setTheme = document.getElementById('set-theme');
+        if (setTheme) setTheme.value = quickTheme.value;
+        this.pushHistory();
+        this.autoSave();
+        this.editorCanvas.render();
+        this.showToast(`Tileset switched to ${quickTheme.options[quickTheme.selectedIndex].text}!`, 'info');
+      });
+    }
+
+    // 3. Layer Switcher Tabs
     const tabGround = document.getElementById('tab-layer-ground');
     const tabOverhead = document.getElementById('tab-layer-overhead');
     const statusLayer = document.getElementById('status-layer');
@@ -147,7 +181,7 @@ export class EditorUI {
     tabGround.addEventListener('click', () => setLayer(LAYERS.GROUND));
     tabOverhead.addEventListener('click', () => setLayer(LAYERS.OVERHEAD));
 
-    // 3. Palette Buttons Binding
+    // 4. Palette Buttons Binding
     const paletteButtons = document.querySelectorAll('.palette-btn[data-tool], .palette-btn[data-tile], .palette-btn[data-entity]');
     paletteButtons.forEach(btn => {
       btn.addEventListener('click', () => {
@@ -157,6 +191,8 @@ export class EditorUI {
         const tool = btn.dataset.tool;
         const tile = btn.dataset.tile;
         const entity = btn.dataset.entity;
+        const color = btn.dataset.color;
+        const name = btn.dataset.name;
 
         if (tool) {
           this.editorCanvas.setTool(tool);
@@ -165,13 +201,16 @@ export class EditorUI {
           const parsedTile = !isNaN(Number(tile)) ? Number(tile) : tile;
           this.editorCanvas.setSelectedTile(parsedTile);
         } else if (entity) {
-          this.editorCanvas.setSelectedEntity(entity);
+          this.editorCanvas.setSelectedEntity(entity, color ? { color, name } : null);
         }
       });
     });
 
-    // 4. Header Actions
+    // 5. Header Actions
     document.getElementById('btn-playtest')?.addEventListener('click', () => this.playTest());
+    document.getElementById('btn-playtest-opts')?.addEventListener('click', () => this.openPlaytestModal());
+    document.getElementById('btn-guide')?.addEventListener('click', () => this.openGuideModal());
+
     document.getElementById('btn-export-json')?.addEventListener('click', () => {
       const report = LevelValidator.validate(this.level);
       if (!report.valid) {
@@ -289,6 +328,10 @@ export class EditorUI {
         document.getElementById('tab-layer-overhead')?.click();
       } else if (e.key.toLowerCase() === 'v') {
         this.openValidationModal();
+      } else if (e.key.toLowerCase() === 't') {
+        this.openPlaytestModal();
+      } else if (e.key.toLowerCase() === 'h' || e.key === '?') {
+        this.openGuideModal();
       }
     });
   }

@@ -95,15 +95,18 @@ export class EditorCanvas {
   setSelectedTile(tile) {
     this.selectedTile = tile;
     this.selectedEntity = null;
+    this.selectedEntityData = null;
     this.currentTool = 'pencil';
   }
 
   /**
    * Set selected entity/special to place
    * @param {string} entityType
+   * @param {object} [entityData]
    */
-  setSelectedEntity(entityType) {
+  setSelectedEntity(entityType, entityData = null) {
     this.selectedEntity = entityType;
+    this.selectedEntityData = entityData;
     this.currentTool = 'pencil';
   }
 
@@ -251,28 +254,34 @@ export class EditorCanvas {
     if (this.selectedEntity) {
       if (this.selectedEntity === 'spawn') {
         this.level.spawn = { x: gridX, y: gridY, elevation: this.activeLayer === LAYERS.OVERHEAD ? 1 : 0 };
+      } else if (this.selectedEntity === 'test_spawn') {
+        this.level.testSpawn = { x: gridX, y: gridY, elevation: this.activeLayer === LAYERS.OVERHEAD ? 1 : 0 };
       } else if (this.selectedEntity === 'exit') {
         this.level.exit = { x: gridX, y: gridY };
-      } else if (['key', 'door', 'lever'].includes(this.selectedEntity)) {
+      } else if (this.selectedEntity.startsWith('key') || this.selectedEntity.startsWith('door') || this.selectedEntity === 'lever') {
         // Remove existing entity at tile if any
         this.level.entities = (this.level.entities || []).filter(e => !(e.x === gridX && e.y === gridY));
 
-        const newId = `${this.selectedEntity}_${gridX}_${gridY}`;
+        const baseType = this.selectedEntity.startsWith('key') ? 'key' : (this.selectedEntity.startsWith('door') ? 'door' : 'lever');
+        const newId = `${baseType}_${gridX}_${gridY}`;
         const newEntity = {
           id: newId,
-          type: this.selectedEntity,
+          type: baseType,
           x: gridX,
           y: gridY,
           elevation: this.activeLayer === LAYERS.OVERHEAD ? 1 : 0,
         };
 
-        if (this.selectedEntity === 'key') {
-          newEntity.color = '#fbbf24';
-          newEntity.name = 'Key';
-        } else if (this.selectedEntity === 'door') {
-          newEntity.color = '#fbbf24';
-          newEntity.requiresKey = '';
-        } else if (this.selectedEntity === 'lever') {
+        const presetColor = this.selectedEntityData?.color;
+        const presetName = this.selectedEntityData?.name;
+
+        if (baseType === 'key') {
+          newEntity.color = presetColor || '#fbbf24';
+          newEntity.name = presetName || 'Key';
+        } else if (baseType === 'door') {
+          newEntity.color = presetColor || '#fbbf24';
+          newEntity.requiresKey = this.selectedEntityData?.requiresKey || '';
+        } else if (baseType === 'lever') {
           newEntity.state = false;
           newEntity.targets = [];
         }
@@ -457,7 +466,7 @@ export class EditorCanvas {
       }
     }
 
-    // 3. Render Spawn (S) and Exit (E)
+    // 3. Render Spawn (S), Test Spawn (T), and Exit (E)
     if (this.level.spawn) {
       const spX = this.level.spawn.x * effTile;
       const spY = this.level.spawn.y * effTile;
@@ -470,6 +479,23 @@ export class EditorCanvas {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('S', spX + effTile / 2, spY + effTile / 2);
+    }
+
+    if (this.level.testSpawn) {
+      const tspX = this.level.testSpawn.x * effTile;
+      const tspY = this.level.testSpawn.y * effTile;
+      ctx.fillStyle = '#f43f5e';
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(tspX + effTile / 2, tspY + effTile / 2, effTile * 0.34, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.max(9, effTile * 0.38)}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🧪', tspX + effTile / 2, tspY + effTile / 2);
     }
 
     if (this.level.exit) {
@@ -503,9 +529,12 @@ export class EditorCanvas {
       ctx.save();
       if (entity.type === ENTITY_TYPES.KEY) {
         ctx.fillStyle = entity.color || '#fbbf24';
+        ctx.shadowColor = entity.color || '#fbbf24';
+        ctx.shadowBlur = 8;
         ctx.beginPath();
-        ctx.arc(enX + effTile / 2, enY + effTile / 2, effTile * 0.3, 0, Math.PI * 2);
+        ctx.arc(enX + effTile / 2, enY + effTile / 2, effTile * 0.32, 0, Math.PI * 2);
         ctx.fill();
+        ctx.shadowBlur = 0;
         ctx.fillStyle = '#000000';
         ctx.font = `${Math.max(9, effTile * 0.35)}px sans-serif`;
         ctx.textAlign = 'center';
@@ -513,15 +542,18 @@ export class EditorCanvas {
         ctx.fillText('🔑', enX + effTile / 2, enY + effTile / 2);
       } else if (entity.type === ENTITY_TYPES.DOOR) {
         ctx.strokeStyle = entity.color || '#fbbf24';
+        ctx.shadowColor = entity.color || '#fbbf24';
+        ctx.shadowBlur = 6;
         ctx.lineWidth = 3;
         ctx.strokeRect(enX + 4, enY + 4, effTile - 8, effTile - 8);
+        ctx.shadowBlur = 0;
         ctx.fillStyle = entity.color || '#fbbf24';
         ctx.font = `${Math.max(9, effTile * 0.35)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('🚪', enX + effTile / 2, enY + effTile / 2);
       } else if (entity.type === ENTITY_TYPES.LEVER) {
-        ctx.fillStyle = '#94a3b8';
+        ctx.fillStyle = entity.state ? '#34d399' : '#94a3b8';
         ctx.fillRect(enX + effTile * 0.2, enY + effTile * 0.3, effTile * 0.6, effTile * 0.4);
         ctx.fillStyle = '#ffffff';
         ctx.font = `${Math.max(9, effTile * 0.35)}px sans-serif`;
@@ -533,7 +565,7 @@ export class EditorCanvas {
         for (const t of (entity.targets || [])) {
           const tX = t.x * effTile + effTile / 2;
           const tY = t.y * effTile + effTile / 2;
-          ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+          ctx.strokeStyle = entity.state ? 'rgba(52, 211, 153, 0.8)' : 'rgba(56, 189, 248, 0.7)';
           ctx.lineWidth = 2;
           ctx.setLineDash([4, 4]);
           ctx.beginPath();
@@ -541,9 +573,31 @@ export class EditorCanvas {
           ctx.lineTo(tX, tY);
           ctx.stroke();
           ctx.setLineDash([]);
+
+          // Target node marker
+          ctx.fillStyle = entity.state ? '#34d399' : '#38bdf8';
+          ctx.beginPath();
+          ctx.arc(tX, tY, effTile * 0.16, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
       ctx.restore();
+    }
+
+    // Active Lever Wiring Target Picker Line
+    if (this.currentTool === 'pick_target' && this.wiringLever && this.hoverGridPos.x >= 0) {
+      const lx = this.wiringLever.x * effTile + effTile / 2;
+      const ly = this.wiringLever.y * effTile + effTile / 2;
+      const hx = this.hoverGridPos.x * effTile + effTile / 2;
+      const hy = this.hoverGridPos.y * effTile + effTile / 2;
+      ctx.strokeStyle = '#34d399';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.moveTo(lx, ly);
+      ctx.lineTo(hx, hy);
+      ctx.stroke();
+      ctx.setLineDash([]);
     }
 
     // 5. Render Hover / Cursor Box
