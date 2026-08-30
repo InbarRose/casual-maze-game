@@ -358,8 +358,8 @@ export class EditorCanvas {
     const effTile = this.getEffectiveTileSize();
     const theme = THEMES[this.level.config.theme] || THEMES.dungeon;
 
-    // 1. Clear Canvas
-    ctx.fillStyle = '#090d13';
+    // 1. Clear Canvas with Theme Background
+    ctx.fillStyle = theme.bg || '#090d13';
     ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
     ctx.save();
@@ -380,25 +380,48 @@ export class EditorCanvas {
           ctx.fillStyle = theme.wall;
           ctx.fillRect(px, py, effTile, effTile);
           ctx.fillStyle = theme.wallTop;
-          ctx.fillRect(px, py, effTile, effTile * 0.2);
+          ctx.fillRect(px, py, effTile, effTile * 0.22);
+          ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
+          ctx.fillRect(px + effTile * 0.1, py + effTile * 0.58, effTile * 0.8, 1.5);
+          ctx.fillRect(px + effTile * 0.5, py + effTile * 0.22, 1.5, effTile * 0.36);
         } else {
           ctx.fillStyle = (x + y) % 2 === 0 ? theme.floorAlt : theme.floor;
           ctx.fillRect(px, py, effTile, effTile);
 
+          // Underpass corridor on ground layer
           if (gTile === TILES.BRIDGE_EW) {
             ctx.fillStyle = theme.bridgeGround;
-            ctx.fillRect(px, py + effTile * 0.2, effTile, effTile * 0.6);
+            ctx.fillRect(px, py + effTile * 0.12, effTile, effTile * 0.76);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.fillRect(px + effTile * 0.15, py + effTile * 0.48, effTile * 0.7, 2);
           } else if (gTile === TILES.BRIDGE_NS) {
             ctx.fillStyle = theme.bridgeGround;
-            ctx.fillRect(px + effTile * 0.2, py, effTile * 0.6, effTile);
+            ctx.fillRect(px + effTile * 0.12, py, effTile * 0.76, effTile);
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+            ctx.fillRect(px + effTile * 0.48, py + effTile * 0.15, 2, effTile * 0.7);
           } else if (this.isRamp(gTile)) {
             ctx.fillStyle = theme.ramp;
             ctx.fillRect(px, py, effTile, effTile);
-            ctx.fillStyle = '#ffffff';
-            ctx.font = `${Math.max(10, effTile * 0.35)}px sans-serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(gTile, px + effTile / 2, py + effTile / 2);
+
+            // Directional chevron arrow
+            const arrowCol = theme.rampArrow || theme.accent || '#38bdf8';
+            ctx.strokeStyle = arrowCol;
+            ctx.lineWidth = Math.max(1.5, effTile * 0.08);
+            const cx = px + effTile / 2;
+            const cy = py + effTile / 2;
+            const aSize = effTile * 0.28;
+
+            ctx.beginPath();
+            if (gTile === TILES.RAMP_N) {
+              ctx.moveTo(cx - aSize, cy + aSize * 0.4); ctx.lineTo(cx, cy - aSize * 0.5); ctx.lineTo(cx + aSize, cy + aSize * 0.4);
+            } else if (gTile === TILES.RAMP_S) {
+              ctx.moveTo(cx - aSize, cy - aSize * 0.4); ctx.lineTo(cx, cy + aSize * 0.5); ctx.lineTo(cx + aSize, cy - aSize * 0.4);
+            } else if (gTile === TILES.RAMP_E) {
+              ctx.moveTo(cx - aSize * 0.4, cy - aSize); ctx.lineTo(cx + aSize * 0.5, cy); ctx.lineTo(cx - aSize * 0.4, cy + aSize);
+            } else if (gTile === TILES.RAMP_W) {
+              ctx.moveTo(cx + aSize * 0.4, cy - aSize); ctx.lineTo(cx - aSize * 0.5, cy); ctx.lineTo(cx + aSize * 0.4, cy + aSize);
+            }
+            ctx.stroke();
           }
         }
 
@@ -407,20 +430,28 @@ export class EditorCanvas {
         if (oTile || gTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_NS) {
           ctx.save();
           if (this.activeLayer === LAYERS.GROUND) {
-            ctx.globalAlpha = 0.5; // Dim overhead when editing ground
+            ctx.globalAlpha = 0.55; // Dim overhead when editing ground
           }
           if (oTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
+            // B_EW Overhead spans North-South
             ctx.fillStyle = theme.bridgeOverhead;
-            ctx.fillRect(px + effTile * 0.2, py, effTile * 0.6, effTile);
+            ctx.fillRect(px + effTile * 0.12, py, effTile * 0.76, effTile);
+            ctx.fillStyle = theme.bridgeRailing;
+            ctx.fillRect(px + effTile * 0.10, py, effTile * 0.08, effTile);
+            ctx.fillRect(px + effTile * 0.82, py, effTile * 0.08, effTile);
           } else if (oTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
+            // B_NS Overhead spans East-West
             ctx.fillStyle = theme.bridgeOverhead;
-            ctx.fillRect(px, py + effTile * 0.2, effTile, effTile * 0.6);
+            ctx.fillRect(px, py + effTile * 0.12, effTile, effTile * 0.76);
+            ctx.fillStyle = theme.bridgeRailing;
+            ctx.fillRect(px, py + effTile * 0.10, effTile, effTile * 0.08);
+            ctx.fillRect(px, py + effTile * 0.82, effTile, effTile * 0.08);
           }
           ctx.restore();
         }
 
         // Grid lines
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.06)';
+        ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.06)';
         ctx.lineWidth = 1;
         ctx.strokeRect(px, py, effTile, effTile);
       }
@@ -432,10 +463,10 @@ export class EditorCanvas {
       const spY = this.level.spawn.y * effTile;
       ctx.fillStyle = '#34d399';
       ctx.beginPath();
-      ctx.arc(spX + effTile / 2, spY + effTile / 2, effTile * 0.35, 0, Math.PI * 2);
+      ctx.arc(spX + effTile / 2, spY + effTile / 2, effTile * 0.36, 0, Math.PI * 2);
       ctx.fill();
       ctx.fillStyle = '#022014';
-      ctx.font = `bold ${Math.max(10, effTile * 0.4)}px monospace`;
+      ctx.font = `bold ${Math.max(10, effTile * 0.42)}px monospace`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('S', spX + effTile / 2, spY + effTile / 2);
@@ -444,12 +475,21 @@ export class EditorCanvas {
     if (this.level.exit) {
       const exX = this.level.exit.x * effTile;
       const exY = this.level.exit.y * effTile;
-      ctx.fillStyle = '#38bdf8';
+      const pOuter = theme.portalOuter || '#0284c7';
+      const pInner = theme.portalInner || '#38bdf8';
+
+      ctx.fillStyle = pOuter;
       ctx.beginPath();
-      ctx.arc(exX + effTile / 2, exY + effTile / 2, effTile * 0.35, 0, Math.PI * 2);
+      ctx.arc(exX + effTile / 2, exY + effTile / 2, effTile * 0.38, 0, Math.PI * 2);
       ctx.fill();
-      ctx.fillStyle = '#04101e';
-      ctx.font = `bold ${Math.max(10, effTile * 0.4)}px monospace`;
+
+      ctx.fillStyle = pInner;
+      ctx.beginPath();
+      ctx.arc(exX + effTile / 2, exY + effTile / 2, effTile * 0.22, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.max(10, effTile * 0.38)}px monospace`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('E', exX + effTile / 2, exY + effTile / 2);
