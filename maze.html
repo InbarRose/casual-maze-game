@@ -125,6 +125,7 @@
         </div>
         <div class="modal-footer" style="justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
           <a href="index.html" class="btn btn-secondary">Level Select</a>
+          <button id="btn-save-progress" class="btn btn-secondary" title="Export game save progress backup to a JSON file">💾 Save Backup</button>
           <button id="btn-download-log" class="btn btn-secondary" title="Download level replay and debug telemetry">📥 Debug Logs</button>
           <button id="btn-replay" class="btn btn-secondary">Replay</button>
           <button id="btn-next-level" class="btn btn-primary">Next Level →</button>
@@ -140,6 +141,7 @@
     import { LevelLoader } from './js/levels/level-loader.js';
     import { GameLoop } from './js/engine/game-loop.js';
     import { globalEvents } from './js/core/events.js';
+    import { StorageManager } from './js/core/storage.js';
 
     // Canvas elements
     const mainCanvas = document.getElementById('game-canvas');
@@ -381,6 +383,10 @@
     btnDownloadLog.addEventListener('click', () => {
       gameLoop.downloadDebugLog();
       showToast('Debug log downloaded!', 'success');
+    });
+    document.getElementById('btn-save-progress')?.addEventListener('click', () => {
+      const filename = StorageManager.downloadSaveFile();
+      showToast(`Saved progress to ${filename}!`, 'success');
     });
 
     // Mobile Virtual Controls Binding
