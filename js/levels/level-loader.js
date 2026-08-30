@@ -170,10 +170,12 @@ export class LevelLoader {
         x: raw.spawn?.x ?? 1,
         y: raw.spawn?.y ?? 1,
         elevation: raw.spawn?.elevation ?? 0,
+        style: raw.spawn?.style || 'stairs_down',
       },
       exit: {
         x: raw.exit?.x ?? width - 2,
         y: raw.exit?.y ?? height - 2,
+        style: raw.exit?.style || 'portal',
       },
       layers: {
         ground: this.normalizeGrid(raw.layers?.ground, width, height, TILES.FLOOR),

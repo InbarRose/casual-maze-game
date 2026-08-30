@@ -29,6 +29,20 @@ export const ELEVATION = Object.freeze({
   OVERHEAD: 1,
 });
 
+export const ENTRANCE_STYLES = Object.freeze({
+  STAIRS_DOWN: 'stairs_down',
+  PORTAL: 'portal',
+  ARCHWAY: 'archway',
+  DEFAULT: 'default',
+});
+
+export const EXIT_STYLES = Object.freeze({
+  STAIRS_UP: 'stairs_up',
+  PORTAL: 'portal',
+  ARCHWAY: 'archway',
+  DEFAULT: 'default',
+});
+
 export const FOG_STATE = Object.freeze({
   UNEXPLORED: 0,
   EXPLORED: 1,
