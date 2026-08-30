@@ -1,9 +1,8 @@
 /**
- * Casual Maze Game - Level Loader & Procedural Generator
+ * Casual Maze Game - Level Loader & Validator
  */
 
 import { TILES, DEFAULTS, LAYERS } from '../core/constants.js';
-import { PRNG } from '../core/prng.js';
 import { StorageManager } from '../core/storage.js';
 import { CAMPAIGN_LEVELS } from './default-levels.js';
 
@@ -45,7 +44,7 @@ export class LevelLoader {
           return this.normalizeLevel(json);
         }
       } catch (e) {
-        // Fall back to embedded campaign level or procedural generator
+        // Fall back to embedded campaign level
       }
     }
 
@@ -55,8 +54,8 @@ export class LevelLoader {
       return this.normalizeLevel(JSON.parse(JSON.stringify(campaignMatch)));
     }
 
-    // Otherwise, generate deterministic procedural maze based on seed
-    return this.generateProceduralLevel(id);
+    // Default fallback to first campaign level (Training Hall)
+    return this.normalizeLevel(JSON.parse(JSON.stringify(CAMPAIGN_LEVELS[0])));
   }
 
   /**
@@ -134,148 +133,5 @@ export class LevelLoader {
     }
     return result;
   }
-
-  /**
-   * Generates a solvable procedural labyrinth with bridge crossovers & keys
-   * @param {string|number} seed
-   * @param {number} [width=25]
-   * @param {number} [height=25]
-   * @returns {object}
-   */
-  static generateProceduralLevel(seed, width = 23, height = 23) {
-    const prng = new PRNG(seed);
-    // Ensure odd dimensions for proper maze cell grid
-    if (width % 2 === 0) width++;
-    if (height % 2 === 0) height++;
-
-    // 1. Initialize ground layer with walls (1)
-    const ground = Array.from({ length: height }, () => Array(width).fill(TILES.WALL));
-    const overhead = Array.from({ length: height }, () => Array(width).fill(0));
-
-    // 2. Randomized Recursive Backtracker / DFS
-    const stack = [];
-    const startX = 1;
-    const startY = 1;
-    ground[startY][startX] = TILES.FLOOR;
-    stack.push({ x: startX, y: startY });
-
-    const dirs = [
-      { dx: 0, dy: -2 },
-      { dx: 0, dy: 2 },
-      { dx: -2, dy: 0 },
-      { dx: 2, dy: 0 },
-    ];
-
-    while (stack.length > 0) {
-      const current = stack[stack.length - 1];
-      const neighbors = [];
-
-      for (const d of dirs) {
-        const nx = current.x + d.dx;
-        const ny = current.y + d.dy;
-        if (nx > 0 && nx < width - 1 && ny > 0 && ny < height - 1 && ground[ny][nx] === TILES.WALL) {
-          neighbors.push({ x: nx, y: ny, wallX: current.x + d.dx / 2, wallY: current.y + d.dy / 2 });
-        }
-      }
-
-      if (neighbors.length > 0) {
-        const next = prng.choice(neighbors);
-        ground[next.wallY][next.wallX] = TILES.FLOOR;
-        ground[next.y][next.x] = TILES.FLOOR;
-        stack.push({ x: next.x, y: next.y });
-      } else {
-        stack.pop();
-      }
-    }
-
-    // 3. Find Dead Ends and Potential Key / Exit Placements
-    const deadEnds = [];
-    for (let y = 1; y < height - 1; y++) {
-      for (let x = 1; x < width - 1; x++) {
-        if (ground[y][x] === TILES.FLOOR && !(x === startX && y === startY)) {
-          let openNeighbors = 0;
-          if (ground[y - 1][x] === TILES.FLOOR) openNeighbors++;
-          if (ground[y + 1][x] === TILES.FLOOR) openNeighbors++;
-          if (ground[y][x - 1] === TILES.FLOOR) openNeighbors++;
-          if (ground[y][x + 1] === TILES.FLOOR) openNeighbors++;
-
-          if (openNeighbors === 1) {
-            deadEnds.push({ x, y });
-          }
-        }
-      }
-    }
-
-    // Sort dead ends by distance to spawn
-    deadEnds.sort((a, b) => {
-      const distA = Math.hypot(a.x - startX, a.y - startY);
-      const distB = Math.hypot(b.x - startX, b.y - startY);
-      return distB - distA;
-    });
-
-    const exitPos = deadEnds.length > 0 ? deadEnds[0] : { x: width - 2, y: height - 2 };
-    ground[exitPos.y][exitPos.x] = TILES.FLOOR;
-
-    const entities = [];
-
-    // Place Key in a distant dead end if available
-    if (deadEnds.length > 1) {
-      const keyPos = deadEnds[Math.min(deadEnds.length - 1, Math.floor(deadEnds.length / 2))];
-      const keyId = `key_proc_${seed}_1`;
-      entities.push({
-        id: keyId,
-        type: 'key',
-        x: keyPos.x,
-        y: keyPos.y,
-        color: '#fbbf24',
-        name: 'Prismatic Key',
-      });
-
-      // Find entrance tile to exit dead end to place door
-      const doorCandidates = [
-        { x: exitPos.x, y: exitPos.y - 1 },
-        { x: exitPos.x, y: exitPos.y + 1 },
-        { x: exitPos.x - 1, y: exitPos.y },
-        { x: exitPos.x + 1, y: exitPos.y },
-      ].filter(c => ground[c.y] && ground[c.y][c.x] === TILES.FLOOR);
-
-      if (doorCandidates.length > 0) {
-        const doorPos = doorCandidates[0];
-        entities.push({
-          id: `door_proc_${seed}_1`,
-          type: 'door',
-          x: doorPos.x,
-          y: doorPos.y,
-          requiresKey: keyId,
-          color: '#fbbf24',
-        });
-      }
-    }
-
-    const themes = ['dungeon', 'emerald', 'sunset'];
-    const selectedTheme = themes[Math.abs(PRNG.hashString(String(seed))) % themes.length];
-
-    return {
-      $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
-      id: String(seed),
-      title: `Procedural Labyrinth #${seed}`,
-      author: 'Procedural Architect',
-      version: 1,
-      dimensions: { width, height },
-      config: {
-        fogOfWar: true,
-        viewRadius: 6,
-        allowFreePan: true,
-        tileSize: 32,
-        theme: selectedTheme,
-      },
-      spawn: { x: startX, y: startY, elevation: 0 },
-      exit: exitPos,
-      layers: {
-        ground,
-        overhead,
-      },
-      entities,
-    };
-  }
 }
+

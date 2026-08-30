@@ -15,6 +15,7 @@ import { FogOfWar } from './fog.js';
 import { GameRenderer } from './renderer.js';
 import { Minimap } from './minimap.js';
 import { StorageManager } from '../core/storage.js';
+import { DebugLogger } from './debug-logger.js';
 
 export class GameLoop {
   /**
@@ -35,6 +36,16 @@ export class GameLoop {
     this.isWon = false;
     this.lastTime = 0;
     this.elapsedTime = 0; // in milliseconds
+
+    // Telemetry & Debug Logger
+    this.logger = new DebugLogger(this.level);
+    this.logger.log('game:start', {
+      spawn: {
+        x: this.level.spawn.x,
+        y: this.level.spawn.y,
+        elevation: this.level.spawn.elevation || 0,
+      },
+    }, 0);
 
     // Subsystems
     const tileSize = this.level.config.tileSize || 32;
@@ -234,6 +245,17 @@ export class GameLoop {
       this.level.dimensions.height
     );
     this.updateFog();
+
+    // Reset logger for new attempt
+    this.logger = new DebugLogger(this.level);
+    this.logger.log('game:restarted', {
+      spawn: {
+        x: this.level.spawn.x,
+        y: this.level.spawn.y,
+        elevation: this.level.spawn.elevation || 0,
+      },
+    }, 0);
+
     this.notifyUI();
     globalEvents.emit('game:restarted');
     if (this.uiCallbacks.onRestart) {
@@ -280,6 +302,26 @@ export class GameLoop {
 
     // If player just finished a step onto a new cell
     if (!this.player.isMoving && (prevGridX !== this.player.gridX || prevGridY !== this.player.gridY || prevElevation !== this.player.elevation)) {
+      if (prevElevation !== this.player.elevation) {
+        this.logger.logElevationChange({
+          fromElevation: prevElevation,
+          toElevation: this.player.elevation,
+          atX: this.player.gridX,
+          atY: this.player.gridY,
+          triggerTile: this.level.layers.ground[this.player.gridY]?.[this.player.gridX],
+          elapsedMs: this.elapsedTime,
+        });
+      }
+
+      this.logger.logStepCompleted({
+        stepIndex: this.player.stepsTaken,
+        x: this.player.gridX,
+        y: this.player.gridY,
+        elevation: this.player.elevation,
+        facing: this.player.facing,
+        elapsedMs: this.elapsedTime,
+      });
+
       this.handleCellArrival();
     }
 
@@ -300,12 +342,14 @@ export class GameLoop {
     // 6. Update Fog
     this.updateFog();
 
-    // 7. Check Victory Condition
+    // 7. Check Victory Condition (Player must be on ground unless exit is specifically overhead)
+    const requiredExitElevation = this.level.exit?.elevation || ELEVATION.GROUND;
     if (
       !this.isWon &&
       this.level.exit &&
       this.player.gridX === this.level.exit.x &&
-      this.player.gridY === this.level.exit.y
+      this.player.gridY === this.level.exit.y &&
+      this.player.elevation === requiredExitElevation
     ) {
       this.handleVictory();
     }
@@ -347,6 +391,18 @@ export class GameLoop {
       this.player.inventory
     );
 
+    this.logger.logMoveAttempt({
+      fromX: this.player.gridX,
+      fromY: this.player.gridY,
+      fromElevation: this.player.elevation,
+      toX: targetX,
+      toY: targetY,
+      allowed: check.allowed,
+      nextElevation: check.nextElevation,
+      reason: check.reason,
+      elapsedMs: this.elapsedTime,
+    });
+
     if (check.allowed) {
       // If door was unlocked
       if (check.doorToUnlock) {
@@ -358,6 +414,13 @@ export class GameLoop {
           check.doorToUnlock.color,
           25
         );
+        this.logger.logDoorUnlocked({
+          doorId: check.doorToUnlock.id,
+          keyUsed: check.doorToUnlock.requiresKey,
+          atX: targetX,
+          atY: targetY,
+          elapsedMs: this.elapsedTime,
+        });
         globalEvents.emit('door:unlocked', { doorId: check.doorToUnlock.id });
         this.notifyUI();
       }
@@ -397,9 +460,10 @@ export class GameLoop {
   handleCellArrival() {
     const px = this.player.gridX;
     const py = this.player.gridY;
+    const pe = this.player.elevation;
 
-    // 1. Check Key pickup
-    const key = this.entities.find(e => e.type === 'key' && !e.isCollected && e.x === px && e.y === py);
+    // 1. Check Key pickup (must match entity elevation, default 0)
+    const key = this.entities.find(e => e.type === 'key' && !e.isCollected && e.x === px && e.y === py && (e.elevation || ELEVATION.GROUND) === pe);
     if (key) {
       key.isCollected = true;
       this.player.addKey(key.id);
@@ -409,12 +473,21 @@ export class GameLoop {
         key.color,
         30
       );
+      this.logger.logKeyCollected({
+        keyId: key.id,
+        keyName: key.name,
+        color: key.color,
+        atX: px,
+        atY: py,
+        inventory: this.player.inventory,
+        elapsedMs: this.elapsedTime,
+      });
       globalEvents.emit('key:collected', { keyId: key.id, name: key.name, color: key.color });
       this.notifyUI();
     }
 
-    // 2. Check Lever step trigger
-    const lever = this.entities.find(e => e.type === 'lever' && e.x === px && e.y === py);
+    // 2. Check Lever step trigger (must match entity elevation, default 0)
+    const lever = this.entities.find(e => e.type === 'lever' && e.x === px && e.y === py && (e.elevation || ELEVATION.GROUND) === pe);
     if (lever) {
       lever.toggle(this.level);
       this.renderer.spawnParticles(
@@ -423,6 +496,14 @@ export class GameLoop {
         lever.state ? '#34d399' : '#f43f5e',
         15
       );
+      this.logger.logLeverToggled({
+        leverId: lever.id,
+        state: lever.state,
+        atX: px,
+        atY: py,
+        targets: lever.targets,
+        elapsedMs: this.elapsedTime,
+      });
       this.notifyUI();
     }
 
@@ -433,12 +514,13 @@ export class GameLoop {
    * Handle manual interact button (E / Space / Enter)
    */
   handleManualInteract() {
-    // Check if player is on or adjacent to a lever
+    // Check if player is on or adjacent to a lever at matching elevation
     const px = this.player.gridX;
     const py = this.player.gridY;
+    const pe = this.player.elevation;
 
     const adjacentLevers = this.entities.filter(
-      e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1
+      e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation || ELEVATION.GROUND) === pe
     );
 
     if (adjacentLevers.length > 0) {
@@ -450,6 +532,14 @@ export class GameLoop {
         lever.state ? '#34d399' : '#f43f5e',
         20
       );
+      this.logger.logLeverToggled({
+        leverId: lever.id,
+        state: lever.state,
+        atX: lever.x,
+        atY: lever.y,
+        targets: lever.targets,
+        elapsedMs: this.elapsedTime,
+      });
       this.notifyUI();
     }
   }
@@ -482,12 +572,29 @@ export class GameLoop {
       steps: this.player.stepsTaken,
     };
 
+    this.logger.logVictory(stats, this.elapsedTime);
     StorageManager.saveLevelCompletion(this.level.id, stats);
     globalEvents.emit('level:completed', { levelId: this.level.id, stats });
 
     if (this.uiCallbacks.onVictory) {
       this.uiCallbacks.onVictory(stats);
     }
+  }
+
+  /**
+   * Export telemetry / debug log as JSON string
+   * @returns {string}
+   */
+  getDebugLogJSON() {
+    return this.logger.exportJSON();
+  }
+
+  /**
+   * Download debug log file to client
+   * @param {string} [customFilename]
+   */
+  downloadDebugLog(customFilename) {
+    this.logger.download(customFilename);
   }
 
   /**

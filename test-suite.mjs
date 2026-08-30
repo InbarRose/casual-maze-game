@@ -17,6 +17,7 @@ import { GameLoop } from './js/engine/game-loop.js';
 import { GameRenderer } from './js/engine/renderer.js';
 import { Minimap } from './js/engine/minimap.js';
 import { JsonExporter } from './js/editor/json-exporter.js';
+import { DebugLogger } from './js/engine/debug-logger.js';
 
 let passed = 0;
 let failed = 0;
@@ -78,15 +79,8 @@ assert(fs.existsSync(manifestPath), 'levels/manifest.json exists');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 assert(Array.isArray(manifest) && manifest.length === 5, 'manifest.json lists 5 levels');
 
-// 4. Test Procedural Level Generator
-console.log('\n[4] Testing Procedural Maze Generator...');
-const procLevel = LevelLoader.generateProceduralLevel('seed_99', 21, 21);
-assert(procLevel.dimensions.width === 21 && procLevel.dimensions.height === 21, 'Procedural level generated with correct dimensions');
-assert(procLevel.layers.ground[procLevel.spawn.y][procLevel.spawn.x] === TILES.FLOOR, 'Procedural spawn is on open floor');
-assert(procLevel.layers.ground[procLevel.exit.y][procLevel.exit.x] === TILES.FLOOR, 'Procedural exit is on open floor');
-
-// 5. Test Collision Engine & Elevation
-console.log('\n[5] Testing Collision Engine & Elevation Mechanics...');
+// 4. Test Collision Engine & Elevation Mechanics
+console.log('\n[4] Testing Collision Engine & Elevation Mechanics...');
 const testLevel = {
   dimensions: { width: 10, height: 10 },
   layers: {
@@ -136,8 +130,61 @@ assert(!bridgeEWGroundN.allowed, 'B_EW blocks Northward crossing on Ground');
 const rampClimb = CollisionEngine.checkMove(6, 1, 7, 1, ELEVATION.GROUND, testLevel);
 assert(rampClimb.allowed && rampClimb.nextElevation === ELEVATION.OVERHEAD, 'R_E transitions player from Ground (0) to Overhead (1)');
 
-// 6. Test Lever Mechanism & Tile Mutation
-console.log('\n[6] Testing Lever Mutation...');
+// Test Ramp R_E side entry blocked
+const rampSideEntry = CollisionEngine.checkMove(7, 2, 7, 1, ELEVATION.GROUND, testLevel);
+assert(!rampSideEntry.allowed && rampSideEntry.reason === 'ramp_side_entry_blocked', 'R_E blocks Northward side entry');
+
+// Test Ramp R_N (Moving North climbs 0 -> 1, moving South from 1 descends 1 -> 0)
+const rampNLevel = {
+  dimensions: { width: 5, height: 5 },
+  layers: {
+    ground: [
+      [1, 1, 1, 1, 1],
+      [1, 0, 'B_EW', 0, 1],
+      [1, 0, 'R_N', 0, 1],
+      [1, 0, 0, 0, 1],
+      [1, 1, 1, 1, 1]
+    ],
+    overhead: [
+      [0, 0, 0, 0, 0],
+      [0, 0, 'B_EW', 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0]
+    ]
+  },
+  entities: []
+};
+
+// Climb R_N North: from (2, 3) at Ground to (2, 2)
+const climbRN = CollisionEngine.checkMove(2, 3, 2, 2, ELEVATION.GROUND, rampNLevel);
+assert(climbRN.allowed && climbRN.nextElevation === ELEVATION.OVERHEAD, 'R_N climb North transitions 0 -> 1');
+
+// Step from R_N North onto B_EW Overhead: from (2, 2) to (2, 1)
+const stepOntoBridge = CollisionEngine.checkMove(2, 2, 2, 1, ELEVATION.OVERHEAD, rampNLevel);
+assert(stepOntoBridge.allowed && stepOntoBridge.nextElevation === ELEVATION.OVERHEAD, 'Exit R_N North onto B_EW Overhead allowed');
+
+// Descend from B_EW South onto R_N: from (2, 1) to (2, 2)
+const descendOntoRN = CollisionEngine.checkMove(2, 1, 2, 2, ELEVATION.OVERHEAD, rampNLevel);
+assert(descendOntoRN.allowed && descendOntoRN.nextElevation === ELEVATION.GROUND, 'Enter R_N South from Overhead descends to 0');
+
+// Exit R_N South onto Ground floor: from (2, 2) to (2, 3)
+const exitRNSouth = CollisionEngine.checkMove(2, 2, 2, 3, ELEVATION.GROUND, rampNLevel);
+assert(exitRNSouth.allowed && exitRNSouth.nextElevation === ELEVATION.GROUND, 'Exit R_N South onto Ground floor allowed');
+
+// Test Bridge B_EW on Overhead (N-S allowed, E-W blocked)
+const bridgeEWOverheadNS = CollisionEngine.checkMove(5, 2, 5, 1, ELEVATION.OVERHEAD, testLevel);
+assert(bridgeEWOverheadNS.allowed, 'B_EW allows North-South movement across bridge on Overhead');
+
+const bridgeEWOverheadEW = CollisionEngine.checkMove(4, 1, 5, 1, ELEVATION.OVERHEAD, testLevel);
+assert(!bridgeEWOverheadEW.allowed && bridgeEWOverheadEW.reason === 'bridge_overhead_cross_blocked', 'B_EW blocks East-West movement across railings on Overhead');
+
+// Test Overhead Void Blocking (Prevent floating across empty overhead space)
+const overheadVoidMove = CollisionEngine.checkMove(2, 2, 3, 2, ELEVATION.OVERHEAD, testLevel);
+assert(!overheadVoidMove.allowed && overheadVoidMove.reason === 'no_overhead_path', 'Overhead movement into empty space (0) is blocked');
+
+// 5. Test Lever Mechanism & Tile Mutation
+console.log('\n[5] Testing Lever Mutation...');
 const leverLevel = {
   dimensions: { width: 5, height: 5 },
   layers: {
@@ -169,21 +216,70 @@ lever.toggle(leverLevel);
 assert(lever.state === false, 'Lever toggled back to state false');
 assert(leverLevel.layers.ground[1][2] === 1, 'Target tile reverted to Wall (1)');
 
-// 7. Test Fog of War Raycasting
-console.log('\n[7] Testing Fog of War...');
+// 6. Test Fog of War Raycasting
+console.log('\n[6] Testing Fog of War...');
 const fog = new FogOfWar(10, 10);
 assert(fog.getVisibility(5, 5) === FOG_STATE.UNEXPLORED, 'Initial fog tile is UNEXPLORED');
 fog.update(5, 5, 0, testLevel.layers.ground, testLevel.layers.overhead, 3);
 assert(fog.getVisibility(5, 5) === FOG_STATE.VISIBLE, 'Player position is VISIBLE');
 assert(fog.isExplored(5, 5), 'Player position is marked explored');
 
-// 8. Test Camera Viewport Math
-console.log('\n[8] Testing Camera Viewport Culling...');
+// 7. Test Camera Viewport Math
+console.log('\n[7] Testing Camera Viewport Culling...');
 const cam = new Camera(800, 600, 32);
 cam.snapTo(160, 160, 20, 20);
 const bounds = cam.getViewportBounds(20, 20);
 assert(bounds.startCol >= 0 && bounds.endCol < 20, 'Viewport culling start/end columns bounded');
 assert(bounds.startRow >= 0 && bounds.endRow < 20, 'Viewport culling start/end rows bounded');
+
+// 8. Test DebugLogger Subsystem
+console.log('\n[8] Testing DebugLogger Subsystem...');
+const logger = new DebugLogger(testLevel);
+logger.log('game:start', { spawn: { x: 1, y: 1, elevation: 0 } }, 0);
+logger.logMoveAttempt({
+  fromX: 1,
+  fromY: 1,
+  fromElevation: 0,
+  toX: 2,
+  toY: 1,
+  allowed: false,
+  nextElevation: 0,
+  reason: 'door_locked',
+  elapsedMs: 250,
+});
+logger.logKeyCollected({
+  keyId: 'key_1',
+  keyName: 'Gold Key',
+  color: '#fbbf24',
+  atX: 1,
+  atY: 1,
+  inventory: ['key_1'],
+  elapsedMs: 500,
+});
+logger.logDoorUnlocked({
+  doorId: 'door_1',
+  keyUsed: 'key_1',
+  atX: 2,
+  atY: 1,
+  elapsedMs: 750,
+});
+logger.logElevationChange({
+  fromElevation: 0,
+  toElevation: 1,
+  atX: 7,
+  atY: 1,
+  triggerTile: 'R_E',
+  elapsedMs: 1200,
+});
+logger.logVictory({ time: 1500, steps: 10 }, 1500);
+
+const payload = logger.buildPayload();
+assert(payload.schemaVersion === '1.0.0', 'DebugLogger payload has schemaVersion 1.0.0');
+assert(payload.summary.completed === true, 'DebugLogger records victory completion');
+assert(payload.events.length === 6, 'DebugLogger recorded 6 events in session');
+const jsonExport = logger.exportJSON();
+const parsed = JSON.parse(jsonExport);
+assert(parsed.sessionId && parsed.events.length === 6, 'DebugLogger exportJSON produces valid parseable JSON');
 
 console.log(`\n=== TEST SUMMARY: ${passed} PASSED, ${failed} FAILED ===`);
 if (failed > 0) {

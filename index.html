@@ -221,19 +221,6 @@
 
     <!-- Navigation Hub Grid -->
     <div class="hub-grid">
-      <!-- Random / Custom Seed Jump -->
-      <div class="card">
-        <div>
-          <span class="card-header-icon">🎲</span>
-          <div class="card-title">Seeded Generator</div>
-          <div class="card-desc">Jump to any numeric level or custom seed to generate an endless procedural maze puzzle.</div>
-        </div>
-        <form class="input-group" onsubmit="handleIdJump(event)" style="display: flex; gap: 0.5rem;">
-          <input type="text" id="maze-id-input" class="input-field" placeholder="e.g. 42 or vault-9" style="flex: 1;" required />
-          <button type="submit" class="btn btn-secondary">Play</button>
-        </form>
-      </div>
-
       <!-- Import JSON -->
       <div class="card">
         <div>
@@ -290,15 +277,6 @@
         pill.appendChild(statusSpan);
       }
     });
-
-    window.handleIdJump = function(e) {
-      e.preventDefault();
-      const input = document.getElementById('maze-id-input');
-      const val = input.value.trim();
-      if (val) {
-        window.location.href = `maze.html?id=${encodeURIComponent(val)}`;
-      }
-    };
 
     window.handleFileUpload = function(e) {
       const file = e.target.files[0];

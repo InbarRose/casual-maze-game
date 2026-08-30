@@ -99,8 +99,9 @@
             </div>
           </div>
         </div>
-        <div class="modal-footer" style="justify-content: center;">
+        <div class="modal-footer" style="justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
           <a href="index.html" class="btn btn-secondary">Level Select</a>
+          <button id="btn-download-log" class="btn btn-secondary" title="Download level replay and debug telemetry">📥 Debug Logs</button>
           <button id="btn-replay" class="btn btn-secondary">Replay</button>
           <button id="btn-next-level" class="btn btn-primary">Next Level →</button>
         </div>
@@ -133,6 +134,9 @@
     const victoryModal = document.getElementById('victory-modal');
     const btnReplay = document.getElementById('btn-replay');
     const btnNextLevel = document.getElementById('btn-next-level');
+    const btnDownloadLog = document.getElementById('btn-download-log');
+
+    let lastRenderedKeyIds = '';
 
     // Resize Handler
     function resizeCanvas() {
@@ -182,19 +186,24 @@
           timerEl.textContent = formatTime(state.time);
           stepsEl.textContent = state.steps;
 
-          // Render inventory keys
-          if (state.keys.length > 0) {
-            inventoryCardEl.style.display = 'flex';
-            keysListEl.innerHTML = '';
-            for (const key of state.keys) {
-              const pill = document.createElement('span');
-              pill.className = 'key-pill';
-              pill.style.borderColor = key.color;
-              pill.innerHTML = `<span style="color:${key.color};">🔑</span> ${key.name || 'Key'}`;
-              keysListEl.appendChild(pill);
+          // Render inventory keys only when the inventory actually changes
+          const currentKeyIds = state.keys.map(k => k.id).sort().join(',');
+          if (currentKeyIds !== lastRenderedKeyIds) {
+            lastRenderedKeyIds = currentKeyIds;
+            if (state.keys.length > 0) {
+              inventoryCardEl.style.display = 'flex';
+              keysListEl.innerHTML = '';
+              for (const key of state.keys) {
+                const pill = document.createElement('span');
+                pill.className = 'key-pill';
+                pill.style.borderColor = key.color;
+                pill.innerHTML = `<span style="color:${key.color};">🔑</span> ${key.name || 'Key'}`;
+                keysListEl.appendChild(pill);
+              }
+            } else {
+              inventoryCardEl.style.display = 'none';
+              keysListEl.innerHTML = '';
             }
-          } else {
-            inventoryCardEl.style.display = 'none';
           }
         },
         onFreePanChange: (mode) => {
@@ -232,10 +241,18 @@
 
     // Button event listeners
     btnFreePan.addEventListener('click', () => gameLoop.toggleFreePan());
-    btnRestart.addEventListener('click', () => gameLoop.restartLevel());
+    btnRestart.addEventListener('click', () => {
+      lastRenderedKeyIds = '';
+      gameLoop.restartLevel();
+    });
     btnReplay.addEventListener('click', () => {
+      lastRenderedKeyIds = '';
       victoryModal.classList.remove('active');
       gameLoop.restartLevel();
+    });
+    btnDownloadLog.addEventListener('click', () => {
+      gameLoop.downloadDebugLog();
+      showToast('Debug log downloaded!', 'success');
     });
 
     // Mobile Virtual Controls Binding

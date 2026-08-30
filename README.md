@@ -1,6 +1,6 @@
 # Casual Maze Game
 
-A top-down 2D puzzle maze and labyrinth engine built with Vanilla HTML5, CSS3, Modern JavaScript (ES6+ Modules), and HTML5 Canvas 2D. Features multi-layer elevation (bridges & tunnels), reactive puzzle mechanics (levers, color-locked doors, keys), dynamic fog-of-war, viewport cameras with free-panning, a minimap HUD, seeded procedural labyrinths, and a browser-based level editor with JSON import/export.
+A top-down 2D puzzle maze and labyrinth engine built with Vanilla HTML5, CSS3, Modern JavaScript (ES6+ Modules), and HTML5 Canvas 2D. Features multi-layer elevation (bridges & tunnels), reactive puzzle mechanics (levers, color-locked doors, keys), dynamic fog-of-war, viewport cameras with free-panning, a minimap HUD, handcrafted campaign levels, and a browser-based level editor with JSON import/export.
 
 Hosted statically on GitHub Pages at [casual-maze-game.inbarrose.com](https://casual-maze-game.inbarrose.com).
 
@@ -13,7 +13,7 @@ Hosted statically on GitHub Pages at [casual-maze-game.inbarrose.com](https://ca
 * **3-State Fog-of-War**: 2D raycasting line-of-sight with memory dimming for explored terrain.
 * **Camera & Free-Pan Mode**: Smooth camera follow with the ability to press `[M]` to freely pan and inspect the discovered map.
 * **Minimap HUD**: Real-time minimap with click-and-drag navigation.
-* **Campaign & Seeded Procedural Generator**: Play through handcrafted tutorial and master labyrinths (Levels 1–5), or enter any custom seed/id (`?id=42`) for an infinite variety of solvable mazes.
+* **Handcrafted Campaign Labyrinths**: Play through handcrafted tutorial and master labyrinths (Levels 1–5).
 * **Handcrafted Maze Architect (Editor)**: Design custom puzzles, wire levers to toggle tiles, and export/import `.json` maze files.
 * **Responsive & Mobile Ready**: Full keyboard controls (WASD / Arrows / Space / E / M / R) and on-screen virtual touch controls for phones and tablets.
 
@@ -81,11 +81,9 @@ casual-maze-game/
         └── json-exporter.js      # File export/import parser via Web File API
 ```
 
----
+## 🚀 Local Development & Testing
 
-## 🚀 Local Development
-
-To run the game locally:
+### Running Locally
 ```bash
 # Using Python
 python -m http.server 8000
@@ -93,3 +91,18 @@ python -m http.server 8000
 # Or using any static file server
 # Open http://localhost:8000 in your browser
 ```
+
+### Running Automated Tests
+```bash
+npm test
+```
+
+---
+
+## 📚 Documentation & Guidelines
+
+* **[AGENTS.md](AGENTS.md)**: Standard operating procedures and engineering guidelines for AI coding agents (static hosting rules, small atomic commits, mandatory automated tests).
+* **[PROJECT_CONTEXT.md](PROJECT_CONTEXT.md)**: Detailed technical context, level schema, and subsystem specifications.
+* **[docs/PROJECT_MANAGEMENT.md](docs/PROJECT_MANAGEMENT.md)**: Current release status, milestone roadmap, and active backlog/TODO items.
+* **[docs/adr/](docs/adr/)**: Architectural Decision Records (ADRs).
+

@@ -7,6 +7,7 @@ const STORAGE_KEYS = {
   PROGRESS: 'casual_maze_campaign_progress',
   SETTINGS: 'casual_maze_user_settings',
   EDITOR_AUTOSAVE: 'casual_maze_editor_autosave',
+  SAVED_PROJECTS: 'casual_maze_saved_projects',
 };
 
 export class StorageManager {
@@ -86,7 +87,11 @@ export class StorageManager {
    */
   static saveEditorDraft(mazeData) {
     try {
-      localStorage.setItem(STORAGE_KEYS.EDITOR_AUTOSAVE, JSON.stringify(mazeData));
+      const draft = {
+        ...mazeData,
+        _lastSaved: Date.now(),
+      };
+      localStorage.setItem(STORAGE_KEYS.EDITOR_AUTOSAVE, JSON.stringify(draft));
       return true;
     } catch (e) {
       console.error('[StorageManager] Failed to save editor draft:', e);
@@ -105,6 +110,101 @@ export class StorageManager {
     } catch (e) {
       console.error('[StorageManager] Failed to load editor draft:', e);
       return null;
+    }
+  }
+
+  /**
+   * Clear editor draft
+   */
+  static clearEditorDraft() {
+    try {
+      localStorage.removeItem(STORAGE_KEYS.EDITOR_AUTOSAVE);
+    } catch (e) {
+      console.error('[StorageManager] Failed to clear editor draft:', e);
+    }
+  }
+
+  /**
+   * Save a named project to local storage
+   * @param {object} mazeData
+   * @returns {string} project ID
+   */
+  static saveProject(mazeData) {
+    try {
+      const projects = this.getSavedProjectsMap();
+      const id = String(mazeData.id || `project_${Date.now()}`);
+      const project = {
+        ...mazeData,
+        id,
+        updatedAt: Date.now(),
+      };
+      projects[id] = project;
+      localStorage.setItem(STORAGE_KEYS.SAVED_PROJECTS, JSON.stringify(projects));
+      return id;
+    } catch (e) {
+      console.error('[StorageManager] Failed to save project:', e);
+      return null;
+    }
+  }
+
+  /**
+   * Internal helper to load raw projects map
+   * @returns {Record<string, object>}
+   */
+  static getSavedProjectsMap() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.SAVED_PROJECTS);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      console.error('[StorageManager] Failed to read saved projects map:', e);
+      return {};
+    }
+  }
+
+  /**
+   * List all saved custom projects sorted by most recently modified
+   * @returns {Array<{ id: string, title: string, author: string, dimensions: object, updatedAt: number }>}
+   */
+  static listProjects() {
+    const map = this.getSavedProjectsMap();
+    return Object.values(map)
+      .map(p => ({
+        id: p.id,
+        title: p.title || 'Untitled Labyrinth',
+        author: p.author || 'Architect',
+        dimensions: p.dimensions || { width: 21, height: 21 },
+        updatedAt: p.updatedAt || 0,
+      }))
+      .sort((a, b) => b.updatedAt - a.updatedAt);
+  }
+
+  /**
+   * Load a specific saved project by ID
+   * @param {string} id
+   * @returns {object|null}
+   */
+  static loadProject(id) {
+    const map = this.getSavedProjectsMap();
+    return map[id] ? JSON.parse(JSON.stringify(map[id])) : null;
+  }
+
+  /**
+   * Delete a saved project by ID
+   * @param {string} id
+   * @returns {boolean}
+   */
+  static deleteProject(id) {
+    try {
+      const map = this.getSavedProjectsMap();
+      if (map[id]) {
+        delete map[id];
+        localStorage.setItem(STORAGE_KEYS.SAVED_PROJECTS, JSON.stringify(map));
+        return true;
+      }
+      return false;
+    } catch (e) {
+      console.error('[StorageManager] Failed to delete project:', e);
+      return false;
     }
   }
 

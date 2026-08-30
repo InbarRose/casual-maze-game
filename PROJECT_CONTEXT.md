@@ -5,7 +5,7 @@
 * **Domain:** `casual-maze-game.inbarrose.com`
 * **Hosting:** GitHub Pages (Static hosting, zero backend, zero external database).
 * **Stack:** Vanilla HTML5, CSS3, Modern JavaScript (ES6+ Modules), HTML5 Canvas 2D.
-* **Core Concept:** A 2D top-down, tile-based puzzle maze engine supporting large procedural or handcrafted labyrinths, multi-layer elevation (bridges/tunnels), reactive mechanics (levers, keys, locking doors), fog-of-war, viewport cameras with free-panning, a minimap HUD, and a browser-based level editor with JSON import/export.
+* **Core Concept:** A 2D top-down, tile-based puzzle maze engine supporting handcrafted and custom user-designed labyrinths, multi-layer elevation (bridges/tunnels), reactive mechanics (levers, keys, locking doors), fog-of-war, viewport cameras with free-panning, a minimap HUD, and a browser-based level editor with JSON import/export.
 
 ---
 
@@ -15,8 +15,11 @@
 casual-maze-game/
 ├── CNAME                         # Domain mapping (casual-maze-game.inbarrose.com)
 ├── README.md                     # Documentation & Instructions
+├── AGENTS.md                     # Agent Operating Guidelines & Standards
 ├── PROJECT_CONTEXT.md            # AI Context Specification (this file)
-├── plan.md                       # Roadmap & Architecture Blueprint
+├── docs/                         # Project management, roadmaps, and ADR records
+│   ├── PROJECT_MANAGEMENT.md     # Milestone tracking, roadmap & active backlog
+│   └── adr/                      # Architectural Decision Records
 ├── index.html                    # Hub / Landing Page (Level Select, Import, Editor link)
 ├── maze.html                     # Game Player Canvas Interface
 ├── editor.html                   # Handcrafted Maze Architect & JSON Designer
