@@ -30,13 +30,17 @@ Hosted statically on GitHub Pages at [casual-maze-game.inbarrose.com](https://ca
 
 ## 🚀 Quickstart & Local Development
 
-Run locally using any static HTTP server:
+Run locally with automatic live-reload on file changes:
 
 ```bash
-# Start a local static server
+# Start local development server with auto-reload (live-server)
+npm start
+
+# Or using Python HTTP server (manual refresh)
 python -m http.server 8000
-# Open http://localhost:8000 in your browser
 ```
+
+Open `http://localhost:8000` in your browser.
 
 Run the automated test suite:
 
