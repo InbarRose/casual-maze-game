@@ -12,7 +12,7 @@ import { Key } from './js/entities/key.js';
 import { Door } from './js/entities/door.js';
 import { Lever } from './js/entities/lever.js';
 import { LevelLoader } from './js/levels/level-loader.js';
-import { CAMPAIGN_LEVELS } from './js/levels/default-levels.js';
+import { CAMPAIGN_LEVELS, TUTORIAL_LEVELS } from './js/levels/default-levels.js';
 import { GameLoop } from './js/engine/game-loop.js';
 import { GameRenderer } from './js/engine/renderer.js';
 import { Minimap } from './js/engine/minimap.js';
@@ -96,10 +96,22 @@ for (let i = 1; i <= 5; i++) {
   assert(norm.exit && norm.exit.x !== undefined, `JSON Level ${i} has valid exit point`);
 }
 
+for (let i = 1; i <= 6; i++) {
+  const jsonPath = `./levels/tutorial_${i}.json`;
+  assert(fs.existsSync(jsonPath), `File ${jsonPath} exists on disk`);
+  const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+  const norm = LevelLoader.normalizeLevel(raw);
+  assert(norm.dimensions.width > 0 && norm.dimensions.height > 0, `JSON Tutorial ${i} has valid dimensions`);
+  assert(norm.layers.ground.length === norm.dimensions.height, `JSON Tutorial ${i} ground layer matches height`);
+  assert(norm.layers.ground[0].length === norm.dimensions.width, `JSON Tutorial ${i} ground layer matches width`);
+  assert(norm.spawn && norm.spawn.x !== undefined, `JSON Tutorial ${i} has valid spawn point`);
+  assert(norm.exit && norm.exit.x !== undefined, `JSON Tutorial ${i} has valid exit point`);
+}
+
 const manifestPath = './levels/manifest.json';
 assert(fs.existsSync(manifestPath), 'levels/manifest.json exists');
 const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-assert(Array.isArray(manifest) && manifest.length === 5, 'manifest.json lists 5 levels');
+assert(Array.isArray(manifest) && manifest.length === 11, 'manifest.json lists 11 levels (6 tutorial + 5 campaign)');
 
 // 4. Test Collision Engine & Elevation Mechanics
 console.log('\n[4] Testing Collision Engine & Elevation Mechanics...');
@@ -311,6 +323,14 @@ for (let i = 1; i <= 5; i++) {
   const report = LevelValidator.validate(lvl);
   assert(report.valid === true, `Campaign Level ${i} passes validation (valid=true, errors=0)`);
   assert(report.stats.exitReached === true, `Campaign Level ${i} exit is reachable via BFS`);
+}
+
+// 9b. Test valid tutorial levels
+for (let i = 1; i <= 6; i++) {
+  const lvl = TUTORIAL_LEVELS[i - 1];
+  const report = LevelValidator.validate(lvl);
+  assert(report.valid === true, `Tutorial Level ${i} (${lvl.title}) passes validation (valid=true, errors=0)`);
+  assert(report.stats.exitReached === true, `Tutorial Level ${i} (${lvl.title}) exit is reachable via BFS`);
 }
 
 // 9b. Test invalid spawn inside wall

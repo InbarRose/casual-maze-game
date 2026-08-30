@@ -1,30 +1,77 @@
 [
   {
+    "id": "tutorial_1",
+    "category": "tutorial",
+    "title": "First Steps",
+    "file": "levels/tutorial_1.json",
+    "theme": "dungeon"
+  },
+  {
+    "id": "tutorial_2",
+    "category": "tutorial",
+    "title": "Keys & Colored Gates",
+    "file": "levels/tutorial_2.json",
+    "theme": "dungeon"
+  },
+  {
+    "id": "tutorial_3",
+    "category": "tutorial",
+    "title": "Mechanisms & Levers",
+    "file": "levels/tutorial_3.json",
+    "theme": "sunset"
+  },
+  {
+    "id": "tutorial_4",
+    "category": "tutorial",
+    "title": "Bridges & Elevation",
+    "file": "levels/tutorial_4.json",
+    "theme": "emerald"
+  },
+  {
+    "id": "tutorial_5",
+    "category": "tutorial",
+    "title": "The Shrouded Path",
+    "file": "levels/tutorial_5.json",
+    "theme": "dungeon"
+  },
+  {
+    "id": "tutorial_6",
+    "category": "tutorial",
+    "title": "Master's Trial",
+    "file": "levels/tutorial_6.json",
+    "theme": "sunset"
+  },
+  {
     "id": "1",
+    "category": "campaign",
     "title": "The Training Hall",
     "file": "levels/level_1.json",
     "theme": "dungeon"
   },
   {
     "id": "2",
+    "category": "campaign",
     "title": "The Overpass",
     "file": "levels/level_2.json",
     "theme": "emerald"
   },
   {
     "id": "3",
+    "category": "campaign",
     "title": "The Lever Crypt",
     "file": "levels/level_3.json",
     "theme": "sunset"
   },
   {
     "id": "4",
+    "category": "campaign",
     "title": "Sky Bridges & Crossroads",
     "file": "levels/level_4.json",
     "theme": "dungeon"
   },
   {
     "id": "5",
+    "category": "campaign",
     "title": "The Sunken Vault",
     "file": "levels/level_5.json",
     "theme": "dungeon"

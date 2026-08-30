@@ -468,3 +468,485 @@ export const CAMPAIGN_LEVELS = [
     ]
   }
 ];
+
+// =========================================================================
+// HANDCRAFTED PROGRESSIVE TUTORIAL LEVELS (1 to 6)
+// =========================================================================
+export const TUTORIAL_LEVELS = [
+  // -----------------------------------------------------------------------
+  // Tutorial 1: First Steps (Basics: Navigation & Exit)
+  // -----------------------------------------------------------------------
+  {
+    id: "tutorial_1",
+    title: "First Steps",
+    author: "Casual Maze Academy",
+    version: 1,
+    dimensions: { width: 9, height: 9 },
+    config: {
+      fogOfWar: false,
+      mapRevealed: true,
+      viewRadius: 6,
+      allowFreePan: true,
+      tileSize: 32,
+      theme: "dungeon"
+    },
+    help: {
+      title: "Navigation Basics",
+      message: "Welcome to Casual Maze! Use WASD or Arrow Keys to navigate through the corridor and reach the glowing blue exit portal."
+    },
+    spawn: { x: 1, y: 1, elevation: 0 },
+    exit: { x: 7, y: 7 },
+    layers: {
+      ground: [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 0, 1, 0, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ],
+      overhead: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    },
+    entities: []
+  },
+
+  // -----------------------------------------------------------------------
+  // Tutorial 2: Keys & Colored Gates (Red & Blue Pairs)
+  // -----------------------------------------------------------------------
+  {
+    id: "tutorial_2",
+    title: "Keys & Colored Gates",
+    author: "Casual Maze Academy",
+    version: 1,
+    dimensions: { width: 11, height: 11 },
+    config: {
+      fogOfWar: false,
+      mapRevealed: true,
+      viewRadius: 6,
+      allowFreePan: true,
+      tileSize: 32,
+      theme: "dungeon"
+    },
+    help: {
+      title: "Color Keys & Gates",
+      message: "Doors are locked! Walk over colored keys to collect them into your inventory. Red keys unlock Red doors, and Blue keys unlock Blue doors."
+    },
+    spawn: { x: 1, y: 1, elevation: 0 },
+    exit: { x: 9, y: 9 },
+    layers: {
+      ground: [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ],
+      overhead: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    },
+    entities: [
+      {
+        id: "key_red_t2",
+        type: "key",
+        x: 1,
+        y: 5,
+        color: "#f43f5e",
+        name: "Ruby Key"
+      },
+      {
+        id: "door_red_t2",
+        type: "door",
+        x: 5,
+        y: 5,
+        requiresKey: "key_red_t2",
+        color: "#f43f5e"
+      },
+      {
+        id: "key_blue_t2",
+        type: "key",
+        x: 9,
+        y: 1,
+        color: "#38bdf8",
+        name: "Sapphire Key"
+      },
+      {
+        id: "door_blue_t2",
+        type: "door",
+        x: 7,
+        y: 9,
+        requiresKey: "key_blue_t2",
+        color: "#38bdf8"
+      }
+    ]
+  },
+
+  // -----------------------------------------------------------------------
+  // Tutorial 3: Mechanisms & Levers (Interactive Switches)
+  // -----------------------------------------------------------------------
+  {
+    id: "tutorial_3",
+    title: "Mechanisms & Levers",
+    author: "Casual Maze Academy",
+    version: 1,
+    dimensions: { width: 11, height: 11 },
+    config: {
+      fogOfWar: false,
+      mapRevealed: true,
+      viewRadius: 6,
+      allowFreePan: true,
+      tileSize: 32,
+      theme: "sunset"
+    },
+    help: {
+      title: "Interactive Switches",
+      message: "Floor levers dynamically mutate the labyrinth! Step onto or press E / Space near a switch to lower walls blocking your path."
+    },
+    spawn: { x: 1, y: 1, elevation: 0 },
+    exit: { x: 9, y: 9 },
+    layers: {
+      ground: [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1],
+        [1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 0, 0, 0, 0, 1],
+        [1, 0, 0, 0, 1, 1, 1, 1, 1, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ],
+      overhead: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    },
+    entities: [
+      {
+        id: "lever_t3_1",
+        type: "lever",
+        x: 1,
+        y: 9,
+        state: false,
+        name: "Passage Lever",
+        targets: [
+          {
+            action: "toggle_tile",
+            layer: "ground",
+            x: 5,
+            y: 5,
+            stateA: 0,
+            stateB: 1
+          }
+        ]
+      }
+    ]
+  },
+
+  // -----------------------------------------------------------------------
+  // Tutorial 4: Bridges & Elevation (Ramps & 3D Walkways)
+  // -----------------------------------------------------------------------
+  {
+    id: "tutorial_4",
+    title: "Bridges & Elevation",
+    author: "Casual Maze Academy",
+    version: 1,
+    dimensions: { width: 13, height: 13 },
+    config: {
+      fogOfWar: false,
+      mapRevealed: true,
+      viewRadius: 6,
+      allowFreePan: true,
+      tileSize: 32,
+      theme: "emerald"
+    },
+    help: {
+      title: "Bridges & Ramps",
+      message: "Walk onto a Ramp (▲) to climb to Elevation 1 (Overhead Bridge). You can cross over ground corridors, while ground traffic passes beneath."
+    },
+    spawn: { x: 1, y: 1, elevation: 0 },
+    exit: { x: 11, y: 11 },
+    layers: {
+      ground: [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, "R_S", 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, "B_EW", 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 1, "R_N", 1, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ],
+      overhead: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, "B_EW", 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    },
+    entities: []
+  },
+
+  // -----------------------------------------------------------------------
+  // Tutorial 5: The Shrouded Path (Fog-of-War & Vision Radius)
+  // -----------------------------------------------------------------------
+  {
+    id: "tutorial_5",
+    title: "The Shrouded Path",
+    author: "Casual Maze Academy",
+    version: 1,
+    dimensions: { width: 13, height: 13 },
+    config: {
+      fogOfWar: true,
+      mapRevealed: true,
+      viewRadius: 4,
+      allowFreePan: true,
+      tileSize: 32,
+      theme: "dungeon"
+    },
+    help: {
+      title: "Fog of War & Vision Radius",
+      message: "The maze layout is revealed in memory, but dynamic items (keys, doors, levers) stay hidden in the shadows until you are within 4 tiles of vision!"
+    },
+    spawn: { x: 1, y: 1, elevation: 0 },
+    exit: { x: 11, y: 11 },
+    layers: {
+      ground: [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 0, 1, 0, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ],
+      overhead: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    },
+    entities: [
+      {
+        id: "key_gold_t5",
+        type: "key",
+        x: 1,
+        y: 11,
+        color: "#fbbf24",
+        name: "Golden Key"
+      },
+      {
+        id: "door_gold_t5",
+        type: "door",
+        x: 9,
+        y: 11,
+        requiresKey: "key_gold_t5",
+        color: "#fbbf24"
+      }
+    ]
+  },
+
+  // -----------------------------------------------------------------------
+  // Tutorial 6: Master's Trial (Grand Final Tutorial)
+  // -----------------------------------------------------------------------
+  {
+    id: "tutorial_6",
+    title: "Master's Trial",
+    author: "Casual Maze Academy",
+    version: 1,
+    dimensions: { width: 17, height: 17 },
+    config: {
+      fogOfWar: true,
+      mapRevealed: false,
+      viewRadius: 5,
+      allowFreePan: true,
+      tileSize: 32,
+      theme: "sunset"
+    },
+    help: {
+      title: "The Master's Trial",
+      message: "The final test! Navigate the shrouded darkness, collect multiple colored keys, trigger switch mechanisms, and cross elevated overpasses to reach the exit."
+    },
+    spawn: { x: 1, y: 1, elevation: 0 },
+    exit: { x: 15, y: 15 },
+    layers: {
+      ground: [
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 1, "R_S", 1, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, "B_EW", 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 1, 1, "R_N", 1, 1, 0, 1, 0, 1, 0, 1],
+        [1, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 0, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1],
+        [1, 0, 1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1],
+        [1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1],
+        [1, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 0, 1],
+        [1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
+        [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+      ],
+      overhead: [
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, "B_EW", 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, "B_EW", 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, "B_EW", 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      ]
+    },
+    entities: [
+      {
+        id: "key_green_t6",
+        type: "key",
+        x: 1,
+        y: 5,
+        color: "#34d399",
+        name: "Emerald Key"
+      },
+      {
+        id: "door_green_t6",
+        type: "door",
+        x: 5,
+        y: 1,
+        requiresKey: "key_green_t6",
+        color: "#34d399"
+      },
+      {
+        id: "key_blue_t6",
+        type: "key",
+        x: 15,
+        y: 1,
+        color: "#38bdf8",
+        name: "Sapphire Key"
+      },
+      {
+        id: "door_blue_t6",
+        type: "door",
+        x: 11,
+        y: 4,
+        requiresKey: "key_blue_t6",
+        color: "#38bdf8"
+      },
+      {
+        id: "key_red_t6",
+        type: "key",
+        x: 1,
+        y: 15,
+        color: "#f43f5e",
+        name: "Ruby Key"
+      },
+      {
+        id: "door_red_t6",
+        type: "door",
+        x: 14,
+        y: 15,
+        requiresKey: "key_red_t6",
+        color: "#f43f5e"
+      },
+      {
+        id: "lever_t6",
+        type: "lever",
+        x: 11,
+        y: 11,
+        state: false,
+        name: "Sanctuary Switch",
+        targets: [
+          {
+            action: "toggle_tile",
+            layer: "ground",
+            x: 11,
+            y: 14,
+            stateA: 0,
+            stateB: 1
+          }
+        ]
+      }
+    ]
+  }
+];
+

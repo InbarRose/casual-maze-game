@@ -4,11 +4,11 @@
 
 import { TILES, DEFAULTS, LAYERS } from '../core/constants.js';
 import { StorageManager } from '../core/storage.js';
-import { CAMPAIGN_LEVELS } from './default-levels.js';
+import { CAMPAIGN_LEVELS, TUTORIAL_LEVELS } from './default-levels.js';
 
 export class LevelLoader {
   /**
-   * Load level from URL parameters, session storage, or campaign
+   * Load level from URL parameters, session storage, campaign, or tutorial
    * @param {URLSearchParams} [params]
    * @returns {object} Canonical Level Object
    */
@@ -25,7 +25,7 @@ export class LevelLoader {
     }
 
     const mode = params.get('mode');
-    const id = params.get('id') || '1';
+    const id = params.get('id') || params.get('tutorial') || '1';
 
     if (mode === 'custom') {
       const customData = StorageManager.loadCustomMaze();
@@ -35,26 +35,41 @@ export class LevelLoader {
       console.warn('[LevelLoader] Custom maze requested but none found in session storage. Falling back to Level 1.');
     }
 
-    // Try fetching JSON file first from /levels directory
+    const isTutorialMode = mode === 'tutorial' || params.has('tutorial') || String(id).startsWith('tutorial_') || /^t\d+$/i.test(String(id));
+    const cleanId = String(id).replace(/^(tutorial_|t)/i, '');
+
+    // 1. Try fetching JSON file from /levels directory
     if (typeof fetch === 'function') {
       try {
-        const res = await fetch(`levels/level_${id}.json`);
+        const fileName = isTutorialMode ? `levels/tutorial_${cleanId}.json` : `levels/level_${id}.json`;
+        const res = await fetch(fileName);
         if (res.ok) {
           const json = await res.json();
           return this.normalizeLevel(json);
         }
       } catch (e) {
-        // Fall back to embedded campaign level
+        // Fall back to embedded levels
       }
     }
 
-    // Check campaign levels fallback
+    // 2. Check tutorial fallback levels if tutorial
+    if (isTutorialMode) {
+      const tutorialMatch = TUTORIAL_LEVELS.find(lvl => String(lvl.id) === `tutorial_${cleanId}` || String(lvl.id) === String(id) || String(lvl.id) === cleanId);
+      if (tutorialMatch) {
+        return this.normalizeLevel(JSON.parse(JSON.stringify(tutorialMatch)));
+      }
+    }
+
+    // 3. Check campaign fallback levels
     const campaignMatch = CAMPAIGN_LEVELS.find(lvl => String(lvl.id) === String(id));
     if (campaignMatch) {
       return this.normalizeLevel(JSON.parse(JSON.stringify(campaignMatch)));
     }
 
-    // Default fallback to first campaign level (Training Hall)
+    // Default fallback to first tutorial or campaign level
+    if (isTutorialMode && TUTORIAL_LEVELS.length > 0) {
+      return this.normalizeLevel(JSON.parse(JSON.stringify(TUTORIAL_LEVELS[0])));
+    }
     return this.normalizeLevel(JSON.parse(JSON.stringify(CAMPAIGN_LEVELS[0])));
   }
 
@@ -80,11 +95,16 @@ export class LevelLoader {
       dimensions: { width, height },
       config: {
         fogOfWar: raw.config?.fogOfWar !== undefined ? !!raw.config.fogOfWar : DEFAULTS.FOG_OF_WAR,
-        viewRadius: raw.config?.viewRadius || DEFAULTS.VIEW_RADIUS,
+        mapRevealed: raw.config?.mapRevealed !== undefined ? !!raw.config.mapRevealed : DEFAULTS.MAP_REVEALED,
+        viewRadius: raw.config?.viewRadius !== undefined ? Number(raw.config.viewRadius) : DEFAULTS.VIEW_RADIUS,
         allowFreePan: raw.config?.allowFreePan !== undefined ? !!raw.config.allowFreePan : DEFAULTS.ALLOW_FREE_PAN,
         tileSize: raw.config?.tileSize || DEFAULTS.TILE_SIZE,
         theme: raw.config?.theme || DEFAULTS.THEME,
       },
+      help: raw.help ? {
+        title: String(raw.help.title || ''),
+        message: String(raw.help.message || ''),
+      } : null,
       spawn: {
         x: raw.spawn?.x ?? 1,
         y: raw.spawn?.y ?? 1,
