@@ -184,6 +184,47 @@
       </p>
     </header>
 
+    <!-- Tutorial Academy Section -->
+    <section class="campaign-section" style="border-color: rgba(56, 189, 248, 0.35); background: linear-gradient(180deg, rgba(56, 189, 248, 0.04) 0%, rgba(22, 27, 34, 0.9) 100%);">
+      <div class="campaign-header">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
+            <h2 style="font-size: 1.25rem; font-weight: 700;">🎓 Tutorial Academy</h2>
+            <span class="badge" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--accent); font-size: 0.7rem;">Quick Lessons</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Master core mechanics one at a time: navigation, colored keys, levers, elevation ramps, and fog of war.</p>
+        </div>
+        <a href="maze.html?tutorial=1" class="btn btn-primary btn-sm">Start Tutorial 1 →</a>
+      </div>
+
+      <div class="campaign-levels" id="tutorial-list">
+        <a href="maze.html?tutorial=1" class="level-pill" data-id="tutorial_1">
+          <span class="level-number">T1</span>
+          <span class="level-name">First Steps</span>
+        </a>
+        <a href="maze.html?tutorial=2" class="level-pill" data-id="tutorial_2">
+          <span class="level-number">T2</span>
+          <span class="level-name">Color Keys</span>
+        </a>
+        <a href="maze.html?tutorial=3" class="level-pill" data-id="tutorial_3">
+          <span class="level-number">T3</span>
+          <span class="level-name">Levers</span>
+        </a>
+        <a href="maze.html?tutorial=4" class="level-pill" data-id="tutorial_4">
+          <span class="level-number">T4</span>
+          <span class="level-name">Bridges</span>
+        </a>
+        <a href="maze.html?tutorial=5" class="level-pill" data-id="tutorial_5">
+          <span class="level-number">T5</span>
+          <span class="level-name">Fog of War</span>
+        </a>
+        <a href="maze.html?tutorial=6" class="level-pill" data-id="tutorial_6">
+          <span class="level-number">T6</span>
+          <span class="level-name">Master's Trial</span>
+        </a>
+      </div>
+    </section>
+
     <!-- Campaign Section -->
     <section class="campaign-section">
       <div class="campaign-header">
@@ -191,7 +232,7 @@
           <h2 style="font-size: 1.25rem; font-weight: 700;">Campaign Labyrinths</h2>
           <p style="font-size: 0.85rem;">Play through crafted puzzle levels exploring each core engine mechanic.</p>
         </div>
-        <a href="maze.html?id=1" class="btn btn-primary btn-sm">Play Level 1</a>
+        <a href="maze.html?id=1" class="btn btn-secondary btn-sm">Play Campaign 1</a>
       </div>
 
       <div class="campaign-levels" id="campaign-list">
@@ -249,6 +290,29 @@
       </div>
     </div>
 
+    <!-- Gameplay & Help Quick Reference Guide -->
+    <section class="campaign-section" style="margin-bottom: 2rem;">
+      <h2 style="font-size: 1.15rem; font-weight: 700; margin-bottom: 0.75rem;">📖 Explorer's Field Guide</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+        <div>
+          <strong style="color: var(--text); display: block; margin-bottom: 0.25rem;">🎮 Movement &amp; Controls</strong>
+          Use <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> or <kbd>Arrows</kbd> to move. Press <kbd>E</kbd> or <kbd>Space</kbd> to interact with mechanisms. Press <kbd>M</kbd> to free-pan the map.
+        </div>
+        <div>
+          <strong style="color: var(--text); display: block; margin-bottom: 0.25rem;">🔑 Color Keys &amp; Gates</strong>
+          Pick up Ruby (Red), Sapphire (Blue), and Emerald (Green) keys by walking over them to unlock matching colored gates.
+        </div>
+        <div>
+          <strong style="color: var(--text); display: block; margin-bottom: 0.25rem;">🌉 3D Bridges &amp; Ramps</strong>
+          Ramps (▲) elevate you to Elevation 1 (Overhead Bridge) to cross over ground paths, or lower you back to Ground floor.
+        </div>
+        <div>
+          <strong style="color: var(--text); display: block; margin-bottom: 0.25rem;">🌫️ Fog of War &amp; Memory</strong>
+          Vision radius dictates how far you see. In memory mode, maze layouts are revealed, while items stay hidden in darkness.
+        </div>
+      </div>
+    </section>
+
     <footer>
       <span>casual-maze-game.inbarrose.com</span>
       <span>•</span>
@@ -263,12 +327,27 @@
   <script type="module">
     import { StorageManager } from './js/core/storage.js';
 
-    // Load progress and mark completed levels
-    const progress = StorageManager.loadCampaignProgress();
+    // 1. Load Tutorial Progress
+    const tutorialProgress = StorageManager.loadTutorialProgress();
+    const tutorialPills = document.querySelectorAll('#tutorial-list .level-pill');
+    tutorialPills.forEach((pill, idx) => {
+      const tutId = `tutorial_${idx + 1}`;
+      const record = tutorialProgress[tutId] || tutorialProgress[String(idx + 1)] || tutorialProgress[`t${idx + 1}`];
+      if (record && record.completed) {
+        pill.classList.add('completed');
+        const statusSpan = document.createElement('span');
+        statusSpan.className = 'level-status';
+        statusSpan.textContent = `★ ${record.bestTime ? (record.bestTime / 1000).toFixed(1) + 's' : 'Done'}`;
+        pill.appendChild(statusSpan);
+      }
+    });
+
+    // 2. Load Campaign Progress
+    const campaignProgress = StorageManager.loadCampaignProgress();
     const campaignPills = document.querySelectorAll('#campaign-list .level-pill');
     campaignPills.forEach((pill, idx) => {
       const levelId = String(idx + 1);
-      const record = progress[levelId];
+      const record = campaignProgress[levelId];
       if (record && record.completed) {
         pill.classList.add('completed');
         const statusSpan = document.createElement('span');
