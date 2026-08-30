@@ -193,9 +193,23 @@
               <input type="number" id="set-radius" class="input-field" min="3" max="20" />
             </div>
           </div>
-          <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
-            <input type="checkbox" id="set-fog" style="width: 18px; height: 18px; cursor: pointer;" />
-            <label for="set-fog" style="cursor: pointer;">Enable Fog of War</label>
+          <div style="display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="set-fog" style="width: 18px; height: 18px; cursor: pointer;" />
+              <label for="set-fog" style="cursor: pointer;">Enable Fog of War</label>
+            </div>
+            <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="set-map-revealed" style="width: 18px; height: 18px; cursor: pointer;" />
+              <label for="set-map-revealed" style="cursor: pointer;">Map Starts Revealed (Memory Mode)</label>
+            </div>
+          </div>
+          <div class="form-row" style="margin-top: 0.75rem;">
+            <label for="set-help-title">Tutorial / Help Header</label>
+            <input type="text" id="set-help-title" class="input-field" placeholder="e.g. Navigation Basics (Optional)" />
+          </div>
+          <div class="form-row">
+            <label for="set-help-message">Tutorial / Help Message</label>
+            <textarea id="set-help-message" class="input-field" rows="2" placeholder="Actionable guidance or hint displayed in player HUD..." style="resize: vertical;"></textarea>
           </div>
         </div>
       </div>
@@ -248,9 +262,17 @@
           </div>
         </div>
 
+        <!-- Tutorial Starter Templates -->
+        <div class="projects-section">
+          <div class="sidebar-section-title">🎓 Tutorial Academy Templates</div>
+          <div class="template-grid" id="tutorial-templates-container">
+            <!-- Injected via JavaScript -->
+          </div>
+        </div>
+
         <!-- Campaign Starter Templates -->
         <div class="projects-section">
-          <div class="sidebar-section-title">Campaign Starter Templates</div>
+          <div class="sidebar-section-title">⚔️ Campaign Starter Templates</div>
           <div class="template-grid" id="campaign-templates-container">
             <!-- Injected via JavaScript -->
           </div>

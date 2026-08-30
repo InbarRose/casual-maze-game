@@ -5,7 +5,7 @@
 import { TILES, LAYERS, DEFAULTS } from '../core/constants.js';
 import { StorageManager } from '../core/storage.js';
 import { LevelLoader } from '../levels/level-loader.js';
-import { CAMPAIGN_LEVELS } from '../levels/default-levels.js';
+import { CAMPAIGN_LEVELS, TUTORIAL_LEVELS } from '../levels/default-levels.js';
 import { JsonExporter } from './json-exporter.js';
 import { EntityInspector } from './entity-inspector.js';
 import { EditorCanvas } from './editor-canvas.js';
@@ -311,8 +311,11 @@ export class EditorUI {
       document.getElementById('set-width').value = this.level.dimensions.width;
       document.getElementById('set-height').value = this.level.dimensions.height;
       document.getElementById('set-fog').checked = !!this.level.config.fogOfWar;
+      document.getElementById('set-map-revealed').checked = !!this.level.config.mapRevealed;
       document.getElementById('set-radius').value = this.level.config.viewRadius || 6;
       document.getElementById('set-theme').value = this.level.config.theme || 'dungeon';
+      document.getElementById('set-help-title').value = this.level.help?.title || '';
+      document.getElementById('set-help-message').value = this.level.help?.message || '';
       modal.classList.add('active');
     });
 
@@ -326,8 +329,17 @@ export class EditorUI {
       this.level.title = document.getElementById('set-title').value.trim() || 'Custom Maze';
       this.level.author = document.getElementById('set-author').value.trim() || 'Architect';
       this.level.config.fogOfWar = document.getElementById('set-fog').checked;
+      this.level.config.mapRevealed = document.getElementById('set-map-revealed').checked;
       this.level.config.viewRadius = parseInt(document.getElementById('set-radius').value, 10) || 6;
       this.level.config.theme = document.getElementById('set-theme').value;
+
+      const helpTitle = document.getElementById('set-help-title').value.trim();
+      const helpMsg = document.getElementById('set-help-message').value.trim();
+      if (helpTitle || helpMsg) {
+        this.level.help = { title: helpTitle, message: helpMsg };
+      } else {
+        this.level.help = null;
+      }
 
       // Resize dimensions if changed
       if (newW !== this.level.dimensions.width || newH !== this.level.dimensions.height) {
@@ -462,7 +474,33 @@ export class EditorUI {
       }
     }
 
-    // 2. Render Campaign Starter Templates
+    // 2. Render Tutorial Starter Templates
+    const tutorialTemplatesContainer = document.getElementById('tutorial-templates-container');
+    if (tutorialTemplatesContainer) {
+      tutorialTemplatesContainer.innerHTML = '';
+      TUTORIAL_LEVELS.forEach((lvl, idx) => {
+        const tCard = document.createElement('div');
+        tCard.className = 'template-card';
+        tCard.innerHTML = `
+          <div style="font-family: var(--font-mono); font-weight: 700; font-size: 0.9rem; color: var(--gold);">T${idx + 1}</div>
+          <div style="font-size: 0.75rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(lvl.title)}</div>
+        `;
+        tCard.title = `Remix Tutorial ${idx + 1}: ${lvl.title}`;
+        tCard.addEventListener('click', () => {
+          if (confirm(`Load Tutorial ${idx + 1} (${lvl.title}) as a template into the editor?`)) {
+            const template = JSON.parse(JSON.stringify(lvl));
+            template.id = `remix_tut_${idx + 1}_${Date.now()}`;
+            template.title = `${lvl.title} (Tutorial Remix)`;
+            this.loadLevel(template);
+            document.getElementById('projects-modal').classList.remove('active');
+            this.showToast(`Loaded tutorial template "${lvl.title}"!`, 'success');
+          }
+        });
+        tutorialTemplatesContainer.appendChild(tCard);
+      });
+    }
+
+    // 3. Render Campaign Starter Templates
     if (templatesContainer) {
       templatesContainer.innerHTML = '';
       CAMPAIGN_LEVELS.forEach(lvl => {
