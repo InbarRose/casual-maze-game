@@ -27,8 +27,7 @@ What is the change or solution being adopted?
 * ...
 ```
 
-## Index of Records
-
 * [0001: Static Canvas 2D Engine with ES6 Modules](0001-static-canvas-modular-engine.md) — Pure client-side static hosting on GitHub Pages.
 * [0002: Two-Layer Elevation and Directional Bridges](0002-multi-elevation-bridge-system.md) — 2D elevation coordinate and bridge crossing model.
 * [0003: Tutorial Academy, In-Game Hint System, and Level Design Toggles](0003-tutorial-system-and-level-toggles.md) — Progressive tutorial system, contextual hints, fog memory mode, and multi-color keys.
+* [0004: Zone Grouping, Thematic Tilesets, and Directional Graphics](0004-zone-grouping-and-thematic-tilesets.md) — Zone progression hierarchy, 6 visual tilesets, and enhanced directional entity graphics.
