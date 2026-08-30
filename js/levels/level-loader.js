@@ -89,6 +89,7 @@ export class LevelLoader {
     const normalized = {
       $schema: raw.$schema || 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
       id: String(raw.id || 'custom'),
+      zone: raw.zone || (raw.id && String(raw.id).startsWith('tutorial') ? 'tutorial' : 'zone_1'),
       title: raw.title || 'Untitled Labyrinth',
       author: raw.author || 'Anonymous',
       version: raw.version || 1,
