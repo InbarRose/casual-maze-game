@@ -78,4 +78,18 @@ describe('Engine > DebugLogger', () => {
     assertEqual(parsed.summary.completed, true);
     assert(parsed.sessionId !== undefined, 'Contains unique sessionId');
   });
+
+  it('captures system warnings and error exceptions in event telemetry', () => {
+    const logger = new DebugLogger(dummyLevel);
+    logger.logWarning({ message: 'Low memory warning', context: { usage: '85%' }, elapsedMs: 150 });
+    logger.logError({ message: 'Null reference exception', stack: 'Error at GameLoop.update', source: 'loop', elapsedMs: 300 });
+
+    const payload = logger.buildPayload();
+    assertEqual(payload.events.length, 2);
+    assertEqual(payload.events[0].type, 'system:warning');
+    assertEqual(payload.events[0].message, 'Low memory warning');
+    assertEqual(payload.events[1].type, 'system:error');
+    assertEqual(payload.events[1].message, 'Null reference exception');
+    assertEqual(payload.events[1].source, 'loop');
+  });
 });

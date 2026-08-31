@@ -566,7 +566,25 @@
 
   <script type="module">
     import { EditorUI } from './js/editor/editor-ui.js';
-    window.editorUI = new EditorUI();
+
+    // Global Error & Promise Rejection Handlers
+    window.addEventListener('error', (event) => {
+      console.error('[MazeGame:EditorGlobalError]', event.error || event.message, {
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      });
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('[MazeGame:EditorUnhandledRejection]', event.reason);
+    });
+
+    try {
+      window.editorUI = new EditorUI();
+    } catch (err) {
+      console.error('[MazeGame:Editor] Failed to initialize EditorUI:', err);
+    }
   </script>
 </body>
 </html>

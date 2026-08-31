@@ -406,6 +406,19 @@
   <script type="module">
     import { StorageManager } from './js/core/storage.js';
 
+    // Global Error & Promise Rejection Handlers
+    window.addEventListener('error', (event) => {
+      console.error('[MazeGame:HubGlobalError]', event.error || event.message, {
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      });
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('[MazeGame:HubUnhandledRejection]', event.reason);
+    });
+
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       if (!container) return;

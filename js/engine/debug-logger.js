@@ -145,6 +145,39 @@ export class DebugLogger {
   }
 
   /**
+   * Record runtime error or caught exception
+   * @param {object} params
+   */
+  logError({ message, stack, source, elapsedMs = 0 }) {
+    console.error(`[MazeGame:Error] ${message}`, { source, stack });
+    this.log(
+      'system:error',
+      {
+        message: String(message),
+        stack: stack ? String(stack) : undefined,
+        source: source || 'runtime',
+      },
+      elapsedMs
+    );
+  }
+
+  /**
+   * Record system or validation warning
+   * @param {object} params
+   */
+  logWarning({ message, context, elapsedMs = 0 }) {
+    console.warn(`[MazeGame:Warn] ${message}`, context || '');
+    this.log(
+      'system:warning',
+      {
+        message: String(message),
+        context: context || undefined,
+      },
+      elapsedMs
+    );
+  }
+
+  /**
    * Record level victory / completion
    * @param {object} stats
    * @param {number} elapsedMs

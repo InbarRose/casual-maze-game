@@ -26,6 +26,9 @@ export class EditorUI {
     });
 
     this.currentProjectId = this.level.id || 'custom_labyrinth';
+    console.info(
+      `[MazeGame:Editor] Initialized Maze Architect with project "${this.level.title}" (${this.level.id}) | Size: ${this.level.dimensions.width}x${this.level.dimensions.height}`
+    );
 
     this.initCanvas();
     this.initInspector();

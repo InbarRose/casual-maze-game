@@ -223,6 +223,35 @@
     import { globalEvents } from './js/core/events.js';
     import { StorageManager } from './js/core/storage.js';
 
+    // Global Runtime Error Capture & Telemetry Routing
+    window.addEventListener('error', (event) => {
+      console.error('[MazeGame:GlobalError]', event.error || event.message, {
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      });
+      if (window.gameLoop?.logger) {
+        window.gameLoop.logger.logError({
+          message: event.message || 'Uncaught runtime error',
+          stack: event.error?.stack,
+          source: `${event.filename}:${event.lineno}:${event.colno}`,
+          elapsedMs: window.gameLoop?.elapsedTime || 0,
+        });
+      }
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('[MazeGame:UnhandledPromiseRejection]', event.reason);
+      if (window.gameLoop?.logger) {
+        window.gameLoop.logger.logError({
+          message: event.reason?.message || String(event.reason),
+          stack: event.reason?.stack,
+          source: 'unhandled_promise_rejection',
+          elapsedMs: window.gameLoop?.elapsedTime || 0,
+        });
+      }
+    });
+
     // Canvas elements
     const mainCanvas = document.getElementById('game-canvas');
     const minimapCanvas = document.getElementById('minimap-canvas');
