@@ -357,6 +357,8 @@ export class EditorUI {
       document.getElementById('set-map-revealed').checked = !!this.level.config.mapRevealed;
       document.getElementById('set-radius').value = this.level.config.viewRadius || 6;
       document.getElementById('set-theme').value = this.level.config.theme || 'dungeon';
+      document.getElementById('set-spawn-style').value = this.level.spawn?.style || 'stairs_down';
+      document.getElementById('set-exit-style').value = this.level.exit?.style || 'portal';
       document.getElementById('set-help-title').value = this.level.help?.title || '';
       document.getElementById('set-help-message').value = this.level.help?.message || '';
       modal.classList.add('active');
@@ -375,6 +377,12 @@ export class EditorUI {
       this.level.config.mapRevealed = document.getElementById('set-map-revealed').checked;
       this.level.config.viewRadius = parseInt(document.getElementById('set-radius').value, 10) || 6;
       this.level.config.theme = document.getElementById('set-theme').value;
+
+      if (!this.level.spawn) this.level.spawn = { x: 1, y: 1, elevation: 0 };
+      this.level.spawn.style = document.getElementById('set-spawn-style').value || 'stairs_down';
+
+      if (!this.level.exit) this.level.exit = { x: newW - 2, y: newH - 2 };
+      this.level.exit.style = document.getElementById('set-exit-style').value || 'portal';
 
       const helpTitle = document.getElementById('set-help-title').value.trim();
       const helpMsg = document.getElementById('set-help-message').value.trim();

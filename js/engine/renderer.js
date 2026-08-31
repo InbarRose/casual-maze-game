@@ -45,9 +45,12 @@ export class GameRenderer {
     // 2. Render Ground Layer
     this.renderGroundLayer(ctx, level, bounds, camera, theme);
 
-    // 3. Render Exit Portal
+    // 3. Render Spawn Entrance & Exit Markers
+    if (level.spawn) {
+      this.renderSpawnEntrance(ctx, level, camera, theme, fog);
+    }
     if (level.exit) {
-      this.renderExitPortal(ctx, level.exit.x, level.exit.y, camera, theme, fog);
+      this.renderExit(ctx, level, camera, theme, fog);
     }
 
     // 4. Render Ground Entities (Doors, Levers, Keys on elevation 0)
@@ -327,6 +330,201 @@ export class GameRenderer {
       const screen = camera.worldToScreen(entity.x * tileSize, entity.y * tileSize);
       entity.render(ctx, screen.x, screen.y, tileSize);
     }
+  }
+
+  /**
+   * Render Entrance Marker on spawn tile (Stairs down, Portal, Archway)
+   */
+  renderSpawnEntrance(ctx, level, camera, theme, fog) {
+    if (!level.spawn) return;
+    const { x, y, style = 'stairs_down' } = level.spawn;
+    if (fog && !fog.isExplored(x, y)) return;
+
+    const tileSize = camera.tileSize;
+    const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+    const cx = screen.x + tileSize / 2;
+    const cy = screen.y + tileSize / 2;
+
+    ctx.save();
+
+    if (style === 'portal') {
+      // Cyan/Emerald summoning rift
+      const radius = tileSize * 0.36;
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius * 0.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = `bold ${Math.floor(tileSize * 0.35)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('▼', cx, cy);
+    } else if (style === 'archway') {
+      // Heavy stone archway entry threshold
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+      ctx.fillRect(screen.x + tileSize * 0.1, screen.y + tileSize * 0.1, tileSize * 0.8, tileSize * 0.8);
+
+      ctx.strokeStyle = theme.wallTop || '#484f58';
+      ctx.lineWidth = 3;
+      ctx.strokeRect(screen.x + tileSize * 0.15, screen.y + tileSize * 0.15, tileSize * 0.7, tileSize * 0.7);
+
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
+      ctx.beginPath();
+      ctx.arc(cx, cy, tileSize * 0.25, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      // stairs_down (default entrance) - Recessed stairwell into the dungeon
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.fillRect(screen.x + tileSize * 0.08, screen.y + tileSize * 0.08, tileSize * 0.84, tileSize * 0.84);
+
+      // Stone stair risers descending down
+      for (let i = 0; i < 4; i++) {
+        const py = screen.y + tileSize * (0.15 + i * 0.18);
+        const h = tileSize * 0.12;
+        const shade = Math.floor(40 + i * 20);
+        ctx.fillStyle = `rgb(${shade}, ${shade + 5}, ${shade + 10})`;
+        ctx.fillRect(screen.x + tileSize * 0.12, py, tileSize * 0.76, h);
+
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(screen.x + tileSize * 0.12, py, tileSize * 0.76, h);
+      }
+
+      // Wooden/stone side banisters
+      ctx.fillStyle = theme.bridgeOverhead || '#78350f';
+      ctx.fillRect(screen.x + tileSize * 0.08, screen.y + tileSize * 0.08, tileSize * 0.08, tileSize * 0.84);
+      ctx.fillRect(screen.x + tileSize * 0.84, screen.y + tileSize * 0.08, tileSize * 0.08, tileSize * 0.84);
+
+      // Entrance icon indicator
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+      ctx.font = `${Math.floor(tileSize * 0.25)}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('IN', cx, screen.y + tileSize * 0.88);
+    }
+
+    ctx.restore();
+  }
+
+  /**
+   * Render Exit (Stairs up, Portal, Archway)
+   */
+  renderExit(ctx, level, camera, theme, fog) {
+    if (!level.exit) return;
+    const { x, y, style = 'portal' } = level.exit;
+    if (fog && !fog.isExplored(x, y)) return;
+
+    if (style === 'stairs' || style === 'stairs_up') {
+      this.renderExitStairs(ctx, x, y, camera, theme);
+    } else if (style === 'archway' || style === 'gate') {
+      this.renderExitArchway(ctx, x, y, camera, theme);
+    } else {
+      this.renderExitPortal(ctx, x, y, camera, theme, fog);
+    }
+  }
+
+  /**
+   * Render Ascending Exit Stairs with Golden Daylight Beam
+   */
+  renderExitStairs(ctx, exitX, exitY, camera, theme) {
+    const tileSize = camera.tileSize;
+    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize);
+    const cx = screen.x + tileSize / 2;
+    const cy = screen.y + tileSize / 2;
+    const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
+
+    ctx.save();
+
+    // Golden ambient daylight aura
+    ctx.shadowColor = '#fbbf24';
+    ctx.shadowBlur = 16 * pulse;
+
+    // Dark well base
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.fillRect(screen.x + tileSize * 0.05, screen.y + tileSize * 0.05, tileSize * 0.9, tileSize * 0.9);
+
+    // Stone Steps ascending upwards
+    for (let i = 0; i < 4; i++) {
+      const stepY = screen.y + tileSize * (0.65 - i * 0.16);
+      const stepW = tileSize * (0.8 - i * 0.06);
+      const stepX = cx - stepW / 2;
+      const stepH = tileSize * 0.14;
+
+      // Tread color getting brighter near the top exit
+      const brightness = Math.floor(130 + i * 35);
+      ctx.fillStyle = `rgb(${brightness}, ${Math.floor(brightness * 0.9)}, ${Math.floor(brightness * 0.7)})`;
+      ctx.fillRect(stepX, stepY, stepW, stepH);
+
+      // Tread edge
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(stepX, stepY, stepW, stepH);
+    }
+
+    // Top Daylight Gateway / Sunbeams
+    const sunGrad = ctx.createRadialGradient(cx, screen.y + tileSize * 0.15, 2, cx, screen.y + tileSize * 0.15, tileSize * 0.45);
+    sunGrad.addColorStop(0, '#ffffff');
+    sunGrad.addColorStop(0.5, '#fef08a');
+    sunGrad.addColorStop(1, 'rgba(251, 191, 36, 0)');
+    ctx.fillStyle = sunGrad;
+    ctx.beginPath();
+    ctx.arc(cx, screen.y + tileSize * 0.18, tileSize * 0.4 * pulse, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Exit badge / upward chevron
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#000000';
+    ctx.shadowBlur = 4;
+    ctx.font = `bold ${Math.floor(tileSize * 0.35)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('▲', cx, screen.y + tileSize * 0.2);
+
+    ctx.restore();
+  }
+
+  /**
+   * Render Archway Exit
+   */
+  renderExitArchway(ctx, exitX, exitY, camera, theme) {
+    const tileSize = camera.tileSize;
+    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize);
+    const cx = screen.x + tileSize / 2;
+    const cy = screen.y + tileSize / 2;
+    const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
+
+    ctx.save();
+
+    // Glowing arch threshold
+    ctx.shadowColor = theme.accent || '#38bdf8';
+    ctx.shadowBlur = 14 * pulse;
+
+    // Stone pillars
+    ctx.fillStyle = theme.wallTop || '#475569';
+    ctx.fillRect(screen.x + tileSize * 0.1, screen.y + tileSize * 0.15, tileSize * 0.18, tileSize * 0.75);
+    ctx.fillRect(screen.x + tileSize * 0.72, screen.y + tileSize * 0.15, tileSize * 0.18, tileSize * 0.75);
+
+    // Arch keystone top
+    ctx.fillStyle = theme.wall || '#334155';
+    ctx.fillRect(screen.x + tileSize * 0.08, screen.y + tileSize * 0.08, tileSize * 0.84, tileSize * 0.2);
+
+    // Luminous doorway
+    const portalGrad = ctx.createLinearGradient(cx, screen.y + tileSize * 0.28, cx, screen.y + tileSize * 0.9);
+    portalGrad.addColorStop(0, '#ffffff');
+    portalGrad.addColorStop(0.5, theme.accent || '#38bdf8');
+    portalGrad.addColorStop(1, 'rgba(0, 0, 0, 0.6)');
+    ctx.fillStyle = portalGrad;
+    ctx.fillRect(screen.x + tileSize * 0.28, screen.y + tileSize * 0.28, tileSize * 0.44, tileSize * 0.62);
+
+    ctx.restore();
   }
 
   /**

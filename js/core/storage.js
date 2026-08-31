@@ -281,4 +281,134 @@ export class StorageManager {
       return {};
     }
   }
+
+  /* =========================================================
+   * FULL GAME PROGRESS EXPORT & IMPORT (JSON BACKUP)
+   * ========================================================= */
+
+  /**
+   * Export all game progress, tutorial completions, saved editor projects, and settings
+   * @returns {object} Full save profile object
+   */
+  static exportSaveProfile() {
+    return {
+      schemaVersion: '1.0.0',
+      game: 'casual-maze-game',
+      exportedAt: new Date().toISOString(),
+      progress: {
+        campaign: this.loadCampaignProgress(),
+        tutorial: this.loadTutorialProgress(),
+      },
+      projects: this.getSavedProjectsMap(),
+      settings: this.loadSettings(),
+    };
+  }
+
+  /**
+   * Import and restore a save profile into local storage
+   * @param {object|string} rawSaveData
+   * @returns {{ success: boolean, stats: { campaignLevels: number, tutorialLevels: number, projects: number } }}
+   */
+  static importSaveProfile(rawSaveData) {
+    try {
+      let data = rawSaveData;
+      if (typeof data === 'string') {
+        data = JSON.parse(data);
+      }
+
+      if (!data || typeof data !== 'object') {
+        throw new Error('Invalid save file format. Expected a JSON object.');
+      }
+
+      // Restore Campaign Progress
+      const campaign = data.progress?.campaign || data.campaign || {};
+      if (typeof campaign === 'object') {
+        localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(campaign));
+      }
+
+      // Restore Tutorial Progress
+      const tutorial = data.progress?.tutorial || data.tutorial || {};
+      if (typeof tutorial === 'object') {
+        localStorage.setItem(STORAGE_KEYS.TUTORIAL_PROGRESS, JSON.stringify(tutorial));
+      }
+
+      // Restore Projects
+      const projects = data.projects || {};
+      if (typeof projects === 'object') {
+        localStorage.setItem(STORAGE_KEYS.SAVED_PROJECTS, JSON.stringify(projects));
+      }
+
+      // Restore Settings
+      const settings = data.settings || {};
+      if (typeof settings === 'object') {
+        localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+      }
+
+      const campaignCount = Object.keys(campaign).length;
+      const tutorialCount = Object.keys(tutorial).length;
+      const projectCount = Object.keys(projects).length;
+
+      return {
+        success: true,
+        stats: {
+          campaignLevels: campaignCount,
+          tutorialLevels: tutorialCount,
+          projects: projectCount,
+        },
+      };
+    } catch (e) {
+      console.error('[StorageManager] Failed to import save profile:', e);
+      throw new Error(`Failed to import save data: ${e.message}`);
+    }
+  }
+
+  /**
+   * Trigger browser file download of the current save state
+   * @param {string} [customFilename]
+   * @returns {string} Download filename
+   */
+  static downloadSaveFile(customFilename) {
+    const profile = this.exportSaveProfile();
+    const jsonString = JSON.stringify(profile, null, 2);
+    const dateStr = new Date().toISOString().slice(0, 10);
+    const filename = customFilename || `casual_maze_save_${dateStr}.json`;
+
+    if (typeof document !== 'undefined') {
+      const blob = new Blob([jsonString], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    }
+
+    return filename;
+  }
+
+  /**
+   * Load and parse a save profile file from a browser File instance
+   * @param {File} file
+   * @returns {Promise<{ success: boolean, stats: object }>}
+   */
+  static importSaveFile(file) {
+    return new Promise((resolve, reject) => {
+      if (!file) {
+        return reject(new Error('No file provided'));
+      }
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const result = this.importSaveProfile(e.target.result);
+          resolve(result);
+        } catch (err) {
+          reject(err);
+        }
+      };
+      reader.onerror = () => reject(new Error('Failed to read save file'));
+      reader.readAsText(file);
+    });
+  }
 }

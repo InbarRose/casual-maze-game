@@ -251,6 +251,23 @@
               <label for="set-radius">Fog View Radius</label>
               <input type="number" id="set-radius" class="input-field" min="3" max="20" />
             </div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+            <div class="form-row">
+              <label for="set-spawn-style">Entrance Graphic Style</label>
+              <select id="set-spawn-style" class="select-field">
+                <option value="stairs_down">🪜 Stairs Down (Recessed Steps)</option>
+                <option value="portal">🌀 Mystic Portal Rift</option>
+                <option value="archway">🏛️ Stone Archway / Gateway</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="set-exit-style">Exit Graphic Style</label>
+              <select id="set-exit-style" class="select-field">
+                <option value="portal">🌀 Cosmic Vortex Portal</option>
+                <option value="stairs_up">🪜 Stairs Up (Daylight Ascent)</option>
+                <option value="archway">🏛️ Stone Archway / Threshold</option>
+              </select>
+            </div>
           </div>
           <div style="display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.5rem;">
             <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem;">

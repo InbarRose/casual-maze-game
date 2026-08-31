@@ -10,36 +10,48 @@ import { LevelLoader } from '../../../js/levels/level-loader.js';
 
 describe('Levels > JSON File Integrity', () => {
   it('validates existence and schema of all 10 campaign level files', () => {
-    for (let i = 1; i <= 10; i++) {
-      const jsonPath = path.resolve(`./levels/level_${i}.json`);
-      assert(fs.existsSync(jsonPath), `File level_${i}.json exists on disk`);
+    const manifestPath = path.resolve('./levels/manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const campaignEntries = manifest.filter(m => m.category === 'campaign' || !m.category);
+
+    assertEqual(campaignEntries.length, 10, 'Manifest contains 10 campaign levels');
+
+    for (const entry of campaignEntries) {
+      const jsonPath = path.resolve(entry.file);
+      assert(fs.existsSync(jsonPath), `File ${entry.file} exists on disk`);
 
       const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
       const norm = LevelLoader.normalizeLevel(raw);
 
-      assert(norm.dimensions.width >= 5, `Level ${i} width >= 5`);
-      assert(norm.dimensions.height >= 5, `Level ${i} height >= 5`);
-      assertEqual(norm.layers.ground.length, norm.dimensions.height, `Level ${i} ground height matches`);
-      assertEqual(norm.layers.ground[0].length, norm.dimensions.width, `Level ${i} ground width matches`);
-      assert(norm.spawn && typeof norm.spawn.x === 'number', `Level ${i} has valid spawn`);
-      assert(norm.exit && typeof norm.exit.x === 'number', `Level ${i} has valid exit`);
+      assert(norm.dimensions.width >= 5, `Level ${entry.id} width >= 5`);
+      assert(norm.dimensions.height >= 5, `Level ${entry.id} height >= 5`);
+      assertEqual(norm.layers.ground.length, norm.dimensions.height, `Level ${entry.id} ground height matches`);
+      assertEqual(norm.layers.ground[0].length, norm.dimensions.width, `Level ${entry.id} ground width matches`);
+      assert(norm.spawn && typeof norm.spawn.x === 'number', `Level ${entry.id} has valid spawn`);
+      assert(norm.exit && typeof norm.exit.x === 'number', `Level ${entry.id} has valid exit`);
     }
   });
 
   it('validates existence and schema of all 6 tutorial level files', () => {
-    for (let i = 1; i <= 6; i++) {
-      const jsonPath = path.resolve(`./levels/tutorial_${i}.json`);
-      assert(fs.existsSync(jsonPath), `File tutorial_${i}.json exists on disk`);
+    const manifestPath = path.resolve('./levels/manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const tutorialEntries = manifest.filter(m => m.category === 'tutorial');
+
+    assertEqual(tutorialEntries.length, 6, 'Manifest contains 6 tutorial levels');
+
+    for (const entry of tutorialEntries) {
+      const jsonPath = path.resolve(entry.file);
+      assert(fs.existsSync(jsonPath), `File ${entry.file} exists on disk`);
 
       const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
       const norm = LevelLoader.normalizeLevel(raw);
 
-      assert(norm.dimensions.width >= 5, `Tutorial ${i} width >= 5`);
-      assert(norm.dimensions.height >= 5, `Tutorial ${i} height >= 5`);
-      assertEqual(norm.layers.ground.length, norm.dimensions.height, `Tutorial ${i} ground height matches`);
-      assertEqual(norm.layers.ground[0].length, norm.dimensions.width, `Tutorial ${i} ground width matches`);
-      assert(norm.spawn && typeof norm.spawn.x === 'number', `Tutorial ${i} has valid spawn`);
-      assert(norm.exit && typeof norm.exit.x === 'number', `Tutorial ${i} has valid exit`);
+      assert(norm.dimensions.width >= 5, `Tutorial ${entry.id} width >= 5`);
+      assert(norm.dimensions.height >= 5, `Tutorial ${entry.id} height >= 5`);
+      assertEqual(norm.layers.ground.length, norm.dimensions.height, `Tutorial ${entry.id} ground height matches`);
+      assertEqual(norm.layers.ground[0].length, norm.dimensions.width, `Tutorial ${entry.id} ground width matches`);
+      assert(norm.spawn && typeof norm.spawn.x === 'number', `Tutorial ${entry.id} has valid spawn`);
+      assert(norm.exit && typeof norm.exit.x === 'number', `Tutorial ${entry.id} has valid exit`);
     }
   });
 
