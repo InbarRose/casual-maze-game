@@ -227,4 +227,83 @@ describe('Editor > EditorCanvas Grab & Move Tool', () => {
     editorCanvas.zoomToFit();
     assert(editorCanvas.zoom >= 0.15 && editorCanvas.zoom <= 3.0, 'zoomToFit computed valid zoom level');
   });
+
+  it('selects and triggers inspection for keys, doors, levers, spawn, and exit', () => {
+    const mockCanvas = createMockCanvas();
+    const level = createTestLevel();
+    let inspectedObject = null;
+
+    const editorCanvas = new EditorCanvas({
+      canvas: mockCanvas,
+      level,
+      onEntityClick: (obj) => {
+        inspectedObject = obj;
+      },
+    });
+
+    editorCanvas.setTool('select');
+
+    // Click Key at (4, 4)
+    editorCanvas.applyToolAt(4, 4);
+    assert(inspectedObject !== null, 'Key inspection triggered');
+    assertEqual(inspectedObject.type, 'key');
+    assertEqual(inspectedObject.id, 'key_emerald_1');
+
+    // Click Spawn at (1, 1)
+    editorCanvas.applyToolAt(1, 1);
+    assert(inspectedObject !== null, 'Spawn inspection triggered');
+    assertEqual(inspectedObject.type, 'spawn');
+
+    // Click Exit at (8, 8)
+    editorCanvas.applyToolAt(8, 8);
+    assert(inspectedObject !== null, 'Exit inspection triggered');
+    assertEqual(inspectedObject.type, 'exit');
+  });
+
+  it('preserves alternative art styles and custom settings on entity models', async () => {
+    const { Key } = await import('../../../js/entities/key.js');
+    const { Door } = await import('../../../js/entities/door.js');
+    const { Lever } = await import('../../../js/entities/lever.js');
+
+    const crystalKey = new Key({
+      id: 'k_crys',
+      x: 1,
+      y: 1,
+      style: 'crystal',
+      glowEffect: 'pulse',
+      color: '#38bdf8',
+    });
+    assertEqual(crystalKey.style, 'crystal');
+    assertEqual(crystalKey.glowEffect, 'pulse');
+
+    const barrierDoor = new Door({
+      id: 'd_barrier',
+      x: 2,
+      y: 2,
+      style: 'laser_barrier',
+      orientation: 'horizontal',
+      color: '#f43f5e',
+    });
+    assertEqual(barrierDoor.style, 'laser_barrier');
+    assertEqual(barrierDoor.orientation, 'horizontal');
+
+    const oneWayLever = new Lever({
+      id: 'lev_oneway',
+      x: 3,
+      y: 3,
+      style: 'crystal_switch',
+      oneWay: true,
+    });
+    assertEqual(oneWayLever.style, 'crystal_switch');
+    assertEqual(oneWayLever.oneWay, true);
+    assertEqual(oneWayLever.state, false);
+
+    // Toggle once -> true
+    oneWayLever.toggle({ layers: { ground: [[]], overhead: [[]] } });
+    assertEqual(oneWayLever.state, true);
+
+    // Toggle second time -> remains true because oneWay = true
+    oneWayLever.toggle({ layers: { ground: [[]], overhead: [[]] } });
+    assertEqual(oneWayLever.state, true);
+  });
 });

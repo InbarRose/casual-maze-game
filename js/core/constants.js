@@ -43,6 +43,48 @@ export const EXIT_STYLES = Object.freeze({
   DEFAULT: 'default',
 });
 
+export const KEY_STYLES = Object.freeze([
+  { id: 'classic', icon: '🔑', label: 'Classic Key', desc: 'Standard notched key with gemstone bow' },
+  { id: 'ornate', icon: '🗝️', label: 'Ornate Skeleton Key', desc: 'Antique forged skeleton key' },
+  { id: 'crystal', icon: '💎', label: 'Elemental Crystal', desc: 'Glowing mineral crystal shard' },
+  { id: 'orb', icon: '🔮', label: 'Arcane Orb', desc: 'Luminous magical sphere' },
+  { id: 'relic', icon: '👑', label: 'Royal Relic', desc: 'Golden imperial crown relic' },
+  { id: 'skull', icon: '💀', label: 'Crypt Rune Token', desc: 'Ancient bone crypt token' },
+]);
+
+export const DOOR_STYLES = Object.freeze([
+  { id: 'classic', icon: '🚪', label: 'Reinforced Gate', desc: 'Ironbound wooden doorway with central keyhole' },
+  { id: 'portcullis', icon: '🏰', label: 'Spiked Portcullis', desc: 'Heavy iron grid gate with defensive spikes' },
+  { id: 'laser_barrier', icon: '⚡', label: 'Energy Barrier', desc: 'Pulsing electromagnetic forcefield' },
+  { id: 'magic_seal', icon: '🔯', label: 'Arcane Rune Seal', desc: 'Glowing mystic rune barrier' },
+  { id: 'crystal_spikes', icon: '💠', label: 'Crystal Spikes', desc: 'Faceted crystalline obstruction' },
+  { id: 'vault_hatch', icon: '🔒', label: 'Vault Bulkhead', desc: 'Heavy mechanical airtight door' },
+]);
+
+export const LEVER_STYLES = Object.freeze([
+  { id: 'switch_lever', icon: '🕹️', label: 'Floor Lever', desc: 'Mechanical toggle handle with ON/OFF LED' },
+  { id: 'pressure_pedestal', icon: '🔘', label: 'Stone Pedestal', desc: 'Carved pressure switch pedestal' },
+  { id: 'crystal_switch', icon: '🔮', label: 'Resonance Crystal', desc: 'Harmonic crystal switch that hums when active' },
+  { id: 'runic_plate', icon: '📜', label: 'Runic Inscription', desc: 'Floor glyph that glows when triggered' },
+  { id: 'cog_wheel', icon: '⚙️', label: 'Mechanical Valve', desc: 'Industrial steam valve crank wheel' },
+]);
+
+export const SPAWN_STYLE_PRESETS = Object.freeze([
+  { id: 'stairs_down', icon: '🪜', label: 'Stairs Down', desc: 'Recessed stone steps descending into the labyrinth' },
+  { id: 'portal', icon: '🌀', label: 'Summoning Rift', desc: 'Swirling dimensional portal' },
+  { id: 'archway', icon: '🏛️', label: 'Stone Archway', desc: 'Ancient gateway threshold' },
+  { id: 'pentagram', icon: '🔯', label: 'Runic Circle', desc: 'Glowing invocation circle' },
+  { id: 'camp', icon: '⛺', label: 'Explorer Camp', desc: 'Starting basecamp' },
+]);
+
+export const EXIT_STYLE_PRESETS = Object.freeze([
+  { id: 'portal', icon: '🌀', label: 'Cosmic Portal', desc: 'Swirling celestial gateway' },
+  { id: 'stairs_up', icon: '🪜', label: 'Daylight Ascent', desc: 'Ascending staircase with golden sunbeams' },
+  { id: 'archway', icon: '🏛️', label: 'Exit Archway', desc: 'Luminous sanctuary threshold' },
+  { id: 'chest', icon: '🎁', label: 'Treasure Vault', desc: 'Golden reward chest exit' },
+  { id: 'shrine', icon: '⛩️', label: 'Sacred Shrine', desc: 'Ancient victory shrine' },
+]);
+
 export const FOG_STATE = Object.freeze({
   UNEXPLORED: 0,
   EXPLORED: 1,

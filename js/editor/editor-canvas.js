@@ -504,9 +504,9 @@ export class EditorCanvas {
         } else if (this.onTilePaint) {
           this.onTilePaint();
         }
-      } else if (this.currentTool === 'select' && type === 'entity' && this.onEntityClick) {
-        // If clicked in Inspect tool without moving, open inspector
-        this.onEntityClick(ref);
+      } else if (this.currentTool === 'select' && this.onEntityClick) {
+        // If clicked in Inspect tool without moving, open inspector for entity/spawn/exit
+        this.onEntityClick(type === 'entity' ? ref : { type, ...ref, x: origX, y: origY });
       }
 
       this.isDraggingObject = false;
@@ -559,11 +559,11 @@ export class EditorCanvas {
       return;
     }
 
-    // Select Tool: open inspector for clicked entity
+    // Select Tool: open inspector for clicked entity, spawn, or exit
     if (this.currentTool === 'select') {
-      const entity = (this.level.entities || []).find(e => e.x === gridX && e.y === gridY);
-      if (entity && this.onEntityClick) {
-        this.onEntityClick(entity);
+      const obj = this.findObjectAt(gridX, gridY);
+      if (obj && this.onEntityClick) {
+        this.onEntityClick(obj.type === 'entity' ? obj.ref : { type: obj.type, ...obj.ref, x: gridX, y: gridY });
       }
       return;
     }
@@ -813,11 +813,19 @@ export class EditorCanvas {
       ctx.beginPath();
       ctx.arc(spX + effTile / 2, spY + effTile / 2, effTile * 0.36, 0, Math.PI * 2);
       ctx.fill();
+
+      const spStyle = this.level.spawn.style || 'stairs_down';
+      let spIcon = '🪜';
+      if (spStyle === 'portal') spIcon = '🌀';
+      else if (spStyle === 'archway') spIcon = '🏛️';
+      else if (spStyle === 'pentagram') spIcon = '🔯';
+      else if (spStyle === 'camp') spIcon = '⛺';
+
       ctx.fillStyle = '#022014';
-      ctx.font = `bold ${Math.max(10, effTile * 0.42)}px monospace`;
+      ctx.font = `bold ${Math.max(9, effTile * 0.38)}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('S', spX + effTile / 2, spY + effTile / 2);
+      ctx.fillText(spIcon, spX + effTile / 2, spY + effTile / 2);
     }
 
     if (this.level.testSpawn) {
@@ -853,11 +861,18 @@ export class EditorCanvas {
       ctx.arc(exX + effTile / 2, exY + effTile / 2, effTile * 0.22, 0, Math.PI * 2);
       ctx.fill();
 
+      const exStyle = this.level.exit.style || 'portal';
+      let exIcon = '🌀';
+      if (exStyle === 'stairs_up' || exStyle === 'stairs') exIcon = '🪜';
+      else if (exStyle === 'archway') exIcon = '🏛️';
+      else if (exStyle === 'chest') exIcon = '🎁';
+      else if (exStyle === 'shrine') exIcon = '⛩️';
+
       ctx.fillStyle = '#ffffff';
-      ctx.font = `bold ${Math.max(10, effTile * 0.38)}px monospace`;
+      ctx.font = `bold ${Math.max(9, effTile * 0.38)}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('E', exX + effTile / 2, exY + effTile / 2);
+      ctx.fillText(exIcon, exX + effTile / 2, exY + effTile / 2);
     }
 
     // 4. Render Entities (Keys, Doors, Levers)
@@ -869,16 +884,24 @@ export class EditorCanvas {
       if (entity.type === ENTITY_TYPES.KEY) {
         ctx.fillStyle = entity.color || '#fbbf24';
         ctx.shadowColor = entity.color || '#fbbf24';
-        ctx.shadowBlur = 8;
+        ctx.shadowBlur = entity.glowEffect === 'subtle' ? 4 : (entity.glowEffect === 'pulse' ? 12 : 8);
         ctx.beginPath();
         ctx.arc(enX + effTile / 2, enY + effTile / 2, effTile * 0.32, 0, Math.PI * 2);
         ctx.fill();
         ctx.shadowBlur = 0;
+
+        let kIcon = '🔑';
+        if (entity.style === 'ornate') kIcon = '🗝️';
+        else if (entity.style === 'crystal') kIcon = '💎';
+        else if (entity.style === 'orb') kIcon = '🔮';
+        else if (entity.style === 'relic') kIcon = '👑';
+        else if (entity.style === 'skull') kIcon = '💀';
+
         ctx.fillStyle = '#000000';
         ctx.font = `${Math.max(9, effTile * 0.35)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('🔑', enX + effTile / 2, enY + effTile / 2);
+        ctx.fillText(kIcon, enX + effTile / 2, enY + effTile / 2);
       } else if (entity.type === ENTITY_TYPES.DOOR) {
         ctx.strokeStyle = entity.color || '#fbbf24';
         ctx.shadowColor = entity.color || '#fbbf24';
@@ -887,18 +910,33 @@ export class EditorCanvas {
         ctx.strokeRect(enX + 4, enY + 4, effTile - 8, effTile - 8);
         ctx.shadowBlur = 0;
         ctx.fillStyle = entity.color || '#fbbf24';
+
+        let dIcon = '🚪';
+        if (entity.style === 'portcullis') dIcon = '🏰';
+        else if (entity.style === 'laser_barrier') dIcon = '⚡';
+        else if (entity.style === 'magic_seal') dIcon = '🔯';
+        else if (entity.style === 'crystal_spikes') dIcon = '💠';
+        else if (entity.style === 'vault_hatch') dIcon = '🔒';
+
         ctx.font = `${Math.max(9, effTile * 0.35)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('🚪', enX + effTile / 2, enY + effTile / 2);
+        ctx.fillText(dIcon, enX + effTile / 2, enY + effTile / 2);
       } else if (entity.type === ENTITY_TYPES.LEVER) {
         ctx.fillStyle = entity.state ? '#34d399' : '#94a3b8';
         ctx.fillRect(enX + effTile * 0.2, enY + effTile * 0.3, effTile * 0.6, effTile * 0.4);
         ctx.fillStyle = '#ffffff';
+
+        let lIcon = '🕹️';
+        if (entity.style === 'pressure_pedestal') lIcon = '🔘';
+        else if (entity.style === 'crystal_switch') lIcon = '🔮';
+        else if (entity.style === 'runic_plate') lIcon = '📜';
+        else if (entity.style === 'cog_wheel') lIcon = '⚙️';
+
         ctx.font = `${Math.max(9, effTile * 0.35)}px sans-serif`;
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillText('🕹️', enX + effTile / 2, enY + effTile / 2);
+        ctx.fillText(lIcon, enX + effTile / 2, enY + effTile / 2);
 
         // Draw Lever Wiring Target Lines
         for (const t of (entity.targets || [])) {
