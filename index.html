@@ -189,6 +189,7 @@
         <a href="maze.html?tutorial=1" class="btn btn-primary">🎓 Start Tutorial 1</a>
         <a href="maze.html?id=1" class="btn btn-secondary">🏰 Enter Campaign (Zone 1)</a>
         <a href="editor.html" class="btn btn-secondary">🛠️ Maze Architect</a>
+        <button id="btn-hero-save-progress" class="btn btn-secondary" title="Save Game Progress (export JSON save file)">💾 Save Game Progress</button>
       </div>
     </header>
 
@@ -326,16 +327,16 @@
 
     <!-- Navigation Hub Grid -->
     <div class="hub-grid">
-      <!-- Save & Backup Progress -->
+      <!-- Save Game Progress -->
       <div class="card">
         <div>
           <span class="card-header-icon">💾</span>
-          <div class="card-title">Save Game &amp; Progress</div>
-          <div class="card-desc">Export your stars, best times, tutorial milestones, and custom projects to a local JSON backup file or restore a previous save.</div>
+          <div class="card-title">Save Game Progress</div>
+          <div class="card-desc">Export your stars, best times, tutorial milestones, and custom projects to a JSON save file or restore a previous game save.</div>
         </div>
         <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-          <button id="btn-export-save" class="btn btn-primary" style="width: 100%; justify-content: center;">💾 Export Save File (.json)</button>
-          <button id="btn-import-save" class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="document.getElementById('save-file-input').click()">📥 Restore Save File</button>
+          <button id="btn-export-save" class="btn btn-primary" style="width: 100%; justify-content: center;">💾 Save Game Progress (.json)</button>
+          <button id="btn-import-save" class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="document.getElementById('save-file-input').click()">📂 Restore Game Progress</button>
           <input type="file" id="save-file-input" accept=".json" style="display: none;" />
         </div>
       </div>
@@ -461,11 +462,14 @@
     // Initial render
     renderAllProgress();
 
-    // Export Save Progress
-    document.getElementById('btn-export-save')?.addEventListener('click', () => {
+    // Save Game Progress
+    const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
-      showToast(`Exported save file: ${filename}`, 'success');
-    });
+      showToast(`Saved game progress to ${filename}!`, 'success');
+    };
+
+    document.getElementById('btn-hero-save-progress')?.addEventListener('click', handleSaveGameProgress);
+    document.getElementById('btn-export-save')?.addEventListener('click', handleSaveGameProgress);
 
     // Import Save Progress
     const saveFileInput = document.getElementById('save-file-input');

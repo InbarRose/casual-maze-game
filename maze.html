@@ -63,6 +63,11 @@
           📥 <span class="hide-mobile">Debug Log</span>
         </button>
 
+        <!-- Save Game Progress (Anytime during game) -->
+        <button id="btn-hud-save-progress" class="btn btn-secondary btn-sm" title="Save Game Progress (export JSON save file)">
+          💾 <span class="hide-mobile">Save Game Progress</span>
+        </button>
+
         <!-- Controls Toggles -->
         <button id="btn-freepan" class="btn btn-secondary btn-sm" title="Toggle Free-Pan Mode (M)">
           🗺 <span class="hide-mobile">Map Pan [M]</span>
@@ -153,8 +158,9 @@
           </div>
         </div>
         <div class="modal-footer" style="justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
-          <div style="display: flex; gap: 0.5rem;">
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
             <button id="btn-modal-download-log" class="btn btn-primary btn-sm">📥 Download JSON Log</button>
+            <button id="btn-modal-save-progress" class="btn btn-secondary btn-sm">💾 Save Game Progress</button>
             <button id="btn-modal-copy-log" class="btn btn-secondary btn-sm">📋 Copy JSON</button>
           </div>
           <button class="btn btn-secondary btn-sm" id="btn-modal-dismiss-log">Close [Esc]</button>
@@ -183,7 +189,7 @@
         </div>
         <div class="modal-footer" style="justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
           <a href="index.html" class="btn btn-secondary">Level Select</a>
-          <button id="btn-save-progress" class="btn btn-secondary" title="Export game save progress backup to a JSON file">💾 Save Backup</button>
+          <button id="btn-save-progress" class="btn btn-secondary" title="Export game save progress backup to a JSON file">💾 Save Game Progress</button>
           <button id="btn-download-log" class="btn btn-secondary" title="Download level replay and debug telemetry">📥 Debug Logs</button>
           <button id="btn-replay" class="btn btn-secondary">Replay</button>
           <button id="btn-next-level" class="btn btn-primary">Next Level →</button>
@@ -575,10 +581,14 @@
       gameLoop.downloadDebugLog();
       showToast('Debug log downloaded!', 'success');
     });
-    document.getElementById('btn-save-progress')?.addEventListener('click', () => {
+    const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
-      showToast(`Saved progress to ${filename}!`, 'success');
-    });
+      showToast(`Saved game progress to ${filename}!`, 'success');
+    };
+
+    document.getElementById('btn-hud-save-progress')?.addEventListener('click', handleSaveGameProgress);
+    document.getElementById('btn-modal-save-progress')?.addEventListener('click', handleSaveGameProgress);
+    document.getElementById('btn-save-progress')?.addEventListener('click', handleSaveGameProgress);
 
     // Mobile Virtual Controls Binding
     function bindVirtualButton(btnId, keyCode) {
