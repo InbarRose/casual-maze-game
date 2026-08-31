@@ -3,12 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
   <title>Play Labyrinth — Casual Maze Game</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css" />
-  <link rel="stylesheet" href="css/game.css" />
+  <link rel="stylesheet" href="css/main.css?v=1.1.0" />
+  <link rel="stylesheet" href="css/game.css?v=1.1.0" />
 </head>
 <body style="overflow: hidden;">
 
@@ -49,6 +52,21 @@
           <div class="hud-stat">⏱ <strong id="hud-timer">00:00.0</strong></div>
           <div class="hud-stat">👣 <strong id="hud-steps">0</strong></div>
         </div>
+
+        <!-- In-Game Activity Log & Telemetry Access -->
+        <button id="btn-activity-log" class="btn btn-secondary btn-sm" title="View Full Activity Log & Telemetry History (L)">
+          📜 <span class="hide-mobile">Log [L]</span>
+        </button>
+
+        <!-- Instant Debug Log Download (Anytime) -->
+        <button id="btn-quick-download-log" class="btn btn-secondary btn-sm" title="Download Session Debug Log JSON at any time without finishing the level">
+          📥 <span class="hide-mobile">Debug Log</span>
+        </button>
+
+        <!-- Save Game Progress (Anytime during game) -->
+        <button id="btn-hud-save-progress" class="btn btn-secondary btn-sm" title="Save Game Progress (export JSON save file)">
+          💾 <span class="hide-mobile">Save Game Progress</span>
+        </button>
 
         <!-- Controls Toggles -->
         <button id="btn-freepan" class="btn btn-secondary btn-sm" title="Toggle Free-Pan Mode (M)">
@@ -94,6 +112,8 @@
       <span>•</span>
       <span><kbd>E</kbd> / <kbd>Space</kbd> Interact</span>
       <span>•</span>
+      <span><kbd>L</kbd> Activity Log</span>
+      <span>•</span>
       <span><kbd>M</kbd> Free Pan</span>
       <span>•</span>
       <span><kbd>R</kbd> Restart</span>
@@ -106,6 +126,46 @@
       <button class="dpad-btn dpad-center" id="vbtn-act" aria-label="Interact">USE</button>
       <button class="dpad-btn dpad-right" id="vbtn-right" aria-label="Right">▶</button>
       <button class="dpad-btn dpad-down" id="vbtn-down" aria-label="Down">▼</button>
+    </div>
+
+    <!-- In-Game Activity Log & Telemetry Modal -->
+    <div class="modal-backdrop" id="activity-log-modal">
+      <div class="modal-dialog activity-modal-dialog">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <span style="font-size: 1.25rem;">📜</span>
+            <h3 style="font-size: 1.15rem; margin: 0;">Level Activity Log &amp; Telemetry</h3>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm btn-icon" id="btn-close-log-modal" title="Close Log (Esc)">✕</button>
+        </div>
+        <div class="modal-body" style="padding: 1rem 1.25rem;">
+          <div class="activity-modal-stats">
+            <span>Level: <strong id="log-modal-level-name">Labyrinth</strong></span>
+            <span>⏱ <strong id="log-modal-time">00:00.0</strong></span>
+            <span>👣 <strong id="log-modal-steps">0</strong> steps</span>
+            <span>🎒 <strong id="log-modal-keys">0</strong> held</span>
+          </div>
+
+          <div class="activity-filter-bar">
+            <button class="btn btn-sm btn-secondary filter-btn active" data-filter="all" id="filter-all">All Events (<span id="log-count-all">0</span>)</button>
+            <button class="btn btn-sm btn-secondary filter-btn" data-filter="key-door" id="filter-key-door">🗝️ Keys &amp; Gates</button>
+            <button class="btn btn-sm btn-secondary filter-btn" data-filter="lever" id="filter-lever">⚡ Levers</button>
+            <button class="btn btn-sm btn-secondary filter-btn" data-filter="warning" id="filter-warning">⚠️ Warnings</button>
+          </div>
+
+          <div class="activity-modal-list" id="activity-modal-list">
+            <div class="activity-empty-state">No events recorded yet. Move, toggle levers, or collect keys to populate the live log!</div>
+          </div>
+        </div>
+        <div class="modal-footer" style="justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            <button id="btn-modal-download-log" class="btn btn-primary btn-sm">📥 Download JSON Log</button>
+            <button id="btn-modal-save-progress" class="btn btn-secondary btn-sm">💾 Save Game Progress</button>
+            <button id="btn-modal-copy-log" class="btn btn-secondary btn-sm">📋 Copy JSON</button>
+          </div>
+          <button class="btn btn-secondary btn-sm" id="btn-modal-dismiss-log">Close [Esc]</button>
+        </div>
+      </div>
     </div>
 
     <!-- Victory Modal -->
@@ -129,7 +189,7 @@
         </div>
         <div class="modal-footer" style="justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
           <a href="index.html" class="btn btn-secondary">Level Select</a>
-          <button id="btn-save-progress" class="btn btn-secondary" title="Export game save progress backup to a JSON file">💾 Save Backup</button>
+          <button id="btn-save-progress" class="btn btn-secondary" title="Export game save progress backup to a JSON file">💾 Save Game Progress</button>
           <button id="btn-download-log" class="btn btn-secondary" title="Download level replay and debug telemetry">📥 Debug Logs</button>
           <button id="btn-replay" class="btn btn-secondary">Replay</button>
           <button id="btn-next-level" class="btn btn-primary">Next Level →</button>
@@ -286,11 +346,12 @@
           stepsEl.textContent = state.steps;
 
           // Render inventory items in top HUD bar
-          const currentKeyIds = (state.inventory || []).join(',');
+          const heldKeyIds = state.inventory || (state.keys ? state.keys.map(k => k.id) : []) || [];
+          const currentKeyIds = heldKeyIds.join(',');
           if (currentKeyIds !== lastRenderedKeyIds) {
             lastRenderedKeyIds = currentKeyIds;
             keysListEl.innerHTML = '';
-            const keyCount = state.inventory ? state.inventory.length : 0;
+            const keyCount = heldKeyIds.length;
             const inventoryCountEl = document.getElementById('hud-inventory-count');
             if (inventoryCountEl) {
               inventoryCountEl.textContent = `${keyCount}`;
@@ -300,8 +361,8 @@
             }
 
             if (keyCount > 0) {
-              for (const keyId of state.inventory) {
-                const key = currentLevel.entities.find(e => e.id === keyId) || { name: 'Key', color: '#fbbf24' };
+              for (const keyId of heldKeyIds) {
+                const key = currentLevel.entities.find(e => e.id === keyId) || (state.keys ? state.keys.find(k => k.id === keyId) : null) || { name: 'Key', color: '#fbbf24' };
                 const pill = document.createElement('div');
                 pill.className = 'key-pill';
                 pill.style.borderColor = key.color || '#fbbf24';
@@ -382,6 +443,129 @@
     window.gameLoop = gameLoop;
     gameLoop.start();
 
+    // Activity Log & Telemetry Modal Elements
+    const activityModal = document.getElementById('activity-log-modal');
+    const activityModalList = document.getElementById('activity-modal-list');
+    const btnActivityLog = document.getElementById('btn-activity-log');
+    const btnQuickDownloadLog = document.getElementById('btn-quick-download-log');
+    const btnCloseLogModal = document.getElementById('btn-close-log-modal');
+    const btnModalDismissLog = document.getElementById('btn-modal-dismiss-log');
+    const btnModalDownloadLog = document.getElementById('btn-modal-download-log');
+    const btnModalCopyLog = document.getElementById('btn-modal-copy-log');
+    const logModalLevelName = document.getElementById('log-modal-level-name');
+    const logModalTime = document.getElementById('log-modal-time');
+    const logModalSteps = document.getElementById('log-modal-steps');
+    const logModalKeys = document.getElementById('log-modal-keys');
+    const logCountAll = document.getElementById('log-count-all');
+    const filterButtons = document.querySelectorAll('.activity-filter-bar .filter-btn');
+
+    let currentLogFilter = 'all';
+    const gameActivityHistory = [];
+
+    function renderActivityModalList() {
+      if (!activityModalList) return;
+      activityModalList.innerHTML = '';
+
+      const filtered = gameActivityHistory.filter(item => {
+        if (currentLogFilter === 'all') return true;
+        if (currentLogFilter === 'key-door') return item.category === 'key' || item.category === 'door';
+        if (currentLogFilter === 'lever') return item.category === 'lever';
+        if (currentLogFilter === 'warning') return item.category === 'warning';
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        activityModalList.innerHTML = '<div class="activity-empty-state">No matching events in log.</div>';
+        return;
+      }
+
+      for (const entry of filtered) {
+        const row = document.createElement('div');
+        row.className = `log-entry-row ${entry.category || 'info'}`;
+        row.innerHTML = `
+          <span class="log-time">${entry.timeStr}</span>
+          <span style="font-size: 1rem; line-height: 1;">${entry.icon}</span>
+          <div style="flex: 1;">${entry.message}</div>
+        `;
+        activityModalList.appendChild(row);
+      }
+    }
+
+    function openActivityLogModal() {
+      if (!activityModal) return;
+      if (logModalLevelName) logModalLevelName.textContent = currentLevel.title || 'Labyrinth';
+      if (logModalTime && window.gameLoop) logModalTime.textContent = formatTime(window.gameLoop.elapsedTime);
+      if (logModalSteps && window.gameLoop) logModalSteps.textContent = window.gameLoop.player.stepsTaken;
+      if (logModalKeys && window.gameLoop) logModalKeys.textContent = window.gameLoop.player.inventory.length;
+      if (logCountAll) logCountAll.textContent = gameActivityHistory.length;
+
+      renderActivityModalList();
+      activityModal.classList.add('active');
+    }
+
+    function closeActivityLogModal() {
+      if (activityModal) activityModal.classList.remove('active');
+    }
+
+    function toggleActivityLogModal() {
+      if (activityModal && activityModal.classList.contains('active')) {
+        closeActivityLogModal();
+      } else {
+        openActivityLogModal();
+      }
+    }
+
+    // Filter Buttons
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentLogFilter = btn.dataset.filter || 'all';
+        renderActivityModalList();
+      });
+    });
+
+    if (btnActivityLog) btnActivityLog.addEventListener('click', toggleActivityLogModal);
+    if (btnCloseLogModal) btnCloseLogModal.addEventListener('click', closeActivityLogModal);
+    if (btnModalDismissLog) btnModalDismissLog.addEventListener('click', closeActivityLogModal);
+
+    if (btnQuickDownloadLog) {
+      btnQuickDownloadLog.addEventListener('click', () => {
+        gameLoop.downloadDebugLog();
+        showToast('Live debug log downloaded!', 'success');
+      });
+    }
+
+    if (btnModalDownloadLog) {
+      btnModalDownloadLog.addEventListener('click', () => {
+        gameLoop.downloadDebugLog();
+        showToast('Debug telemetry log downloaded!', 'success');
+      });
+    }
+
+    if (btnModalCopyLog) {
+      btnModalCopyLog.addEventListener('click', async () => {
+        try {
+          const json = gameLoop.getDebugLogJSON();
+          await navigator.clipboard.writeText(json);
+          showToast('Debug log JSON copied to clipboard!', 'success');
+        } catch (err) {
+          showToast('Failed to copy to clipboard', 'error');
+        }
+      });
+    }
+
+    // Keyboard Shortcuts (L for Log, Esc for close modals)
+    window.addEventListener('keydown', (e) => {
+      if (e.code === 'KeyL' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        toggleActivityLogModal();
+      } else if (e.code === 'Escape') {
+        closeActivityLogModal();
+        if (victoryModal) victoryModal.classList.remove('active');
+      }
+    });
+
     // Button event listeners
     btnFreePan.addEventListener('click', () => gameLoop.toggleFreePan());
     btnRestart.addEventListener('click', () => {
@@ -397,10 +581,14 @@
       gameLoop.downloadDebugLog();
       showToast('Debug log downloaded!', 'success');
     });
-    document.getElementById('btn-save-progress')?.addEventListener('click', () => {
+    const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
-      showToast(`Saved progress to ${filename}!`, 'success');
-    });
+      showToast(`Saved game progress to ${filename}!`, 'success');
+    };
+
+    document.getElementById('btn-hud-save-progress')?.addEventListener('click', handleSaveGameProgress);
+    document.getElementById('btn-modal-save-progress')?.addEventListener('click', handleSaveGameProgress);
+    document.getElementById('btn-save-progress')?.addEventListener('click', handleSaveGameProgress);
 
     // Mobile Virtual Controls Binding
     function bindVirtualButton(btnId, keyCode) {
@@ -431,23 +619,42 @@
     // Real-Time In-Game Activity Log Feed & Toast Notifications
     const activityFeedEl = document.getElementById('game-activity-feed');
 
-    function addActivityLog(message, type = 'info', icon = 'ℹ️') {
-      if (!activityFeedEl) return;
-      const item = document.createElement('div');
-      item.className = `activity-log-item ${type}`;
-      item.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-      activityFeedEl.appendChild(item);
+    function addActivityLog(message, type = 'info', icon = 'ℹ️', category = 'info') {
+      const timeMs = window.gameLoop ? window.gameLoop.elapsedTime : 0;
+      const timeStr = formatTime(timeMs);
 
-      // Keep max 4 active items on screen
-      while (activityFeedEl.children.length > 4) {
-        activityFeedEl.removeChild(activityFeedEl.firstChild);
+      // Record to full activity history
+      gameActivityHistory.unshift({
+        time: timeMs,
+        timeStr,
+        message,
+        type,
+        icon,
+        category,
+      });
+
+      if (logCountAll) logCountAll.textContent = gameActivityHistory.length;
+      if (activityModal && activityModal.classList.contains('active')) {
+        renderActivityModalList();
       }
 
-      setTimeout(() => {
-        item.style.opacity = '0';
-        item.style.transform = 'translateY(-8px)';
-        setTimeout(() => item.remove(), 400);
-      }, 4200);
+      // Toast / Feed item
+      if (activityFeedEl) {
+        const item = document.createElement('div');
+        item.className = `activity-log-item ${type}`;
+        item.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+        activityFeedEl.appendChild(item);
+
+        while (activityFeedEl.children.length > 4) {
+          activityFeedEl.removeChild(activityFeedEl.firstChild);
+        }
+
+        setTimeout(() => {
+          item.style.opacity = '0';
+          item.style.transform = 'translateY(-8px)';
+          setTimeout(() => item.remove(), 400);
+        }, 4200);
+      }
     }
 
     function showToast(message, type = 'info') {
@@ -461,16 +668,16 @@
 
     globalEvents.on('key:collected', (data) => {
       showToast(`Acquired ${data.name || 'Key'}!`, 'success');
-      addActivityLog(`Collected <strong>${data.name || 'Key'}</strong> (Holding: ${data.inventoryCount || 1})`, 'key-event', '🗝️');
+      addActivityLog(`Collected <strong>${data.name || 'Key'}</strong> (Holding: ${data.inventoryCount || 1})`, 'key-event', '🗝️', 'key');
     });
 
     globalEvents.on('door:unlocked', (data) => {
       showToast(`Gate unlocked!`, 'success');
-      addActivityLog(`Unlocked <strong>${data.doorName || 'Gate'}</strong>`, 'door-event', '🔓');
+      addActivityLog(`Unlocked <strong>${data.doorName || 'Gate'}</strong>`, 'door-event', '🔓', 'door');
     });
 
     globalEvents.on('door:locked', (data) => {
-      addActivityLog(`<strong>${data.doorName || 'Gate'}</strong> is locked! Requires <strong>${data.requiredKeyName || 'Key'}</strong>`, 'locked-warn', '🔒');
+      addActivityLog(`<strong>${data.doorName || 'Gate'}</strong> is locked! Requires <strong>${data.requiredKeyName || 'Key'}</strong>`, 'locked-warn', '🔒', 'warning');
     });
 
     globalEvents.on('lever:toggled', (data) => {
@@ -483,7 +690,7 @@
         targetDesc = ` — Passage ${data.state ? 'opened' : 'closed'} at (${t0.x}, ${t0.y})`;
       }
       showToast(`${data.name || 'Switch'} toggled ${stateName}!`, data.state ? 'success' : 'info');
-      addActivityLog(`<strong>${data.name || 'Switch'}</strong> toggled ${stateName}${targetDesc}`, type, icon);
+      addActivityLog(`<strong>${data.name || 'Switch'}</strong> toggled ${stateName}${targetDesc}`, type, icon, 'lever');
     });
   </script>
 </body>

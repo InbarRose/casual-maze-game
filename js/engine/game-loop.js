@@ -700,6 +700,7 @@ export class GameLoop {
         levelTitle: this.level.title,
         help: this.level.help || null,
         elevation: this.player.elevation === ELEVATION.OVERHEAD ? 'Bridge (Elevation 1)' : 'Ground Floor',
+        inventory: [...this.player.inventory],
         keys: this.entities.filter(e => e.type === 'key' && this.player.inventory.includes(e.id)),
         steps: this.player.stepsTaken,
         time: this.elapsedTime,

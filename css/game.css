@@ -243,6 +243,94 @@
   100% { transform: translateY(0); opacity: 1; }
 }
 
+/* In-Game Activity Log Modal */
+.activity-modal-dialog {
+  max-width: 620px;
+  width: 92%;
+  max-height: 85vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.activity-modal-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 0.6rem 0.85rem;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: var(--radius-sm);
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-bottom: 0.75rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.activity-modal-stats strong {
+  color: var(--text);
+  font-family: var(--font-mono);
+}
+
+.activity-filter-bar {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.75rem;
+}
+
+.filter-btn.active {
+  background: var(--accent);
+  color: #0f172a;
+  font-weight: 700;
+  border-color: var(--accent);
+}
+
+.activity-modal-list {
+  max-height: 340px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding-right: 0.25rem;
+}
+
+.log-entry-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(15, 23, 42, 0.7);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.35;
+}
+
+.log-entry-row .log-time {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  white-space: nowrap;
+  margin-top: 0.05rem;
+}
+
+.log-entry-row.key { border-left: 3px solid var(--gold); }
+.log-entry-row.door { border-left: 3px solid var(--accent); }
+.log-entry-row.lever { border-left: 3px solid var(--emerald); }
+.log-entry-row.warning { border-left: 3px solid var(--rose); background: rgba(45, 15, 20, 0.5); }
+.log-entry-row.step { border-left: 3px solid var(--text-muted); opacity: 0.8; }
+
+.activity-empty-state {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
 /* Minimap Container */
 .minimap-container {
   position: absolute;
