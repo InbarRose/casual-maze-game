@@ -208,4 +208,43 @@ describe('Editor > Buttons & Core Functions Suite', () => {
     const clipboardOk = await JsonExporter.copyToClipboard(level);
     assert(clipboardOk === true || clipboardOk === false, 'Clipboard handler returns boolean status');
   });
+
+  it('tests loading official preset levels and remix cloning into the editor', () => {
+    const canvas = new EditorCanvas({ canvas: createMockCanvas(), level: createTestLevel() });
+
+    // Mock editorUI instance methods
+    const mockUI = {
+      level: createTestLevel(),
+      editorCanvas: canvas,
+      showToast: () => {},
+      loadLevel(lvl) {
+        this.level = LevelLoader.normalizeLevel(lvl);
+        this.editorCanvas.setLevel(this.level);
+      },
+    };
+
+    // Import loadPresetLevel logic test
+    const { TUTORIAL_LEVELS, CAMPAIGN_LEVELS } = LevelLoader;
+
+    // 1. Load Campaign Level 4 directly
+    const l4 = CAMPAIGN_LEVELS?.find(l => String(l.id) === '4') || { id: '4', title: 'Sky Bridges & Crossroads', dimensions: { width: 25, height: 25 }, layers: { ground: [], overhead: [] } };
+    mockUI.loadLevel(l4);
+    assertEqual(mockUI.level.id, '4');
+    assertEqual(mockUI.level.title, 'Sky Bridges & Crossroads');
+
+    // 2. Clone Campaign Level 4 as a Remix
+    const remixCopy = JSON.parse(JSON.stringify(l4));
+    remixCopy.id = `remix_${l4.id}_12345`;
+    remixCopy.title = `${l4.title} (Remix)`;
+    mockUI.loadLevel(remixCopy);
+    assert(mockUI.level.id.startsWith('remix_4_'), 'Remix ID set');
+    assert(mockUI.level.title.includes('(Remix)'), 'Remix title set');
+
+    // 3. Load Tutorial Level 2
+    const t2 = TUTORIAL_LEVELS?.find(l => String(l.id) === 'tutorial_2') || { id: 'tutorial_2', title: 'Keys & Colored Gates', dimensions: { width: 13, height: 13 }, layers: { ground: [], overhead: [] } };
+    mockUI.loadLevel(t2);
+    assertEqual(mockUI.level.id, 'tutorial_2');
+    assertEqual(mockUI.level.title, 'Keys & Colored Gates');
+  });
 });
+

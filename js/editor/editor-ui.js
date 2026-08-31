@@ -40,6 +40,16 @@ export class EditorUI {
     this.initGuideModal();
     this.pushHistory();
     this.updateValidationState();
+
+    // Check URL parameters for preset levels (?level=X, ?tutorial=X, ?preset=X, ?id=X)
+    if (typeof window !== 'undefined' && window.location?.search) {
+      const urlParams = new URLSearchParams(window.location.search);
+      const presetParam = urlParams.get('preset') || urlParams.get('level') || urlParams.get('tutorial') || urlParams.get('tut') || urlParams.get('id');
+      if (presetParam) {
+        console.info(`[MazeGame:Editor] Detected URL preset request for "${presetParam}"`);
+        this.loadPresetLevel(presetParam, false);
+      }
+    }
   }
 
   initCanvas() {
@@ -173,6 +183,18 @@ export class EditorUI {
         this.editorCanvas.render();
         console.info(`[MazeGame:Editor] Visual tileset switched to "${quickTheme.value}"`);
         this.showToast(`Tileset switched to ${quickTheme.options[quickTheme.selectedIndex].text}!`, 'info');
+      });
+    }
+
+    // 2b. Official Level Quick Loader Dropdown
+    const quickPreset = document.getElementById('quick-preset-select');
+    if (quickPreset) {
+      quickPreset.addEventListener('change', () => {
+        const val = quickPreset.value;
+        if (val) {
+          this.loadPresetLevel(val, false);
+          quickPreset.value = '';
+        }
       });
     }
 
@@ -504,6 +526,55 @@ export class EditorUI {
   }
 
   /* =========================================================
+   * OFFICIAL PRESET & LEVEL LOADER SYSTEM
+   * ========================================================= */
+  loadPresetLevel(presetId, asCopy = false) {
+    const rawId = String(presetId).trim().toLowerCase();
+    let found = null;
+    let category = 'Campaign';
+
+    // 1. Check Tutorial levels
+    if (rawId.startsWith('tutorial_') || rawId.startsWith('tut_') || rawId.startsWith('t')) {
+      const match = rawId.match(/\d+/);
+      const num = match ? parseInt(match[0], 10) : 1;
+      found = TUTORIAL_LEVELS[num - 1] || TUTORIAL_LEVELS.find(l => String(l.id).toLowerCase() === rawId);
+      category = 'Tutorial';
+    } else {
+      // 2. Check Campaign levels
+      const match = rawId.match(/\d+/);
+      const num = match ? match[0] : rawId;
+      found = CAMPAIGN_LEVELS.find(l => String(l.id).toLowerCase() === String(num) || String(l.id).toLowerCase() === `level_${num}`) ||
+              TUTORIAL_LEVELS.find(l => String(l.id).toLowerCase() === rawId);
+      if (found && !found.id.startsWith('tutorial')) {
+        category = 'Campaign';
+      }
+    }
+
+    if (!found) {
+      console.warn(`[MazeGame:Editor] Preset level "${presetId}" not found in default levels.`);
+      this.showToast(`Preset level "${presetId}" not found`, 'error');
+      return false;
+    }
+
+    const levelData = JSON.parse(JSON.stringify(found));
+    if (asCopy) {
+      levelData.id = `remix_${found.id}_${Date.now()}`;
+      levelData.title = `${found.title} (Remix)`;
+    }
+
+    console.info(`[MazeGame:Editor] Loaded official game level "${found.title}" (${found.id}) [asCopy=${asCopy}]`);
+    this.loadLevel(levelData);
+
+    const quickSelect = document.getElementById('quick-preset-select');
+    if (quickSelect && !asCopy) {
+      quickSelect.value = found.id;
+    }
+
+    this.showToast(`Loaded ${category} "${found.title}" into editor!`, 'success');
+    return true;
+  }
+
+  /* =========================================================
    * PROJECTS & TEMPLATES SYSTEM
    * ========================================================= */
   initProjectsModal() {
@@ -512,8 +583,39 @@ export class EditorUI {
     const btnClose = document.getElementById('projects-btn-close');
     const btnSaveAs = document.getElementById('btn-save-as-project');
 
+    // Tab Navigation within Projects Modal (Official Presets / Saved / Blank)
+    document.querySelectorAll('#project-modal-tabs .modal-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.dataset.tab;
+        document.querySelectorAll('#project-modal-tabs .modal-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+        document.querySelectorAll('#projects-modal .modal-tab-pane').forEach(pane => {
+          pane.classList.toggle('active', pane.id === `pane-proj-${targetTab}`);
+          pane.style.display = pane.id === `pane-proj-${targetTab}` ? 'flex' : 'none';
+        });
+      });
+    });
+
+    // Preset Search Input & Category Filter Pills
+    const searchInput = document.getElementById('preset-search-input');
+    let currentFilter = 'all';
+
+    searchInput?.addEventListener('input', () => {
+      this.renderOfficialPresets(currentFilter, searchInput.value.trim().toLowerCase());
+    });
+
+    document.querySelectorAll('#preset-filter-pills button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#preset-filter-pills button').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentFilter = btn.dataset.filter || 'all';
+        this.renderOfficialPresets(currentFilter, searchInput?.value.trim().toLowerCase() || '');
+      });
+    });
+
     btnOpen?.addEventListener('click', () => {
       this.renderProjectsModalContent();
+      // Default to official tab
+      document.querySelector('#project-modal-tabs .modal-tab-btn[data-tab="official"]')?.click();
       modal.classList.add('active');
     });
 
@@ -555,15 +657,140 @@ export class EditorUI {
   }
 
   renderProjectsModalContent() {
+    this.renderOfficialPresets('all', '');
+    this.renderSavedProjects();
+  }
+
+  renderOfficialPresets(filterCategory = 'all', searchTerm = '') {
+    const container = document.getElementById('official-presets-container');
+    if (!container) return;
+
+    container.innerHTML = '';
+
+    // Aggregate all 16 levels
+    const allPresets = [];
+
+    TUTORIAL_LEVELS.forEach((lvl, idx) => {
+      allPresets.push({
+        raw: lvl,
+        id: lvl.id || `tutorial_${idx + 1}`,
+        badge: `T${idx + 1}`,
+        category: 'tutorial',
+        categoryLabel: 'Tutorial Academy',
+        badgeClass: 'tutorial',
+        zoneLabel: 'Tutorial',
+      });
+    });
+
+    CAMPAIGN_LEVELS.forEach(lvl => {
+      const num = parseInt(lvl.id, 10) || 1;
+      let cat = 'zone_1';
+      let catLabel = 'Zone 1: Crypts';
+      let badgeClass = 'zone_1';
+
+      if (num >= 6 && num <= 8) {
+        cat = 'zone_2';
+        catLabel = 'Zone 2: Jungle';
+        badgeClass = 'zone_2';
+      } else if (num >= 9) {
+        cat = 'zone_3';
+        catLabel = 'Zone 3: Magma';
+        badgeClass = 'zone_3';
+      }
+
+      allPresets.push({
+        raw: lvl,
+        id: lvl.id,
+        badge: `L${lvl.id}`,
+        category: cat,
+        categoryLabel: catLabel,
+        badgeClass: badgeClass,
+        zoneLabel: catLabel,
+      });
+    });
+
+    // Filter by Category & Search Term
+    const filtered = allPresets.filter(item => {
+      if (filterCategory !== 'all' && item.category !== filterCategory) {
+        return false;
+      }
+      if (searchTerm) {
+        const titleMatch = (item.raw.title || '').toLowerCase().includes(searchTerm);
+        const idMatch = String(item.id).toLowerCase().includes(searchTerm);
+        const themeMatch = (item.raw.config?.theme || '').toLowerCase().includes(searchTerm);
+        const zoneMatch = item.zoneLabel.toLowerCase().includes(searchTerm);
+        return titleMatch || idMatch || themeMatch || zoneMatch;
+      }
+      return true;
+    });
+
+    if (filtered.length === 0) {
+      container.innerHTML = `<div style="font-size: 0.8rem; color: var(--text-muted); padding: 0.75rem; text-align: center;">No official levels match "${searchTerm}".</div>`;
+      return;
+    }
+
+    filtered.forEach(item => {
+      const lvl = item.raw;
+      const card = document.createElement('div');
+      card.className = 'official-preset-card';
+
+      const keyCount = (lvl.entities || []).filter(e => e.type === 'key').length;
+      const doorCount = (lvl.entities || []).filter(e => e.type === 'door').length;
+      const leverCount = (lvl.entities || []).filter(e => e.type === 'lever').length;
+      const entityStr = [
+        keyCount > 0 ? `🔑 ${keyCount}` : '',
+        doorCount > 0 ? `🚪 ${doorCount}` : '',
+        leverCount > 0 ? `🕹️ ${leverCount}` : '',
+      ].filter(Boolean).join(' • ') || 'Standard Run';
+
+      const theme = lvl.config?.theme || 'dungeon';
+      const themeIcon = theme === 'jungle' ? '🌴' : (theme === 'lava' || theme === 'magma' ? '🌋' : (theme === 'temple' ? '🏛️' : (theme === 'snow' ? '❄️' : '🏰')));
+
+      card.innerHTML = `
+        <div class="official-preset-meta">
+          <span class="official-preset-badge ${item.badgeClass}">${item.badge}</span>
+          <div style="min-width: 0; flex: 1;">
+            <div style="font-weight: 700; font-size: 0.85rem; color: var(--text); display: flex; align-items: center; gap: 0.4rem;">
+              <span>${this.escapeHtml(lvl.title)}</span>
+              <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 400;">(${item.zoneLabel})</span>
+            </div>
+            <div style="font-size: 0.73rem; color: var(--text-muted); margin-top: 0.15rem;">
+              ${lvl.dimensions.width}×${lvl.dimensions.height} • ${themeIcon} ${theme.toUpperCase()} • ${entityStr}
+            </div>
+          </div>
+        </div>
+        <div style="display: flex; gap: 0.4rem;">
+          <button class="btn btn-primary btn-sm btn-edit-level" title="Load this official level directly into editor to tweak and test" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+            ✏️ Edit Level
+          </button>
+          <button class="btn btn-secondary btn-sm btn-clone-remix" title="Clone this level with a new remix ID and custom copy" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
+            📋 Clone Copy
+          </button>
+        </div>
+      `;
+
+      card.querySelector('.btn-edit-level').addEventListener('click', () => {
+        this.loadPresetLevel(item.id, false);
+        document.getElementById('projects-modal')?.classList.remove('active');
+      });
+
+      card.querySelector('.btn-clone-remix').addEventListener('click', () => {
+        this.loadPresetLevel(item.id, true);
+        document.getElementById('projects-modal')?.classList.remove('active');
+      });
+
+      container.appendChild(card);
+    });
+  }
+
+  renderSavedProjects() {
     const savedContainer = document.getElementById('saved-projects-container');
-    const templatesContainer = document.getElementById('campaign-templates-container');
     const nameInput = document.getElementById('project-save-name');
 
     if (nameInput) {
       nameInput.value = this.level.title || 'My Labyrinth';
     }
 
-    // 1. Render Saved Projects
     const projects = StorageManager.listProjects();
     if (savedContainer) {
       savedContainer.innerHTML = '';
@@ -601,14 +828,14 @@ export class EditorUI {
             this.level.id = p.id;
             this.level.title = p.title;
             StorageManager.saveProject(this.level);
-            this.renderProjectsModalContent();
+            this.renderSavedProjects();
             this.showToast(`Overwrote project "${p.title}"!`, 'success');
           });
 
           card.querySelector('.btn-delete').addEventListener('click', () => {
             if (confirm(`Delete project "${p.title}"?`)) {
               StorageManager.deleteProject(p.id);
-              this.renderProjectsModalContent();
+              this.renderSavedProjects();
               this.showToast(`Deleted "${p.title}"`, 'info');
             }
           });
@@ -616,57 +843,6 @@ export class EditorUI {
           savedContainer.appendChild(card);
         });
       }
-    }
-
-    // 2. Render Tutorial Starter Templates
-    const tutorialTemplatesContainer = document.getElementById('tutorial-templates-container');
-    if (tutorialTemplatesContainer) {
-      tutorialTemplatesContainer.innerHTML = '';
-      TUTORIAL_LEVELS.forEach((lvl, idx) => {
-        const tCard = document.createElement('div');
-        tCard.className = 'template-card';
-        tCard.innerHTML = `
-          <div style="font-family: var(--font-mono); font-weight: 700; font-size: 0.9rem; color: var(--gold);">T${idx + 1}</div>
-          <div style="font-size: 0.75rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(lvl.title)}</div>
-        `;
-        tCard.title = `Remix Tutorial ${idx + 1}: ${lvl.title}`;
-        tCard.addEventListener('click', () => {
-          if (confirm(`Load Tutorial ${idx + 1} (${lvl.title}) as a template into the editor?`)) {
-            const template = JSON.parse(JSON.stringify(lvl));
-            template.id = `remix_tut_${idx + 1}_${Date.now()}`;
-            template.title = `${lvl.title} (Tutorial Remix)`;
-            this.loadLevel(template);
-            document.getElementById('projects-modal').classList.remove('active');
-            this.showToast(`Loaded tutorial template "${lvl.title}"!`, 'success');
-          }
-        });
-        tutorialTemplatesContainer.appendChild(tCard);
-      });
-    }
-
-    // 3. Render Campaign Starter Templates
-    if (templatesContainer) {
-      templatesContainer.innerHTML = '';
-      CAMPAIGN_LEVELS.forEach(lvl => {
-        const tCard = document.createElement('div');
-        tCard.className = 'template-card';
-        tCard.innerHTML = `
-          <div style="font-family: var(--font-mono); font-weight: 700; font-size: 0.9rem; color: var(--accent);">L${lvl.id}</div>
-          <div style="font-size: 0.75rem; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${this.escapeHtml(lvl.title)}</div>
-        `;
-        tCard.title = `Remix Level ${lvl.id}: ${lvl.title}`;
-        tCard.addEventListener('click', () => {
-          if (confirm(`Load Level ${lvl.id} (${lvl.title}) as a template into the editor?`)) {
-            const template = JSON.parse(JSON.stringify(lvl));
-            template.id = `remix_lvl_${lvl.id}_${Date.now()}`;
-            template.title = `${lvl.title} (Remix)`;
-            this.loadLevel(template);
-            document.getElementById('projects-modal').classList.remove('active');
-            this.showToast(`Loaded template "${lvl.title}"!`, 'success');
-          }
-        });
-        templatesContainer.appendChild(tCard);
-      });
     }
   }
 
