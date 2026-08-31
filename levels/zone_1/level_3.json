@@ -13,7 +13,7 @@
     "viewRadius": 6,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "sunset"
+    "theme": "dungeon"
   },
   "spawn": {
     "x": 1,
@@ -835,15 +835,16 @@
       "id": "lever_crypt_1",
       "type": "lever",
       "x": 1,
-      "y": 17,
+      "y": 15,
+      "name": "Crypt Iron Switch",
+      "style": "switch_lever",
       "state": false,
-      "name": "Secret Passage Switch",
       "targets": [
         {
           "action": "toggle_tile",
           "layer": "ground",
           "x": 9,
-          "y": 16,
+          "y": 7,
           "stateA": 0,
           "stateB": 1
         }
@@ -852,18 +853,22 @@
     {
       "id": "key_sunset_3",
       "type": "key",
-      "x": 17,
+      "x": 15,
       "y": 1,
       "color": "#f43f5e",
-      "name": "Ruby Key"
+      "name": "Ruby Crypt Orb",
+      "style": "orb",
+      "glowEffect": "pulse"
     },
     {
       "id": "door_sunset_3",
       "type": "door",
-      "x": 11,
-      "y": 17,
+      "x": 9,
+      "y": 13,
       "requiresKey": "key_sunset_3",
-      "color": "#f43f5e"
+      "color": "#f43f5e",
+      "style": "classic",
+      "orientation": "vertical"
     }
   ]
 }

@@ -130,7 +130,11 @@ export class GameLoop {
       if (isMap) {
         this.toggleFreePan();
       } else if (isRestart) {
-        this.restartLevel();
+        if (typeof this.uiCallbacks.onRequestRestart === 'function') {
+          this.uiCallbacks.onRequestRestart();
+        } else {
+          this.restartLevel();
+        }
       } else if (isInteract) {
         this.handleManualInteract();
       }
@@ -222,6 +226,9 @@ export class GameLoop {
     if (this.isRunning) return;
     this.isRunning = true;
     this.lastTime = performance.now();
+    console.info(
+      `[MazeGame:Engine] Game loop started for level "${this.level.title}" (ID: ${this.level.id}) | Dimensions: ${this.level.dimensions.width}x${this.level.dimensions.height} | Entities: ${this.entities.length}`
+    );
     this.loop(this.lastTime);
   }
 
@@ -230,6 +237,7 @@ export class GameLoop {
    */
   stop() {
     this.isRunning = false;
+    console.info('[MazeGame:Engine] Game loop stopped');
   }
 
   /**
@@ -272,6 +280,7 @@ export class GameLoop {
       },
     }, 0);
 
+    console.info(`[MazeGame:Engine] Level restarted at (${effectiveSpawnX}, ${effectiveSpawnY})`);
     this.notifyUI();
     globalEvents.emit('game:restarted');
     if (this.uiCallbacks.onRestart) {
@@ -285,15 +294,28 @@ export class GameLoop {
   loop(currentTime) {
     if (!this.isRunning) return;
 
-    const dt = Math.min(0.1, (currentTime - this.lastTime) / 1000);
-    this.lastTime = currentTime;
+    try {
+      const dt = Math.min(0.1, (currentTime - this.lastTime) / 1000);
+      this.lastTime = currentTime;
 
-    if (!this.isPaused && !this.isWon) {
-      this.elapsedTime += dt * 1000;
-      this.update(dt);
+      if (!this.isPaused && !this.isWon) {
+        this.elapsedTime += dt * 1000;
+        this.update(dt);
+      }
+
+      this.render(dt);
+    } catch (err) {
+      console.error('[MazeGame:Engine] Exception inside animation loop:', err);
+      if (this.logger) {
+        this.logger.logError({
+          message: err.message || 'GameLoop iteration error',
+          stack: err.stack,
+          source: 'animation_frame_loop',
+          elapsedMs: this.elapsedTime,
+        });
+      }
     }
 
-    this.render(dt);
     requestAnimationFrame((t) => this.loop(t));
   }
 
@@ -525,6 +547,8 @@ export class GameLoop {
         name: key.name || 'Key',
         color: key.color || '#fbbf24',
         inventoryCount: this.player.inventory.length,
+        x: px,
+        y: py,
       });
       this.notifyUI();
     }
@@ -570,6 +594,8 @@ export class GameLoop {
         stateLabel: leverStateLabel,
         actionLabel: leverActionLabel,
         targets: lever.targets,
+        x: px,
+        y: py,
       });
 
       this.notifyUI();
@@ -632,6 +658,8 @@ export class GameLoop {
         stateLabel: leverStateLabel,
         actionLabel: leverActionLabel,
         targets: lever.targets,
+        x: lever.x,
+        y: lever.y,
       });
 
       this.notifyUI();
@@ -665,6 +693,12 @@ export class GameLoop {
       time: this.elapsedTime,
       steps: this.player.stepsTaken,
     };
+
+    console.info(`[MazeGame:Engine] Victory achieved on level "${this.level.title}" (${this.level.id})!`, {
+      timeFormatted: (this.elapsedTime / 1000).toFixed(2) + 's',
+      steps: this.player.stepsTaken,
+      finalInventory: [...this.player.inventory],
+    });
 
     this.logger.logVictory(stats, this.elapsedTime);
     StorageManager.saveLevelCompletion(this.level.id, stats);

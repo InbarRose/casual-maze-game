@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="flr_dungeon" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#1e293b" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" fill="url(#flr_dungeon)" />
+  <path d="M 0 32 L 64 32 M 32 0 L 32 32 M 16 32 L 16 64 M 48 32 L 48 64" stroke="#334155" stroke-width="1.5" />
+  <circle cx="14" cy="16" r="1.5" fill="#475569" opacity="0.5" />
+  <circle cx="46" cy="18" r="1" fill="#475569" opacity="0.5" />
+  <circle cx="24" cy="48" r="1.5" fill="#475569" opacity="0.5" />
+</svg>

@@ -24,7 +24,7 @@
   "exit": {
     "x": 21,
     "y": 21,
-    "style": "stairs_up"
+    "style": "chest"
   },
   "layers": {
     "ground": [
@@ -1184,38 +1184,43 @@
   },
   "entities": [
     {
-      "id": "key_gold_5",
-      "type": "key",
-      "x": 21,
-      "y": 1,
-      "color": "#fbbf24",
-      "name": "Golden Sanctuary Key"
-    },
-    {
-      "id": "door_gold_5",
-      "type": "door",
-      "x": 20,
-      "y": 21,
-      "requiresKey": "key_gold_5",
-      "color": "#fbbf24"
-    },
-    {
       "id": "lever_vault_1",
       "type": "lever",
       "x": 1,
-      "y": 21,
+      "y": 19,
+      "name": "Sunken Vault Pedestal",
+      "style": "pressure_pedestal",
       "state": false,
-      "name": "Vault Gate Lever",
       "targets": [
         {
           "action": "toggle_tile",
           "layer": "ground",
-          "x": 19,
-          "y": 20,
+          "x": 11,
+          "y": 11,
           "stateA": 0,
           "stateB": 1
         }
       ]
+    },
+    {
+      "id": "key_gold_5",
+      "type": "key",
+      "x": 19,
+      "y": 1,
+      "color": "#fbbf24",
+      "name": "Grand Vault Key",
+      "style": "ornate",
+      "glowEffect": "pulse"
+    },
+    {
+      "id": "door_gold_5",
+      "type": "door",
+      "x": 19,
+      "y": 13,
+      "requiresKey": "key_gold_5",
+      "color": "#fbbf24",
+      "style": "vault_hatch",
+      "orientation": "auto"
     }
   ]
 }

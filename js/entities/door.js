@@ -16,6 +16,7 @@ export class Door {
     this.y = config.y ?? 0;
     this.requiresKey = config.requiresKey || '';
     this.color = config.color || '#fbbf24';
+    this.style = config.style || 'classic'; // 'classic' | 'portcullis' | 'laser_barrier' | 'magic_seal' | 'crystal_spikes' | 'vault_hatch'
     this.isOpen = !!config.isOpen;
     this.elevation = config.elevation ?? 0;
     this.orientation = config.orientation || 'auto'; // 'auto' | 'horizontal' | 'vertical'
@@ -44,7 +45,7 @@ export class Door {
   }
 
   /**
-   * Render door gate / bars with orientation awareness
+   * Render door gate / barrier with style awareness
    * @param {CanvasRenderingContext2D} ctx
    * @param {number} screenX
    * @param {number} screenY
@@ -58,73 +59,168 @@ export class Door {
     const h = tileSize - pad * 2;
     const x = screenX + pad;
     const y = screenY + pad;
+    const cx = x + w / 2;
+    const cy = y + h / 2;
 
     ctx.save();
     ctx.globalAlpha = 1 - this.openProgress * 0.85;
 
-    // Frame Body & Shadow
-    ctx.fillStyle = '#0f172a';
-    ctx.strokeStyle = this.color;
-    ctx.lineWidth = Math.max(2, tileSize * 0.07);
-    ctx.shadowColor = this.color;
-    ctx.shadowBlur = this.isOpen ? 0 : 8;
+    if (this.style === 'laser_barrier') {
+      // Energy Forcefield Barrier
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.6)';
+      ctx.fillRect(x, y, w, h);
 
-    ctx.beginPath();
-    if (typeof ctx.roundRect === 'function') {
-      ctx.roundRect(x, y, w, h, tileSize * 0.14);
-    } else {
-      ctx.rect(x, y, w, h);
-    }
-    ctx.fill();
-    ctx.stroke();
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 12;
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = Math.max(2, tileSize * 0.08);
 
-    // Directional Gate Bars
-    const isHorizontal = this.orientation === 'horizontal';
-    const barCount = 3;
-    ctx.strokeStyle = '#475569';
-    ctx.lineWidth = Math.max(1.5, tileSize * 0.055);
+      // Pylons on sides
+      ctx.fillStyle = '#334155';
+      ctx.fillRect(x, y, tileSize * 0.15, h);
+      ctx.fillRect(x + w - tileSize * 0.15, y, tileSize * 0.15, h);
 
-    if (isHorizontal) {
-      // Horizontal crossbars
-      const spacing = h / (barCount + 1);
-      for (let i = 1; i <= barCount; i++) {
+      // Laser energy beams
+      ctx.beginPath();
+      for (let i = 1; i <= 3; i++) {
+        const by = y + (h / 4) * i;
+        ctx.moveTo(x + tileSize * 0.15, by);
+        ctx.lineTo(x + w - tileSize * 0.15, by);
+      }
+      ctx.stroke();
+    } else if (this.style === 'magic_seal') {
+      // Arcane Runic Seal
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.7)';
+      ctx.fillRect(x, y, w, h);
+
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 14;
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = Math.max(1.5, tileSize * 0.06);
+
+      // Outer mystic circle
+      ctx.beginPath();
+      ctx.arc(cx, cy, w * 0.42, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inscribed star / rune hexagram
+      ctx.beginPath();
+      ctx.arc(cx, cy, w * 0.22, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = this.color;
+      ctx.font = `${Math.floor(tileSize * 0.3)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('🔯', cx, cy);
+    } else if (this.style === 'crystal_spikes') {
+      // Crystal Spikes Barrier
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.65)';
+      ctx.fillRect(x, y, w, h);
+
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 8;
+      ctx.fillStyle = this.color;
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 1;
+
+      // Cluster of 3 crystal spikes
+      for (let i = -1; i <= 1; i++) {
+        const sx = cx + i * (w * 0.28);
+        const sy = y + h - pad;
+        const sh = h * (i === 0 ? 0.85 : 0.65);
         ctx.beginPath();
-        ctx.moveTo(x + pad, y + i * spacing);
-        ctx.lineTo(x + w - pad, y + i * spacing);
+        ctx.moveTo(sx - w * 0.12, sy);
+        ctx.lineTo(sx, sy - sh);
+        ctx.lineTo(sx + w * 0.12, sy);
+        ctx.closePath();
+        ctx.fill();
         ctx.stroke();
       }
+    } else if (this.style === 'vault_hatch') {
+      // Heavy Vault Bulkhead
+      ctx.fillStyle = '#1e293b';
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = Math.max(2, tileSize * 0.07);
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 8;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, w * 0.44, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Vault Rotary Wheel
+      ctx.strokeStyle = '#64748b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, w * 0.22, 0, Math.PI * 2);
+      ctx.stroke();
+
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(cx, cy, w * 0.08, 0, Math.PI * 2);
+      ctx.fill();
     } else {
-      // Vertical portcullis bars
-      const spacing = w / (barCount + 1);
-      for (let i = 1; i <= barCount; i++) {
-        ctx.beginPath();
-        ctx.moveTo(x + i * spacing, y + pad);
-        ctx.lineTo(x + i * spacing, y + h - pad);
-        ctx.stroke();
+      // Classic Gate or Spiked Portcullis
+      const isPortcullis = this.style === 'portcullis';
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = this.color;
+      ctx.lineWidth = Math.max(2, tileSize * 0.07);
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = this.isOpen ? 0 : 8;
+
+      ctx.beginPath();
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(x, y, w, h, tileSize * 0.14);
+      } else {
+        ctx.rect(x, y, w, h);
       }
+      ctx.fill();
+      ctx.stroke();
+
+      // Gate Bars
+      const isHorizontal = this.orientation === 'horizontal';
+      const barCount = 3;
+      ctx.strokeStyle = '#475569';
+      ctx.lineWidth = Math.max(1.5, tileSize * 0.055);
+
+      if (isHorizontal) {
+        const spacing = h / (barCount + 1);
+        for (let i = 1; i <= barCount; i++) {
+          ctx.beginPath();
+          ctx.moveTo(x + pad, y + i * spacing);
+          ctx.lineTo(x + w - pad, y + i * spacing);
+          ctx.stroke();
+        }
+      } else {
+        const spacing = w / (barCount + 1);
+        for (let i = 1; i <= barCount; i++) {
+          ctx.beginPath();
+          ctx.moveTo(x + i * spacing, y + pad);
+          ctx.lineTo(x + i * spacing, y + h - pad);
+          ctx.stroke();
+        }
+      }
+
+      // Keyhole Gemstone Emblem
+      ctx.fillStyle = this.color;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 10;
+      const r = tileSize * 0.13;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy - r * 0.35, r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.beginPath();
+      ctx.moveTo(cx - r * 0.45, cy);
+      ctx.lineTo(cx + r * 0.45, cy);
+      ctx.lineTo(cx + r * 0.22, cy + r * 1.35);
+      ctx.lineTo(cx - r * 0.22, cy + r * 1.35);
+      ctx.closePath();
+      ctx.fill();
     }
-
-    // Glowing Keyhole Gemstone Emblem in center
-    ctx.fillStyle = this.color;
-    ctx.shadowColor = this.color;
-    ctx.shadowBlur = 10;
-    const cx = x + w / 2;
-    const cy = y + h / 2;
-    const r = tileSize * 0.13;
-
-    // Circular lock head
-    ctx.beginPath();
-    ctx.arc(cx, cy - r * 0.35, r, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Keyway slot
-    ctx.beginPath();
-    ctx.moveTo(cx - r * 0.45, cy);
-    ctx.lineTo(cx + r * 0.45, cy);
-    ctx.lineTo(cx + r * 0.22, cy + r * 1.35);
-    ctx.lineTo(cx - r * 0.22, cy + r * 1.35);
-    ctx.closePath();
-    ctx.fill();
 
     ctx.restore();
   }

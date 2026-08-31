@@ -330,7 +330,9 @@
       "x": 3,
       "y": 3,
       "color": "#f43f5e",
-      "name": "Ruby Key"
+      "name": "Ruby Key",
+      "style": "classic",
+      "glowEffect": "vibrant"
     },
     {
       "id": "door_red_t2",
@@ -338,7 +340,9 @@
       "x": 1,
       "y": 5,
       "requiresKey": "key_red_t2",
-      "color": "#f43f5e"
+      "color": "#f43f5e",
+      "style": "classic",
+      "orientation": "vertical"
     },
     {
       "id": "key_blue_t2",
@@ -346,7 +350,9 @@
       "x": 7,
       "y": 3,
       "color": "#38bdf8",
-      "name": "Sapphire Key"
+      "name": "Sapphire Crystal",
+      "style": "crystal",
+      "glowEffect": "pulse"
     },
     {
       "id": "door_blue_t2",
@@ -354,7 +360,9 @@
       "x": 7,
       "y": 7,
       "requiresKey": "key_blue_t2",
-      "color": "#38bdf8"
+      "color": "#38bdf8",
+      "style": "portcullis",
+      "orientation": "horizontal"
     }
   ]
 }

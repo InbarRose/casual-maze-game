@@ -20,12 +20,12 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "camp"
   },
   "exit": {
     "x": 15,
     "y": 15,
-    "style": "portal"
+    "style": "shrine"
   },
   "layers": {
     "ground": [
@@ -683,20 +683,22 @@
     {
       "id": "key_purple_8",
       "type": "key",
-      "x": 15,
-      "y": 1,
+      "x": 1,
+      "y": 13,
       "color": "#a855f7",
-      "name": "Amethyst Key",
-      "elevation": 0
+      "name": "Jungle Heart Relic",
+      "style": "relic",
+      "glowEffect": "pulse"
     },
     {
       "id": "door_purple_8",
       "type": "door",
-      "x": 14,
-      "y": 15,
+      "x": 7,
+      "y": 7,
       "requiresKey": "key_purple_8",
       "color": "#a855f7",
-      "elevation": 0
+      "style": "portcullis",
+      "orientation": "vertical"
     }
   ]
 }

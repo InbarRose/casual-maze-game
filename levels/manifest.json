@@ -21,7 +21,7 @@
     "zone": "tutorial",
     "title": "Mechanisms & Levers",
     "file": "levels/tutorial/tutorial_3.json",
-    "theme": "sunset"
+    "theme": "temple"
   },
   {
     "id": "tutorial_4",
@@ -45,7 +45,7 @@
     "zone": "tutorial",
     "title": "Master's Trial",
     "file": "levels/tutorial/tutorial_6.json",
-    "theme": "sunset"
+    "theme": "temple"
   },
   {
     "id": "1",

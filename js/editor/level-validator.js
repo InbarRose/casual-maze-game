@@ -235,6 +235,20 @@ export class LevelValidator {
       info.push(`Keys collectible: ${reachability.reachableKeys.size}/${keyEntities.size}`);
     }
 
+    if (errors.length > 0) {
+      console.warn(
+        `[MazeGame:Validator] Level "${level.title || level.id || 'Untitled'}" has ${errors.length} validation error(s):`,
+        errors.map(e => e.message)
+      );
+    } else if (warnings.length > 0) {
+      console.info(
+        `[MazeGame:Validator] Level "${level.title || level.id || 'Untitled'}" is valid with ${warnings.length} warning(s):`,
+        warnings.map(w => w.message)
+      );
+    } else {
+      console.info(`[MazeGame:Validator] Level "${level.title || level.id || 'Untitled'}" is 100% valid and solvable.`);
+    }
+
     return {
       valid: errors.length === 0,
       errors,

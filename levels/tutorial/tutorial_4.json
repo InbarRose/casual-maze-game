@@ -14,7 +14,7 @@
     "viewRadius": 6,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "emerald"
+    "theme": "jungle"
   },
   "help": {
     "title": "Bridges & Ramps",
@@ -24,12 +24,12 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "camp"
   },
   "exit": {
     "x": 11,
     "y": 11,
-    "style": "portal"
+    "style": "shrine"
   },
   "layers": {
     "ground": [

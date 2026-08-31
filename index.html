@@ -367,6 +367,18 @@
           <a href="editor.html" class="btn btn-secondary" style="width: 100%; justify-content: center;">Open Level Editor</a>
         </div>
       </div>
+
+      <!-- Art & Asset Catalog -->
+      <div class="card">
+        <div>
+          <span class="card-header-icon">🎨</span>
+          <div class="card-title">Art &amp; Asset Catalog</div>
+          <div class="card-desc">Browse, inspect, and edit all standalone SVG vector art, tiles, entities, and environment styles offline.</div>
+        </div>
+        <div>
+          <a href="art-catalog.html" class="btn btn-secondary" style="width: 100%; justify-content: center;">Open Art Catalog</a>
+        </div>
+      </div>
     </div>
 
     <!-- Gameplay & Help Quick Reference Guide -->
@@ -405,6 +417,19 @@
 
   <script type="module">
     import { StorageManager } from './js/core/storage.js';
+
+    // Global Error & Promise Rejection Handlers
+    window.addEventListener('error', (event) => {
+      console.error('[MazeGame:HubGlobalError]', event.error || event.message, {
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno,
+      });
+    });
+
+    window.addEventListener('unhandledrejection', (event) => {
+      console.error('[MazeGame:HubUnhandledRejection]', event.reason);
+    });
 
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');

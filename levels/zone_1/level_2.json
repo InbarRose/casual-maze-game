@@ -13,7 +13,7 @@
     "viewRadius": 6,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "emerald"
+    "theme": "dungeon"
   },
   "spawn": {
     "x": 1,
@@ -682,18 +682,22 @@
     {
       "id": "key_emerald_2",
       "type": "key",
-      "x": 13,
-      "y": 7,
+      "x": 7,
+      "y": 1,
       "color": "#34d399",
-      "name": "Emerald Key"
+      "name": "Overpass Skeleton Key",
+      "style": "ornate",
+      "glowEffect": "vibrant"
     },
     {
       "id": "door_emerald_2",
       "type": "door",
-      "x": 14,
-      "y": 15,
+      "x": 13,
+      "y": 9,
       "requiresKey": "key_emerald_2",
-      "color": "#34d399"
+      "color": "#34d399",
+      "style": "portcullis",
+      "orientation": "horizontal"
     }
   ]
 }

@@ -19,9 +19,10 @@ export class StorageManager {
   static saveCustomMaze(mazeData) {
     try {
       sessionStorage.setItem(STORAGE_KEYS.CUSTOM_MAZE, JSON.stringify(mazeData));
+      console.info(`[MazeGame:Storage] Saved custom maze "${mazeData?.title || 'Custom'}" (${mazeData?.id}) to session storage`);
       return true;
     } catch (e) {
-      console.error('[StorageManager] Failed to save custom maze:', e);
+      console.error('[MazeGame:Storage] Failed to save custom maze to session storage:', e);
       return false;
     }
   }
@@ -33,9 +34,12 @@ export class StorageManager {
   static loadCustomMaze() {
     try {
       const raw = sessionStorage.getItem(STORAGE_KEYS.CUSTOM_MAZE) || sessionStorage.getItem('custom_maze_data');
+      if (raw) {
+        console.info('[MazeGame:Storage] Loaded custom maze from session storage');
+      }
       return raw ? JSON.parse(raw) : null;
     } catch (e) {
-      console.error('[StorageManager] Failed to parse custom maze:', e);
+      console.error('[MazeGame:Storage] Failed to parse custom maze from session storage:', e);
       return null;
     }
   }
@@ -67,9 +71,10 @@ export class StorageManager {
       }
 
       localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progress));
+      console.info(`[MazeGame:Storage] Saved completion record for Campaign Level "${idKey}"`, stats);
       return true;
     } catch (e) {
-      console.error('[StorageManager] Failed to save level completion:', e);
+      console.error(`[MazeGame:Storage] Failed to save campaign completion for "${levelId}":`, e);
       return false;
     }
   }

@@ -29,9 +29,10 @@ export class LevelLoader {
     if (mode === 'custom' || params.has('custom')) {
       const customData = StorageManager.loadCustomMaze();
       if (customData) {
+        console.info('[MazeGame:LevelLoader] Successfully loaded custom maze from session storage');
         return this.normalizeLevel(customData);
       }
-      console.warn('[LevelLoader] Custom maze requested but none found in session storage. Falling back to Level 1.');
+      console.warn('[MazeGame:LevelLoader] Custom maze requested but none found in session storage. Falling back to Level 1.');
     }
 
     // Comprehensive Tutorial Parameter Detection:
@@ -97,10 +98,11 @@ export class LevelLoader {
           const res = await fetch(fileName);
           if (res.ok) {
             const json = await res.json();
+            console.info(`[MazeGame:LevelLoader] Loaded level from remote/disk JSON: "${fileName}"`);
             return this.normalizeLevel(json);
           }
         } catch (e) {
-          // Try next path or fall back to embedded levels
+          console.warn(`[MazeGame:LevelLoader] Fetch failed for "${fileName}" (${e.message}), trying next source...`);
         }
       }
     }
@@ -113,6 +115,7 @@ export class LevelLoader {
         String(lvl.id) === String(cleanId)
       );
       if (tutorialMatch) {
+        console.info(`[MazeGame:LevelLoader] Using embedded tutorial fallback for "${targetId}"`);
         return this.normalizeLevel(JSON.parse(JSON.stringify(tutorialMatch)));
       }
     }
@@ -123,10 +126,12 @@ export class LevelLoader {
       String(lvl.id) === String(cleanId)
     );
     if (campaignMatch) {
+      console.info(`[MazeGame:LevelLoader] Using embedded campaign fallback for Level "${targetId}"`);
       return this.normalizeLevel(JSON.parse(JSON.stringify(campaignMatch)));
     }
 
     // Default fallback to first tutorial or campaign level
+    console.warn(`[MazeGame:LevelLoader] Could not resolve Level "${targetId}". Using default starter level.`);
     if (isTutorialMode && TUTORIAL_LEVELS.length > 0) {
       return this.normalizeLevel(JSON.parse(JSON.stringify(TUTORIAL_LEVELS[0])));
     }
