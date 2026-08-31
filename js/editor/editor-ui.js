@@ -276,23 +276,49 @@ export class EditorUI {
       }
     });
 
+    // Brush Size Buttons
+    document.querySelectorAll('.brush-size-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const size = parseInt(btn.dataset.size, 10);
+        this.setBrushSize(size);
+      });
+    });
+
     // Settings Modal
     this.initSettingsModal();
 
     // Zoom buttons in viewport overlay
     document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
-      this.editorCanvas.zoom = Math.min(3.5, this.editorCanvas.zoom * 1.2);
-      this.editorCanvas.render();
+      this.editorCanvas.setZoom(this.editorCanvas.zoom * 1.25);
+      this.updateZoomBadge();
     });
     document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
-      this.editorCanvas.zoom = Math.max(0.3, this.editorCanvas.zoom / 1.2);
-      this.editorCanvas.render();
+      this.editorCanvas.setZoom(this.editorCanvas.zoom / 1.25);
+      this.updateZoomBadge();
     });
     document.getElementById('btn-zoom-fit')?.addEventListener('click', () => {
-      this.editorCanvas.zoom = 1.0;
-      this.editorCanvas.centerInViewport();
-      this.editorCanvas.render();
+      this.editorCanvas.zoomToFit();
+      this.updateZoomBadge();
     });
+    this.updateZoomBadge();
+  }
+
+  setBrushSize(size) {
+    const s = Math.max(1, Math.min(5, parseInt(size, 10) || 1));
+    document.querySelectorAll('.brush-size-btn').forEach(btn => {
+      btn.classList.toggle('active', parseInt(btn.dataset.size, 10) === s);
+    });
+    const label = document.getElementById('brush-size-label');
+    if (label) label.textContent = `${s}x${s}`;
+    this.editorCanvas?.setBrushSize(s);
+    this.showToast(`Brush size: ${s}x${s}`, 'info', 1000);
+  }
+
+  updateZoomBadge() {
+    const badge = document.getElementById('zoom-badge');
+    if (badge && this.editorCanvas) {
+      badge.textContent = `${Math.round(this.editorCanvas.zoom * 100)}%`;
+    }
   }
 
   initKeyboardShortcuts() {
@@ -326,6 +352,8 @@ export class EditorUI {
       // Tool shortcuts
       if (e.key.toLowerCase() === 'p') {
         this.selectToolBtn('pencil');
+      } else if (e.key.toLowerCase() === 'l') {
+        this.selectToolBtn('line');
       } else if (e.key.toLowerCase() === 'f') {
         this.selectToolBtn('fill');
       } else if (e.key.toLowerCase() === 'e') {
@@ -334,6 +362,10 @@ export class EditorUI {
         this.selectToolBtn('select');
       } else if (e.key.toLowerCase() === 'g' || e.key.toLowerCase() === 'm') {
         this.selectToolBtn('move');
+      } else if (e.key === '[') {
+        this.setBrushSize((this.editorCanvas?.brushSize || 1) - 1);
+      } else if (e.key === ']') {
+        this.setBrushSize((this.editorCanvas?.brushSize || 1) + 1);
       } else if (e.key === '1') {
         document.getElementById('tab-layer-ground')?.click();
       } else if (e.key === '2') {
@@ -359,6 +391,25 @@ export class EditorUI {
     const btnSave = document.getElementById('settings-btn-save');
     const btnClose = document.getElementById('settings-btn-close');
 
+    // Tab Navigation within Properties Modal
+    document.querySelectorAll('#prop-modal-tabs .modal-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const targetTab = btn.dataset.tab;
+        document.querySelectorAll('#prop-modal-tabs .modal-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
+        document.querySelectorAll('#settings-modal .modal-tab-pane').forEach(pane => {
+          pane.classList.toggle('active', pane.id === `pane-prop-${targetTab}`);
+        });
+      });
+    });
+
+    // Dimension Quick Preset Buttons
+    document.querySelectorAll('#settings-modal .dim-preset-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.getElementById('set-width').value = btn.dataset.w;
+        document.getElementById('set-height').value = btn.dataset.h;
+      });
+    });
+
     btnOpen?.addEventListener('click', () => {
       document.getElementById('set-id').value = this.level.id || 'custom';
       document.getElementById('set-title').value = this.level.title || '';
@@ -373,14 +424,17 @@ export class EditorUI {
       document.getElementById('set-exit-style').value = this.level.exit?.style || 'portal';
       document.getElementById('set-help-title').value = this.level.help?.title || '';
       document.getElementById('set-help-message').value = this.level.help?.message || '';
+
+      // Reset to first tab
+      document.querySelector('#prop-modal-tabs .modal-tab-btn[data-tab="meta"]')?.click();
       modal.classList.add('active');
     });
 
     btnClose?.addEventListener('click', () => modal.classList.remove('active'));
 
     btnSave?.addEventListener('click', () => {
-      const newW = parseInt(document.getElementById('set-width').value, 10) || 21;
-      const newH = parseInt(document.getElementById('set-height').value, 10) || 21;
+      const newW = Math.max(9, Math.min(150, parseInt(document.getElementById('set-width').value, 10) || 21));
+      const newH = Math.max(9, Math.min(150, parseInt(document.getElementById('set-height').value, 10) || 21));
 
       this.level.id = document.getElementById('set-id').value.trim() || 'custom';
       this.level.title = document.getElementById('set-title').value.trim() || 'Custom Maze';
@@ -404,7 +458,7 @@ export class EditorUI {
         this.level.help = null;
       }
 
-      // Resize dimensions if changed
+      // Resize dimensions if changed (supports up to 150x150)
       if (newW !== this.level.dimensions.width || newH !== this.level.dimensions.height) {
         this.level.dimensions = { width: newW, height: newH };
         this.level.layers.ground = LevelLoader.normalizeGrid(this.level.layers.ground, newW, newH, TILES.FLOOR);
@@ -417,8 +471,9 @@ export class EditorUI {
       this.autoSave();
       this.updateValidationState();
       this.editorCanvas.render();
+      this.updateZoomBadge();
       modal.classList.remove('active');
-      this.showToast('Level properties saved!', 'success');
+      this.showToast(`Labyrinth properties saved (${newW}x${newH})!`, 'success');
     });
   }
 

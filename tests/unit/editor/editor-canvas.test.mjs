@@ -138,4 +138,93 @@ describe('Editor > EditorCanvas Grab & Move Tool', () => {
     assertEqual(editorCanvas.isDraggingObject, false);
     assertEqual(editorCanvas.draggedObject, null);
   });
+
+  it('calculates Bresenham line coordinates for straight horizontal, vertical, and diagonals', () => {
+    const mockCanvas = createMockCanvas();
+    const level = createTestLevel();
+    const editorCanvas = new EditorCanvas({ canvas: mockCanvas, level });
+
+    // Horizontal line from (1, 1) to (4, 1)
+    const hLine = editorCanvas.getLineCoordinates(1, 1, 4, 1);
+    assertEqual(hLine.length, 4);
+    assertDeepEqual(hLine, [{ x: 1, y: 1 }, { x: 2, y: 1 }, { x: 3, y: 1 }, { x: 4, y: 1 }]);
+
+    // Vertical line from (2, 2) to (2, 5)
+    const vLine = editorCanvas.getLineCoordinates(2, 2, 2, 5);
+    assertEqual(vLine.length, 4);
+    assertDeepEqual(vLine, [{ x: 2, y: 2 }, { x: 2, y: 3 }, { x: 2, y: 4 }, { x: 2, y: 5 }]);
+
+    // Diagonal line from (0, 0) to (3, 3)
+    const dLine = editorCanvas.getLineCoordinates(0, 0, 3, 3);
+    assertEqual(dLine.length, 4);
+    assertDeepEqual(dLine, [{ x: 0, y: 0 }, { x: 1, y: 1 }, { x: 2, y: 2 }, { x: 3, y: 3 }]);
+  });
+
+  it('calculates brush stamp footprints for 1x1, 2x2, 3x3, 4x4, and 5x5', () => {
+    const mockCanvas = createMockCanvas();
+    const level = createTestLevel();
+    const editorCanvas = new EditorCanvas({ canvas: mockCanvas, level });
+
+    const b1 = editorCanvas.getBrushCoordinates(5, 5, 1);
+    assertEqual(b1.length, 1);
+
+    const b2 = editorCanvas.getBrushCoordinates(5, 5, 2);
+    assertEqual(b2.length, 4);
+
+    const b3 = editorCanvas.getBrushCoordinates(5, 5, 3);
+    assertEqual(b3.length, 9);
+
+    const b4 = editorCanvas.getBrushCoordinates(5, 5, 4);
+    assertEqual(b4.length, 16);
+
+    const b5 = editorCanvas.getBrushCoordinates(5, 5, 5);
+    assertEqual(b5.length, 25);
+  });
+
+  it('draws a straight wall line using the Line tool from start to end coordinate', () => {
+    const mockCanvas = createMockCanvas();
+    const level = createTestLevel();
+    let paintTriggered = false;
+
+    const editorCanvas = new EditorCanvas({
+      canvas: mockCanvas,
+      level,
+      onTilePaint: () => { paintTriggered = true; },
+    });
+
+    editorCanvas.setTool('line');
+    editorCanvas.setSelectedTile(TILES.WALL);
+    editorCanvas.setBrushSize(1);
+
+    // Mouse down at (1, 3)
+    editorCanvas.isDrawingLine = true;
+    editorCanvas.lineStartPos = { x: 1, y: 3 };
+    editorCanvas.hoverGridPos = { x: 5, y: 3 };
+
+    // Mouse up at (5, 3)
+    editorCanvas.handleMouseUp();
+
+    assertEqual(level.layers.ground[3][1], TILES.WALL, 'Wall stamped at (1, 3)');
+    assertEqual(level.layers.ground[3][2], TILES.WALL, 'Wall stamped at (2, 3)');
+    assertEqual(level.layers.ground[3][3], TILES.WALL, 'Wall stamped at (3, 3)');
+    assertEqual(level.layers.ground[3][4], TILES.WALL, 'Wall stamped at (4, 3)');
+    assertEqual(level.layers.ground[3][5], TILES.WALL, 'Wall stamped at (5, 3)');
+    assertEqual(paintTriggered, true, 'onTilePaint fired after line completion');
+    assertEqual(editorCanvas.isDrawingLine, false);
+  });
+
+  it('supports zoom level clamping and zoomToFit calculations', () => {
+    const mockCanvas = createMockCanvas();
+    const level = createTestLevel();
+    const editorCanvas = new EditorCanvas({ canvas: mockCanvas, level });
+
+    editorCanvas.setZoom(0.01);
+    assertEqual(editorCanvas.zoom, 0.15, 'Zoom clamped to min 0.15x');
+
+    editorCanvas.setZoom(10.0);
+    assertEqual(editorCanvas.zoom, 5.0, 'Zoom clamped to max 5.0x');
+
+    editorCanvas.zoomToFit();
+    assert(editorCanvas.zoom >= 0.15 && editorCanvas.zoom <= 3.0, 'zoomToFit computed valid zoom level');
+  });
 });

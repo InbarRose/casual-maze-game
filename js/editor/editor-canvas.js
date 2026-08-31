@@ -35,7 +35,8 @@ export class EditorCanvas {
 
     // View state
     this.activeLayer = LAYERS.GROUND;
-    this.currentTool = 'pencil'; // 'pencil' | 'fill' | 'eraser' | 'select' | 'move' | 'pick_target'
+    this.currentTool = 'pencil'; // 'pencil' | 'line' | 'fill' | 'eraser' | 'select' | 'move' | 'pick_target'
+    this.brushSize = 1; // 1, 2, 3, 4, 5
     this.selectedTile = TILES.WALL;
     this.selectedEntity = null; // 'key' | 'door' | 'lever' | 'spawn' | 'exit'
     this.wiringLever = null; // When picking target
@@ -49,11 +50,115 @@ export class EditorCanvas {
     this.isPanning = false;
     this.isDraggingObject = false;
     this.draggedObject = null; // { type, ref, origX, origY, currentX, currentY, name, color, icon }
+    this.isDrawingLine = false;
+    this.lineStartPos = null; // { x, y }
     this.lastMousePos = { x: 0, y: 0 };
     this.hoverGridPos = { x: -1, y: -1 };
 
     this.initEvents();
     this.centerInViewport();
+  }
+
+  /**
+   * Set active brush size (1x1 to 5x5)
+   * @param {number} size
+   */
+  setBrushSize(size) {
+    this.brushSize = Math.max(1, Math.min(5, parseInt(size, 10) || 1));
+    this.render();
+  }
+
+  /**
+   * Calculate all grid cells stamped by active brush around (centerX, centerY)
+   * @param {number} centerX
+   * @param {number} centerY
+   * @param {number} [size=this.brushSize]
+   * @returns {Array<{x: number, y: number}>}
+   */
+  getBrushCoordinates(centerX, centerY, size = this.brushSize) {
+    const coords = [];
+    const radius = Math.floor(size / 2);
+    const { width, height } = this.level.dimensions;
+
+    const xStart = size % 2 === 1 ? centerX - radius : centerX - radius;
+    const xEnd = size % 2 === 1 ? centerX + radius : centerX + radius - 1;
+    const yStart = size % 2 === 1 ? centerY - radius : centerY - radius;
+    const yEnd = size % 2 === 1 ? centerY + radius : centerY + radius - 1;
+
+    for (let y = yStart; y <= yEnd; y++) {
+      for (let x = xStart; x <= xEnd; x++) {
+        if (x >= 0 && x < width && y >= 0 && y < height) {
+          coords.push({ x, y });
+        }
+      }
+    }
+    return coords;
+  }
+
+  /**
+   * Bresenham Line Rasterization algorithm for straight and diagonal lines
+   * @param {number} x0
+   * @param {number} y0
+   * @param {number} x1
+   * @param {number} y1
+   * @returns {Array<{x: number, y: number}>}
+   */
+  getLineCoordinates(x0, y0, x1, y1) {
+    const points = [];
+    const dx = Math.abs(x1 - x0);
+    const dy = Math.abs(y1 - y0);
+    const sx = x0 < x1 ? 1 : -1;
+    const sy = y0 < y1 ? 1 : -1;
+    let err = dx - dy;
+
+    let currX = x0;
+    let currY = y0;
+
+    while (true) {
+      points.push({ x: currX, y: currY });
+      if (currX === x1 && currY === y1) break;
+      const e2 = 2 * err;
+      if (e2 > -dy) {
+        err -= dy;
+        currX += sx;
+      }
+      if (e2 < dx) {
+        err += dx;
+        currY += sy;
+      }
+    }
+
+    return points;
+  }
+
+  /**
+   * Set explicit zoom level
+   * @param {number} newZoom
+   */
+  setZoom(newZoom) {
+    const clamped = Math.max(0.15, Math.min(5.0, newZoom));
+    const centerX = this.canvas.width / 2;
+    const centerY = this.canvas.height / 2;
+    this.panX = centerX - (centerX - this.panX) * (clamped / this.zoom);
+    this.panY = centerY - (centerY - this.panY) * (clamped / this.zoom);
+    this.zoom = clamped;
+    this.render();
+  }
+
+  /**
+   * Fit entire maze grid inside canvas viewport
+   */
+  zoomToFit() {
+    const totalW = this.level.dimensions.width * this.baseTileSize;
+    const totalH = this.level.dimensions.height * this.baseTileSize;
+    const pad = 48;
+    const availableW = Math.max(100, this.canvas.width - pad * 2);
+    const availableH = Math.max(100, this.canvas.height - pad * 2);
+
+    const fitZoom = Math.max(0.15, Math.min(3.0, Math.min(availableW / totalW, availableH / totalH)));
+    this.zoom = fitZoom;
+    this.centerInViewport();
+    this.render();
   }
 
   /**
@@ -90,7 +195,7 @@ export class EditorCanvas {
    */
   setTool(tool) {
     this.currentTool = tool;
-    this.canvas.style.cursor = tool === 'move' ? 'grab' : 'default';
+    this.canvas.style.cursor = tool === 'move' ? 'grab' : (tool === 'line' ? 'crosshair' : 'default');
   }
 
   /**
@@ -248,6 +353,17 @@ export class EditorCanvas {
       this.hasModifiedStroke = false;
       const { gridX, gridY } = this.clientToGrid(e.clientX, e.clientY);
 
+      // Line / Wall Drawing Tool start
+      if (this.currentTool === 'line') {
+        const { width, height } = this.level.dimensions;
+        if (gridX >= 0 && gridX < width && gridY >= 0 && gridY < height) {
+          this.isDrawingLine = true;
+          this.lineStartPos = { x: gridX, y: gridY };
+          this.render();
+        }
+        return;
+      }
+
       // Check Grab & Move tool OR Inspect tool on an object
       if (this.currentTool === 'move' || this.currentTool === 'select') {
         const obj = this.findObjectAt(gridX, gridY);
@@ -289,6 +405,11 @@ export class EditorCanvas {
       this.onHoverCoord(gridX, gridY);
     }
 
+    if (this.isDrawingLine && this.lineStartPos) {
+      this.render();
+      return;
+    }
+
     if (this.isDraggingObject && this.draggedObject) {
       const { width, height } = this.level.dimensions;
       if (gridX >= 0 && gridX < width && gridY >= 0 && gridY < height) {
@@ -315,6 +436,44 @@ export class EditorCanvas {
   }
 
   handleMouseUp() {
+    // Finish Line Drawing Tool
+    if (this.isDrawingLine && this.lineStartPos) {
+      const x0 = this.lineStartPos.x;
+      const y0 = this.lineStartPos.y;
+      const x1 = this.hoverGridPos.x;
+      const y1 = this.hoverGridPos.y;
+      const { width, height } = this.level.dimensions;
+
+      if (x1 >= 0 && x1 < width && y1 >= 0 && y1 < height) {
+        const linePoints = this.getLineCoordinates(x0, y0, x1, y1);
+        const layer = this.level.layers[this.activeLayer];
+        let anyChanged = false;
+
+        for (const pt of linePoints) {
+          const stamp = this.getBrushCoordinates(pt.x, pt.y, this.brushSize);
+          for (const cell of stamp) {
+            if (layer[cell.y] && layer[cell.y][cell.x] !== undefined) {
+              layer[cell.y][cell.x] = this.selectedTile;
+              if (this.selectedTile === TILES.WALL) {
+                this.level.entities = (this.level.entities || []).filter(e => !(e.x === cell.x && e.y === cell.y));
+              }
+              anyChanged = true;
+            }
+          }
+        }
+
+        console.info(`[MazeGame:Editor] Stamped line (${x0}, ${y0}) ➔ (${x1}, ${y1}) with tile "${this.selectedTile}" [Brush: ${this.brushSize}x${this.brushSize}]`);
+        if (anyChanged && this.onTilePaint) {
+          this.onTilePaint();
+        }
+      }
+
+      this.isDrawingLine = false;
+      this.lineStartPos = null;
+      this.render();
+      return;
+    }
+
     if (this.isDraggingObject && this.draggedObject) {
       const { type, ref, origX, origY, currentX, currentY, name } = this.draggedObject;
       const didMove = currentX !== origX || currentY !== origY;
@@ -352,7 +511,7 @@ export class EditorCanvas {
 
       this.isDraggingObject = false;
       this.draggedObject = null;
-      this.canvas.style.cursor = this.currentTool === 'move' ? 'grab' : 'default';
+      this.canvas.style.cursor = this.currentTool === 'move' ? 'grab' : (this.currentTool === 'line' ? 'crosshair' : 'default');
       this.render();
       return;
     }
@@ -374,7 +533,7 @@ export class EditorCanvas {
     const mouseY = e.clientY - rect.top;
 
     const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
-    const newZoom = Math.max(0.3, Math.min(3.5, this.zoom * zoomFactor));
+    const newZoom = Math.max(0.15, Math.min(5.0, this.zoom * zoomFactor));
 
     // Zoom centered on cursor
     this.panX = mouseX - (mouseX - this.panX) * (newZoom / this.zoom);
@@ -464,23 +623,44 @@ export class EditorCanvas {
       return;
     }
 
-    // Eraser Tool
+    // Eraser Tool (Supports Brush Sizes 1x1 to 5x5)
     if (this.currentTool === 'eraser') {
-      const curr = this.level.layers[this.activeLayer][gridY][gridX];
-      const hasEnt = (this.level.entities || []).some(e => e.x === gridX && e.y === gridY);
-      if (curr !== 0 || hasEnt) {
-        this.level.layers[this.activeLayer][gridY][gridX] = 0;
-        this.level.entities = (this.level.entities || []).filter(e => !(e.x === gridX && e.y === gridY));
+      const stamp = this.getBrushCoordinates(gridX, gridY, this.brushSize);
+      let changed = false;
+      for (const pt of stamp) {
+        const curr = this.level.layers[this.activeLayer][pt.y]?.[pt.x];
+        const hasEnt = (this.level.entities || []).some(e => e.x === pt.x && e.y === pt.y);
+        if (curr !== 0 || hasEnt) {
+          if (this.level.layers[this.activeLayer][pt.y]) {
+            this.level.layers[this.activeLayer][pt.y][pt.x] = 0;
+          }
+          this.level.entities = (this.level.entities || []).filter(e => !(e.x === pt.x && e.y === pt.y));
+          changed = true;
+        }
+      }
+      if (changed) {
         this.hasModifiedStroke = true;
         this.render();
       }
       return;
     }
 
-    // Pencil Tile Paint
-    const currentVal = this.level.layers[this.activeLayer][gridY][gridX];
-    if (currentVal !== this.selectedTile) {
-      this.level.layers[this.activeLayer][gridY][gridX] = this.selectedTile;
+    // Pencil Tool (Supports Brush Sizes 1x1 to 5x5)
+    const stamp = this.getBrushCoordinates(gridX, gridY, this.brushSize);
+    let changed = false;
+    for (const pt of stamp) {
+      const currentVal = this.level.layers[this.activeLayer][pt.y]?.[pt.x];
+      if (currentVal !== this.selectedTile) {
+        if (this.level.layers[this.activeLayer][pt.y]) {
+          this.level.layers[this.activeLayer][pt.y][pt.x] = this.selectedTile;
+          if (this.selectedTile === TILES.WALL) {
+            this.level.entities = (this.level.entities || []).filter(e => !(e.x === pt.x && e.y === pt.y));
+          }
+          changed = true;
+        }
+      }
+    }
+    if (changed) {
       this.hasModifiedStroke = true;
       this.render();
     }
@@ -759,13 +939,26 @@ export class EditorCanvas {
       ctx.setLineDash([]);
     }
 
-    // 5. Render Hover / Cursor Box
+    // 5. Render Hover / Cursor Box (Reflects Active Brush Size)
     const hx = this.hoverGridPos.x;
     const hy = this.hoverGridPos.y;
     if (hx >= 0 && hx < mazeW && hy >= 0 && hy < mazeH) {
-      ctx.strokeStyle = this.currentTool === 'pick_target' ? '#34d399' : (this.currentTool === 'move' ? '#f59e0b' : '#38bdf8');
-      ctx.lineWidth = 2;
-      ctx.strokeRect(hx * effTile, hy * effTile, effTile, effTile);
+      if ((this.currentTool === 'pencil' || this.currentTool === 'eraser' || this.currentTool === 'line') && this.brushSize > 1) {
+        const brushCells = this.getBrushCoordinates(hx, hy, this.brushSize);
+        ctx.save();
+        ctx.strokeStyle = this.currentTool === 'eraser' ? '#f43f5e' : (this.currentTool === 'line' ? '#a855f7' : '#38bdf8');
+        ctx.fillStyle = this.currentTool === 'eraser' ? 'rgba(244, 63, 94, 0.15)' : 'rgba(56, 189, 248, 0.15)';
+        ctx.lineWidth = 2;
+        for (const c of brushCells) {
+          ctx.fillRect(c.x * effTile, c.y * effTile, effTile, effTile);
+          ctx.strokeRect(c.x * effTile, c.y * effTile, effTile, effTile);
+        }
+        ctx.restore();
+      } else {
+        ctx.strokeStyle = this.currentTool === 'pick_target' ? '#34d399' : (this.currentTool === 'move' ? '#f59e0b' : (this.currentTool === 'line' ? '#a855f7' : (this.currentTool === 'eraser' ? '#f43f5e' : '#38bdf8')));
+        ctx.lineWidth = 2;
+        ctx.strokeRect(hx * effTile, hy * effTile, effTile, effTile);
+      }
     }
 
     // 6. Render Dragging Object Preview Overlay
@@ -834,6 +1027,86 @@ export class EditorCanvas {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(badgeText, cx, badgeY + textH / 2);
+
+      ctx.restore();
+    }
+
+    // 7. Render Line / Wall Drawing Real-time Preview Overlay
+    if (this.isDrawingLine && this.lineStartPos && this.hoverGridPos.x >= 0) {
+      const x0 = this.lineStartPos.x;
+      const y0 = this.lineStartPos.y;
+      const x1 = this.hoverGridPos.x;
+      const y1 = this.hoverGridPos.y;
+
+      const sx = x0 * effTile + effTile / 2;
+      const sy = y0 * effTile + effTile / 2;
+      const ex = x1 * effTile + effTile / 2;
+      const ey = y1 * effTile + effTile / 2;
+
+      ctx.save();
+
+      // Start Anchor Node Marker
+      ctx.fillStyle = '#a855f7';
+      ctx.beginPath();
+      ctx.arc(sx, sy, effTile * 0.28, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.stroke();
+
+      // Guide Vector Line
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([5, 3]);
+      ctx.beginPath();
+      ctx.moveTo(sx, sy);
+      ctx.lineTo(ex, ey);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Rasterized Line Stamped Cells Preview
+      const linePts = this.getLineCoordinates(x0, y0, x1, y1);
+      ctx.fillStyle = this.selectedTile === TILES.WALL ? 'rgba(168, 85, 247, 0.35)' : 'rgba(56, 189, 248, 0.35)';
+      ctx.strokeStyle = '#a855f7';
+      ctx.lineWidth = 1.5;
+
+      const renderedSet = new Set();
+      for (const pt of linePts) {
+        const stamp = this.getBrushCoordinates(pt.x, pt.y, this.brushSize);
+        for (const cell of stamp) {
+          const key = `${cell.x},${cell.y}`;
+          if (!renderedSet.has(key)) {
+            renderedSet.add(key);
+            ctx.fillRect(cell.x * effTile, cell.y * effTile, effTile, effTile);
+            ctx.strokeRect(cell.x * effTile, cell.y * effTile, effTile, effTile);
+          }
+        }
+      }
+
+      // Floating Line Metric Badge
+      const dx = Math.abs(x1 - x0);
+      const dy = Math.abs(y1 - y0);
+      const length = Math.max(dx, dy) + 1;
+      const lineBadge = `Line (${x0},${y0}) ➔ (${x1},${y1}) | ${length} tiles [${this.brushSize}x${this.brushSize}]`;
+      ctx.font = 'bold 11px monospace';
+      const m = ctx.measureText(lineBadge);
+      const bW = m.width + 14;
+      const bH = 22;
+      const bX = ex - bW / 2;
+      const bY = y1 * effTile - 26;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.95)';
+      ctx.strokeStyle = '#c084fc';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(bX, bY, bW, bH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#f3e8ff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(lineBadge, ex, bY + bH / 2);
 
       ctx.restore();
     }

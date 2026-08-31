@@ -74,6 +74,9 @@
           <button type="button" class="palette-btn active" data-tool="pencil" title="Pencil Tool [P] — Click or drag to draw selected tile">
             <span class="palette-icon">✏️</span> Pencil
           </button>
+          <button type="button" class="palette-btn" data-tool="line" title="Line / Wall Tool [L] — Click &amp; drag straight or diagonal walls">
+            <span class="palette-icon">📏</span> Line / Wall
+          </button>
           <button type="button" class="palette-btn" data-tool="fill" title="Flood Fill Tool [F] — Fill contiguous region with selected tile">
             <span class="palette-icon">🪣</span> Fill
           </button>
@@ -86,6 +89,21 @@
           <button type="button" class="palette-btn" data-tool="move" title="Grab &amp; Move Tool [G] — Click &amp; drag any key, door, lever, spawn, or exit to relocate it across the labyrinth">
             <span class="palette-icon">✋</span> Grab / Move
           </button>
+        </div>
+      </div>
+
+      <!-- Brush Size Selector -->
+      <div>
+        <div class="sidebar-section-title">
+          <span>Brush Size</span>
+          <span id="brush-size-label" style="font-family: var(--font-mono); color: var(--accent); font-size: 0.7rem;">1x1</span>
+        </div>
+        <div class="brush-size-group">
+          <button type="button" class="brush-size-btn active" data-size="1" title="1x1 Precision Brush [[]">1x1</button>
+          <button type="button" class="brush-size-btn" data-size="2" title="2x2 Wide Brush">2x2</button>
+          <button type="button" class="brush-size-btn" data-size="3" title="3x3 Block Brush">3x3</button>
+          <button type="button" class="brush-size-btn" data-size="4" title="4x4 Large Brush">4x4</button>
+          <button type="button" class="brush-size-btn" data-size="5" title="5x5 Massive Brush []]">5x5</button>
         </div>
       </div>
 
@@ -196,9 +214,10 @@
       <canvas id="editor-canvas"></canvas>
 
       <div class="viewport-overlay-controls">
-        <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In">+</button>
-        <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out">-</button>
-        <button id="btn-zoom-fit" class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:0.2rem 0.5rem;">Fit</button>
+        <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In (+)">+</button>
+        <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out (-)">-</button>
+        <span class="zoom-level-badge" id="zoom-badge">100%</span>
+        <button id="btn-zoom-fit" class="btn btn-secondary btn-sm" style="font-size:0.75rem; padding:0.2rem 0.5rem;" title="Fit Entire Labyrinth (F)">Fit</button>
       </div>
     </main>
 
@@ -212,35 +231,64 @@
 
   <!-- Level Properties Modal -->
   <div class="modal-backdrop" id="settings-modal">
-    <div class="modal-dialog">
+    <div class="modal-dialog" style="max-width: 580px;">
       <div class="modal-header">
-        <h3 style="font-size: 1.15rem;">Labyrinth Properties</h3>
+        <h3 style="font-size: 1.15rem;">⚙ Labyrinth Properties</h3>
         <button type="button" class="btn btn-secondary btn-sm btn-icon" id="settings-btn-close">✕</button>
       </div>
-      <div class="modal-body">
-        <div class="entity-props-form">
+
+      <!-- Tab Navigation -->
+      <nav class="modal-tabs" id="prop-modal-tabs">
+        <button type="button" class="modal-tab-btn active" data-tab="meta">📝 Identity &amp; Info</button>
+        <button type="button" class="modal-tab-btn" data-tab="dims">📐 Dimensions &amp; Size</button>
+        <button type="button" class="modal-tab-btn" data-tab="rules">🎮 Fog &amp; Vision</button>
+        <button type="button" class="modal-tab-btn" data-tab="graphics">🚪 Graphics &amp; Hints</button>
+      </nav>
+
+      <div class="modal-body" style="max-height: 65vh; overflow-y: auto;">
+        <!-- Tab 1: Identity & Metadata -->
+        <div class="modal-tab-pane active" id="pane-prop-meta">
           <div class="form-row">
-            <label for="set-id">Level ID</label>
+            <label for="set-id">Level Identifier (Unique ID)</label>
             <input type="text" id="set-id" class="input-field" placeholder="e.g. vault_of_shadows" />
           </div>
           <div class="form-row">
-            <label for="set-title">Title</label>
+            <label for="set-title">Labyrinth Title</label>
             <input type="text" id="set-title" class="input-field" placeholder="Labyrinth Name" />
           </div>
           <div class="form-row">
-            <label for="set-author">Author</label>
+            <label for="set-author">Author / Architect Name</label>
             <input type="text" id="set-author" class="input-field" placeholder="Your Name" />
           </div>
+        </div>
+
+        <!-- Tab 2: Dimensions & Sizing -->
+        <div class="modal-tab-pane" id="pane-prop-dims">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
             <div class="form-row">
-              <label for="set-width">Width (Tiles)</label>
-              <input type="number" id="set-width" class="input-field" min="9" max="99" />
+              <label for="set-width">Width (9 - 150 Tiles)</label>
+              <input type="number" id="set-width" class="input-field" min="9" max="150" />
             </div>
             <div class="form-row">
-              <label for="set-height">Height (Tiles)</label>
-              <input type="number" id="set-height" class="input-field" min="9" max="99" />
+              <label for="set-height">Height (9 - 150 Tiles)</label>
+              <input type="number" id="set-height" class="input-field" min="9" max="150" />
             </div>
           </div>
+          <div class="form-row">
+            <label>Quick Dimension Presets</label>
+            <div class="dim-preset-grid">
+              <button type="button" class="dim-preset-btn" data-w="21" data-h="21">21x21 (Standard)</button>
+              <button type="button" class="dim-preset-btn" data-w="35" data-h="35">35x35 (Large)</button>
+              <button type="button" class="dim-preset-btn" data-w="55" data-h="55">55x55 (Epic)</button>
+              <button type="button" class="dim-preset-btn" data-w="75" data-h="75">75x75 (Massive)</button>
+              <button type="button" class="dim-preset-btn" data-w="100" data-h="100">100x100 (Colossal)</button>
+              <button type="button" class="dim-preset-btn" data-w="150" data-h="150">150x150 (Titan)</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 3: Fog & Vision -->
+        <div class="modal-tab-pane" id="pane-prop-rules">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
             <div class="form-row">
               <label for="set-theme">Visual Theme &amp; Tileset</label>
@@ -255,8 +303,23 @@
             </div>
             <div class="form-row">
               <label for="set-radius">Fog View Radius</label>
-              <input type="number" id="set-radius" class="input-field" min="3" max="20" />
+              <input type="number" id="set-radius" class="input-field" min="3" max="25" />
             </div>
+          </div>
+          <div style="display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.5rem;">
+            <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="set-fog" style="width: 18px; height: 18px; cursor: pointer;" />
+              <label for="set-fog" style="cursor: pointer;">Enable Dynamic Fog of War</label>
+            </div>
+            <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem;">
+              <input type="checkbox" id="set-map-revealed" style="width: 18px; height: 18px; cursor: pointer;" />
+              <label for="set-map-revealed" style="cursor: pointer;">Map Starts Revealed (Memory Mode)</label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 4: Graphics & Hints -->
+        <div class="modal-tab-pane" id="pane-prop-graphics">
           <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
             <div class="form-row">
               <label for="set-spawn-style">Entrance Graphic Style</label>
@@ -275,22 +338,12 @@
               </select>
             </div>
           </div>
-          <div style="display: flex; gap: 1.25rem; flex-wrap: wrap; margin-top: 0.5rem;">
-            <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" id="set-fog" style="width: 18px; height: 18px; cursor: pointer;" />
-              <label for="set-fog" style="cursor: pointer;">Enable Fog of War</label>
-            </div>
-            <div class="form-row" style="flex-direction: row; align-items: center; gap: 0.5rem;">
-              <input type="checkbox" id="set-map-revealed" style="width: 18px; height: 18px; cursor: pointer;" />
-              <label for="set-map-revealed" style="cursor: pointer;">Map Starts Revealed (Memory Mode)</label>
-            </div>
-          </div>
-          <div class="form-row" style="margin-top: 0.75rem;">
-            <label for="set-help-title">Tutorial / Help Header</label>
+          <div class="form-row" style="margin-top: 0.5rem;">
+            <label for="set-help-title">Tutorial / Guidance Header</label>
             <input type="text" id="set-help-title" class="input-field" placeholder="e.g. Navigation Basics (Optional)" />
           </div>
           <div class="form-row">
-            <label for="set-help-message">Tutorial / Help Message</label>
+            <label for="set-help-message">Tutorial / Guidance Message</label>
             <textarea id="set-help-message" class="input-field" rows="2" placeholder="Actionable guidance or hint displayed in player HUD..." style="resize: vertical;"></textarea>
           </div>
         </div>
@@ -539,10 +592,12 @@
               </thead>
               <tbody>
                 <tr><td><kbd>P</kbd></td><td>Select Pencil Tool</td></tr>
+                <tr><td><kbd>L</kbd></td><td>Select Line / Wall Tool (Straight &amp; Diagonal)</td></tr>
                 <tr><td><kbd>F</kbd></td><td>Select Flood Fill Tool</td></tr>
                 <tr><td><kbd>E</kbd></td><td>Select Eraser Tool</td></tr>
                 <tr><td><kbd>S</kbd></td><td>Select Inspect Tool</td></tr>
                 <tr><td><kbd>G</kbd> / <kbd>M</kbd></td><td>Select Grab &amp; Move Tool</td></tr>
+                <tr><td><kbd>[</kbd> / <kbd>]</kbd></td><td>Decrease / Increase Brush Size (1x1 to 5x5)</td></tr>
                 <tr><td><kbd>1</kbd></td><td>Switch to Ground Layer (0)</td></tr>
                 <tr><td><kbd>2</kbd></td><td>Switch to Overhead Layer (1)</td></tr>
                 <tr><td><kbd>V</kbd></td><td>Open Solvability Validation Report</td></tr>
@@ -552,7 +607,7 @@
                 <tr><td><kbd>Ctrl+Y</kbd> / <kbd>Ctrl+Shift+Z</kbd></td><td>Redo Change</td></tr>
                 <tr><td><kbd>Ctrl+S</kbd></td><td>Quick Save Project to Browser Storage</td></tr>
                 <tr><td><kbd>Space+Drag</kbd> / <kbd>Middle-Click</kbd></td><td>Pan Canvas Viewport</td></tr>
-                <tr><td><kbd>Mouse Wheel</kbd></td><td>Zoom In / Out centered at cursor</td></tr>
+                <tr><td><kbd>Mouse Wheel</kbd></td><td>Zoom In / Out centered at cursor (15% to 500%)</td></tr>
               </tbody>
             </table>
           </div>
