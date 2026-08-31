@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Art Catalog & Asset Gallery — Casual Maze Game</title>
+  <link rel="stylesheet" href="css/main.css">
+  <style>
+    .catalog-layout {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 70px);
+      gap: 1.5rem;
+      padding: 1.5rem;
+      max-width: 1600px;
+      margin: 0 auto;
+    }
+    .catalog-sidebar {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      padding: 1.25rem;
+      height: fit-content;
+      position: sticky;
+      top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .filter-group-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+    .filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+    .filter-pill {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.3rem 0.75rem;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .filter-pill:hover, .filter-pill.active {
+      background: var(--accent);
+      color: #0f172a;
+      font-weight: 700;
+      border-color: var(--accent);
+    }
+    .asset-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+    .asset-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+      cursor: pointer;
+    }
+    .asset-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
+      box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15);
+    }
+    .asset-preview-box {
+      height: 140px;
+      background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-bottom: 1px solid var(--border);
+    }
+    .asset-preview-box img, .asset-preview-box svg {
+      width: 72px;
+      height: 72px;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+    }
+    .asset-type-badge {
+      position: absolute;
+      top: 0.5rem;
+      left: 0.5rem;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 0.15rem 0.45rem;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .asset-card-body {
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      flex: 1;
+    }
+    .asset-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+    .asset-desc {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      flex: 1;
+    }
+    .asset-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+    }
+    .asset-path-tag {
+      max-width: 140px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="app-header">
+    <div class="header-left">
+      <span class="logo-icon">🎨</span>
+      <h1 class="logo-text">Art &amp; Asset Catalog</h1>
+      <span class="badge" id="asset-count-badge">Loading...</span>
+    </div>
+    <div class="header-right">
+      <a href="index.html" class="btn btn-secondary btn-sm">🏠 Back to Game</a>
+      <a href="editor.html" class="btn btn-primary btn-sm">🛠️ Level Editor</a>
+    </div>
+  </header>
+
+  <div class="catalog-layout">
+    <!-- Sidebar Filters -->
+    <aside class="catalog-sidebar">
+      <div>
+        <label for="search-input" class="filter-group-title">🔍 Search Assets</label>
+        <input type="text" id="search-input" class="input-field" placeholder="Search by name, tag, style..." />
+      </div>
+
+      <div>
+        <div class="filter-group-title">Asset Types</div>
+        <div class="filter-pills" id="type-filters">
+          <button class="filter-pill active" data-type="all">All</button>
+          <button class="filter-pill" data-type="tile">Tiles</button>
+          <button class="filter-pill" data-type="entity">Entities</button>
+          <button class="filter-pill" data-type="environment">Environment</button>
+          <button class="filter-pill" data-type="player">Player</button>
+          <button class="filter-pill" data-type="ui">UI &amp; Tools</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="filter-group-title">Categories</div>
+        <div class="filter-pills" id="category-filters">
+          <button class="filter-pill active" data-category="all">All</button>
+          <button class="filter-pill" data-category="ground">Ground</button>
+          <button class="filter-pill" data-category="bridges">Bridges</button>
+          <button class="filter-pill" data-category="ramps">Ramps</button>
+          <button class="filter-pill" data-category="keys">Keys</button>
+          <button class="filter-pill" data-category="doors">Doors</button>
+          <button class="filter-pill" data-category="levers">Levers</button>
+          <button class="filter-pill" data-category="spawn">Spawn</button>
+          <button class="filter-pill" data-category="exit">Exit</button>
+          <button class="filter-pill" data-category="tools">Tools</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="filter-group-title">Offline File Organization</div>
+        <div style="font-size:0.75rem; color:var(--text-muted); line-height:1.5;">
+          All SVG assets are organized in the <code>/assets/</code> directory by <strong>type</strong>, <strong>category</strong>, and <strong>style</strong>.
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Asset Grid -->
+    <main>
+      <div class="asset-grid" id="asset-grid"></div>
+    </main>
+  </div>
+
+  <!-- Detail Modal -->
+  <div class="modal-overlay" id="asset-modal">
+    <div class="modal-card" style="max-width:650px;">
+      <div class="modal-header">
+        <h3 id="modal-asset-name">Asset Details</h3>
+        <button type="button" class="btn btn-secondary btn-sm" id="btn-close-modal">✕</button>
+      </div>
+      <div class="modal-body" style="display:flex; flex-direction:column; gap:1rem;">
+        <div style="display:flex; gap:1.5rem; align-items:center; background:radial-gradient(circle at center, #1e293b, #0f172a); padding:1.5rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
+          <div id="modal-preview-container" style="width:100px; height:100px; display:flex; align-items:center; justify-content:center;"></div>
+          <div style="flex:1;">
+            <h4 id="modal-title" style="font-size:1.15rem; color:var(--text-main); margin-bottom:0.25rem;"></h4>
+            <div id="modal-desc" style="font-size:0.82rem; color:var(--text-muted); margin-bottom:0.6rem;"></div>
+            <div style="font-family:var(--font-mono); font-size:0.75rem; color:var(--accent);" id="modal-path"></div>
+          </div>
+        </div>
+
+        <div>
+          <label style="font-size:0.8rem; font-weight:700; color:var(--text-muted); margin-bottom:0.35rem; display:block;">Raw SVG Vector Code:</label>
+          <textarea id="modal-svg-code" class="input-field" style="height:140px; font-family:var(--font-mono); font-size:0.75rem; width:100%; resize:vertical;" readonly></textarea>
+        </div>
+      </div>
+      <div class="modal-footer" style="display:flex; justify-content:space-between;">
+        <button type="button" class="btn btn-secondary" id="btn-copy-path">📋 Copy Path</button>
+        <button type="button" class="btn btn-accent" id="btn-copy-svg">📄 Copy SVG Code</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    let allAssets = [];
+    let activeType = 'all';
+    let activeCategory = 'all';
+    let searchQuery = '';
+
+    async function initCatalog() {
+      try {
+        const res = await fetch('assets/manifest.json');
+        if (!res.ok) throw new Error('Manifest not found');
+        const manifest = await res.json();
+        allAssets = manifest.assets || [];
+        document.getElementById('asset-count-badge').textContent = `${allAssets.length} Vector Assets`;
+        renderGrid();
+      } catch (err) {
+        document.getElementById('asset-grid').innerHTML = `<div style="padding:2rem; color:var(--rose);">Error loading assets manifest: ${err.message}</div>`;
+      }
+    }
+
+    function renderGrid() {
+      const grid = document.getElementById('asset-grid');
+      const filtered = allAssets.filter(a => {
+        if (activeType !== 'all' && a.type !== activeType) return false;
+        if (activeCategory !== 'all' && a.category !== activeCategory) return false;
+        if (searchQuery) {
+          const q = searchQuery.toLowerCase();
+          const matchName = a.name.toLowerCase().includes(q);
+          const matchDesc = (a.description || '').toLowerCase().includes(q);
+          const matchTag = (a.tags || []).some(t => t.toLowerCase().includes(q));
+          const matchPath = a.path.toLowerCase().includes(q);
+          if (!matchName && !matchDesc && !matchTag && !matchPath) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '<div style="padding:3rem; text-align:center; color:var(--text-muted); grid-column:1/-1;">No matching assets found. Try adjusting your search or filters!</div>';
+        return;
+      }
+
+      grid.innerHTML = filtered.map(a => `
+        <div class="asset-card" data-id="${a.id}">
+          <div class="asset-preview-box">
+            <span class="asset-type-badge">${a.type} / ${a.category}</span>
+            <img src="${a.path}" alt="${a.name}" loading="lazy" />
+          </div>
+          <div class="asset-card-body">
+            <div class="asset-title">${a.name}</div>
+            <div class="asset-desc">${a.description || ''}</div>
+            <div class="asset-meta">
+              <span class="asset-path-tag" title="${a.path}">${a.path.split('/').pop()}</span>
+              <span>${a.style || 'default'}</span>
+            </div>
+          </div>
+        </div>
+      `).join('');
+
+      // Wire card clicks
+      grid.querySelectorAll('.asset-card').forEach(card => {
+        card.addEventListener('click', () => {
+          const asset = allAssets.find(a => a.id === card.dataset.id);
+          if (asset) openModal(asset);
+        });
+      });
+    }
+
+    async function openModal(asset) {
+      const modal = document.getElementById('asset-modal');
+      document.getElementById('modal-asset-name').textContent = asset.name;
+      document.getElementById('modal-title').textContent = asset.name;
+      document.getElementById('modal-desc').textContent = asset.description || '';
+      document.getElementById('modal-path').textContent = asset.path;
+      document.getElementById('modal-preview-container').innerHTML = `<img src="${asset.path}" style="width:80px; height:80px;" />`;
+
+      try {
+        const res = await fetch(asset.path);
+        const code = await res.text();
+        document.getElementById('modal-svg-code').value = code;
+      } catch {
+        document.getElementById('modal-svg-code').value = 'Unable to fetch raw code';
+      }
+
+      document.getElementById('btn-copy-path').onclick = () => {
+        navigator.clipboard.writeText(asset.path);
+        alert('Asset path copied!');
+      };
+
+      document.getElementById('btn-copy-svg').onclick = () => {
+        navigator.clipboard.writeText(document.getElementById('modal-svg-code').value);
+        alert('SVG XML code copied!');
+      };
+
+      modal.classList.add('active');
+    }
+
+    document.getElementById('btn-close-modal')?.addEventListener('click', () => {
+      document.getElementById('asset-modal').classList.remove('active');
+    });
+
+    // Wire filters
+    document.querySelectorAll('#type-filters .filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#type-filters .filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeType = btn.dataset.type;
+        renderGrid();
+      });
+    });
+
+    document.querySelectorAll('#category-filters .filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#category-filters .filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeCategory = btn.dataset.category;
+        renderGrid();
+      });
+    });
+
+    document.getElementById('search-input')?.addEventListener('input', (e) => {
+      searchQuery = e.target.value.trim();
+      renderGrid();
+    });
+
+    initCatalog();
+  </script>
+</body>
+</html>

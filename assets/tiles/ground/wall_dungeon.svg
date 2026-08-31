@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="wDungGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#475569" />
+      <stop offset="40%" stop-color="#334155" />
+      <stop offset="100%" stop-color="#0f172a" />
+    </linearGradient>
+  </defs>
+  <rect x="0" y="8" width="64" height="56" fill="#000000" opacity="0.4" />
+  <rect x="0" y="0" width="64" height="60" rx="2" fill="url(#wDungGrad)" />
+  <rect x="2" y="2" width="60" height="16" rx="1" fill="#64748b" />
+  <path d="M 0 18 L 64 18 M 0 40 L 64 40 M 32 18 L 32 40 M 16 40 L 16 60 M 48 40 L 48 60" stroke="#1e293b" stroke-width="1.5" />
+  <path d="M 2 2 L 62 2" stroke="#94a3b8" stroke-width="1" />
+</svg>

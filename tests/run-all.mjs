@@ -38,7 +38,10 @@ import './unit/editor/level-validator.test.mjs';
 import './unit/editor/json-exporter.test.mjs';
 import './unit/editor/editor-canvas.test.mjs';
 
-// 6. End-to-End User Journey Tests
+// 6. Asset & Vector Pipeline Unit Tests
+import './unit/assets/asset-catalog.test.mjs';
+
+// 7. End-to-End User Journey Tests
 import './integration/journeys/tutorial-progression.journey.test.mjs';
 import './integration/journeys/campaign-solvability.journey.test.mjs';
 import './integration/journeys/editor-authoring.journey.test.mjs';

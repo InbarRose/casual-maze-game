@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="wMagmaGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#450a0a" />
+      <stop offset="100%" stop-color="#1c0404" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="60" rx="2" fill="url(#wMagmaGrad)" />
+  <rect x="2" y="2" width="60" height="16" rx="1" fill="#7f1d1d" />
+  <path d="M 12 18 Q 18 32 10 44 Q 8 50 14 58 M 38 18 Q 32 30 40 42 Q 44 48 36 58 M 52 24 Q 48 36 56 46" stroke="#ef4444" stroke-width="2" fill="none" />
+  <path d="M 12 24 L 10 40 M 38 28 L 36 46" stroke="#fbbf24" stroke-width="1" fill="none" />
+</svg>
