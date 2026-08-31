@@ -18,7 +18,7 @@ This document outlines the standard operating procedures, architectural principl
 * **Documentation Integrity**: Preserve all existing non-conflicting comments and docstrings unless deliberately deprecating them.
 
 ### C. Mandatory Testing & Validation
-* **Automated Tests**: Every new game mechanic, entity, collision rule, PRNG feature, or schema mutation **must** include automated tests in `test-suite.mjs`.
+* **Automated Tests**: Every new game mechanic, entity, collision rule, PRNG feature, or schema mutation **must** include automated tests in the modular `tests/` directory architecture.
 * **Test Command**: Always run `npm test` before concluding any task and ensure all tests pass (`0 failed`).
 
 ### D. Protected Branch Workflow & GitHub MCP Lifecycle
@@ -51,7 +51,7 @@ Before concluding any task or reporting back to the user, ensure:
 - [ ] Task was developed on a dedicated branch to protect `main`.
 - [ ] Changes are modular, focused, and atomic.
 - [ ] Zero server dependencies added (remains 100% static on GitHub Pages).
-- [ ] New logic or entity types are covered by tests in `test-suite.mjs`.
+- [ ] New logic or entity types are covered by tests in `tests/`.
 - [ ] `npm test` runs and passes with `0 failed`.
 - [ ] Relevant documentation (`docs/PROJECT_MANAGEMENT.md`, `docs/ARCHITECTURE.md`, or `docs/adr/`) is updated.
 - [ ] Work is committed with conventional, atomic git commit messages.

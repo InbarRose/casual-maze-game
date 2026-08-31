@@ -7,6 +7,6 @@
   "scripts": {
     "start": "npx live-server --port=8000 --cors",
     "serve": "npx serve -l 8000 .",
-    "test": "node test-suite.mjs"
+    "test": "node tests/run-all.mjs"
   }
 }

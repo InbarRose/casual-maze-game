@@ -52,7 +52,27 @@ casual-maze-game/
 ├── maze.html                     # Game canvas viewport interface
 ├── editor.html                   # Handcrafted maze architect and JSON level designer
 ├── package.json                  # Test script runner (`npm test`)
-├── test-suite.mjs                # Pure Node ES-module test runner
+├── test-suite.mjs                # Backward-compatible proxy to `tests/run-all.mjs`
+├── tests/                        # Modular Test Architecture & User Journeys
+│   ├── harness/                  # Test runner, assertions, and Node.js DOM/storage mocks
+│   │   ├── index.mjs             # Unified harness export
+│   │   ├── runner.mjs            # describe, it, suite grouping, filtering (--suite, --grep)
+│   │   ├── assertions.mjs        # assert, assertEqual, assertDeepEqual, assertThrows
+│   │   └── mocks.mjs             # Storage polyfills, mock canvas/DOM, FileReader/Blob
+│   ├── unit/                     # Granular subsystem unit test suites
+│   │   ├── core/                 # prng, events, storage, constants
+│   │   ├── engine/               # collision, fog, camera, debug-logger
+│   │   ├── entities/             # player, key, door, lever
+│   │   ├── levels/               # level-loader, json-integrity, campaign, tutorial
+│   │   └── editor/               # level-validator, json-exporter
+│   ├── integration/
+│   │   └── journeys/             # End-to-end simulated player & architect workflows
+│   │       ├── tutorial-progression.journey.test.mjs
+│   │       ├── campaign-solvability.journey.test.mjs
+│   │       ├── editor-authoring.journey.test.mjs
+│   │       ├── fog-exploration.journey.test.mjs
+│   │       └── multi-elevation.journey.test.mjs
+│   └── run-all.mjs               # Master test runner entrypoint
 ├── docs/                         # Documentation & Architecture Records
 │   ├── ARCHITECTURE.md           # Deep subsystem architecture & engine details (this file)
 │   ├── LEVEL_SCHEMA.md           # Canonical JSON level schema and entity specs
