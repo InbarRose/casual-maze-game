@@ -196,6 +196,23 @@
       </div>
     </div>
 
+    <!-- Restart Confirmation Modal -->
+    <div class="modal-backdrop" id="restart-confirm-modal">
+      <div class="modal-dialog" style="max-width: 440px;">
+        <div class="modal-body" style="text-align: center; padding: 1.75rem 1.5rem 1.25rem;">
+          <span style="font-size: 2.2rem; display: inline-block; margin-bottom: 0.5rem;">🔄</span>
+          <h3 style="font-size: 1.35rem; margin-bottom: 0.5rem; color: var(--text);">Restart Level?</h3>
+          <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 1.25rem;">
+            Are you sure you want to restart this labyrinth? Current progress, held keys, and timer will be reset.
+          </p>
+          <div style="display: flex; gap: 0.75rem; justify-content: center;">
+            <button id="btn-cancel-restart" class="btn btn-secondary" style="min-width: 110px;">Cancel [Esc]</button>
+            <button id="btn-confirm-restart" class="btn btn-primary" style="min-width: 130px; background: #f43f5e; border-color: #f43f5e;">Restart [Enter]</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- Toast Container -->
     <div class="toast-container" id="toast-container"></div>
   </div>
@@ -436,6 +453,9 @@
             }
           }
         },
+        onRequestRestart: () => {
+          promptRestartConfirmation();
+        },
       }
     });
 
@@ -554,12 +574,56 @@
       });
     }
 
-    // Keyboard Shortcuts (L for Log, Esc for close modals)
+    // Restart Confirmation Dialog Elements & Logic
+    const restartConfirmModal = document.getElementById('restart-confirm-modal');
+    const btnConfirmRestart = document.getElementById('btn-confirm-restart');
+    const btnCancelRestart = document.getElementById('btn-cancel-restart');
+
+    function promptRestartConfirmation() {
+      if (restartConfirmModal) {
+        restartConfirmModal.classList.add('active');
+      }
+    }
+
+    function cancelRestart() {
+      if (restartConfirmModal) {
+        restartConfirmModal.classList.remove('active');
+      }
+    }
+
+    function confirmRestart() {
+      cancelRestart();
+      lastRenderedKeyIds = '';
+      gameLoop.restartLevel();
+      showToast('Level restarted!', 'info');
+    }
+
+    if (btnConfirmRestart) btnConfirmRestart.addEventListener('click', confirmRestart);
+    if (btnCancelRestart) btnCancelRestart.addEventListener('click', cancelRestart);
+
+    // Keyboard Shortcuts (L for Log, R for Restart, Esc for close modals, Enter for confirm restart)
     window.addEventListener('keydown', (e) => {
+      // If restart confirmation modal is active
+      if (restartConfirmModal && restartConfirmModal.classList.contains('active')) {
+        if (e.code === 'Enter' || e.code === 'NumpadEnter' || e.code === 'KeyR') {
+          e.preventDefault();
+          confirmRestart();
+          return;
+        } else if (e.code === 'Escape') {
+          e.preventDefault();
+          cancelRestart();
+          return;
+        }
+      }
+
       if (e.code === 'KeyL' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         toggleActivityLogModal();
+      } else if (e.code === 'KeyR' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        promptRestartConfirmation();
       } else if (e.code === 'Escape') {
+        cancelRestart();
         closeActivityLogModal();
         if (victoryModal) victoryModal.classList.remove('active');
       }
@@ -568,8 +632,7 @@
     // Button event listeners
     btnFreePan.addEventListener('click', () => gameLoop.toggleFreePan());
     btnRestart.addEventListener('click', () => {
-      lastRenderedKeyIds = '';
-      gameLoop.restartLevel();
+      promptRestartConfirmation();
     });
     btnReplay.addEventListener('click', () => {
       lastRenderedKeyIds = '';

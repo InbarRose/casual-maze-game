@@ -130,7 +130,11 @@ export class GameLoop {
       if (isMap) {
         this.toggleFreePan();
       } else if (isRestart) {
-        this.restartLevel();
+        if (typeof this.uiCallbacks.onRequestRestart === 'function') {
+          this.uiCallbacks.onRequestRestart();
+        } else {
+          this.restartLevel();
+        }
       } else if (isInteract) {
         this.handleManualInteract();
       }
