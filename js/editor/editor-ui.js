@@ -155,6 +155,7 @@ export class EditorUI {
       titleInput.value = this.level.title;
       titleInput.addEventListener('input', () => {
         this.level.title = titleInput.value.trim() || 'Untitled Labyrinth';
+        console.info(`[MazeGame:Editor] Labyrinth renamed to "${this.level.title}"`);
         this.autoSave();
       });
     }
@@ -170,6 +171,7 @@ export class EditorUI {
         this.pushHistory();
         this.autoSave();
         this.editorCanvas.render();
+        console.info(`[MazeGame:Editor] Visual tileset switched to "${quickTheme.value}"`);
         this.showToast(`Tileset switched to ${quickTheme.options[quickTheme.selectedIndex].text}!`, 'info');
       });
     }
@@ -180,16 +182,17 @@ export class EditorUI {
     const statusLayer = document.getElementById('status-layer');
 
     const setLayer = (layer) => {
-      tabGround.classList.toggle('active', layer === LAYERS.GROUND);
-      tabOverhead.classList.toggle('active', layer === LAYERS.OVERHEAD);
+      tabGround?.classList.toggle('active', layer === LAYERS.GROUND);
+      tabOverhead?.classList.toggle('active', layer === LAYERS.OVERHEAD);
       this.editorCanvas.setActiveLayer(layer);
       if (statusLayer) {
         statusLayer.textContent = `Layer: ${layer.toUpperCase()}`;
       }
+      console.info(`[MazeGame:Editor] Active layer switched to "${layer.toUpperCase()}" (Elevation: ${layer === LAYERS.OVERHEAD ? 1 : 0})`);
     };
 
-    tabGround.addEventListener('click', () => setLayer(LAYERS.GROUND));
-    tabOverhead.addEventListener('click', () => setLayer(LAYERS.OVERHEAD));
+    tabGround?.addEventListener('click', () => setLayer(LAYERS.GROUND));
+    tabOverhead?.addEventListener('click', () => setLayer(LAYERS.OVERHEAD));
 
     // 4. Palette Buttons Binding
     const paletteButtons = document.querySelectorAll('.palette-btn[data-tool], .palette-btn[data-tile], .palette-btn[data-entity]');
@@ -207,52 +210,71 @@ export class EditorUI {
         if (tool) {
           this.editorCanvas.setTool(tool);
           this.editorCanvas.selectedEntity = null;
+          console.info(`[MazeGame:Editor] Active draw tool: "${tool.toUpperCase()}"`);
         } else if (tile !== undefined) {
           const parsedTile = !isNaN(Number(tile)) ? Number(tile) : tile;
           this.editorCanvas.setSelectedTile(parsedTile);
+          console.info(`[MazeGame:Editor] Selected tile for painting: "${parsedTile}"`);
         } else if (entity) {
           this.editorCanvas.setSelectedEntity(entity, color ? { color, name } : null);
+          console.info(`[MazeGame:Editor] Selected entity for placement: "${entity}" (${name || color || 'Default'})`);
         }
       });
     });
 
     // 5. Header Actions
-    document.getElementById('btn-playtest')?.addEventListener('click', () => this.playTest());
-    document.getElementById('btn-playtest-opts')?.addEventListener('click', () => this.openPlaytestModal());
-    document.getElementById('btn-guide')?.addEventListener('click', () => this.openGuideModal());
+    document.getElementById('btn-playtest')?.addEventListener('click', () => {
+      console.info('[MazeGame:Editor] Playtest launch triggered');
+      this.playTest();
+    });
+    document.getElementById('btn-playtest-opts')?.addEventListener('click', () => {
+      console.info('[MazeGame:Editor] Playtest options modal opened');
+      this.openPlaytestModal();
+    });
+    document.getElementById('btn-guide')?.addEventListener('click', () => {
+      console.info('[MazeGame:Editor] Architect handbook opened');
+      this.openGuideModal();
+    });
 
     document.getElementById('btn-export-json')?.addEventListener('click', () => {
       const report = LevelValidator.validate(this.level);
       if (!report.valid) {
+        console.warn('[MazeGame:Editor] Export requested on invalid level:', report.errors);
         if (!confirm('⚠️ This maze currently has validation errors. Do you still want to export?')) {
           this.openValidationModal();
           return;
         }
       }
+      console.info('[MazeGame:Editor] Exporting level JSON to file:', this.level.title);
       JsonExporter.exportToFile(this.level);
     });
 
     document.getElementById('btn-copy-json')?.addEventListener('click', async () => {
       const ok = await JsonExporter.copyToClipboard(this.level);
+      console.info(`[MazeGame:Editor] Level JSON clipboard copy status: ${ok ? 'SUCCESS' : 'FAILED'}`);
       this.showToast(ok ? 'JSON copied to clipboard!' : 'Failed to copy', ok ? 'success' : 'error');
     });
 
     // Quick Save button
     document.getElementById('btn-save-project')?.addEventListener('click', () => {
+      console.info('[MazeGame:Editor] Quick save button clicked');
       this.quickSaveProject();
     });
 
     // Import file
     const fileInput = document.getElementById('editor-file-input');
-    document.getElementById('btn-import-json')?.addEventListener('click', () => fileInput.click());
+    document.getElementById('btn-import-json')?.addEventListener('click', () => fileInput?.click());
     fileInput?.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
       try {
+        console.info(`[MazeGame:Editor] Importing file "${file.name}"...`);
         const imported = await JsonExporter.importFromFile(file);
         this.loadLevel(imported);
+        console.info(`[MazeGame:Editor] File "${file.name}" imported successfully as "${imported.title}"`);
         this.showToast('Labyrinth loaded successfully!', 'success');
       } catch (err) {
+        console.error('[MazeGame:Editor] File import error:', err);
         alert(err.message);
       }
       fileInput.value = '';
@@ -269,6 +291,7 @@ export class EditorUI {
         this.level.layers.ground = LevelLoader.normalizeGrid([], width, height, TILES.FLOOR);
         this.level.layers.overhead = LevelLoader.normalizeGrid([], width, height, 0);
         this.level.entities = [];
+        console.warn(`[MazeGame:Editor] Labyrinth canvas cleared to empty floor (${width}x${height})`);
         this.pushHistory();
         this.autoSave();
         this.updateValidationState();
@@ -291,14 +314,17 @@ export class EditorUI {
     document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
       this.editorCanvas.setZoom(this.editorCanvas.zoom * 1.25);
       this.updateZoomBadge();
+      console.info(`[MazeGame:Editor] Zoom In: ${Math.round(this.editorCanvas.zoom * 100)}%`);
     });
     document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
       this.editorCanvas.setZoom(this.editorCanvas.zoom / 1.25);
       this.updateZoomBadge();
+      console.info(`[MazeGame:Editor] Zoom Out: ${Math.round(this.editorCanvas.zoom * 100)}%`);
     });
     document.getElementById('btn-zoom-fit')?.addEventListener('click', () => {
       this.editorCanvas.zoomToFit();
       this.updateZoomBadge();
+      console.info(`[MazeGame:Editor] Zoom to Fit: ${Math.round(this.editorCanvas.zoom * 100)}%`);
     });
     this.updateZoomBadge();
   }
