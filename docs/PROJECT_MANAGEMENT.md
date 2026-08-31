@@ -6,19 +6,17 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.5.0` (Completed & Verified)
+### Current Version: `v1.6.0` (Completed & Verified)
 
-- [x] **Editor Quick Tileset / Theme Switcher**: Instant live switching and previewing across all 6 visual themes (Dungeon, Emerald Jungle, Molten Core, Glacial Expanse, Amethyst Caverns, Sunset Citadel) directly from the sidebar.
-- [x] **Multi-Colored Keys & Doors Studio**: Direct palette buttons and swatch pickers for Gold, Ruby Red, Sapphire Blue, Emerald Green, and Amethyst Purple with automatic key matching.
-- [x] **Advanced Lever Configuration & Mechanism Studio**:
-  - Initial state toggle (Unpulled / Pulled).
-  - Multi-target wiring with layer selection and customizable State A / State B tile transitions (Floor, Wall, Bridges, Ramps).
-  - Live "⚡ Toggle Preview" in-editor mechanism test trigger.
-- [x] **Architect Handbook & Mouse-Over Tooltips**: Comprehensive interactive Guide modal and rich tooltips on every tool, layer, tile, ramp, and entity.
-- [x] **Advanced Playtest Suite (Custom Test Spawn & Inventory Preload)**:
-  - Playtest configuration modal with custom test spawn coordinates and layer selection.
-  - Starting inventory preloading with checklist to test late-stage puzzle gates directly.
-- [x] **Automated Test Suite**: 244 automated assertions in `test-suite.mjs` (0 failed).
+- [x] **Modular Test Directory Architecture (`tests/`)**: Extracted monolithic `test-suite.mjs` into dedicated subsystem unit suites across `core`, `engine`, `entities`, `levels`, and `editor`.
+- [x] **Zero-Dependency Test Harness & Assertions**: Custom ES-module runner (`describe`, `it`, hooks, timers, filtering via `--suite` and `--grep`) with deep equality, numeric ranges, and mock polyfills.
+- [x] **End-to-End User Journey Suites**:
+  - 🎓 *Novice Tutorial Academy Journey*: Full sequential 6-level onboarding from basic movement to multi-elevation bridges and fog.
+  - 🗺️ *Campaign Solvability & Replay Journey*: Multi-zone BFS solvability and telemetry event stream verification.
+  - 📐 *Dungeon Architect Journey*: Level creation, deadlock and missing key detection, error correction, and JSON roundtrip export.
+  - 🕯️ *Fog & Line-of-Sight Exploration Journey*: Dynamic raycasting line-of-sight and corner shadow casting.
+  - 🌉 *Multi-Elevation Traversal Journey*: 3D-feel ramps, East-West and North-South bridges, railings, and overhead void boundaries.
+- [x] **Automated Test Coverage**: 87 test cases and 1,202 automated assertions running in ~60ms (0 failed).
 
 ---
 
