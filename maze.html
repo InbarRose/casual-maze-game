@@ -38,6 +38,7 @@
         <div class="hud-card hud-inventory-card" id="hud-inventory-card" title="Player Inventory">
           <span class="inventory-icon">🎒</span>
           <span class="inventory-label hide-mobile">Holding:</span>
+          <span class="inventory-count-badge" id="hud-inventory-count">0</span>
           <div class="inventory-list" id="hud-keys-list">
             <span class="inventory-empty-slot">Empty</span>
           </div>
@@ -72,6 +73,9 @@
         Follow the corridor to the glowing exit portal.
       </div>
     </aside>
+
+    <!-- Real-Time In-Game Activity Log Feed -->
+    <div class="game-activity-feed" id="game-activity-feed" aria-live="polite"></div>
 
     <!-- Free-Pan Active Banner -->
     <div class="freepan-banner" id="freepan-banner">
@@ -286,14 +290,23 @@
           if (currentKeyIds !== lastRenderedKeyIds) {
             lastRenderedKeyIds = currentKeyIds;
             keysListEl.innerHTML = '';
-            if (state.inventory && state.inventory.length > 0) {
+            const keyCount = state.inventory ? state.inventory.length : 0;
+            const inventoryCountEl = document.getElementById('hud-inventory-count');
+            if (inventoryCountEl) {
+              inventoryCountEl.textContent = `${keyCount}`;
+            }
+            if (inventoryCardEl) {
+              inventoryCardEl.classList.toggle('has-items', keyCount > 0);
+            }
+
+            if (keyCount > 0) {
               for (const keyId of state.inventory) {
                 const key = currentLevel.entities.find(e => e.id === keyId) || { name: 'Key', color: '#fbbf24' };
                 const pill = document.createElement('div');
                 pill.className = 'key-pill';
                 pill.style.borderColor = key.color || '#fbbf24';
-                pill.style.boxShadow = `0 0 8px ${key.color ? key.color + '40' : 'rgba(251,191,36,0.25)'}`;
-                pill.innerHTML = `<span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 6px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
+                pill.style.boxShadow = `0 0 10px ${key.color ? key.color + '60' : 'rgba(251,191,36,0.35)'}`;
+                pill.innerHTML = `<span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 8px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
                 keysListEl.appendChild(pill);
               }
             } else {
@@ -415,7 +428,28 @@
     bindVirtualButton('vbtn-right', 'ArrowRight');
     bindVirtualButton('vbtn-act', 'KeyE');
 
-    // Toast Notifications Listener
+    // Real-Time In-Game Activity Log Feed & Toast Notifications
+    const activityFeedEl = document.getElementById('game-activity-feed');
+
+    function addActivityLog(message, type = 'info', icon = 'ℹ️') {
+      if (!activityFeedEl) return;
+      const item = document.createElement('div');
+      item.className = `activity-log-item ${type}`;
+      item.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
+      activityFeedEl.appendChild(item);
+
+      // Keep max 4 active items on screen
+      while (activityFeedEl.children.length > 4) {
+        activityFeedEl.removeChild(activityFeedEl.firstChild);
+      }
+
+      setTimeout(() => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(-8px)';
+        setTimeout(() => item.remove(), 400);
+      }, 4200);
+    }
+
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
       const toast = document.createElement('div');
@@ -427,14 +461,29 @@
 
     globalEvents.on('key:collected', (data) => {
       showToast(`Acquired ${data.name || 'Key'}!`, 'success');
+      addActivityLog(`Collected <strong>${data.name || 'Key'}</strong> (Holding: ${data.inventoryCount || 1})`, 'key-event', '🗝️');
     });
 
-    globalEvents.on('door:unlocked', () => {
-      showToast(`Door unlocked!`, 'success');
+    globalEvents.on('door:unlocked', (data) => {
+      showToast(`Gate unlocked!`, 'success');
+      addActivityLog(`Unlocked <strong>${data.doorName || 'Gate'}</strong>`, 'door-event', '🔓');
     });
 
-    globalEvents.on('tile:toggled', () => {
-      showToast(`Mechanism activated!`, 'info');
+    globalEvents.on('door:locked', (data) => {
+      addActivityLog(`<strong>${data.doorName || 'Gate'}</strong> is locked! Requires <strong>${data.requiredKeyName || 'Key'}</strong>`, 'locked-warn', '🔒');
+    });
+
+    globalEvents.on('lever:toggled', (data) => {
+      const stateName = data.state ? 'ON' : 'OFF';
+      const type = data.state ? 'lever-on' : 'lever-off';
+      const icon = data.state ? '⚡' : '🔌';
+      let targetDesc = '';
+      if (Array.isArray(data.targets) && data.targets.length > 0) {
+        const t0 = data.targets[0];
+        targetDesc = ` — Passage ${data.state ? 'opened' : 'closed'} at (${t0.x}, ${t0.y})`;
+      }
+      showToast(`${data.name || 'Switch'} toggled ${stateName}!`, data.state ? 'success' : 'info');
+      addActivityLog(`<strong>${data.name || 'Switch'}</strong> toggled ${stateName}${targetDesc}`, type, icon);
     });
   </script>
 </body>

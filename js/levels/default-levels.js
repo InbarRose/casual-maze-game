@@ -2559,8 +2559,8 @@ export const TUTORIAL_LEVELS = Object.freeze([
             "layer": "ground",
             "x": 13,
             "y": 13,
-            "stateA": 1,
-            "stateB": 0
+            "stateA": 0,
+            "stateB": 1
           }
         ]
       },

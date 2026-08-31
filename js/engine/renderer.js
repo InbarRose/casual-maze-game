@@ -13,6 +13,8 @@ export class GameRenderer {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
     this.particles = [];
+    this.floatingTexts = [];
+    this.shockwaves = [];
     this.exitPulseTimer = 0;
   }
 
@@ -33,7 +35,7 @@ export class GameRenderer {
     const theme = THEMES[level.config.theme] || THEMES.dungeon;
 
     this.exitPulseTimer += dt * 3;
-    this.updateParticles(dt);
+    this.updateEffects(dt);
 
     // 1. Clear background
     ctx.fillStyle = theme.bg;
@@ -71,8 +73,8 @@ export class GameRenderer {
       this.renderFogOfWar(ctx, fog, bounds, camera, theme);
     }
 
-    // 9. Render Particle Effects
-    this.renderParticles(ctx, camera);
+    // 9. Render Particle Effects, Shockwaves, and In-World Floating Text
+    this.renderWorldEffects(ctx, camera);
   }
 
   /**
@@ -637,38 +639,133 @@ export class GameRenderer {
   }
 
   /**
-   * Update particle lifetimes
+   * Spawn expanding shockwave ring (e.g. lever activation or door unlock)
+   * @param {number} worldX
+   * @param {number} worldY
+   * @param {string} [color='#34d399']
+   * @param {number} [maxRadius=36]
+   */
+  spawnShockwave(worldX, worldY, color = '#34d399', maxRadius = 36) {
+    this.shockwaves.push({
+      x: worldX,
+      y: worldY,
+      color,
+      radius: 4,
+      maxRadius,
+      life: 1.0,
+    });
+  }
+
+  /**
+   * Spawn floating text rising above a tile/entity
+   * @param {number} worldX
+   * @param {number} worldY
+   * @param {string} text
+   * @param {string} [color='#ffffff']
+   */
+  spawnFloatingText(worldX, worldY, text, color = '#ffffff') {
+    this.floatingTexts.push({
+      x: worldX,
+      y: worldY - 8,
+      text,
+      color,
+      life: 1.0,
+      vy: -28,
+    });
+  }
+
+  /**
+   * Update all particle, shockwave, and floating text lifetimes
    * @param {number} dt
    */
-  updateParticles(dt) {
+  updateEffects(dt) {
+    // 1. Particles
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
       p.x += p.vx * dt;
       p.y += p.vy * dt;
       p.life -= p.decay * dt;
+      if (p.life <= 0) this.particles.splice(i, 1);
+    }
 
-      if (p.life <= 0) {
-        this.particles.splice(i, 1);
-      }
+    // 2. Shockwaves
+    for (let i = this.shockwaves.length - 1; i >= 0; i--) {
+      const sw = this.shockwaves[i];
+      sw.radius += (sw.maxRadius - sw.radius) * Math.min(1, dt * 8);
+      sw.life -= dt * 2.2;
+      if (sw.life <= 0) this.shockwaves.splice(i, 1);
+    }
+
+    // 3. Floating Texts
+    for (let i = this.floatingTexts.length - 1; i >= 0; i--) {
+      const ft = this.floatingTexts[i];
+      ft.y += ft.vy * dt;
+      ft.life -= dt * 0.9;
+      if (ft.life <= 0) this.floatingTexts.splice(i, 1);
     }
   }
 
   /**
-   * Render particles in world space
+   * Render all world effects (particles, shockwaves, floating text)
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {Camera} camera
    */
-  renderParticles(ctx, camera) {
-    if (this.particles.length === 0) return;
-
-    ctx.save();
-    for (const p of this.particles) {
-      const screen = camera.worldToScreen(p.x, p.y);
-      ctx.globalAlpha = Math.max(0, p.life);
-      ctx.fillStyle = p.color;
-      ctx.beginPath();
-      ctx.arc(screen.x, screen.y, p.size, 0, Math.PI * 2);
-      ctx.fill();
+  renderWorldEffects(ctx, camera) {
+    // 1. Shockwaves
+    if (this.shockwaves.length > 0) {
+      ctx.save();
+      for (const sw of this.shockwaves) {
+        const screen = camera.worldToScreen(sw.x, sw.y);
+        ctx.globalAlpha = Math.max(0, sw.life * 0.85);
+        ctx.strokeStyle = sw.color;
+        ctx.shadowColor = sw.color;
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = Math.max(2, sw.life * 3.5);
+        ctx.beginPath();
+        ctx.arc(screen.x, screen.y, sw.radius, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.restore();
     }
-    ctx.restore();
+
+    // 2. Particles
+    if (this.particles.length > 0) {
+      ctx.save();
+      for (const p of this.particles) {
+        const screen = camera.worldToScreen(p.x, p.y);
+        ctx.globalAlpha = Math.max(0, p.life);
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(screen.x, screen.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // 3. Floating In-World Text
+    if (this.floatingTexts.length > 0) {
+      ctx.save();
+      for (const ft of this.floatingTexts) {
+        const screen = camera.worldToScreen(ft.x, ft.y);
+        const alpha = Math.min(1, ft.life * 1.5);
+        ctx.globalAlpha = Math.max(0, alpha);
+        ctx.font = 'bold 12px "JetBrains Mono", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'bottom';
+
+        // Dark text outline for readability against bright tiles
+        ctx.strokeStyle = '#000000';
+        ctx.lineWidth = 3;
+        ctx.strokeText(ft.text, screen.x, screen.y);
+
+        // Bright fill color
+        ctx.fillStyle = ft.color;
+        ctx.shadowColor = ft.color;
+        ctx.shadowBlur = 4;
+        ctx.fillText(ft.text, screen.x, screen.y);
+      }
+      ctx.restore();
+    }
   }
 
   /**
