@@ -431,18 +431,22 @@
     {
       "id": "key_gold_t5",
       "type": "key",
-      "x": 1,
-      "y": 11,
+      "x": 9,
+      "y": 3,
       "color": "#fbbf24",
-      "name": "Golden Key"
+      "name": "Crypt Bone Token",
+      "style": "skull",
+      "glowEffect": "pulse"
     },
     {
       "id": "door_gold_t5",
       "type": "door",
       "x": 9,
-      "y": 11,
+      "y": 9,
       "requiresKey": "key_gold_t5",
-      "color": "#fbbf24"
+      "color": "#fbbf24",
+      "style": "magic_seal",
+      "orientation": "auto"
     }
   ]
 }

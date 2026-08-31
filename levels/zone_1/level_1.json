@@ -24,7 +24,7 @@
   "exit": {
     "x": 13,
     "y": 13,
-    "style": "stairs_up"
+    "style": "archway"
   },
   "layers": {
     "ground": [
@@ -549,15 +549,19 @@
       "x": 1,
       "y": 11,
       "color": "#fbbf24",
-      "name": "Gold Key"
+      "name": "Dungeon Master Key",
+      "style": "classic",
+      "glowEffect": "vibrant"
     },
     {
       "id": "door_gold_1",
       "type": "door",
-      "x": 11,
-      "y": 13,
+      "x": 7,
+      "y": 7,
       "requiresKey": "key_gold_1",
-      "color": "#fbbf24"
+      "color": "#fbbf24",
+      "style": "classic",
+      "orientation": "vertical"
     }
   ]
 }

@@ -20,12 +20,12 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "camp"
   },
   "exit": {
     "x": 13,
     "y": 13,
-    "style": "portal"
+    "style": "shrine"
   },
   "layers": {
     "ground": [
@@ -547,20 +547,22 @@
     {
       "id": "key_green_6",
       "type": "key",
-      "x": 13,
-      "y": 1,
+      "x": 1,
+      "y": 11,
       "color": "#34d399",
-      "name": "Emerald Key",
-      "elevation": 0
+      "name": "Jade Shard",
+      "style": "crystal",
+      "glowEffect": "vibrant"
     },
     {
       "id": "door_green_6",
       "type": "door",
-      "x": 11,
-      "y": 13,
+      "x": 7,
+      "y": 7,
       "requiresKey": "key_green_6",
       "color": "#34d399",
-      "elevation": 0
+      "style": "portcullis",
+      "orientation": "vertical"
     }
   ]
 }

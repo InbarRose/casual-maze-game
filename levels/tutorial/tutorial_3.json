@@ -14,7 +14,7 @@
     "viewRadius": 6,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "sunset"
+    "theme": "temple"
   },
   "help": {
     "title": "Interactive Switches",
@@ -24,12 +24,12 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "archway"
   },
   "exit": {
     "x": 9,
     "y": 9,
-    "style": "portal"
+    "style": "stairs_up"
   },
   "layers": {
     "ground": [
@@ -327,16 +327,17 @@
     {
       "id": "lever_t3_1",
       "type": "lever",
-      "x": 1,
-      "y": 9,
+      "x": 3,
+      "y": 7,
+      "name": "Sanctuary Lever",
+      "style": "switch_lever",
       "state": false,
-      "name": "Passage Lever",
       "targets": [
         {
           "action": "toggle_tile",
           "layer": "ground",
           "x": 5,
-          "y": 5,
+          "y": 3,
           "stateA": 0,
           "stateB": 1
         }

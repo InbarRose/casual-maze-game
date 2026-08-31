@@ -14,7 +14,7 @@
     "viewRadius": 5,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "sunset"
+    "theme": "temple"
   },
   "help": {
     "title": "The Master's Trial",
@@ -24,12 +24,12 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "archway"
   },
   "exit": {
     "x": 15,
     "y": 15,
-    "style": "portal"
+    "style": "chest"
   },
   "layers": {
     "ground": [
@@ -690,7 +690,9 @@
       "x": 3,
       "y": 3,
       "color": "#34d399",
-      "name": "Emerald Key"
+      "name": "Emerald Scarab",
+      "style": "relic",
+      "glowEffect": "vibrant"
     },
     {
       "id": "door_green_t6",
@@ -698,7 +700,9 @@
       "x": 5,
       "y": 1,
       "requiresKey": "key_green_t6",
-      "color": "#34d399"
+      "color": "#34d399",
+      "style": "portcullis",
+      "orientation": "vertical"
     },
     {
       "id": "key_blue_t6",
@@ -706,7 +710,9 @@
       "x": 15,
       "y": 1,
       "color": "#38bdf8",
-      "name": "Sapphire Key"
+      "name": "Sapphire Orb",
+      "style": "orb",
+      "glowEffect": "pulse"
     },
     {
       "id": "door_blue_t6",
@@ -714,15 +720,18 @@
       "x": 11,
       "y": 4,
       "requiresKey": "key_blue_t6",
-      "color": "#38bdf8"
+      "color": "#38bdf8",
+      "style": "magic_seal",
+      "orientation": "auto"
     },
     {
       "id": "lever_t6",
       "type": "lever",
       "x": 11,
       "y": 11,
-      "state": false,
       "name": "Sanctuary Switch",
+      "style": "pressure_pedestal",
+      "state": false,
       "targets": [
         {
           "action": "toggle_tile",
@@ -740,7 +749,9 @@
       "x": 1,
       "y": 15,
       "color": "#f43f5e",
-      "name": "Ruby Key"
+      "name": "Ruby Sun Shard",
+      "style": "crystal",
+      "glowEffect": "vibrant"
     },
     {
       "id": "door_red_t6",
@@ -748,7 +759,9 @@
       "x": 14,
       "y": 15,
       "requiresKey": "key_red_t6",
-      "color": "#f43f5e"
+      "color": "#f43f5e",
+      "style": "vault_hatch",
+      "orientation": "auto"
     }
   ]
 }

@@ -1005,7 +1005,9 @@
       "x": 15,
       "y": 1,
       "color": "#38bdf8",
-      "name": "Azure Key"
+      "name": "Azure Crystal",
+      "style": "crystal",
+      "glowEffect": "vibrant"
     },
     {
       "id": "key_gold_4",
@@ -1013,7 +1015,9 @@
       "x": 1,
       "y": 19,
       "color": "#fbbf24",
-      "name": "Golden Crest"
+      "name": "Imperial Relic Crown",
+      "style": "relic",
+      "glowEffect": "pulse"
     },
     {
       "id": "door_blue_4",
@@ -1021,7 +1025,9 @@
       "x": 17,
       "y": 19,
       "requiresKey": "key_blue_4",
-      "color": "#38bdf8"
+      "color": "#38bdf8",
+      "style": "portcullis",
+      "orientation": "vertical"
     },
     {
       "id": "door_gold_4",
@@ -1029,7 +1035,9 @@
       "x": 18,
       "y": 19,
       "requiresKey": "key_gold_4",
-      "color": "#fbbf24"
+      "color": "#fbbf24",
+      "style": "classic",
+      "orientation": "horizontal"
     }
   ]
 }

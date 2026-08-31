@@ -20,7 +20,7 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "archway"
   },
   "exit": {
     "x": 13,
@@ -547,20 +547,22 @@
     {
       "id": "key_red_9",
       "type": "key",
-      "x": 13,
-      "y": 1,
+      "x": 1,
+      "y": 11,
       "color": "#f43f5e",
-      "name": "Ruby Key",
-      "elevation": 0
+      "name": "Molten Ruby Shard",
+      "style": "crystal",
+      "glowEffect": "pulse"
     },
     {
       "id": "door_red_9",
       "type": "door",
-      "x": 11,
-      "y": 13,
+      "x": 7,
+      "y": 7,
       "requiresKey": "key_red_9",
       "color": "#f43f5e",
-      "elevation": 0
+      "style": "laser_barrier",
+      "orientation": "horizontal"
     }
   ]
 }

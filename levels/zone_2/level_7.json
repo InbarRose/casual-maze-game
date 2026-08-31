@@ -20,12 +20,12 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "archway"
   },
   "exit": {
     "x": 15,
     "y": 15,
-    "style": "stairs_up"
+    "style": "portal"
   },
   "layers": {
     "ground": [
@@ -684,37 +684,41 @@
       "id": "key_green_7",
       "type": "key",
       "x": 1,
-      "y": 5,
+      "y": 13,
       "color": "#34d399",
-      "name": "Emerald Key",
-      "elevation": 0
+      "name": "Vine Skeleton Key",
+      "style": "ornate",
+      "glowEffect": "pulse"
     },
     {
       "id": "door_green_7",
       "type": "door",
-      "x": 5,
-      "y": 1,
+      "x": 7,
+      "y": 7,
       "requiresKey": "key_green_7",
       "color": "#34d399",
-      "elevation": 0
+      "style": "portcullis",
+      "orientation": "horizontal"
     },
     {
       "id": "key_blue_7",
       "type": "key",
-      "x": 15,
+      "x": 13,
       "y": 1,
       "color": "#38bdf8",
-      "name": "Sapphire Key",
-      "elevation": 0
+      "name": "Canopy Crystal",
+      "style": "crystal",
+      "glowEffect": "vibrant"
     },
     {
       "id": "door_blue_7",
       "type": "door",
-      "x": 14,
-      "y": 15,
+      "x": 13,
+      "y": 9,
       "requiresKey": "key_blue_7",
       "color": "#38bdf8",
-      "elevation": 0
+      "style": "magic_seal",
+      "orientation": "auto"
     }
   ]
 }
