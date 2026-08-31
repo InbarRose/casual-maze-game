@@ -525,6 +525,8 @@ export class GameLoop {
         name: key.name || 'Key',
         color: key.color || '#fbbf24',
         inventoryCount: this.player.inventory.length,
+        x: px,
+        y: py,
       });
       this.notifyUI();
     }
@@ -570,6 +572,8 @@ export class GameLoop {
         stateLabel: leverStateLabel,
         actionLabel: leverActionLabel,
         targets: lever.targets,
+        x: px,
+        y: py,
       });
 
       this.notifyUI();
@@ -632,6 +636,8 @@ export class GameLoop {
         stateLabel: leverStateLabel,
         actionLabel: leverActionLabel,
         targets: lever.targets,
+        x: lever.x,
+        y: lever.y,
       });
 
       this.notifyUI();
