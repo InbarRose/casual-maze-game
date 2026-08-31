@@ -16,6 +16,8 @@ This document tracks project milestones, current release status, active developm
   - 📐 *Dungeon Architect Journey*: Level creation, deadlock and missing key detection, error correction, and JSON roundtrip export.
   - 🕯️ *Fog & Line-of-Sight Exploration Journey*: Dynamic raycasting line-of-sight and corner shadow casting.
   - 🌉 *Multi-Elevation Traversal Journey*: 3D-feel ramps, East-West and North-South bridges, railings, and overhead void boundaries.
+- [x] **Comprehensive Testing Strategy (`docs/TESTING_PLAN.md`)**: Subsystem matrices, user journey playbooks, future activity test patterns (audio, touch, hazards, portals), and CI gating standards.
+- [x] **Multi-Stage GitHub Actions CI Matrix**: Automated CI workflow across Node.js 18.x, 20.x, and 22.x running static file validation, zero-dependency audit, syntax integrity check, unit suites, user journeys, and master test suite.
 - [x] **Automated Test Coverage**: 87 test cases and 1,202 automated assertions running in ~60ms (0 failed).
 
 ---
