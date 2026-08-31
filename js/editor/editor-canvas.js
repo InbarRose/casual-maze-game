@@ -19,6 +19,7 @@ export class EditorCanvas {
     level,
     onTilePaint,
     onEntityClick,
+    onObjectMoved,
     onTargetTilePicked,
     onHoverCoord,
   }) {
@@ -28,12 +29,13 @@ export class EditorCanvas {
 
     this.onTilePaint = onTilePaint;
     this.onEntityClick = onEntityClick;
+    this.onObjectMoved = onObjectMoved;
     this.onTargetTilePicked = onTargetTilePicked;
     this.onHoverCoord = onHoverCoord;
 
     // View state
     this.activeLayer = LAYERS.GROUND;
-    this.currentTool = 'pencil'; // 'pencil' | 'fill' | 'eraser' | 'select' | 'pick_target'
+    this.currentTool = 'pencil'; // 'pencil' | 'fill' | 'eraser' | 'select' | 'move' | 'pick_target'
     this.selectedTile = TILES.WALL;
     this.selectedEntity = null; // 'key' | 'door' | 'lever' | 'spawn' | 'exit'
     this.wiringLever = null; // When picking target
@@ -45,6 +47,8 @@ export class EditorCanvas {
 
     this.isMouseDown = false;
     this.isPanning = false;
+    this.isDraggingObject = false;
+    this.draggedObject = null; // { type, ref, origX, origY, currentX, currentY, name, color, icon }
     this.lastMousePos = { x: 0, y: 0 };
     this.hoverGridPos = { x: -1, y: -1 };
 
@@ -86,6 +90,74 @@ export class EditorCanvas {
    */
   setTool(tool) {
     this.currentTool = tool;
+    this.canvas.style.cursor = tool === 'move' ? 'grab' : 'default';
+  }
+
+  /**
+   * Find any interactive/movable object at coordinates
+   * @param {number} gridX
+   * @param {number} gridY
+   * @returns {object|null}
+   */
+  findObjectAt(gridX, gridY) {
+    // 1. Check runtime entities (key, door, lever)
+    const entity = (this.level.entities || []).find(e => e.x === gridX && e.y === gridY);
+    if (entity) {
+      return {
+        type: 'entity',
+        ref: entity,
+        name: entity.name || (entity.type.charAt(0).toUpperCase() + entity.type.slice(1)),
+        color: entity.color || (entity.type === 'lever' ? '#34d399' : '#fbbf24'),
+        icon: entity.type === 'key' ? '🔑' : (entity.type === 'door' ? '🚪' : '🕹️'),
+        x: entity.x,
+        y: entity.y,
+        elevation: entity.elevation || 0,
+      };
+    }
+
+    // 2. Check Player Spawn
+    if (this.level.spawn && this.level.spawn.x === gridX && this.level.spawn.y === gridY) {
+      return {
+        type: 'spawn',
+        ref: this.level.spawn,
+        name: 'Spawn Point',
+        color: '#34d399',
+        icon: '🟢',
+        x: this.level.spawn.x,
+        y: this.level.spawn.y,
+        elevation: this.level.spawn.elevation || 0,
+      };
+    }
+
+    // 3. Check Test Spawn
+    if (this.level.testSpawn && this.level.testSpawn.x === gridX && this.level.testSpawn.y === gridY) {
+      return {
+        type: 'test_spawn',
+        ref: this.level.testSpawn,
+        name: 'Test Spawn',
+        color: '#f43f5e',
+        icon: '🧪',
+        x: this.level.testSpawn.x,
+        y: this.level.testSpawn.y,
+        elevation: this.level.testSpawn.elevation || 0,
+      };
+    }
+
+    // 4. Check Exit Portal
+    if (this.level.exit && this.level.exit.x === gridX && this.level.exit.y === gridY) {
+      return {
+        type: 'exit',
+        ref: this.level.exit,
+        name: 'Exit Portal',
+        color: '#0284c7',
+        icon: '🌀',
+        x: this.level.exit.x,
+        y: this.level.exit.y,
+        elevation: this.level.exit.elevation || 0,
+      };
+    }
+
+    return null;
   }
 
   /**
@@ -97,6 +169,7 @@ export class EditorCanvas {
     this.selectedEntity = null;
     this.selectedEntityData = null;
     this.currentTool = 'pencil';
+    this.canvas.style.cursor = 'default';
   }
 
   /**
@@ -108,6 +181,7 @@ export class EditorCanvas {
     this.selectedEntity = entityType;
     this.selectedEntityData = entityData;
     this.currentTool = 'pencil';
+    this.canvas.style.cursor = 'default';
   }
 
   /**
@@ -117,12 +191,14 @@ export class EditorCanvas {
   startTargetPickMode(lever) {
     this.wiringLever = lever;
     this.currentTool = 'pick_target';
+    this.canvas.style.cursor = 'crosshair';
     this.render();
   }
 
   cancelTargetPickMode() {
     this.wiringLever = null;
     this.currentTool = 'pencil';
+    this.canvas.style.cursor = 'default';
     this.render();
   }
 
@@ -130,11 +206,15 @@ export class EditorCanvas {
    * Initialize mouse and touch interaction handlers
    */
   initEvents() {
-    this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
-    window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
-    window.addEventListener('mouseup', () => this.handleMouseUp());
-    this.canvas.addEventListener('wheel', (e) => this.handleWheel(e), { passive: false });
-    this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    if (this.canvas && typeof this.canvas.addEventListener === 'function') {
+      this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+      this.canvas.addEventListener('wheel', (e) => this.handleWheel(e), { passive: false });
+      this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+    }
+    if (typeof window !== 'undefined') {
+      window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+      window.addEventListener('mouseup', () => this.handleMouseUp());
+    }
   }
 
   getEffectiveTileSize() {
@@ -167,6 +247,25 @@ export class EditorCanvas {
       this.isMouseDown = true;
       this.hasModifiedStroke = false;
       const { gridX, gridY } = this.clientToGrid(e.clientX, e.clientY);
+
+      // Check Grab & Move tool OR Inspect tool on an object
+      if (this.currentTool === 'move' || this.currentTool === 'select') {
+        const obj = this.findObjectAt(gridX, gridY);
+        if (obj) {
+          this.isDraggingObject = true;
+          this.draggedObject = {
+            ...obj,
+            origX: gridX,
+            origY: gridY,
+            currentX: gridX,
+            currentY: gridY,
+          };
+          this.canvas.style.cursor = 'grabbing';
+          this.render();
+          return;
+        }
+      }
+
       this.applyToolAt(gridX, gridY);
     }
   }
@@ -190,6 +289,24 @@ export class EditorCanvas {
       this.onHoverCoord(gridX, gridY);
     }
 
+    if (this.isDraggingObject && this.draggedObject) {
+      const { width, height } = this.level.dimensions;
+      if (gridX >= 0 && gridX < width && gridY >= 0 && gridY < height) {
+        if (gridX !== this.draggedObject.currentX || gridY !== this.draggedObject.currentY) {
+          this.draggedObject.currentX = gridX;
+          this.draggedObject.currentY = gridY;
+          this.hasModifiedStroke = true;
+        }
+      }
+      this.render();
+      return;
+    }
+
+    if (this.currentTool === 'move') {
+      const obj = this.findObjectAt(gridX, gridY);
+      this.canvas.style.cursor = obj ? 'grab' : 'default';
+    }
+
     if (this.isMouseDown && (this.currentTool === 'pencil' || this.currentTool === 'eraser')) {
       this.applyToolAt(gridX, gridY);
     } else {
@@ -198,6 +315,48 @@ export class EditorCanvas {
   }
 
   handleMouseUp() {
+    if (this.isDraggingObject && this.draggedObject) {
+      const { type, ref, origX, origY, currentX, currentY, name } = this.draggedObject;
+      const didMove = currentX !== origX || currentY !== origY;
+
+      if (didMove) {
+        // Apply relocation to the target object
+        if (type === 'entity') {
+          ref.x = currentX;
+          ref.y = currentY;
+          ref.elevation = (this.activeLayer === LAYERS.OVERHEAD ? 1 : 0);
+        } else if (type === 'spawn') {
+          this.level.spawn.x = currentX;
+          this.level.spawn.y = currentY;
+          this.level.spawn.elevation = (this.activeLayer === LAYERS.OVERHEAD ? 1 : 0);
+        } else if (type === 'test_spawn') {
+          this.level.testSpawn.x = currentX;
+          this.level.testSpawn.y = currentY;
+          this.level.testSpawn.elevation = (this.activeLayer === LAYERS.OVERHEAD ? 1 : 0);
+        } else if (type === 'exit') {
+          this.level.exit.x = currentX;
+          this.level.exit.y = currentY;
+        }
+
+        console.info(`[MazeGame:Editor] Relocated ${name} from (${origX}, ${origY}) to (${currentX}, ${currentY})`);
+
+        if (this.onObjectMoved) {
+          this.onObjectMoved(type, ref, origX, origY, currentX, currentY);
+        } else if (this.onTilePaint) {
+          this.onTilePaint();
+        }
+      } else if (this.currentTool === 'select' && type === 'entity' && this.onEntityClick) {
+        // If clicked in Inspect tool without moving, open inspector
+        this.onEntityClick(ref);
+      }
+
+      this.isDraggingObject = false;
+      this.draggedObject = null;
+      this.canvas.style.cursor = this.currentTool === 'move' ? 'grab' : 'default';
+      this.render();
+      return;
+    }
+
     if (this.isMouseDown && this.hasModifiedStroke) {
       if (this.onTilePaint) {
         this.onTilePaint();
@@ -604,9 +763,79 @@ export class EditorCanvas {
     const hx = this.hoverGridPos.x;
     const hy = this.hoverGridPos.y;
     if (hx >= 0 && hx < mazeW && hy >= 0 && hy < mazeH) {
-      ctx.strokeStyle = this.currentTool === 'pick_target' ? '#34d399' : '#38bdf8';
+      ctx.strokeStyle = this.currentTool === 'pick_target' ? '#34d399' : (this.currentTool === 'move' ? '#f59e0b' : '#38bdf8');
       ctx.lineWidth = 2;
       ctx.strokeRect(hx * effTile, hy * effTile, effTile, effTile);
+    }
+
+    // 6. Render Dragging Object Preview Overlay
+    if (this.isDraggingObject && this.draggedObject) {
+      const { origX, origY, currentX, currentY, name, icon, color } = this.draggedObject;
+      const ox = origX * effTile + effTile / 2;
+      const oy = origY * effTile + effTile / 2;
+      const cx = currentX * effTile + effTile / 2;
+      const cy = currentY * effTile + effTile / 2;
+
+      ctx.save();
+
+      // Origin Ghost Marker
+      ctx.strokeStyle = 'rgba(244, 63, 94, 0.8)';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 4]);
+      ctx.strokeRect(origX * effTile + 2, origY * effTile + 2, effTile - 4, effTile - 4);
+      ctx.fillStyle = 'rgba(244, 63, 94, 0.15)';
+      ctx.fillRect(origX * effTile + 2, origY * effTile + 2, effTile - 4, effTile - 4);
+
+      // Connecting Path Vector
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([6, 4]);
+      ctx.beginPath();
+      ctx.moveTo(ox, oy);
+      ctx.lineTo(cx, cy);
+      ctx.stroke();
+      ctx.setLineDash([]);
+
+      // Destination Glowing Target Box
+      ctx.strokeStyle = '#34d399';
+      ctx.shadowColor = '#34d399';
+      ctx.shadowBlur = 10;
+      ctx.lineWidth = 3;
+      ctx.strokeRect(currentX * effTile, currentY * effTile, effTile, effTile);
+      ctx.fillStyle = 'rgba(52, 211, 153, 0.22)';
+      ctx.fillRect(currentX * effTile, currentY * effTile, effTile, effTile);
+      ctx.shadowBlur = 0;
+
+      // Floating Entity Icon
+      ctx.fillStyle = color || '#38bdf8';
+      ctx.font = `${Math.max(12, effTile * 0.55)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(icon || '📍', cx, cy);
+
+      // Coordinates Floating Badge above destination cell
+      const badgeText = `${name} ➔ (${currentX}, ${currentY})`;
+      ctx.font = 'bold 11px monospace';
+      const textMetrics = ctx.measureText(badgeText);
+      const textW = textMetrics.width + 12;
+      const textH = 20;
+      const badgeX = cx - textW / 2;
+      const badgeY = currentY * effTile - 24;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.94)';
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(badgeX, badgeY, textW, textH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#f8fafc';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(badgeText, cx, badgeY + textH / 2);
+
+      ctx.restore();
     }
 
     ctx.restore();

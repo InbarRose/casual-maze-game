@@ -36,6 +36,7 @@ import './unit/levels/tutorial-levels.test.mjs';
 // 5. Editor Subsystem Unit Tests
 import './unit/editor/level-validator.test.mjs';
 import './unit/editor/json-exporter.test.mjs';
+import './unit/editor/editor-canvas.test.mjs';
 
 // 6. End-to-End User Journey Tests
 import './integration/journeys/tutorial-progression.journey.test.mjs';

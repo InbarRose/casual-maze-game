@@ -68,6 +68,13 @@ export class EditorUI {
       onEntityClick: (entity) => {
         this.inspector.open(entity, this.level);
       },
+      onObjectMoved: (type, ref, fromX, fromY, toX, toY) => {
+        this.pushHistory();
+        this.autoSave();
+        this.updateValidationState();
+        const objName = ref?.name || (type === 'spawn' ? 'Spawn Point' : (type === 'test_spawn' ? 'Test Spawn' : (type === 'exit' ? 'Exit Portal' : 'Object')));
+        this.showToast(`Relocated ${objName} to (${toX}, ${toY})!`, 'success');
+      },
       onTargetTilePicked: (lever, targetX, targetY, layer) => {
         lever.targets = lever.targets || [];
         lever.targets.push({
@@ -325,6 +332,8 @@ export class EditorUI {
         this.selectToolBtn('eraser');
       } else if (e.key.toLowerCase() === 's') {
         this.selectToolBtn('select');
+      } else if (e.key.toLowerCase() === 'g' || e.key.toLowerCase() === 'm') {
+        this.selectToolBtn('move');
       } else if (e.key === '1') {
         document.getElementById('tab-layer-ground')?.click();
       } else if (e.key === '2') {
