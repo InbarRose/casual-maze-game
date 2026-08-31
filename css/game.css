@@ -100,13 +100,19 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(22, 27, 34, 0.9);
-  border: 1px solid var(--card-border);
-  transition: all 0.2s ease;
+  background: rgba(15, 23, 42, 0.92);
+  border: 1.5px solid rgba(100, 116, 139, 0.35);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+  transition: all 0.25s ease;
+}
+
+.hud-inventory-card.has-items {
+  border-color: rgba(251, 191, 36, 0.6);
+  box-shadow: 0 0 14px rgba(251, 191, 36, 0.25);
 }
 
 .inventory-icon {
-  font-size: 0.95rem;
+  font-size: 1rem;
   line-height: 1;
 }
 
@@ -116,6 +122,21 @@
   color: var(--text-muted);
   text-transform: uppercase;
   letter-spacing: 0.05em;
+}
+
+.inventory-count-badge {
+  font-size: 0.7rem;
+  font-weight: 800;
+  font-family: var(--font-mono);
+  padding: 0.1rem 0.45rem;
+  border-radius: var(--radius-full);
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-muted);
+}
+
+.hud-inventory-card.has-items .inventory-count-badge {
+  background: rgba(251, 191, 36, 0.2);
+  color: var(--gold);
 }
 
 .inventory-list {
@@ -137,9 +158,9 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
-  padding: 0.2rem 0.6rem;
-  background: rgba(15, 23, 42, 0.85);
-  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  padding: 0.25rem 0.65rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1.5px solid rgba(255, 255, 255, 0.3);
   border-radius: var(--radius-full);
   font-size: 0.78rem;
   font-family: var(--font-mono);
@@ -152,12 +173,74 @@
 
 .key-pill .key-name {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: 700;
 }
 
 @keyframes keyAcquire {
   0% { transform: scale(0.5); opacity: 0; }
   100% { transform: scale(1); opacity: 1; }
+}
+
+/* In-Game Activity Log & Toast Feed */
+.game-activity-feed {
+  position: absolute;
+  bottom: 4.2rem;
+  left: 1rem;
+  z-index: 95;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 0.4rem;
+  max-width: 380px;
+  pointer-events: none;
+}
+
+.activity-log-item {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-sm);
+  background: rgba(15, 23, 42, 0.92);
+  border: 1px solid var(--card-border);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  font-size: 0.82rem;
+  color: var(--text);
+  line-height: 1.35;
+  animation: activitySlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.activity-log-item.lever-on {
+  border-color: rgba(52, 211, 153, 0.6);
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.25);
+}
+
+.activity-log-item.lever-off {
+  border-color: rgba(244, 63, 94, 0.5);
+  box-shadow: 0 0 10px rgba(244, 63, 94, 0.2);
+}
+
+.activity-log-item.key-event {
+  border-color: rgba(251, 191, 36, 0.6);
+  box-shadow: 0 0 12px rgba(251, 191, 36, 0.25);
+}
+
+.activity-log-item.door-event {
+  border-color: rgba(56, 189, 248, 0.6);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+
+.activity-log-item.locked-warn {
+  border-color: rgba(244, 63, 94, 0.7);
+  background: rgba(45, 15, 20, 0.95);
+  color: #fca5a5;
+  box-shadow: 0 0 14px rgba(244, 63, 94, 0.3);
+}
+
+@keyframes activitySlideIn {
+  0% { transform: translateY(12px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
 }
 
 /* Minimap Container */

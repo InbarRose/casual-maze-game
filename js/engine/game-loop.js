@@ -424,12 +424,11 @@ export class GameLoop {
       if (check.doorToUnlock) {
         check.doorToUnlock.open();
         this.player.removeKey(check.doorToUnlock.requiresKey);
-        this.renderer.spawnParticles(
-          targetX * this.camera.tileSize + this.camera.tileSize / 2,
-          targetY * this.camera.tileSize + this.camera.tileSize / 2,
-          check.doorToUnlock.color,
-          25
-        );
+        const doorWx = targetX * this.camera.tileSize + this.camera.tileSize / 2;
+        const doorWy = targetY * this.camera.tileSize + this.camera.tileSize / 2;
+        this.renderer.spawnParticles(doorWx, doorWy, check.doorToUnlock.color, 25);
+        this.renderer.spawnShockwave(doorWx, doorWy, check.doorToUnlock.color, 36);
+        this.renderer.spawnFloatingText(doorWx, doorWy, '🔓 Gate Unlocked!', check.doorToUnlock.color || '#38bdf8');
         this.logger.logDoorUnlocked({
           doorId: check.doorToUnlock.id,
           keyUsed: check.doorToUnlock.requiresKey,
@@ -437,11 +436,37 @@ export class GameLoop {
           atY: targetY,
           elapsedMs: this.elapsedTime,
         });
-        globalEvents.emit('door:unlocked', { doorId: check.doorToUnlock.id });
+        globalEvents.emit('door:unlocked', {
+          doorId: check.doorToUnlock.id,
+          doorName: check.doorToUnlock.name || 'Gate',
+          keyUsed: check.doorToUnlock.requiresKey,
+          color: check.doorToUnlock.color,
+          x: targetX,
+          y: targetY,
+        });
         this.notifyUI();
       }
 
       this.player.startMove(targetX, targetY, check.nextElevation);
+    } else if (check.reason === 'door_locked' && check.doorToUnlock) {
+      const now = performance.now();
+      if (!this.lastLockedDoorFeedback || now - this.lastLockedDoorFeedback > 450) {
+        this.lastLockedDoorFeedback = now;
+        const reqKey = this.entities.find(e => e.id === check.doorToUnlock.requiresKey);
+        const reqKeyName = reqKey?.name || 'Matching Key';
+        const doorWx = targetX * this.camera.tileSize + this.camera.tileSize / 2;
+        const doorWy = targetY * this.camera.tileSize + this.camera.tileSize / 2;
+        this.renderer.spawnFloatingText(doorWx, doorWy, `🔒 Needs ${reqKeyName}`, check.doorToUnlock.color || '#f43f5e');
+        globalEvents.emit('door:locked', {
+          doorId: check.doorToUnlock.id,
+          doorName: check.doorToUnlock.name || 'Gate',
+          requiredKeyId: check.doorToUnlock.requiresKey,
+          requiredKeyName: reqKeyName,
+          color: check.doorToUnlock.color || '#f43f5e',
+          x: targetX,
+          y: targetY,
+        });
+      }
     }
   }
 
@@ -483,12 +508,9 @@ export class GameLoop {
     if (key) {
       key.isCollected = true;
       this.player.addKey(key.id);
-      this.renderer.spawnParticles(
-        this.player.worldX,
-        this.player.worldY,
-        key.color,
-        30
-      );
+      this.renderer.spawnParticles(this.player.worldX, this.player.worldY, key.color || '#fbbf24', 30);
+      this.renderer.spawnShockwave(this.player.worldX, this.player.worldY, key.color || '#fbbf24', 32);
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY, `+ ${key.name || 'Key'}`, key.color || '#fbbf24');
       this.logger.logKeyCollected({
         keyId: key.id,
         keyName: key.name,
@@ -498,7 +520,12 @@ export class GameLoop {
         inventory: this.player.inventory,
         elapsedMs: this.elapsedTime,
       });
-      globalEvents.emit('key:collected', { keyId: key.id, name: key.name, color: key.color });
+      globalEvents.emit('key:collected', {
+        keyId: key.id,
+        name: key.name || 'Key',
+        color: key.color || '#fbbf24',
+        inventoryCount: this.player.inventory.length,
+      });
       this.notifyUI();
     }
 
@@ -506,12 +533,27 @@ export class GameLoop {
     const lever = this.entities.find(e => e.type === 'lever' && e.x === px && e.y === py && (e.elevation || ELEVATION.GROUND) === pe);
     if (lever) {
       lever.toggle(this.level);
-      this.renderer.spawnParticles(
-        this.player.worldX,
-        this.player.worldY,
-        lever.state ? '#34d399' : '#f43f5e',
-        15
-      );
+      const leverColor = lever.state ? '#34d399' : '#f43f5e';
+      const leverStateLabel = lever.state ? 'ON' : 'OFF';
+      const leverActionLabel = lever.state ? 'Mechanism Opened' : 'Mechanism Closed';
+
+      this.renderer.spawnParticles(this.player.worldX, this.player.worldY, leverColor, 20);
+      this.renderer.spawnShockwave(this.player.worldX, this.player.worldY, leverColor, 36);
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY, `⚡ ${lever.name || 'Switch'}: ${leverStateLabel}`, leverColor);
+
+      // Trigger effects at all target coordinates
+      if (Array.isArray(lever.targets)) {
+        for (const target of lever.targets) {
+          if (target.x !== undefined && target.y !== undefined) {
+            const targetWx = target.x * this.camera.tileSize + this.camera.tileSize / 2;
+            const targetWy = target.y * this.camera.tileSize + this.camera.tileSize / 2;
+            this.renderer.spawnParticles(targetWx, targetWy, leverColor, 15);
+            this.renderer.spawnShockwave(targetWx, targetWy, leverColor, 28);
+            this.renderer.spawnFloatingText(targetWx, targetWy, lever.state ? '🔓 Passage Opened' : '🔒 Passage Closed', leverColor);
+          }
+        }
+      }
+
       this.logger.logLeverToggled({
         leverId: lever.id,
         state: lever.state,
@@ -520,6 +562,16 @@ export class GameLoop {
         targets: lever.targets,
         elapsedMs: this.elapsedTime,
       });
+
+      globalEvents.emit('lever:toggled', {
+        leverId: lever.id,
+        name: lever.name || 'Switch',
+        state: lever.state,
+        stateLabel: leverStateLabel,
+        actionLabel: leverActionLabel,
+        targets: lever.targets,
+      });
+
       this.notifyUI();
     }
 
@@ -542,12 +594,28 @@ export class GameLoop {
     if (adjacentLevers.length > 0) {
       const lever = adjacentLevers[0];
       lever.toggle(this.level);
-      this.renderer.spawnParticles(
-        lever.x * this.camera.tileSize + this.camera.tileSize / 2,
-        lever.y * this.camera.tileSize + this.camera.tileSize / 2,
-        lever.state ? '#34d399' : '#f43f5e',
-        20
-      );
+      const leverColor = lever.state ? '#34d399' : '#f43f5e';
+      const leverStateLabel = lever.state ? 'ON' : 'OFF';
+      const leverActionLabel = lever.state ? 'Mechanism Opened' : 'Mechanism Closed';
+      const leverWx = lever.x * this.camera.tileSize + this.camera.tileSize / 2;
+      const leverWy = lever.y * this.camera.tileSize + this.camera.tileSize / 2;
+
+      this.renderer.spawnParticles(leverWx, leverWy, leverColor, 20);
+      this.renderer.spawnShockwave(leverWx, leverWy, leverColor, 36);
+      this.renderer.spawnFloatingText(leverWx, leverWy, `⚡ ${lever.name || 'Switch'}: ${leverStateLabel}`, leverColor);
+
+      if (Array.isArray(lever.targets)) {
+        for (const target of lever.targets) {
+          if (target.x !== undefined && target.y !== undefined) {
+            const targetWx = target.x * this.camera.tileSize + this.camera.tileSize / 2;
+            const targetWy = target.y * this.camera.tileSize + this.camera.tileSize / 2;
+            this.renderer.spawnParticles(targetWx, targetWy, leverColor, 15);
+            this.renderer.spawnShockwave(targetWx, targetWy, leverColor, 28);
+            this.renderer.spawnFloatingText(targetWx, targetWy, lever.state ? '🔓 Passage Opened' : '🔒 Passage Closed', leverColor);
+          }
+        }
+      }
+
       this.logger.logLeverToggled({
         leverId: lever.id,
         state: lever.state,
@@ -556,6 +624,16 @@ export class GameLoop {
         targets: lever.targets,
         elapsedMs: this.elapsedTime,
       });
+
+      globalEvents.emit('lever:toggled', {
+        leverId: lever.id,
+        name: lever.name || 'Switch',
+        state: lever.state,
+        stateLabel: leverStateLabel,
+        actionLabel: leverActionLabel,
+        targets: lever.targets,
+      });
+
       this.notifyUI();
     }
   }
