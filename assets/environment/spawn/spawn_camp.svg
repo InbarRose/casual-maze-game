@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <polygon points="12,52 32,16 52,52" fill="#78350f" stroke="#92400e" stroke-width="2" />
-  <polygon points="24,52 32,32 40,52" fill="#0f172a" />
-  <circle cx="54" cy="50" r="3" fill="#ef4444" />
+  <rect x="4" y="4" width="56" height="56" fill="#0f172a" rx="4" />
+  <circle cx="32" cy="32" r="22" stroke="#34d399" stroke-width="2.5" fill="rgba(52,211,153,0.15)" />
+  <text x="32" y="37" font-size="16" fill="#34d399" font-weight="bold" text-anchor="middle">⛺</text>
 </svg>

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="flrCrk_jungle" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#14532d" />
+      <stop offset="100%" stop-color="#052e16" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" fill="url(#flrCrk_jungle)" />
+  <path d="M 0 32 L 64 32 M 32 0 L 32 32 M 16 32 L 16 64" stroke="#166534" stroke-width="1.5" />
+  <!-- Fractures -->
+  <path d="M 18 12 L 26 24 L 22 36 L 30 48 M 26 24 L 38 20 L 46 28 M 22 36 L 14 42" stroke="#34d399" stroke-width="1.5" fill="none" opacity="0.8" />
+  <circle cx="46" cy="48" r="1.5" fill="#22c55e" opacity="0.5" />
+</svg>

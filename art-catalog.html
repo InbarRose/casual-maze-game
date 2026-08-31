@@ -175,10 +175,23 @@
       </div>
 
       <div>
+        <div class="filter-group-title">Themes &amp; Biomes</div>
+        <div class="filter-pills" id="theme-filters">
+          <button class="filter-pill active" data-theme="all">All</button>
+          <button class="filter-pill" data-theme="dungeon">🏰 Dungeon</button>
+          <button class="filter-pill" data-theme="jungle">🌴 Jungle</button>
+          <button class="filter-pill" data-theme="magma">🌋 Magma</button>
+          <button class="filter-pill" data-theme="temple">🏛️ Temple</button>
+          <button class="filter-pill" data-theme="glacial">❄️ Glacial</button>
+        </div>
+      </div>
+
+      <div>
         <div class="filter-group-title">Categories</div>
         <div class="filter-pills" id="category-filters">
           <button class="filter-pill active" data-category="all">All</button>
           <button class="filter-pill" data-category="ground">Ground</button>
+          <button class="filter-pill" data-category="variations">Variations</button>
           <button class="filter-pill" data-category="bridges">Bridges</button>
           <button class="filter-pill" data-category="ramps">Ramps</button>
           <button class="filter-pill" data-category="keys">Keys</button>
@@ -186,6 +199,8 @@
           <button class="filter-pill" data-category="levers">Levers</button>
           <button class="filter-pill" data-category="spawn">Spawn</button>
           <button class="filter-pill" data-category="exit">Exit</button>
+          <button class="filter-pill" data-category="edge_passages">Edge Passages</button>
+          <button class="filter-pill" data-category="player">Player Classes</button>
           <button class="filter-pill" data-category="tools">Tools</button>
         </div>
       </div>
@@ -237,6 +252,7 @@
     let allAssets = [];
     let activeType = 'all';
     let activeCategory = 'all';
+    let activeTheme = 'all';
     let searchQuery = '';
 
     async function initCatalog() {
@@ -257,6 +273,7 @@
       const filtered = allAssets.filter(a => {
         if (activeType !== 'all' && a.type !== activeType) return false;
         if (activeCategory !== 'all' && a.category !== activeCategory) return false;
+        if (activeTheme !== 'all' && a.style !== activeTheme && !(a.tags || []).includes(activeTheme)) return false;
         if (searchQuery) {
           const q = searchQuery.toLowerCase();
           const matchName = a.name.toLowerCase().includes(q);
@@ -338,6 +355,15 @@
         document.querySelectorAll('#type-filters .filter-pill').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         activeType = btn.dataset.type;
+        renderGrid();
+      });
+    });
+
+    document.querySelectorAll('#theme-filters .filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#theme-filters .filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeTheme = btn.dataset.theme;
         renderGrid();
       });
     });
