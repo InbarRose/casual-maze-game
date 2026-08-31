@@ -75,6 +75,7 @@ casual-maze-game/
 │   └── run-all.mjs               # Master test runner entrypoint
 ├── docs/                         # Documentation & Architecture Records
 │   ├── ARCHITECTURE.md           # Deep subsystem architecture & engine details (this file)
+│   ├── TESTING_PLAN.md           # Comprehensive testing strategy, matrices & CI gating
 │   ├── LEVEL_SCHEMA.md           # Canonical JSON level schema and entity specs
 │   ├── PROJECT_MANAGEMENT.md     # Milestone tracking, roadmap & active backlog
 │   └── adr/                      # Architectural Decision Records (ADRs)

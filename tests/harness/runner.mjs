@@ -63,6 +63,7 @@ class TestRunner {
     const options = {
       grep: null,
       suite: null,
+      suiteRaw: null,
       verbose: false,
     };
 
@@ -70,7 +71,9 @@ class TestRunner {
       if (arg.startsWith('--grep=')) {
         options.grep = new RegExp(arg.slice(7), 'i');
       } else if (arg.startsWith('--suite=')) {
-        options.suite = new RegExp(arg.slice(8), 'i');
+        const raw = arg.slice(8);
+        options.suiteRaw = raw;
+        options.suite = new RegExp(raw, 'i');
       } else if (arg === '-v' || arg === '--verbose') {
         options.verbose = true;
       }
@@ -144,8 +147,18 @@ class TestRunner {
 
     if (!isRoot) {
       this.results.suitesCount++;
-      if (this.cliOptions.suite && !this.cliOptions.suite.test(suite.getFullName())) {
-        return;
+      if (this.cliOptions.suiteRaw) {
+        const fullName = suite.getFullName();
+        const filter = this.cliOptions.suiteRaw.toLowerCase();
+        let matches = false;
+        if (filter === 'unit') {
+          matches = !fullName.toLowerCase().includes('journey');
+        } else if (filter === 'journey' || filter === 'journeys') {
+          matches = fullName.toLowerCase().includes('journey');
+        } else {
+          matches = this.cliOptions.suite.test(fullName);
+        }
+        if (!matches) return;
       }
       console.log(`\n${indent}${colors.bold}${colors.cyan}[Suite] ${suite.name}${colors.reset}`);
     }
@@ -199,15 +212,15 @@ class TestRunner {
         console.log(`${indent}  ${colors.green}✓${colors.reset} ${testCase.name} ${colors.gray}(${durationMs}ms)${colors.reset}`);
       } else {
         this.results.failed++;
-        console.log(`${indent}  ${colors.red}✗ FAIL: ${testCase.name}${colors.reset} ${colors.gray}(${durationMs}ms)${colors.reset}`);
+        console.log(`${indent}  ${colors.red}✗ FAIL: ${testCase.name} (${durationMs}ms)${colors.reset}`);
         console.log(`${indent}    ${colors.red}${error.message}${colors.reset}`);
-        if (error.stack && (this.cliOptions.verbose || !error.detail)) {
-          const formattedStack = error.stack
+        if (error.stack && this.cliOptions.verbose) {
+          const stackSnippet = error.stack
             .split('\n')
             .slice(1, 4)
             .map(line => `${indent}    ${colors.gray}${line.trim()}${colors.reset}`)
             .join('\n');
-          console.log(formattedStack);
+          console.log(stackSnippet);
         }
         this.results.failures.push({
           suite: suite.getFullName(),
@@ -217,7 +230,7 @@ class TestRunner {
       }
     }
 
-    // Recursively run nested suites
+    // Run child suites recursively
     for (const childSuite of suite.suites) {
       await this.runSuite(childSuite, depth + (isRoot ? 0 : 1));
     }
@@ -229,14 +242,14 @@ class TestRunner {
   }
 
   async run() {
-    const overallStart = performance.now();
-    console.log(`${colors.bold}${colors.magenta}=== CASUAL MAZE GAME TEST RUNNER ===${colors.reset}`);
+    console.log(`${colors.bold}${colors.blue}=== CASUAL MAZE GAME TEST RUNNER ===${colors.reset}`);
+    const suiteStartTime = performance.now();
 
     await this.runSuite(this.rootSuite);
 
-    const overallDuration = (performance.now() - overallStart).toFixed(1);
+    const totalDuration = (performance.now() - suiteStartTime).toFixed(1);
 
-    console.log(`\n${colors.bold}----------------------------------------${colors.reset}`);
+    console.log('\n' + '-'.repeat(40));
     console.log(`${colors.bold}TEST SUMMARY:${colors.reset}`);
     console.log(`  Suites:     ${this.results.suitesCount}`);
     console.log(`  Passed:     ${colors.green}${this.results.passed}${colors.reset}`);
@@ -245,29 +258,26 @@ class TestRunner {
       console.log(`  Skipped:    ${colors.yellow}${this.results.skipped}${colors.reset}`);
     }
     console.log(`  Assertions: ${this.results.totalAssertions}`);
-    console.log(`  Duration:   ${overallDuration}ms`);
-    console.log(`${colors.bold}----------------------------------------${colors.reset}`);
+    console.log(`  Duration:   ${totalDuration}ms`);
+    console.log('-'.repeat(40));
 
     if (this.results.failed > 0) {
       console.log(`\n${colors.bold}${colors.red}❌ ${this.results.failed} TEST(S) FAILED${colors.reset}\n`);
-      process.exitCode = 1;
+      process.exit(1);
     } else {
       console.log(`\n${colors.bold}${colors.green}✨ ALL ${this.results.passed} TESTS PASSED (0 FAILED)${colors.reset}\n`);
-      process.exitCode = 0;
+      process.exit(0);
     }
-
-    return this.results;
   }
 }
 
-// Global Runner Instance
-export const globalRunner = new TestRunner();
+const runner = new TestRunner();
 
-export const describe = (name, fn) => globalRunner.describe(name, fn);
-export const it = (name, fn) => globalRunner.it(name, fn);
-export const test = (name, fn) => globalRunner.test(name, fn);
-export const beforeAll = (fn) => globalRunner.beforeAll(fn);
-export const afterAll = (fn) => globalRunner.afterAll(fn);
-export const beforeEach = (fn) => globalRunner.beforeEach(fn);
-export const afterEach = (fn) => globalRunner.afterEach(fn);
-export const run = () => globalRunner.run();
+export const describe = runner.describe.bind(runner);
+export const it = runner.it.bind(runner);
+export const test = runner.test.bind(runner);
+export const beforeAll = runner.beforeAll.bind(runner);
+export const afterAll = runner.afterAll.bind(runner);
+export const beforeEach = runner.beforeEach.bind(runner);
+export const afterEach = runner.afterEach.bind(runner);
+export const run = runner.run.bind(runner);
