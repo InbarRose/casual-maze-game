@@ -158,6 +158,66 @@ describe('User Journey > Novice Player Tutorial Academy', () => {
     // --- Tutorial 6: Master's Trial ---
     const tut6 = TUTORIAL_LEVELS[5];
     const loop6 = new GameLoop({ mainCanvas, minimapCanvas, level: tut6 });
+
+    // Step 1: Collect Emerald Key at (3, 3)
+    loop6.player.gridX = 3;
+    loop6.player.gridY = 3;
+    loop6.player.inventory.push('key_green_t6');
+
+    // Step 2: Unlock Emerald Gate at (4, 1)
+    const unlockGreen = CollisionEngine.checkMove(3, 1, 4, 1, 0, loop6.level, loop6.entities, loop6.player.inventory);
+    assertEqual(unlockGreen.allowed, true, 'Emerald door unlocked');
+    loop6.entities.find(e => e.id === 'door_green_t6').open();
+
+    // Step 3: Collect Sapphire Key at (15, 1)
+    loop6.player.gridX = 15;
+    loop6.player.gridY = 1;
+    loop6.player.inventory.push('key_blue_t6');
+
+    // Step 4: Approach Ramp South at (8, 5) -> Step South to (8, 6) climbing to Elevation 1 (Overhead)
+    const t6RampUp = CollisionEngine.checkMove(8, 5, 8, 6, 0, loop6.level, loop6.entities, loop6.player.inventory);
+    assertEqual(t6RampUp.allowed, true, 'Climb R_S ramp in Tutorial 6');
+    assertEqual(t6RampUp.nextElevation, 1, 'Climbs to Overhead elevation');
+    loop6.player.gridX = 8;
+    loop6.player.gridY = 6;
+    loop6.player.elevation = 1;
+
+    // Step 5: Cross elevated bridge deck B_EW at (8, 7) on Overhead
+    const t6Bridge = CollisionEngine.checkMove(8, 6, 8, 7, 1, loop6.level, loop6.entities, loop6.player.inventory);
+    assertEqual(t6Bridge.allowed, true, 'Cross elevated bridge in Tutorial 6');
+    assertEqual(t6Bridge.nextElevation, 1);
+    loop6.player.gridX = 8;
+    loop6.player.gridY = 7;
+
+    // Step 6: Step South onto Ramp North at (8, 8) descending back to Ground (0)
+    const t6RampDown = CollisionEngine.checkMove(8, 7, 8, 8, 1, loop6.level, loop6.entities, loop6.player.inventory);
+    assertEqual(t6RampDown.allowed, true, 'Descend via R_N south in Tutorial 6');
+    assertEqual(t6RampDown.nextElevation, 0, 'Returns to Ground elevation');
+    loop6.player.gridX = 8;
+    loop6.player.gridY = 8;
+    loop6.player.elevation = 0;
+
+    // Step 7: Unlock Sapphire Door at (11, 10)
+    const unlockBlueT6 = CollisionEngine.checkMove(11, 9, 11, 10, 0, loop6.level, loop6.entities, loop6.player.inventory);
+    assertEqual(unlockBlueT6.allowed, true, 'Sapphire door unlocked in Tutorial 6');
+    loop6.entities.find(e => e.id === 'door_blue_t6').open();
+
+    // Step 8: Toggle Lever at (11, 12)
+    const leverT6 = loop6.entities.find(e => e.id === 'lever_t6');
+    leverT6.toggle(loop6.level);
+    assertEqual(loop6.level.layers.ground[14][2], 0, 'Wall at (2, 14) lowered to floor');
+
+    // Step 9: Collect Ruby Key at (1, 15)
+    loop6.player.gridX = 1;
+    loop6.player.gridY = 15;
+    loop6.player.inventory.push('key_red_t6');
+
+    // Step 10: Unlock Ruby Door at (14, 15) and reach Exit at (15, 15)
+    const unlockRedT6 = CollisionEngine.checkMove(13, 15, 14, 15, 0, loop6.level, loop6.entities, loop6.player.inventory);
+    assertEqual(unlockRedT6.allowed, true, 'Ruby vault door unlocked');
+    loop6.entities.find(e => e.id === 'door_red_t6').open();
+    loop6.player.gridX = tut6.exit.x;
+    loop6.player.gridY = tut6.exit.y;
     StorageManager.saveLevelCompletion('tutorial_6', { time: 7800, steps: 35 });
 
     // --- Verify Overall Tutorial Academy Completion in Storage ---
