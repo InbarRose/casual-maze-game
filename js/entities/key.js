@@ -19,10 +19,27 @@ export class Key {
     this.style = config.style || 'classic'; // 'classic' | 'ornate' | 'crystal' | 'orb' | 'relic' | 'skull'
     this.glowEffect = config.glowEffect || 'vibrant';
     this.isCollected = !!config.isCollected;
-    this.elevation = config.elevation ?? 0;
+    this.z = config.z ?? config.elevation ?? 0;
+    this.elevation = this.z;
 
     // Visual animation states
     this.bobTimer = Math.random() * Math.PI * 2;
+  }
+
+  get elevation() {
+    return this.z;
+  }
+
+  set elevation(value) {
+    this.z = value;
+  }
+
+  /**
+   * Returns canonical (X, Y, Z) coordinate string
+   * @returns {string}
+   */
+  getCoordString() {
+    return `(${this.x}, ${this.y}, ${this.z ?? 0})`;
   }
 
   /**

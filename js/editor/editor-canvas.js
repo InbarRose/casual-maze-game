@@ -216,7 +216,8 @@ export class EditorCanvas {
         icon: entity.type === 'key' ? '🔑' : (entity.type === 'door' ? '🚪' : '🕹️'),
         x: entity.x,
         y: entity.y,
-        elevation: entity.elevation || 0,
+        z: entity.z ?? entity.elevation ?? 0,
+        elevation: entity.z ?? entity.elevation ?? 0,
       };
     }
 
@@ -230,7 +231,8 @@ export class EditorCanvas {
         icon: '🟢',
         x: this.level.spawn.x,
         y: this.level.spawn.y,
-        elevation: this.level.spawn.elevation || 0,
+        z: this.level.spawn.z ?? this.level.spawn.elevation ?? 0,
+        elevation: this.level.spawn.z ?? this.level.spawn.elevation ?? 0,
       };
     }
 
@@ -244,7 +246,8 @@ export class EditorCanvas {
         icon: '🧪',
         x: this.level.testSpawn.x,
         y: this.level.testSpawn.y,
-        elevation: this.level.testSpawn.elevation || 0,
+        z: this.level.testSpawn.z ?? this.level.testSpawn.elevation ?? 0,
+        elevation: this.level.testSpawn.z ?? this.level.testSpawn.elevation ?? 0,
       };
     }
 
@@ -258,7 +261,8 @@ export class EditorCanvas {
         icon: '🌀',
         x: this.level.exit.x,
         y: this.level.exit.y,
-        elevation: this.level.exit.elevation || 0,
+        z: this.level.exit.z ?? this.level.exit.elevation ?? 0,
+        elevation: this.level.exit.z ?? this.level.exit.elevation ?? 0,
       };
     }
 
@@ -400,9 +404,10 @@ export class EditorCanvas {
 
     const { gridX, gridY } = this.clientToGrid(e.clientX, e.clientY);
     this.hoverGridPos = { x: gridX, y: gridY };
+    const activeZ = this.activeLayer === LAYERS.OVERHEAD ? 1 : 0;
 
     if (this.onHoverCoord) {
-      this.onHoverCoord(gridX, gridY);
+      this.onHoverCoord(gridX, gridY, activeZ);
     }
 
     if (this.isDrawingLine && this.lineStartPos) {
@@ -436,6 +441,8 @@ export class EditorCanvas {
   }
 
   handleMouseUp() {
+    const activeZ = this.activeLayer === LAYERS.OVERHEAD ? 1 : 0;
+
     // Finish Line Drawing Tool
     if (this.isDrawingLine && this.lineStartPos) {
       const x0 = this.lineStartPos.x;
@@ -462,7 +469,7 @@ export class EditorCanvas {
           }
         }
 
-        console.info(`[MazeGame:Editor] Stamped line (${x0}, ${y0}) ➔ (${x1}, ${y1}) with tile "${this.selectedTile}" [Brush: ${this.brushSize}x${this.brushSize}]`);
+        console.info(`[MazeGame:Editor] Stamped line (${x0}, ${y0}, ${activeZ}) ➔ (${x1}, ${y1}, ${activeZ}) with tile "${this.selectedTile}" [Brush: ${this.brushSize}x${this.brushSize}]`);
         if (anyChanged && this.onTilePaint) {
           this.onTilePaint();
         }
@@ -475,38 +482,44 @@ export class EditorCanvas {
     }
 
     if (this.isDraggingObject && this.draggedObject) {
-      const { type, ref, origX, origY, currentX, currentY, name } = this.draggedObject;
+      const { type, ref, origX, origY, origZ = (ref.z ?? ref.elevation ?? 0), currentX, currentY, name } = this.draggedObject;
       const didMove = currentX !== origX || currentY !== origY;
+      const targetZ = activeZ;
 
       if (didMove) {
         // Apply relocation to the target object
         if (type === 'entity') {
           ref.x = currentX;
           ref.y = currentY;
-          ref.elevation = (this.activeLayer === LAYERS.OVERHEAD ? 1 : 0);
+          ref.z = targetZ;
+          ref.elevation = targetZ;
         } else if (type === 'spawn') {
           this.level.spawn.x = currentX;
           this.level.spawn.y = currentY;
-          this.level.spawn.elevation = (this.activeLayer === LAYERS.OVERHEAD ? 1 : 0);
+          this.level.spawn.z = targetZ;
+          this.level.spawn.elevation = targetZ;
         } else if (type === 'test_spawn') {
           this.level.testSpawn.x = currentX;
           this.level.testSpawn.y = currentY;
-          this.level.testSpawn.elevation = (this.activeLayer === LAYERS.OVERHEAD ? 1 : 0);
+          this.level.testSpawn.z = targetZ;
+          this.level.testSpawn.elevation = targetZ;
         } else if (type === 'exit') {
           this.level.exit.x = currentX;
           this.level.exit.y = currentY;
+          this.level.exit.z = targetZ;
+          this.level.exit.elevation = targetZ;
         }
 
-        console.info(`[MazeGame:Editor] Relocated ${name} from (${origX}, ${origY}) to (${currentX}, ${currentY})`);
+        console.info(`[MazeGame:Editor] Relocated ${name} from (${origX}, ${origY}, ${origZ}) to (${currentX}, ${currentY}, ${targetZ})`);
 
         if (this.onObjectMoved) {
-          this.onObjectMoved(type, ref, origX, origY, currentX, currentY);
+          this.onObjectMoved(type, ref, origX, origY, currentX, currentY, targetZ);
         } else if (this.onTilePaint) {
           this.onTilePaint();
         }
       } else if (this.currentTool === 'select' && this.onEntityClick) {
         // If clicked in Inspect tool without moving, open inspector for entity/spawn/exit
-        this.onEntityClick(type === 'entity' ? ref : { type, ...ref, x: origX, y: origY });
+        this.onEntityClick(type === 'entity' ? ref : { type, ...ref, x: origX, y: origY, z: origZ, elevation: origZ });
       }
 
       this.isDraggingObject = false;

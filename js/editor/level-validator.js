@@ -2,7 +2,7 @@
  * Casual Maze Game — Level Validator & Solvability Analyzer
  */
 
-import { TILES, ELEVATION, ENTITY_TYPES, LAYERS } from '../core/constants.js';
+import { TILES, ELEVATION, ENTITY_TYPES, LAYERS, formatXYZ } from '../core/constants.js';
 import { CollisionEngine } from '../engine/collision.js';
 
 export class LevelValidator {
@@ -40,13 +40,13 @@ export class LevelValidator {
     if (!level.spawn || typeof level.spawn.x !== 'number' || typeof level.spawn.y !== 'number') {
       errors.push({ message: 'Missing spawn point.' });
     } else {
-      const { x: sx, y: sy, elevation: se = 0 } = level.spawn;
+      const { x: sx, y: sy, z: sz = level.spawn.elevation ?? 0 } = level.spawn;
       if (sx < 0 || sx >= width || sy < 0 || sy >= height) {
-        errors.push({ message: `Spawn point (${sx}, ${sy}) is outside maze bounds (${width}x${height}).`, x: sx, y: sy });
+        errors.push({ message: `Spawn point ${formatXYZ(sx, sy, sz)} is outside maze bounds (${width}x${height}).`, x: sx, y: sy });
       } else {
-        const spawnTile = se === ELEVATION.OVERHEAD ? overhead[sy]?.[sx] : ground[sy]?.[sx];
+        const spawnTile = sz === ELEVATION.OVERHEAD ? overhead[sy]?.[sx] : ground[sy]?.[sx];
         if (spawnTile === TILES.WALL) {
-          errors.push({ message: `Spawn point (${sx}, ${sy}) is placed inside a solid wall.`, x: sx, y: sy });
+          errors.push({ message: `Spawn point ${formatXYZ(sx, sy, sz)} is placed inside a solid wall.`, x: sx, y: sy });
         }
       }
     }
@@ -55,17 +55,17 @@ export class LevelValidator {
     if (!level.exit || typeof level.exit.x !== 'number' || typeof level.exit.y !== 'number') {
       errors.push({ message: 'Missing exit point.' });
     } else {
-      const { x: ex, y: ey } = level.exit;
+      const { x: ex, y: ey, z: ez = level.exit.elevation ?? 0 } = level.exit;
       if (ex < 0 || ex >= width || ey < 0 || ey >= height) {
-        errors.push({ message: `Exit point (${ex}, ${ey}) is outside maze bounds (${width}x${height}).`, x: ex, y: ey });
+        errors.push({ message: `Exit point ${formatXYZ(ex, ey, ez)} is outside maze bounds (${width}x${height}).`, x: ex, y: ey });
       } else {
-        const exitGroundTile = ground[ey]?.[ex];
+        const exitGroundTile = ez === ELEVATION.OVERHEAD ? overhead[ey]?.[ex] : ground[ey]?.[ex];
         if (exitGroundTile === TILES.WALL) {
-          errors.push({ message: `Exit point (${ex}, ${ey}) is placed inside a solid wall.`, x: ex, y: ey });
+          errors.push({ message: `Exit point ${formatXYZ(ex, ey, ez)} is placed inside a solid wall.`, x: ex, y: ey });
         }
       }
 
-      if (level.spawn && level.spawn.x === level.exit.x && level.spawn.y === level.exit.y) {
+      if (level.spawn && level.spawn.x === level.exit.x && level.spawn.y === level.exit.y && (level.spawn.z ?? level.spawn.elevation ?? 0) === (level.exit.z ?? level.exit.elevation ?? 0)) {
         warnings.push({ message: 'Spawn and Exit are on the exact same tile.', x: ex, y: ey });
       }
     }
@@ -77,6 +77,7 @@ export class LevelValidator {
     const leverEntities = [];
 
     for (const entity of entities) {
+      const ez = entity.z ?? entity.elevation ?? 0;
       if (!entity.id) {
         errors.push({ message: `Entity of type "${entity.type}" is missing an ID.`, x: entity.x, y: entity.y });
       } else if (entityIds.has(entity.id)) {
@@ -86,7 +87,7 @@ export class LevelValidator {
       }
 
       if (entity.x < 0 || entity.x >= width || entity.y < 0 || entity.y >= height) {
-        errors.push({ message: `Entity "${entity.id}" (${entity.x}, ${entity.y}) is outside maze bounds.`, entityId: entity.id, x: entity.x, y: entity.y });
+        errors.push({ message: `Entity "${entity.id}" ${formatXYZ(entity.x, entity.y, ez)} is outside maze bounds.`, entityId: entity.id, x: entity.x, y: entity.y });
       }
 
       if (entity.type === ENTITY_TYPES.KEY) {
@@ -100,16 +101,17 @@ export class LevelValidator {
 
     // Check Doors for valid matching keys
     for (const door of doorEntities) {
+      const dz = door.z ?? door.elevation ?? 0;
       if (door.requiresKey && !keyEntities.has(door.requiresKey)) {
         errors.push({
-          message: `Door "${door.id}" at (${door.x}, ${door.y}) requires key "${door.requiresKey}", but no such key exists in the level.`,
+          message: `Door "${door.id}" at ${formatXYZ(door.x, door.y, dz)} requires key "${door.requiresKey}", but no such key exists in the level.`,
           entityId: door.id,
           x: door.x,
           y: door.y,
         });
       } else if (!door.requiresKey) {
         warnings.push({
-          message: `Door "${door.id}" at (${door.x}, ${door.y}) has no required key assigned and will always be locked.`,
+          message: `Door "${door.id}" at ${formatXYZ(door.x, door.y, dz)} has no required key assigned and will always be locked.`,
           entityId: door.id,
           x: door.x,
           y: door.y,
@@ -119,18 +121,20 @@ export class LevelValidator {
 
     // Check Levers for target bounds
     for (const lever of leverEntities) {
+      const lz = lever.z ?? lever.elevation ?? 0;
       if (!lever.targets || lever.targets.length === 0) {
         warnings.push({
-          message: `Lever "${lever.id}" at (${lever.x}, ${lever.y}) has no linked target tiles.`,
+          message: `Lever "${lever.id}" at ${formatXYZ(lever.x, lever.y, lz)} has no linked target tiles.`,
           entityId: lever.id,
           x: lever.x,
           y: lever.y,
         });
       } else {
         for (const target of lever.targets) {
+          const tz = target.layer === 'overhead' ? 1 : 0;
           if (target.x < 0 || target.x >= width || target.y < 0 || target.y >= height) {
             errors.push({
-              message: `Lever "${lever.id}" targets out-of-bounds tile (${target.x}, ${target.y}).`,
+              message: `Lever "${lever.id}" targets out-of-bounds tile ${formatXYZ(target.x, target.y, tz)}.`,
               entityId: lever.id,
               x: lever.x,
               y: lever.y,
@@ -165,9 +169,11 @@ export class LevelValidator {
     const reachability = this.analyzeReachability(level, keyEntities, doorEntities);
 
     if (level.spawn && level.exit && errors.length === 0) {
+      const sz = level.spawn.z ?? level.spawn.elevation ?? 0;
+      const ez = level.exit.z ?? level.exit.elevation ?? 0;
       if (!reachability.exitReached) {
         errors.push({
-          message: `Exit at (${level.exit.x}, ${level.exit.y}) is UNREACHABLE from Spawn (${level.spawn.x}, ${level.spawn.y}).`,
+          message: `Exit at ${formatXYZ(level.exit.x, level.exit.y, ez)} is UNREACHABLE from Spawn ${formatXYZ(level.spawn.x, level.spawn.y, sz)}.`,
           x: level.exit.x,
           y: level.exit.y,
         });
@@ -175,10 +181,11 @@ export class LevelValidator {
 
       // Check Key-Before-Gate Dependencies & Unreachable Keys
       for (const door of doorEntities) {
+        const dz = door.z ?? door.elevation ?? 0;
         if (door.requiresKey && keyEntities.has(door.requiresKey)) {
           if (!reachability.reachableKeys.has(door.requiresKey)) {
             errors.push({
-              message: `Door "${door.id}" at (${door.x}, ${door.y}) requires key "${door.requiresKey}", but the key is unreachable before unlocking this door (key is behind the door or blocked).`,
+              message: `Door "${door.id}" at ${formatXYZ(door.x, door.y, dz)} requires key "${door.requiresKey}", but the key is unreachable before unlocking this door (key is behind the door or blocked).`,
               entityId: door.id,
               x: door.x,
               y: door.y,
@@ -190,11 +197,12 @@ export class LevelValidator {
       // Check for Bypassed / Redundant Doors (doors that can be ignored to reach the exit)
       if (reachability.exitReached) {
         for (const door of doorEntities) {
+          const dz = door.z ?? door.elevation ?? 0;
           if (door.requiresKey && keyEntities.has(door.requiresKey)) {
             const bypassCheck = this.analyzeReachability(level, keyEntities, doorEntities, new Set([door.id]));
             if (bypassCheck.exitReached) {
               warnings.push({
-                message: `Door "${door.id}" (${door.color || 'gate'}) at (${door.x}, ${door.y}) can be bypassed without unlocking it to beat the level.`,
+                message: `Door "${door.id}" (${door.color || 'gate'}) at ${formatXYZ(door.x, door.y, dz)} can be bypassed without unlocking it to beat the level.`,
                 entityId: door.id,
                 x: door.x,
                 y: door.y,
@@ -207,9 +215,10 @@ export class LevelValidator {
       // Check for Unused Keys
       const keysUsedByDoors = new Set(doorEntities.map(d => d.requiresKey).filter(Boolean));
       for (const [keyId, keyEntity] of keyEntities.entries()) {
+        const kz = keyEntity.z ?? keyEntity.elevation ?? 0;
         if (!keysUsedByDoors.has(keyId)) {
           warnings.push({
-            message: `Key "${keyEntity.name || keyId}" at (${keyEntity.x}, ${keyEntity.y}) is not required by any door.`,
+            message: `Key "${keyEntity.name || keyId}" at ${formatXYZ(keyEntity.x, keyEntity.y, kz)} is not required by any door.`,
             entityId: keyId,
             x: keyEntity.x,
             y: keyEntity.y,
@@ -219,9 +228,10 @@ export class LevelValidator {
 
       // Check for Unreachable Keys (that weren't already flagged in door error)
       for (const [keyId, keyEntity] of keyEntities.entries()) {
+        const kz = keyEntity.z ?? keyEntity.elevation ?? 0;
         if (!reachability.reachableKeys.has(keyId) && !keysUsedByDoors.has(keyId)) {
           warnings.push({
-            message: `Key "${keyEntity.name || keyId}" at (${keyEntity.x}, ${keyEntity.y}) is unreachable.`,
+            message: `Key "${keyEntity.name || keyId}" at ${formatXYZ(keyEntity.x, keyEntity.y, kz)} is unreachable.`,
             entityId: keyId,
             x: keyEntity.x,
             y: keyEntity.y,

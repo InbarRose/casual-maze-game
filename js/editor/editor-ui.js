@@ -78,12 +78,13 @@ export class EditorUI {
       onEntityClick: (entity) => {
         this.inspector.open(entity, this.level);
       },
-      onObjectMoved: (type, ref, fromX, fromY, toX, toY) => {
+      onObjectMoved: (type, ref, fromX, fromY, toX, toY, targetZ) => {
         this.pushHistory();
         this.autoSave();
         this.updateValidationState();
+        const z = targetZ ?? (this.editorCanvas.activeLayer === 'overhead' ? 1 : 0);
         const objName = ref?.name || (type === 'spawn' ? 'Spawn Point' : (type === 'test_spawn' ? 'Test Spawn' : (type === 'exit' ? 'Exit Portal' : 'Object')));
-        this.showToast(`Relocated ${objName} to (${toX}, ${toY})!`, 'success');
+        this.showToast(`Relocated ${objName} to (${toX}, ${toY}, ${z})!`, 'success');
       },
       onTargetTilePicked: (lever, targetX, targetY, layer) => {
         lever.targets = lever.targets || [];
@@ -99,17 +100,19 @@ export class EditorUI {
         this.autoSave();
         this.updateValidationState();
         this.inspector.open(lever, this.level);
-        this.showToast(`Linked lever to (${targetX}, ${targetY}) on ${layer}!`, 'success');
+        this.showToast(`Linked lever to (${targetX}, ${targetY}, ${layer === 'overhead' ? 1 : 0}) on ${layer}!`, 'success');
       },
-      onHoverCoord: (gx, gy) => {
+      onHoverCoord: (gx, gy, gz) => {
         const coordEl = document.getElementById('status-coord');
         if (coordEl) {
           const { width, height } = this.level.dimensions;
+          const z = gz ?? (this.editorCanvas.activeLayer === 'overhead' ? 1 : 0);
           if (gx >= 0 && gx < width && gy >= 0 && gy < height) {
-            const tile = this.level.layers[this.editorCanvas.activeLayer][gy]?.[gx];
-            coordEl.textContent = `X: ${gx}, Y: ${gy} | Tile: ${tile ?? 'Empty'}`;
+            const tile = this.level.layers[this.editorCanvas.activeLayer]?.[gy]?.[gx];
+            const elevLabel = z === 1 ? 'Overhead' : (z === -1 ? 'Basement' : 'Ground');
+            coordEl.textContent = `(X: ${gx}, Y: ${gy}, Z: ${z}) [${elevLabel}] • Tile: ${tile ?? 'Empty'}`;
           } else {
-            coordEl.textContent = `X: --, Y: --`;
+            coordEl.textContent = `(X: --, Y: --, Z: ${z})`;
           }
         }
       },
@@ -207,10 +210,11 @@ export class EditorUI {
       tabGround?.classList.toggle('active', layer === LAYERS.GROUND);
       tabOverhead?.classList.toggle('active', layer === LAYERS.OVERHEAD);
       this.editorCanvas.setActiveLayer(layer);
+      const z = layer === LAYERS.OVERHEAD ? 1 : 0;
       if (statusLayer) {
-        statusLayer.textContent = `Layer: ${layer.toUpperCase()}`;
+        statusLayer.textContent = layer === LAYERS.OVERHEAD ? 'Layer: OVERHEAD (Z=1)' : 'Layer: GROUND (Z=0)';
       }
-      console.info(`[MazeGame:Editor] Active layer switched to "${layer.toUpperCase()}" (Elevation: ${layer === LAYERS.OVERHEAD ? 1 : 0})`);
+      console.info(`[MazeGame:Editor] Active layer switched to "${layer.toUpperCase()}" (Z-Level: ${z})`);
     };
 
     tabGround?.addEventListener('click', () => setLayer(LAYERS.GROUND));

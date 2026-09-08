@@ -280,7 +280,7 @@ export class GameLoop {
       },
     }, 0);
 
-    console.info(`[MazeGame:Engine] Level restarted at (${effectiveSpawnX}, ${effectiveSpawnY})`);
+    console.info(`[MazeGame:Engine] Level restarted at (${effectiveSpawnX}, ${effectiveSpawnY}, ${effectiveElevation})`);
     this.notifyUI();
     globalEvents.emit('game:restarted');
     if (this.uiCallbacks.onRestart) {

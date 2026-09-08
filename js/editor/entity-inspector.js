@@ -13,6 +13,8 @@ import {
   LEVER_STYLES,
   SPAWN_STYLE_PRESETS,
   EXIT_STYLE_PRESETS,
+  formatXYZ,
+  getElevationLabel,
 } from '../core/constants.js';
 
 export class EntityInspector {
@@ -103,10 +105,21 @@ export class EntityInspector {
     const container = document.createElement('div');
     container.className = 'entity-props-form';
 
-    // 1. Common: ID (for keys, doors, levers)
+    // 1. Common: ID & Location
+    const ez = e.z ?? e.elevation ?? 0;
     if (!isSystemObj) {
       container.appendChild(this.createInputRow('ID / Code', 'entity-id', e.id || '', 'text'));
     }
+
+    // Common: Z-Level / Elevation
+    container.appendChild(this.createSelectRow(`Location: ${formatXYZ(e.x, e.y, ez)} • Elevation (Z-Level)`, 'entity-z-level', String(ez), [
+      { value: '1', label: 'Overhead / Bridge / Canopy (Z = 1)' },
+      { value: '0', label: 'Ground Floor (Z = 0)' },
+      { value: '-1', label: 'Basement / Crypt (Z = -1)' },
+    ], (val) => {
+      e.z = Number(val) || 0;
+      e.elevation = e.z;
+    }));
 
     // 2. Type Specific: Key
     if (e.type === ENTITY_TYPES.KEY) {
@@ -199,54 +212,51 @@ export class EntityInspector {
         <div style="display:flex; justify-content:space-between; align-items:center; gap:0.75rem; background:rgba(255,255,255,0.03); padding:0.6rem 0.8rem; border-radius:var(--radius-sm); border:1px solid var(--border);">
           <label style="display:flex; align-items:center; gap:0.5rem; cursor:pointer; font-size:0.85rem; font-weight:600; margin:0;">
             <input type="checkbox" id="entity-state" ${e.state ? 'checked' : ''} style="width:18px; height:18px; cursor:pointer;" />
-            <span>Initial State: <strong id="lever-state-label" style="color:${e.state ? 'var(--emerald)' : 'var(--text-muted)'};">${e.state ? 'Pulled / Active' : 'Unpulled / Inactive'}</strong></span>
+            <span style="color:${e.state ? 'var(--accent)' : 'var(--text-muted)'}">${e.state ? 'ACTIVE / OPEN' : 'INACTIVE / CLOSED'}</span>
           </label>
-          <button type="button" class="btn btn-secondary btn-sm" id="btn-test-lever" title="Preview mechanism trigger on editor canvas" style="font-size:0.75rem; padding:0.25rem 0.6rem;">
-            ⚡ Toggle Preview
-          </button>
+          <button type="button" id="btn-test-toggle-lever" class="btn btn-secondary btn-sm" title="Toggle switch to preview linked labyrinth changes">⚡ Test Toggle</button>
         </div>
       `;
 
       const chkState = stateRow.querySelector('#entity-state');
-      const stateLabel = stateRow.querySelector('#lever-state-label');
       chkState.addEventListener('change', () => {
         e.state = chkState.checked;
-        stateLabel.textContent = e.state ? 'Pulled / Active' : 'Unpulled / Inactive';
-        stateLabel.style.color = e.state ? 'var(--emerald)' : 'var(--text-muted)';
+        const lbl = stateRow.querySelector('span');
+        if (lbl) {
+          lbl.textContent = e.state ? 'ACTIVE / OPEN' : 'INACTIVE / CLOSED';
+          lbl.style.color = e.state ? 'var(--accent)' : 'var(--text-muted)';
+        }
       });
 
-      const btnTestLever = stateRow.querySelector('#btn-test-lever');
-      btnTestLever.addEventListener('click', () => {
-        this.saveCurrentForm();
+      stateRow.querySelector('#btn-test-toggle-lever').addEventListener('click', () => {
         if (this.onTestToggle) {
           this.onTestToggle(e);
+          chkState.checked = e.state;
+          const lbl = stateRow.querySelector('span');
+          if (lbl) {
+            lbl.textContent = e.state ? 'ACTIVE / OPEN' : 'INACTIVE / CLOSED';
+            lbl.style.color = e.state ? 'var(--accent)' : 'var(--text-muted)';
+          }
         }
       });
 
       container.appendChild(stateRow);
 
-      // Targets List
-      const targetsSection = document.createElement('div');
-      targetsSection.className = 'form-row';
-      targetsSection.innerHTML = `
+      // Wiring Targets List
+      const targetsContainer = document.createElement('div');
+      targetsContainer.className = 'form-row';
+      targetsContainer.innerHTML = `
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
-          <label style="margin:0;">Wired Target Tiles (<span id="targets-count">${(e.targets || []).length}</span>):</label>
-          <button type="button" class="btn btn-accent btn-sm" id="btn-pick-target" style="padding:0.25rem 0.65rem; font-size:0.75rem;">
-            + Pick Target Tile
-          </button>
+          <label style="margin:0;">Linked Mechanism Target Tiles (${e.targets ? e.targets.length : 0})</label>
+          <button type="button" id="btn-add-target" class="btn btn-primary btn-sm" style="font-size:0.75rem; padding:0.25rem 0.5rem;">+ Wire Target</button>
         </div>
-        <div class="targets-list" id="targets-list-container"></div>
+        <div id="lever-targets-list" style="display:flex; flex-direction:column; gap:0.4rem; max-height:160px; overflow-y:auto;"></div>
       `;
 
-      container.appendChild(targetsSection);
+      this.renderTargetsList(targetsContainer.querySelector('#lever-targets-list'), e);
+      container.appendChild(targetsContainer);
 
-      // Render targets
-      const listContainer = targetsSection.querySelector('#targets-list-container');
-      this.renderTargetsList(listContainer, e.targets || []);
-
-      // Wire Pick button
-      const btnPick = targetsSection.querySelector('#btn-pick-target');
-      btnPick.addEventListener('click', () => {
+      targetsContainer.querySelector('#btn-add-target').addEventListener('click', () => {
         this.saveCurrentForm();
         this.close();
         if (this.onStartPickTarget) {
@@ -257,10 +267,6 @@ export class EntityInspector {
 
     // 5. Type Specific: Spawn Point
     if (e.type === 'spawn' || e.type === 'test_spawn') {
-      container.appendChild(this.createInputRow('Spawn Point Location', 'entity-coords', `(${e.x}, ${e.y}) [Elevation: ${e.elevation || 0}]`, 'text'));
-      const coordInput = container.querySelector('#entity-coords');
-      if (coordInput) coordInput.disabled = true;
-
       container.appendChild(this.createStyleSelectorRow('Entrance Visual Style', e.style || 'stairs_down', SPAWN_STYLE_PRESETS, (sel) => {
         e.style = sel.id;
       }));
@@ -268,10 +274,6 @@ export class EntityInspector {
 
     // 6. Type Specific: Exit Portal
     if (e.type === 'exit') {
-      container.appendChild(this.createInputRow('Exit Portal Location', 'entity-coords', `(${e.x}, ${e.y})`, 'text'));
-      const coordInput = container.querySelector('#entity-coords');
-      if (coordInput) coordInput.disabled = true;
-
       container.appendChild(this.createStyleSelectorRow('Exit Visual Style', e.style || 'portal', EXIT_STYLE_PRESETS, (sel) => {
         e.style = sel.id;
       }));
@@ -580,6 +582,12 @@ export class EntityInspector {
     const selOrientation = this.bodyEl.querySelector('#entity-orientation');
     if (selOrientation) {
       e.orientation = selOrientation.value;
+    }
+
+    const selZ = this.bodyEl.querySelector('#entity-z-level');
+    if (selZ) {
+      e.z = Number(selZ.value) || 0;
+      e.elevation = e.z;
     }
 
     if (this.onUpdate) {

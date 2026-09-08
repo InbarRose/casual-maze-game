@@ -25,9 +25,35 @@ export const LAYERS = Object.freeze({
 });
 
 export const ELEVATION = Object.freeze({
+  BASEMENT: -1,
   GROUND: 0,
   OVERHEAD: 1,
 });
+
+/**
+ * Formats 3D (X, Y, Z) coordinates as a canonical string: (X, Y, Z)
+ * @param {number} x
+ * @param {number} y
+ * @param {number} [z=0]
+ * @returns {string} E.g. "(5, 6, 0)"
+ */
+export function formatXYZ(x, y, z = 0) {
+  return `(${x}, ${y}, ${z ?? 0})`;
+}
+
+/**
+ * Returns user-facing label for a given Z elevation level
+ * @param {number} [z=0]
+ * @returns {string} E.g. "Ground (Z=0)", "Overhead (Z=1)", "Basement (Z=-1)"
+ */
+export function getElevationLabel(z = 0) {
+  const zNum = Number(z) || 0;
+  if (zNum === ELEVATION.GROUND) return 'Ground (Z=0)';
+  if (zNum === ELEVATION.OVERHEAD) return 'Overhead (Z=1)';
+  if (zNum === ELEVATION.BASEMENT) return 'Basement (Z=-1)';
+  return `Level Z=${zNum}`;
+}
+
 
 export const ENTRANCE_STYLES = Object.freeze({
   STAIRS_DOWN: 'stairs_down',

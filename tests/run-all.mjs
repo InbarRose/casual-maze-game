@@ -16,6 +16,7 @@ import './unit/core/prng.test.mjs';
 import './unit/core/events.test.mjs';
 import './unit/core/storage.test.mjs';
 import './unit/core/constants.test.mjs';
+import './unit/core/coordinates-xyz.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';

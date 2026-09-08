@@ -103,13 +103,14 @@ export class CollisionEngine {
     }
 
     // 4. ENTITY COLLISION (Doors, Locks)
-    const door = entities.find(e => e.type === ENTITY_TYPES.DOOR && e.x === toX && e.y === toY && (e.elevation || ELEVATION.GROUND) === targetElevation);
+    const door = entities.find(e => e.type === ENTITY_TYPES.DOOR && e.x === toX && e.y === toY && (e.z ?? e.elevation ?? ELEVATION.GROUND) === targetElevation);
     if (door && !door.isOpen) {
       // Check if player has matching key
       const hasKey = inventory.includes(door.requiresKey);
       if (hasKey) {
         return {
           allowed: true,
+          nextZ: targetElevation,
           nextElevation: targetElevation,
           doorToUnlock: door,
           reason: 'door_unlocked',
@@ -117,6 +118,7 @@ export class CollisionEngine {
       } else {
         return {
           allowed: false,
+          nextZ: currentElevation,
           nextElevation: currentElevation,
           doorToUnlock: door,
           reason: 'door_locked',
@@ -126,6 +128,7 @@ export class CollisionEngine {
 
     return {
       allowed: true,
+      nextZ: targetElevation,
       nextElevation: targetElevation,
       doorToUnlock: null,
       reason: 'ok',

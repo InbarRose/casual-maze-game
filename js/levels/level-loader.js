@@ -174,23 +174,31 @@ export class LevelLoader {
       spawn: {
         x: raw.spawn?.x ?? 1,
         y: raw.spawn?.y ?? 1,
-        elevation: raw.spawn?.elevation ?? 0,
+        z: raw.spawn?.z ?? raw.spawn?.elevation ?? 0,
+        elevation: raw.spawn?.z ?? raw.spawn?.elevation ?? 0,
         style: raw.spawn?.style || 'stairs_down',
       },
       exit: {
         x: raw.exit?.x ?? width - 2,
         y: raw.exit?.y ?? height - 2,
+        z: raw.exit?.z ?? raw.exit?.elevation ?? 0,
+        elevation: raw.exit?.z ?? raw.exit?.elevation ?? 0,
         style: raw.exit?.style || 'portal',
       },
       layers: {
         ground: this.normalizeGrid(raw.layers?.ground, width, height, TILES.FLOOR),
         overhead: this.normalizeGrid(raw.layers?.overhead, width, height, 0),
       },
-      entities: Array.isArray(raw.entities) ? raw.entities.map(e => ({ ...e })) : [],
+      entities: Array.isArray(raw.entities) ? raw.entities.map(e => ({
+        ...e,
+        z: e.z ?? e.elevation ?? 0,
+        elevation: e.z ?? e.elevation ?? 0,
+      })) : [],
       testSpawn: raw.testSpawn ? {
         x: Number(raw.testSpawn.x ?? raw.spawn?.x ?? 1),
         y: Number(raw.testSpawn.y ?? raw.spawn?.y ?? 1),
-        elevation: Number(raw.testSpawn.elevation ?? 0),
+        z: Number(raw.testSpawn.z ?? raw.testSpawn.elevation ?? 0),
+        elevation: Number(raw.testSpawn.z ?? raw.testSpawn.elevation ?? 0),
       } : undefined,
       testInventory: Array.isArray(raw.testInventory) ? [...raw.testInventory] : undefined,
     };
