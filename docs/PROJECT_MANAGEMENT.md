@@ -6,19 +6,29 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.6.0` (Completed & Verified)
+### Current Version: `v1.7.0` (Completed & Verified)
 
-- [x] **Modular Test Directory Architecture (`tests/`)**: Extracted monolithic `test-suite.mjs` into dedicated subsystem unit suites across `core`, `engine`, `entities`, `levels`, and `editor`.
-- [x] **Zero-Dependency Test Harness & Assertions**: Custom ES-module runner (`describe`, `it`, hooks, timers, filtering via `--suite` and `--grep`) with deep equality, numeric ranges, and mock polyfills.
-- [x] **End-to-End User Journey Suites**:
-  - 🎓 *Novice Tutorial Academy Journey*: Full sequential 6-level onboarding from basic movement to multi-elevation bridges and fog.
-  - 🗺️ *Campaign Solvability & Replay Journey*: Multi-zone BFS solvability and telemetry event stream verification.
-  - 📐 *Dungeon Architect Journey*: Level creation, deadlock and missing key detection, error correction, and JSON roundtrip export.
-  - 🕯️ *Fog & Line-of-Sight Exploration Journey*: Dynamic raycasting line-of-sight and corner shadow casting.
-  - 🌉 *Multi-Elevation Traversal Journey*: 3D-feel ramps, East-West and North-South bridges, railings, and overhead void boundaries.
-- [x] **Comprehensive Testing Strategy (`docs/TESTING_PLAN.md`)**: Subsystem matrices, user journey playbooks, future activity test patterns (audio, touch, hazards, portals), and CI gating standards.
-- [x] **Multi-Stage GitHub Actions CI Matrix**: Automated CI workflow across Node.js 18.x, 20.x, and 22.x running static file validation, zero-dependency audit, syntax integrity check, unit suites, user journeys, and master test suite.
-- [x] **Automated Test Coverage**: 87 test cases and 1,202 automated assertions running in ~60ms (0 failed).
+- [x] **3D `(X, Y, Z)` Coordinate Standardization**:
+  - Unified integer spatial model with `Z = 0` (Ground), `Z = 1` (Overhead), and `Z = -1` (Basement).
+  - Canonical formatters `formatXYZ(x, y, z)` and `getElevationLabel(z)`.
+  - Player, Key, Door, and Lever models with synchronized `z` and `elevation` properties and `.getCoordString()`.
+  - Editor 3D cursor readout, layer switcher, and Entity Inspector 3D coordinate support.
+- [x] **Advanced Editor Toolset & Precision Drawing**:
+  - Bresenham Line-Drawing Tool for straight and diagonal wall segments.
+  - Multi-Sized Brush Footprints (`1x1`, `2x2`, `3x3`, `4x4`, `5x5`) for rapid stamping and painting.
+  - Object Grab & Move Tool with real-time collision checks and relocation logging.
+  - Official Preset Level Loading & Remix Cloning for rapid level iteration.
+  - Entity Inspector with custom art style variants, orientation selection, and trigger wiring.
+- [x] **Standalone Asset Catalog & Vector System**:
+  - Decoupled SVG vector graphics catalog in `assets/` with `assets/manifest.json`.
+  - Full tileset variations across all themes (Dungeon, Jungle, Lava, Snow, Cave, Sunset).
+  - 4-way directional player classes and facing-aware passage/gate graphics.
+- [x] **Automated Test Coverage**: 25 test suites, 116 test cases, and 2,044 automated assertions running in ~250ms (0 failed).
+
+### Previous Milestone: `v1.6.0`
+- [x] **Modular Test Directory Architecture (`tests/`)**: Subsystem unit suites across `core`, `engine`, `entities`, `levels`, and `editor`.
+- [x] **Zero-Dependency Test Harness & Assertions**: Custom ES-module runner with deep equality and mocks.
+- [x] **End-to-End User Journey Suites**: Tutorial Academy, Campaign Solvability, Dungeon Architect, Fog Exploration, and Multi-Elevation Traversal.
 
 ---
 

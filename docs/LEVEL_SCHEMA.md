@@ -103,12 +103,12 @@ Levels are defined as static JSON files conforming to the following structure:
 | `title` | `string` | Display name shown in HUD and level select. |
 | `author` | `string` | Creator attribution. |
 | `dimensions` | `object` | `{ width: number, height: number }` of the grid. |
-| `spawn` | `object` | `{ x: number, y: number, elevation: 0|1 }` starting point. |
-| `exit` | `object` | `{ x: number, y: number }` target portal location. |
+| `spawn` | `object` | `{ x: number, y: number, z?: number, elevation?: number }` starting point (`z = 0` Ground, `z = 1` Overhead, `z = -1` Basement). |
+| `exit` | `object` | `{ x: number, y: number, z?: number, elevation?: number }` target portal location. |
 | `config` | `object` | Gameplay flags (see below). |
 | `help` | `object` | Optional guidance banner (`{ title: string, message: string }`). |
 | `layers` | `object` | `{ ground: Array<Array>, overhead: Array<Array> }` 2D tile matrices. |
-| `entities` | `array` | Interactive objects (Keys, Doors, Levers). |
+| `entities` | `array` | Interactive objects (Keys, Doors, Levers) with `(x, y, z)` positioning. |
 
 ---
 

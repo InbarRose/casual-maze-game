@@ -126,16 +126,21 @@ casual-maze-game/
 
 ## 3. Core Engine Subsystems
 
-### A. Coordinate System & Layer Elevation
-* **Grid Coordinates:** Integer space `(gridX, gridY)` mapped to pixel space via `TILE_SIZE` (default `32px`).
-* **Multi-Layer System (Bridges & Tunnels):**
-  * `Layer 0 (Ground)`: Default walking floor, walls, tunnels beneath bridges.
-  * `Layer 1 (Overhead / Bridge)`: Elevated walkways spanning across Layer 0.
-* **Bridge Tiles:**
-  * `BRIDGE_EW` (`B_EW`): Allows East <-> West traversal on `Layer 0`; allows North <-> South traversal on `Layer 1`.
-  * `BRIDGE_NS` (`B_NS`): Allows North <-> South traversal on `Layer 0`; allows East <-> West traversal on `Layer 1`.
-* **Directional Ramps:** `RAMP_N`, `RAMP_S`, `RAMP_E`, `RAMP_W` (`R_N`, `R_S`, `R_E`, `R_W`): Dynamically transition the player's elevation between `0` and `1` based on movement vector.
-* **Collision Rule:** Movement evaluation checks walls, entity obstacles, and elevation bounds via `CollisionEngine.checkMove(fromX, fromY, toX, toY, elevation, level, entities, inventory)`.
+### A. 3D Coordinate System & Layer Elevation (X, Y, Z)
+* **3D Coordinate Tuple:** Space is represented canonically as `(X, Y, Z)`:
+  * `X, Y`: Horizontal and vertical grid cell indices mapped to pixel space via `TILE_SIZE` (default `32px`).
+  * `Z` (Elevation Level):
+    * `Z = 0 (Ground)`: Default walking floor, standard walls, tunnels beneath bridges.
+    * `Z = 1 (Overhead)`: Elevated walkways, bridge decks, canopies spanning across Ground level.
+    * `Z = -1 (Basement)`: Subterranean vaults, sunken chambers, crypts.
+* **Canonical Helpers:**
+  * `formatXYZ(x, y, z)`: Returns standard string `(X, Y, Z)`.
+  * `getElevationLabel(z)`: Returns human-readable label (`Ground (Z=0)`, `Overhead (Z=1)`, `Basement (Z=-1)`).
+* **Multi-Layer System & Bridges:**
+  * `BRIDGE_EW` (`B_EW`): Allows East <-> West traversal on `Z = 0` (Ground); allows North <-> South traversal on `Z = 1` (Overhead).
+  * `BRIDGE_NS` (`B_NS`): Allows North <-> South traversal on `Z = 0` (Ground); allows East <-> West traversal on `Z = 1` (Overhead).
+* **Directional Ramps:** `RAMP_N`, `RAMP_S`, `RAMP_E`, `RAMP_W` (`R_N`, `R_S`, `R_E`, `R_W`): Dynamically transition the player's elevation between `Z = 0` and `Z = 1` based on movement vector.
+* **Collision Rule:** Movement evaluation checks walls, entity obstacles, and elevation bounds via `CollisionEngine.checkMove(fromX, fromY, toX, toY, elevation, level, entities, inventory)`. Both `nextZ` and `nextElevation` are returned.
 
 ### B. Viewport Camera & Pan Engine
 * **Performance Clamping:** Tiles outside `[camX - halfWidth, camY - halfHeight]` to `[camX + halfWidth, camY + halfHeight]` are culled during rendering and line-of-sight updates.
