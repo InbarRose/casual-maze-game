@@ -461,6 +461,17 @@ export class GameLoop {
 
     const targetX = this.player.gridX + dx;
     const targetY = this.player.gridY + dy;
+    this.tryMove(targetX, targetY);
+  }
+
+  /**
+   * Attempt to move player towards target cell coordinate
+   * @param {number} targetX
+   * @param {number} targetY
+   * @returns {boolean} Whether movement was allowed and started
+   */
+  tryMove(targetX, targetY) {
+    if (this.player.isMoving || this.camera.mode === 'freepan') return false;
 
     // Check collision & elevation change
     const check = CollisionEngine.checkMove(
@@ -515,6 +526,7 @@ export class GameLoop {
       }
 
       this.player.startMove(targetX, targetY, check.nextElevation);
+      return true;
     } else if (check.reason === 'door_locked' && check.doorToUnlock) {
       const now = performance.now();
       if (!this.lastLockedDoorFeedback || now - this.lastLockedDoorFeedback > 450) {
@@ -534,13 +546,16 @@ export class GameLoop {
           y: targetY,
         });
       }
+      return false;
     } else if (check.reason === 'puzzle_gate_locked' && check.puzzleGate) {
       const now = performance.now();
       if (!this.lastPuzzleGateFeedback || now - this.lastPuzzleGateFeedback > 600) {
         this.lastPuzzleGateFeedback = now;
         this.openPuzzleGateModal(check.puzzleGate);
       }
+      return false;
     }
+    return false;
   }
 
   /**

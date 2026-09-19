@@ -6,27 +6,11 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
-const tutorialFiles = [
-  'levels/tutorial/tutorial_1.json',
-  'levels/tutorial/tutorial_2.json',
-  'levels/tutorial/tutorial_3.json',
-  'levels/tutorial/tutorial_4.json',
-  'levels/tutorial/tutorial_5.json',
-  'levels/tutorial/tutorial_6.json',
-];
+const manifestPath = path.join(rootDir, 'levels', 'manifest.json');
+const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf-8'));
 
-const campaignFiles = [
-  'levels/zone_1/level_1.json',
-  'levels/zone_1/level_2.json',
-  'levels/zone_1/level_3.json',
-  'levels/zone_1/level_4.json',
-  'levels/zone_1/level_5.json',
-  'levels/zone_2/level_6.json',
-  'levels/zone_2/level_7.json',
-  'levels/zone_2/level_8.json',
-  'levels/zone_3/level_9.json',
-  'levels/zone_3/level_10.json',
-];
+const tutorialFiles = manifest.filter(m => m.category === 'tutorial').map(m => m.file);
+const campaignFiles = manifest.filter(m => m.category === 'campaign').map(m => m.file);
 
 const tutorials = tutorialFiles.map(f => JSON.parse(fs.readFileSync(path.join(rootDir, f), 'utf-8')));
 const campaigns = campaignFiles.map(f => JSON.parse(fs.readFileSync(path.join(rootDir, f), 'utf-8')));

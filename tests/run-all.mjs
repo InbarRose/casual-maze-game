@@ -54,6 +54,7 @@ import './integration/journeys/fog-exploration.journey.test.mjs';
 import './integration/journeys/multi-elevation.journey.test.mjs';
 import './integration/journeys/interactive-activities.journey.test.mjs';
 import './integration/journeys/campaign-progression.journey.test.mjs';
+import './integration/journeys/campaign-playthrough.journey.test.mjs';
 
 // Run registered suites
 await run();
