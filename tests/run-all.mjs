@@ -59,6 +59,7 @@ import './integration/journeys/interactive-activities.journey.test.mjs';
 import './integration/journeys/campaign-progression.journey.test.mjs';
 import './integration/journeys/campaign-playthrough.journey.test.mjs';
 import './integration/journeys/obstacle-interactions.journey.test.mjs';
+import './integration/journeys/checkpoints-and-lore.journey.test.mjs';
 
 // Run registered suites
 await run();

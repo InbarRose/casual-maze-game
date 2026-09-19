@@ -3194,6 +3194,29 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "style": "stone_tablet"
       },
       {
+        "id": "decor_lv1_painting",
+        "type": "wall_decor",
+        "x": 3,
+        "y": 0,
+        "z": 0,
+        "facing": "south",
+        "decorType": "painting",
+        "title": "The Vault Gateway",
+        "text": "An oil painting depicting ancient stone arches reflecting upon tranquil subterranean water.",
+        "response": "This painting is nice! The pigments look ancient yet remarkably vibrant."
+      },
+      {
+        "id": "gem_lv1_ruby",
+        "type": "collectible",
+        "x": 3,
+        "y": 1,
+        "z": 0,
+        "itemType": "gem",
+        "name": "Ruby Gem",
+        "scoreValue": 100,
+        "color": "#f43f5e"
+      },
+      {
         "id": "key_gold_1",
         "type": "key",
         "x": 1,
@@ -15596,6 +15619,37 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "title": "Architect's Note #17",
         "text": "Feel the heat beneath the obsidian floor. Time your movement between eruptions.",
         "style": "stone_tablet"
+      },
+      {
+        "id": "decor_lv17_note",
+        "type": "wall_decor",
+        "x": 2,
+        "y": 0,
+        "z": 0,
+        "facing": "south",
+        "decorType": "note",
+        "title": "Sentinel Patrol Warning",
+        "text": "The molten sentinel scans the corridor between the fifth and ninth pillars. Wait for it to reverse direction.",
+        "response": "A helpful warning pinned to the basalt wall... I should watch its patrol rhythm."
+      },
+      {
+        "id": "cp_lv17_hearth",
+        "type": "checkpoint",
+        "x": 3,
+        "y": 1,
+        "z": 0,
+        "style": "runic_hearth",
+        "name": "Foundry Waypoint Hearth"
+      },
+      {
+        "id": "torch_lv17",
+        "type": "collectible",
+        "x": 4,
+        "y": 1,
+        "z": 0,
+        "itemType": "torch",
+        "name": "Foundry Torch",
+        "scoreValue": 50
       },
       {
         "id": "patroller_17",

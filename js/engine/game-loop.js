@@ -742,9 +742,7 @@ export class GameLoop {
 
       if (data.isCarriable) {
         this.renderer.spawnFloatingText(cWx, cWy, `🔥 Equipped: ${data.name}`, '#f97316');
-        if (data.itemType === 'torch' && this.fog) {
-          this.fog.viewRadius = (this.level.config.viewRadius || 6) + 3;
-        }
+        this.updateFog();
       } else {
         this.renderer.spawnFloatingText(cWx, cWy, `+${data.scoreValue} pts (${data.name})`, collectible.color || '#fbbf24');
       }
@@ -1009,9 +1007,18 @@ export class GameLoop {
         this.player.elevation,
         this.level.layers.ground,
         this.level.layers.overhead,
-        this.level.config.viewRadius
+        this.getEffectiveViewRadius()
       );
     }
+  }
+
+  /**
+   * Get effective fog-of-war vision radius (expanded by +3 when holding torch)
+   * @returns {number}
+   */
+  getEffectiveViewRadius() {
+    const baseRadius = this.level.config.viewRadius || 6;
+    return baseRadius + (this.player && this.player.hasTorch && this.player.hasTorch() ? 3 : 0);
   }
 
   /**
