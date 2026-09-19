@@ -6,7 +6,36 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.11.0` (Completed & Verified)
+### Current Version: `v1.12.0` (Completed & Verified)
+
+- [x] **Test Suite Modularization & BFS Campaign Solver Extraction**:
+  - Replaced monolithic `campaign-playthrough.journey.test.mjs` with modular per-chapter test suites (`chapter-1.test.mjs` through `chapter-7.test.mjs`).
+  - Extracted generalized solver into `tests/helpers/campaign-solver.mjs` for fast parallel verification of all 28 levels.
+- [x] **Default Levels Modularization**:
+  - Partitioned the 26,053-line monolith `default-levels.js` into categorized submodules (`tutorials.js`, `campaign-ch1.js` through `campaign-ch7.js`) with a clean 28-line backward-compatible aggregator.
+- [x] **Carryable Riddle Relics & Inscribed Pedestal Puzzles**:
+  - Added `RiddleItem` and `Pedestal` entities supporting non-automatic riddle solving.
+  - Facing-tile interaction priority (`sortByFacing`), manual `[E]` interact to place/retrieve/swap items, inspection clues, and group solving (`evaluateRiddleGroup`) triggering target gate unlock.
+  - Full end-to-end journey test `tests/integration/journeys/riddle-pedestals.journey.test.mjs` (4-statue guardian riddle solving sanctum gate).
+- [x] **Thematic Atmospheric Backdrops & Procedural Perimeter Decor**:
+  - Implemented `renderThematicBackdrop` with ambient vignette and animated biome particles (rising magma embers, drifting stars/crystals, snowflakes, floating pollen).
+  - Deterministic procedural perimeter decor across non-playable void regions (`renderThematicPerimeterDecor`): skeletons, iron wall chains, cobwebs, trailing vines, fern clusters, sandstone arches, golden hieroglyphs, amethyst geodes, stalactites, magma fissures, astrolabes, and icicles.
+- [x] **Wall Art, Atmospheric Inscriptions, Bonus Collectibles & Checkpoints**:
+  - Added interactive wall art & lore tablets with inspection modal and player dialogue.
+  - Added score gems (`BonusItem`) and carriable lighting aids (Torch).
+  - Added mid-level checkpoints (`Checkpoint`) with death snapshot restoration.
+- [x] **Editor Modernization & Modal Architecture**:
+  - Extracted modal controllers into dedicated modules in `js/editor/modals/` (`ProjectsModal`, `ValidationModal`, `PlaytestModal`, `GuideModal`).
+  - Added authoring palette buttons and Inspector property forms for Pedestals, Riddle Relics, Checkpoints, Notes, and Bonus Gems.
+  - Real-time LevelValidator integrity checks for pedestal accepted items and target doors.
+  - Grab & Move tool support for all new entity types.
+- [x] **HUD Carried Relic Badge & Pedestal Inscription Dialog**:
+  - Real-time badge in `maze.html` showing carried relic and key actions.
+  - Inscription modal displaying riddle clues, socket status, and interactive controls.
+- [x] **Automated Test Suite**:
+  - 45 test suites, 207 tests, 4,082 assertions passing 100% (0 failed) in ~280ms.
+
+### Previous Milestone: `v1.11.0`
 
 - [x] **Mandatory Labyrinth Chokepoints & Non-Bypassable Obstacles**:
   - Audited all 28 campaign levels and redesigned corridor geometry across Chapters 1, 2, 3, 6, and 7 to seal unintended perimeter bypasses.
