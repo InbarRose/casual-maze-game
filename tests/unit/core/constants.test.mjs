@@ -41,6 +41,10 @@ describe('Core > Constants & Registries', () => {
     assertEqual(ENTITY_TYPES.HAZARD, 'hazard');
     assertEqual(ENTITY_TYPES.PATROLLER, 'patroller');
     assertEqual(ENTITY_TYPES.PUZZLE_GATE, 'puzzle_gate');
+    assertEqual(ENTITY_TYPES.SIGNPOST, 'signpost');
+    assertEqual(ENTITY_TYPES.WALL_DECOR, 'wall_decor');
+    assertEqual(ENTITY_TYPES.CHECKPOINT, 'checkpoint');
+    assertEqual(ENTITY_TYPES.COLLECTIBLE, 'collectible');
   });
 
   it('defines inverse opposite directions consistently', () => {
