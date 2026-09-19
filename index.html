@@ -180,14 +180,17 @@
 
   <div class="main-container">
     <header class="hero-section">
-      <div class="badge badge-gold" style="margin-bottom: 1rem;">Modular Puzzle Engine</div>
+      <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
+        <span class="badge badge-gold">Modular Puzzle Engine</span>
+        <span class="badge" id="hero-stars-badge" style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.35); color: #fbbf24; font-weight: 700;">★ 0 Stars Earned</span>
+      </div>
       <h1 style="font-size: 2.75rem; line-height: 1.1; margin-bottom: 0.8rem;">Casual Maze Game</h1>
       <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">
         Traverse multi-elevation bridges &amp; tunnels, uncover hidden paths through dynamic fog of war, trigger puzzle switches, and design custom labyrinths.
       </p>
       <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
         <a href="maze.html?tutorial=1" class="btn btn-primary">🎓 Start Tutorial 1</a>
-        <a href="maze.html?id=1" class="btn btn-secondary">🏰 Enter Campaign (Zone 1)</a>
+        <a href="maze.html?id=1" class="btn btn-secondary">🏰 Enter Campaign (Chapter 1)</a>
         <a href="editor.html" class="btn btn-secondary">🛠️ Maze Architect</a>
         <button id="btn-hero-save-progress" class="btn btn-secondary" title="Save Game Progress (export JSON save file)">💾 Save Game Progress</button>
       </div>
@@ -234,17 +237,18 @@
       </div>
     </section>
 
-    <!-- Zone 1: Whispering Dungeon -->
-    <section class="campaign-section">
+    <!-- Chapter 1: The Foundation -->
+    <section class="campaign-section" id="chapter-1-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text);">🏰 Zone 1: Whispering Dungeon</h2>
-            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: var(--accent); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 1</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text);">🏰 Chapter 1: The Foundation</h2>
+            <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: var(--accent); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 1 • Navigation &amp; Levers</span>
+            <span class="badge" id="chapter-1-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 15</span>
           </div>
           <p style="font-size: 0.85rem; color: var(--text-muted);">Ancient stone corridors exploring multi-elevation crossings, lever mechanisms, and locked crypts.</p>
         </div>
-        <a href="maze.html?id=1" class="btn btn-secondary btn-sm">Enter Zone 1</a>
+        <a href="maze.html?id=1" class="btn btn-secondary btn-sm">Enter Chapter 1</a>
       </div>
 
       <div class="campaign-levels" id="zone-1-list">
@@ -271,17 +275,18 @@
       </div>
     </section>
 
-    <!-- Zone 2: Emerald Jungle -->
-    <section class="campaign-section">
+    <!-- Chapter 2: The Vertical Dimension -->
+    <section class="campaign-section" id="chapter-2-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #34d399;">🌴 Zone 2: Emerald Jungle</h2>
-            <span class="badge" style="background: rgba(52, 211, 153, 0.15); color: #34d399; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 2</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #34d399;">🌴 Chapter 2: The Vertical Dimension</h2>
+            <span class="badge" style="background: rgba(52, 211, 153, 0.15); color: #34d399; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 2 • 3D Bridges &amp; Ramps</span>
+            <span class="badge" id="chapter-2-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 9</span>
           </div>
           <p style="font-size: 0.85rem; color: var(--text-muted);">Lush canopy mazes with rope bridge walkways, dense foliage barriers, and multiple colored gates.</p>
         </div>
-        <a href="maze.html?id=6" class="btn btn-secondary btn-sm">Enter Zone 2</a>
+        <a href="maze.html?id=6" class="btn btn-secondary btn-sm">Enter Chapter 2</a>
       </div>
 
       <div class="campaign-levels" id="zone-2-list">
@@ -300,17 +305,18 @@
       </div>
     </section>
 
-    <!-- Zone 3: Molten Core -->
-    <section class="campaign-section">
+    <!-- Chapter 3: Rhythm & Molten Danger -->
+    <section class="campaign-section" id="chapter-3-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #fb923c;">🌋 Zone 3: Molten Core</h2>
-            <span class="badge" style="background: rgba(249, 115, 22, 0.15); color: #fb923c; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 3</span>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #fb923c;">🌋 Chapter 3: Rhythm &amp; Molten Danger</h2>
+            <span class="badge" style="background: rgba(249, 115, 22, 0.15); color: #fb923c; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 3 • Hazards &amp; Patrollers</span>
+            <span class="badge" id="chapter-3-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 6</span>
           </div>
           <p style="font-size: 0.85rem; color: var(--text-muted);">Intense volcanic vaults with obsidian bridges spanning over magma channels and dynamic switch gates.</p>
         </div>
-        <a href="maze.html?id=9" class="btn btn-secondary btn-sm">Enter Zone 3</a>
+        <a href="maze.html?id=9" class="btn btn-secondary btn-sm">Enter Chapter 3</a>
       </div>
 
       <div class="campaign-levels" id="zone-3-list">
@@ -322,6 +328,20 @@
           <span class="level-number">10</span>
           <span class="level-name">Obsidian Vault</span>
         </a>
+      </div>
+    </section>
+
+    <!-- Chapter 4 Preview / Expansion -->
+    <section class="campaign-section" style="border-style: dashed; border-color: rgba(168, 85, 247, 0.4); background: rgba(168, 85, 247, 0.03);">
+      <div class="campaign-header">
+        <div>
+          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #c084fc;">🔮 Chapter 4: Astral Anomalies &amp; Arcane Seals</h2>
+            <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 4 • Teleporters &amp; Minigames</span>
+          </div>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">Resonant crystal cavers introducing dimensional teleporters, Simon-style rune memory seals, and celestial cipher dial locks.</p>
+        </div>
+        <a href="editor.html" class="btn btn-secondary btn-sm" style="border-color: rgba(168, 85, 247, 0.5); color: #c084fc;">Design in Architect →</a>
       </div>
     </section>
 
@@ -464,24 +484,58 @@
         }
       });
 
-      // 2. Load Campaign / Zone Progress
+      // 2. Load Campaign / Chapter Progress & Medals
       const campaignProgress = StorageManager.loadCampaignProgress();
-      const zonePills = document.querySelectorAll('#zone-1-list .level-pill, #zone-2-list .level-pill, #zone-3-list .level-pill');
-      zonePills.forEach(pill => {
-        const oldStatus = pill.querySelector('.level-status');
-        if (oldStatus) oldStatus.remove();
-        pill.classList.remove('completed');
+      let totalStars = 0;
 
-        const levelId = pill.getAttribute('data-id');
-        const record = campaignProgress[levelId];
-        if (record && record.completed) {
-          pill.classList.add('completed');
-          const statusSpan = document.createElement('span');
-          statusSpan.className = 'level-status';
-          statusSpan.textContent = `★ ${record.bestTime ? (record.bestTime / 1000).toFixed(1) + 's' : 'Done'}`;
-          pill.appendChild(statusSpan);
+      const updateChapterCounter = (zoneListId, counterElId, maxStars) => {
+        const pills = document.querySelectorAll(`${zoneListId} .level-pill`);
+        let chapterStars = 0;
+        pills.forEach(pill => {
+          const oldStatus = pill.querySelector('.level-status');
+          if (oldStatus) oldStatus.remove();
+          pill.classList.remove('completed');
+
+          const levelId = pill.getAttribute('data-id');
+          const record = campaignProgress[levelId];
+          if (record && record.completed) {
+            pill.classList.add('completed');
+            chapterStars += 1;
+            totalStars += 1;
+
+            let medalIcons = '★';
+            if (record.medals?.parSteps) {
+              chapterStars += 1;
+              totalStars += 1;
+              medalIcons += ' 👟';
+            }
+            if (record.medals?.parTime) {
+              chapterStars += 1;
+              totalStars += 1;
+              medalIcons += ' ⏱️';
+            }
+
+            const statusSpan = document.createElement('span');
+            statusSpan.className = 'level-status';
+            statusSpan.textContent = `${medalIcons} ${record.bestTime ? (record.bestTime / 1000).toFixed(1) + 's' : 'Done'}`;
+            pill.appendChild(statusSpan);
+          }
+        });
+
+        const counterEl = document.getElementById(counterElId);
+        if (counterEl) {
+          counterEl.textContent = `★ ${chapterStars} / ${maxStars}`;
         }
-      });
+      };
+
+      updateChapterCounter('#zone-1-list', 'chapter-1-stars', 15);
+      updateChapterCounter('#zone-2-list', 'chapter-2-stars', 9);
+      updateChapterCounter('#zone-3-list', 'chapter-3-stars', 6);
+
+      const heroStarsBadge = document.getElementById('hero-stars-badge');
+      if (heroStarsBadge) {
+        heroStarsBadge.textContent = `★ ${totalStars} Stars Earned`;
+      }
     }
 
     // Initial render
