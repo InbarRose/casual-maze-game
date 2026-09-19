@@ -166,6 +166,7 @@ export class LevelLoader {
         allowFreePan: raw.config?.allowFreePan !== undefined ? !!raw.config.allowFreePan : DEFAULTS.ALLOW_FREE_PAN,
         tileSize: raw.config?.tileSize || DEFAULTS.TILE_SIZE,
         theme: raw.config?.theme || DEFAULTS.THEME,
+        viewPerspective: raw.config?.viewPerspective || DEFAULTS.VIEW_PERSPECTIVE || 'angled',
       },
       help: raw.help ? {
         title: String(raw.help.title || ''),
@@ -193,6 +194,8 @@ export class LevelLoader {
         ...e,
         z: e.z ?? e.elevation ?? 0,
         elevation: e.z ?? e.elevation ?? 0,
+        targetZ: e.targetZ !== undefined ? e.targetZ : (e.targetElevation !== undefined ? e.targetElevation : (e.z ?? e.elevation ?? 0)),
+        targetElevation: e.targetZ !== undefined ? e.targetZ : (e.targetElevation !== undefined ? e.targetElevation : (e.z ?? e.elevation ?? 0)),
       })) : [],
       testSpawn: raw.testSpawn ? {
         x: Number(raw.testSpawn.x ?? raw.spawn?.x ?? 1),

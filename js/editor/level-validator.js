@@ -75,6 +75,8 @@ export class LevelValidator {
     const keyEntities = new Map(); // keyId -> entity
     const doorEntities = [];
     const leverEntities = [];
+    const teleporterEntities = [];
+    const patrollerEntities = [];
 
     for (const entity of entities) {
       const ez = entity.z ?? entity.elevation ?? 0;
@@ -96,6 +98,10 @@ export class LevelValidator {
         doorEntities.push(entity);
       } else if (entity.type === ENTITY_TYPES.LEVER) {
         leverEntities.push(entity);
+      } else if (entity.type === ENTITY_TYPES.TELEPORTER) {
+        teleporterEntities.push(entity);
+      } else if (entity.type === ENTITY_TYPES.PATROLLER) {
+        patrollerEntities.push(entity);
       }
     }
 
@@ -138,6 +144,45 @@ export class LevelValidator {
               entityId: lever.id,
               x: lever.x,
               y: lever.y,
+            });
+          }
+        }
+      }
+    }
+
+    // Check Teleporters
+    for (const tp of teleporterEntities) {
+      const tz = tp.targetZ ?? tp.targetElevation ?? 0;
+      if (tp.targetX === undefined || tp.targetY === undefined || tp.targetX < 0 || tp.targetX >= width || tp.targetY < 0 || tp.targetY >= height) {
+        errors.push({
+          message: `Teleporter "${tp.id}" targets out-of-bounds coordinate ${formatXYZ(tp.targetX, tp.targetY, tz)}.`,
+          entityId: tp.id,
+          x: tp.x,
+          y: tp.y,
+        });
+      } else {
+        const destTile = tz === ELEVATION.OVERHEAD ? overhead[tp.targetY]?.[tp.targetX] : ground[tp.targetY]?.[tp.targetX];
+        if (destTile === TILES.WALL) {
+          errors.push({
+            message: `Teleporter "${tp.id}" targets a solid wall at ${formatXYZ(tp.targetX, tp.targetY, tz)}.`,
+            entityId: tp.id,
+            x: tp.x,
+            y: tp.y,
+          });
+        }
+      }
+    }
+
+    // Check Patrollers
+    for (const pat of patrollerEntities) {
+      if (Array.isArray(pat.waypoints)) {
+        for (const wp of pat.waypoints) {
+          if (wp.x < 0 || wp.x >= width || wp.y < 0 || wp.y >= height) {
+            errors.push({
+              message: `Patroller "${pat.id}" has an out-of-bounds waypoint at (${wp.x}, ${wp.y}).`,
+              entityId: pat.id,
+              x: pat.x,
+              y: pat.y,
             });
           }
         }

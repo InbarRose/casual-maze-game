@@ -23,6 +23,7 @@ import './unit/engine/collision.test.mjs';
 import './unit/engine/fog.test.mjs';
 import './unit/engine/camera.test.mjs';
 import './unit/engine/debug-logger.test.mjs';
+import './unit/engine/perspective-renderer.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/player.test.mjs';
@@ -50,6 +51,7 @@ import './integration/journeys/campaign-solvability.journey.test.mjs';
 import './integration/journeys/editor-authoring.journey.test.mjs';
 import './integration/journeys/fog-exploration.journey.test.mjs';
 import './integration/journeys/multi-elevation.journey.test.mjs';
+import './integration/journeys/interactive-activities.journey.test.mjs';
 
 // Run registered suites
 await run();

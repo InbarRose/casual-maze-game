@@ -69,6 +69,9 @@
         </button>
 
         <!-- Controls Toggles -->
+        <button id="btn-perspective" class="btn btn-secondary btn-sm" title="Toggle Perspective: Angled 2.5D / Top-Down (V)">
+          📐 <span class="hide-mobile">Perspective [V]</span>
+        </button>
         <button id="btn-freepan" class="btn btn-secondary btn-sm" title="Toggle Free-Pan Mode (M)">
           🗺 <span class="hide-mobile">Map Pan [M]</span>
         </button>
@@ -785,6 +788,33 @@
       }
       showToast(`${data.name || 'Switch'} toggled ${stateName}!`, data.state ? 'success' : 'info');
       addActivityLog(`<strong>${data.name || 'Switch'}</strong>${coords} toggled ${stateName}${targetDesc}`, type, icon, 'lever');
+    });
+
+    document.getElementById('btn-perspective')?.addEventListener('click', () => {
+      if (window.gameLoop) {
+        window.gameLoop.togglePerspective();
+      }
+    });
+
+    globalEvents.on('perspective:toggled', ({ mode }) => {
+      const modeName = mode === 'angled' ? 'Angled 2.5D Sprite View' : 'Classic Top-Down View';
+      showToast(`Perspective: ${modeName}`, 'info');
+      addActivityLog(`View perspective switched to <strong>${modeName}</strong>`, 'info', '📐', 'info');
+    });
+
+    globalEvents.on('teleport:warped', (data) => {
+      showToast(`Dimensional warp through ${data.name || 'Teleporter'}!`, 'success');
+      addActivityLog(`Warped through <strong>${data.name || 'Teleporter'}</strong> to (${data.to.x}, ${data.to.y}, ${data.to.z ?? 0})`, 'success', '🌀', 'info');
+    });
+
+    globalEvents.on('player:hazard_hit', (data) => {
+      showToast(`Struck by ${data.name || 'Hazard'}! Returning to spawn.`, 'warning');
+      addActivityLog(`Struck by <strong>${data.name || 'Hazard'}</strong> at (${data.x}, ${data.y})! Respawned.`, 'warning', '⚠️', 'warning');
+    });
+
+    globalEvents.on('puzzle:solved', (data) => {
+      showToast(`Mystic seal unlocked: ${data.name || 'Gate'}!`, 'success');
+      addActivityLog(`Solved mystic seal for <strong>${data.name || 'Gate'}</strong>!`, 'success', '✨', 'door');
     });
   </script>
 </body>

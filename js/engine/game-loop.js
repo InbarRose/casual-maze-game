@@ -3,12 +3,15 @@
  * Ties together input, physics/collision, entities, camera, fog, and rendering.
  */
 
-import { KEY_CODES, ELEVATION } from '../core/constants.js';
+import { KEY_CODES, ELEVATION, ENTITY_TYPES } from '../core/constants.js';
 import { globalEvents } from '../core/events.js';
 import { CollisionEngine } from './collision.js';
 import { Key } from '../entities/key.js';
 import { Door } from '../entities/door.js';
 import { Lever } from '../entities/lever.js';
+import { Teleporter } from '../entities/teleporter.js';
+import { TimedHazard, Patroller } from '../entities/hazard.js';
+import { PuzzleGate } from '../entities/puzzle-gate.js';
 import { Player } from '../entities/player.js';
 import { Camera } from './camera.js';
 import { FogOfWar } from './fog.js';
@@ -16,6 +19,7 @@ import { GameRenderer } from './renderer.js';
 import { Minimap } from './minimap.js';
 import { StorageManager } from '../core/storage.js';
 import { DebugLogger } from './debug-logger.js';
+import { PuzzleModal } from '../ui/puzzle-modal.js';
 
 export class GameLoop {
   /**
@@ -91,6 +95,10 @@ export class GameLoop {
       this.level.dimensions.height
     );
 
+    // Puzzle modal state
+    this.puzzleModal = new PuzzleModal();
+    this.isPuzzleOpen = false;
+
     // Initial fog update
     this.updateFog();
 
@@ -104,11 +112,28 @@ export class GameLoop {
    */
   initEntities() {
     this.entities = (this.level.entities || []).map(e => {
-      if (e.type === 'key') return new Key(e);
-      if (e.type === 'door') return new Door(e);
-      if (e.type === 'lever') return new Lever(e);
+      if (e.type === ENTITY_TYPES.KEY) return new Key(e);
+      if (e.type === ENTITY_TYPES.DOOR) return new Door(e);
+      if (e.type === ENTITY_TYPES.LEVER) return new Lever(e);
+      if (e.type === ENTITY_TYPES.TELEPORTER) return new Teleporter(e);
+      if (e.type === ENTITY_TYPES.HAZARD) return new TimedHazard(e);
+      if (e.type === ENTITY_TYPES.PATROLLER) return new Patroller(e);
+      if (e.type === ENTITY_TYPES.PUZZLE_GATE) return new PuzzleGate(e);
       return null;
     }).filter(Boolean);
+  }
+
+  /**
+   * Toggle perspective between angled 2.5D and flat top-down
+   */
+  togglePerspective() {
+    const current = this.renderer.perspective || 'angled';
+    const next = current === 'angled' ? 'topdown' : 'angled';
+    this.renderer.setPerspective(next);
+    globalEvents.emit('perspective:toggled', { mode: next });
+    if (this.uiCallbacks.onPerspectiveChange) {
+      this.uiCallbacks.onPerspectiveChange(next);
+    }
   }
 
   /**
@@ -126,6 +151,7 @@ export class GameLoop {
       const isMap = KEY_CODES.MAP.includes(e.code) || (e.key && KEY_CODES.MAP.includes(e.key));
       const isRestart = KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key));
       const isInteract = KEY_CODES.INTERACT.includes(e.code) || (e.key && KEY_CODES.INTERACT.includes(e.key));
+      const isViewMode = KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)));
 
       if (isMap) {
         this.toggleFreePan();
@@ -137,6 +163,8 @@ export class GameLoop {
         }
       } else if (isInteract) {
         this.handleManualInteract();
+      } else if (isViewMode) {
+        this.togglePerspective();
       }
     };
 
@@ -180,6 +208,9 @@ export class GameLoop {
    */
   destroy() {
     this.stop();
+    if (this.puzzleModal) {
+      this.puzzleModal.close();
+    }
     if (typeof window !== 'undefined') {
       window.removeEventListener('keydown', this.handleKeyDown);
       window.removeEventListener('keyup', this.handleKeyUp);
@@ -323,6 +354,8 @@ export class GameLoop {
    * Game state updates
    */
   update(dt) {
+    if (this.isPuzzleOpen) return;
+
     // 1. Process continuous movement input
     this.processPlayerMovement();
 
@@ -363,9 +396,19 @@ export class GameLoop {
       this.handleCellArrival();
     }
 
-    // 4. Update Entities
+    // 4. Update Entities and check dynamic hazard collisions
     for (const entity of this.entities) {
       entity.update(dt);
+
+      if (entity.type === ENTITY_TYPES.PATROLLER) {
+        if (entity.checkCollision(this.player.worldX, this.player.worldY, this.player.elevation, this.camera.tileSize)) {
+          this.handleHazardHit(entity);
+        }
+      } else if (entity.type === ENTITY_TYPES.HAZARD) {
+        if (entity.isLethalAt(this.player.gridX, this.player.gridY, this.player.elevation)) {
+          this.handleHazardHit(entity);
+        }
+      }
     }
 
     // 5. Update Camera
@@ -489,6 +532,12 @@ export class GameLoop {
           y: targetY,
         });
       }
+    } else if (check.reason === 'puzzle_gate_locked' && check.puzzleGate) {
+      const now = performance.now();
+      if (!this.lastPuzzleGateFeedback || now - this.lastPuzzleGateFeedback > 600) {
+        this.lastPuzzleGateFeedback = now;
+        this.openPuzzleGateModal(check.puzzleGate);
+      }
     }
   }
 
@@ -601,18 +650,163 @@ export class GameLoop {
       this.notifyUI();
     }
 
+    // 3. Check Teleporter warp trigger (must match entity elevation, default 0)
+    const teleporter = this.entities.find(
+      e => e.type === ENTITY_TYPES.TELEPORTER && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (teleporter && teleporter.canWarp()) {
+      const dest = teleporter.triggerWarp();
+      this.handleTeleport(teleporter, dest);
+    }
+
     this.notifyUI();
+  }
+
+  /**
+   * Handle teleporter warp mechanics
+   * @param {Teleporter} teleporter
+   * @param {{ x: number, y: number, z: number, elevation: number }} dest
+   */
+  handleTeleport(teleporter, dest) {
+    const fromWx = this.player.worldX;
+    const fromWy = this.player.worldY;
+    this.renderer.spawnParticles(fromWx, fromWy, teleporter.color || '#38bdf8', 25);
+    this.renderer.spawnShockwave(fromWx, fromWy, teleporter.color || '#38bdf8', 36);
+
+    // Relocate player to destination
+    this.player.gridX = dest.x;
+    this.player.gridY = dest.y;
+    this.player.fromGridX = dest.x;
+    this.player.fromGridY = dest.y;
+    this.player.targetGridX = dest.x;
+    this.player.targetGridY = dest.y;
+    this.player.elevation = dest.elevation ?? dest.z ?? ELEVATION.GROUND;
+    this.player.gridZ = this.player.elevation;
+    this.player.targetElevation = this.player.elevation;
+    this.player.worldX = dest.x * this.camera.tileSize + this.camera.tileSize / 2;
+    this.player.worldY = dest.y * this.camera.tileSize + this.camera.tileSize / 2;
+
+    const toWx = this.player.worldX;
+    const toWy = this.player.worldY;
+    this.renderer.spawnParticles(toWx, toWy, teleporter.color || '#38bdf8', 30);
+    this.renderer.spawnShockwave(toWx, toWy, teleporter.color || '#38bdf8', 42);
+    this.renderer.spawnFloatingText(toWx, toWy, `🌀 Warped to (${dest.x}, ${dest.y}, ${dest.z})`, teleporter.color || '#38bdf8');
+
+    // Trigger destination teleporter cooldown to avoid instant bounce loop
+    const targetTeleporter = this.entities.find(
+      e => e.type === ENTITY_TYPES.TELEPORTER && e.x === dest.x && e.y === dest.y && (e.elevation ?? ELEVATION.GROUND) === dest.z
+    );
+    if (targetTeleporter) {
+      targetTeleporter.triggerWarp();
+    }
+
+    this.camera.snapTo(toWx, toWy, this.level.dimensions.width, this.level.dimensions.height);
+    this.updateFog();
+    this.notifyUI();
+
+    this.logger.log('teleport:warped', {
+      teleporterId: teleporter.id,
+      fromX: teleporter.x,
+      fromY: teleporter.y,
+      fromZ: teleporter.z,
+      toX: dest.x,
+      toY: dest.y,
+      toZ: dest.z,
+      elapsedMs: this.elapsedTime,
+    });
+
+    globalEvents.emit('teleport:warped', {
+      teleporterId: teleporter.id,
+      name: teleporter.name,
+      from: { x: teleporter.x, y: teleporter.y, z: teleporter.z },
+      to: dest,
+    });
+  }
+
+  /**
+   * Handle hazard / patroller damage hit on player
+   * @param {TimedHazard|Patroller} hazard
+   */
+  handleHazardHit(hazard) {
+    const now = performance.now();
+    if (this.lastHazardHit && now - this.lastHazardHit < 1000) return;
+    this.lastHazardHit = now;
+
+    const wx = this.player.worldX;
+    const wy = this.player.worldY;
+    this.renderer.spawnParticles(wx, wy, '#f43f5e', 35);
+    this.renderer.spawnShockwave(wx, wy, '#f43f5e', 42);
+    this.renderer.spawnFloatingText(wx, wy, `⚠️ Hit by ${hazard.name || 'Hazard'}!`, '#f43f5e');
+
+    this.logger.log('player:hazard_hit', {
+      hazardId: hazard.id,
+      hazardType: hazard.type,
+      atX: this.player.gridX,
+      atY: this.player.gridY,
+      elevation: this.player.elevation,
+      elapsedMs: this.elapsedTime,
+    });
+
+    globalEvents.emit('player:hazard_hit', {
+      hazardId: hazard.id,
+      name: hazard.name,
+      x: this.player.gridX,
+      y: this.player.gridY,
+    });
+
+    // Reset player back to starting spawn
+    const spawnX = this.level.testSpawn?.x ?? this.level.spawn?.x ?? 1;
+    const spawnY = this.level.testSpawn?.y ?? this.level.spawn?.y ?? 1;
+    const spawnZ = this.level.testSpawn?.elevation ?? this.level.spawn?.elevation ?? 0;
+    this.player.reset(spawnX, spawnY, spawnZ, this.player.inventory);
+    this.camera.snapTo(this.player.worldX, this.player.worldY, this.level.dimensions.width, this.level.dimensions.height);
+    this.updateFog();
+    this.notifyUI();
+  }
+
+  /**
+   * Open the puzzle modal overlay for a PuzzleGate
+   * @param {PuzzleGate} puzzleGate
+   */
+  openPuzzleGateModal(puzzleGate) {
+    if (this.isPuzzleOpen) return;
+    this.isPuzzleOpen = true;
+
+    this.puzzleModal.open(
+      puzzleGate,
+      () => {
+        this.isPuzzleOpen = false;
+        const gateWx = puzzleGate.x * this.camera.tileSize + this.camera.tileSize / 2;
+        const gateWy = puzzleGate.y * this.camera.tileSize + this.camera.tileSize / 2;
+        this.renderer.spawnParticles(gateWx, gateWy, puzzleGate.color || '#a855f7', 30);
+        this.renderer.spawnShockwave(gateWx, gateWy, puzzleGate.color || '#a855f7', 40);
+        this.renderer.spawnFloatingText(gateWx, gateWy, '✨ Seal Dissolved!', '#34d399');
+        this.notifyUI();
+      },
+      () => {
+        this.isPuzzleOpen = false;
+      }
+    );
   }
 
   /**
    * Handle manual interact button (E / Space / Enter)
    */
   handleManualInteract() {
-    // Check if player is on or adjacent to a lever at matching elevation
     const px = this.player.gridX;
     const py = this.player.gridY;
     const pe = this.player.elevation;
 
+    // Check adjacent locked PuzzleGate
+    const adjacentPuzzleGates = this.entities.filter(
+      e => e.type === ENTITY_TYPES.PUZZLE_GATE && !e.isUnlocked && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (adjacentPuzzleGates.length > 0) {
+      this.openPuzzleGateModal(adjacentPuzzleGates[0]);
+      return;
+    }
+
+    // Check if player is on or adjacent to a lever at matching elevation
     const adjacentLevers = this.entities.filter(
       e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation || ELEVATION.GROUND) === pe
     );
