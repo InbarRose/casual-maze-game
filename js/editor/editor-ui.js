@@ -236,6 +236,9 @@ export class EditorUI {
         const entity = btn.dataset.entity;
         const color = btn.dataset.color;
         const name = btn.dataset.name;
+        const symbol = btn.dataset.symbol;
+        const itemType = btn.dataset.itemtype;
+        const style = btn.dataset.style;
 
         if (tool) {
           this.editorCanvas.setTool(tool);
@@ -246,8 +249,9 @@ export class EditorUI {
           this.editorCanvas.setSelectedTile(parsedTile);
           console.info(`[MazeGame:Editor] Selected tile for painting: "${parsedTile}"`);
         } else if (entity) {
-          this.editorCanvas.setSelectedEntity(entity, color ? { color, name } : null);
-          console.info(`[MazeGame:Editor] Selected entity for placement: "${entity}" (${name || color || 'Default'})`);
+          const entityData = { color, name, symbol, itemType, style };
+          this.editorCanvas.setSelectedEntity(entity, entityData);
+          console.info(`[MazeGame:Editor] Selected entity for placement: "${entity}" (${name || symbol || color || 'Default'})`);
         }
       });
     });

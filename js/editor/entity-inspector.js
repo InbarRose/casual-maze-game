@@ -11,6 +11,8 @@ import {
   KEY_STYLES,
   DOOR_STYLES,
   LEVER_STYLES,
+  PEDESTAL_STYLES,
+  RIDDLE_ITEM_STYLES,
   SPAWN_STYLE_PRESETS,
   EXIT_STYLE_PRESETS,
   formatXYZ,
@@ -279,6 +281,75 @@ export class EntityInspector {
       }));
     }
 
+    // 7. Type Specific: Riddle Pedestal
+    if (e.type === ENTITY_TYPES.PEDESTAL) {
+      container.appendChild(this.createInputRow('Pedestal Title / Name', 'entity-name', e.name || 'Stone Pedestal', 'text'));
+      container.appendChild(this.createTextareaRow('Riddle Inscription / Hint', 'entity-riddle-hint', e.riddleHint || ''));
+      container.appendChild(this.createInputRow('Puzzle Group ID', 'entity-puzzle-group', e.puzzleGroupId || 'pedestal_group_1', 'text'));
+
+      const existingRiddleItems = (this.levelRef?.entities || []).filter(item => item.type === ENTITY_TYPES.RIDDLE_ITEM);
+      container.appendChild(this.createEntitySelectorRow(
+        'Accepted Riddle Item',
+        'entity-accepted-item',
+        e.acceptedItemId || '',
+        existingRiddleItems.map(item => ({
+          id: item.id,
+          label: `${item.symbol || '🦅'} ${item.name || item.id} (${item.id})`
+        })),
+        'Select or enter required Riddle Item ID...'
+      ));
+
+      const existingDoors = (this.levelRef?.entities || []).filter(item => item.type === ENTITY_TYPES.DOOR);
+      container.appendChild(this.createEntitySelectorRow(
+        'Target Door to Unlock upon Group Solve',
+        'entity-target-door',
+        e.targetDoorId || '',
+        existingDoors.map(d => ({
+          id: d.id,
+          label: `🚪 ${d.id} (${d.name || d.color || 'Door'})`
+        })),
+        'Select or enter target Door ID...'
+      ));
+
+      container.appendChild(this.createStyleSelectorRow('Pedestal Visual Style', e.styleId || 'pedestal_stone', PEDESTAL_STYLES, (sel) => {
+        e.styleId = sel.id;
+      }));
+    }
+
+    // 8. Type Specific: Carryable Riddle Item / Relic
+    if (e.type === ENTITY_TYPES.RIDDLE_ITEM) {
+      container.appendChild(this.createInputRow('Item / Statue Name', 'entity-name', e.name || 'Falcon Statue', 'text'));
+      container.appendChild(this.createInputRow('Glyph / Emoji Symbol', 'entity-symbol', e.symbol || '🦅', 'text'));
+      container.appendChild(this.createInputRow('Item Type Identifier', 'entity-item-type', e.itemType || 'falcon_statue', 'text'));
+      container.appendChild(this.createTextareaRow('Lore / Inspection Clue', 'entity-desc', e.description || ''));
+
+      container.appendChild(this.createStyleSelectorRow('Relic Art Style', e.styleId || 'statue_falcon', RIDDLE_ITEM_STYLES, (sel) => {
+        e.styleId = sel.id;
+        const symInput = container.querySelector('#entity-symbol');
+        if (symInput && sel.icon) {
+          symInput.value = sel.icon;
+          e.symbol = sel.icon;
+        }
+      }));
+    }
+
+    // 9. Type Specific: Checkpoint
+    if (e.type === ENTITY_TYPES.CHECKPOINT) {
+      container.appendChild(this.createInputRow('Beacon / Checkpoint Name', 'entity-name', e.name || 'Sanctuary Beacon', 'text'));
+    }
+
+    // 10. Type Specific: Wall Note / Lore
+    if (e.type === ENTITY_TYPES.NOTE) {
+      container.appendChild(this.createInputRow('Note / Inscription Title', 'entity-note-title', e.title || 'Carved Inscription', 'text'));
+      container.appendChild(this.createTextareaRow('Inscription / Lore Text', 'entity-note-text', e.text || ''));
+    }
+
+    // 11. Type Specific: Bonus Item
+    if (e.type === ENTITY_TYPES.BONUS_ITEM) {
+      container.appendChild(this.createInputRow('Item Name', 'entity-name', e.name || 'Sapphire Gem', 'text'));
+      container.appendChild(this.createInputRow('Score Points', 'entity-points', String(e.points || 100), 'number'));
+    }
+
     this.bodyEl.appendChild(container);
   }
 
@@ -537,6 +608,43 @@ export class EntityInspector {
     return row;
   }
 
+  createTextareaRow(label, id, value) {
+    const row = document.createElement('div');
+    row.className = 'form-row';
+    row.innerHTML = `
+      <label for="${id}">${label}</label>
+      <textarea id="${id}" class="input-field" rows="2" style="resize:vertical;">${value || ''}</textarea>
+    `;
+    return row;
+  }
+
+  createEntitySelectorRow(label, id, value, items, placeholder = 'Select or enter ID...') {
+    const row = document.createElement('div');
+    row.className = 'form-row';
+
+    let options = `<option value="">-- ${placeholder} --</option>`;
+    for (const item of items) {
+      options += `<option value="${item.id}" ${item.id === value ? 'selected' : ''}>${item.label}</option>`;
+    }
+
+    row.innerHTML = `
+      <label for="${id}">${label}</label>
+      <select id="${id}-select" class="select-field" style="margin-bottom:0.35rem;">${options}</select>
+      <input type="text" id="${id}" class="input-field" value="${value}" placeholder="or custom ID" />
+    `;
+
+    const select = row.querySelector(`#${id}-select`);
+    const input = row.querySelector(`#${id}`);
+
+    select?.addEventListener('change', () => {
+      if (select.value) {
+        input.value = select.value;
+      }
+    });
+
+    return row;
+  }
+
   /**
    * Save form values back to currentEntity
    */
@@ -588,6 +696,56 @@ export class EntityInspector {
     if (selZ) {
       e.z = Number(selZ.value) || 0;
       e.elevation = e.z;
+    }
+
+    const riddleHintInput = this.bodyEl.querySelector('#entity-riddle-hint');
+    if (riddleHintInput) {
+      e.riddleHint = riddleHintInput.value.trim();
+    }
+
+    const acceptedItemInput = this.bodyEl.querySelector('#entity-accepted-item');
+    if (acceptedItemInput) {
+      e.acceptedItemId = acceptedItemInput.value.trim();
+    }
+
+    const puzzleGroupInput = this.bodyEl.querySelector('#entity-puzzle-group');
+    if (puzzleGroupInput) {
+      e.puzzleGroupId = puzzleGroupInput.value.trim();
+    }
+
+    const targetDoorInput = this.bodyEl.querySelector('#entity-target-door');
+    if (targetDoorInput) {
+      e.targetDoorId = targetDoorInput.value.trim();
+    }
+
+    const symbolInput = this.bodyEl.querySelector('#entity-symbol');
+    if (symbolInput) {
+      e.symbol = symbolInput.value.trim();
+    }
+
+    const itemTypeInput = this.bodyEl.querySelector('#entity-item-type');
+    if (itemTypeInput) {
+      e.itemType = itemTypeInput.value.trim();
+    }
+
+    const descInput = this.bodyEl.querySelector('#entity-desc');
+    if (descInput) {
+      e.description = descInput.value.trim();
+    }
+
+    const noteTitleInput = this.bodyEl.querySelector('#entity-note-title');
+    if (noteTitleInput) {
+      e.title = noteTitleInput.value.trim();
+    }
+
+    const noteTextInput = this.bodyEl.querySelector('#entity-note-text');
+    if (noteTextInput) {
+      e.text = noteTextInput.value.trim();
+    }
+
+    const pointsInput = this.bodyEl.querySelector('#entity-points');
+    if (pointsInput) {
+      e.points = parseInt(pointsInput.value, 10) || 100;
     }
 
     if (this.onUpdate) {

@@ -205,15 +205,26 @@ export class EditorCanvas {
    * @returns {object|null}
    */
   findObjectAt(gridX, gridY) {
-    // 1. Check runtime entities (key, door, lever)
+    // 1. Check runtime entities
     const entity = (this.level.entities || []).find(e => e.x === gridX && e.y === gridY);
     if (entity) {
+      let icon = '📦';
+      let color = entity.color || '#fbbf24';
+      if (entity.type === 'key') icon = '🔑';
+      else if (entity.type === 'door') icon = '🚪';
+      else if (entity.type === 'lever') { icon = '🕹️'; color = '#34d399'; }
+      else if (entity.type === 'pedestal') { icon = '🏛️'; color = '#94a3b8'; }
+      else if (entity.type === 'riddle_item') { icon = entity.symbol || '🦅'; color = '#f59e0b'; }
+      else if (entity.type === 'checkpoint') { icon = '🚩'; color = '#38bdf8'; }
+      else if (entity.type === 'note') { icon = '📜'; color = '#e2e8f0'; }
+      else if (entity.type === 'bonus_item') { icon = '💎'; color = '#a855f7'; }
+
       return {
         type: 'entity',
         ref: entity,
         name: entity.name || (entity.type.charAt(0).toUpperCase() + entity.type.slice(1)),
-        color: entity.color || (entity.type === 'lever' ? '#34d399' : '#fbbf24'),
-        icon: entity.type === 'key' ? '🔑' : (entity.type === 'door' ? '🚪' : '🕹️'),
+        color,
+        icon,
         x: entity.x,
         y: entity.y,
         z: entity.z ?? entity.elevation ?? 0,
@@ -589,11 +600,24 @@ export class EditorCanvas {
         this.level.testSpawn = { x: gridX, y: gridY, elevation: this.activeLayer === LAYERS.OVERHEAD ? 1 : 0 };
       } else if (this.selectedEntity === 'exit') {
         this.level.exit = { x: gridX, y: gridY };
-      } else if (this.selectedEntity.startsWith('key') || this.selectedEntity.startsWith('door') || this.selectedEntity === 'lever') {
+      } else if (
+        this.selectedEntity.startsWith('key') ||
+        this.selectedEntity.startsWith('door') ||
+        this.selectedEntity === 'lever' ||
+        this.selectedEntity === 'pedestal' ||
+        this.selectedEntity === 'riddle_item' ||
+        this.selectedEntity === 'checkpoint' ||
+        this.selectedEntity === 'note' ||
+        this.selectedEntity === 'bonus_item'
+      ) {
         // Remove existing entity at tile if any
         this.level.entities = (this.level.entities || []).filter(e => !(e.x === gridX && e.y === gridY));
 
-        const baseType = this.selectedEntity.startsWith('key') ? 'key' : (this.selectedEntity.startsWith('door') ? 'door' : 'lever');
+        const baseType = this.selectedEntity.startsWith('key')
+          ? 'key'
+          : this.selectedEntity.startsWith('door')
+          ? 'door'
+          : this.selectedEntity;
         const newId = `${baseType}_${gridX}_${gridY}`;
         const newEntity = {
           id: newId,
@@ -605,6 +629,9 @@ export class EditorCanvas {
 
         const presetColor = this.selectedEntityData?.color;
         const presetName = this.selectedEntityData?.name;
+        const presetSymbol = this.selectedEntityData?.symbol;
+        const presetItemType = this.selectedEntityData?.itemType;
+        const presetStyle = this.selectedEntityData?.style;
 
         if (baseType === 'key') {
           newEntity.color = presetColor || '#fbbf24';
@@ -615,6 +642,28 @@ export class EditorCanvas {
         } else if (baseType === 'lever') {
           newEntity.state = false;
           newEntity.targets = [];
+        } else if (baseType === 'pedestal') {
+          newEntity.riddleHint = 'A stone pedestal awaits a sacred offering.';
+          newEntity.acceptedItemId = '';
+          newEntity.puzzleGroupId = 'pedestal_group_1';
+          newEntity.targetDoorId = '';
+          newEntity.styleId = presetStyle || 'pedestal_stone';
+        } else if (baseType === 'riddle_item') {
+          newEntity.symbol = presetSymbol || '🦅';
+          newEntity.itemType = presetItemType || 'falcon_statue';
+          newEntity.name = presetName || 'Falcon Statue';
+          newEntity.description = `A heavy carved ${presetName || 'statue'}.`;
+          newEntity.styleId = presetStyle || 'statue_falcon';
+        } else if (baseType === 'checkpoint') {
+          newEntity.name = 'Sanctuary Beacon';
+          newEntity.active = false;
+        } else if (baseType === 'note') {
+          newEntity.title = 'Carved Inscription';
+          newEntity.text = 'The ancient stone whispers of forgotten secrets.';
+          newEntity.artStyle = 'wall_tablet';
+        } else if (baseType === 'bonus_item') {
+          newEntity.points = 100;
+          newEntity.itemType = 'gem_sapphire';
         }
 
         this.level.entities.push(newEntity);
@@ -970,6 +1019,75 @@ export class EditorCanvas {
           ctx.arc(tX, tY, effTile * 0.16, 0, Math.PI * 2);
           ctx.fill();
         }
+      } else if (entity.type === ENTITY_TYPES.PEDESTAL) {
+        ctx.fillStyle = '#334155';
+        ctx.strokeStyle = '#94a3b8';
+        ctx.lineWidth = 2;
+        ctx.fillRect(enX + effTile * 0.15, enY + effTile * 0.2, effTile * 0.7, effTile * 0.6);
+        ctx.strokeRect(enX + effTile * 0.15, enY + effTile * 0.2, effTile * 0.7, effTile * 0.6);
+
+        // Pedestal inner socket
+        ctx.fillStyle = '#0f172a';
+        ctx.fillRect(enX + effTile * 0.25, enY + effTile * 0.3, effTile * 0.5, effTile * 0.35);
+
+        let pIcon = '🏛️';
+        if (entity.item?.symbol) {
+          pIcon = entity.item.symbol;
+        }
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = `${Math.max(9, effTile * 0.35)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(pIcon, enX + effTile / 2, enY + effTile / 2);
+
+        // Target Door indicator line if configured
+        if (entity.targetDoorId) {
+          const targetDoor = (this.level.entities || []).find(e => e.id === entity.targetDoorId);
+          if (targetDoor) {
+            const tdX = targetDoor.x * effTile + effTile / 2;
+            const tdY = targetDoor.y * effTile + effTile / 2;
+            ctx.strokeStyle = 'rgba(251, 191, 36, 0.6)';
+            ctx.lineWidth = 1.5;
+            ctx.setLineDash([3, 3]);
+            ctx.beginPath();
+            ctx.moveTo(enX + effTile / 2, enY + effTile / 2);
+            ctx.lineTo(tdX, tdY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          }
+        }
+      } else if (entity.type === ENTITY_TYPES.RIDDLE_ITEM) {
+        ctx.fillStyle = 'rgba(251, 191, 36, 0.2)';
+        ctx.beginPath();
+        ctx.arc(enX + effTile / 2, enY + effTile / 2, effTile * 0.32, 0, Math.PI * 2);
+        ctx.fill();
+
+        const icon = entity.symbol || '🦅';
+        ctx.fillStyle = '#fbbf24';
+        ctx.font = `${Math.max(9, effTile * 0.38)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(icon, enX + effTile / 2, enY + effTile / 2);
+      } else if (entity.type === ENTITY_TYPES.CHECKPOINT) {
+        ctx.fillStyle = 'rgba(56, 189, 248, 0.25)';
+        ctx.beginPath();
+        ctx.arc(enX + effTile / 2, enY + effTile / 2, effTile * 0.35, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.font = `${Math.max(9, effTile * 0.38)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🚩', enX + effTile / 2, enY + effTile / 2);
+      } else if (entity.type === ENTITY_TYPES.NOTE) {
+        ctx.font = `${Math.max(9, effTile * 0.38)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('📜', enX + effTile / 2, enY + effTile / 2);
+      } else if (entity.type === ENTITY_TYPES.BONUS_ITEM) {
+        ctx.font = `${Math.max(9, effTile * 0.38)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('💎', enX + effTile / 2, enY + effTile / 2);
       }
       ctx.restore();
     }
