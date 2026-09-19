@@ -149,13 +149,15 @@ export class GameRenderer {
   renderAngledFloors(ctx, level, bounds, camera, theme) {
     const ground = level.layers.ground;
     const tileSize = camera.tileSize;
+    const angle = camera ? camera.getDiscreteRotation() : 0;
+    const isRotated90or270 = angle === 90 || angle === 270;
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const tile = ground[y]?.[x];
         if (tile === TILES.WALL) continue; // Walls drawn in wall pass
 
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
         const isAlt = (x + y) % 2 === 0;
         ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
         ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
@@ -165,18 +167,20 @@ export class GameRenderer {
         ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
 
         // Bridge underpass tunnels
-        if (tile === TILES.BRIDGE_EW) {
+        if (tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS) {
+          const isHorizUnderpass = (tile === TILES.BRIDGE_EW) ? !isRotated90or270 : isRotated90or270;
           ctx.fillStyle = theme.bridgeGround;
-          ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.76);
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-          ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.1);
-          ctx.fillRect(screen.x, screen.y + tileSize * 0.78, tileSize, tileSize * 0.1);
-        } else if (tile === TILES.BRIDGE_NS) {
-          ctx.fillStyle = theme.bridgeGround;
-          ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.76, tileSize);
-          ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-          ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.1, tileSize);
-          ctx.fillRect(screen.x + tileSize * 0.78, screen.y, tileSize * 0.1, tileSize);
+          if (isHorizUnderpass) {
+            ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.76);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.1);
+            ctx.fillRect(screen.x, screen.y + tileSize * 0.78, tileSize, tileSize * 0.1);
+          } else {
+            ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.76, tileSize);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+            ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.1, tileSize);
+            ctx.fillRect(screen.x + tileSize * 0.78, screen.y, tileSize * 0.1, tileSize);
+          }
         }
       }
     }
@@ -192,21 +196,42 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         if (ground[y]?.[x] === TILES.WALL) {
-          const screen = camera.worldToScreen(x * tileSize, y * tileSize);
-          this.renderAngledWall(ctx, x, y, screen.x, screen.y, tileSize, theme, ground);
+          const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+          this.renderAngledWall(ctx, x, y, screen.x, screen.y, tileSize, theme, ground, camera);
         }
       }
     }
   }
 
   /**
-   * Render single 2.5D wall block with front drop face and bevels
+   * Render single 2.5D wall block with front drop face and bevels relative to active camera rotation
    */
-  renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground) {
+  renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground, camera) {
     const wallH = Math.round(tileSize * 0.38); // e.g. 12px for 32px tile
-    const hasSouthWall = ground[y + 1]?.[x] === TILES.WALL;
-    const hasWestWall = ground[y]?.[x - 1] === TILES.WALL;
-    const hasEastWall = ground[y]?.[x + 1] === TILES.WALL;
+    const angle = camera ? camera.getDiscreteRotation() : 0;
+
+    let hasFrontWall, hasLeftWall, hasRightWall;
+    if (angle === 90) {
+      // East is UP, West is DOWN (Front)
+      hasFrontWall = ground[y]?.[x - 1] === TILES.WALL;
+      hasLeftWall = ground[y - 1]?.[x] === TILES.WALL;
+      hasRightWall = ground[y + 1]?.[x] === TILES.WALL;
+    } else if (angle === 180) {
+      // South is UP, North is DOWN (Front)
+      hasFrontWall = ground[y - 1]?.[x] === TILES.WALL;
+      hasLeftWall = ground[y]?.[x + 1] === TILES.WALL;
+      hasRightWall = ground[y]?.[x - 1] === TILES.WALL;
+    } else if (angle === 270) {
+      // West is UP, East is DOWN (Front)
+      hasFrontWall = ground[y]?.[x + 1] === TILES.WALL;
+      hasLeftWall = ground[y + 1]?.[x] === TILES.WALL;
+      hasRightWall = ground[y - 1]?.[x] === TILES.WALL;
+    } else {
+      // 0 deg: North is UP, South is DOWN (Front)
+      hasFrontWall = ground[y + 1]?.[x] === TILES.WALL;
+      hasLeftWall = ground[y]?.[x - 1] === TILES.WALL;
+      hasRightWall = ground[y]?.[x + 1] === TILES.WALL;
+    }
 
     // 1. Top Cap Face (Elevated by wallH)
     ctx.fillStyle = theme.wallTop;
@@ -216,8 +241,8 @@ export class GameRenderer {
     ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
     ctx.fillRect(screenX, screenY - wallH, tileSize, 2);
 
-    // 2. Front Face (South-facing vertical drop)
-    if (!hasSouthWall) {
+    // 2. Front Face (Facing downward towards camera view)
+    if (!hasFrontWall) {
       // Main vertical front face
       ctx.fillStyle = theme.wall;
       ctx.fillRect(screenX, screenY - wallH + tileSize, tileSize, wallH);
@@ -237,13 +262,13 @@ export class GameRenderer {
     }
 
     // 3. Side vertical depth bevels
-    if (!hasEastWall) {
+    if (!hasRightWall) {
       ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
-      ctx.fillRect(screenX + tileSize - 2, screenY - wallH, 2, tileSize + (hasSouthWall ? 0 : wallH));
+      ctx.fillRect(screenX + tileSize - 2, screenY - wallH, 2, tileSize + (hasFrontWall ? 0 : wallH));
     }
-    if (!hasWestWall) {
+    if (!hasLeftWall) {
       ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-      ctx.fillRect(screenX, screenY - wallH, 2, tileSize + (hasSouthWall ? 0 : wallH));
+      ctx.fillRect(screenX, screenY - wallH, 2, tileSize + (hasFrontWall ? 0 : wallH));
     }
 
     // Top border stroke
@@ -253,29 +278,49 @@ export class GameRenderer {
   }
 
   /**
+   * Translate ramp tile to screen orientation based on camera rotation
+   * @param {string} rampTile
+   * @param {number} angle
+   * @returns {string}
+   */
+  getScreenRampTile(rampTile, angle = 0) {
+    if (angle === 0) return rampTile;
+    const rampOrder = [TILES.RAMP_N, TILES.RAMP_E, TILES.RAMP_S, TILES.RAMP_W];
+    const idx = rampOrder.indexOf(rampTile);
+    if (idx === -1) return rampTile;
+    const shift = (4 - (Math.round(angle / 90) % 4)) % 4;
+    return rampOrder[(idx + shift) % 4];
+  }
+
+  /**
    * Render Overhead Layer in Angled 2.5D Mode with vertical lift and support pillars
    */
   renderAngledOverheadLayer(ctx, level, bounds, camera, theme, heightOffset) {
     const overhead = level.layers.overhead;
     const ground = level.layers.ground;
     const tileSize = camera.tileSize;
+    const angle = camera ? camera.getDiscreteRotation() : 0;
+    const isRotated90or270 = angle === 90 || angle === 270;
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const overTile = overhead?.[y]?.[x];
         const gTile = ground?.[y]?.[x];
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         // Render Ramps connecting ground to elevated deck
         if (this.isRampTile(gTile)) {
-          this.renderAngledRamp(ctx, gTile, screen.x, screen.y, tileSize, theme, heightOffset);
+          const screenRamp = this.getScreenRampTile(gTile, angle);
+          this.renderAngledRamp(ctx, screenRamp, screen.x, screen.y, tileSize, theme, heightOffset);
         }
 
         // Render Overhead Bridges
         if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
-          this.renderAngledBridgeSpan(ctx, 'NS', screen.x, screen.y, tileSize, theme, heightOffset);
+          const dir = isRotated90or270 ? 'EW' : 'NS';
+          this.renderAngledBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme, heightOffset);
         } else if (overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
-          this.renderAngledBridgeSpan(ctx, 'EW', screen.x, screen.y, tileSize, theme, heightOffset);
+          const dir = isRotated90or270 ? 'NS' : 'EW';
+          this.renderAngledBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme, heightOffset);
         }
       }
     }
@@ -403,13 +448,16 @@ export class GameRenderer {
       });
     }
 
-    // Sort ascending by bottomY (back to front)
-    drawables.sort((a, b) => a.bottomY - b.bottomY);
+    // Compute screen coordinates and sort ascending by screen.y (back to front in screen space)
+    for (const item of drawables) {
+      item.screen = camera.worldToScreen(item.worldX, item.worldY);
+    }
+    drawables.sort((a, b) => a.screen.y - b.screen.y);
 
     // Render sorted
     for (const item of drawables) {
       if (item.type === 'player') {
-        const screen = camera.worldToScreen(item.worldX, item.worldY);
+        const screen = item.screen;
         if (player.hasTorch && player.hasTorch()) {
           ctx.save();
           const pulse = Math.sin(this.exitPulseTimer * 1.5) * 0.1 + 0.9;
@@ -428,12 +476,7 @@ export class GameRenderer {
       } else {
         const entity = item.ref;
         const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
-        let screen;
-        if (isContinuous) {
-          screen = camera.worldToScreen(entity.worldX, entity.worldY);
-        } else {
-          screen = camera.worldToScreen(entity.x * tileSize, entity.y * tileSize);
-        }
+        const screen = isContinuous ? item.screen : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize, true);
         entity.render(ctx, screen.x, screen.y - heightOffset, tileSize, this.perspective);
       }
     }
@@ -481,32 +524,27 @@ export class GameRenderer {
           ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
 
           // Bridge underpass tunnel styling on ground layer
-          if (tile === TILES.BRIDGE_EW) {
-            // E-W Ground corridor passing UNDER North-South bridge
+          if (tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS) {
+            const angle = camera ? camera.getDiscreteRotation() : 0;
+            const isRotated90or270 = angle === 90 || angle === 270;
+            const isHorizUnderpass = (tile === TILES.BRIDGE_EW) ? !isRotated90or270 : isRotated90or270;
             ctx.fillStyle = theme.bridgeGround;
-            ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.76);
 
-            // Top and bottom underpass depth shadow
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.1);
-            ctx.fillRect(screen.x, screen.y + tileSize * 0.78, tileSize, tileSize * 0.1);
-
-            // Subtle corridor dashed center-line
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-            ctx.fillRect(screen.x + tileSize * 0.15, screen.y + tileSize * 0.48, tileSize * 0.7, 2);
-          } else if (tile === TILES.BRIDGE_NS) {
-            // N-S Ground corridor passing UNDER East-West bridge
-            ctx.fillStyle = theme.bridgeGround;
-            ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.76, tileSize);
-
-            // Left and right underpass depth shadow
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.1, tileSize);
-            ctx.fillRect(screen.x + tileSize * 0.78, screen.y, tileSize * 0.1, tileSize);
-
-            // Subtle corridor dashed center-line
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
-            ctx.fillRect(screen.x + tileSize * 0.48, screen.y + tileSize * 0.15, 2, tileSize * 0.7);
+            if (isHorizUnderpass) {
+              ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.76);
+              ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+              ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.1);
+              ctx.fillRect(screen.x, screen.y + tileSize * 0.78, tileSize, tileSize * 0.1);
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+              ctx.fillRect(screen.x + tileSize * 0.15, screen.y + tileSize * 0.48, tileSize * 0.7, 2);
+            } else {
+              ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.76, tileSize);
+              ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+              ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.1, tileSize);
+              ctx.fillRect(screen.x + tileSize * 0.78, screen.y, tileSize * 0.1, tileSize);
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.12)';
+              ctx.fillRect(screen.x + tileSize * 0.48, screen.y + tileSize * 0.15, 2, tileSize * 0.7);
+            }
           }
         }
       }
@@ -520,25 +558,28 @@ export class GameRenderer {
     const overhead = level.layers.overhead;
     const ground = level.layers.ground;
     const tileSize = camera.tileSize;
+    const angle = camera ? camera.getDiscreteRotation() : 0;
+    const isRotated90or270 = angle === 90 || angle === 270;
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const overTile = overhead?.[y]?.[x];
         const gTile = ground?.[y]?.[x];
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         // Render Ramps
         if (this.isRampTile(gTile)) {
-          this.renderRamp(ctx, gTile, screen.x, screen.y, tileSize, theme);
+          const screenRamp = this.getScreenRampTile(gTile, angle);
+          this.renderRamp(ctx, screenRamp, screen.x, screen.y, tileSize, theme);
         }
 
         // Render Overhead Bridge
         if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
-          // B_EW Overhead spans North-South across the EW tunnel below!
-          this.renderBridgeSpan(ctx, 'NS', screen.x, screen.y, tileSize, theme);
+          const dir = isRotated90or270 ? 'EW' : 'NS';
+          this.renderBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme);
         } else if (overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
-          // B_NS Overhead spans East-West across the NS tunnel below!
-          this.renderBridgeSpan(ctx, 'EW', screen.x, screen.y, tileSize, theme);
+          const dir = isRotated90or270 ? 'NS' : 'EW';
+          this.renderBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme);
         }
       }
     }
@@ -792,19 +833,39 @@ export class GameRenderer {
   }
 
   /**
-   * Render Exit (Stairs up, Portal, Archway)
+   * Render Exit (Stairs up, Portal, Archway) supporting multiple exits
    */
   renderExit(ctx, level, camera, theme, fog) {
-    if (!level.exit) return;
-    const { x, y, style = 'portal' } = level.exit;
-    if (fog && !fog.isExplored(x, y)) return;
+    const exitList = Array.isArray(level.exits) && level.exits.length > 0 ? level.exits : (level.exit ? [level.exit] : []);
+    for (const exit of exitList) {
+      const { x, y, style = 'portal', label } = exit;
+      if (fog && !fog.isExplored(x, y)) continue;
 
-    if (style === 'stairs' || style === 'stairs_up') {
-      this.renderExitStairs(ctx, x, y, camera, theme);
-    } else if (style === 'archway' || style === 'gate') {
-      this.renderExitArchway(ctx, x, y, camera, theme);
-    } else {
-      this.renderExitPortal(ctx, x, y, camera, theme, fog);
+      if (style === 'stairs' || style === 'stairs_up') {
+        this.renderExitStairs(ctx, x, y, camera, theme);
+      } else if (style === 'archway' || style === 'gate') {
+        this.renderExitArchway(ctx, x, y, camera, theme);
+      } else {
+        this.renderExitPortal(ctx, x, y, camera, theme, fog);
+      }
+
+      // If exit has a destination label (e.g. "To Catacombs"), render tooltip badge
+      if (label) {
+        const tileSize = camera.tileSize;
+        const screen = camera.worldToScreen(x * tileSize + tileSize / 2, y * tileSize - 8, true);
+        ctx.save();
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
+        const textWidth = ctx.measureText(label).width;
+        ctx.fillRect(screen.x - textWidth / 2 - 5, screen.y - 13, textWidth + 10, 16);
+        ctx.strokeStyle = '#38bdf8';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(screen.x - textWidth / 2 - 5, screen.y - 13, textWidth + 10, 16);
+        ctx.fillStyle = '#38bdf8';
+        ctx.fillText(label, screen.x, screen.y - 1);
+        ctx.restore();
+      }
     }
   }
 
