@@ -9,12 +9,12 @@ import { describe, it, assert, assertEqual } from '../../harness/index.mjs';
 import { LevelLoader } from '../../../js/levels/level-loader.js';
 
 describe('Levels > JSON File Integrity', () => {
-  it('validates existence and schema of all 10 campaign level files', () => {
+  it('validates existence and schema of all 28 campaign level files', () => {
     const manifestPath = path.resolve('./levels/manifest.json');
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const campaignEntries = manifest.filter(m => m.category === 'campaign' || !m.category);
 
-    assertEqual(campaignEntries.length, 10, 'Manifest contains 10 campaign levels');
+    assertEqual(campaignEntries.length, 28, 'Manifest contains 28 campaign levels');
 
     for (const entry of campaignEntries) {
       const jsonPath = path.resolve(entry.file);
@@ -61,7 +61,7 @@ describe('Levels > JSON File Integrity', () => {
 
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     assert(Array.isArray(manifest), 'manifest.json is an array');
-    assertEqual(manifest.length, 16, 'Lists 16 total levels (6 tutorial + 10 campaign)');
+    assertEqual(manifest.length, 34, 'Lists 34 total levels (6 tutorial + 28 campaign)');
 
     for (const entry of manifest) {
       assert(entry.id, `Manifest entry ${entry.id} has ID`);

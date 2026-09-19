@@ -21,6 +21,7 @@ export const ENTITY_TYPES = Object.freeze({
   HAZARD: 'hazard',
   PATROLLER: 'patroller',
   PUZZLE_GATE: 'puzzle_gate',
+  SIGNPOST: 'signpost',
 });
 
 export const VIEW_PERSPECTIVES = Object.freeze({
@@ -50,6 +51,99 @@ export const HAZARD_STYLES = Object.freeze([
 export const PUZZLE_GATE_STYLES = Object.freeze([
   { id: 'rune_memory', icon: '🔮', label: 'Rune Memory Seal', desc: 'Requires memorizing and repeating an illuminated 4-rune sequence' },
   { id: 'cipher_dial', icon: '🔐', label: 'Cipher Dial Barrier', desc: 'Requires aligning concentric runic dials to decipher the clue' },
+]);
+
+export const SIGNPOST_STYLES = Object.freeze([
+  { id: 'stone_tablet', icon: '🪨', label: 'Stone Tablet', desc: 'Carved obsidian tablet bearing ancient inscriptions' },
+  { id: 'wooden_sign', icon: '🪵', label: 'Wooden Signpost', desc: 'Charming weathered wooden marker left by a previous explorer' },
+  { id: 'astral_scroll', icon: '📜', label: 'Arcane Scroll', desc: "Illuminated parchment glowing with the Architect's notes" },
+]);
+
+export const MEDAL_TYPES = Object.freeze({
+  COMPLETION: 'completion',
+  PAR_STEPS: 'par_steps',
+  PAR_TIME: 'par_time',
+  FLAWLESS: 'flawless',
+});
+
+export const CAMPAIGN_CHAPTERS = Object.freeze([
+  {
+    id: 'chapter_1',
+    number: 1,
+    title: 'The Foundation',
+    subtitle: 'Ancient Stone Vaults',
+    theme: 'dungeon',
+    icon: '🏰',
+    description: 'Master spatial navigation, dynamic line of sight, and fundamental key/door mechanics.',
+    mechanic: 'Orientation & Keys',
+    levelCount: 4,
+  },
+  {
+    id: 'chapter_2',
+    number: 2,
+    title: 'The Vertical Dimension',
+    subtitle: 'Emerald Treetop Canopies',
+    theme: 'jungle',
+    icon: '🌴',
+    description: 'Ascend directional ramps, cross elevated bridges, and navigate multi-layer crossings.',
+    mechanic: '3D Bridges & Ramps',
+    levelCount: 4,
+  },
+  {
+    id: 'chapter_3',
+    number: 3,
+    title: 'Shifting Architecture',
+    subtitle: 'Sunken Clockwork Crypts',
+    theme: 'temple',
+    icon: '🏛️',
+    description: 'Engage clockwork levers to dynamically mutate wall barriers and invert pathways.',
+    mechanic: 'Modulating Levers',
+    levelCount: 4,
+  },
+  {
+    id: 'chapter_4',
+    number: 4,
+    title: 'Astral Anomalies',
+    subtitle: 'Resonant Crystal Caverns',
+    theme: 'cave',
+    icon: '💠',
+    description: 'Step into dimensional portals warping across disconnected chambers and elevations.',
+    mechanic: 'Teleportation Rifts',
+    levelCount: 4,
+  },
+  {
+    id: 'chapter_5',
+    number: 5,
+    title: 'Rhythm & Danger',
+    subtitle: 'Molten Core Foundry',
+    theme: 'lava',
+    icon: '🌋',
+    description: 'Dodge cyclical flame vents and sneak past continuous waypoint sentry patrols.',
+    mechanic: 'Hazards & Patrollers',
+    levelCount: 4,
+  },
+  {
+    id: 'chapter_6',
+    number: 6,
+    title: 'Arcane Seals',
+    subtitle: 'The Sunken Observatory',
+    theme: 'sunset',
+    icon: '🔮',
+    description: 'Decipher celestial cipher dials and repeat memory rune sequences to pass arcane gates.',
+    mechanic: 'Puzzle Minigames',
+    levelCount: 4,
+  },
+  {
+    id: 'chapter_7',
+    number: 7,
+    title: 'Grand Synthesis',
+    subtitle: 'Citadel of Trials',
+    theme: 'snow',
+    icon: '⭐',
+    description: 'The ultimate synthesis of 3D geometry, warps, levers, sentries, and cryptic puzzles.',
+    mechanic: 'Master Megalabyrinths',
+    levelCount: 4,
+  },
 ]);
 
 export const LAYERS = Object.freeze({

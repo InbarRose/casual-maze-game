@@ -29,6 +29,7 @@ import './unit/engine/perspective-renderer.test.mjs';
 import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
 import './unit/entities/dynamic-activities.test.mjs';
+import './unit/entities/signpost.test.mjs';
 
 // 4. Level Subsystem Unit Tests
 import './unit/levels/level-loader.test.mjs';
@@ -52,6 +53,8 @@ import './integration/journeys/editor-authoring.journey.test.mjs';
 import './integration/journeys/fog-exploration.journey.test.mjs';
 import './integration/journeys/multi-elevation.journey.test.mjs';
 import './integration/journeys/interactive-activities.journey.test.mjs';
+import './integration/journeys/campaign-progression.journey.test.mjs';
+import './integration/journeys/campaign-playthrough.journey.test.mjs';
 
 // Run registered suites
 await run();

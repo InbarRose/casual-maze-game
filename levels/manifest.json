@@ -50,81 +50,309 @@
   {
     "id": "1",
     "category": "campaign",
+    "chapter": "chapter_1",
     "zone": "zone_1",
-    "title": "The Training Hall",
-    "file": "levels/zone_1/level_1.json",
-    "theme": "dungeon"
+    "title": "First Footsteps",
+    "file": "levels/chapter_1/level_1.json",
+    "theme": "dungeon",
+    "parSteps": 35,
+    "parTime": 20
   },
   {
     "id": "2",
     "category": "campaign",
+    "chapter": "chapter_1",
     "zone": "zone_1",
-    "title": "The Overpass",
-    "file": "levels/zone_1/level_2.json",
-    "theme": "dungeon"
+    "title": "The Ruby Lock",
+    "file": "levels/chapter_1/level_2.json",
+    "theme": "dungeon",
+    "parSteps": 38,
+    "parTime": 22
   },
   {
     "id": "3",
     "category": "campaign",
+    "chapter": "chapter_1",
     "zone": "zone_1",
-    "title": "The Lever Crypt",
-    "file": "levels/zone_1/level_3.json",
-    "theme": "dungeon"
+    "title": "Prismatic Corridors",
+    "file": "levels/chapter_1/level_3.json",
+    "theme": "dungeon",
+    "parSteps": 54,
+    "parTime": 32
   },
   {
     "id": "4",
     "category": "campaign",
+    "chapter": "chapter_1",
     "zone": "zone_1",
-    "title": "Sky Bridges & Crossroads",
-    "file": "levels/zone_1/level_4.json",
-    "theme": "dungeon"
+    "title": "The Shrouded Vault",
+    "file": "levels/chapter_1/level_4.json",
+    "theme": "dungeon",
+    "parSteps": 68,
+    "parTime": 40
   },
   {
     "id": "5",
     "category": "campaign",
-    "zone": "zone_1",
-    "title": "The Sunken Vault",
-    "file": "levels/zone_1/level_5.json",
-    "theme": "dungeon"
+    "chapter": "chapter_2",
+    "zone": "zone_2",
+    "title": "The Wooden Ramp",
+    "file": "levels/chapter_2/level_5.json",
+    "theme": "jungle",
+    "parSteps": 36,
+    "parTime": 22
   },
   {
     "id": "6",
     "category": "campaign",
+    "chapter": "chapter_2",
     "zone": "zone_2",
-    "title": "The Canopy Crossing",
-    "file": "levels/zone_2/level_6.json",
-    "theme": "jungle"
+    "title": "Under & Over",
+    "file": "levels/chapter_2/level_6.json",
+    "theme": "jungle",
+    "parSteps": 48,
+    "parTime": 28
   },
   {
     "id": "7",
     "category": "campaign",
+    "chapter": "chapter_2",
     "zone": "zone_2",
-    "title": "The Vine Crypt",
-    "file": "levels/zone_2/level_7.json",
-    "theme": "jungle"
+    "title": "Canopy Crossroads",
+    "file": "levels/chapter_2/level_7.json",
+    "theme": "jungle",
+    "parSteps": 56,
+    "parTime": 34
   },
   {
     "id": "8",
     "category": "campaign",
+    "chapter": "chapter_2",
     "zone": "zone_2",
-    "title": "Heart of the Overgrowth",
-    "file": "levels/zone_2/level_8.json",
-    "theme": "jungle"
+    "title": "The Treehouse Spire",
+    "file": "levels/chapter_2/level_8.json",
+    "theme": "jungle",
+    "parSteps": 75,
+    "parTime": 45
   },
   {
     "id": "9",
     "category": "campaign",
+    "chapter": "chapter_3",
     "zone": "zone_3",
-    "title": "The Magma Chasm",
-    "file": "levels/zone_3/level_9.json",
-    "theme": "lava"
+    "title": "The Stone Switch",
+    "file": "levels/chapter_3/level_9.json",
+    "theme": "temple",
+    "parSteps": 40,
+    "parTime": 24
   },
   {
     "id": "10",
     "category": "campaign",
+    "chapter": "chapter_3",
     "zone": "zone_3",
-    "title": "The Obsidian Vault",
-    "file": "levels/zone_3/level_10.json",
-    "theme": "lava"
+    "title": "The Seesaw Chasm",
+    "file": "levels/chapter_3/level_10.json",
+    "theme": "temple",
+    "parSteps": 50,
+    "parTime": 30
+  },
+  {
+    "id": "11",
+    "category": "campaign",
+    "chapter": "chapter_3",
+    "zone": "zone_3",
+    "title": "Vertical Gears",
+    "file": "levels/chapter_3/level_11.json",
+    "theme": "temple",
+    "parSteps": 58,
+    "parTime": 35
+  },
+  {
+    "id": "12",
+    "category": "campaign",
+    "chapter": "chapter_3",
+    "zone": "zone_3",
+    "title": "The Clockwork Vault",
+    "file": "levels/chapter_3/level_12.json",
+    "theme": "temple",
+    "parSteps": 78,
+    "parTime": 48
+  },
+  {
+    "id": "13",
+    "category": "campaign",
+    "chapter": "chapter_4",
+    "zone": "zone_4",
+    "title": "The Crystal Rift",
+    "file": "levels/chapter_4/level_13.json",
+    "theme": "cave",
+    "parSteps": 38,
+    "parTime": 22
+  },
+  {
+    "id": "14",
+    "category": "campaign",
+    "chapter": "chapter_4",
+    "zone": "zone_4",
+    "title": "Dimensional Lift",
+    "file": "levels/chapter_4/level_14.json",
+    "theme": "cave",
+    "parSteps": 46,
+    "parTime": 26
+  },
+  {
+    "id": "15",
+    "category": "campaign",
+    "chapter": "chapter_4",
+    "zone": "zone_4",
+    "title": "The Relay Network",
+    "file": "levels/chapter_4/level_15.json",
+    "theme": "cave",
+    "parSteps": 54,
+    "parTime": 32
+  },
+  {
+    "id": "16",
+    "category": "campaign",
+    "chapter": "chapter_4",
+    "zone": "zone_4",
+    "title": "The Amethyst Nexus",
+    "file": "levels/chapter_4/level_16.json",
+    "theme": "cave",
+    "parSteps": 72,
+    "parTime": 44
+  },
+  {
+    "id": "17",
+    "category": "campaign",
+    "chapter": "chapter_5",
+    "zone": "zone_5",
+    "title": "The Fire Vents",
+    "file": "levels/chapter_5/level_17.json",
+    "theme": "lava",
+    "parSteps": 40,
+    "parTime": 24
+  },
+  {
+    "id": "18",
+    "category": "campaign",
+    "chapter": "chapter_5",
+    "zone": "zone_5",
+    "title": "The Sentry Hall",
+    "file": "levels/chapter_5/level_18.json",
+    "theme": "lava",
+    "parSteps": 48,
+    "parTime": 28
+  },
+  {
+    "id": "19",
+    "category": "campaign",
+    "chapter": "chapter_5",
+    "zone": "zone_5",
+    "title": "Molten Overpass",
+    "file": "levels/chapter_5/level_19.json",
+    "theme": "lava",
+    "parSteps": 60,
+    "parTime": 36
+  },
+  {
+    "id": "20",
+    "category": "campaign",
+    "chapter": "chapter_5",
+    "zone": "zone_5",
+    "title": "The Obsidian Gauntlet",
+    "file": "levels/chapter_5/level_20.json",
+    "theme": "lava",
+    "parSteps": 80,
+    "parTime": 50
+  },
+  {
+    "id": "21",
+    "category": "campaign",
+    "chapter": "chapter_6",
+    "zone": "zone_6",
+    "title": "The Rune Lock",
+    "file": "levels/chapter_6/level_21.json",
+    "theme": "sunset",
+    "parSteps": 38,
+    "parTime": 24
+  },
+  {
+    "id": "22",
+    "category": "campaign",
+    "chapter": "chapter_6",
+    "zone": "zone_6",
+    "title": "The Celestial Astrolabe",
+    "file": "levels/chapter_6/level_22.json",
+    "theme": "sunset",
+    "parSteps": 48,
+    "parTime": 28
+  },
+  {
+    "id": "23",
+    "category": "campaign",
+    "chapter": "chapter_6",
+    "zone": "zone_6",
+    "title": "The Linked Seals",
+    "file": "levels/chapter_6/level_23.json",
+    "theme": "sunset",
+    "parSteps": 62,
+    "parTime": 38
+  },
+  {
+    "id": "24",
+    "category": "campaign",
+    "chapter": "chapter_6",
+    "zone": "zone_6",
+    "title": "The Grand Archive",
+    "file": "levels/chapter_6/level_24.json",
+    "theme": "sunset",
+    "parSteps": 82,
+    "parTime": 52
+  },
+  {
+    "id": "25",
+    "category": "campaign",
+    "chapter": "chapter_7",
+    "zone": "zone_7",
+    "title": "The Synthesis Trial",
+    "file": "levels/chapter_7/level_25.json",
+    "theme": "snow",
+    "parSteps": 68,
+    "parTime": 42
+  },
+  {
+    "id": "26",
+    "category": "campaign",
+    "chapter": "chapter_7",
+    "zone": "zone_7",
+    "title": "The Clockwork Rift",
+    "file": "levels/chapter_7/level_26.json",
+    "theme": "snow",
+    "parSteps": 78,
+    "parTime": 48
+  },
+  {
+    "id": "27",
+    "category": "campaign",
+    "chapter": "chapter_7",
+    "zone": "zone_7",
+    "title": "The Arcane Chasm",
+    "file": "levels/chapter_7/level_27.json",
+    "theme": "snow",
+    "parSteps": 90,
+    "parTime": 56
+  },
+  {
+    "id": "28",
+    "category": "campaign",
+    "chapter": "chapter_7",
+    "zone": "zone_7",
+    "title": "The Master's Masterpiece",
+    "file": "levels/chapter_7/level_28.json",
+    "theme": "snow",
+    "parSteps": 110,
+    "parTime": 70
   }
 ]

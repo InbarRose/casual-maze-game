@@ -12,6 +12,7 @@ import { Lever } from '../entities/lever.js';
 import { Teleporter } from '../entities/teleporter.js';
 import { TimedHazard, Patroller } from '../entities/hazard.js';
 import { PuzzleGate } from '../entities/puzzle-gate.js';
+import { Signpost } from '../entities/signpost.js';
 import { Player } from '../entities/player.js';
 import { Camera } from './camera.js';
 import { FogOfWar } from './fog.js';
@@ -119,6 +120,7 @@ export class GameLoop {
       if (e.type === ENTITY_TYPES.HAZARD) return new TimedHazard(e);
       if (e.type === ENTITY_TYPES.PATROLLER) return new Patroller(e);
       if (e.type === ENTITY_TYPES.PUZZLE_GATE) return new PuzzleGate(e);
+      if (e.type === ENTITY_TYPES.SIGNPOST) return new Signpost(e);
       return null;
     }).filter(Boolean);
   }
@@ -459,6 +461,17 @@ export class GameLoop {
 
     const targetX = this.player.gridX + dx;
     const targetY = this.player.gridY + dy;
+    this.tryMove(targetX, targetY);
+  }
+
+  /**
+   * Attempt to move player towards target cell coordinate
+   * @param {number} targetX
+   * @param {number} targetY
+   * @returns {boolean} Whether movement was allowed and started
+   */
+  tryMove(targetX, targetY) {
+    if (this.player.isMoving || this.camera.mode === 'freepan') return false;
 
     // Check collision & elevation change
     const check = CollisionEngine.checkMove(
@@ -513,6 +526,7 @@ export class GameLoop {
       }
 
       this.player.startMove(targetX, targetY, check.nextElevation);
+      return true;
     } else if (check.reason === 'door_locked' && check.doorToUnlock) {
       const now = performance.now();
       if (!this.lastLockedDoorFeedback || now - this.lastLockedDoorFeedback > 450) {
@@ -532,13 +546,16 @@ export class GameLoop {
           y: targetY,
         });
       }
+      return false;
     } else if (check.reason === 'puzzle_gate_locked' && check.puzzleGate) {
       const now = performance.now();
       if (!this.lastPuzzleGateFeedback || now - this.lastPuzzleGateFeedback > 600) {
         this.lastPuzzleGateFeedback = now;
         this.openPuzzleGateModal(check.puzzleGate);
       }
+      return false;
     }
+    return false;
   }
 
   /**
@@ -657,6 +674,19 @@ export class GameLoop {
     if (teleporter && teleporter.canWarp()) {
       const dest = teleporter.triggerWarp();
       this.handleTeleport(teleporter, dest);
+    }
+
+    // 4. Check Signpost step trigger
+    const signpost = this.entities.find(
+      e => e.type === ENTITY_TYPES.SIGNPOST && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (signpost) {
+      const data = signpost.readSign();
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
+      globalEvents.emit('signpost:read', data);
+      if (this.uiCallbacks.onSignpostRead) {
+        this.uiCallbacks.onSignpostRead(data);
+      }
     }
 
     this.notifyUI();
@@ -806,6 +836,21 @@ export class GameLoop {
       return;
     }
 
+    // Check if player is on or adjacent to a Signpost
+    const adjacentSignposts = this.entities.filter(
+      e => e.type === ENTITY_TYPES.SIGNPOST && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (adjacentSignposts.length > 0) {
+      const signpost = adjacentSignposts[0];
+      const data = signpost.readSign();
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
+      globalEvents.emit('signpost:read', data);
+      if (this.uiCallbacks.onSignpostRead) {
+        this.uiCallbacks.onSignpostRead(data);
+      }
+      return;
+    }
+
     // Check if player is on or adjacent to a lever at matching elevation
     const adjacentLevers = this.entities.filter(
       e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation || ELEVATION.GROUND) === pe
@@ -883,15 +928,24 @@ export class GameLoop {
     this.isWon = true;
     this.renderer.spawnParticles(this.player.worldX, this.player.worldY, '#38bdf8', 60);
 
+    const earnedParSteps = this.level.parSteps !== undefined ? this.player.stepsTaken <= this.level.parSteps : false;
+    const earnedParTime = this.level.parTime !== undefined ? (this.elapsedTime / 1000) <= this.level.parTime : false;
+
     const stats = {
       time: this.elapsedTime,
       steps: this.player.stepsTaken,
+      earnedParSteps,
+      earnedParTime,
+      parSteps: this.level.parSteps,
+      parTime: this.level.parTime,
     };
 
     console.info(`[MazeGame:Engine] Victory achieved on level "${this.level.title}" (${this.level.id})!`, {
       timeFormatted: (this.elapsedTime / 1000).toFixed(2) + 's',
       steps: this.player.stepsTaken,
       finalInventory: [...this.player.inventory],
+      earnedParSteps,
+      earnedParTime,
     });
 
     this.logger.logVictory(stats, this.elapsedTime);

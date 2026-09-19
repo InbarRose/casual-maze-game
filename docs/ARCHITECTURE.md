@@ -62,12 +62,14 @@ casual-maze-game/
 │   ├── unit/                     # Granular subsystem unit test suites
 │   │   ├── core/                 # prng, events, storage, constants
 │   │   ├── engine/               # collision, fog, camera, debug-logger
-│   │   ├── entities/             # player, key, door, lever, dynamic-activities
+│   │   ├── entities/             # player, key, door, lever, signpost, dynamic-activities
 │   │   ├── levels/               # level-loader, json-integrity, campaign, tutorial
 │   │   └── editor/               # level-validator, json-exporter
 │   ├── integration/
 │   │   └── journeys/             # End-to-end simulated player & architect workflows
 │   │       ├── tutorial-progression.journey.test.mjs
+│   │       ├── campaign-progression.journey.test.mjs
+│   │       ├── campaign-playthrough.journey.test.mjs
 │   │       ├── campaign-solvability.journey.test.mjs
 │   │       ├── editor-authoring.journey.test.mjs
 │   │       ├── fog-exploration.journey.test.mjs
@@ -109,6 +111,7 @@ casual-maze-game/
 │   │   ├── key.js                # Collectible colored key entities
 │   │   ├── door.js               # Locked barrier entities
 │   │   ├── lever.js              # State-switching trigger entities (mutates grid tiles)
+│   │   ├── signpost.js           # Readable lore tablets, journal notes, spatial hints
 │   │   ├── teleporter.js         # Dimensional warp portals with 3D coordinate translation
 │   │   ├── hazard.js             # Timed cyclical hazards & waypoint-navigating patrollers
 │   │   └── puzzle-gate.js        # Interactive minigame puzzle barrier entities
@@ -116,7 +119,7 @@ casual-maze-game/
 │   │   └── puzzle-modal.js       # Pure static DOM modal for rune sequence and cipher dials
 │   ├── levels/
 │   │   ├── level-loader.js       # Schema validator, URL param parser, static level loader
-│   │   └── default-levels.js     # Hardcoded fallback campaign levels (Levels 1–10)
+│   │   └── default-levels.js     # Hardcoded fallback levels (28 campaign levels + 6 tutorials)
 │   └── editor/
 │       ├── editor-canvas.js      # Grid painting, drag-placement, coordinate preview
 │       ├── editor-ui.js          # Palette selection, layer toggling, toolbar bindings
@@ -124,9 +127,15 @@ casual-maze-game/
 │       ├── level-validator.js    # Static schema checks & BFS reachability solver
 │       └── json-exporter.js      # File export/import parser via Web File API
 └── levels/
-    ├── manifest.json             # Manifest of campaign and tutorial levels
-    ├── tutorial_1.json .. tutorial_6.json # Handcrafted tutorial levels
-    └── level_1.json .. level_10.json      # Canonical JSON campaign levels (Zones 1-3)
+    ├── manifest.json             # Manifest of 34 campaign & tutorial levels
+    ├── tutorial/                 # Handcrafted tutorial levels (tutorial_1.json .. tutorial_6.json)
+    ├── chapter_1/                # The Foundation (level_1.json .. level_4.json)
+    ├── chapter_2/                # The Vertical Dimension (level_5.json .. level_8.json)
+    ├── chapter_3/                # Shifting Architecture (level_9.json .. level_12.json)
+    ├── chapter_4/                # Astral Anomalies (level_13.json .. level_16.json)
+    ├── chapter_5/                # Rhythm & Danger (level_17.json .. level_20.json)
+    ├── chapter_6/                # Arcane Seals (level_21.json .. level_24.json)
+    └── chapter_7/                # Grand Synthesis (level_25.json .. level_28.json)
 ```
 
 ---
@@ -214,4 +223,33 @@ casual-maze-game/
     * `CIPHER_DIAL`: 3-ring celestial rotary lock requiring alignment to secret target runes.
   * Pure static modal UI (`js/ui/puzzle-modal.js`) with responsive mouse and keyboard controls.
   * Successful solve unlocks the gate, removes collision obstacle, and dispatches `puzzle:solved` event.
+* **Architect's Journal & Signpost Entity (`Signpost`):**
+  * Spatial narrative tablets and guidance markers embedded at specific `(x, y, z)` coordinates.
+  * Rendered across both 2.5D angled and 2D top-down perspectives with inscribed tablet glyphs and glowing rune embellishments.
+  * Proximity detection triggers read toasts and emits `signpost:read` events to the EventBus.
+
+### I. Progressive Campaign Architecture (Kishōtenketsu Progression)
+* **Design Philosophy:** Inspired by *World of Goo*, introducing core mechanics in isolation, developing variations, introducing unexpected twists, and culminating in grand synthesis.
+* **7-Chapter Thematic Arc (28 Levels):**
+  1. **Chapter 1: The Foundation** (Levels 1–4, Whispering Dungeon): Spatial orientation, 2D Line-of-Sight fog, colored keys and matching barrier doors.
+  2. **Chapter 2: The Vertical Dimension** (Levels 5–8, Emerald Canopy): 3D directional ramps (`R_N`, `R_S`) and multi-elevation bridges (`B_EW`, `B_NS`) enabling underpasses and overpasses.
+  3. **Chapter 3: Shifting Architecture** (Levels 9–12, Sunken Clockwork Crypt): Interactive switches and levers dynamically altering maze wall topography.
+  4. **Chapter 4: Astral Anomalies** (Levels 13–16, Crystal Caverns): Dimensional teleporter pairs connecting non-Euclidean isolated chambers across 3D space.
+  5. **Chapter 5: Rhythm & Danger** (Levels 17–20, Molten Core): Kinetic timed flame vents and autonomous waypoint patroller sentinels.
+  6. **Chapter 6: Arcane Seals** (Levels 21–24, Sunken Observatory): Interactive mental minigames (Simon-style Rune Memory and multi-ring Cipher Dials).
+  7. **Chapter 7: Grand Synthesis** (Levels 25–28, Citadel of Trials): Multi-floor megalabyrinths synthesizing bridges, teleporters, levers, patrollers, and puzzles.
+* **Tri-Medal Mastery & Progression (`StorageManager`):**
+  * Tracks 3 distinct mastery awards per level: **Completion Star**, **Pathfinder** (par steps), and **Speedrunner** (par elapsed seconds).
+  * Persisted locally with zero backend dependencies (`casual_maze_stars`, `casual_maze_par_steps`, `casual_maze_par_time`).
+  * Real-time chapter progress calculation (`getChapterStars(levels, progress)`) driving hub world cards and medal ribbons.
+
+### J. Automated BFS Playthrough Verification Engine
+* **Shortest Path State-Space Solver:**
+  * Zero-dependency Breadth-First Search (BFS) engine traversing the complete configuration space `(x, y, elevation, keyBitmask)`.
+  * Models key pickups, door unlocks, directional ramp transitions, bridge deck/underpass traversals, and teleporter dimensional jumps.
+* **Real Engine Simulation (`GameLoop.tryMove`):**
+  * Automated journey test (`campaign-playthrough.journey.test.mjs`) loads each of the 28 campaign levels into an instantiated `GameLoop` instance.
+  * Replays the solved optimal coordinate sequence step-by-step through real collision, inventory, and elevation transition logic.
+  * Formally verifies reachability and asserts `gameLoop.isWon === true` for every single level.
+
 

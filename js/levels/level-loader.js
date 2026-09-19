@@ -77,6 +77,9 @@ export class LevelLoader {
 
     // 1. Try fetching JSON file from /levels subdirectories
     if (typeof fetch === 'function') {
+      const chapterParam = params.get('chapter') ?? params.get('ch');
+      const fileParam = params.get('file');
+
       const fileNames = isTutorialMode
         ? [
             `levels/tutorial/tutorial_${cleanId}.json`,
@@ -84,6 +87,20 @@ export class LevelLoader {
             `levels/tutorial_${cleanId}.json`
           ]
         : [
+            ...(fileParam ? [fileParam, `./${fileParam}`] : []),
+            ...(chapterParam ? [
+              `levels/${chapterParam}/level_${cleanId}.json`,
+              `./levels/${chapterParam}/level_${cleanId}.json`,
+              `levels/chapter_${chapterParam.replace(/\D/g, '')}/level_${cleanId}.json`,
+              `./levels/chapter_${chapterParam.replace(/\D/g, '')}/level_${cleanId}.json`,
+            ] : []),
+            `levels/chapter_1/level_${cleanId}.json`,
+            `levels/chapter_2/level_${cleanId}.json`,
+            `levels/chapter_3/level_${cleanId}.json`,
+            `levels/chapter_4/level_${cleanId}.json`,
+            `levels/chapter_5/level_${cleanId}.json`,
+            `levels/chapter_6/level_${cleanId}.json`,
+            `levels/chapter_7/level_${cleanId}.json`,
             `levels/zone_1/level_${cleanId}.json`,
             `levels/zone_2/level_${cleanId}.json`,
             `levels/zone_3/level_${cleanId}.json`,
@@ -155,8 +172,12 @@ export class LevelLoader {
       $schema: raw.$schema || 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
       id: String(raw.id || 'custom'),
       zone: raw.zone || (raw.id && String(raw.id).startsWith('tutorial') ? 'tutorial' : 'zone_1'),
+      chapter: raw.chapter || raw.zone || undefined,
       title: raw.title || 'Untitled Labyrinth',
       author: raw.author || 'Anonymous',
+      architectNote: raw.architectNote ? String(raw.architectNote) : undefined,
+      parSteps: raw.parSteps !== undefined ? Number(raw.parSteps) : undefined,
+      parTime: raw.parTime !== undefined ? Number(raw.parTime) : undefined,
       version: raw.version || 1,
       dimensions: { width, height },
       config: {

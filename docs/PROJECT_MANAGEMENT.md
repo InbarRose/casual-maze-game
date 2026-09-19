@@ -6,8 +6,33 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.8.0` (Completed & Verified)
+### Current Version: `v1.9.0` (Completed & Verified)
 
+- [x] **Progressive Campaign Architecture (7 Chapters, 28 Levels)**:
+  - Structured progression inspired by *World of Goo*: introducing core mechanics, scaling, twisting, and culminating in grand synthesis.
+  - 7 curated chapters conforming to Kishōtenketsu 4-act progression:
+    1. **Chapter 1: The Foundation** (Levels 1-4, Whispering Dungeon, Orientation, Line of Sight, Keys).
+    2. **Chapter 2: The Vertical Dimension** (Levels 5-8, Emerald Canopy, 3D Bridges, Ramps, Underpasses).
+    3. **Chapter 3: Shifting Architecture** (Levels 9-12, Sunken Clockwork Crypt, Modulating Levers).
+    4. **Chapter 4: Astral Anomalies** (Levels 13-16, Crystal Caverns, Dimensional Teleporters).
+    5. **Chapter 5: Rhythm & Danger** (Levels 17-20, Molten Core, Timed Flame Vents, Patroller Sentinels).
+    6. **Chapter 6: Arcane Seals** (Levels 21-24, Sunken Observatory, Rune Memory, Cipher Dial Minigames).
+    7. **Chapter 7: Grand Synthesis** (Levels 25-28, Citadel of Trials, Megalabyrinth Fusion).
+- [x] **Architect's Journal & Signpost Entity (`Signpost`)**:
+  - Readable tablets and scrolls placed across labyrinths with whimsical lore and spatial guidance.
+  - Visual rendering across both 2.5D angled and top-down perspectives.
+  - Step arrival toast and event bus broadcast (`signpost:read`).
+- [x] **Tri-Medal Mastery & Progression System**:
+  - Three distinct achievement goals per level: Completion Star, Pathfinder (Par Steps), Speedrunner (Par Time).
+  - StorageManager aggregation: `getChapterStars(levels, progress)` and persistent medals.
+  - Hub world map (`index.html`) displaying chapter cards, tier tags, level pills, star counters, and medal ribbon status.
+- [x] **Automated Level Playthrough Verification Suite**:
+  - Zero-dependency BFS state-space pathfinding solver computing shortest winning paths for any level.
+  - `campaign-playthrough.journey.test.mjs` executing live GameLoop runtime simulation for all 28 campaign levels, verifying collision, key pickup, door unlocking, bridge crossing, teleporter warping, and victory.
+- [x] **Comprehensive Automated Test Coverage**:
+  - 31 test suites, 174 test cases, 3,455 assertions running with 0 failures in under 200ms.
+
+### Previous Milestone: `v1.8.0`
 - [x] **Angled Top-Down (2.5D) Perspective Renderer**:
   - Dual-perspective engine (`ANGLED` default, `TOPDOWN` flat toggleable with `[V]` and HUD button).
   - Dual-plane wall rendering with elevated top caps (`wallH = 12px`), vertical south-facing drop facades with brick/mortar relief, and cast shadows.
@@ -22,7 +47,6 @@ This document tracks project milestones, current release status, active developm
   - Simon-style sequential pattern memorization (`Rune Memory`).
   - 3-ring celestial rotary combination dial lock (`Cipher Dial`).
   - Responsive mouse and keyboard accessibility with solve animations and event bus dispatches.
-- [x] **Automated Test Coverage**: 28 test suites, 124 test cases, and 2,099 automated assertions running in ~200ms (0 failed).
 
 ### Previous Milestone: `v1.7.0`
 - [x] **3D `(X, Y, Z)` Coordinate Standardization**:
