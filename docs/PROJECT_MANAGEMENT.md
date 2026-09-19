@@ -6,7 +6,37 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.14.0` (Completed & Verified)
+### Current Version: `v1.15.0` (Completed & Verified)
+
+- [x] **Modern & Sleek Game UI Design System**:
+  - CSS3 glassmorphism system with surface layering (`--bg-deep`, `--bg-surface`, `--bg-glass`, `--bg-glass-elevated`, `--bg-glass-card`, `--border-glass-bright`, `--inset-highlight`).
+  - Luminescent neon accents (`--accent-cyan-glow`, `--gold-glow`, `--emerald-glow`, `--rose-glow`, `--purple-glow`).
+  - Tactile physical button mechanics with spring-curve transitions (`cubic-bezier(0.34, 1.56, 0.64, 1)`), active state depress, and angled light shimmer hover sweeps.
+  - Smooth modal transitions with backdrop blur and scaling pop-in animations (`scale(0.92)` to `scale(1)`).
+- [x] **Procedural Web Audio Sound FX Engine (`js/ui/audio-fx.js`)**:
+  - 100% static, zero-dependency browser Web Audio API procedural synthesizer (zero audio files to download or stream).
+  - Procedural sound presets: `playHover`, `playClick`, `playKeyPickup` (3-note arpeggio), `playDoorUnlock` (stone thud), `playLeverToggle`, `playTeleport` (frequency sweep), `playVictory` (triumphant fanfare), `playHazardHit`, `playCheckpoint`, `playModalOpen`, `playModalClose`.
+  - Persistent sound toggle (`localStorage['casual_maze_sound_muted']`) with audio button state mirroring.
+  - Automatic DOM listener attachment helper `attachToInteractiveElements()`.
+  - Headless-safe architecture enabling pure Node.js test execution.
+- [x] **In-Game Floating Island HUD & Pause Menu (`maze.html`, `js/ui/game-menu.js`)**:
+  - Decluttered viewport into 3 modern floating glassmorphic islands:
+    - **Navigation & Info Island** (`[← Hub]`, `[Editor]`, `#hud-level-card` with tutorial/chapter badge, elevation, room title).
+    - **Inventory Belt Island** (color keys, carried riddle relics, hints).
+    - **Telemetry & Controls Island** (time, steps, score, compass dial with rotation buttons, `[⏸ Menu [P]]`).
+  - In-game Pause & Action Menu controller (`GameMenu`) triggered via `[P]`, `Escape`, or menu button.
+  - Pause menu provides real-time level telemetry, view mode toggles (Angled 2.5D vs. Top-Down), Free-Pan mode, Activity Log, Hints, Save Progress export, Sound toggle, Restart, and Level Select.
+- [x] **Hub Navigation & Catalog Studio Mode (`index.html`)**:
+  - Modernized Hub mode switcher with 3 tabs: `📜 Storylines (3 Sagas)`, `🏰 Campaign Trail (8 Chapters • 32 Levels)`, and `🛠️ Level Architect (Studio)`.
+  - Integrated Story 3 (*The Whispering Citadel*) card with multi-room status tracking.
+  - Integrated Chapter 8 (*The Shifting Monolith*) section with 12-star completion counter.
+  - Architect Studio container housing Save Progress, Custom Maze importer, Maze Architect editor, and Art & Asset Catalog.
+- [x] **Automated Test Coverage & Quality Assurance**:
+  - 58 test suites, 274 tests, 5,915 assertions passing 100% (0 failed).
+  - Dedicated unit test suite for Web Audio sound synthesis (`audio-fx.test.mjs`).
+  - Dedicated unit test suite for Pause and Action Menu state machine (`game-menu.test.mjs`).
+
+### Previous Milestone: `v1.14.0`
 
 - [x] **Camera World Rotation & Perspective Mechanics**:
   - 4-quadrant camera rotation: `0° (North)`, `90° (East)`, `180° (South)`, `270° (West)`.

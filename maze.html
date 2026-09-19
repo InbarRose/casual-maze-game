@@ -19,12 +19,13 @@
     <!-- Main 2D Canvas -->
     <canvas id="game-canvas"></canvas>
 
-    <!-- Top HUD Overlay -->
+    <!-- Top HUD Overlay — Floating Islands -->
     <header class="game-hud-top">
-      <div class="hud-group">
-        <a href="index.html" class="btn btn-secondary btn-sm">← Hub</a>
+      <!-- Left Island: Navigation & Level Info -->
+      <div class="hud-island hud-island-left">
+        <a href="index.html" class="btn btn-secondary btn-sm" title="Return to Level Select Hub">← Hub</a>
         <a href="editor.html" class="btn btn-secondary btn-sm" id="hud-btn-editor" style="display: none;">🛠️ Editor</a>
-        <div class="hud-card">
+        <div class="hud-card" id="hud-level-card">
           <span class="tutorial-badge" id="hud-tutorial-badge" style="display: none;">🎓 Tutorial</span>
           <span class="hud-title" id="hud-level-title">Loading...</span>
           <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
@@ -32,12 +33,8 @@
         </div>
       </div>
 
-      <div class="hud-group">
-        <!-- Tutorial Hint Button -->
-        <button id="btn-hint" class="btn btn-secondary btn-sm" title="Toggle Tutorial Objective & Hint" style="display: none;">
-          💡 <span class="hide-mobile">Hint</span>
-        </button>
-
+      <!-- Center Island: Inventory & Carried Relics -->
+      <div class="hud-island hud-island-center">
         <!-- Inventory Keys & Held Items -->
         <div class="hud-card hud-inventory-card" id="hud-inventory-card" title="Player Inventory">
           <span class="inventory-icon">🎒</span>
@@ -57,34 +54,27 @@
           </div>
         </div>
 
+        <!-- Hint / Objective Button -->
+        <button id="btn-hint" class="btn btn-secondary btn-sm" title="Toggle Tutorial Objective & Hint" style="display: none;">
+          💡 <span class="hide-mobile">Hint</span>
+        </button>
+      </div>
+
+      <!-- Right Island: Stats, Compass Dial, & Pause Menu -->
+      <div class="hud-island hud-island-right">
         <!-- Timer, Steps, & Score -->
-        <div class="hud-card">
+        <div class="hud-card" id="hud-stats-card">
           <div class="hud-stat">⏱ <strong id="hud-timer">00:00.0</strong></div>
           <div class="hud-stat">👣 <strong id="hud-steps">0</strong></div>
           <div class="hud-stat">⭐ <strong id="hud-score">0</strong></div>
         </div>
 
-        <!-- In-Game Activity Log & Telemetry Access -->
-        <button id="btn-activity-log" class="btn btn-secondary btn-sm" title="View Full Activity Log & Telemetry History (L)">
-          📜 <span class="hide-mobile">Log [L]</span>
-        </button>
-
-        <!-- Instant Debug Log Download (Anytime) -->
-        <button id="btn-quick-download-log" class="btn btn-secondary btn-sm" title="Download Session Debug Log JSON at any time without finishing the level">
-          📥 <span class="hide-mobile">Debug Log</span>
-        </button>
-
-        <!-- Save Game Progress (Anytime during game) -->
-        <button id="btn-hud-save-progress" class="btn btn-secondary btn-sm" title="Save Game Progress (export JSON save file)">
-          💾 <span class="hide-mobile">Save Game Progress</span>
-        </button>
-
-        <!-- World Rotation Controls -->
-        <div class="rotation-control-group" style="display: inline-flex; align-items: center; gap: 0.25rem; background: rgba(15, 23, 42, 0.6); padding: 0.2rem 0.4rem; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2);">
+        <!-- World Rotation Compass Widget -->
+        <div class="rotation-control-group" id="rotation-control-group">
           <button id="btn-rotate-left" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CCW [Q]" aria-label="Rotate Left">
             ↺
           </button>
-          <span id="compass-badge" class="compass-badge" title="Compass Heading" style="font-size: 0.8rem; font-weight: 700; color: #38bdf8; min-width: 44px; text-align: center;">
+          <span id="compass-badge" class="compass-badge" title="Compass Heading">
             🧭 N
           </span>
           <button id="btn-rotate-right" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CW [R]" aria-label="Rotate Right">
@@ -92,15 +82,9 @@
           </button>
         </div>
 
-        <!-- Controls Toggles -->
-        <button id="btn-perspective" class="btn btn-secondary btn-sm" title="Toggle Perspective: Angled 2.5D / Top-Down (V)">
-          📐 <span class="hide-mobile">Perspective [V]</span>
-        </button>
-        <button id="btn-freepan" class="btn btn-secondary btn-sm" title="Toggle Free-Pan Mode (M)">
-          🗺 <span class="hide-mobile">Map Pan [M]</span>
-        </button>
-        <button id="btn-restart" class="btn btn-secondary btn-sm btn-icon" title="Restart Level (T)">
-          🔄
+        <!-- Pause / Game Menu Button -->
+        <button id="btn-open-menu" class="btn btn-primary btn-sm" title="Open Game Menu & Options (Esc / P)">
+          ⏸️ <span class="hide-mobile">Menu [P]</span>
         </button>
       </div>
     </header>
@@ -157,6 +141,71 @@
       <button class="dpad-btn dpad-center" id="vbtn-act" aria-label="Interact">USE</button>
       <button class="dpad-btn dpad-right" id="vbtn-right" aria-label="Right">▶</button>
       <button class="dpad-btn dpad-down" id="vbtn-down" aria-label="Down">▼</button>
+    </div>
+
+    <!-- In-Game Pause & Action Menu Modal -->
+    <div class="modal-backdrop" id="game-pause-modal">
+      <div class="modal-dialog pause-menu-dialog">
+        <div class="modal-header pause-header">
+          <div style="display: flex; align-items: center; gap: 0.65rem;">
+            <span style="font-size: 1.5rem;">⏸️</span>
+            <div>
+              <h2 style="font-size: 1.35rem; margin: 0; color: #f8fafc; letter-spacing: -0.01em;">Labyrinth Paused</h2>
+              <span id="pause-stat-title" style="font-size: 0.8rem; color: var(--accent); font-weight: 700;">First Footsteps</span>
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm btn-icon" id="btn-pause-close" title="Resume Game (Esc / P)">✕</button>
+        </div>
+
+        <div class="modal-body" style="padding: 1.25rem 1.5rem;">
+          <!-- Telemetry quick stats bar -->
+          <div class="pause-stats-banner">
+            <div class="pause-stat-item">
+              <span class="pause-stat-lbl">Time</span>
+              <strong id="pause-stat-time">00:00.0</strong>
+            </div>
+            <div class="pause-stat-item">
+              <span class="pause-stat-lbl">Steps</span>
+              <strong id="pause-stat-steps">0</strong>
+            </div>
+            <div class="pause-stat-item">
+              <span class="pause-stat-lbl">Keys</span>
+              <strong id="pause-stat-keys">0</strong>
+            </div>
+          </div>
+
+          <!-- Action Menu List -->
+          <div class="pause-menu-actions">
+            <button class="btn btn-primary pause-action-btn" id="btn-pause-resume">
+              ▶ <span>Resume Labyrinth [Esc / P]</span>
+            </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-restart">
+              🔄 <span>Restart Level [T]</span>
+            </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-perspective">
+              📐 <span>View: Angled 2.5D [V]</span>
+            </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-freepan">
+              🗺️ <span>Free-Pan Mode [M]</span>
+            </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-hint" style="display: none;">
+              📜 <span>Objective &amp; Lore</span>
+            </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-log">
+              📜 <span>Activity Log &amp; Telemetry [L]</span>
+            </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-sound">
+              🔊 <span>Sound FX: ON</span>
+            </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-save">
+              💾 <span>Save Game Progress (.json)</span>
+            </button>
+            <button class="btn btn-danger pause-action-btn" id="btn-pause-quit">
+              🏰 <span>Return to Level Select</span>
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- In-Game Activity Log & Telemetry Modal -->
@@ -308,6 +357,8 @@
     import { globalEvents } from './js/core/events.js';
     import { StorageManager } from './js/core/storage.js';
     import { getStoryline, getNextStoryChapter } from './js/stories/storylines.js';
+    import { audioFX } from './js/ui/audio-fx.js';
+    import { GameMenu } from './js/ui/game-menu.js';
 
 
     // Global Runtime Error Capture & Telemetry Routing
@@ -580,15 +631,19 @@
           }
         },
         onRoomTransition: (data) => {
+          audioFX.playTeleport();
           showToast(`🚪 Entered: ${data.roomTitle}`, 'info');
         },
         onWallDecorInspected: (data) => {
+          audioFX.playModalOpen();
           openInspectModal(data);
         },
         onPedestalInspect: (data) => {
+          audioFX.playModalOpen();
           openPedestalModal(data);
         },
         onPedestalInteract: (data) => {
+          audioFX.playKeyPickup();
           if (data.action === 'placed') {
             showToast(`Placed ${data.placedItem?.name || 'Relic'} onto ${data.pedestal?.name || 'Pedestal'}!`, 'success');
           } else if (data.action === 'swapped') {
@@ -598,31 +653,33 @@
           }
         },
         onRiddleItemCollected: (item) => {
+          audioFX.playKeyPickup();
           showToast(`🦅 Picked up ${item.name || 'Riddle Relic'}!`, 'success');
         },
         onRiddleSolved: (data) => {
+          audioFX.playVictory();
           showToast('✨ The sanctum riddle has been solved! Gate unlocked!', 'success');
         },
         onCheckpointActivated: (cp) => {
+          audioFX.playCheckpoint();
           showToast(`🚩 Checkpoint Activated: ${cp.name}`, 'info');
         },
         onCollectibleCollected: (data) => {
+          audioFX.playKeyPickup();
           if (data.isCarriable) {
             showToast(`🔥 Equipped: ${data.name}!`, 'success');
           }
         },
         onFreePanChange: (mode) => {
+          audioFX.playClick();
           if (mode === 'freepan') {
             freepanBanner.classList.add('active');
-            btnFreePan.classList.add('btn-primary');
-            btnFreePan.classList.remove('btn-secondary');
           } else {
             freepanBanner.classList.remove('active');
-            btnFreePan.classList.remove('btn-primary');
-            btnFreePan.classList.add('btn-secondary');
           }
         },
         onVictory: (stats) => {
+          audioFX.playVictory();
           document.getElementById('vic-time').textContent = `${(stats.time / 1000).toFixed(1)}s`;
           document.getElementById('vic-steps').textContent = stats.steps;
 
@@ -631,17 +688,20 @@
             medalsContainer.innerHTML = '';
             
             const starPill = document.createElement('div');
-            starPill.style.cssText = 'background: rgba(251, 191, 36, 0.15); border: 1px solid #fbbf24; color: #fbbf24; font-size: 0.8rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-weight: 600;';
-            starPill.textContent = '★ Level Cleared';
+            starPill.className = 'victory-medal-pill';
+            starPill.style.cssText = 'background: rgba(251, 191, 36, 0.2); border: 1.5px solid #fbbf24; color: #fbbf24;';
+            starPill.innerHTML = '★ <span>Level Cleared</span>';
             medalsContainer.appendChild(starPill);
 
             if (currentLevel.parSteps) {
               const stepsPill = document.createElement('div');
               const earnedSteps = stats.earnedParSteps;
+              stepsPill.className = 'victory-medal-pill';
+              stepsPill.style.animationDelay = '0.12s';
               stepsPill.style.cssText = earnedSteps
-                ? 'background: rgba(52, 211, 153, 0.18); border: 1px solid #34d399; color: #34d399; font-size: 0.8rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-weight: 600;'
-                : 'background: rgba(100, 116, 139, 0.15); border: 1px solid #64748b; color: #94a3b8; font-size: 0.8rem; padding: 0.3rem 0.75rem; border-radius: 9999px;';
-              stepsPill.textContent = earnedSteps ? `👟 Pathfinder (${stats.steps} / ${currentLevel.parSteps} steps)` : `👟 Par: ${currentLevel.parSteps} steps`;
+                ? 'background: rgba(52, 211, 153, 0.2); border: 1.5px solid #34d399; color: #34d399;'
+                : 'background: rgba(100, 116, 139, 0.2); border: 1.5px solid #64748b; color: #94a3b8;';
+              stepsPill.innerHTML = earnedSteps ? `👟 <span>Pathfinder (${stats.steps} / ${currentLevel.parSteps})</span>` : `👟 <span>Par: ${currentLevel.parSteps}</span>`;
               medalsContainer.appendChild(stepsPill);
             }
 
@@ -649,10 +709,12 @@
               const timePill = document.createElement('div');
               const earnedTime = stats.earnedParTime;
               const timeSec = (stats.time / 1000).toFixed(1);
+              timePill.className = 'victory-medal-pill';
+              timePill.style.animationDelay = '0.24s';
               timePill.style.cssText = earnedTime
-                ? 'background: rgba(56, 189, 248, 0.18); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.8rem; padding: 0.3rem 0.75rem; border-radius: 9999px; font-weight: 600;'
-                : 'background: rgba(100, 116, 139, 0.15); border: 1px solid #64748b; color: #94a3b8; font-size: 0.8rem; padding: 0.3rem 0.75rem; border-radius: 9999px;';
-              timePill.textContent = earnedTime ? `⏱️ Speedrunner (${timeSec}s / ${currentLevel.parTime}s)` : `⏱️ Par: ${currentLevel.parTime}s`;
+                ? 'background: rgba(56, 189, 248, 0.2); border: 1.5px solid #38bdf8; color: #38bdf8;'
+                : 'background: rgba(100, 116, 139, 0.2); border: 1.5px solid #64748b; color: #94a3b8;';
+              timePill.innerHTML = earnedTime ? `⏱️ <span>Speedrunner (${timeSec}s / ${currentLevel.parTime}s)</span>` : `⏱️ <span>Par: ${currentLevel.parTime}s</span>`;
               medalsContainer.appendChild(timePill);
             }
           }
@@ -985,9 +1047,11 @@
         promptRestartConfirmation();
       } else if (e.code === 'KeyQ' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
+        audioFX.playClick();
         gameLoop.rotateLeft();
       } else if (e.code === 'KeyR' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
+        audioFX.playClick();
         gameLoop.rotateRight();
       } else if (e.code === 'Escape') {
         cancelRestart();
@@ -996,17 +1060,122 @@
       }
     });
 
+    // Pause & Action Menu Controller
+    const pauseModalEl = document.getElementById('game-pause-modal');
+    const btnOpenMenu = document.getElementById('btn-open-menu');
+    const btnPauseClose = document.getElementById('btn-pause-close');
+
+    const gameMenu = new GameMenu({
+      modalEl: pauseModalEl,
+      onResume: () => {
+        audioFX.playModalClose();
+        if (window.gameLoop && !window.gameLoop.isRunning) {
+          window.gameLoop.start();
+        }
+      },
+      onRestart: () => {
+        audioFX.playClick();
+        promptRestartConfirmation();
+      },
+      onTogglePerspective: () => {
+        audioFX.playClick();
+        if (window.gameLoop) {
+          window.gameLoop.togglePerspective();
+        }
+      },
+      onToggleFreePan: () => {
+        audioFX.playClick();
+        if (window.gameLoop) {
+          window.gameLoop.toggleFreePan();
+        }
+      },
+      onOpenLog: () => {
+        audioFX.playModalOpen();
+        openActivityLogModal();
+      },
+      onOpenHint: () => {
+        audioFX.playModalOpen();
+        if (tutorialHintCard) {
+          tutorialHintCard.style.display = 'block';
+          tutorialHintCard.classList.remove('minimized');
+        }
+      },
+      onSaveProgress: () => {
+        audioFX.playClick();
+        handleSaveGameProgress();
+      },
+      onToggleSound: () => {
+        const isMuted = audioFX.toggleMute();
+        if (!isMuted) audioFX.playClick();
+        showToast(isMuted ? 'Sound FX Muted' : 'Sound FX Enabled', 'info');
+        return isMuted;
+      },
+      onQuit: () => {
+        audioFX.playClick();
+        window.location.href = 'index.html';
+      },
+      isOtherModalOpen: () => {
+        return (
+          (activityModal && activityModal.classList.contains('active')) ||
+          (victoryModal && victoryModal.classList.contains('active')) ||
+          (restartConfirmModal && restartConfirmModal.classList.contains('active')) ||
+          (inspectModal && inspectModal.classList.contains('active')) ||
+          (pedestalModal && pedestalModal.classList.contains('active'))
+        );
+      },
+    });
+
+    function openPauseMenu() {
+      if (window.gameLoop && window.gameLoop.isRunning) {
+        window.gameLoop.stop();
+      }
+      gameMenu.pause({
+        title: currentLevel.title || 'Labyrinth',
+        timeStr: formatTime(window.gameLoop ? window.gameLoop.elapsedTime : 0),
+        steps: window.gameLoop?.player?.stepsTaken || 0,
+        keysHeld: window.gameLoop?.player?.inventory?.length || 0,
+      });
+      gameMenu.updateSoundButtonLabel(audioFX.isMuted());
+      if (window.gameLoop?.renderer) {
+        gameMenu.updatePerspectiveButtonLabel(window.gameLoop.renderer.perspective);
+      }
+    }
+
+    if (btnOpenMenu) {
+      btnOpenMenu.addEventListener('click', () => {
+        audioFX.playModalOpen();
+        openPauseMenu();
+      });
+    }
+
+    if (btnPauseClose) {
+      btnPauseClose.addEventListener('click', () => {
+        gameMenu.resume();
+      });
+    }
+
     // Button event listeners
     const btnRotateLeft = document.getElementById('btn-rotate-left');
     const btnRotateRight = document.getElementById('btn-rotate-right');
-    if (btnRotateLeft) btnRotateLeft.addEventListener('click', () => gameLoop.rotateLeft());
-    if (btnRotateRight) btnRotateRight.addEventListener('click', () => gameLoop.rotateRight());
+    if (btnRotateLeft) btnRotateLeft.addEventListener('click', () => {
+      audioFX.playClick();
+      gameLoop.rotateLeft();
+    });
+    if (btnRotateRight) btnRotateRight.addEventListener('click', () => {
+      audioFX.playClick();
+      gameLoop.rotateRight();
+    });
 
-    btnFreePan.addEventListener('click', () => gameLoop.toggleFreePan());
-    btnRestart.addEventListener('click', () => {
+    btnFreePan?.addEventListener('click', () => {
+      audioFX.playClick();
+      gameLoop.toggleFreePan();
+    });
+    btnRestart?.addEventListener('click', () => {
+      audioFX.playClick();
       promptRestartConfirmation();
     });
     btnReplay.addEventListener('click', () => {
+      audioFX.playClick();
       lastRenderedKeyIds = '';
       victoryModal.classList.remove('active');
       gameLoop.restartLevel();
@@ -1100,23 +1269,27 @@
     }
 
     globalEvents.on('key:collected', (data) => {
+      audioFX.playKeyPickup();
       const coords = (data.x !== undefined && data.y !== undefined) ? ` at (${data.x}, ${data.y})` : '';
       showToast(`Acquired ${data.name || 'Key'}${coords}!`, 'success');
       addActivityLog(`Collected <strong>${data.name || 'Key'}</strong>${coords} (Holding: ${data.inventoryCount || 1})`, 'key-event', '🗝️', 'key');
     });
 
     globalEvents.on('door:unlocked', (data) => {
+      audioFX.playDoorUnlock();
       const coords = (data.x !== undefined && data.y !== undefined) ? ` at (${data.x}, ${data.y})` : '';
       showToast(`Gate unlocked${coords}!`, 'success');
       addActivityLog(`Unlocked <strong>${data.doorName || 'Gate'}</strong>${coords}`, 'door-event', '🔓', 'door');
     });
 
     globalEvents.on('door:locked', (data) => {
+      audioFX.playHazardHit();
       const coords = (data.x !== undefined && data.y !== undefined) ? ` at (${data.x}, ${data.y})` : '';
       addActivityLog(`<strong>${data.doorName || 'Gate'}</strong>${coords} is locked! Requires <strong>${data.requiredKeyName || 'Key'}</strong>`, 'locked-warn', '🔒', 'warning');
     });
 
     globalEvents.on('lever:toggled', (data) => {
+      audioFX.playLeverToggle(data.state);
       const stateName = data.state ? 'ON' : 'OFF';
       const type = data.state ? 'lever-on' : 'lever-off';
       const icon = data.state ? '⚡' : '🔌';
@@ -1154,6 +1327,7 @@
     }
 
     btnPerspective?.addEventListener('click', () => {
+      audioFX.playClick();
       if (window.gameLoop) {
         window.gameLoop.togglePerspective();
       }
@@ -1167,24 +1341,31 @@
     });
 
     globalEvents.on('teleport:warped', (data) => {
+      audioFX.playTeleport();
       showToast(`Dimensional warp through ${data.name || 'Teleporter'}!`, 'success');
       addActivityLog(`Warped through <strong>${data.name || 'Teleporter'}</strong> to (${data.to.x}, ${data.to.y}, ${data.to.z ?? 0})`, 'success', '🌀', 'info');
     });
 
     globalEvents.on('player:hazard_hit', (data) => {
+      audioFX.playHazardHit();
       showToast(`Struck by ${data.name || 'Hazard'}! Returning to spawn.`, 'warning');
       addActivityLog(`Struck by <strong>${data.name || 'Hazard'}</strong> at (${data.x}, ${data.y})! Respawned.`, 'warning', '⚠️', 'warning');
     });
 
     globalEvents.on('puzzle:solved', (data) => {
+      audioFX.playVictory();
       showToast(`Mystic seal unlocked: ${data.name || 'Gate'}!`, 'success');
       addActivityLog(`Solved mystic seal for <strong>${data.name || 'Gate'}</strong>!`, 'success', '✨', 'door');
     });
 
     globalEvents.on('signpost:read', (data) => {
+      audioFX.playModalOpen();
       showToast(`📜 ${data.title}: "${data.text}"`, 'info');
       addActivityLog(`Read <strong>${data.title}</strong>: "${data.text}" <em>— ${data.author}</em>`, 'info', '📜', 'info');
     });
+
+    // Attach audio FX listeners to all interactive buttons and links
+    audioFX.attachToInteractiveElements(document);
   </script>
 </body>
 </html>
