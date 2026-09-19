@@ -354,5 +354,35 @@
     "theme": "snow",
     "parSteps": 110,
     "parTime": 70
+  },
+  {
+    "id": "story_guardians_1",
+    "category": "story",
+    "zone": "story",
+    "storyId": "relics_of_the_guardians",
+    "chapter": 1,
+    "title": "The Whispering Ruins",
+    "file": "levels/stories/story_guardians_1.json",
+    "theme": "temple"
+  },
+  {
+    "id": "story_guardians_2",
+    "category": "story",
+    "zone": "story",
+    "storyId": "relics_of_the_guardians",
+    "chapter": 2,
+    "title": "The Falcon's Plinth",
+    "file": "levels/stories/story_guardians_2.json",
+    "theme": "temple"
+  },
+  {
+    "id": "story_guardians_3",
+    "category": "story",
+    "zone": "story",
+    "storyId": "relics_of_the_guardians",
+    "chapter": 3,
+    "title": "Sanctum of the Four Guardians",
+    "file": "levels/stories/story_guardians_3.json",
+    "theme": "temple"
   }
 ]

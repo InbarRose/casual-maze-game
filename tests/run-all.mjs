@@ -36,11 +36,12 @@ import './unit/entities/collectible.test.mjs';
 import './unit/entities/riddle-item.test.mjs';
 import './unit/entities/pedestal.test.mjs';
 
-// 4. Level Subsystem Unit Tests
+// 4. Level & Story Subsystem Unit Tests
 import './unit/levels/level-loader.test.mjs';
 import './unit/levels/json-integrity.test.mjs';
 import './unit/levels/campaign-levels.test.mjs';
 import './unit/levels/tutorial-levels.test.mjs';
+import './unit/stories/storylines.test.mjs';
 
 // 5. Editor Subsystem Unit Tests
 import './unit/editor/level-validator.test.mjs';
@@ -71,6 +72,8 @@ import './integration/journeys/campaign-progression.journey.test.mjs';
 import './integration/journeys/obstacle-interactions.journey.test.mjs';
 import './integration/journeys/checkpoints-and-lore.journey.test.mjs';
 import './integration/journeys/riddle-pedestals.journey.test.mjs';
+import './integration/journeys/storylines-progression.journey.test.mjs';
 
 // Run registered suites
+
 await run();

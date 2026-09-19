@@ -55,13 +55,36 @@ describe('Levels > JSON File Integrity', () => {
     }
   });
 
+  it('validates existence and schema of all 3 story level files', () => {
+    const manifestPath = path.resolve('./levels/manifest.json');
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    const storyEntries = manifest.filter(m => m.category === 'story');
+
+    assertEqual(storyEntries.length, 3, 'Manifest contains 3 story levels');
+
+    for (const entry of storyEntries) {
+      const jsonPath = path.resolve(entry.file);
+      assert(fs.existsSync(jsonPath), `File ${entry.file} exists on disk`);
+
+      const raw = JSON.parse(fs.readFileSync(jsonPath, 'utf8'));
+      const norm = LevelLoader.normalizeLevel(raw);
+
+      assert(norm.dimensions.width >= 5, `Story ${entry.id} width >= 5`);
+      assert(norm.dimensions.height >= 5, `Story ${entry.id} height >= 5`);
+      assertEqual(norm.layers.ground.length, norm.dimensions.height, `Story ${entry.id} ground height matches`);
+      assertEqual(norm.layers.ground[0].length, norm.dimensions.width, `Story ${entry.id} ground width matches`);
+      assert(norm.spawn && typeof norm.spawn.x === 'number', `Story ${entry.id} has valid spawn`);
+      assert(norm.exit && typeof norm.exit.x === 'number', `Story ${entry.id} has valid exit`);
+    }
+  });
+
   it('validates levels/manifest.json registry entries', () => {
     const manifestPath = path.resolve('./levels/manifest.json');
     assert(fs.existsSync(manifestPath), 'manifest.json exists on disk');
 
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     assert(Array.isArray(manifest), 'manifest.json is an array');
-    assertEqual(manifest.length, 34, 'Lists 34 total levels (6 tutorial + 28 campaign)');
+    assertEqual(manifest.length, 37, 'Lists 37 total levels (6 tutorial + 3 story + 28 campaign)');
 
     for (const entry of manifest) {
       assert(entry.id, `Manifest entry ${entry.id} has ID`);

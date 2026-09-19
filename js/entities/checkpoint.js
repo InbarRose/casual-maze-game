@@ -37,6 +37,10 @@ export class Checkpoint {
     this.z = value;
   }
 
+  get isActivated() {
+    return this.activated;
+  }
+
   /**
    * Canonical (X, Y, Z) coordinate string
    * @returns {string}

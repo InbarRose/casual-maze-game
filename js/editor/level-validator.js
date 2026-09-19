@@ -173,7 +173,11 @@ export class LevelValidator {
       }
     }
 
-    // Check Doors for valid matching keys
+    // Check Doors for valid matching keys or pedestal triggers
+    const pedestalTargets = new Set(
+      entities.filter(e => e.type === 'pedestal' && e.targetDoorId).map(e => e.targetDoorId)
+    );
+
     for (const door of doorEntities) {
       const dz = door.z ?? door.elevation ?? 0;
       if (door.requiresKey && !keyEntities.has(door.requiresKey)) {
@@ -183,7 +187,7 @@ export class LevelValidator {
           x: door.x,
           y: door.y,
         });
-      } else if (!door.requiresKey) {
+      } else if (!door.requiresKey && !pedestalTargets.has(door.id)) {
         warnings.push({
           message: `Door "${door.id}" at ${formatXYZ(door.x, door.y, dz)} has no required key assigned and will always be locked.`,
           entityId: door.id,
@@ -192,6 +196,7 @@ export class LevelValidator {
         });
       }
     }
+
 
     // Check Levers for target bounds
     for (const lever of leverEntities) {

@@ -165,6 +165,59 @@
       background: rgba(56, 189, 248, 0.04);
     }
 
+    .mode-nav {
+      display: flex;
+      gap: 0.75rem;
+      width: 100%;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--card-border);
+      padding-bottom: 0.75rem;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .mode-tab {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.75rem 1.4rem;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.95rem;
+      cursor: pointer;
+      background: var(--bg);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+    }
+
+    .mode-tab:hover {
+      color: var(--text);
+      border-color: #58a6ff;
+      transform: translateY(-1px);
+    }
+
+    .mode-tab.active {
+      background: var(--card-bg);
+      border-color: var(--accent);
+      color: var(--text);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+    }
+
+    .story-card {
+      width: 100%;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      margin-bottom: 1.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .story-card:hover {
+      border-color: rgba(56, 189, 248, 0.4);
+    }
+
     footer {
       margin-top: 2rem;
       font-size: 0.85rem;
@@ -189,53 +242,107 @@
         Traverse multi-elevation bridges &amp; tunnels, uncover hidden paths through dynamic fog of war, trigger puzzle switches, and design custom labyrinths.
       </p>
       <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-        <a href="maze.html?tutorial=1" class="btn btn-primary">🎓 Start Tutorial 1</a>
-        <a href="maze.html?id=1" class="btn btn-secondary">🏰 Enter Campaign (Chapter 1)</a>
+        <button id="btn-hero-stories" class="btn btn-primary">📜 Explore Stories</button>
+        <button id="btn-hero-campaign" class="btn btn-secondary">🏰 Enter Campaign</button>
         <a href="editor.html" class="btn btn-secondary">🛠️ Maze Architect</a>
-        <button id="btn-hero-save-progress" class="btn btn-secondary" title="Save Game Progress (export JSON save file)">💾 Save Game Progress</button>
+        <button id="btn-hero-save-progress" class="btn btn-secondary" title="Save Game Progress (export JSON save file)">💾 Save Progress</button>
       </div>
     </header>
 
-    <!-- Tutorial Academy Section -->
-    <section class="campaign-section" style="border-color: rgba(56, 189, 248, 0.35); background: linear-gradient(180deg, rgba(56, 189, 248, 0.04) 0%, rgba(22, 27, 34, 0.9) 100%);">
-      <div class="campaign-header">
-        <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
-            <h2 style="font-size: 1.25rem; font-weight: 700;">🎓 Tutorial Academy</h2>
-            <span class="badge" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--accent); font-size: 0.7rem;">Quick Lessons</span>
-          </div>
-          <p style="font-size: 0.85rem; color: var(--text-muted);">Master core mechanics one at a time: navigation, colored keys, levers, elevation ramps, and fog of war.</p>
-        </div>
-        <a href="maze.html?tutorial=1" class="btn btn-primary btn-sm">Start Tutorial 1 →</a>
-      </div>
+    <!-- Game Mode Switcher Navigation -->
+    <nav class="mode-nav" id="mode-tabs">
+      <button class="mode-tab active" id="tab-stories" data-mode="stories">
+        <span>📜</span>
+        <span>Storylines ("Stories")</span>
+        <span class="badge" id="badge-stories-count" style="background: rgba(56, 189, 248, 0.15); color: var(--accent); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">2 Quests</span>
+      </button>
+      <button class="mode-tab" id="tab-campaign" data-mode="campaign">
+        <span>🏰</span>
+        <span>Campaign Trail</span>
+        <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">7 Chapters • 28 Levels</span>
+      </button>
+    </nav>
 
-      <div class="campaign-levels" id="tutorial-list">
-        <a href="maze.html?tutorial=1" class="level-pill" data-id="tutorial_1">
-          <span class="level-number">T1</span>
-          <span class="level-name">First Steps</span>
-        </a>
-        <a href="maze.html?tutorial=2" class="level-pill" data-id="tutorial_2">
-          <span class="level-number">T2</span>
-          <span class="level-name">Color Keys</span>
-        </a>
-        <a href="maze.html?tutorial=3" class="level-pill" data-id="tutorial_3">
-          <span class="level-number">T3</span>
-          <span class="level-name">Levers</span>
-        </a>
-        <a href="maze.html?tutorial=4" class="level-pill" data-id="tutorial_4">
-          <span class="level-number">T4</span>
-          <span class="level-name">Bridges</span>
-        </a>
-        <a href="maze.html?tutorial=5" class="level-pill" data-id="tutorial_5">
-          <span class="level-number">T5</span>
-          <span class="level-name">Fog of War</span>
-        </a>
-        <a href="maze.html?tutorial=6" class="level-pill" data-id="tutorial_6">
-          <span class="level-number">T6</span>
-          <span class="level-name">Master's Trial</span>
-        </a>
-      </div>
-    </section>
+    <!-- STORIES MODE CONTAINER -->
+    <div id="stories-section-container" style="width: 100%;">
+      <!-- Story 1: The Novice's Initiation -->
+      <section class="story-card" id="story-novice-card" style="border-color: rgba(56, 189, 248, 0.35); background: linear-gradient(180deg, rgba(56, 189, 248, 0.04) 0%, rgba(22, 27, 34, 0.95) 100%);">
+        <div class="campaign-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+              <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text);">📜 Story 1: The Novice's Initiation</h2>
+              <span class="badge" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--accent); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Prologue • 6 Chapters</span>
+              <span class="badge" id="story-novice-status" style="background: rgba(52, 211, 153, 0.12); color: var(--emerald); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 6 Chapters</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.2rem;">Master the ancient art of labyrinth navigation and earn your pathfinder badge.</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">Follow the rite of passage designed by the ancient Guild of Cartographers: line of sight, colored gates, dynamic levers, overhead canopy bridges, and the shrouded fog of war.</p>
+          </div>
+          <a href="maze.html?story=novice_initiation&chapter=1" class="btn btn-primary btn-sm" id="btn-start-novice">Start Story →</a>
+        </div>
+
+        <div class="campaign-levels" id="story-novice-list">
+          <a href="maze.html?story=novice_initiation&chapter=1" class="level-pill" data-story="novice_initiation" data-chapter="1" data-tut="tutorial_1">
+            <span class="level-number">Ch. 1</span>
+            <span class="level-name">The Waking Hall</span>
+          </a>
+          <a href="maze.html?story=novice_initiation&chapter=2" class="level-pill" data-story="novice_initiation" data-chapter="2" data-tut="tutorial_2">
+            <span class="level-number">Ch. 2</span>
+            <span class="level-name">Prismatic Gates</span>
+          </a>
+          <a href="maze.html?story=novice_initiation&chapter=3" class="level-pill" data-story="novice_initiation" data-chapter="3" data-tut="tutorial_3">
+            <span class="level-number">Ch. 3</span>
+            <span class="level-name">Clockwork Levers</span>
+          </a>
+          <a href="maze.html?story=novice_initiation&chapter=4" class="level-pill" data-story="novice_initiation" data-chapter="4" data-tut="tutorial_4">
+            <span class="level-number">Ch. 4</span>
+            <span class="level-name">Canopy Crossing</span>
+          </a>
+          <a href="maze.html?story=novice_initiation&chapter=5" class="level-pill" data-story="novice_initiation" data-chapter="5" data-tut="tutorial_5">
+            <span class="level-number">Ch. 5</span>
+            <span class="level-name">Shrouded Vaults</span>
+          </a>
+          <a href="maze.html?story=novice_initiation&chapter=6" class="level-pill" data-story="novice_initiation" data-chapter="6" data-tut="tutorial_6">
+            <span class="level-number">Ch. 6</span>
+            <span class="level-name">Guildmaster Rite</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- Story 2: Relics of the Four Guardians -->
+      <section class="story-card" id="story-guardians-card" style="border-color: rgba(251, 191, 36, 0.35); background: linear-gradient(180deg, rgba(251, 191, 36, 0.04) 0%, rgba(22, 27, 34, 0.95) 100%);">
+        <div class="campaign-header">
+          <div>
+            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+              <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--gold);">🦅 Story 2: Relics of the Four Guardians</h2>
+              <span class="badge" style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); color: var(--gold); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Riddle Quest • 3 Chapters</span>
+              <span class="badge" id="story-guardians-status" style="background: rgba(52, 211, 153, 0.12); color: var(--emerald); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 3 Chapters</span>
+            </div>
+            <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.2rem;">Recover the sacred animal totems and unlock the sealed sanctum.</p>
+            <p style="font-size: 0.8rem; color: var(--text-muted); font-style: italic;">Decipher wall inscriptions, gather sunstone crystals, activate respawn beacons, and place the Falcon, Lion, Serpent, and Bear statues onto their matching riddle plinths.</p>
+          </div>
+          <a href="maze.html?story=relics_of_the_guardians&chapter=1" class="btn btn-primary btn-sm" id="btn-start-guardians">Start Quest →</a>
+        </div>
+
+        <div class="campaign-levels" id="story-guardians-list">
+          <a href="maze.html?story=relics_of_the_guardians&chapter=1" class="level-pill" data-story="relics_of_the_guardians" data-chapter="1" data-id="story_guardians_1">
+            <span class="level-number">Ch. 1</span>
+            <span class="level-name">Whispering Ruins</span>
+          </a>
+          <a href="maze.html?story=relics_of_the_guardians&chapter=2" class="level-pill" data-story="relics_of_the_guardians" data-chapter="2" data-id="story_guardians_2">
+            <span class="level-number">Ch. 2</span>
+            <span class="level-name">Falcon's Plinth</span>
+          </a>
+          <a href="maze.html?story=relics_of_the_guardians&chapter=3" class="level-pill" data-story="relics_of_the_guardians" data-chapter="3" data-id="story_guardians_3">
+            <span class="level-number">Ch. 3</span>
+            <span class="level-name">Four Guardians</span>
+          </a>
+        </div>
+      </section>
+    </div>
+
+    <!-- CAMPAIGN MODE CONTAINER -->
+    <div id="campaign-section-container" style="width: 100%; display: none;">
+
 
     <!-- Chapter 1: The Foundation -->
     <section class="campaign-section" id="chapter-1-section">
@@ -474,8 +581,10 @@
         </a>
       </div>
     </section>
+  </div> <!-- /#campaign-section-container -->
 
     <!-- Navigation Hub Grid -->
+
     <div class="hub-grid">
       <!-- Save Game Progress -->
       <div class="card">
@@ -595,17 +704,26 @@
     }
 
     function renderAllProgress() {
-      // 1. Load Tutorial Progress
+      // 1. Load Story Progress
+      const storyProgress = StorageManager.loadStoryProgress();
       const tutorialProgress = StorageManager.loadTutorialProgress();
-      const tutorialPills = document.querySelectorAll('#tutorial-list .level-pill');
-      tutorialPills.forEach((pill, idx) => {
+
+      // Render Novice Initiation Story Pills
+      let noviceCompleted = 0;
+      const novicePills = document.querySelectorAll('#story-novice-list .level-pill');
+      novicePills.forEach((pill, idx) => {
         const oldStatus = pill.querySelector('.level-status');
         if (oldStatus) oldStatus.remove();
         pill.classList.remove('completed');
 
-        const tutId = `tutorial_${idx + 1}`;
-        const record = tutorialProgress[tutId] || tutorialProgress[String(idx + 1)] || tutorialProgress[`t${idx + 1}`];
+        const chNum = idx + 1;
+        const tutId = `tutorial_${chNum}`;
+        const record = storyProgress?.novice_initiation?.[String(chNum)] ||
+                       tutorialProgress[tutId] ||
+                       tutorialProgress[String(chNum)];
+
         if (record && record.completed) {
+          noviceCompleted++;
           pill.classList.add('completed');
           const statusSpan = document.createElement('span');
           statusSpan.className = 'level-status';
@@ -613,10 +731,51 @@
           pill.appendChild(statusSpan);
         }
       });
+      const noviceStatus = document.getElementById('story-novice-status');
+      if (noviceStatus) {
+        if (noviceCompleted === 6) {
+          noviceStatus.style.background = 'rgba(52, 211, 153, 0.2)';
+          noviceStatus.style.color = '#34d399';
+          noviceStatus.textContent = `🏆 6 / 6 Completed!`;
+        } else {
+          noviceStatus.textContent = `★ ${noviceCompleted} / 6 Chapters`;
+        }
+      }
+
+      // Render Guardians Story Pills
+      let guardiansCompleted = 0;
+      const guardiansPills = document.querySelectorAll('#story-guardians-list .level-pill');
+      guardiansPills.forEach((pill, idx) => {
+        const oldStatus = pill.querySelector('.level-status');
+        if (oldStatus) oldStatus.remove();
+        pill.classList.remove('completed');
+
+        const chNum = idx + 1;
+        const record = storyProgress?.relics_of_the_guardians?.[String(chNum)];
+
+        if (record && record.completed) {
+          guardiansCompleted++;
+          pill.classList.add('completed');
+          const statusSpan = document.createElement('span');
+          statusSpan.className = 'level-status';
+          statusSpan.textContent = `★ ${record.bestTime ? (record.bestTime / 1000).toFixed(1) + 's' : 'Done'}`;
+          pill.appendChild(statusSpan);
+        }
+      });
+      const guardiansStatus = document.getElementById('story-guardians-status');
+      if (guardiansStatus) {
+        if (guardiansCompleted === 3) {
+          guardiansStatus.style.background = 'rgba(251, 191, 36, 0.2)';
+          guardiansStatus.style.color = '#fbbf24';
+          guardiansStatus.textContent = `🏆 3 / 3 Completed!`;
+        } else {
+          guardiansStatus.textContent = `★ ${guardiansCompleted} / 3 Chapters`;
+        }
+      }
 
       // 2. Load Campaign / Chapter Progress & Medals
       const campaignProgress = StorageManager.loadCampaignProgress();
-      let totalStars = 0;
+      let totalStars = noviceCompleted + guardiansCompleted;
 
       const updateChapterCounter = (zoneListId, counterElId, maxStars) => {
         const pills = document.querySelectorAll(`${zoneListId} .level-pill`);
@@ -668,8 +827,41 @@
       }
     }
 
+    // Mode Switcher Tabs
+    const modeTabs = document.querySelectorAll('.mode-tab');
+    const storiesContainer = document.getElementById('stories-section-container');
+    const campaignContainer = document.getElementById('campaign-section-container');
+
+    function switchMode(mode) {
+      modeTabs.forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.mode === mode);
+      });
+      if (mode === 'stories') {
+        if (storiesContainer) storiesContainer.style.display = 'block';
+        if (campaignContainer) campaignContainer.style.display = 'none';
+      } else {
+        if (storiesContainer) storiesContainer.style.display = 'none';
+        if (campaignContainer) campaignContainer.style.display = 'block';
+      }
+    }
+
+    modeTabs.forEach(tab => {
+      tab.addEventListener('click', () => switchMode(tab.dataset.mode));
+    });
+
+    document.getElementById('btn-hero-stories')?.addEventListener('click', () => {
+      switchMode('stories');
+      storiesContainer?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('btn-hero-campaign')?.addEventListener('click', () => {
+      switchMode('campaign');
+      campaignContainer?.scrollIntoView({ behavior: 'smooth' });
+    });
+
     // Initial render
     renderAllProgress();
+
 
     // Save Game Progress
     const handleSaveGameProgress = () => {
