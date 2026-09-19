@@ -66,6 +66,7 @@ casual-maze-game/
 │   │   ├── engine/               # collision, fog, camera, debug-logger, perspective-renderer
 │   │   ├── entities/             # player, key, door, lever, signpost, dynamic-activities, riddle-item, pedestal
 │   │   ├── levels/               # level-loader, json-integrity, campaign, tutorial
+│   │   ├── stories/              # storylines registry, chapter navigation, level validation
 │   │   └── editor/               # level-validator, json-exporter
 │   ├── integration/
 │   │   ├── campaign/             # Per-chapter modular campaign playthrough test suites
@@ -80,7 +81,8 @@ casual-maze-game/
 │   │       ├── interactive-activities.journey.test.mjs
 │   │       ├── obstacle-interactions.journey.test.mjs
 │   │       ├── wall-art-checkpoints-bonus.journey.test.mjs
-│   │       └── riddle-pedestals.journey.test.mjs
+│   │       ├── riddle-pedestals.journey.test.mjs
+│   │       └── storylines-progression.journey.test.mjs
 │   └── run-all.mjs               # Master test runner entrypoint
 ├── docs/                         # Documentation & Architecture Records
 │   ├── ARCHITECTURE.md           # Deep subsystem architecture & engine details (this file)
@@ -94,6 +96,11 @@ casual-maze-game/
 │       ├── 0003-tutorial-system-and-level-toggles.md
 │       ├── 0004-zone-grouping-and-thematic-tilesets.md
 │       └── 0005-angled-topdown-perspective-and-dynamic-activities.md
+├── levels/                       # Standalone Level JSON Files & Manifest
+│   ├── manifest.json             # Master level registry (campaign, tutorials, stories)
+│   ├── tutorial/                 # Tutorial Academy levels (1-6)
+│   ├── stories/                  # Episodic Storyline levels (Four Guardians 1-3)
+│   └── chapter_1/ ... chapter_7/ # 28 Megalabyrinth campaign JSON files
 ├── css/
 │   ├── main.css                  # Shared UI design tokens, typography, hub styling
 │   ├── game.css                  # Canvas overlay, HUD, minimap, mobile d-pad, puzzle modal
@@ -133,6 +140,8 @@ casual-maze-game/
 │   │   ├── tutorials.js          # Tutorial academy levels (1-6)
 │   │   ├── campaign-ch1.js ... campaign-ch7.js # Modular chapter level definitions
 │   │   └── default-levels.js     # Aggregator exporting all campaign and tutorial levels
+│   ├── stories/
+│   │   └── storylines.js         # Storylines registry, chapter progression, Novice & Guardian sagas
 │   └── editor/
 │       ├── editor-canvas.js      # Grid painting, drag-placement, coordinate preview
 │       ├── editor-ui.js          # Palette selection, layer toggling, toolbar bindings

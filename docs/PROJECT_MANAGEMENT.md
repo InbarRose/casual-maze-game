@@ -6,7 +6,31 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.12.0` (Completed & Verified)
+### Current Version: `v1.13.0` (Completed & Verified)
+
+- [x] **Storylines ("Stories") Game Mode & Tutorial Evolution**:
+  - Dual primary play modes accessible from the Hub (`index.html`): **Campaign Trail** (28 Megalabyrinths across 7 chapters) and **Storylines** (narrative episodic sagas).
+  - Mode Switcher navigation tabs (`#tab-stories`, `#tab-campaign`) with persistent selection, hero call-to-actions, story cards with synopsis, difficulty badges, and chapter completion pills.
+  - Transformed the 6 tutorial mazes into **Storyline 1: *The Novice's Initiation*** with narrative prologues, rich titles, and seamless backward compatibility for `?tutorial=N` URLs.
+  - Authored **Storyline 2: *Relics of the Four Guardians*** with 3 custom chapters:
+    1. *The Whispering Ruins* (Orientation, ancient notes, bonus sunstone crystals, beacons).
+    2. *The Falcon's Plinth* (Falcon statue retrieval, sky plinth socketing, terrace gate unsealing).
+    3. *Sanctum of the Four Guardians* (4-statue environmental riddle: Falcon, Lion, Serpent, Bear placed on elemental plinths to break the golden sanctuary seal).
+  - Standalone level JSON files exported to `levels/stories/story_guardians_[1-3].json` and registered in `levels/manifest.json`.
+- [x] **In-Game Viewport Story Mode Experience (`maze.html`)**:
+  - Detects `?story=<id>&chapter=<num>` with in-game story header badge (`📜 The Novice's Initiation • Ch. 1/6`, `🦅 Four Guardians • Ch. 2/3`).
+  - Narrative prologue modal on chapter entry detailing lore and objective.
+  - Next-chapter victory progression (`Chapter N →`) automatically loading the next sequential chapter and presenting a story victory celebration upon finishing the finale.
+- [x] **Persistent Story Progression (`StorageManager`)**:
+  - `STORY_PROGRESS` local storage key tracking per-story, per-chapter completion, best times, and step counts.
+  - Full save profile export/import serialization including both campaign and story progress.
+- [x] **Comprehensive Automated Test Coverage**:
+  - Dedicated unit suite `tests/unit/stories/storylines.test.mjs` verifying registry and chapter navigation.
+  - End-to-end user journey test `tests/integration/journeys/storylines-progression.journey.test.mjs` running complete live GameLoop simulations through all 6 chapters of Novice Initiation and all 3 chapters of Four Guardians.
+  - Updated `tests/unit/levels/json-integrity.test.mjs` and `tests/validate-static.mjs` covering all 37 manifest levels.
+  - 48 test suites, 221 tests, 4,274 assertions passing 100% (0 failed).
+
+### Previous Milestone: `v1.12.0`
 
 - [x] **Test Suite Modularization & BFS Campaign Solver Extraction**:
   - Replaced monolithic `campaign-playthrough.journey.test.mjs` with modular per-chapter test suites (`chapter-1.test.mjs` through `chapter-7.test.mjs`).
