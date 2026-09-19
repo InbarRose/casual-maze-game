@@ -28,6 +28,7 @@
           <span class="tutorial-badge" id="hud-tutorial-badge" style="display: none;">🎓 Tutorial</span>
           <span class="hud-title" id="hud-level-title">Loading...</span>
           <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
+          <span class="room-badge" id="hud-room-badge" style="display: none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 600;"></span>
         </div>
       </div>
 
@@ -78,6 +79,19 @@
           💾 <span class="hide-mobile">Save Game Progress</span>
         </button>
 
+        <!-- World Rotation Controls -->
+        <div class="rotation-control-group" style="display: inline-flex; align-items: center; gap: 0.25rem; background: rgba(15, 23, 42, 0.6); padding: 0.2rem 0.4rem; border-radius: 6px; border: 1px solid rgba(56, 189, 248, 0.2);">
+          <button id="btn-rotate-left" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CCW [Q]" aria-label="Rotate Left">
+            ↺
+          </button>
+          <span id="compass-badge" class="compass-badge" title="Compass Heading" style="font-size: 0.8rem; font-weight: 700; color: #38bdf8; min-width: 44px; text-align: center;">
+            🧭 N
+          </span>
+          <button id="btn-rotate-right" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CW [R]" aria-label="Rotate Right">
+            ↻
+          </button>
+        </div>
+
         <!-- Controls Toggles -->
         <button id="btn-perspective" class="btn btn-secondary btn-sm" title="Toggle Perspective: Angled 2.5D / Top-Down (V)">
           📐 <span class="hide-mobile">Perspective [V]</span>
@@ -85,7 +99,7 @@
         <button id="btn-freepan" class="btn btn-secondary btn-sm" title="Toggle Free-Pan Mode (M)">
           🗺 <span class="hide-mobile">Map Pan [M]</span>
         </button>
-        <button id="btn-restart" class="btn btn-secondary btn-sm btn-icon" title="Restart Level (R)">
+        <button id="btn-restart" class="btn btn-secondary btn-sm btn-icon" title="Restart Level (T)">
           🔄
         </button>
       </div>
@@ -123,13 +137,17 @@
     <div class="controls-hint-bar">
       <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>Arrows</kbd> Move</span>
       <span>•</span>
+      <span><kbd>Q</kbd> / <kbd>R</kbd> Rotate</span>
+      <span>•</span>
       <span><kbd>E</kbd> / <kbd>Space</kbd> Interact</span>
+      <span>•</span>
+      <span><kbd>V</kbd> View</span>
       <span>•</span>
       <span><kbd>L</kbd> Activity Log</span>
       <span>•</span>
       <span><kbd>M</kbd> Free Pan</span>
       <span>•</span>
-      <span><kbd>R</kbd> Restart</span>
+      <span><kbd>T</kbd> Restart</span>
     </div>
 
     <!-- Mobile Virtual Controls -->
@@ -544,6 +562,25 @@
               riddleCardEl.style.display = 'none';
             }
           }
+
+          // Render compass badge and room title in HUD
+          const compassBadgeEl = document.getElementById('compass-badge');
+          if (compassBadgeEl) {
+            compassBadgeEl.textContent = `🧭 ${state.compassHeading || 'N'}`;
+          }
+
+          const roomBadgeEl = document.getElementById('hud-room-badge');
+          if (roomBadgeEl) {
+            if (state.roomTitle) {
+              roomBadgeEl.style.display = 'inline-block';
+              roomBadgeEl.textContent = `🏛️ ${state.roomTitle}`;
+            } else {
+              roomBadgeEl.style.display = 'none';
+            }
+          }
+        },
+        onRoomTransition: (data) => {
+          showToast(`🚪 Entered: ${data.roomTitle}`, 'info');
         },
         onWallDecorInspected: (data) => {
           openInspectModal(data);
@@ -624,7 +661,19 @@
 
           const victorySubtitle = document.getElementById('victory-subtitle');
 
-          if (isCustomMode) {
+          if (stats.targetLevel) {
+            // Branching Exit Pathway
+            if (victorySubtitle) {
+              victorySubtitle.textContent = stats.branchLabel
+                ? `Route Chosen: ${stats.branchLabel}`
+                : 'Branching path unlocked!';
+            }
+            btnNextLevel.style.display = 'inline-flex';
+            btnNextLevel.textContent = stats.branchLabel ? `${stats.branchLabel} →` : 'Proceed to Branch →';
+            btnNextLevel.onclick = () => {
+              window.location.href = `maze.html?id=${stats.targetLevel}`;
+            };
+          } else if (isCustomMode) {
             btnNextLevel.style.display = 'inline-flex';
             btnNextLevel.textContent = '🛠️ Back to Editor';
             btnNextLevel.onclick = () => {
@@ -676,9 +725,9 @@
               };
             }
           } else {
-            // Check if there is a next campaign level (Levels 1 to 28 across all 7 chapters)
+            // Check if there is a next campaign level (Levels 1 to 32 across all 8 chapters)
             const currentIdNum = parseInt(currentLevel.id, 10);
-            if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 28) {
+            if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 32) {
               btnNextLevel.style.display = 'inline-flex';
               btnNextLevel.textContent = `Level ${currentIdNum + 1} →`;
               btnNextLevel.onclick = () => {
@@ -917,7 +966,7 @@
 
       // If restart confirmation modal is active
       if (restartConfirmModal && restartConfirmModal.classList.contains('active')) {
-        if (e.code === 'Enter' || e.code === 'NumpadEnter' || e.code === 'KeyR') {
+        if (e.code === 'Enter' || e.code === 'NumpadEnter' || e.code === 'KeyT') {
           e.preventDefault();
           confirmRestart();
           return;
@@ -931,9 +980,15 @@
       if (e.code === 'KeyL' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         toggleActivityLogModal();
-      } else if (e.code === 'KeyR' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      } else if (e.code === 'KeyT' && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         promptRestartConfirmation();
+      } else if (e.code === 'KeyQ' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        gameLoop.rotateLeft();
+      } else if (e.code === 'KeyR' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        gameLoop.rotateRight();
       } else if (e.code === 'Escape') {
         cancelRestart();
         closeActivityLogModal();
@@ -942,6 +997,11 @@
     });
 
     // Button event listeners
+    const btnRotateLeft = document.getElementById('btn-rotate-left');
+    const btnRotateRight = document.getElementById('btn-rotate-right');
+    if (btnRotateLeft) btnRotateLeft.addEventListener('click', () => gameLoop.rotateLeft());
+    if (btnRotateRight) btnRotateRight.addEventListener('click', () => gameLoop.rotateRight());
+
     btnFreePan.addEventListener('click', () => gameLoop.toggleFreePan());
     btnRestart.addEventListener('click', () => {
       promptRestartConfirmation();
