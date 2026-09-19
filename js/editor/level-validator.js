@@ -375,12 +375,31 @@ export class LevelValidator {
           exitReached = true;
         }
 
-        // Check for keys at this position
+        // Check for keys at this position and elevation
         for (const [keyId, keyEntity] of keyEntities.entries()) {
-          if (keyEntity.x === x && keyEntity.y === y && !collectedKeys.has(keyId)) {
+          const kz = keyEntity.z ?? keyEntity.elevation ?? 0;
+          if (keyEntity.x === x && keyEntity.y === y && kz === elevation && !collectedKeys.has(keyId)) {
             collectedKeys.add(keyId);
             reachableKeys.add(keyId);
             keysChanged = true;
+          }
+        }
+
+        // Check for teleporters at this position
+        for (const entity of level.entities || []) {
+          if (
+            entity.type === ENTITY_TYPES.TELEPORTER &&
+            entity.x === x &&
+            entity.y === y &&
+            (entity.z ?? entity.elevation ?? 0) === elevation
+          ) {
+            const tx = entity.targetX;
+            const ty = entity.targetY;
+            const tz = entity.targetZ ?? entity.targetElevation ?? 0;
+            const tpStateKey = `${tx},${ty},${tz}`;
+            if (!visitedThisPass.has(tpStateKey)) {
+              queue.push({ x: tx, y: ty, elevation: tz });
+            }
           }
         }
 

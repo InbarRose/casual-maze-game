@@ -23,7 +23,7 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
     assertEqual(CAMPAIGN_CHAPTERS[4].title, 'Rhythm & Danger');
 
     // 2. Load Level 1 JSON
-    const level1Raw = JSON.parse(fs.readFileSync(path.resolve('levels/zone_1/level_1.json'), 'utf8'));
+    const level1Raw = JSON.parse(fs.readFileSync(path.resolve('levels/chapter_1/level_1.json'), 'utf8'));
     const level1 = LevelLoader.normalizeLevel(level1Raw);
 
     assertEqual(level1.id, '1');
