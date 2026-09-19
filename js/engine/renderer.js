@@ -12,6 +12,7 @@ export class GameRenderer {
   constructor(canvas) {
     this.canvas = canvas;
     this.ctx = canvas.getContext('2d', { alpha: false });
+    this.perspective = 'angled'; // 'angled' | 'topdown'
     this.particles = [];
     this.floatingTexts = [];
     this.shockwaves = [];
@@ -19,20 +20,30 @@ export class GameRenderer {
   }
 
   /**
+   * Switch perspective mode ('angled' | 'topdown')
+   * @param {'angled'|'topdown'} mode
+   */
+  setPerspective(mode) {
+    if (mode === 'angled' || mode === 'topdown') {
+      this.perspective = mode;
+    }
+  }
+
+  /**
    * Main render method
    * @param {object} level
    * @param {Player} player
-   * @param {Array<Key|Door|Lever>} entities
+   * @param {Array<Key|Door|Lever|Teleporter|TimedHazard|Patroller|PuzzleGate>} entities
    * @param {Camera} camera
    * @param {FogOfWar} fog
    * @param {number} dt
    */
   render(level, player, entities, camera, fog, dt) {
     const ctx = this.ctx;
-    const { width: viewW, height: viewH } = camera;
     const tileSize = camera.tileSize;
     const { width: mazeW, height: mazeH } = level.dimensions;
     const theme = THEMES[level.config.theme] || THEMES.dungeon;
+    this.perspective = level.config.viewPerspective || this.perspective || 'angled';
 
     this.exitPulseTimer += dt * 3;
     this.updateEffects(dt);
@@ -44,37 +55,337 @@ export class GameRenderer {
     // Viewport bounds (performance budget optimization: only iterate visible tiles)
     const bounds = camera.getViewportBounds(mazeW, mazeH, 2);
 
-    // 2. Render Ground Layer
+    if (this.perspective === 'angled') {
+      this.renderAngledPipeline(level, player, entities, camera, fog, bounds, theme, tileSize);
+    } else {
+      this.renderClassicPipeline(level, player, entities, camera, fog, bounds, theme, tileSize);
+    }
+
+    // Render Particle Effects, Shockwaves, and In-World Floating Text
+    this.renderWorldEffects(ctx, camera);
+  }
+
+  /**
+   * Classic Flat Top-Down Pipeline
+   */
+  renderClassicPipeline(level, player, entities, camera, fog, bounds, theme, tileSize) {
+    const ctx = this.ctx;
     this.renderGroundLayer(ctx, level, bounds, camera, theme);
 
-    // 3. Render Spawn Entrance & Exit Markers
-    if (level.spawn) {
-      this.renderSpawnEntrance(ctx, level, camera, theme, fog);
-    }
-    if (level.exit) {
-      this.renderExit(ctx, level, camera, theme, fog);
-    }
+    if (level.spawn) this.renderSpawnEntrance(ctx, level, camera, theme, fog);
+    if (level.exit) this.renderExit(ctx, level, camera, theme, fog);
 
-    // 4. Render Ground Entities (Doors, Levers, Keys on elevation 0)
     this.renderEntities(ctx, entities, ELEVATION.GROUND, camera, fog);
-
-    // 5. Render Overhead Bridges & Ramps
     this.renderOverheadLayer(ctx, level, bounds, camera, theme);
-
-    // 6. Render Overhead Entities
     this.renderEntities(ctx, entities, ELEVATION.OVERHEAD, camera, fog);
 
-    // 7. Render Player
     const playerScreen = camera.worldToScreen(player.worldX, player.worldY);
     player.render(ctx, playerScreen.x, playerScreen.y, tileSize);
 
-    // 8. Render Fog-of-War Mask
     if (level.config.fogOfWar && fog) {
       this.renderFogOfWar(ctx, fog, bounds, camera, theme);
     }
+  }
 
-    // 9. Render Particle Effects, Shockwaves, and In-World Floating Text
-    this.renderWorldEffects(ctx, camera);
+  /**
+   * Angled 2.5D Top-Down Sprite Pipeline with depth wall faces, pillars, and height lift
+   */
+  renderAngledPipeline(level, player, entities, camera, fog, bounds, theme, tileSize) {
+    const ctx = this.ctx;
+    const heightOffset = Math.round(tileSize * 0.45);
+
+    // 1. Ground Floors
+    this.renderAngledFloors(ctx, level, bounds, camera, theme);
+
+    // 2. Spawn Entrance & Exit Markers
+    if (level.spawn) this.renderSpawnEntrance(ctx, level, camera, theme, fog);
+    if (level.exit) this.renderExit(ctx, level, camera, theme, fog);
+
+    // 3. Ground Walls with Front Face & Side Relief
+    this.renderAngledWalls(ctx, level, bounds, camera, theme);
+
+    // 4. Ground Entities & Player (if player on ground) with Y-sorting
+    this.renderYSortedEntities(ctx, entities, player, ELEVATION.GROUND, camera, fog, tileSize, 0);
+
+    // 5. Overhead Bridges & Ramps with vertical lift and support pillars
+    this.renderAngledOverheadLayer(ctx, level, bounds, camera, theme, heightOffset);
+
+    // 6. Overhead Entities & Player (if player overhead) with Y-sorting
+    this.renderYSortedEntities(ctx, entities, player, ELEVATION.OVERHEAD, camera, fog, tileSize, heightOffset);
+
+    // 7. Fog-of-War Mask
+    if (level.config.fogOfWar && fog) {
+      this.renderFogOfWar(ctx, fog, bounds, camera, theme);
+    }
+  }
+
+  /**
+   * Render ground floor tiles only in angled mode
+   */
+  renderAngledFloors(ctx, level, bounds, camera, theme) {
+    const ground = level.layers.ground;
+    const tileSize = camera.tileSize;
+
+    for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+      for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+        const tile = ground[y]?.[x];
+        if (tile === TILES.WALL) continue; // Walls drawn in wall pass
+
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+        const isAlt = (x + y) % 2 === 0;
+        ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
+        ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+
+        ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.02)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
+
+        // Bridge underpass tunnels
+        if (tile === TILES.BRIDGE_EW) {
+          ctx.fillStyle = theme.bridgeGround;
+          ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.76);
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+          ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.1);
+          ctx.fillRect(screen.x, screen.y + tileSize * 0.78, tileSize, tileSize * 0.1);
+        } else if (tile === TILES.BRIDGE_NS) {
+          ctx.fillStyle = theme.bridgeGround;
+          ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.76, tileSize);
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+          ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.1, tileSize);
+          ctx.fillRect(screen.x + tileSize * 0.78, screen.y, tileSize * 0.1, tileSize);
+        }
+      }
+    }
+  }
+
+  /**
+   * Render walls with 2.5D top cap, front vertical drop face, and masonry relief
+   */
+  renderAngledWalls(ctx, level, bounds, camera, theme) {
+    const ground = level.layers.ground;
+    const tileSize = camera.tileSize;
+
+    for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+      for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+        if (ground[y]?.[x] === TILES.WALL) {
+          const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+          this.renderAngledWall(ctx, x, y, screen.x, screen.y, tileSize, theme, ground);
+        }
+      }
+    }
+  }
+
+  /**
+   * Render single 2.5D wall block with front drop face and bevels
+   */
+  renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground) {
+    const wallH = Math.round(tileSize * 0.38); // e.g. 12px for 32px tile
+    const hasSouthWall = ground[y + 1]?.[x] === TILES.WALL;
+    const hasWestWall = ground[y]?.[x - 1] === TILES.WALL;
+    const hasEastWall = ground[y]?.[x + 1] === TILES.WALL;
+
+    // 1. Top Cap Face (Elevated by wallH)
+    ctx.fillStyle = theme.wallTop;
+    ctx.fillRect(screenX, screenY - wallH, tileSize, tileSize);
+
+    // Top highlight rim
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+    ctx.fillRect(screenX, screenY - wallH, tileSize, 2);
+
+    // 2. Front Face (South-facing vertical drop)
+    if (!hasSouthWall) {
+      // Main vertical front face
+      ctx.fillStyle = theme.wall;
+      ctx.fillRect(screenX, screenY - wallH + tileSize, tileSize, wallH);
+
+      // Horizontal masonry mortar line
+      ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.28)';
+      ctx.fillRect(screenX, screenY - wallH + tileSize + wallH * 0.5, tileSize, 1.5);
+
+      // Vertical brick divider
+      const brickSplit = (x % 2 === 0) ? 0.35 : 0.65;
+      ctx.fillRect(screenX + tileSize * brickSplit, screenY - wallH + tileSize, 1.5, wallH * 0.5);
+      ctx.fillRect(screenX + tileSize * (1 - brickSplit), screenY - wallH + tileSize + wallH * 0.5, 1.5, wallH * 0.5);
+
+      // Shadow cast onto floor beneath
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+      ctx.fillRect(screenX, screenY + tileSize, tileSize, wallH * 0.35);
+    }
+
+    // 3. Side vertical depth bevels
+    if (!hasEastWall) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(screenX + tileSize - 2, screenY - wallH, 2, tileSize + (hasSouthWall ? 0 : wallH));
+    }
+    if (!hasWestWall) {
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.fillRect(screenX, screenY - wallH, 2, tileSize + (hasSouthWall ? 0 : wallH));
+    }
+
+    // Top border stroke
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(screenX, screenY - wallH, tileSize, tileSize);
+  }
+
+  /**
+   * Render Overhead Layer in Angled 2.5D Mode with vertical lift and support pillars
+   */
+  renderAngledOverheadLayer(ctx, level, bounds, camera, theme, heightOffset) {
+    const overhead = level.layers.overhead;
+    const ground = level.layers.ground;
+    const tileSize = camera.tileSize;
+
+    for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+      for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+        const overTile = overhead?.[y]?.[x];
+        const gTile = ground?.[y]?.[x];
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+
+        // Render Ramps connecting ground to elevated deck
+        if (this.isRampTile(gTile)) {
+          this.renderAngledRamp(ctx, gTile, screen.x, screen.y, tileSize, theme, heightOffset);
+        }
+
+        // Render Overhead Bridges
+        if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
+          this.renderAngledBridgeSpan(ctx, 'NS', screen.x, screen.y, tileSize, theme, heightOffset);
+        } else if (overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
+          this.renderAngledBridgeSpan(ctx, 'EW', screen.x, screen.y, tileSize, theme, heightOffset);
+        }
+      }
+    }
+  }
+
+  /**
+   * Render elevated bridge span with support pillars anchored to the ground
+   */
+  renderAngledBridgeSpan(ctx, direction, screenX, screenY, tileSize, theme, heightOffset) {
+    ctx.save();
+    const elevatedY = screenY - heightOffset;
+
+    // 1. Drop shadow onto ground below
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.52)';
+    if (direction === 'NS') {
+      ctx.fillRect(screenX + tileSize * 0.12 + 6, screenY + 6, tileSize * 0.76, tileSize);
+    } else {
+      ctx.fillRect(screenX + 6, screenY + tileSize * 0.12 + 6, tileSize, tileSize * 0.76);
+    }
+
+    // 2. Vertical Support Pillars
+    ctx.fillStyle = theme.bridgeGround || '#1e293b';
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.lineWidth = 1;
+    const pillarW = tileSize * 0.12;
+    const pillarH = heightOffset + tileSize * 0.15;
+
+    if (direction === 'NS') {
+      const p1x = screenX + tileSize * 0.12;
+      const p2x = screenX + tileSize * 0.76;
+      const py = elevatedY + tileSize * 0.85;
+
+      ctx.fillRect(p1x, py, pillarW, pillarH);
+      ctx.strokeRect(p1x, py, pillarW, pillarH);
+      ctx.fillRect(p2x, py, pillarW, pillarH);
+      ctx.strokeRect(p2x, py, pillarW, pillarH);
+    } else {
+      const p1y = elevatedY + tileSize * 0.12;
+      const p2y = elevatedY + tileSize * 0.76;
+      const px = screenX + tileSize * 0.85;
+
+      ctx.fillRect(px, p1y, pillarW, pillarH);
+      ctx.strokeRect(px, p1y, pillarW, pillarH);
+      ctx.fillRect(px, p2y, pillarW, pillarH);
+      ctx.strokeRect(px, p2y, pillarW, pillarH);
+    }
+
+    // 3. Render bridge deck at elevated Y
+    this.renderBridgeSpan(ctx, direction, screenX, elevatedY, tileSize, theme);
+
+    ctx.restore();
+  }
+
+  /**
+   * Render Ramp in angled mode with incline slope
+   */
+  renderAngledRamp(ctx, rampTile, screenX, screenY, tileSize, theme, heightOffset) {
+    ctx.save();
+    this.renderRamp(ctx, rampTile, screenX, screenY, tileSize, theme);
+
+    // Side railing slope
+    ctx.strokeStyle = theme.bridgeRailing || '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    if (rampTile === TILES.RAMP_N) {
+      ctx.moveTo(screenX + tileSize * 0.1, screenY + tileSize);
+      ctx.lineTo(screenX + tileSize * 0.1, screenY - heightOffset);
+      ctx.moveTo(screenX + tileSize * 0.9, screenY + tileSize);
+      ctx.lineTo(screenX + tileSize * 0.9, screenY - heightOffset);
+    } else if (rampTile === TILES.RAMP_S) {
+      ctx.moveTo(screenX + tileSize * 0.1, screenY);
+      ctx.lineTo(screenX + tileSize * 0.1, screenY + tileSize - heightOffset);
+      ctx.moveTo(screenX + tileSize * 0.9, screenY);
+      ctx.lineTo(screenX + tileSize * 0.9, screenY + tileSize - heightOffset);
+    }
+    ctx.stroke();
+    ctx.restore();
+  }
+
+  /**
+   * Unified Y-sorted rendering pass for entities and player
+   */
+  renderYSortedEntities(ctx, entities, player, elevation, camera, fog, tileSize, heightOffset) {
+    const drawables = [];
+
+    // Collect entities on this elevation
+    for (const entity of entities) {
+      if ((entity.elevation ?? 0) !== elevation) continue;
+      if (fog && !fog.isVisible(Math.round(entity.x), Math.round(entity.y))) continue;
+
+      const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
+      const worldX = isContinuous ? entity.worldX : (entity.x * tileSize + tileSize / 2);
+      const worldY = isContinuous ? entity.worldY : (entity.y * tileSize + tileSize / 2);
+
+      drawables.push({
+        type: 'entity',
+        ref: entity,
+        worldX,
+        worldY,
+        bottomY: worldY + tileSize * 0.4,
+      });
+    }
+
+    // Include player if matching elevation
+    if (player.elevation === elevation) {
+      drawables.push({
+        type: 'player',
+        ref: player,
+        worldX: player.worldX,
+        worldY: player.worldY,
+        bottomY: player.worldY + tileSize * 0.4,
+      });
+    }
+
+    // Sort ascending by bottomY (back to front)
+    drawables.sort((a, b) => a.bottomY - b.bottomY);
+
+    // Render sorted
+    for (const item of drawables) {
+      if (item.type === 'player') {
+        const screen = camera.worldToScreen(item.worldX, item.worldY);
+        player.render(ctx, screen.x, screen.y - heightOffset, tileSize);
+      } else {
+        const entity = item.ref;
+        const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
+        let screen;
+        if (isContinuous) {
+          screen = camera.worldToScreen(entity.worldX, entity.worldY);
+        } else {
+          screen = camera.worldToScreen(entity.x * tileSize, entity.y * tileSize);
+        }
+        entity.render(ctx, screen.x, screen.y - heightOffset, tileSize);
+      }
+    }
   }
 
   /**
@@ -325,11 +636,14 @@ export class GameRenderer {
       if ((entity.elevation ?? 0) !== elevation) continue;
 
       // Check fog visibility: dynamic entities are hidden unless active line of sight (VISIBLE = 2)
-      if (fog && !fog.isVisible(entity.x, entity.y)) {
+      if (fog && !fog.isVisible(Math.round(entity.x), Math.round(entity.y))) {
         continue;
       }
 
-      const screen = camera.worldToScreen(entity.x * tileSize, entity.y * tileSize);
+      const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
+      const screen = isContinuous
+        ? camera.worldToScreen(entity.worldX, entity.worldY)
+        : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize);
       entity.render(ctx, screen.x, screen.y, tileSize);
     }
   }
