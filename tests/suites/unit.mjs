@@ -57,5 +57,7 @@ import '../unit/assets/asset-drift.test.mjs';
 // UI
 import '../unit/ui/audio-fx.test.mjs';
 import '../unit/ui/game-menu.test.mjs';
+import '../unit/ui/app-header.test.mjs';
 
-await run();
+const results = await run();
+process.exit(results.failed > 0 ? 1 : 0);

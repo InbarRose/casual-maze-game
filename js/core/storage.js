@@ -592,4 +592,86 @@ export class StorageManager {
     }
     throw new Error('Clipboard API unavailable');
   }
+
+  /**
+   * Get player profile metadata and computed rank statistics
+   * @returns {{ name: string, totalStars: number, campaignLevels: number, storyChapters: number, totalSteps: number, rankTitle: string, rankIcon: string }}
+   */
+  static getPlayerProfile() {
+    const name = this.getSetting('player_name', 'Explorer');
+    const campaign = this.loadCampaignProgress();
+    const tutorial = this.loadTutorialProgress();
+    const stories = this.loadStoryProgress();
+
+    let totalStars = 0;
+    let campaignLevels = 0;
+    let totalSteps = 0;
+
+    for (const lvl of Object.values(campaign)) {
+      if (lvl && lvl.completed) {
+        campaignLevels++;
+        totalStars += 1;
+        if (lvl.medals?.parSteps) totalStars += 1;
+        if (lvl.medals?.parTime) totalStars += 1;
+        if (lvl.medals?.flawless) totalStars += 1;
+        if (lvl.bestSteps && lvl.bestSteps !== Infinity) {
+          totalSteps += lvl.bestSteps;
+        }
+      }
+    }
+
+    let storyChapters = 0;
+    for (const s of Object.values(stories)) {
+      if (s && typeof s === 'object') {
+        for (const ch of Object.values(s)) {
+          if (ch && ch.completed) {
+            storyChapters++;
+            totalStars += 1;
+          }
+        }
+      }
+    }
+
+    for (const t of Object.values(tutorial)) {
+      if (t && t.completed) {
+        totalStars += 1;
+      }
+    }
+
+    let rankTitle = 'Novice Pathfinder';
+    let rankIcon = '🧭';
+
+    if (totalStars >= 50) {
+      rankTitle = 'Grand Labyrinth Sovereign';
+      rankIcon = '👑';
+    } else if (totalStars >= 25) {
+      rankTitle = 'Master Architect';
+      rankIcon = '🏛️';
+    } else if (totalStars >= 12) {
+      rankTitle = 'Dungeon Cartographer';
+      rankIcon = '📜';
+    } else if (totalStars >= 4) {
+      rankTitle = 'Labyrinth Scout';
+      rankIcon = '🗺️';
+    }
+
+    return {
+      name,
+      totalStars,
+      campaignLevels,
+      storyChapters,
+      totalSteps,
+      rankTitle,
+      rankIcon,
+    };
+  }
+
+  /**
+   * Set and persist player display name
+   * @param {string} name
+   */
+  static setPlayerName(name) {
+    const clean = String(name || 'Explorer').trim().slice(0, 24);
+    return this.setSetting('player_name', clean || 'Explorer');
+  }
 }
