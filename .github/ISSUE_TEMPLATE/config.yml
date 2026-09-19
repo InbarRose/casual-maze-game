@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: "🧪 Browser Test Runner & Replay Theater"
+    url: "https://casual-maze-game.inbarrose.com/test.html"
+    about: "Run live browser diagnostics, step-by-step walkthrough replays, or inspect exported game debug logs."
+  - name: "📖 Explorer's Documentation & Architecture"
+    url: "https://github.com/InbarRose/casual-maze-game/tree/main/docs"
+    about: "Read architectural records (ADRs), level schemas, engine maps, and testing plans."
