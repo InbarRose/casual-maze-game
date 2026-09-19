@@ -104,7 +104,10 @@ Levels are defined as static JSON files conforming to the following structure:
 | `author` | `string` | Creator attribution. |
 | `dimensions` | `object` | `{ width: number, height: number }` of the grid. |
 | `spawn` | `object` | `{ x: number, y: number, z?: number, elevation?: number }` starting point (`z = 0` Ground, `z = 1` Overhead, `z = -1` Basement). |
-| `exit` | `object` | `{ x: number, y: number, z?: number, elevation?: number }` target portal location. |
+| `exit` | `object` | Single exit portal `{ x, y, z?, elevation?, targetLevel?, targetRoom?, targetSpawn?, label? }` (automatically normalized to `exits`). |
+| `exits` | `array` | Array of exit portal objects for branching or multi-exit labyrinths. |
+| `initialRoom` | `string` | Optional starting room ID for multi-room levels (defaults to first room key or `'main'`). |
+| `rooms` | `object` | Optional dictionary of interconnected chambers `{ [roomId]: RoomDefinition }`. |
 | `config` | `object` | Gameplay flags (see below). |
 | `help` | `object` | Optional guidance banner (`{ title: string, message: string }`). |
 | `layers` | `object` | `{ ground: Array<Array>, overhead: Array<Array> }` 2D tile matrices. |
@@ -276,4 +279,116 @@ When playtesting custom drafts from the editor, transient runtime properties can
 | --- | --- | --- |
 | `testSpawn` | `{ x: number, y: number, elevation: number }` | Overrides starting position and elevation for focused chamber testing. |
 | `testInventory` | `string[]` | Preloaded array of key IDs placed in the player's backpack upon start. |
+
+---
+
+## 3. Multi-Exit & Branching Levels Specification
+
+Levels can provide multiple exit portals that lead to alternative routes, secret stages, or different rooms:
+
+```json
+{
+  "exits": [
+    {
+      "x": 19,
+      "y": 1,
+      "z": 0,
+      "targetLevel": "30",
+      "label": "Path of the Shifting Sands"
+    },
+    {
+      "x": 1,
+      "y": 19,
+      "z": 0,
+      "targetLevel": "secret_crypt",
+      "label": "Forgotten Crypt Portal"
+    }
+  ]
+}
+```
+
+### Exit Object Properties
+| Property | Type | Description |
+| :--- | :--- | :--- |
+| `x` | `number` | Grid column coordinate. |
+| `y` | `number` | Grid row coordinate. |
+| `z` / `elevation` | `number` | Optional elevation layer (0: Ground, 1: Overhead). Default: `0`. |
+| `targetLevel` | `string` | Optional destination level ID to load upon victory. If omitted, sequential campaign progression is used. |
+| `targetRoom` | `string` | Optional room ID within the current multi-room level. Triggers room switch instead of level victory. |
+| `targetSpawn` | `object` | Optional coordinates `{ x: number, y: number, z?: number }` to place the player in the destination room. |
+| `label` | `string` | Descriptive portal name displayed on hover tooltips and victory announcements. |
+
+---
+
+## 4. Multi-Room Dungeon Specification (`level.rooms`)
+
+A single level file can contain multiple interconnected chambers, with travel between rooms and persistent player state:
+
+```json
+{
+  "id": "story_citadel_1",
+  "title": "The Whispering Citadel",
+  "initialRoom": "courtyard",
+  "rooms": {
+    "courtyard": {
+      "dimensions": { "width": 15, "height": 15 },
+      "spawn": { "x": 1, "y": 1, "z": 0 },
+      "exits": [
+        {
+          "x": 13,
+          "y": 1,
+          "z": 0,
+          "targetRoom": "catacombs",
+          "targetSpawn": { "x": 1, "y": 1, "z": 0 },
+          "label": "Catacombs Descent"
+        },
+        {
+          "x": 13,
+          "y": 13,
+          "z": 0,
+          "targetRoom": "high_spire",
+          "targetSpawn": { "x": 1, "y": 1, "z": 0 },
+          "label": "Ascent to High Spire"
+        }
+      ],
+      "layers": {
+        "ground": [[1, 1, 1], [1, 0, 1], [1, 1, 1]],
+        "overhead": [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+      },
+      "entities": [
+        { "id": "spire_gate", "type": "door", "x": 10, "y": 13, "requiresKey": "catacombs_key" }
+      ]
+    },
+    "catacombs": {
+      "dimensions": { "width": 11, "height": 11 },
+      "spawn": { "x": 1, "y": 1, "z": 0 },
+      "exits": [
+        {
+          "x": 1,
+          "y": 1,
+          "z": 0,
+          "targetRoom": "courtyard",
+          "targetSpawn": { "x": 13, "y": 2, "z": 0 },
+          "label": "Return to Courtyard"
+        }
+      ],
+      "layers": {
+        "ground": [[1, 1, 1], [1, 0, 1], [1, 1, 1]],
+        "overhead": [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+      },
+      "entities": [
+        { "id": "catacombs_key", "type": "key", "x": 9, "y": 9, "name": "Spire Gate Key", "color": "#a855f7" }
+      ]
+    }
+  }
+}
+```
+
+### State Persistence Across Room Transitions
+When traveling between rooms via an exit portal:
+1. **Room State Caching (`roomStates[roomId]`)**:
+   - The departure room's mutable entities (unlocked doors, collected keys/items, lever toggle states) and modified tile layers are snapshotted in memory.
+   - Returning to a previously visited room restores all previous modifications (unlocked doors stay unlocked, collected keys stay collected).
+2. **Player Global State**:
+   - Carried inventory, keys, collected bonus items, elapsed game time, step count, and carried riddle relics are preserved across all rooms in the dungeon.
 

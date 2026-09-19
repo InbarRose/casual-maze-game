@@ -6,7 +6,40 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.13.0` (Completed & Verified)
+### Current Version: `v1.14.0` (Completed & Verified)
+
+- [x] **Camera World Rotation & Perspective Mechanics**:
+  - 4-quadrant camera rotation: `0° (North)`, `90° (East)`, `180° (South)`, `270° (West)`.
+  - Smooth camera rotation interpolation (`rotationLerpSpeed`) and center-pivot coordinate transformation matrices (`worldToScreen`, `screenToWorld`).
+  - Screen-relative player control mapping (`SCREEN_TO_WORLD_DELTAS[rotationAngle][dir]`) ensuring directional keys always move the explorer in the visual screen direction.
+  - Explorer avatar facing automatically matches screen movement direction.
+  - Renderer rotation support: dynamic wall drop faces, underpass tunnel visibility, bridge deck spans, and 4-way Y-depth sorting.
+  - Interactive HUD controls: rotation buttons (`#btn-rotate-left`, `#btn-rotate-right`), dynamic compass heading rose (`#compass-badge`), and hotkeys (`[Q]` / `[R]`, `[` / `]`).
+- [x] **Branching Labyrinths & Multi-Exit Routing**:
+  - `exits` array schema contract supporting multiple distinct exits per level (`{ x, y, z, targetLevel, targetRoom, targetSpawn, label }`).
+  - Portal-specific victory routing loading alternative target levels or trigger secret branches.
+  - Glowing visual exit portal markers with tooltip destination labels.
+- [x] **Interconnected Multi-Room Dungeon State Architecture**:
+  - Level `rooms` dictionary supporting interconnected chambers within a single level (e.g. `courtyard`, `catacombs`, `high_spire`).
+  - Bidirectional room transition portals (`targetRoom` / `targetSpawn`).
+  - In-memory room state snapshot caching (`roomStates[roomId]`), preserving unlocked doors, collected keys/items, lever configurations, and modified tile layers upon leaving and returning.
+  - Continuous global player state preservation (keys, carried relics, score, elapsed time) across room traversals.
+  - Active room badge in HUD (`#hud-room-badge`).
+- [x] **Campaign Chapter 8: The Shifting Monolith (Levels 29–32)**:
+  - Level 29: *The Cardinal Needle* (Rotation tutorial, north/south corridor perspective shifts).
+  - Level 30: *The Hidden Underpass* (Perspective-occluded underpass tunnel beneath an elevated bridge deck).
+  - Level 31: *The Four-Faced Pillar* (4-sided central monolithic pillar hiding keys and levers on cardinal facades).
+  - Level 32: *The Prismatic Spire* (Grand synthesis of rotation, bridges, teleporters, patrollers, and puzzle minigames).
+  - Created modular `js/levels/campaign-ch8.js` and expanded campaign registry to 32 levels.
+- [x] **Storyline 3: The Whispering Citadel**:
+  - Multi-room episodic saga featuring 3 interconnected rooms (Courtyard, Catacombs, High Spire).
+  - Puzzle flow: retrieve crypt key from catacombs, unlock spire gate in courtyard, cross high spire overpass to the apex altar.
+  - Secret branching exit to Level 29 (*The Cardinal Needle*).
+- [x] **Automated Test Coverage & Quality Assurance**:
+  - 53 test suites, 250 tests, 4,748 assertions passing 100% (0 failed) in ~260ms.
+  - Integration suite `chapter-8.test.mjs`, unit suite `multi-room.test.mjs`, and journey suites `camera-rotation.journey.test.mjs` and `multi-room-dungeon.journey.test.mjs`.
+
+### Previous Milestone: `v1.13.0`
 
 - [x] **Storylines ("Stories") Game Mode & Tutorial Evolution**:
   - Dual primary play modes accessible from the Hub (`index.html`): **Campaign Trail** (28 Megalabyrinths across 7 chapters) and **Storylines** (narrative episodic sagas).
@@ -203,6 +236,7 @@ All architectural decisions are documented in `docs/adr/`:
 | [0003](adr/0003-tutorial-system-and-level-toggles.md) | Tutorial Academy, In-Game Hint System, and Level Design Toggles | Accepted | 2026-08-30 |
 | [0004](adr/0004-zone-grouping-and-thematic-tilesets.md) | Zone Grouping, Thematic Tilesets, and Directional Graphics | Accepted | 2026-08-30 |
 | [0005](adr/0005-angled-topdown-perspective-and-dynamic-activities.md) | Angled Top-Down (2.5D) Perspective and Dynamic Activities | Accepted | 2026-09-18 |
+| [0006](adr/0006-camera-world-rotation-branching-rooms.md) | Camera World Rotation, Branching Levels, and Multi-Room Dungeons | Accepted | 2026-09-19 |
 
 ---
 

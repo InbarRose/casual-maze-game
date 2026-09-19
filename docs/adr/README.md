@@ -32,3 +32,4 @@ What is the change or solution being adopted?
 * [0003: Tutorial Academy, In-Game Hint System, and Level Design Toggles](0003-tutorial-system-and-level-toggles.md) — Progressive tutorial system, contextual hints, fog memory mode, and multi-color keys.
 * [0004: Zone Grouping, Thematic Tilesets, and Directional Graphics](0004-zone-grouping-and-thematic-tilesets.md) — Zone progression hierarchy, 6 visual tilesets, and enhanced directional entity graphics.
 * [0005: Angled Top-Down (2.5D) Perspective and Dynamic Activities](0005-angled-topdown-perspective-and-dynamic-activities.md) — Dual-plane 2.5D canvas rendering, Y-depth sorting, teleporters, timed hazards, patrollers, and puzzle minigames.
+* [0006: Camera World Rotation, Branching Levels, and Multi-Room Dungeons](0006-camera-world-rotation-branching-rooms.md) — 90° camera world rotation, screen-relative navigation, multi-exit branching routes, and persistent multi-room dungeon state.
