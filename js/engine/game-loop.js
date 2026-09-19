@@ -46,7 +46,10 @@ export class GameLoop {
       uiCallbacks = maybeUiCallbacks;
     }
     this.mainCanvas = mainCanvas;
+    this.canvas = mainCanvas;
     this.minimapCanvas = minimapCanvas;
+    this.autoMovePath = null;
+    this.clickTarget = null;
     this.level = JSON.parse(JSON.stringify(level));
     this.uiCallbacks = uiCallbacks || {};
 
@@ -89,6 +92,7 @@ export class GameLoop {
 
     // Subsystems
     const tileSize = this.level.config?.tileSize || 32;
+    this.tileSize = tileSize;
     this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize);
     this.fog = this.level.config?.fogOfWar
       ? new FogOfWar(this.level.dimensions.width, this.level.dimensions.height)
@@ -416,6 +420,31 @@ export class GameLoop {
   }
 
   /**
+   * Check whether single-letter shortcut hotkeys (Q, R, T, M, V) are enabled.
+   * If false, the game operates in Simple Keyboard Mode (WASD/Arrows + Space/Enter only).
+   * @returns {boolean}
+   */
+  areHotkeysEnabled() {
+    const hotkeysEnabled = StorageManager.getSetting('hotkeys_enabled', true);
+    const simpleMode = StorageManager.getSetting('simple_keyboard_mode', false);
+    return !!hotkeysEnabled && !simpleMode;
+  }
+
+  /**
+   * Toggle or set single-letter hotkeys on or off.
+   * @param {boolean} enabled
+   */
+  setHotkeysEnabled(enabled) {
+    const val = !!enabled;
+    StorageManager.setSetting('hotkeys_enabled', val);
+    StorageManager.setSetting('simple_keyboard_mode', !val);
+    globalEvents.emit('hotkeys:toggled', { enabled: val });
+    if (typeof this.uiCallbacks.onHotkeysChanged === 'function') {
+      this.uiCallbacks.onHotkeysChanged(val);
+    }
+  }
+
+  /**
    * Bind keyboard, mouse, and touch events
    */
   bindInputs() {
@@ -426,13 +455,14 @@ export class GameLoop {
       this.keysDown.add(e.code);
       if (e.key) this.keysDown.add(e.key);
 
-      // Handle Instant Actions
-      const isMap = KEY_CODES.MAP.includes(e.code) || (e.key && KEY_CODES.MAP.includes(e.key));
-      const isRestart = KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key));
+      // Handle Instant Actions (gated by hotkeys toggle / simple keyboard mode)
+      const hotkeysActive = this.areHotkeysEnabled();
+      const isMap = hotkeysActive && (KEY_CODES.MAP.includes(e.code) || (e.key && KEY_CODES.MAP.includes(e.key)));
+      const isRestart = hotkeysActive && (KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key)));
       const isInteract = KEY_CODES.INTERACT.includes(e.code) || (e.key && KEY_CODES.INTERACT.includes(e.key));
-      const isViewMode = KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)));
-      const isRotateLeft = KEY_CODES.ROTATE_LEFT && (KEY_CODES.ROTATE_LEFT.includes(e.code) || (e.key && KEY_CODES.ROTATE_LEFT.includes(e.key)));
-      const isRotateRight = KEY_CODES.ROTATE_RIGHT && (KEY_CODES.ROTATE_RIGHT.includes(e.code) || (e.key && KEY_CODES.ROTATE_RIGHT.includes(e.key)));
+      const isViewMode = hotkeysActive && KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)));
+      const isRotateLeft = hotkeysActive && KEY_CODES.ROTATE_LEFT && (KEY_CODES.ROTATE_LEFT.includes(e.code) || (e.key && KEY_CODES.ROTATE_LEFT.includes(e.key)));
+      const isRotateRight = hotkeysActive && KEY_CODES.ROTATE_RIGHT && (KEY_CODES.ROTATE_RIGHT.includes(e.code) || (e.key && KEY_CODES.ROTATE_RIGHT.includes(e.key)));
 
       if (isMap) {
         this.toggleFreePan();
@@ -488,6 +518,63 @@ export class GameLoop {
       window.addEventListener('mousemove', this.handleMinimapMouseMove);
       window.addEventListener('mouseup', this.handleMinimapMouseUp);
     }
+
+    // Click / Tap to Move & Interact on Canvas
+    this.handleCanvasPointerDown = (e) => {
+      if (this.camera.mode === 'freepan' || (this.camera?.isRotating?.() ?? false)) return;
+      if (e.button !== undefined && e.button !== 0) return;
+
+      if (!this.canvas) return;
+      const rect = this.canvas.getBoundingClientRect();
+      const scaleX = this.canvas.width / (rect.width || 1);
+      const scaleY = this.canvas.height / (rect.height || 1);
+      const canvasX = (e.clientX - rect.left) * scaleX;
+      const canvasY = (e.clientY - rect.top) * scaleY;
+
+      const worldPos = this.camera.screenToWorld(canvasX, canvasY, true);
+      const targetGridX = Math.floor(worldPos.x / this.tileSize);
+      const targetGridY = Math.floor(worldPos.y / this.tileSize);
+
+      if (targetGridX < 0 || targetGridX >= this.level.dimensions.width || targetGridY < 0 || targetGridY >= this.level.dimensions.height) {
+        return;
+      }
+
+      // If clicking own tile: interact!
+      if (targetGridX === this.player.gridX && targetGridY === this.player.gridY) {
+        this.handleManualInteract();
+        return;
+      }
+
+      // If clicking an adjacent interactable: face it and interact
+      const dist = Math.abs(targetGridX - this.player.gridX) + Math.abs(targetGridY - this.player.gridY);
+      if (dist === 1) {
+        const hasInteractable = this.entities.some(
+          ent => ent.x === targetGridX && ent.y === targetGridY && (ent.elevation ?? ELEVATION.GROUND) === this.player.elevation
+        );
+        if (hasInteractable) {
+          if (targetGridX > this.player.gridX) this.player.facing = 'east';
+          else if (targetGridX < this.player.gridX) this.player.facing = 'west';
+          else if (targetGridY > this.player.gridY) this.player.facing = 'south';
+          else if (targetGridY < this.player.gridY) this.player.facing = 'north';
+          this.handleManualInteract();
+          return;
+        }
+      }
+
+      const path = this.findPathTo(targetGridX, targetGridY);
+      if (path && path.length > 0) {
+        this.autoMovePath = path;
+        this.clickTarget = {
+          x: targetGridX,
+          y: targetGridY,
+          time: performance.now(),
+        };
+      }
+    };
+
+    if (this.canvas && typeof this.canvas.addEventListener === 'function') {
+      this.canvas.addEventListener('pointerdown', this.handleCanvasPointerDown);
+    }
   }
 
   /**
@@ -506,6 +593,9 @@ export class GameLoop {
     }
     if (this.minimapCanvas && typeof this.minimapCanvas.removeEventListener === 'function') {
       this.minimapCanvas.removeEventListener('mousedown', this.handleMinimapMouseDown);
+    }
+    if (this.canvas && typeof this.canvas.removeEventListener === 'function') {
+      this.canvas.removeEventListener('pointerdown', this.handleCanvasPointerDown);
     }
   }
 
@@ -563,6 +653,8 @@ export class GameLoop {
    */
   restartLevel() {
     this.roomStates = {};
+    this.autoMovePath = null;
+    this.clickTarget = null;
     let effectiveSpawnX = 1;
     let effectiveSpawnY = 1;
     let effectiveElevation = 0;
@@ -743,6 +835,16 @@ export class GameLoop {
         }
       }
     }
+
+    // 8. Check for available contextual interaction
+    if (typeof this.uiCallbacks.onInteractionAvailable === 'function') {
+      const interaction = this.getAvailableInteraction();
+      let screenPos = null;
+      if (interaction && this.camera) {
+        screenPos = this.camera.worldToScreen(this.player.worldX, this.player.worldY, true);
+      }
+      this.uiCallbacks.onInteractionAvailable(interaction, screenPos);
+    }
   }
 
   /**
@@ -761,32 +863,270 @@ export class GameLoop {
       else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
     }
 
-    // Restrict to orthogonal movement
-    if (screenDx !== 0) screenDy = 0;
-    if (screenDx === 0 && screenDy === 0) return;
-
-    const angle = this.camera?.getDiscreteRotation?.() ?? 0;
-    const mapping = SCREEN_TO_WORLD_DELTAS[angle] || SCREEN_TO_WORLD_DELTAS[0];
-    let worldDx = 0;
-    let worldDy = 0;
-
-    if (screenDy < 0) {
-      worldDx = mapping.UP.dx;
-      worldDy = mapping.UP.dy;
-    } else if (screenDy > 0) {
-      worldDx = mapping.DOWN.dx;
-      worldDy = mapping.DOWN.dy;
-    } else if (screenDx < 0) {
-      worldDx = mapping.LEFT.dx;
-      worldDy = mapping.LEFT.dy;
-    } else if (screenDx > 0) {
-      worldDx = mapping.RIGHT.dx;
-      worldDy = mapping.RIGHT.dy;
+    // Cancel auto-move path if player presses directional keys
+    if (screenDx !== 0 || screenDy !== 0) {
+      this.autoMovePath = null;
+      this.clickTarget = null;
     }
 
-    const targetX = this.player.gridX + worldDx;
-    const targetY = this.player.gridY + worldDy;
-    this.tryMove(targetX, targetY);
+    // Restrict to orthogonal movement
+    if (screenDx !== 0) screenDy = 0;
+
+    if (screenDx !== 0 || screenDy !== 0) {
+      const angle = this.camera?.getDiscreteRotation?.() ?? 0;
+      const mapping = SCREEN_TO_WORLD_DELTAS[angle] || SCREEN_TO_WORLD_DELTAS[0];
+      let worldDx = 0;
+      let worldDy = 0;
+
+      if (screenDy < 0) {
+        worldDx = mapping.UP.dx;
+        worldDy = mapping.UP.dy;
+      } else if (screenDy > 0) {
+        worldDx = mapping.DOWN.dx;
+        worldDy = mapping.DOWN.dy;
+      } else if (screenDx < 0) {
+        worldDx = mapping.LEFT.dx;
+        worldDy = mapping.LEFT.dy;
+      } else if (screenDx > 0) {
+        worldDx = mapping.RIGHT.dx;
+        worldDy = mapping.RIGHT.dy;
+      }
+
+      const targetX = this.player.gridX + worldDx;
+      const targetY = this.player.gridY + worldDy;
+      this.tryMove(targetX, targetY);
+      return;
+    }
+
+    // Process next step along autoMovePath if active and no directional keys are held
+    if (this.autoMovePath && this.autoMovePath.length > 0) {
+      const nextStep = this.autoMovePath.shift();
+      const moved = this.tryMove(nextStep.x, nextStep.y);
+      if (!moved) {
+        this.autoMovePath = null;
+        this.clickTarget = null;
+      }
+    }
+  }
+
+  /**
+   * Find the shortest walkable path to the target grid coordinate using Breadth-First Search (BFS).
+   * Respects elevation, ramps, bridges, and door keys using CollisionEngine.checkMove.
+   * If the target cell is a solid obstacle (e.g. wall, lever on wall, closed gate),
+   * finds the path to the closest walkable adjacent cell.
+   * @param {number} targetX
+   * @param {number} targetY
+   * @returns {Array<{x: number, y: number}>|null} Array of path steps, or null if unreachable
+   */
+  findPathTo(targetX, targetY) {
+    if (targetX < 0 || targetX >= this.level.dimensions.width || targetY < 0 || targetY >= this.level.dimensions.height) {
+      return null;
+    }
+
+    const startX = this.player.gridX;
+    const startY = this.player.gridY;
+    const startElev = this.player.elevation;
+
+    if (startX === targetX && startY === targetY) {
+      return [];
+    }
+
+    // Check if target tile can ever be entered from any adjacent direction
+    const isTargetWalkable = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }].some(d => {
+      const ax = targetX + d.dx;
+      const ay = targetY + d.dy;
+      if (ax < 0 || ax >= this.level.dimensions.width || ay < 0 || ay >= this.level.dimensions.height) return false;
+      const chk = CollisionEngine.checkMove(ax, ay, targetX, targetY, startElev, this.level, this.entities, this.player.inventory);
+      return chk.allowed;
+    });
+
+    const queue = [{ x: startX, y: startY, elevation: startElev, path: [] }];
+    const visited = new Set([`${startX},${startY},${startElev}`]);
+    let bestAdjacentPath = null;
+
+    let iterations = 0;
+    const maxIterations = 2500;
+
+    while (queue.length > 0 && iterations++ < maxIterations) {
+      const curr = queue.shift();
+
+      // If target is directly walkable and we reached it:
+      if (isTargetWalkable && curr.x === targetX && curr.y === targetY) {
+        return curr.path;
+      }
+
+      // If target is solid and we reached an adjacent cell:
+      if (!isTargetWalkable && Math.abs(curr.x - targetX) + Math.abs(curr.y - targetY) === 1) {
+        if (!bestAdjacentPath || curr.path.length < bestAdjacentPath.length) {
+          bestAdjacentPath = curr.path;
+          return bestAdjacentPath; // First adjacent encountered in BFS is guaranteed shortest
+        }
+      }
+
+      const neighbors = [
+        { dx: 0, dy: -1 },
+        { dx: 0, dy: 1 },
+        { dx: -1, dy: 0 },
+        { dx: 1, dy: 0 },
+      ];
+
+      for (const n of neighbors) {
+        const nx = curr.x + n.dx;
+        const ny = curr.y + n.dy;
+
+        if (nx < 0 || nx >= this.level.dimensions.width || ny < 0 || ny >= this.level.dimensions.height) {
+          continue;
+        }
+
+        const check = CollisionEngine.checkMove(
+          curr.x,
+          curr.y,
+          nx,
+          ny,
+          curr.elevation,
+          this.level,
+          this.entities,
+          this.player.inventory
+        );
+
+        if (check.allowed) {
+          const nextElevation = check.nextElevation;
+          const key = `${nx},${ny},${nextElevation}`;
+          if (!visited.has(key)) {
+            visited.add(key);
+            queue.push({
+              x: nx,
+              y: ny,
+              elevation: nextElevation,
+              path: [...curr.path, { x: nx, y: ny }],
+            });
+          }
+        }
+      }
+    }
+
+    return bestAdjacentPath;
+  }
+
+  /**
+   * Get interactable entity or tile action available at or adjacent to the player's current location
+   * @returns {{ type: string, label: string, icon: string, keyHint: string, x: number, y: number, canInteract: boolean }|null}
+   */
+  getAvailableInteraction() {
+    if (!this.player || this.isPuzzleOpen || this.isWon || this.camera?.mode === 'freepan') return null;
+
+    const px = this.player.gridX;
+    const py = this.player.gridY;
+    const pe = this.player.elevation;
+
+    const facingDx = this.player.facing === 'east' ? 1 : (this.player.facing === 'west' ? -1 : 0);
+    const facingDy = this.player.facing === 'south' ? 1 : (this.player.facing === 'north' ? -1 : 0);
+    const facingX = px + facingDx;
+    const facingY = py + facingDy;
+
+    const sortByFacing = (list) => {
+      return [...list].sort((a, b) => {
+        const aFacing = (a.x === facingX && a.y === facingY) ? 0 : ((a.x === px && a.y === py) ? 1 : 2);
+        const bFacing = (b.x === facingX && b.y === facingY) ? 0 : ((b.x === px && b.y === py) ? 1 : 2);
+        return aFacing - bFacing;
+      });
+    };
+
+    // 1. Check adjacent locked PuzzleGate
+    const adjacentGates = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.PUZZLE_GATE && !e.isUnlocked && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentGates.length > 0) {
+      const g = adjacentGates[0];
+      return { type: 'puzzle_gate', label: g.name ? `Solve ${g.name}` : 'Solve Seal', icon: '🧩', keyHint: 'Space', x: g.x, y: g.y, canInteract: true };
+    }
+
+    // 2. Check adjacent Pedestal
+    const adjacentPedestals = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.PEDESTAL && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentPedestals.length > 0) {
+      const ped = adjacentPedestals[0];
+      const hasCarried = this.player.hasCarriedRiddleItem();
+      if (hasCarried && !ped.slottedItem) {
+        return { type: 'pedestal', label: `Place ${this.player.carriedRiddleItem.name || 'Relic'}`, icon: '📥', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+      } else if (!hasCarried && ped.slottedItem) {
+        return { type: 'pedestal', label: `Take ${ped.slottedItem.name || 'Relic'}`, icon: '📤', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+      } else {
+        return { type: 'pedestal', label: `Inspect ${ped.name || 'Pedestal'}`, icon: '🦅', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+      }
+    }
+
+    // 3. Check adjacent Lever
+    const adjacentLevers = sortByFacing(this.entities.filter(
+      e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation || ELEVATION.GROUND) === pe
+    ));
+    if (adjacentLevers.length > 0) {
+      const lever = adjacentLevers[0];
+      return { type: 'lever', label: lever.state ? 'Switch Off' : 'Pull Switch', icon: '🕹️', keyHint: 'Space', x: lever.x, y: lever.y, canInteract: true };
+    }
+
+    // 4. Check adjacent Signpost
+    const adjacentSigns = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.SIGNPOST && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentSigns.length > 0) {
+      const s = adjacentSigns[0];
+      return { type: 'signpost', label: s.title ? `Read "${s.title}"` : 'Read Signpost', icon: '📜', keyHint: 'Space', x: s.x, y: s.y, canInteract: true };
+    }
+
+    // 5. Check adjacent WallDecor
+    const adjacentDecor = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.WALL_DECOR && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentDecor.length > 0) {
+      const d = adjacentDecor[0];
+      const icon = d.decorType === 'note' ? '📝' : (d.decorType === 'painting' ? '🖼️' : '🏛️');
+      return { type: 'wall_decor', label: d.title ? `Examine "${d.title}"` : 'Examine Lore', icon, keyHint: 'Space', x: d.x, y: d.y, canInteract: true };
+    }
+
+    // 6. Check floor RiddleItem
+    const floorRiddleItems = this.entities.filter(
+      e => e.type === ENTITY_TYPES.RIDDLE_ITEM && !e.isCarried && !e.isSlotted && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (floorRiddleItems.length > 0 && !this.player.hasCarriedRiddleItem()) {
+      const item = floorRiddleItems[0];
+      return { type: 'riddle_item', label: `Pick Up ${item.name || 'Relic'}`, icon: '🗿', keyHint: 'Space', x: item.x, y: item.y, canInteract: true };
+    }
+
+    // 7. Check adjacent Door
+    const adjacentDoors = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.DOOR && !e.isOpen && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentDoors.length > 0) {
+      const d = adjacentDoors[0];
+      const hasKey = this.player.hasKey(d.requiresKey);
+      return {
+        type: 'door',
+        label: hasKey ? `Unlock ${d.name || 'Door'}` : `Locked (${d.name || 'Door'})`,
+        icon: hasKey ? '🗝️' : '🔒',
+        keyHint: 'Space',
+        x: d.x,
+        y: d.y,
+        canInteract: hasKey,
+      };
+    }
+
+    // 8. Check on-cell Exit
+    const exit = this.getMatchingExit(px, py, pe);
+    if (exit) {
+      return {
+        type: 'exit',
+        label: exit.targetRoom ? 'Proceed to Room' : 'Exit Portal',
+        icon: '🌀',
+        keyHint: 'Space',
+        x: px,
+        y: py,
+        canInteract: true,
+      };
+    }
+
+    return null;
   }
 
   /**
@@ -1693,7 +2033,8 @@ export class GameLoop {
       this.entities,
       this.camera,
       this.fog,
-      dt
+      dt,
+      this.clickTarget
     );
 
     this.minimap.render(this.level, this.player, this.fog, dt);

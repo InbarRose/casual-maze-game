@@ -352,4 +352,32 @@ casual-maze-game/
 * **HUD Room Badge (`#hud-room-badge`):**
   * Displays the current active room name in real-time alongside compass heading and carried inventory.
 
+### N. Click-to-Move Pathfinding, Floating Contextual Actions & Simple Keyboard Mode
+* **Click-to-Move BFS Pathfinding Engine (`GameLoop.findPathTo`):**
+  * Grid-based Breadth-First Search (BFS) pathfinder computing optimal paths across `(x, y, elevation)` state space.
+  * **Elevation & Multi-Layer Traversal**: Respects directional ramps (`R_N`, `R_S`, `R_E`, `R_W`) for ascending/descending and distinguishes bridge deck walking (`elevation = 1`) from underpass tunneling (`elevation = 0`).
+  * **Dynamic Door States**: Open doors are treated as walkable passages; closed doors block pathfinding unless unlocked.
+  * **Adjacent Obstacle Routing**: When a player clicks on a non-walkable solid object (e.g. a wall lever, locked gate, pedestal, or signpost), BFS identifies the closest adjacent walkable tile and paths directly to it.
+  * **Canvas Pointer Events & Matrix Inversion**:
+    * Canvas captures `pointerdown` coordinates (`clientX`, `clientY`).
+    * Coordinates are converted to local canvas pixels via `getBoundingClientRect()`, then unprojected into world coordinates via `camera.screenToWorld(screenX, screenY)`.
+    * Works seamlessly under all 4 camera rotation angles (0°, 90°, 180°, 270°).
+  * **Destination Feedback & Stepping**:
+    * Renders a pulsing concentric cyan ring with crosshair reticles at `(clickTarget.x, clickTarget.y)` (`GameRenderer.renderClickTarget`).
+    * Steps along `autoMovePath` each movement tick in `processPlayerMovement()`.
+    * Any manual directional keyboard press (`WASD` or Arrow keys) cancels the active `autoMovePath` immediately.
+* **Contextual Floating Action Button (`#hud-contextual-interact`):**
+  * Real-time query in `GameLoop.getAvailableInteraction()` checking player cell and 4 adjacent neighbors for interactable entities:
+    * `puzzle_gate` (locked seals), `pedestal` (riddle slots), `lever` (wall/floor switches), `signpost` (lore tablets), `wall_decor` (notes/paintings), `riddle_item` (carriable relics), `door` (locked/unlocked key doors), and `exit` (exit portals).
+  * **Facing Direction Priority**: Prioritizes the entity directly in front of the player's facing direction before inspecting other adjacent tiles.
+  * **Screen-Projected Positioning**: Dispatches `uiCallbacks.onInteractionAvailable(interaction, screenPos)` where `screenPos = camera.worldToScreen(player.worldX, player.worldY)`.
+  * Projects a glassmorphic floating pill with action emoji, label, and desktop keyhint (`[Space]`) centered 36px above the player character.
+  * Captures `pointerdown` with `stopPropagation()`, preventing click-to-move interference when tapping the action button.
+* **Simple Keyboard Mode & Hotkey Isolation:**
+  * Clean separation between restart (`KeyT`) and camera rotation (`KeyQ` / `KeyR`), eliminating keyboard conflicts.
+  * Hotkeys toggleable at runtime via `GameLoop.setHotkeysEnabled(enabled)` and persisted via `StorageManager` (`hotkeys_enabled`, `simple_keyboard_mode`).
+  * Toggles available in both the in-game Pause Menu and global Settings modal.
+  * When disabled ("Simple Keyboard Mode"), single-letter shortcut keys (`Q`, `R`, `T`, `M`, `V`, `L`) are ignored, restricting active input strictly to directional navigation (`WASD`, Arrows) and interaction (`Space`, `Enter`).
+
+
 

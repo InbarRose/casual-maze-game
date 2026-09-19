@@ -37,8 +37,9 @@ export class GameRenderer {
    * @param {Camera} camera
    * @param {FogOfWar} fog
    * @param {number} dt
+   * @param {{ x: number, y: number, time: number }|null} [clickTarget=null]
    */
-  render(level, player, entities, camera, fog, dt) {
+  render(level, player, entities, camera, fog, dt = 0, clickTarget = null) {
     const ctx = this.ctx;
     const tileSize = camera.tileSize;
     const { width: mazeW, height: mazeH } = level.dimensions;
@@ -75,6 +76,11 @@ export class GameRenderer {
       this.renderAngledPipeline(level, player, entities, camera, fog, bounds, theme, tileSize);
     } else {
       this.renderClassicPipeline(level, player, entities, camera, fog, bounds, theme, tileSize);
+    }
+
+    // Render Destination Click Ring
+    if (clickTarget && clickTarget.time) {
+      this.renderClickTarget(ctx, camera, clickTarget, tileSize);
     }
 
     // Render Particle Effects, Shockwaves, and In-World Floating Text
@@ -1594,6 +1600,50 @@ export class GameRenderer {
     ctx.lineTo(ix + 10, iy + 12);
     ctx.closePath();
     ctx.fill();
+    ctx.restore();
+  }
+
+  /**
+   * Render pulsing destination ring at clicked/tapped target
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {Camera} camera
+   * @param {{ x: number, y: number, time: number }} clickTarget
+   * @param {number} tileSize
+   */
+  renderClickTarget(ctx, camera, clickTarget, tileSize) {
+    const age = performance.now() - clickTarget.time;
+    if (age > 1200) return;
+
+    const t = age / 1200;
+    const alpha = Math.max(0, 1 - t);
+    const radius = (tileSize * 0.35) + (t * tileSize * 0.25);
+
+    const worldX = clickTarget.x * tileSize + tileSize / 2;
+    const worldY = clickTarget.y * tileSize + tileSize / 2;
+    const screen = camera.worldToScreen(worldX, worldY, true);
+
+    ctx.save();
+    ctx.strokeStyle = `rgba(56, 189, 248, ${alpha * 0.85})`;
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.arc(screen.x, screen.y, Math.max(2, radius), 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Inner core dot
+    ctx.fillStyle = `rgba(56, 189, 248, ${alpha * 0.7})`;
+    ctx.beginPath();
+    ctx.arc(screen.x, screen.y, Math.max(1, 3 * (1 - t)), 0, Math.PI * 2);
+    ctx.fill();
+
+    // Crosshairs
+    const arm = Math.max(2, 6 * (1 - t));
+    ctx.beginPath();
+    ctx.moveTo(screen.x - arm, screen.y);
+    ctx.lineTo(screen.x + arm, screen.y);
+    ctx.moveTo(screen.x, screen.y - arm);
+    ctx.lineTo(screen.x, screen.y + arm);
+    ctx.stroke();
+
     ctx.restore();
   }
 }

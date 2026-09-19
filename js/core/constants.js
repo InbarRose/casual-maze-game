@@ -366,13 +366,15 @@ export const OPPOSITE_DIRECTIONS = Object.freeze({
 });
 
 export const KEY_CODES = Object.freeze({
-  UP: ['ArrowUp', 'KeyW', 'KeyK', 'w', 'W', 'k', 'K', 'Up'],
-  DOWN: ['ArrowDown', 'KeyS', 'KeyJ', 's', 'S', 'j', 'J', 'Down'],
-  LEFT: ['ArrowLeft', 'KeyA', 'KeyH', 'a', 'A', 'h', 'H', 'Left'],
-  RIGHT: ['ArrowRight', 'KeyD', 'KeyL', 'd', 'D', 'l', 'L', 'Right'],
+  UP: ['ArrowUp', 'KeyW', 'w', 'W', 'Up'],
+  DOWN: ['ArrowDown', 'KeyS', 's', 'S', 'Down'],
+  LEFT: ['ArrowLeft', 'KeyA', 'a', 'A', 'Left'],
+  RIGHT: ['ArrowRight', 'KeyD', 'd', 'D', 'Right'],
   INTERACT: ['Space', 'KeyE', 'Enter', 'e', 'E', ' ', 'Enter'],
+  ROTATE_LEFT: ['KeyQ', 'q', 'Q', 'BracketLeft', '['],
+  ROTATE_RIGHT: ['KeyR', 'r', 'R', 'BracketRight', ']'],
   MAP: ['KeyM', 'm', 'M'],
-  RESTART: ['KeyR', 'r', 'R'],
+  RESTART: ['KeyT', 't', 'T'],
   PAUSE: ['Escape', 'KeyP', 'p', 'P', 'Esc'],
   VIEW_MODE: ['KeyV', 'v', 'V'],
 });

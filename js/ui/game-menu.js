@@ -35,6 +35,7 @@ export class GameMenu {
     this.onReportIssue = options.onReportIssue || (() => {});
     this.onSaveProgress = options.onSaveProgress || (() => {});
     this.onToggleSound = options.onToggleSound || (() => {});
+    this.onToggleHotkeys = options.onToggleHotkeys || (() => true);
     this.onQuit = options.onQuit || (() => {
       if (typeof window !== 'undefined') window.location.href = 'index.html';
     });
@@ -63,6 +64,9 @@ export class GameMenu {
       this.modalEl.classList.add('active');
     }
     this._updateMenuStats(stats);
+    if (typeof window !== 'undefined' && window.gameLoop && typeof window.gameLoop.areHotkeysEnabled === 'function') {
+      this.updateHotkeysButtonLabel(window.gameLoop.areHotkeysEnabled());
+    }
   }
 
   /**
@@ -160,6 +164,11 @@ export class GameMenu {
       this.updateSoundButtonLabel(isMuted);
     });
 
+    bindClick('#btn-pause-hotkeys', () => {
+      const enabled = this.onToggleHotkeys();
+      this.updateHotkeysButtonLabel(enabled);
+    });
+
     bindClick('#btn-pause-quit', () => {
       this.onQuit();
     });
@@ -229,6 +238,20 @@ export class GameMenu {
       btnPerspective.innerHTML = mode === 'angled'
         ? '📐 <span>View: Angled 2.5D [V]</span>'
         : '🗺️ <span>View: Top-Down [V]</span>';
+    }
+  }
+
+  /**
+   * Update hotkeys button label
+   * @param {boolean} enabled
+   */
+  updateHotkeysButtonLabel(enabled) {
+    if (!this.modalEl) return;
+    const btnHotkeys = this.modalEl.querySelector('#btn-pause-hotkeys');
+    if (btnHotkeys) {
+      btnHotkeys.innerHTML = enabled
+        ? '⌨️ <span>Hotkeys: ON [Full]</span>'
+        : '⌨️ <span>Hotkeys: OFF [Simple Mode]</span>';
     }
   }
 

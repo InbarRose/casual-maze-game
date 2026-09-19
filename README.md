@@ -17,6 +17,9 @@ Hosted statically on GitHub Pages at [casual-maze-game.inbarrose.com](https://ca
 * **Reactive Puzzle Mechanics**: Collect color-coded keys (Ruby, Sapphire, Emerald, Gold, Purple), unlock matching gates, carry riddle relics into pedestal sockets, and pull levers to dynamically open passages.
 * **Architect Studio Map Editor Overhaul**: Modern grouped toolbars, multi-layer switching (Ground Floor Z=0 vs Overhead Walkway Z=1), multi-colored entity palettes, brush sizing (1x1 to 5x5), grab & move tool, live solvability diagnostic reports, and test play with custom spawns.
 * **Replay Theater & Diagnostics Lab**: In-browser test runner, deterministic solver walkthrough replay visualizer, and diagnostic reporting bundle generator.
+* **Click-to-Move & Mobile Pointer Navigation**: Tap or click anywhere on the game canvas to route the explorer via BFS shortest-path navigation around obstacles, across multi-elevation ramps/bridges, and through open doors with an animated pulsing destination indicator.
+* **Contextual Floating Action Button**: Seamless one-tap interaction for mobile and mouse users; a dynamic glassmorphic pill button appears above the character whenever adjacent to levers, riddle pedestals, signposts, lore notes, puzzle seals, doors, or portals.
+* **Simple Keyboard Mode & Hotkey Isolation**: Clean separation of restart (`T`) from camera rotation (`Q`/`R`). Hotkeys can be toggled on/off in the Pause Menu or Settings modal to disable single-letter shortcuts (`Q`, `R`, `T`, `M`, `V`, `L`) and prevent accidental restarts during play.
 * **Dynamic Fog-of-War & Minimap**: 3-state raycasting line-of-sight with memory dimming and an interactive HUD minimap.
 * **Tutorial Academy & 32-Level Campaign Progression**: 6 structured introductory onboarding lessons plus 32 megalabyrinths across 8 themed zones.
 * **Zero Backend**: 100% static client-side architecture with zero runtime dependencies.
@@ -25,19 +28,19 @@ Hosted statically on GitHub Pages at [casual-maze-game.inbarrose.com](https://ca
 
 ## 🕹️ Controls
 
-| Action | Keyboard | Touch / Mobile |
+| Action | Keyboard | Touch / Mobile / Mouse |
 | :--- | :--- | :--- |
-| **Move Explorer** | `W`, `A`, `S`, `D` / Arrow Keys | On-screen Virtual D-Pad |
-| **Rotate Camera 90°** | `Q` (CCW) / `E` or `R` (CW) | Compass Dial Buttons `↺` / `↻` |
-| **Interact / Pull Lever** | `Space`, `Enter`, or `E` | `USE` button |
-| **Toggle Perspective** | `V` | Pause Menu / Settings |
-| **Free-Pan Map** | `M` | Tap Map Button / Minimap |
-| **Activity Log** | `L` | Pause Menu `📜` |
+| **Move Explorer** | `W`, `A`, `S`, `D` / Arrow Keys | **Click-to-Move** (tap destination on canvas) / Virtual D-Pad |
+| **Rotate Camera 90°** | `Q` or `[` (CCW) / `R` or `]` (CW) | Compass Dial Buttons `↺` / `↻` |
+| **Interact / Pull Lever** | `Space` or `Enter` | **Contextual Floating Action Pill** / `USE` button |
+| **Restart Level** | `T` *(isolated from camera rotation)* | Pause Menu / Restart Button `🔄` |
+| **Toggle Perspective** | `V` *(when hotkeys enabled)* | Pause Menu / Settings Modal |
+| **Free-Pan Map** | `M` *(when hotkeys enabled)* | Tap Map Button / Minimap |
+| **Activity Log** | `L` *(when hotkeys enabled)* | Pause Menu `📜` |
 | **Pause & Options** | `P` or `Esc` | Menu Button `⏸️` |
-| **Restart Level** | `T` | Restart Button `🔄` |
+| **Simple Keyboard Mode** | Toggle in Pause Menu or Settings | Pause Menu -> Hotkeys Toggle |
 
 
----
 
 ## 🚀 Quick Start & Local Testing Guide
 

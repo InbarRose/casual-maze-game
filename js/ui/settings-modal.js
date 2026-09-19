@@ -123,17 +123,36 @@ export class SettingsModal {
             </div>
           </div>
 
-          <!-- Section 3: Keyboard & Navigation Cheatsheet -->
+          <!-- Section 3: Keyboard & Navigation Controls -->
           <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
-            <div style="font-size: 0.8rem; color: var(--emerald); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem;">
-              🎮 Controls & Keybindings
+            <div style="font-size: 0.8rem; color: var(--emerald); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
+              <span>🎮 Controls & Navigation</span>
+              <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; text-transform: none; color: var(--text-muted); cursor: pointer;">
+                <input type="checkbox" id="setting-simple-mode" /> Simple Keyboard Mode
+              </label>
             </div>
+
+            <!-- Enable Single-Letter Hotkeys Toggle -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <div>
+                <div style="font-size: 0.85rem; font-weight: 600;">Enable Single-Letter Hotkeys</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Allow Q/R (Rotate), T (Restart), M (Map), V (3D), L (Log)</div>
+              </div>
+              <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+                <input type="checkbox" id="setting-hotkeys-toggle" checked />
+                <span class="slider" style="position: absolute; cursor: pointer; inset: 0; background-color: #334155; border-radius: 24px; transition: 0.2s;"></span>
+              </label>
+            </div>
+
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.8rem;">
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">WASD</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Arrows</kbd> : Move Explorer</div>
-              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Q</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">E</kbd> : Rotate Camera 90°</div>
+              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Click / Tap</kbd> : Click to Move &amp; Interact</div>
+              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Q</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">R</kbd> : Rotate Camera 90°</div>
+              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Space</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Enter</kbd> : Inspect / Interact</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">V</kbd> : Toggle 2.5D / Top-Down</div>
-              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Space</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">E</kbd> : Inspect / Interact</div>
-              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">M</kbd> : Minimap & Free-Pan</div>
+              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">L</kbd> : Activity Log &amp; Replay</div>
+              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">M</kbd> : Minimap &amp; Free-Pan</div>
+              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">T</kbd> : Restart Level (Confirm)</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">P</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Esc</kbd> : Pause / In-Game Menu</div>
             </div>
           </div>
@@ -256,6 +275,30 @@ export class SettingsModal {
       };
     }
 
+    // Hotkeys & Simple Keyboard Mode Toggles
+    const hotkeysToggle = this.modalEl.querySelector('#setting-hotkeys-toggle');
+    const simpleModeCb = this.modalEl.querySelector('#setting-simple-mode');
+
+    if (hotkeysToggle) {
+      hotkeysToggle.onchange = () => {
+        const enabled = hotkeysToggle.checked;
+        StorageManager.setSetting('hotkeys_enabled', enabled);
+        StorageManager.setSetting('simple_keyboard_mode', !enabled);
+        if (simpleModeCb) simpleModeCb.checked = !enabled;
+        globalEvents.emit('hotkeys:toggled', { enabled });
+      };
+    }
+
+    if (simpleModeCb) {
+      simpleModeCb.onchange = () => {
+        const simple = simpleModeCb.checked;
+        StorageManager.setSetting('simple_keyboard_mode', simple);
+        StorageManager.setSetting('hotkeys_enabled', !simple);
+        if (hotkeysToggle) hotkeysToggle.checked = !simple;
+        globalEvents.emit('hotkeys:toggled', { enabled: !simple });
+      };
+    }
+
     document.addEventListener('keydown', (e) => {
       if (this.isOpen && e.key === 'Escape') {
         this.close();
@@ -273,6 +316,9 @@ export class SettingsModal {
     const perspective = StorageManager.getSetting('perspective', 'angled');
     const smoothRot = StorageManager.getSetting('smooth_rotation', true);
     const highContrast = StorageManager.getSetting('high_contrast', false);
+    const hotkeysEnabled = StorageManager.getSetting('hotkeys_enabled', true);
+    const simpleMode = StorageManager.getSetting('simple_keyboard_mode', false);
+    const effectiveHotkeys = hotkeysEnabled && !simpleMode;
 
     const muteAllCb = this.modalEl.querySelector('#setting-mute-all');
     const masterSlider = this.modalEl.querySelector('#setting-vol-master');
@@ -284,6 +330,8 @@ export class SettingsModal {
     const perspSelect = this.modalEl.querySelector('#setting-perspective-select');
     const smoothRotToggle = this.modalEl.querySelector('#setting-smooth-rotation');
     const contrastToggle = this.modalEl.querySelector('#setting-high-contrast');
+    const hotkeysToggleEl = this.modalEl.querySelector('#setting-hotkeys-toggle');
+    const simpleModeCbEl = this.modalEl.querySelector('#setting-simple-mode');
 
     if (muteAllCb) muteAllCb.checked = isMuted;
     if (masterSlider) masterSlider.value = volMaster;
@@ -295,6 +343,8 @@ export class SettingsModal {
     if (perspSelect) perspSelect.value = perspective;
     if (smoothRotToggle) smoothRotToggle.checked = smoothRot;
     if (contrastToggle) contrastToggle.checked = highContrast;
+    if (hotkeysToggleEl) hotkeysToggleEl.checked = effectiveHotkeys;
+    if (simpleModeCbEl) simpleModeCbEl.checked = !effectiveHotkeys;
   }
 
   open() {
