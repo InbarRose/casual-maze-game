@@ -16,11 +16,12 @@ import path from 'path';
 describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
   it('guides an explorer through Chapter 1, discovering Architect Notes and earning medals', async () => {
     // 1. Verify Campaign Chapters Structure
-    assertEqual(CAMPAIGN_CHAPTERS.length, 7, 'Campaign is organized into 7 distinct thematic chapters');
+    assertEqual(CAMPAIGN_CHAPTERS.length, 8, 'Campaign is organized into 8 distinct thematic chapters');
     assertEqual(CAMPAIGN_CHAPTERS[0].id, 'chapter_1');
     assertEqual(CAMPAIGN_CHAPTERS[0].title, 'The Foundation');
     assertEqual(CAMPAIGN_CHAPTERS[1].title, 'The Vertical Dimension');
     assertEqual(CAMPAIGN_CHAPTERS[4].title, 'Rhythm & Danger');
+    assertEqual(CAMPAIGN_CHAPTERS[7].title, 'The Shifting Monolith');
 
     // 2. Load Level 1 JSON
     const level1Raw = JSON.parse(fs.readFileSync(path.resolve('levels/chapter_1/level_1.json'), 'utf8'));

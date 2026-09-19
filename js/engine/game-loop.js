@@ -3,7 +3,7 @@
  * Ties together input, physics/collision, entities, camera, fog, and rendering.
  */
 
-import { KEY_CODES, ELEVATION, ENTITY_TYPES } from '../core/constants.js';
+import { KEY_CODES, ELEVATION, ENTITY_TYPES, SCREEN_TO_WORLD_DELTAS } from '../core/constants.js';
 import { globalEvents } from '../core/events.js';
 import { CollisionEngine } from './collision.js';
 import { Key } from '../entities/key.js';
@@ -35,11 +35,20 @@ export class GameLoop {
    * @param {object} options.level
    * @param {object} [options.uiCallbacks]
    */
-  constructor({ mainCanvas, minimapCanvas, level, uiCallbacks = {} }) {
+  constructor(optionsOrLevel, maybeMainCanvas, maybeMinimapCanvas, maybeUiCallbacks = {}) {
+    let mainCanvas, minimapCanvas, level, uiCallbacks;
+    if (optionsOrLevel && optionsOrLevel.mainCanvas) {
+      ({ mainCanvas, minimapCanvas, level, uiCallbacks = {} } = optionsOrLevel);
+    } else {
+      level = optionsOrLevel;
+      mainCanvas = maybeMainCanvas;
+      minimapCanvas = maybeMinimapCanvas;
+      uiCallbacks = maybeUiCallbacks;
+    }
     this.mainCanvas = mainCanvas;
     this.minimapCanvas = minimapCanvas;
     this.level = JSON.parse(JSON.stringify(level));
-    this.uiCallbacks = uiCallbacks;
+    this.uiCallbacks = uiCallbacks || {};
 
     this.isRunning = false;
     this.isPaused = false;
@@ -51,31 +60,52 @@ export class GameLoop {
     this.logger = new DebugLogger(this.level);
     this.logger.log('game:start', {
       spawn: {
-        x: this.level.spawn.x,
-        y: this.level.spawn.y,
-        elevation: this.level.spawn.elevation || 0,
+        x: this.level.spawn?.x ?? 1,
+        y: this.level.spawn?.y ?? 1,
+        elevation: this.level.spawn?.elevation || 0,
       },
     }, 0);
 
+    // Multi-Room State Management
+    this.roomStates = {};
+    this.activeRoomId = null;
+    this.currentRoom = null;
+    this.lastRoomTransitionTime = -10000;
+    this.isMultiRoom = Boolean(this.level.rooms && Object.keys(this.level.rooms).length > 0);
+
+    let initialRoomDef = null;
+    if (this.isMultiRoom) {
+      this.activeRoomId = this.level.initialRoom || Object.keys(this.level.rooms)[0];
+      initialRoomDef = this.level.rooms[this.activeRoomId];
+      if (initialRoomDef) {
+        this.currentRoom = initialRoomDef;
+        this.level.dimensions = initialRoomDef.dimensions || this.level.dimensions;
+        this.level.theme = initialRoomDef.theme || this.level.theme;
+        this.level.backgroundArt = initialRoomDef.backgroundArt || this.level.backgroundArt || null;
+        this.level.exits = initialRoomDef.exits || (initialRoomDef.exit ? [initialRoomDef.exit] : []);
+        this.level.exit = this.level.exits[0] || null;
+      }
+    }
+
     // Subsystems
-    const tileSize = this.level.config.tileSize || 32;
+    const tileSize = this.level.config?.tileSize || 32;
     this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize);
-    this.fog = this.level.config.fogOfWar
+    this.fog = this.level.config?.fogOfWar
       ? new FogOfWar(this.level.dimensions.width, this.level.dimensions.height)
       : null;
-    if (this.fog && this.level.config.mapRevealed) {
+    if (this.fog && this.level.config?.mapRevealed) {
       this.fog.reset(true);
     }
     const savedPerspective = StorageManager.getSetting('perspective');
-    const initialPerspective = savedPerspective || this.level.config.viewPerspective || 'angled';
+    const initialPerspective = savedPerspective || this.level.config?.viewPerspective || 'angled';
     this.renderer = new GameRenderer(mainCanvas);
     this.renderer.setPerspective(initialPerspective);
     this.minimap = new Minimap(minimapCanvas);
 
     // Determine effective spawn coordinates (custom test spawn takes precedence in playtest mode)
-    const effectiveSpawnX = this.level.testSpawn?.x ?? this.level.spawn?.x ?? 1;
-    const effectiveSpawnY = this.level.testSpawn?.y ?? this.level.spawn?.y ?? 1;
-    const effectiveElevation = this.level.testSpawn?.elevation ?? this.level.spawn?.elevation ?? 0;
+    const effectiveSpawnX = this.level.testSpawn?.x ?? initialRoomDef?.spawn?.x ?? this.level.spawn?.x ?? 1;
+    const effectiveSpawnY = this.level.testSpawn?.y ?? initialRoomDef?.spawn?.y ?? this.level.spawn?.y ?? 1;
+    const effectiveElevation = this.level.testSpawn?.elevation ?? initialRoomDef?.spawn?.elevation ?? this.level.spawn?.elevation ?? 0;
     const initialInventory = Array.isArray(this.level.testInventory) ? [...this.level.testInventory] : [];
 
     // Instantiate Player
@@ -87,9 +117,15 @@ export class GameLoop {
       initialInventory
     );
 
-    // Instantiate Entities
-    this.entities = [];
-    this.initEntities();
+    // Instantiate Entities & Room Layers
+    if (this.isMultiRoom && initialRoomDef) {
+      this.level.layers = JSON.parse(JSON.stringify(initialRoomDef.layers));
+      this.entities = this.createEntities(initialRoomDef.entities || []);
+      this.snapshotCurrentRoom();
+    } else {
+      this.entities = [];
+      this.initEntities();
+    }
 
     // Input state
     this.keysDown = new Set();
@@ -121,13 +157,15 @@ export class GameLoop {
   }
 
   /**
-   * Instantiate entities from level definition
+   * Helper to construct entity instances from plain entity definition objects
+   * @param {Array<object>} entityDefs
+   * @returns {Array<object>}
    */
-  initEntities() {
+  createEntities(entityDefs) {
     const riddleItems = [];
     const pedestals = [];
 
-    this.entities = (this.level.entities || []).map(e => {
+    const entities = (entityDefs || []).map(e => {
       if (e.type === ENTITY_TYPES.KEY) return new Key(e);
       if (e.type === ENTITY_TYPES.DOOR) return new Door(e);
       if (e.type === ENTITY_TYPES.LEVER) return new Lever(e);
@@ -163,6 +201,15 @@ export class GameLoop {
         }
       }
     }
+
+    return entities;
+  }
+
+  /**
+   * Instantiate entities from level definition
+   */
+  initEntities() {
+    this.entities = this.createEntities(this.level.entities || []);
   }
 
   /**
@@ -177,6 +224,195 @@ export class GameLoop {
     if (this.uiCallbacks.onPerspectiveChange) {
       this.uiCallbacks.onPerspectiveChange(next);
     }
+  }
+
+  /**
+   * Rotate world camera 90 degrees counter-clockwise
+   */
+  rotateLeft() {
+    if (!this.camera) return;
+    this.camera.rotateLeft();
+    this.notifyUI();
+    globalEvents.emit('camera:rotated', {
+      rotation: this.camera.rotation,
+      discreteRotation: this.camera.getDiscreteRotation(),
+      heading: this.camera.getCompassHeading(),
+    });
+  }
+
+  /**
+   * Rotate world camera 90 degrees clockwise
+   */
+  rotateRight() {
+    if (!this.camera) return;
+    this.camera.rotateRight();
+    this.notifyUI();
+    globalEvents.emit('camera:rotated', {
+      rotation: this.camera.rotation,
+      discreteRotation: this.camera.getDiscreteRotation(),
+      heading: this.camera.getCompassHeading(),
+    });
+  }
+
+  /**
+   * Initialize and switch active room in a multi-room level
+   * @param {string} roomId
+   * @param {object|null} [spawnOverride=null]
+   * @param {boolean} [shouldSnapshot=true]
+   */
+  initActiveRoom(roomId, spawnOverride = null, shouldSnapshot = true) {
+    if (!this.level.rooms || !this.level.rooms[roomId]) {
+      console.warn(`[MazeGame:Engine] Room "${roomId}" not found in level definition`);
+      return;
+    }
+
+    if (shouldSnapshot && this.activeRoomId) {
+      this.snapshotCurrentRoom();
+    }
+
+    const roomDef = this.level.rooms[roomId];
+    this.activeRoomId = roomId;
+    this.currentRoom = roomDef;
+
+    // Apply room properties to active level context
+    this.level.dimensions = roomDef.dimensions || this.level.dimensions;
+    this.level.theme = roomDef.theme || this.level.theme || 'stone';
+    this.level.backgroundArt = roomDef.backgroundArt || this.level.backgroundArt || null;
+    this.level.exits = roomDef.exits || (roomDef.exit ? [roomDef.exit] : []);
+    this.level.exit = this.level.exits[0] || null;
+
+    // Restore cached room state or initialize new
+    if (this.roomStates[roomId]) {
+      this.entities = this.roomStates[roomId].entities;
+      this.level.layers = this.roomStates[roomId].layers;
+    } else {
+      this.level.layers = JSON.parse(JSON.stringify(roomDef.layers));
+      this.entities = this.createEntities(roomDef.entities || []);
+      this.snapshotCurrentRoom();
+    }
+
+    // Position player if player is instantiated
+    const spawnX = spawnOverride?.x ?? roomDef.spawn?.x ?? 1;
+    const spawnY = spawnOverride?.y ?? roomDef.spawn?.y ?? 1;
+    const spawnElev = spawnOverride?.elevation ?? spawnOverride?.z ?? roomDef.spawn?.elevation ?? roomDef.spawn?.z ?? 0;
+
+    if (this.player) {
+      this.player.teleport(spawnX, spawnY, spawnElev);
+      this.camera.snapTo(
+        this.player.worldX,
+        this.player.worldY,
+        this.level.dimensions.width,
+        this.level.dimensions.height
+      );
+    }
+
+    // Re-create fog for this room's dimensions if fog is enabled
+    if (this.level.config?.fogOfWar) {
+      this.fog = new FogOfWar(this.level.dimensions.width, this.level.dimensions.height);
+      if (this.level.config.mapRevealed) {
+        this.fog.reset(true);
+      }
+    }
+
+    this.updateFog();
+    this.notifyUI();
+    globalEvents.emit('room:entered', {
+      roomId,
+      title: roomDef.title || roomId,
+      levelId: this.level.id,
+    });
+  }
+
+  /**
+   * Save current room state (mutable entities, modified layers) to cache
+   */
+  snapshotCurrentRoom() {
+    if (!this.activeRoomId) return;
+    this.roomStates[this.activeRoomId] = {
+      entities: this.entities,
+      layers: this.level.layers,
+    };
+  }
+
+  /**
+   * Seamlessly travel player between interconnected rooms
+   * @param {string} targetRoomId
+   * @param {object|null} [targetSpawn=null]
+   */
+  transitionToRoom(targetRoomId, targetSpawn = null, force = false) {
+    const now = performance.now();
+    if (!force && now - this.lastRoomTransitionTime < 300) return;
+    this.lastRoomTransitionTime = now;
+
+    if (!this.level.rooms || !this.level.rooms[targetRoomId]) {
+      console.warn(`[MazeGame:Engine] Cannot transition to unknown room: ${targetRoomId}`);
+      return;
+    }
+
+    const prevRoomId = this.activeRoomId;
+    this.initActiveRoom(targetRoomId, targetSpawn, true);
+
+    // Particle & shockwave flare at new spawn
+    this.renderer.spawnParticles(this.player.worldX, this.player.worldY, '#38bdf8', 35);
+    this.renderer.spawnShockwave(this.player.worldX, this.player.worldY, '#38bdf8', 45);
+    const roomTitle = this.currentRoom?.title || targetRoomId;
+    this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 24, `🚪 ${roomTitle}`, '#38bdf8');
+
+    this.logger.log('room:transition', {
+      fromRoom: prevRoomId,
+      toRoom: targetRoomId,
+      spawn: targetSpawn,
+      elapsedMs: this.elapsedTime,
+    });
+
+    globalEvents.emit('room:transition', {
+      fromRoom: prevRoomId,
+      toRoom: targetRoomId,
+      roomTitle,
+    });
+
+    if (this.uiCallbacks.onRoomTransition) {
+      this.uiCallbacks.onRoomTransition({
+        fromRoom: prevRoomId,
+        toRoom: targetRoomId,
+        roomTitle,
+      });
+    }
+  }
+
+  /**
+   * Find matching exit at given player coordinates and elevation
+   * @param {number} px
+   * @param {number} py
+   * @param {number} pe
+   * @returns {object|null}
+   */
+  getMatchingExit(px, py, pe) {
+    const exits = Array.isArray(this.level.exits) && this.level.exits.length > 0
+      ? this.level.exits
+      : (this.level.exit ? [this.level.exit] : []);
+
+    return exits.find(e => {
+      const ex = e.x;
+      const ey = e.y;
+      const ez = e.elevation ?? e.z ?? ELEVATION.GROUND;
+      return px === ex && py === ey && pe === ez;
+    }) || null;
+  }
+
+  /**
+   * Move player one step in the specified screen direction ('UP', 'DOWN', 'LEFT', 'RIGHT')
+   * Translates screen-relative direction according to current camera rotation angle.
+   * @param {'UP'|'DOWN'|'LEFT'|'RIGHT'|'up'|'down'|'left'|'right'} direction
+   * @returns {boolean}
+   */
+  tryMoveDirection(direction) {
+    if (this.player.isMoving || this.camera.mode === 'freepan') return false;
+    const angle = this.camera?.getDiscreteRotation?.() ?? 0;
+    const mapping = SCREEN_TO_WORLD_DELTAS[angle] || SCREEN_TO_WORLD_DELTAS[0];
+    const delta = mapping[direction?.toUpperCase()];
+    if (!delta) return false;
+    return this.tryMove(this.player.gridX + delta.dx, this.player.gridY + delta.dy);
   }
 
   /**
@@ -195,6 +431,8 @@ export class GameLoop {
       const isRestart = KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key));
       const isInteract = KEY_CODES.INTERACT.includes(e.code) || (e.key && KEY_CODES.INTERACT.includes(e.key));
       const isViewMode = KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)));
+      const isRotateLeft = KEY_CODES.ROTATE_LEFT && (KEY_CODES.ROTATE_LEFT.includes(e.code) || (e.key && KEY_CODES.ROTATE_LEFT.includes(e.key)));
+      const isRotateRight = KEY_CODES.ROTATE_RIGHT && (KEY_CODES.ROTATE_RIGHT.includes(e.code) || (e.key && KEY_CODES.ROTATE_RIGHT.includes(e.key)));
 
       if (isMap) {
         this.toggleFreePan();
@@ -208,6 +446,12 @@ export class GameLoop {
         this.handleManualInteract();
       } else if (isViewMode) {
         this.togglePerspective();
+      } else if (isRotateLeft) {
+        e.preventDefault();
+        this.rotateLeft();
+      } else if (isRotateRight) {
+        e.preventDefault();
+        this.rotateRight();
       }
     };
 
@@ -318,31 +562,53 @@ export class GameLoop {
    * Reset the current level state
    */
   restartLevel() {
-    const effectiveSpawnX = this.level.testSpawn?.x ?? this.level.spawn?.x ?? 1;
-    const effectiveSpawnY = this.level.testSpawn?.y ?? this.level.spawn?.y ?? 1;
-    const effectiveElevation = this.level.testSpawn?.elevation ?? this.level.spawn?.elevation ?? 0;
+    this.roomStates = {};
+    let effectiveSpawnX = 1;
+    let effectiveSpawnY = 1;
+    let effectiveElevation = 0;
     const initialInventory = Array.isArray(this.level.testInventory) ? [...this.level.testInventory] : [];
 
-    this.player.reset(
-      effectiveSpawnX,
-      effectiveSpawnY,
-      effectiveElevation,
-      initialInventory
-    );
-    this.initEntities();
-    if (this.fog) {
-      this.fog.reset(!!this.level.config.mapRevealed);
+    if (this.isMultiRoom) {
+      const initialId = this.level.initialRoom || Object.keys(this.level.rooms)[0];
+      const initialRoom = this.level.rooms[initialId];
+      effectiveSpawnX = this.level.testSpawn?.x ?? initialRoom?.spawn?.x ?? 1;
+      effectiveSpawnY = this.level.testSpawn?.y ?? initialRoom?.spawn?.y ?? 1;
+      effectiveElevation = this.level.testSpawn?.elevation ?? initialRoom?.spawn?.elevation ?? 0;
+
+      this.player.reset(
+        effectiveSpawnX,
+        effectiveSpawnY,
+        effectiveElevation,
+        initialInventory
+      );
+      this.initActiveRoom(initialId, { x: effectiveSpawnX, y: effectiveSpawnY, elevation: effectiveElevation }, false);
+    } else {
+      effectiveSpawnX = this.level.testSpawn?.x ?? this.level.spawn?.x ?? 1;
+      effectiveSpawnY = this.level.testSpawn?.y ?? this.level.spawn?.y ?? 1;
+      effectiveElevation = this.level.testSpawn?.elevation ?? this.level.spawn?.elevation ?? 0;
+
+      this.player.reset(
+        effectiveSpawnX,
+        effectiveSpawnY,
+        effectiveElevation,
+        initialInventory
+      );
+      this.initEntities();
+      if (this.fog) {
+        this.fog.reset(!!this.level.config.mapRevealed);
+      }
+      this.camera.snapTo(
+        this.player.worldX,
+        this.player.worldY,
+        this.level.dimensions.width,
+        this.level.dimensions.height
+      );
+      this.updateFog();
     }
+
     this.isWon = false;
     this.elapsedTime = 0;
     this.camera.setMode('follow');
-    this.camera.snapTo(
-      this.player.worldX,
-      this.player.worldY,
-      this.level.dimensions.width,
-      this.level.dimensions.height
-    );
-    this.updateFog();
 
     // Reset logger for new attempt
     this.logger = new DebugLogger(this.level);
@@ -466,42 +732,60 @@ export class GameLoop {
     // 6. Update Fog
     this.updateFog();
 
-    // 7. Check Victory Condition (Player must be on ground unless exit is specifically overhead)
-    const requiredExitElevation = this.level.exit?.elevation || ELEVATION.GROUND;
-    if (
-      !this.isWon &&
-      this.level.exit &&
-      this.player.gridX === this.level.exit.x &&
-      this.player.gridY === this.level.exit.y &&
-      this.player.elevation === requiredExitElevation
-    ) {
-      this.handleVictory();
+    // 7. Check Victory Condition or Room Transition (Player must match exit coordinates and elevation)
+    if (!this.isWon && !this.player.isMoving) {
+      const matchingExit = this.getMatchingExit(this.player.gridX, this.player.gridY, this.player.elevation);
+      if (matchingExit) {
+        if (matchingExit.targetRoom) {
+          this.transitionToRoom(matchingExit.targetRoom, matchingExit.targetSpawn);
+        } else {
+          this.handleVictory(matchingExit);
+        }
+      }
     }
   }
 
   /**
-   * Check for input direction and initiate player movement
+   * Check for input direction and initiate player movement (screen-relative)
    */
   processPlayerMovement() {
     if (this.player.isMoving || this.camera.mode === 'freepan') return;
 
-    let dx = 0;
-    let dy = 0;
+    let screenDx = 0;
+    let screenDy = 0;
 
     for (const code of this.keysDown) {
-      if (KEY_CODES.UP.includes(code)) dy -= 1;
-      else if (KEY_CODES.DOWN.includes(code)) dy += 1;
-      else if (KEY_CODES.LEFT.includes(code)) dx -= 1;
-      else if (KEY_CODES.RIGHT.includes(code)) dx += 1;
+      if (KEY_CODES.UP.includes(code)) screenDy -= 1;
+      else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
+      else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
+      else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
     }
 
     // Restrict to orthogonal movement
-    if (dx !== 0) dy = 0;
+    if (screenDx !== 0) screenDy = 0;
+    if (screenDx === 0 && screenDy === 0) return;
 
-    if (dx === 0 && dy === 0) return;
+    const angle = this.camera?.getDiscreteRotation?.() ?? 0;
+    const mapping = SCREEN_TO_WORLD_DELTAS[angle] || SCREEN_TO_WORLD_DELTAS[0];
+    let worldDx = 0;
+    let worldDy = 0;
 
-    const targetX = this.player.gridX + dx;
-    const targetY = this.player.gridY + dy;
+    if (screenDy < 0) {
+      worldDx = mapping.UP.dx;
+      worldDy = mapping.UP.dy;
+    } else if (screenDy > 0) {
+      worldDx = mapping.DOWN.dx;
+      worldDy = mapping.DOWN.dy;
+    } else if (screenDx < 0) {
+      worldDx = mapping.LEFT.dx;
+      worldDy = mapping.LEFT.dy;
+    } else if (screenDx > 0) {
+      worldDx = mapping.RIGHT.dx;
+      worldDy = mapping.RIGHT.dy;
+    }
+
+    const targetX = this.player.gridX + worldDx;
+    const targetY = this.player.gridY + worldDy;
     this.tryMove(targetX, targetY);
   }
 
@@ -603,21 +887,31 @@ export class GameLoop {
    * Process manual camera pan when in Free-Pan mode
    */
   processFreePanMovement(dt) {
-    let dx = 0;
-    let dy = 0;
+    let screenDx = 0;
+    let screenDy = 0;
 
     for (const code of this.keysDown) {
-      if (KEY_CODES.UP.includes(code)) dy -= 1;
-      else if (KEY_CODES.DOWN.includes(code)) dy += 1;
-      else if (KEY_CODES.LEFT.includes(code)) dx -= 1;
-      else if (KEY_CODES.RIGHT.includes(code)) dx += 1;
+      if (KEY_CODES.UP.includes(code)) screenDy -= 1;
+      else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
+      else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
+      else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
     }
 
-    if (dx !== 0 || dy !== 0) {
+    if (screenDx !== 0 || screenDy !== 0) {
       const speed = this.camera.panSpeed * dt;
+      const angle = this.camera?.getDiscreteRotation?.() ?? 0;
+      const mapping = SCREEN_TO_WORLD_DELTAS[angle] || SCREEN_TO_WORLD_DELTAS[0];
+      let worldDx = 0;
+      let worldDy = 0;
+
+      if (screenDy < 0) { worldDx += mapping.UP.dx; worldDy += mapping.UP.dy; }
+      if (screenDy > 0) { worldDx += mapping.DOWN.dx; worldDy += mapping.DOWN.dy; }
+      if (screenDx < 0) { worldDx += mapping.LEFT.dx; worldDy += mapping.LEFT.dy; }
+      if (screenDx > 0) { worldDx += mapping.RIGHT.dx; worldDy += mapping.RIGHT.dy; }
+
       this.camera.panBy(
-        dx * speed,
-        dy * speed,
+        worldDx * speed,
+        worldDy * speed,
         this.level.dimensions.width,
         this.level.dimensions.height
       );
@@ -1285,8 +1579,9 @@ export class GameLoop {
 
   /**
    * Handle level completion
+   * @param {object|null} [exit=null]
    */
-  handleVictory() {
+  handleVictory(exit = null) {
     this.isWon = true;
     this.renderer.spawnParticles(this.player.worldX, this.player.worldY, '#38bdf8', 60);
 
@@ -1300,6 +1595,9 @@ export class GameLoop {
       earnedParTime,
       parSteps: this.level.parSteps,
       parTime: this.level.parTime,
+      targetLevel: exit?.targetLevel || null,
+      branchLabel: exit?.label || null,
+      exitId: exit?.id || null,
     };
 
     console.info(`[MazeGame:Engine] Victory achieved on level "${this.level.title}" (${this.level.id})!`, {
@@ -1308,6 +1606,8 @@ export class GameLoop {
       finalInventory: [...this.player.inventory],
       earnedParSteps,
       earnedParTime,
+      targetLevel: stats.targetLevel,
+      branchLabel: stats.branchLabel,
     });
 
     this.logger.logVictory(stats, this.elapsedTime);
@@ -1342,6 +1642,10 @@ export class GameLoop {
     if (this.uiCallbacks.onStateUpdate) {
       this.uiCallbacks.onStateUpdate({
         levelTitle: this.level.title,
+        roomTitle: this.currentRoom?.title || null,
+        roomId: this.activeRoomId || null,
+        rotation: this.camera ? this.camera.getDiscreteRotation() : 0,
+        compassHeading: this.camera ? this.camera.getCompassHeading() : 'N',
         help: this.level.help || null,
         elevation: this.player.elevation === ELEVATION.OVERHEAD ? 'Bridge (Elevation 1)' : 'Ground Floor',
         inventory: [...this.player.inventory],

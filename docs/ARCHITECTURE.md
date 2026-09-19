@@ -95,32 +95,33 @@ casual-maze-game/
 │       ├── 0002-multi-elevation-bridge-system.md
 │       ├── 0003-tutorial-system-and-level-toggles.md
 │       ├── 0004-zone-grouping-and-thematic-tilesets.md
-│       └── 0005-angled-topdown-perspective-and-dynamic-activities.md
+│       ├── 0005-angled-topdown-perspective-and-dynamic-activities.md
+│       └── 0006-camera-world-rotation-branching-rooms.md
 ├── levels/                       # Standalone Level JSON Files & Manifest
-│   ├── manifest.json             # Master level registry (campaign, tutorials, stories)
+│   ├── manifest.json             # Master level registry (42 campaign, tutorial, and story levels)
 │   ├── tutorial/                 # Tutorial Academy levels (1-6)
-│   ├── stories/                  # Episodic Storyline levels (Four Guardians 1-3)
-│   └── chapter_1/ ... chapter_7/ # 28 Megalabyrinth campaign JSON files
+│   ├── stories/                  # Episodic Storyline levels (Four Guardians 1-3, Whispering Citadel 1)
+│   └── chapter_1/ ... chapter_8/ # 32 Megalabyrinth campaign JSON files
 ├── css/
 │   ├── main.css                  # Shared UI design tokens, typography, hub styling
 │   ├── game.css                  # Canvas overlay, HUD, minimap, mobile d-pad, puzzle modal
 │   └── editor.css                # Editor toolbars, entity inspector, palette, validator
 ├── js/
 │   ├── core/
-│   │   ├── constants.js          # Tile types, entity enums, key mappings, layer IDs
+│   │   ├── constants.js          # Tile types, entity enums, key mappings, layer IDs, rotation matrices
 │   │   ├── prng.js               # Mulberry32 deterministic pseudo-random generator
 │   │   ├── events.js             # Pub/Sub EventBus for decoupled engine communication
 │   │   └── storage.js            # LocalStorage / SessionStorage persistence wrapper
 │   ├── engine/
-│   │   ├── camera.js             # Viewport translation, lerp follow, free-pan mode
+│   │   ├── camera.js             # Viewport translation, lerp follow, free-pan mode, 90° rotation matrices
 │   │   ├── collision.js          # Elevation-aware collision & directional bridge traversal
 │   │   ├── fog.js                # 3-state fog-of-war (Unexplored, Explored, Visible)
-│   │   ├── game-loop.js          # Delta-time coordinator, entity cycles, animation loop
+│   │   ├── game-loop.js          # Delta-time coordinator, entity cycles, screen-relative navigation, room transitions
 │   │   ├── minimap.js            # Dedicated HUD minimap canvas renderer
-│   │   ├── renderer.js           # 2D/2.5D canvas drawing pipeline, vignettes, and decor
+│   │   ├── renderer.js           # 2D/2.5D canvas drawing pipeline, vignettes, decor, rotation transforms
 │   │   └── debug-logger.js       # Runtime debug telemetry & replay JSON export
 │   ├── entities/
-│   │   ├── player.js             # Position, elevation state, inventory, carried riddle badges
+│   │   ├── player.js             # Position, elevation state, inventory, carried riddle badges, screen facing
 │   │   ├── key.js                # Collectible colored key entities
 │   │   ├── door.js               # Locked barrier entities
 │   │   ├── lever.js              # State-switching trigger entities (mutates grid tiles)
@@ -136,17 +137,17 @@ casual-maze-game/
 │   ├── ui/
 │   │   └── puzzle-modal.js       # Pure static DOM modal for rune sequence and cipher dials
 │   ├── levels/
-│   │   ├── level-loader.js       # Schema validator, URL param parser, static level loader
+│   │   ├── level-loader.js       # Schema validator, URL param parser, static level loader, room normalizer
 │   │   ├── tutorials.js          # Tutorial academy levels (1-6)
-│   │   ├── campaign-ch1.js ... campaign-ch7.js # Modular chapter level definitions
+│   │   ├── campaign-ch1.js ... campaign-ch8.js # Modular chapter level definitions
 │   │   └── default-levels.js     # Aggregator exporting all campaign and tutorial levels
 │   ├── stories/
-│   │   └── storylines.js         # Storylines registry, chapter progression, Novice & Guardian sagas
+│   │   └── storylines.js         # Storylines registry, chapter progression, Novice, Guardian, and Citadel sagas
 │   └── editor/
 │       ├── editor-canvas.js      # Grid painting, drag-placement, coordinate preview
 │       ├── editor-ui.js          # Palette selection, layer toggling, toolbar bindings
 │       ├── entity-inspector.js   # Interactive lever-to-target wiring & entity property forms
-│       ├── level-validator.js    # Static schema checks & BFS reachability solver
+│       ├── level-validator.js    # Static schema checks, multi-room integrity & BFS reachability solver
 │       ├── json-exporter.js      # File export/import parser via Web File API
 │       └── modals/               # Modular editor dialog controllers
 │           ├── projects-modal.js
@@ -154,15 +155,17 @@ casual-maze-game/
 │           ├── playtest-modal.js
 │           └── guide-modal.js
 └── levels/
-    ├── manifest.json             # Manifest of 34 campaign & tutorial levels
+    ├── manifest.json             # Manifest of 42 levels (32 campaign, 6 tutorial, 4 story)
     ├── tutorial/                 # Handcrafted tutorial levels (tutorial_1.json .. tutorial_6.json)
+    ├── stories/                  # Episodic story levels (story_guardians_1..3.json, story_citadel_1.json)
     ├── chapter_1/                # The Foundation (level_1.json .. level_4.json)
     ├── chapter_2/                # The Vertical Dimension (level_5.json .. level_8.json)
     ├── chapter_3/                # Shifting Architecture (level_9.json .. level_12.json)
     ├── chapter_4/                # Astral Anomalies (level_13.json .. level_16.json)
     ├── chapter_5/                # Rhythm & Danger (level_17.json .. level_20.json)
     ├── chapter_6/                # Arcane Seals (level_21.json .. level_24.json)
-    └── chapter_7/                # Grand Synthesis (level_25.json .. level_28.json)
+    ├── chapter_7/                # Grand Synthesis (level_25.json .. level_28.json)
+    └── chapter_8/                # The Shifting Monolith (level_29.json .. level_32.json)
 ```
 
 ---
@@ -257,7 +260,7 @@ casual-maze-game/
 
 ### I. Progressive Campaign Architecture (Kishōtenketsu Progression)
 * **Design Philosophy:** Inspired by *World of Goo*, introducing core mechanics in isolation, developing variations, introducing unexpected twists, and culminating in grand synthesis.
-* **7-Chapter Thematic Arc (28 Levels):**
+* **8-Chapter Thematic Arc (32 Levels):**
   1. **Chapter 1: The Foundation** (Levels 1–4, Whispering Dungeon): Spatial orientation, 2D Line-of-Sight fog, colored keys and matching barrier doors.
   2. **Chapter 2: The Vertical Dimension** (Levels 5–8, Emerald Canopy): 3D directional ramps (`R_N`, `R_S`) and multi-elevation bridges (`B_EW`, `B_NS`) enabling underpasses and overpasses.
   3. **Chapter 3: Shifting Architecture** (Levels 9–12, Sunken Clockwork Crypt): Interactive switches and levers dynamically altering maze wall topography.
@@ -265,6 +268,7 @@ casual-maze-game/
   5. **Chapter 5: Rhythm & Danger** (Levels 17–20, Molten Core): Kinetic timed flame vents and autonomous waypoint patroller sentinels.
   6. **Chapter 6: Arcane Seals** (Levels 21–24, Sunken Observatory): Interactive mental minigames (Simon-style Rune Memory and multi-ring Cipher Dials).
   7. **Chapter 7: Grand Synthesis** (Levels 25–28, Citadel of Trials): Multi-floor megalabyrinths synthesizing bridges, teleporters, levers, patrollers, and puzzles.
+  8. **Chapter 8: The Shifting Monolith** (Levels 29–32, Monolithic Ruins): 4-quadrant camera world rotation, perspective-hidden alcoves, occluded underpasses, four-faced pillar keys, and prismatic overpasses.
 * **Tri-Medal Mastery & Progression (`StorageManager`):**
   * Tracks 3 distinct mastery awards per level: **Completion Star**, **Pathfinder** (par steps), and **Speedrunner** (par elapsed seconds).
   * Persisted locally with zero backend dependencies (`casual_maze_stars`, `casual_maze_par_steps`, `casual_maze_par_time`).
@@ -275,8 +279,58 @@ casual-maze-game/
   * Zero-dependency Breadth-First Search (BFS) engine traversing the complete configuration space `(x, y, elevation, keyBitmask)`.
   * Models key pickups, door unlocks, directional ramp transitions, bridge deck/underpass traversals, and teleporter dimensional jumps.
 * **Real Engine Simulation (`GameLoop.tryMove`):**
-  * Automated journey test (`campaign-playthrough.journey.test.mjs`) loads each of the 28 campaign levels into an instantiated `GameLoop` instance.
+  * Automated journey test (`campaign-playthrough.journey.test.mjs`) loads each of the campaign levels into an instantiated `GameLoop` instance.
   * Replays the solved optimal coordinate sequence step-by-step through real collision, inventory, and elevation transition logic.
   * Formally verifies reachability and asserts `gameLoop.isWon === true` for every single level.
+
+### K. 90-Degree Camera World Rotation & Screen-Relative Navigation
+* **4-Quadrant Compass Model (`ROTATION_ANGLES`, `ROTATION_COMPASS`):**
+  * Supported rotations: `0° (North)`, `90° (East)`, `180° (South)`, `270° (West)`.
+  * Managed by `Camera2D` with smooth linear interpolation (`rotationLerpSpeed`) and center-pivot rotation:
+    * `worldToScreen(wx, wy)`: Rotates coordinates around the level grid center before applying camera translation and zoom.
+    * `screenToWorld(sx, sy)`: Inverts the rotation transformation matrix to unproject screen-space pointer coordinates back to world grid coordinates.
+    * `getViewportBounds()`: Unprojects all 4 screen corners to compute an accurate world-space bounding box for viewport culling.
+* **Screen-Relative Input Vector Translation (`SCREEN_TO_WORLD_DELTAS`):**
+  * Directs player movement relative to the screen viewpoint regardless of world angle:
+    * At `0°`: Screen UP moves North `(dx: 0, dy: -1)`.
+    * At `90°`: Screen UP moves East `(dx: 1, dy: 0)`.
+    * At `180°`: Screen UP moves South `(dx: 0, dy: 1)`.
+    * At `270°`: Screen UP moves West `(dx: -1, dy: 0)`.
+  * Player avatar facing automatically syncs to screen movement vector (`player.getScreenFacing(worldFacing, rotationAngle)`).
+* **Perspective Depth & Directional Tile Rendering (`renderer.js`):**
+  * `renderAngledWall`: Dynamically shifts vertical drop facades, mortar joints, and cast shadows according to the camera's orientation.
+  * `renderAngledFloors` & `renderAngledOverheadLayer`: Adjusts underpass tunnel visibility and bridge deck orientation relative to viewpoint.
+  * `renderYSortedEntities`: 4-way back-to-front depth sort ensuring entities properly pass behind walls and underpasses at any angle.
+
+### L. Branching Labyrinths & Multi-Exit Routing
+* **Multi-Exit Level Contract (`level.exits[]`):**
+  * Levels can define multiple exits via the `exits` array, while maintaining full backward compatibility with single `exit` definitions:
+    ```json
+    {
+      "exits": [
+        { "x": 19, "y": 1, "z": 0, "targetLevel": "secret_vault", "label": "Secret Vault" },
+        { "x": 19, "y": 19, "z": 0, "targetLevel": "30", "label": "Path of the Needle" }
+      ]
+    }
+    ```
+  * `GameLoop.getMatchingExit(x, y, z)` matches player coordinates against active exit portals.
+* **Conditional Level & Story Routing:**
+  * When reaching an exit portal, `GameLoop.handleVictory()` checks matching exit properties:
+    * If `targetLevel` is set, navigation routes to the designated level ID.
+    * If `targetRoom` is set, initiates an intra-level room transition.
+    * If neither is set, preserves standard sequential level progression.
+  * Portals render with pulsing golden ring effects and hover tooltip destination banners.
+
+### M. Interconnected Multi-Room Dungeon State Architecture
+* **Topological Room Structure (`level.rooms`):**
+  * Levels can contain multiple interconnected rooms (e.g. `courtyard`, `catacombs`, `high_spire`) in a single JSON schema.
+  * Each room defines its own dimensions, tile layers (ground and overhead), entity instances, spawn, and exits.
+* **Persistent In-Memory Room State Caching (`roomStates[roomId]`):**
+  * When transitioning between rooms via `GameLoop.transitionToRoom(roomId, spawn, force)`:
+    1. Active room is snapshotted (`snapshotCurrentRoom()`): caching open door states, collected keys, active checkpoint, lever toggle states, and modified tile layers.
+    2. Target room is activated, restoring its previous state from `roomStates` cache or initializing fresh on first visit.
+    3. Global explorer state is preserved uninterrupted: carried inventory, score, elapsed time, and carried riddle relics.
+* **HUD Room Badge (`#hud-room-badge`):**
+  * Displays the current active room name in real-time alongside compass heading and carried inventory.
 
 

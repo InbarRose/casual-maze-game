@@ -54,6 +54,46 @@ export const VIEW_PERSPECTIVES = Object.freeze({
   TOPDOWN: 'topdown',
 });
 
+export const ROTATION_ANGLES = Object.freeze([0, 90, 180, 270]);
+
+export const ROTATION_COMPASS = Object.freeze({
+  0: Object.freeze({ angle: 0, heading: 'N', label: 'North' }),
+  90: Object.freeze({ angle: 90, heading: 'E', label: 'East' }),
+  180: Object.freeze({ angle: 180, heading: 'S', label: 'South' }),
+  270: Object.freeze({ angle: 270, heading: 'W', label: 'West' }),
+});
+
+/**
+ * Screen-relative input translation to world grid delta based on camera angle (0, 90, 180, 270)
+ * Pressing Up always moves screen-upward.
+ */
+export const SCREEN_TO_WORLD_DELTAS = Object.freeze({
+  0: Object.freeze({
+    UP: Object.freeze({ dx: 0, dy: -1 }),
+    DOWN: Object.freeze({ dx: 0, dy: 1 }),
+    LEFT: Object.freeze({ dx: -1, dy: 0 }),
+    RIGHT: Object.freeze({ dx: 1, dy: 0 }),
+  }),
+  90: Object.freeze({
+    UP: Object.freeze({ dx: 1, dy: 0 }),
+    DOWN: Object.freeze({ dx: -1, dy: 0 }),
+    LEFT: Object.freeze({ dx: 0, dy: -1 }),
+    RIGHT: Object.freeze({ dx: 0, dy: 1 }),
+  }),
+  180: Object.freeze({
+    UP: Object.freeze({ dx: 0, dy: 1 }),
+    DOWN: Object.freeze({ dx: 0, dy: -1 }),
+    LEFT: Object.freeze({ dx: 1, dy: 0 }),
+    RIGHT: Object.freeze({ dx: -1, dy: 0 }),
+  }),
+  270: Object.freeze({
+    UP: Object.freeze({ dx: -1, dy: 0 }),
+    DOWN: Object.freeze({ dx: 1, dy: 0 }),
+    LEFT: Object.freeze({ dx: 0, dy: 1 }),
+    RIGHT: Object.freeze({ dx: 0, dy: -1 }),
+  }),
+});
+
 export const PUZZLE_TYPES = Object.freeze({
   RUNE_MEMORY: 'rune_memory',
   CIPHER_DIAL: 'cipher_dial',
@@ -189,6 +229,17 @@ export const CAMPAIGN_CHAPTERS = Object.freeze([
     icon: '⭐',
     description: 'The ultimate synthesis of 3D geometry, warps, levers, sentries, and cryptic puzzles.',
     mechanic: 'Master Megalabyrinths',
+    levelCount: 4,
+  },
+  {
+    id: 'chapter_8',
+    number: 8,
+    title: 'The Shifting Monolith',
+    subtitle: 'The Prism of Perspectives',
+    theme: 'dungeon',
+    icon: '🧭',
+    description: 'Rotate the world perspective 90 degrees to discover occluded underpasses, read cardinal inscriptions, and solve multi-room trials.',
+    mechanic: 'World Rotation & Branching',
     levelCount: 4,
   },
 ]);

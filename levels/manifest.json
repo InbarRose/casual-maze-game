@@ -356,6 +356,50 @@
     "parTime": 70
   },
   {
+    "id": "29",
+    "category": "campaign",
+    "chapter": "chapter_8",
+    "zone": "zone_8",
+    "title": "The Cardinal Needle",
+    "file": "levels/chapter_8/level_29.json",
+    "theme": "dungeon",
+    "parSteps": 48,
+    "parTime": 30
+  },
+  {
+    "id": "30",
+    "category": "campaign",
+    "chapter": "chapter_8",
+    "zone": "zone_8",
+    "title": "The Hidden Underpass",
+    "file": "levels/chapter_8/level_30.json",
+    "theme": "dungeon",
+    "parSteps": 54,
+    "parTime": 36
+  },
+  {
+    "id": "31",
+    "category": "campaign",
+    "chapter": "chapter_8",
+    "zone": "zone_8",
+    "title": "The Four-Faced Pillar",
+    "file": "levels/chapter_8/level_31.json",
+    "theme": "temple",
+    "parSteps": 58,
+    "parTime": 38
+  },
+  {
+    "id": "32",
+    "category": "campaign",
+    "chapter": "chapter_8",
+    "zone": "zone_8",
+    "title": "The Prismatic Spire",
+    "file": "levels/chapter_8/level_32.json",
+    "theme": "snow",
+    "parSteps": 72,
+    "parTime": 46
+  },
+  {
     "id": "story_guardians_1",
     "category": "story",
     "zone": "story",
@@ -383,6 +427,16 @@
     "chapter": 3,
     "title": "Sanctum of the Four Guardians",
     "file": "levels/stories/story_guardians_3.json",
+    "theme": "temple"
+  },
+  {
+    "id": "story_citadel_1",
+    "category": "story",
+    "zone": "story",
+    "storyId": "the_whispering_citadel",
+    "chapter": 1,
+    "title": "The Whispering Citadel",
+    "file": "levels/stories/story_citadel_1.json",
     "theme": "temple"
   }
 ]

@@ -126,6 +126,7 @@ export class LevelLoader {
             `levels/chapter_5/level_${cleanId}.json`,
             `levels/chapter_6/level_${cleanId}.json`,
             `levels/chapter_7/level_${cleanId}.json`,
+            `levels/chapter_8/level_${cleanId}.json`,
             `levels/zone_1/level_${cleanId}.json`,
             `levels/zone_2/level_${cleanId}.json`,
             `levels/zone_3/level_${cleanId}.json`,
@@ -193,6 +194,89 @@ export class LevelLoader {
     const width = raw.dimensions?.width || 21;
     const height = raw.dimensions?.height || 21;
 
+    const rawExits = Array.isArray(raw.exits) && raw.exits.length > 0
+      ? raw.exits
+      : (raw.exit ? [raw.exit] : []);
+
+    const normalizedExits = rawExits.map(e => ({
+      id: e.id ? String(e.id) : undefined,
+      x: Number(e.x ?? width - 2),
+      y: Number(e.y ?? height - 2),
+      z: Number(e.z ?? e.elevation ?? 0),
+      elevation: Number(e.z ?? e.elevation ?? 0),
+      style: e.style || 'portal',
+      label: e.label ? String(e.label) : undefined,
+      targetLevel: e.targetLevel ? String(e.targetLevel) : undefined,
+      targetRoom: e.targetRoom ? String(e.targetRoom) : undefined,
+      targetSpawn: e.targetSpawn ? {
+        x: Number(e.targetSpawn.x ?? 1),
+        y: Number(e.targetSpawn.y ?? 1),
+        elevation: Number(e.targetSpawn.elevation ?? e.targetSpawn.z ?? 0),
+      } : undefined,
+    }));
+
+    const normalizedExit = normalizedExits[0] || {
+      x: raw.exit?.x ?? width - 2,
+      y: raw.exit?.y ?? height - 2,
+      z: raw.exit?.z ?? raw.exit?.elevation ?? 0,
+      elevation: raw.exit?.z ?? raw.exit?.elevation ?? 0,
+      style: raw.exit?.style || 'portal',
+    };
+
+    const normalizedRooms = raw.rooms && typeof raw.rooms === 'object'
+      ? Object.fromEntries(
+          Object.entries(raw.rooms).map(([roomId, roomRaw]) => {
+            const rWidth = roomRaw.dimensions?.width || width;
+            const rHeight = roomRaw.dimensions?.height || height;
+            const rExits = Array.isArray(roomRaw.exits) && roomRaw.exits.length > 0
+              ? roomRaw.exits
+              : (roomRaw.exit ? [roomRaw.exit] : []);
+            return [
+              roomId,
+              {
+                id: String(roomId),
+                title: roomRaw.title || roomId,
+                theme: roomRaw.theme || raw.config?.theme || 'stone',
+                backgroundArt: roomRaw.backgroundArt || null,
+                dimensions: { width: rWidth, height: rHeight },
+                spawn: {
+                  x: roomRaw.spawn?.x ?? 1,
+                  y: roomRaw.spawn?.y ?? 1,
+                  elevation: roomRaw.spawn?.elevation ?? roomRaw.spawn?.z ?? 0,
+                  style: roomRaw.spawn?.style || 'stairs_down',
+                },
+                exits: rExits.map(e => ({
+                  id: e.id ? String(e.id) : undefined,
+                  x: Number(e.x ?? rWidth - 2),
+                  y: Number(e.y ?? rHeight - 2),
+                  elevation: Number(e.elevation ?? e.z ?? 0),
+                  style: e.style || 'portal',
+                  label: e.label ? String(e.label) : undefined,
+                  targetRoom: e.targetRoom ? String(e.targetRoom) : undefined,
+                  targetLevel: e.targetLevel ? String(e.targetLevel) : undefined,
+                  targetSpawn: e.targetSpawn ? {
+                    x: Number(e.targetSpawn.x ?? 1),
+                    y: Number(e.targetSpawn.y ?? 1),
+                    elevation: Number(e.targetSpawn.elevation ?? e.targetSpawn.z ?? 0),
+                  } : undefined,
+                })),
+                layers: {
+                  ground: this.normalizeGrid(roomRaw.layers?.ground, rWidth, rHeight, TILES.FLOOR),
+                  overhead: this.normalizeGrid(roomRaw.layers?.overhead, rWidth, rHeight, 0),
+                },
+                entities: Array.isArray(roomRaw.entities) ? roomRaw.entities.map(e => ({
+                  ...e,
+                  z: e.z ?? e.elevation ?? 0,
+                  elevation: e.z ?? e.elevation ?? 0,
+                  targetZ: e.targetZ !== undefined ? e.targetZ : (e.targetElevation !== undefined ? e.targetElevation : (e.z ?? e.elevation ?? 0)),
+                  targetElevation: e.targetZ !== undefined ? e.targetZ : (e.targetElevation !== undefined ? e.targetElevation : (e.z ?? e.elevation ?? 0)),
+                })) : [],
+              }
+            ];
+          })
+        )
+      : undefined;
+
     const normalized = {
       $schema: raw.$schema || 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
       id: String(raw.id || 'custom'),
@@ -230,13 +314,11 @@ export class LevelLoader {
         elevation: raw.spawn?.z ?? raw.spawn?.elevation ?? 0,
         style: raw.spawn?.style || 'stairs_down',
       },
-      exit: {
-        x: raw.exit?.x ?? width - 2,
-        y: raw.exit?.y ?? height - 2,
-        z: raw.exit?.z ?? raw.exit?.elevation ?? 0,
-        elevation: raw.exit?.z ?? raw.exit?.elevation ?? 0,
-        style: raw.exit?.style || 'portal',
-      },
+      exit: normalizedExit,
+      exits: normalizedExits.length > 0 ? normalizedExits : undefined,
+      rooms: normalizedRooms,
+      initialRoom: raw.initialRoom ? String(raw.initialRoom) : undefined,
+      backgroundArt: raw.backgroundArt ? String(raw.backgroundArt) : undefined,
       layers: {
         ground: this.normalizeGrid(raw.layers?.ground, width, height, TILES.FLOOR),
         overhead: this.normalizeGrid(raw.layers?.overhead, width, height, 0),

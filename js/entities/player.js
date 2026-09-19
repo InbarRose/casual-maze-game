@@ -51,6 +51,28 @@ export class Player {
     this.pulseTimer = 0;
   }
 
+  get x() {
+    return this.gridX;
+  }
+
+  set x(value) {
+    this.gridX = value;
+    this.fromGridX = value;
+    this.targetGridX = value;
+    this.worldX = value * this.tileSize + this.tileSize / 2;
+  }
+
+  get y() {
+    return this.gridY;
+  }
+
+  set y(value) {
+    this.gridY = value;
+    this.fromGridY = value;
+    this.targetGridY = value;
+    this.worldY = value * this.tileSize + this.tileSize / 2;
+  }
+
   get z() {
     return this.elevation;
   }
@@ -212,6 +234,55 @@ export class Player {
   }
 
   /**
+   * Teleport player directly to target coordinates without resetting inventory or score
+   * @param {number} x
+   * @param {number} y
+   * @param {number} [elevation=0]
+   */
+  teleport(x, y, elevation = 0) {
+    this.gridX = x;
+    this.gridY = y;
+    this.gridZ = elevation;
+    this.fromGridX = x;
+    this.fromGridY = y;
+    this.targetGridX = x;
+    this.targetGridY = y;
+    this.elevation = elevation;
+    this.targetElevation = elevation;
+    this.worldX = x * this.tileSize + this.tileSize / 2;
+    this.worldY = y * this.tileSize + this.tileSize / 2;
+    this.isMoving = false;
+    this.moveProgress = 0;
+  }
+
+  /**
+   * Translate world facing ('north', 'south', 'east', 'west') to screen facing given camera rotation
+   * @param {'north'|'south'|'east'|'west'} worldFacing
+   * @param {number} [rotationAngle=0]
+   * @returns {'north'|'south'|'east'|'west'}
+   */
+  getScreenFacing(worldFacing, rotationAngle = 0) {
+    const angle = ((Math.round(rotationAngle) % 360) + 360) % 360;
+    if (angle === 90) {
+      if (worldFacing === 'north') return 'west';
+      if (worldFacing === 'south') return 'east';
+      if (worldFacing === 'east') return 'north';
+      if (worldFacing === 'west') return 'south';
+    } else if (angle === 180) {
+      if (worldFacing === 'north') return 'south';
+      if (worldFacing === 'south') return 'north';
+      if (worldFacing === 'east') return 'west';
+      if (worldFacing === 'west') return 'east';
+    } else if (angle === 270) {
+      if (worldFacing === 'north') return 'east';
+      if (worldFacing === 'south') return 'west';
+      if (worldFacing === 'east') return 'south';
+      if (worldFacing === 'west') return 'north';
+    }
+    return worldFacing;
+  }
+
+  /**
    * Initiate a step move to an adjacent grid cell
    * @param {number} targetX
    * @param {number} targetY
@@ -300,19 +371,25 @@ export class Player {
    * @param {number} screenY Center screen pixel Y
    * @param {number} tileSize
    * @param {'angled'|'topdown'} [perspective='angled']
+   * @param {number} [rotationAngle=0]
    */
-  render(ctx, screenX, screenY, tileSize, perspective = 'angled') {
+  render(ctx, screenX, screenY, tileSize, perspective = 'angled', rotationAngle = 0) {
     if (perspective === 'topdown') {
-      this.renderTopDownExplorer(ctx, screenX, screenY, tileSize);
+      this.renderTopDownExplorer(ctx, screenX, screenY, tileSize, rotationAngle);
     } else {
-      this.renderAngledExplorer(ctx, screenX, screenY, tileSize);
+      this.renderAngledExplorer(ctx, screenX, screenY, tileSize, rotationAngle);
     }
   }
 
   /**
    * Render 2.5D Angled Explorer (Flannel shirt, blue jeans, brown backpack)
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {number} screenX
+   * @param {number} screenY
+   * @param {number} tileSize
+   * @param {number} [rotationAngle=0]
    */
-  renderAngledExplorer(ctx, screenX, screenY, tileSize) {
+  renderAngledExplorer(ctx, screenX, screenY, tileSize, rotationAngle = 0) {
     const isOverhead = this.elevation === ELEVATION.OVERHEAD;
     const s = tileSize / 32;
     const stepCycle = this.isMoving ? this.moveProgress * Math.PI * 2 : 0;
@@ -341,11 +418,12 @@ export class Player {
 
     const py = screenY - walkBob;
 
-    // Directional flags
-    const isNorth = this.facing === 'north';
-    const isSouth = this.facing === 'south';
-    const isEast = this.facing === 'east';
-    const isWest = this.facing === 'west';
+    // Directional flags mapped to screen orientation
+    const screenFacing = this.getScreenFacing(this.facing, rotationAngle);
+    const isNorth = screenFacing === 'north';
+    const isSouth = screenFacing === 'south';
+    const isEast = screenFacing === 'east';
+    const isWest = screenFacing === 'west';
 
     // 3. Brown Backpack (Drawn behind body when facing south, or on back when facing north/east/west)
     const drawBackpack = (x, y, scale = 1, isBackView = false) => {
@@ -613,8 +691,13 @@ export class Player {
 
   /**
    * Render Top-Down Explorer (Orthographic plan view of human explorer)
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {number} screenX
+   * @param {number} screenY
+   * @param {number} tileSize
+   * @param {number} [rotationAngle=0]
    */
-  renderTopDownExplorer(ctx, screenX, screenY, tileSize) {
+  renderTopDownExplorer(ctx, screenX, screenY, tileSize, rotationAngle = 0) {
     const isOverhead = this.elevation === ELEVATION.OVERHEAD;
     const s = tileSize / 32;
     const stepBob = this.isMoving ? Math.sin(this.moveProgress * Math.PI) * (1.5 * s) : 0;
@@ -638,14 +721,15 @@ export class Player {
     }
 
     const py = screenY - stepBob;
+    const screenFacing = this.getScreenFacing(this.facing, rotationAngle);
 
     // 2. Brown Backpack (offset opposite facing)
     let packX = screenX;
     let packY = py;
-    if (this.facing === 'south') packY -= 5 * s;
-    else if (this.facing === 'north') packY += 5 * s;
-    else if (this.facing === 'east') packX -= 5 * s;
-    else if (this.facing === 'west') packX += 5 * s;
+    if (screenFacing === 'south') packY -= 5 * s;
+    else if (screenFacing === 'north') packY += 5 * s;
+    else if (screenFacing === 'east') packX -= 5 * s;
+    else if (screenFacing === 'west') packX += 5 * s;
 
     ctx.fillStyle = '#78350f';
     ctx.strokeStyle = '#451a03';
@@ -678,7 +762,7 @@ export class Player {
     if (this.isMoving) {
       const legOffset = Math.sin(this.moveProgress * Math.PI * 2) * 3 * s;
       ctx.fillStyle = '#2563eb';
-      if (this.facing === 'south' || this.facing === 'north') {
+      if (screenFacing === 'south' || screenFacing === 'north') {
         ctx.fillRect(screenX - 5 * s, py + 5 * s + legOffset, 3 * s, 2 * s);
         ctx.fillRect(screenX + 2 * s, py + 5 * s - legOffset, 3 * s, 2 * s);
       } else {
@@ -702,10 +786,10 @@ export class Player {
     // 6. Directional Facing Compass / Visor
     let dirX = 0;
     let dirY = 0;
-    if (this.facing === 'north') dirY = -7 * s;
-    else if (this.facing === 'south') dirY = 7 * s;
-    else if (this.facing === 'east') dirX = 7 * s;
-    else if (this.facing === 'west') dirX = -7 * s;
+    if (screenFacing === 'north') dirY = -7 * s;
+    else if (screenFacing === 'south') dirY = 7 * s;
+    else if (screenFacing === 'east') dirX = 7 * s;
+    else if (screenFacing === 'west') dirX = -7 * s;
 
     // Golden compass needle / directional indicator
     ctx.fillStyle = '#fbbf24';

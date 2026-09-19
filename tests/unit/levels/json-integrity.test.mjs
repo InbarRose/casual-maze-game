@@ -9,12 +9,12 @@ import { describe, it, assert, assertEqual } from '../../harness/index.mjs';
 import { LevelLoader } from '../../../js/levels/level-loader.js';
 
 describe('Levels > JSON File Integrity', () => {
-  it('validates existence and schema of all 28 campaign level files', () => {
+  it('validates existence and schema of all 32 campaign level files', () => {
     const manifestPath = path.resolve('./levels/manifest.json');
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const campaignEntries = manifest.filter(m => m.category === 'campaign' || !m.category);
 
-    assertEqual(campaignEntries.length, 28, 'Manifest contains 28 campaign levels');
+    assertEqual(campaignEntries.length, 32, 'Manifest contains 32 campaign levels');
 
     for (const entry of campaignEntries) {
       const jsonPath = path.resolve(entry.file);
@@ -55,12 +55,12 @@ describe('Levels > JSON File Integrity', () => {
     }
   });
 
-  it('validates existence and schema of all 3 story level files', () => {
+  it('validates existence and schema of all 4 story level files', () => {
     const manifestPath = path.resolve('./levels/manifest.json');
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const storyEntries = manifest.filter(m => m.category === 'story');
 
-    assertEqual(storyEntries.length, 3, 'Manifest contains 3 story levels');
+    assertEqual(storyEntries.length, 4, 'Manifest contains 4 story levels');
 
     for (const entry of storyEntries) {
       const jsonPath = path.resolve(entry.file);
@@ -84,7 +84,7 @@ describe('Levels > JSON File Integrity', () => {
 
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     assert(Array.isArray(manifest), 'manifest.json is an array');
-    assertEqual(manifest.length, 37, 'Lists 37 total levels (6 tutorial + 3 story + 28 campaign)');
+    assertEqual(manifest.length, 42, 'Lists 42 total levels (6 tutorial + 4 story + 32 campaign)');
 
     for (const entry of manifest) {
       assert(entry.id, `Manifest entry ${entry.id} has ID`);
