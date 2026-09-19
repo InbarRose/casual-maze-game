@@ -47,10 +47,11 @@
           </div>
         </div>
 
-        <!-- Timer & Steps -->
+        <!-- Timer, Steps, & Score -->
         <div class="hud-card">
           <div class="hud-stat">⏱ <strong id="hud-timer">00:00.0</strong></div>
           <div class="hud-stat">👣 <strong id="hud-steps">0</strong></div>
+          <div class="hud-stat">⭐ <strong id="hud-score">0</strong></div>
         </div>
 
         <!-- In-Game Activity Log & Telemetry Access -->
@@ -213,6 +214,30 @@
           <div style="display: flex; gap: 0.75rem; justify-content: center;">
             <button id="btn-cancel-restart" class="btn btn-secondary" style="min-width: 110px;">Cancel [Esc]</button>
             <button id="btn-confirm-restart" class="btn btn-primary" style="min-width: 130px; background: #f43f5e; border-color: #f43f5e;">Restart [Enter]</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Inspection Modal (Wall Decor, Paintings, Notes) -->
+    <div class="modal-backdrop" id="inspect-modal">
+      <div class="modal-dialog" style="max-width: 480px;">
+        <div class="modal-body" style="padding: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
+            <span id="inspect-icon" style="font-size: 2rem;">🖼️</span>
+            <div>
+              <h3 id="inspect-title" style="margin: 0; font-size: 1.25rem; color: var(--text);">Wall Decoration</h3>
+              <span id="inspect-meta" style="font-size: 0.8rem; color: var(--text-muted);">Atmospheric observation</span>
+            </div>
+          </div>
+          <div id="inspect-text" style="font-size: 0.95rem; line-height: 1.6; color: var(--text); margin-bottom: 1rem; background: rgba(0,0,0,0.25); padding: 0.85rem 1rem; border-radius: 6px; border-left: 3px solid var(--accent);">
+            A painted mural hangs quietly in the chamber.
+          </div>
+          <div id="inspect-response" style="font-size: 0.88rem; font-style: italic; color: #fbbf24; margin-bottom: 1.25rem; line-height: 1.5;">
+            "This painting is nice! The pigments look ancient yet vivid."
+          </div>
+          <div style="display: flex; justify-content: flex-end;">
+            <button class="btn btn-primary btn-sm" id="btn-close-inspect">Dismiss [E / Space / Esc]</button>
           </div>
         </div>
       </div>
@@ -395,22 +420,28 @@
           timerEl.textContent = formatTime(state.time);
           stepsEl.textContent = state.steps;
 
-          // Render inventory items in top HUD bar
+          const hudScoreEl = document.getElementById('hud-score');
+          if (hudScoreEl) {
+            hudScoreEl.textContent = state.score || 0;
+          }
+
+          // Render inventory items and carried items in top HUD bar
           const heldKeyIds = state.inventory || (state.keys ? state.keys.map(k => k.id) : []) || [];
-          const currentKeyIds = heldKeyIds.join(',');
+          const carriedItemIds = (state.carriedItems || []).map(i => i.id);
+          const currentKeyIds = heldKeyIds.join(',') + '|' + carriedItemIds.join(',');
           if (currentKeyIds !== lastRenderedKeyIds) {
             lastRenderedKeyIds = currentKeyIds;
             keysListEl.innerHTML = '';
-            const keyCount = heldKeyIds.length;
+            const totalItemCount = heldKeyIds.length + carriedItemIds.length;
             const inventoryCountEl = document.getElementById('hud-inventory-count');
             if (inventoryCountEl) {
-              inventoryCountEl.textContent = `${keyCount}`;
+              inventoryCountEl.textContent = `${totalItemCount}`;
             }
             if (inventoryCardEl) {
-              inventoryCardEl.classList.toggle('has-items', keyCount > 0);
+              inventoryCardEl.classList.toggle('has-items', totalItemCount > 0);
             }
 
-            if (keyCount > 0) {
+            if (totalItemCount > 0) {
               for (const keyId of heldKeyIds) {
                 const key = currentLevel.entities.find(e => e.id === keyId) || (state.keys ? state.keys.find(k => k.id === keyId) : null) || { name: 'Key', color: '#fbbf24' };
                 const pill = document.createElement('div');
@@ -420,12 +451,35 @@
                 pill.innerHTML = `<span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 8px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
                 keysListEl.appendChild(pill);
               }
+
+              if (Array.isArray(state.carriedItems)) {
+                for (const item of state.carriedItems) {
+                  const itemPill = document.createElement('div');
+                  itemPill.className = 'key-pill';
+                  itemPill.style.borderColor = item.color || '#f97316';
+                  itemPill.style.boxShadow = `0 0 10px ${item.color ? item.color + '60' : 'rgba(249,115,22,0.35)'}`;
+                  const icon = item.itemType === 'torch' ? '🔥' : (item.itemType === 'relic' ? '👑' : '💎');
+                  itemPill.innerHTML = `<span>${icon}</span> <span class="key-name">${item.name || 'Item'}</span>`;
+                  keysListEl.appendChild(itemPill);
+                }
+              }
             } else {
               const emptySpan = document.createElement('span');
               emptySpan.className = 'inventory-empty-slot';
               emptySpan.textContent = 'Empty';
               keysListEl.appendChild(emptySpan);
             }
+          }
+        },
+        onWallDecorInspected: (data) => {
+          openInspectModal(data);
+        },
+        onCheckpointActivated: (cp) => {
+          showToast(`🚩 Checkpoint Activated: ${cp.name}`, 'info');
+        },
+        onCollectibleCollected: (data) => {
+          if (data.isCarriable) {
+            showToast(`🔥 Equipped: ${data.name}!`, 'success');
           }
         },
         onFreePanChange: (mode) => {
@@ -640,6 +694,34 @@
       });
     }
 
+    // Inspection Dialog Elements & Logic
+    const inspectModal = document.getElementById('inspect-modal');
+    const inspectIconEl = document.getElementById('inspect-icon');
+    const inspectTitleEl = document.getElementById('inspect-title');
+    const inspectMetaEl = document.getElementById('inspect-meta');
+    const inspectTextEl = document.getElementById('inspect-text');
+    const inspectResponseEl = document.getElementById('inspect-response');
+    const btnCloseInspect = document.getElementById('btn-close-inspect');
+
+    function openInspectModal(data) {
+      if (!inspectModal) return;
+      const iconMap = { note: '📝', painting: '🖼️', fresco: '🏛️', carving: '🗿', tapestry: '🚩' };
+      if (inspectIconEl) inspectIconEl.textContent = iconMap[data.decorType] || '🖼️';
+      if (inspectTitleEl) inspectTitleEl.textContent = data.title || 'Wall Observation';
+      if (inspectMetaEl) inspectMetaEl.textContent = `Facing ${data.facing || 'wall'} • ${data.author || 'Artisan'}`;
+      if (inspectTextEl) inspectTextEl.textContent = data.text || '';
+      if (inspectResponseEl) inspectResponseEl.textContent = data.response ? `"${data.response}"` : '';
+      inspectModal.classList.add('active');
+    }
+
+    function closeInspectModal() {
+      if (inspectModal) {
+        inspectModal.classList.remove('active');
+      }
+    }
+
+    if (btnCloseInspect) btnCloseInspect.addEventListener('click', closeInspectModal);
+
     // Restart Confirmation Dialog Elements & Logic
     const restartConfirmModal = document.getElementById('restart-confirm-modal');
     const btnConfirmRestart = document.getElementById('btn-confirm-restart');
@@ -669,6 +751,15 @@
 
     // Keyboard Shortcuts (L for Log, R for Restart, Esc for close modals, Enter for confirm restart)
     window.addEventListener('keydown', (e) => {
+      // If inspection modal is active
+      if (inspectModal && inspectModal.classList.contains('active')) {
+        if (e.code === 'Escape' || e.code === 'Space' || e.code === 'Enter' || e.code === 'KeyE') {
+          e.preventDefault();
+          closeInspectModal();
+          return;
+        }
+      }
+
       // If restart confirmation modal is active
       if (restartConfirmModal && restartConfirmModal.classList.contains('active')) {
         if (e.code === 'Enter' || e.code === 'NumpadEnter' || e.code === 'KeyR') {

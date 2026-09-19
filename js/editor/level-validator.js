@@ -102,6 +102,26 @@ export class LevelValidator {
         teleporterEntities.push(entity);
       } else if (entity.type === ENTITY_TYPES.PATROLLER) {
         patrollerEntities.push(entity);
+      } else if (entity.type === ENTITY_TYPES.CHECKPOINT) {
+        const tile = ez === ELEVATION.OVERHEAD ? overhead[entity.y]?.[entity.x] : ground[entity.y]?.[entity.x];
+        if (tile === TILES.WALL) {
+          errors.push({
+            message: `Checkpoint "${entity.id}" at ${formatXYZ(entity.x, entity.y, ez)} is placed inside a solid wall.`,
+            entityId: entity.id,
+            x: entity.x,
+            y: entity.y,
+          });
+        }
+      } else if (entity.type === ENTITY_TYPES.COLLECTIBLE) {
+        const tile = ez === ELEVATION.OVERHEAD ? overhead[entity.y]?.[entity.x] : ground[entity.y]?.[entity.x];
+        if (tile === TILES.WALL) {
+          errors.push({
+            message: `Collectible "${entity.id}" at ${formatXYZ(entity.x, entity.y, ez)} is placed inside a solid wall.`,
+            entityId: entity.id,
+            x: entity.x,
+            y: entity.y,
+          });
+        }
       }
     }
 

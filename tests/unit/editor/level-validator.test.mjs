@@ -156,4 +156,29 @@ describe('Editor > LevelValidator', () => {
     assertEqual(report.valid, true, 'Solvable level remains valid');
     assert(report.warnings.some(w => w.message.includes('bypassed')), 'Issues bypass warning');
   });
+
+  it('catches checkpoint or collectible placed inside solid wall', () => {
+    const badPlacementLevel = {
+      dimensions: { width: 7, height: 7 },
+      spawn: { x: 1, y: 1, elevation: 0 },
+      exit: { x: 5, y: 1 },
+      layers: {
+        ground: [
+          [1, 1, 1, 1, 1, 1, 1],
+          [1, 0, 0, 0, 0, 0, 1],
+          [1, 1, 1, 1, 1, 1, 1],
+        ],
+        overhead: Array.from({ length: 3 }, () => Array(7).fill(0)),
+      },
+      entities: [
+        { id: 'cp_wall', type: 'checkpoint', x: 0, y: 0 },
+        { id: 'gem_wall', type: 'collectible', x: 2, y: 0 },
+      ],
+    };
+
+    const report = LevelValidator.validate(badPlacementLevel);
+    assertEqual(report.valid, false);
+    assert(report.errors.some(e => e.message.includes('Checkpoint "cp_wall"') && e.message.includes('solid wall')));
+    assert(report.errors.some(e => e.message.includes('Collectible "gem_wall"') && e.message.includes('solid wall')));
+  });
 });
