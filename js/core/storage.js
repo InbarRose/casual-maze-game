@@ -60,18 +60,25 @@ export class StorageManager {
 
       const progress = this.loadCampaignProgress();
       const existing = progress[idKey];
+      const bestTime = Math.min(stats.time, existing?.bestTime ?? Infinity);
+      const bestSteps = Math.min(stats.steps, existing?.bestSteps ?? Infinity);
+      const existingMedals = existing?.medals || {};
 
-      if (!existing || stats.time < existing.bestTime) {
-        progress[idKey] = {
-          completed: true,
-          bestTime: Math.min(stats.time, existing ? existing.bestTime : Infinity),
-          bestSteps: Math.min(stats.steps, existing ? existing.bestSteps : Infinity),
-          lastPlayed: Date.now(),
-        };
-      }
+      progress[idKey] = {
+        completed: true,
+        bestTime,
+        bestSteps,
+        medals: {
+          completion: true,
+          parSteps: !!(stats.earnedParSteps || existingMedals.parSteps),
+          parTime: !!(stats.earnedParTime || existingMedals.parTime),
+          flawless: !!(stats.flawless || existingMedals.flawless),
+        },
+        lastPlayed: Date.now(),
+      };
 
       localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progress));
-      console.info(`[MazeGame:Storage] Saved completion record for Campaign Level "${idKey}"`, stats);
+      console.info(`[MazeGame:Storage] Saved completion record for Campaign Level "${idKey}"`, progress[idKey]);
       return true;
     } catch (e) {
       console.error(`[MazeGame:Storage] Failed to save campaign completion for "${levelId}":`, e);
@@ -91,6 +98,27 @@ export class StorageManager {
       console.error('[StorageManager] Failed to load campaign progress:', e);
       return {};
     }
+  }
+
+  /**
+   * Calculate total earned stars for a list of chapter levels
+   * @param {Array<{ id: string|number }>} levels
+   * @param {Record<string, object>} [progress]
+   * @returns {number}
+   */
+  static getChapterStars(levels, progress) {
+    const prog = progress || this.loadCampaignProgress();
+    let stars = 0;
+    if (!Array.isArray(levels)) return stars;
+    for (const lvl of levels) {
+      const record = prog[String(lvl.id)];
+      if (record?.completed) {
+        stars += 1;
+        if (record.medals?.parSteps) stars += 1;
+        if (record.medals?.parTime) stars += 1;
+      }
+    }
+    return stars;
   }
 
   /**

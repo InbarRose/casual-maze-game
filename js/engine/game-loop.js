@@ -913,15 +913,24 @@ export class GameLoop {
     this.isWon = true;
     this.renderer.spawnParticles(this.player.worldX, this.player.worldY, '#38bdf8', 60);
 
+    const earnedParSteps = this.level.parSteps !== undefined ? this.player.stepsTaken <= this.level.parSteps : false;
+    const earnedParTime = this.level.parTime !== undefined ? (this.elapsedTime / 1000) <= this.level.parTime : false;
+
     const stats = {
       time: this.elapsedTime,
       steps: this.player.stepsTaken,
+      earnedParSteps,
+      earnedParTime,
+      parSteps: this.level.parSteps,
+      parTime: this.level.parTime,
     };
 
     console.info(`[MazeGame:Engine] Victory achieved on level "${this.level.title}" (${this.level.id})!`, {
       timeFormatted: (this.elapsedTime / 1000).toFixed(2) + 's',
       steps: this.player.stepsTaken,
       finalInventory: [...this.player.inventory],
+      earnedParSteps,
+      earnedParTime,
     });
 
     this.logger.logVictory(stats, this.elapsedTime);
