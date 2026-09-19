@@ -22,7 +22,32 @@ export const ENTITY_TYPES = Object.freeze({
   PATROLLER: 'patroller',
   PUZZLE_GATE: 'puzzle_gate',
   SIGNPOST: 'signpost',
+  WALL_DECOR: 'wall_decor',
+  CHECKPOINT: 'checkpoint',
+  COLLECTIBLE: 'collectible',
+  PEDESTAL: 'pedestal',
+  RIDDLE_ITEM: 'riddle_item',
 });
+
+export const RIDDLE_ITEM_STYLES = Object.freeze([
+  { id: 'statue_falcon', type: 'statue', icon: '🦅', label: 'Falcon Statue', desc: 'Carved obsidian falcon of the eastern dawn' },
+  { id: 'statue_serpent', type: 'statue', icon: '🐍', label: 'Serpent Statue', desc: 'Emerald serpent coiled toward northern depths' },
+  { id: 'statue_lion', type: 'statue', icon: '🦁', label: 'Lion Statue', desc: 'Gilded lion standing guard at the southern sun' },
+  { id: 'statue_dragon', type: 'statue', icon: '🐉', label: 'Dragon Statue', desc: 'Ancient sapphire dragon watching western winds' },
+  { id: 'orb_fire', type: 'orb', icon: '🔥', label: 'Flame Orb', desc: 'Ever-burning cinder sphere pulsating with magma heat' },
+  { id: 'orb_water', type: 'orb', icon: '💧', label: 'Tide Orb', desc: 'Cerulean pearl resonating with oceanic currents' },
+  { id: 'orb_earth', type: 'orb', icon: '🌿', label: 'Flora Orb', desc: 'Jade sphere entwined with living verdant roots' },
+  { id: 'orb_air', type: 'orb', icon: '💨', label: 'Gale Orb', desc: 'Swirling zephyr prism crackling with static wind' },
+  { id: 'rune_sun', type: 'rune', icon: '☀️', label: 'Solar Runestone', desc: 'Radiant golden slate inscribed with daylight glyphs' },
+  { id: 'rune_moon', type: 'rune', icon: '🌙', label: 'Lunar Runestone', desc: 'Silver slate reflecting calm nocturnal phases' },
+  { id: 'rune_star', type: 'rune', icon: '✨', label: 'Astral Runestone', desc: 'Twinkling indigo slate charting celestial orbits' },
+]);
+
+export const PEDESTAL_STYLES = Object.freeze([
+  { id: 'plinth_stone', icon: '🏛️', label: 'Carved Plinth', desc: 'Ancient fluted stone pedestal with rune-etched socket' },
+  { id: 'altar_shrine', icon: '⛩️', label: 'Altar Shrine', desc: 'Ceremonial shrine adorned with divine sigils' },
+  { id: 'pillar_crystal', icon: '💎', label: 'Crystal Pillar', desc: 'Resonating geometric prism socket for elemental orbs' },
+]);
 
 export const VIEW_PERSPECTIVES = Object.freeze({
   ANGLED: 'angled',
@@ -57,6 +82,28 @@ export const SIGNPOST_STYLES = Object.freeze([
   { id: 'stone_tablet', icon: '🪨', label: 'Stone Tablet', desc: 'Carved obsidian tablet bearing ancient inscriptions' },
   { id: 'wooden_sign', icon: '🪵', label: 'Wooden Signpost', desc: 'Charming weathered wooden marker left by a previous explorer' },
   { id: 'astral_scroll', icon: '📜', label: 'Arcane Scroll', desc: "Illuminated parchment glowing with the Architect's notes" },
+]);
+
+export const WALL_DECOR_TYPES = Object.freeze([
+  { id: 'note', icon: '📝', label: 'Scrawled Note', desc: 'Pinned parchment note with handwritten clues or warnings' },
+  { id: 'painting', icon: '🖼️', label: 'Framed Painting', desc: 'Ornate framed oil canvas depicting atmospheric landscapes' },
+  { id: 'fresco', icon: '🏛️', label: 'Ancient Fresco', desc: 'Vibrant mural painted directly onto stone plaster' },
+  { id: 'carving', icon: '🗿', label: 'Stone Bas-Relief', desc: 'Chiseled masonry relief carved into the labyrinth wall' },
+  { id: 'tapestry', icon: '🚩', label: 'Royal Tapestry', desc: 'Weathered woven banner hanging from wall sconces' },
+]);
+
+export const CHECKPOINT_STYLES = Object.freeze([
+  { id: 'shrine', icon: '⛩️', label: 'Waypoint Shrine', desc: 'Ancient stone sanctuary glowing with azure flame' },
+  { id: 'crystal_beacon', icon: '💎', label: 'Resonance Beacon', desc: 'Floating resonant crystal marking a safe waypoint' },
+  { id: 'runic_hearth', icon: '🔥', label: 'Runic Hearth', desc: 'Warm stone brazier hearth that rekindles the explorer' },
+  { id: 'brazier', icon: '🏮', label: 'Bronze Brazier', desc: 'Ceremonial brazier with illuminating spirit flame' },
+]);
+
+export const COLLECTIBLE_TYPES = Object.freeze([
+  { id: 'gem', icon: '💎', label: 'Gemstone', defaultScore: 100, desc: 'Brilliant faceted gem granting bonus score points' },
+  { id: 'coin', icon: '🪙', label: 'Ancient Coin', defaultScore: 50, desc: 'Rare antique minted coin' },
+  { id: 'relic', icon: '👑', label: 'Golden Relic', defaultScore: 300, desc: 'Precious ceremonial artifact' },
+  { id: 'torch', icon: '🔥', label: 'Adventurer Torch', defaultScore: 25, isCarriable: true, desc: 'Illuminates dark halls and expands line of sight' },
 ]);
 
 export const MEDAL_TYPES = Object.freeze({

@@ -59,22 +59,28 @@ casual-maze-game/
 │   │   ├── runner.mjs            # describe, it, suite grouping, filtering (--suite, --grep)
 │   │   ├── assertions.mjs        # assert, assertEqual, assertDeepEqual, assertThrows
 │   │   └── mocks.mjs             # Storage polyfills, mock canvas/DOM, FileReader/Blob
+│   ├── helpers/                  # Test utilities & game simulation helpers
+│   │   └── campaign-solver.mjs   # BFS state-space solver & GameLoop simulation runner
 │   ├── unit/                     # Granular subsystem unit test suites
 │   │   ├── core/                 # prng, events, storage, constants
-│   │   ├── engine/               # collision, fog, camera, debug-logger
-│   │   ├── entities/             # player, key, door, lever, signpost, dynamic-activities
+│   │   ├── engine/               # collision, fog, camera, debug-logger, perspective-renderer
+│   │   ├── entities/             # player, key, door, lever, signpost, dynamic-activities, riddle-item, pedestal
 │   │   ├── levels/               # level-loader, json-integrity, campaign, tutorial
 │   │   └── editor/               # level-validator, json-exporter
 │   ├── integration/
+│   │   ├── campaign/             # Per-chapter modular campaign playthrough test suites
+│   │   │   ├── chapter-1.test.mjs ... chapter-7.test.mjs
 │   │   └── journeys/             # End-to-end simulated player & architect workflows
 │   │       ├── tutorial-progression.journey.test.mjs
 │   │       ├── campaign-progression.journey.test.mjs
-│   │       ├── campaign-playthrough.journey.test.mjs
 │   │       ├── campaign-solvability.journey.test.mjs
 │   │       ├── editor-authoring.journey.test.mjs
 │   │       ├── fog-exploration.journey.test.mjs
 │   │       ├── multi-elevation.journey.test.mjs
-│   │       └── interactive-activities.journey.test.mjs
+│   │       ├── interactive-activities.journey.test.mjs
+│   │       ├── obstacle-interactions.journey.test.mjs
+│   │       ├── wall-art-checkpoints-bonus.journey.test.mjs
+│   │       └── riddle-pedestals.journey.test.mjs
 │   └── run-all.mjs               # Master test runner entrypoint
 ├── docs/                         # Documentation & Architecture Records
 │   ├── ARCHITECTURE.md           # Deep subsystem architecture & engine details (this file)
@@ -104,28 +110,40 @@ casual-maze-game/
 │   │   ├── fog.js                # 3-state fog-of-war (Unexplored, Explored, Visible)
 │   │   ├── game-loop.js          # Delta-time coordinator, entity cycles, animation loop
 │   │   ├── minimap.js            # Dedicated HUD minimap canvas renderer
-│   │   ├── renderer.js           # 2D/2.5D canvas drawing pipeline with Y-depth sorting
+│   │   ├── renderer.js           # 2D/2.5D canvas drawing pipeline, vignettes, and decor
 │   │   └── debug-logger.js       # Runtime debug telemetry & replay JSON export
 │   ├── entities/
-│   │   ├── player.js             # Position, elevation state, inventory, input listener
+│   │   ├── player.js             # Position, elevation state, inventory, carried riddle badges
 │   │   ├── key.js                # Collectible colored key entities
 │   │   ├── door.js               # Locked barrier entities
 │   │   ├── lever.js              # State-switching trigger entities (mutates grid tiles)
 │   │   ├── signpost.js           # Readable lore tablets, journal notes, spatial hints
 │   │   ├── teleporter.js         # Dimensional warp portals with 3D coordinate translation
 │   │   ├── hazard.js             # Timed cyclical hazards & waypoint-navigating patrollers
-│   │   └── puzzle-gate.js        # Interactive minigame puzzle barrier entities
+│   │   ├── puzzle-gate.js        # Interactive minigame puzzle barrier entities
+│   │   ├── checkpoint.js         # Mid-level checkpoint beacon with snapshot restoration
+│   │   ├── collectible.js        # Bonus score collectibles and carriable torches
+│   │   ├── wall-decor.js         # Atmospheric wall art, murals, and lore tablets
+│   │   ├── riddle-item.js        # Carryable statues/relics for environmental puzzles
+│   │   └── pedestal.js           # Inscribed socket pedestals with verification logic
 │   ├── ui/
 │   │   └── puzzle-modal.js       # Pure static DOM modal for rune sequence and cipher dials
 │   ├── levels/
 │   │   ├── level-loader.js       # Schema validator, URL param parser, static level loader
-│   │   └── default-levels.js     # Hardcoded fallback levels (28 campaign levels + 6 tutorials)
+│   │   ├── tutorials.js          # Tutorial academy levels (1-6)
+│   │   ├── campaign-ch1.js ... campaign-ch7.js # Modular chapter level definitions
+│   │   └── default-levels.js     # Aggregator exporting all campaign and tutorial levels
 │   └── editor/
 │       ├── editor-canvas.js      # Grid painting, drag-placement, coordinate preview
 │       ├── editor-ui.js          # Palette selection, layer toggling, toolbar bindings
-│       ├── entity-inspector.js   # Interactive lever-to-target wiring panel
+│       ├── entity-inspector.js   # Interactive lever-to-target wiring & entity property forms
 │       ├── level-validator.js    # Static schema checks & BFS reachability solver
-│       └── json-exporter.js      # File export/import parser via Web File API
+│       ├── json-exporter.js      # File export/import parser via Web File API
+│       └── modals/               # Modular editor dialog controllers
+│           ├── projects-modal.js
+│           ├── validation-modal.js
+│           ├── playtest-modal.js
+│           └── guide-modal.js
 └── levels/
     ├── manifest.json             # Manifest of 34 campaign & tutorial levels
     ├── tutorial/                 # Handcrafted tutorial levels (tutorial_1.json .. tutorial_6.json)

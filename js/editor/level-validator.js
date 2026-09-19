@@ -77,6 +77,8 @@ export class LevelValidator {
     const leverEntities = [];
     const teleporterEntities = [];
     const patrollerEntities = [];
+    const pedestalEntities = [];
+    const riddleItemEntities = new Map();
 
     for (const entity of entities) {
       const ez = entity.z ?? entity.elevation ?? 0;
@@ -102,6 +104,72 @@ export class LevelValidator {
         teleporterEntities.push(entity);
       } else if (entity.type === ENTITY_TYPES.PATROLLER) {
         patrollerEntities.push(entity);
+      } else if (entity.type === ENTITY_TYPES.CHECKPOINT) {
+        const tile = ez === ELEVATION.OVERHEAD ? overhead[entity.y]?.[entity.x] : ground[entity.y]?.[entity.x];
+        if (tile === TILES.WALL) {
+          errors.push({
+            message: `Checkpoint "${entity.id}" at ${formatXYZ(entity.x, entity.y, ez)} is placed inside a solid wall.`,
+            entityId: entity.id,
+            x: entity.x,
+            y: entity.y,
+          });
+        }
+      } else if (entity.type === ENTITY_TYPES.COLLECTIBLE) {
+        const tile = ez === ELEVATION.OVERHEAD ? overhead[entity.y]?.[entity.x] : ground[entity.y]?.[entity.x];
+        if (tile === TILES.WALL) {
+          errors.push({
+            message: `Collectible "${entity.id}" at ${formatXYZ(entity.x, entity.y, ez)} is placed inside a solid wall.`,
+            entityId: entity.id,
+            x: entity.x,
+            y: entity.y,
+          });
+        }
+      } else if (entity.type === ENTITY_TYPES.PEDESTAL) {
+        pedestalEntities.push(entity);
+        const tile = ez === ELEVATION.OVERHEAD ? overhead[entity.y]?.[entity.x] : ground[entity.y]?.[entity.x];
+        if (tile === TILES.WALL) {
+          errors.push({
+            message: `Pedestal "${entity.id}" at ${formatXYZ(entity.x, entity.y, ez)} is placed inside a solid wall.`,
+            entityId: entity.id,
+            x: entity.x,
+            y: entity.y,
+          });
+        }
+      } else if (entity.type === ENTITY_TYPES.RIDDLE_ITEM) {
+        riddleItemEntities.set(entity.id, entity);
+        const tile = ez === ELEVATION.OVERHEAD ? overhead[entity.y]?.[entity.x] : ground[entity.y]?.[entity.x];
+        if (tile === TILES.WALL) {
+          errors.push({
+            message: `Riddle Item "${entity.id}" at ${formatXYZ(entity.x, entity.y, ez)} is placed inside a solid wall.`,
+            entityId: entity.id,
+            x: entity.x,
+            y: entity.y,
+          });
+        }
+      }
+    }
+
+    // Check Pedestals for accepted items and target doors
+    for (const ped of pedestalEntities) {
+      const pz = ped.z ?? ped.elevation ?? 0;
+      if (ped.acceptedItemId && !riddleItemEntities.has(ped.acceptedItemId)) {
+        warnings.push({
+          message: `Pedestal "${ped.id}" at ${formatXYZ(ped.x, ped.y, pz)} requires riddle item "${ped.acceptedItemId}", but no matching riddle item exists in the level.`,
+          entityId: ped.id,
+          x: ped.x,
+          y: ped.y,
+        });
+      }
+      if (ped.targetDoorId) {
+        const matchingDoor = doorEntities.find(d => d.id === ped.targetDoorId);
+        if (!matchingDoor) {
+          warnings.push({
+            message: `Pedestal "${ped.id}" targets door "${ped.targetDoorId}", but no such door exists in the level.`,
+            entityId: ped.id,
+            x: ped.x,
+            y: ped.y,
+          });
+        }
       }
     }
 

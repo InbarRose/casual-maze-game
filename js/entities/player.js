@@ -37,6 +37,9 @@ export class Player {
     this.worldY = startY * tileSize + tileSize / 2;
 
     this.inventory = Array.isArray(initialInventory) ? [...initialInventory] : []; // Array of key IDs e.g. ["key_gold_1"]
+    this.score = 0;
+    this.carriedItems = [];
+    this.carriedRiddleItem = null;
     this.facing = 'south'; // 'north' | 'south' | 'east' | 'west'
 
     this.isMoving = false;
@@ -75,13 +78,116 @@ export class Player {
   }
 
   /**
+   * Add a key to inventory
+   * @param {string} keyId
+   */
+  addKey(keyId) {
+    if (!this.inventory.includes(keyId)) {
+      this.inventory.push(keyId);
+    }
+  }
+
+  /**
+   * Add bonus score points
+   * @param {number} points
+   */
+  addScore(points) {
+    this.score = (this.score || 0) + (Number(points) || 0);
+  }
+
+  /**
+   * Add a carried utility item
+   * @param {object} item
+   */
+  addCarriedItem(item) {
+    if (!this.carriedItems) this.carriedItems = [];
+    this.carriedItems.push(item);
+  }
+
+  /**
+   * Check if player carries an item by type or id
+   * @param {string} idOrType
+   * @returns {boolean}
+   */
+  hasItem(idOrType) {
+    return (this.carriedItems || []).some(item => item.id === idOrType || item.itemType === idOrType);
+  }
+
+  /**
+   * Check if player holds a torch
+   * @returns {boolean}
+   */
+  hasTorch() {
+    return this.hasItem('torch');
+  }
+
+  /**
+   * Pick up a carryable riddle item
+   * @param {object} item
+   * @returns {object}
+   */
+  pickUpRiddleItem(item) {
+    this.carriedRiddleItem = item;
+    if (item && typeof item.pickup === 'function') {
+      item.pickup();
+    }
+    return item;
+  }
+
+  /**
+   * Drop currently carried riddle item to target coordinates
+   * @param {number} x
+   * @param {number} y
+   * @param {number} [elevation]
+   * @returns {object|null}
+   */
+  dropRiddleItem(x, y, elevation = this.elevation) {
+    const item = this.carriedRiddleItem;
+    if (item) {
+      if (typeof item.drop === 'function') {
+        item.drop(x, y, elevation);
+      }
+      this.carriedRiddleItem = null;
+    }
+    return item;
+  }
+
+  /**
+   * Place currently carried riddle item onto an environmental pedestal
+   * @param {object} pedestal
+   * @returns {boolean}
+   */
+  placeRiddleItem(pedestal) {
+    const item = this.carriedRiddleItem;
+    if (item && pedestal) {
+      if (typeof pedestal.placeItem === 'function') {
+        pedestal.placeItem(item);
+      }
+      this.carriedRiddleItem = null;
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * Check if player is carrying a riddle item
+   * @returns {boolean}
+   */
+  hasCarriedRiddleItem() {
+    return Boolean(this.carriedRiddleItem);
+  }
+
+  /**
    * Reset player to initial spawn coordinates
    * @param {number} spawnX
    * @param {number} spawnY
    * @param {number} elevation
    * @param {string[]} [initialInventory=[]]
+   * @param {number} [initialScore=0]
+   * @param {Array<object>} [initialCarriedItems=[]]
+   * @param {object|null} [initialCarriedRiddleItem=null]
    */
-  reset(spawnX, spawnY, elevation = 0, initialInventory = []) {
+  reset(spawnX, spawnY, elevation = 0, initialInventory = [], initialScore = 0, initialCarriedItems = [], initialCarriedRiddleItem = null) {
     this.gridX = spawnX;
     this.gridY = spawnY;
     this.gridZ = elevation;
@@ -96,6 +202,9 @@ export class Player {
     this.worldY = spawnY * this.tileSize + this.tileSize / 2;
 
     this.inventory = Array.isArray(initialInventory) ? [...initialInventory] : [];
+    this.score = initialScore || 0;
+    this.carriedItems = Array.isArray(initialCarriedItems) ? [...initialCarriedItems] : [];
+    this.carriedRiddleItem = initialCarriedRiddleItem || null;
     this.facing = 'south';
     this.isMoving = false;
     this.moveProgress = 0;
@@ -605,6 +714,24 @@ export class Player {
     ctx.beginPath();
     ctx.arc(screenX + dirX, py + dirY, 2.5 * s, 0, Math.PI * 2);
     ctx.fill();
+
+    // 7. Carried Riddle Item indicator floating above shoulder
+    if (this.carriedRiddleItem) {
+      const badgeX = screenX + 9 * s;
+      const badgeY = py - 10 * s;
+      ctx.fillStyle = '#0f172a';
+      ctx.strokeStyle = this.carriedRiddleItem.color || '#38bdf8';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(badgeX, badgeY, 6.5 * s, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.font = `${Math.round(8 * s)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(this.carriedRiddleItem.symbol || '🗿', badgeX, badgeY);
+    }
 
     ctx.restore();
   }
