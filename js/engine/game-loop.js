@@ -12,6 +12,7 @@ import { Lever } from '../entities/lever.js';
 import { Teleporter } from '../entities/teleporter.js';
 import { TimedHazard, Patroller } from '../entities/hazard.js';
 import { PuzzleGate } from '../entities/puzzle-gate.js';
+import { Signpost } from '../entities/signpost.js';
 import { Player } from '../entities/player.js';
 import { Camera } from './camera.js';
 import { FogOfWar } from './fog.js';
@@ -119,6 +120,7 @@ export class GameLoop {
       if (e.type === ENTITY_TYPES.HAZARD) return new TimedHazard(e);
       if (e.type === ENTITY_TYPES.PATROLLER) return new Patroller(e);
       if (e.type === ENTITY_TYPES.PUZZLE_GATE) return new PuzzleGate(e);
+      if (e.type === ENTITY_TYPES.SIGNPOST) return new Signpost(e);
       return null;
     }).filter(Boolean);
   }
@@ -659,6 +661,19 @@ export class GameLoop {
       this.handleTeleport(teleporter, dest);
     }
 
+    // 4. Check Signpost step trigger
+    const signpost = this.entities.find(
+      e => e.type === ENTITY_TYPES.SIGNPOST && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (signpost) {
+      const data = signpost.readSign();
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
+      globalEvents.emit('signpost:read', data);
+      if (this.uiCallbacks.onSignpostRead) {
+        this.uiCallbacks.onSignpostRead(data);
+      }
+    }
+
     this.notifyUI();
   }
 
@@ -803,6 +818,21 @@ export class GameLoop {
     );
     if (adjacentPuzzleGates.length > 0) {
       this.openPuzzleGateModal(adjacentPuzzleGates[0]);
+      return;
+    }
+
+    // Check if player is on or adjacent to a Signpost
+    const adjacentSignposts = this.entities.filter(
+      e => e.type === ENTITY_TYPES.SIGNPOST && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (adjacentSignposts.length > 0) {
+      const signpost = adjacentSignposts[0];
+      const data = signpost.readSign();
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
+      globalEvents.emit('signpost:read', data);
+      if (this.uiCallbacks.onSignpostRead) {
+        this.uiCallbacks.onSignpostRead(data);
+      }
       return;
     }
 

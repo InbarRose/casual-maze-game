@@ -383,7 +383,7 @@ export class GameRenderer {
         } else {
           screen = camera.worldToScreen(entity.x * tileSize, entity.y * tileSize);
         }
-        entity.render(ctx, screen.x, screen.y - heightOffset, tileSize);
+        entity.render(ctx, screen.x, screen.y - heightOffset, tileSize, this.perspective);
       }
     }
   }
@@ -644,7 +644,7 @@ export class GameRenderer {
       const screen = isContinuous
         ? camera.worldToScreen(entity.worldX, entity.worldY)
         : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize);
-      entity.render(ctx, screen.x, screen.y, tileSize);
+      entity.render(ctx, screen.x, screen.y, tileSize, this.perspective);
     }
   }
 
