@@ -740,17 +740,7 @@
       </div>
     </section>
 
-    <footer>
-      <span>casual-maze-game.inbarrose.com</span>
-      <span>•</span>
-      <a href="editor.html">Editor</a>
-      <span>•</span>
-      <a href="art-catalog.html">Art Catalog</a>
-      <span>•</span>
-      <a href="test.html">Test Lab &amp; Replay Theater</a>
-      <span>•</span>
-      <a href="https://github.com/InbarRose/casual-maze-game/issues" target="_blank" rel="noopener">Report Issue / Feedback</a>
-    </footer>
+    </section>
   </div>
 
   <div class="toast-container" id="toast-container"></div>
@@ -758,6 +748,10 @@
   <script type="module">
     import { StorageManager } from './js/core/storage.js';
     import { audioFX } from './js/ui/audio-fx.js';
+    import { initAppHeader } from './js/ui/app-header.js';
+
+    // Mount Universal Global App Header and Footer
+    initAppHeader({ activeTab: 'hub' });
 
     // Global Error & Promise Rejection Handlers
     window.addEventListener('error', (event) => {

@@ -248,5 +248,7 @@ class SoundFXEngine {
   }
 }
 
-// Singleton instance
+// Exports
 export const audioFX = new SoundFXEngine();
+export { SoundFXEngine, SoundFXEngine as AudioFx };
+

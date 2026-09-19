@@ -280,6 +280,11 @@
   </div>
 
   <script type="module">
+    import { initAppHeader } from './js/ui/app-header.js';
+
+    // Mount Universal App Header & Footer
+    initAppHeader({ activeTab: 'art' });
+
     let allAssets = [];
     let activeType = 'all';
     let activeCategory = 'all';

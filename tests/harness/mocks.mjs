@@ -199,8 +199,15 @@ export function setupMocks() {
 
   if (typeof globalThis.window === 'undefined') {
     globalThis.window = globalThis;
+  }
+  if (!globalThis.window.addEventListener) {
     globalThis.window.addEventListener = () => {};
+  }
+  if (!globalThis.window.removeEventListener) {
     globalThis.window.removeEventListener = () => {};
+  }
+  if (!globalThis.window.dispatchEvent) {
+    globalThis.window.dispatchEvent = () => true;
   }
 
   if (typeof globalThis.document === 'undefined') {
@@ -231,6 +238,7 @@ export function setupMocks() {
         setAttribute: () => {},
         getAttribute: () => null,
         appendChild: () => {},
+        prepend: () => {},
         removeChild: () => {},
         addEventListener: () => {},
         removeEventListener: () => {},
@@ -247,6 +255,7 @@ export function setupMocks() {
       querySelectorAll: () => [],
       body: {
         appendChild: () => {},
+        prepend: () => {},
         removeChild: () => {},
       },
     };

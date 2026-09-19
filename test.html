@@ -467,6 +467,11 @@
     import { audioFX } from './js/ui/audio-fx.js';
     import { StorageManager } from './js/core/storage.js';
     import { ENGINE_VERSION } from './js/core/version.js';
+    import { initAppHeader } from './js/ui/app-header.js';
+
+    // Mount Universal App Header & Footer
+    initAppHeader({ activeTab: 'test' });
+
 
     // Set badge version
     const badgeVersion = document.getElementById('badge-version');

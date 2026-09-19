@@ -26,6 +26,7 @@ export class Camera {
     // World / View 90-degree Rotation
     this.rotation = 0; // Current angle in degrees (0, 90, 180, 270)
     this.targetRotation = 0;
+    this.baseRotation = 0; // Discrete base angle for rigid scene rendering
     this.rotationLerpSpeed = 0.22;
   }
 
@@ -38,11 +39,21 @@ export class Camera {
   }
 
   /**
+   * Check whether camera is actively transitioning/rotating
+   * @returns {boolean}
+   */
+  isRotating() {
+    let delta = Math.abs(this.targetRotation - this.rotation) % 360;
+    if (delta > 180) delta = 360 - delta;
+    return delta > 0.05;
+  }
+
+  /**
    * Set target rotation angle in degrees (snapped to 0, 90, 180, 270)
    * @param {number} angle
-   * @param {boolean} [immediate=false]
+   * @param {boolean} [immediate=true]
    */
-  setRotation(angle, immediate = false) {
+  setRotation(angle, immediate = true) {
     this.targetRotation = ((Math.round(angle / 90) * 90) % 360 + 360) % 360;
     if (immediate) {
       this.rotation = this.targetRotation;
@@ -133,18 +144,20 @@ export class Camera {
     }
 
     // Smooth rotation lerp
-    if (Math.abs(this.targetRotation - this.rotation) > 0.01) {
+    if (this.isRotating()) {
       let delta = (this.targetRotation - this.rotation) % 360;
       if (delta > 180) delta -= 360;
       if (delta < -180) delta += 360;
 
       const rFactor = 1 - Math.pow(1 - this.rotationLerpSpeed, dt * 60);
       this.rotation += delta * rFactor;
-      if (Math.abs(delta) < 0.1) {
+      if (Math.abs(delta) < 0.15) {
         this.rotation = this.targetRotation;
+        this.baseRotation = this.targetRotation;
       }
     } else {
       this.rotation = this.targetRotation;
+      this.baseRotation = this.targetRotation;
     }
 
     this.clampToBounds(mazeWidth, mazeHeight);
@@ -284,21 +297,22 @@ export class Camera {
       return { startCol, endCol, startRow, endRow };
     }
 
-    // Rotated bounding box: unproject 4 corners of screen
-    const c1 = this.screenToWorld(0, 0);
-    const c2 = this.screenToWorld(this.viewportWidth, 0);
-    const c3 = this.screenToWorld(0, this.viewportHeight);
-    const c4 = this.screenToWorld(this.viewportWidth, this.viewportHeight);
+    // Rotated bounding box: unproject with extra padding to avoid clipping when spinning
+    const rotPad = this.isRotating() ? padding + 3 : padding;
+    const c1 = this.screenToWorld(0, 0, true);
+    const c2 = this.screenToWorld(this.viewportWidth, 0, true);
+    const c3 = this.screenToWorld(0, this.viewportHeight, true);
+    const c4 = this.screenToWorld(this.viewportWidth, this.viewportHeight, true);
 
     const minX = Math.min(c1.x, c2.x, c3.x, c4.x);
     const maxX = Math.max(c1.x, c2.x, c3.x, c4.x);
     const minY = Math.min(c1.y, c2.y, c3.y, c4.y);
     const maxY = Math.max(c1.y, c2.y, c3.y, c4.y);
 
-    const startCol = Math.max(0, Math.floor(minX / this.tileSize) - padding);
-    const endCol = Math.min(mazeWidth - 1, Math.ceil(maxX / this.tileSize) + padding);
-    const startRow = Math.max(0, Math.floor(minY / this.tileSize) - padding);
-    const endRow = Math.min(mazeHeight - 1, Math.ceil(maxY / this.tileSize) + padding);
+    const startCol = Math.max(0, Math.floor(minX / this.tileSize) - rotPad);
+    const endCol = Math.min(mazeWidth - 1, Math.ceil(maxX / this.tileSize) + rotPad);
+    const startRow = Math.max(0, Math.floor(minY / this.tileSize) - rotPad);
+    const endRow = Math.min(mazeHeight - 1, Math.ceil(maxY / this.tileSize) + rotPad);
 
     return { startCol, endCol, startRow, endRow };
   }
