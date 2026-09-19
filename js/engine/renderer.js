@@ -43,7 +43,9 @@ export class GameRenderer {
     const tileSize = camera.tileSize;
     const { width: mazeW, height: mazeH } = level.dimensions;
     const theme = THEMES[level.config.theme] || THEMES.dungeon;
-    this.perspective = level.config.viewPerspective || this.perspective || 'angled';
+    if (!this.perspective) {
+      this.perspective = level.config.viewPerspective || 'angled';
+    }
 
     this.exitPulseTimer += dt * 3;
     this.updateEffects(dt);
@@ -80,7 +82,7 @@ export class GameRenderer {
     this.renderEntities(ctx, entities, ELEVATION.OVERHEAD, camera, fog);
 
     const playerScreen = camera.worldToScreen(player.worldX, player.worldY);
-    player.render(ctx, playerScreen.x, playerScreen.y, tileSize);
+    player.render(ctx, playerScreen.x, playerScreen.y, tileSize, this.perspective);
 
     if (level.config.fogOfWar && fog) {
       this.renderFogOfWar(ctx, fog, bounds, camera, theme);
@@ -373,7 +375,7 @@ export class GameRenderer {
     for (const item of drawables) {
       if (item.type === 'player') {
         const screen = camera.worldToScreen(item.worldX, item.worldY);
-        player.render(ctx, screen.x, screen.y - heightOffset, tileSize);
+        player.render(ctx, screen.x, screen.y - heightOffset, tileSize, this.perspective);
       } else {
         const entity = item.ref;
         const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
