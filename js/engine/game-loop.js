@@ -13,6 +13,9 @@ import { Teleporter } from '../entities/teleporter.js';
 import { TimedHazard, Patroller } from '../entities/hazard.js';
 import { PuzzleGate } from '../entities/puzzle-gate.js';
 import { Signpost } from '../entities/signpost.js';
+import { WallDecor } from '../entities/wall-decor.js';
+import { Checkpoint } from '../entities/checkpoint.js';
+import { Collectible } from '../entities/collectible.js';
 import { Player } from '../entities/player.js';
 import { Camera } from './camera.js';
 import { FogOfWar } from './fog.js';
@@ -91,6 +94,10 @@ export class GameLoop {
     this.panVelocity = { x: 0, y: 0 };
     this.isDraggingMinimap = false;
 
+    // Checkpoint & snapshot state
+    this.activeCheckpoint = null;
+    this.checkpointSnapshot = null;
+
     // Snap camera to spawn
     this.camera.snapTo(
       this.player.worldX,
@@ -124,6 +131,9 @@ export class GameLoop {
       if (e.type === ENTITY_TYPES.PATROLLER) return new Patroller(e);
       if (e.type === ENTITY_TYPES.PUZZLE_GATE) return new PuzzleGate(e);
       if (e.type === ENTITY_TYPES.SIGNPOST) return new Signpost(e);
+      if (e.type === ENTITY_TYPES.WALL_DECOR) return new WallDecor(e);
+      if (e.type === ENTITY_TYPES.CHECKPOINT) return new Checkpoint(e);
+      if (e.type === ENTITY_TYPES.COLLECTIBLE) return new Collectible(e);
       return null;
     }).filter(Boolean);
   }
@@ -693,6 +703,58 @@ export class GameLoop {
       }
     }
 
+    // 5. Check Checkpoint step trigger
+    const checkpoint = this.entities.find(
+      e => e.type === ENTITY_TYPES.CHECKPOINT && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (checkpoint && !checkpoint.activated) {
+      checkpoint.activate();
+      this.activeCheckpoint = checkpoint;
+      this.checkpointSnapshot = {
+        x: checkpoint.x,
+        y: checkpoint.y,
+        z: checkpoint.elevation ?? checkpoint.z ?? ELEVATION.GROUND,
+        inventory: [...this.player.inventory],
+        score: this.player.score || 0,
+        carriedItems: [...(this.player.carriedItems || [])],
+      };
+      const cpWx = checkpoint.x * this.camera.tileSize + this.camera.tileSize / 2;
+      const cpWy = checkpoint.y * this.camera.tileSize + this.camera.tileSize / 2;
+      this.renderer.spawnParticles(cpWx, cpWy, checkpoint.color || '#38bdf8', 35);
+      this.renderer.spawnShockwave(cpWx, cpWy, checkpoint.color || '#38bdf8', 42);
+      this.renderer.spawnFloatingText(cpWx, cpWy, `🚩 Checkpoint: ${checkpoint.name}`, checkpoint.color || '#38bdf8');
+      globalEvents.emit('checkpoint:activated', checkpoint);
+      if (this.uiCallbacks.onCheckpointActivated) {
+        this.uiCallbacks.onCheckpointActivated(checkpoint);
+      }
+    }
+
+    // 6. Check Collectible pickup (bonus points or carriable utility)
+    const collectible = this.entities.find(
+      e => e.type === ENTITY_TYPES.COLLECTIBLE && !e.isCollected && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (collectible) {
+      const data = collectible.collect(this.player);
+      const cWx = this.player.worldX;
+      const cWy = this.player.worldY;
+      this.renderer.spawnParticles(cWx, cWy, collectible.color || '#fbbf24', 25);
+      this.renderer.spawnShockwave(cWx, cWy, collectible.color || '#fbbf24', 32);
+
+      if (data.isCarriable) {
+        this.renderer.spawnFloatingText(cWx, cWy, `🔥 Equipped: ${data.name}`, '#f97316');
+        if (data.itemType === 'torch' && this.fog) {
+          this.fog.viewRadius = (this.level.config.viewRadius || 6) + 3;
+        }
+      } else {
+        this.renderer.spawnFloatingText(cWx, cWy, `+${data.scoreValue} pts (${data.name})`, collectible.color || '#fbbf24');
+      }
+
+      globalEvents.emit('collectible:collected', data);
+      if (this.uiCallbacks.onCollectibleCollected) {
+        this.uiCallbacks.onCollectibleCollected(data);
+      }
+    }
+
     this.notifyUI();
   }
 
@@ -788,11 +850,22 @@ export class GameLoop {
       y: this.player.gridY,
     });
 
+    // Check if active checkpoint exists: respawn at checkpoint with restored snapshot!
+    if (this.activeCheckpoint && this.checkpointSnapshot) {
+      const snap = this.checkpointSnapshot;
+      this.player.reset(snap.x, snap.y, snap.z, snap.inventory, snap.score, snap.carriedItems);
+      this.camera.snapTo(this.player.worldX, this.player.worldY, this.level.dimensions.width, this.level.dimensions.height);
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, '🛡️ Respawned at Checkpoint', '#38bdf8');
+      this.updateFog();
+      this.notifyUI();
+      return;
+    }
+
     // Reset player back to starting spawn
     const spawnX = this.level.testSpawn?.x ?? this.level.spawn?.x ?? 1;
     const spawnY = this.level.testSpawn?.y ?? this.level.spawn?.y ?? 1;
     const spawnZ = this.level.testSpawn?.elevation ?? this.level.spawn?.elevation ?? 0;
-    this.player.reset(spawnX, spawnY, spawnZ, this.player.inventory);
+    this.player.reset(spawnX, spawnY, spawnZ, this.player.inventory, this.player.score, this.player.carriedItems);
     this.camera.snapTo(this.player.worldX, this.player.worldY, this.level.dimensions.width, this.level.dimensions.height);
     this.updateFog();
     this.notifyUI();
@@ -851,6 +924,22 @@ export class GameLoop {
       globalEvents.emit('signpost:read', data);
       if (this.uiCallbacks.onSignpostRead) {
         this.uiCallbacks.onSignpostRead(data);
+      }
+      return;
+    }
+
+    // Check if player is adjacent to a WallDecor
+    const adjacentDecor = this.entities.filter(
+      e => e.type === ENTITY_TYPES.WALL_DECOR && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (adjacentDecor.length > 0) {
+      const decor = adjacentDecor[0];
+      const data = decor.inspect();
+      const decorIcon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : '🏛️'));
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `${decorIcon} ${data.title}`, '#fbbf24');
+      globalEvents.emit('wall_decor:inspected', data);
+      if (this.uiCallbacks.onWallDecorInspected) {
+        this.uiCallbacks.onWallDecorInspected(data);
       }
       return;
     }
@@ -988,6 +1077,9 @@ export class GameLoop {
         elevation: this.player.elevation === ELEVATION.OVERHEAD ? 'Bridge (Elevation 1)' : 'Ground Floor',
         inventory: [...this.player.inventory],
         keys: this.entities.filter(e => e.type === 'key' && this.player.inventory.includes(e.id)),
+        score: this.player.score || 0,
+        activeCheckpoint: this.activeCheckpoint ? this.activeCheckpoint.name : null,
+        carriedItems: [...(this.player.carriedItems || [])],
         steps: this.player.stepsTaken,
         time: this.elapsedTime,
         cameraMode: this.camera.mode,

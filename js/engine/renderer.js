@@ -82,6 +82,20 @@ export class GameRenderer {
     this.renderEntities(ctx, entities, ELEVATION.OVERHEAD, camera, fog);
 
     const playerScreen = camera.worldToScreen(player.worldX, player.worldY);
+    if (player.hasTorch && player.hasTorch()) {
+      ctx.save();
+      const pulse = Math.sin(this.exitPulseTimer * 1.5) * 0.1 + 0.9;
+      const torchRadius = tileSize * 1.5 * pulse;
+      const grad = ctx.createRadialGradient(playerScreen.x, playerScreen.y, tileSize * 0.15, playerScreen.x, playerScreen.y, torchRadius);
+      grad.addColorStop(0, 'rgba(251, 146, 60, 0.4)');
+      grad.addColorStop(0.6, 'rgba(249, 115, 22, 0.15)');
+      grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(playerScreen.x, playerScreen.y, torchRadius, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
     player.render(ctx, playerScreen.x, playerScreen.y, tileSize, this.perspective);
 
     if (level.config.fogOfWar && fog) {
@@ -342,7 +356,20 @@ export class GameRenderer {
     // Collect entities on this elevation
     for (const entity of entities) {
       if ((entity.elevation ?? 0) !== elevation) continue;
-      if (fog && !fog.isVisible(Math.round(entity.x), Math.round(entity.y))) continue;
+
+      if (fog) {
+        let isEntityVisible = fog.isVisible(Math.round(entity.x), Math.round(entity.y));
+        if (!isEntityVisible && entity.type === ENTITY_TYPES.WALL_DECOR) {
+          const fx = entity.facing === 'east' ? 1 : (entity.facing === 'west' ? -1 : 0);
+          const fy = entity.facing === 'south' ? 1 : (entity.facing === 'north' ? -1 : 0);
+          const adjX = Math.round(entity.x) + fx;
+          const adjY = Math.round(entity.y) + fy;
+          if (fog.isVisible(adjX, adjY) || fog.isExplored(adjX, adjY)) {
+            isEntityVisible = true;
+          }
+        }
+        if (!isEntityVisible) continue;
+      }
 
       const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
       const worldX = isContinuous ? entity.worldX : (entity.x * tileSize + tileSize / 2);
@@ -375,6 +402,20 @@ export class GameRenderer {
     for (const item of drawables) {
       if (item.type === 'player') {
         const screen = camera.worldToScreen(item.worldX, item.worldY);
+        if (player.hasTorch && player.hasTorch()) {
+          ctx.save();
+          const pulse = Math.sin(this.exitPulseTimer * 1.5) * 0.1 + 0.9;
+          const torchRadius = tileSize * 1.5 * pulse;
+          const grad = ctx.createRadialGradient(screen.x, screen.y - heightOffset, tileSize * 0.15, screen.x, screen.y - heightOffset, torchRadius);
+          grad.addColorStop(0, 'rgba(251, 146, 60, 0.4)');
+          grad.addColorStop(0.6, 'rgba(249, 115, 22, 0.15)');
+          grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(screen.x, screen.y - heightOffset, torchRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
         player.render(ctx, screen.x, screen.y - heightOffset, tileSize, this.perspective);
       } else {
         const entity = item.ref;
@@ -638,8 +679,18 @@ export class GameRenderer {
       if ((entity.elevation ?? 0) !== elevation) continue;
 
       // Check fog visibility: dynamic entities are hidden unless active line of sight (VISIBLE = 2)
-      if (fog && !fog.isVisible(Math.round(entity.x), Math.round(entity.y))) {
-        continue;
+      if (fog) {
+        let isEntityVisible = fog.isVisible(Math.round(entity.x), Math.round(entity.y));
+        if (!isEntityVisible && entity.type === ENTITY_TYPES.WALL_DECOR) {
+          const fx = entity.facing === 'east' ? 1 : (entity.facing === 'west' ? -1 : 0);
+          const fy = entity.facing === 'south' ? 1 : (entity.facing === 'north' ? -1 : 0);
+          const adjX = Math.round(entity.x) + fx;
+          const adjY = Math.round(entity.y) + fy;
+          if (fog.isVisible(adjX, adjY) || fog.isExplored(adjX, adjY)) {
+            isEntityVisible = true;
+          }
+        }
+        if (!isEntityVisible) continue;
       }
 
       const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
