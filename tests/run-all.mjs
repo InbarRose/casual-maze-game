@@ -30,6 +30,9 @@ import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
 import './unit/entities/dynamic-activities.test.mjs';
 import './unit/entities/signpost.test.mjs';
+import './unit/entities/wall-decor.test.mjs';
+import './unit/entities/checkpoint.test.mjs';
+import './unit/entities/collectible.test.mjs';
 
 // 4. Level Subsystem Unit Tests
 import './unit/levels/level-loader.test.mjs';

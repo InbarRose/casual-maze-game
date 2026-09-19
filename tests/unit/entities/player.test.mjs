@@ -48,16 +48,25 @@ describe('Entities > Player', () => {
     assertEqual(player.worldX, 2 * 32 + 16);
   });
 
-  it('resets player state and inventory cleanly upon reset()', () => {
+  it('resets player state, inventory, score, and carried items upon reset()', () => {
     const player = new Player(5, 5, 1, 32, ['key_1']);
+    player.addScore(250);
+    player.addCarriedItem({ id: 'torch_1', itemType: 'torch' });
     player.startMove(5, 6, 1);
 
-    player.reset(1, 1, 0, ['key_spawn']);
-    assertEqual(player.gridX, 1);
-    assertEqual(player.gridY, 1);
-    assertEqual(player.elevation, 0);
+    assertEqual(player.score, 250);
+    assertEqual(player.hasTorch(), true);
+
+    // Reset with checkpoint snapshot
+    player.reset(3, 3, 1, ['key_1', 'key_2'], 500, [{ id: 'torch_1', itemType: 'torch' }]);
+    assertEqual(player.gridX, 3);
+    assertEqual(player.gridY, 3);
+    assertEqual(player.elevation, 1);
     assertEqual(player.isMoving, false);
-    assertDeepEqual(player.inventory, ['key_spawn']);
+    assertDeepEqual(player.inventory, ['key_1', 'key_2']);
+    assertEqual(player.score, 500);
+    assertEqual(player.carriedItems.length, 1);
+    assertEqual(player.hasTorch(), true);
   });
 
   it('renders human explorer character in 2.5D angled view across all 4 facings', () => {

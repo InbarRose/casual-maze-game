@@ -37,6 +37,8 @@ export class Player {
     this.worldY = startY * tileSize + tileSize / 2;
 
     this.inventory = Array.isArray(initialInventory) ? [...initialInventory] : []; // Array of key IDs e.g. ["key_gold_1"]
+    this.score = 0;
+    this.carriedItems = [];
     this.facing = 'south'; // 'north' | 'south' | 'east' | 'west'
 
     this.isMoving = false;
@@ -75,13 +77,59 @@ export class Player {
   }
 
   /**
+   * Add a key to inventory
+   * @param {string} keyId
+   */
+  addKey(keyId) {
+    if (!this.inventory.includes(keyId)) {
+      this.inventory.push(keyId);
+    }
+  }
+
+  /**
+   * Add bonus score points
+   * @param {number} points
+   */
+  addScore(points) {
+    this.score = (this.score || 0) + (Number(points) || 0);
+  }
+
+  /**
+   * Add a carried utility item
+   * @param {object} item
+   */
+  addCarriedItem(item) {
+    if (!this.carriedItems) this.carriedItems = [];
+    this.carriedItems.push(item);
+  }
+
+  /**
+   * Check if player carries an item by type or id
+   * @param {string} idOrType
+   * @returns {boolean}
+   */
+  hasItem(idOrType) {
+    return (this.carriedItems || []).some(item => item.id === idOrType || item.itemType === idOrType);
+  }
+
+  /**
+   * Check if player holds a torch
+   * @returns {boolean}
+   */
+  hasTorch() {
+    return this.hasItem('torch');
+  }
+
+  /**
    * Reset player to initial spawn coordinates
    * @param {number} spawnX
    * @param {number} spawnY
    * @param {number} elevation
    * @param {string[]} [initialInventory=[]]
+   * @param {number} [initialScore=0]
+   * @param {Array<object>} [initialCarriedItems=[]]
    */
-  reset(spawnX, spawnY, elevation = 0, initialInventory = []) {
+  reset(spawnX, spawnY, elevation = 0, initialInventory = [], initialScore = 0, initialCarriedItems = []) {
     this.gridX = spawnX;
     this.gridY = spawnY;
     this.gridZ = elevation;
@@ -96,6 +144,8 @@ export class Player {
     this.worldY = spawnY * this.tileSize + this.tileSize / 2;
 
     this.inventory = Array.isArray(initialInventory) ? [...initialInventory] : [];
+    this.score = initialScore || 0;
+    this.carriedItems = Array.isArray(initialCarriedItems) ? [...initialCarriedItems] : [];
     this.facing = 'south';
     this.isMoving = false;
     this.moveProgress = 0;
