@@ -6,6 +6,7 @@ const STORAGE_KEYS = {
   CUSTOM_MAZE: 'casual_maze_custom_data',
   PROGRESS: 'casual_maze_campaign_progress',
   TUTORIAL_PROGRESS: 'casual_maze_tutorial_progress',
+  STORY_PROGRESS: 'casual_maze_story_progress',
   SETTINGS: 'casual_maze_user_settings',
   EDITOR_AUTOSAVE: 'casual_maze_editor_autosave',
   SAVED_PROJECTS: 'casual_maze_saved_projects',
@@ -45,7 +46,7 @@ export class StorageManager {
   }
 
   /**
-   * Save campaign level completion
+   * Save campaign or story level completion
    * @param {string|number} levelId
    * @param {{ time: number, steps: number }} stats
    */
@@ -55,8 +56,18 @@ export class StorageManager {
       const isTutorial = idKey.startsWith('tutorial_') || idKey.startsWith('t');
       
       if (isTutorial) {
+        const numMatch = idKey.match(/\d+/);
+        const chNum = numMatch ? numMatch[0] : '1';
+        this.saveStoryProgress('novice_initiation', chNum, stats);
         return this.saveTutorialProgress(idKey, stats);
       }
+
+      if (idKey.startsWith('story_guardians_')) {
+        const numMatch = idKey.match(/\d+/);
+        const chNum = numMatch ? numMatch[0] : '1';
+        return this.saveStoryProgress('relics_of_the_guardians', chNum, stats);
+      }
+
 
       const progress = this.loadCampaignProgress();
       const existing = progress[idKey];
@@ -162,6 +173,91 @@ export class StorageManager {
       return {};
     }
   }
+
+  /**
+   * Save story chapter completion
+   * @param {string} storyId
+   * @param {number|string} chapterNum
+   * @param {{ time: number, steps: number }} stats
+   * @returns {boolean}
+   */
+  static saveStoryProgress(storyId, chapterNum, stats) {
+    try {
+      const progress = this.loadStoryProgress();
+      if (!progress[storyId]) {
+        progress[storyId] = {};
+      }
+      const chKey = String(chapterNum);
+      const existing = progress[storyId][chKey];
+
+      progress[storyId][chKey] = {
+        completed: true,
+        bestTime: Math.min(stats.time, existing ? existing.bestTime : Infinity),
+        bestSteps: Math.min(stats.steps, existing ? existing.bestSteps : Infinity),
+        lastPlayed: Date.now(),
+      };
+
+      localStorage.setItem(STORAGE_KEYS.STORY_PROGRESS, JSON.stringify(progress));
+
+      // Keep legacy tutorial storage synchronized for novice_initiation
+      if (storyId === 'novice_initiation') {
+        const tutId = `tutorial_${chKey}`;
+        this.saveTutorialProgress(tutId, stats);
+      }
+
+      console.info(`[MazeGame:Storage] Saved story progress for "${storyId}" Chapter ${chKey}`, progress[storyId][chKey]);
+      return true;
+    } catch (e) {
+      console.error('[StorageManager] Failed to save story progress:', e);
+      return false;
+    }
+  }
+
+  /**
+   * Load story progress
+   * @returns {Record<string, Record<string, { completed: boolean, bestTime: number, bestSteps: number, lastPlayed?: number }>>}
+   */
+  static loadStoryProgress() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEYS.STORY_PROGRESS);
+      const data = raw ? JSON.parse(raw) : {};
+
+      // Seamlessly populate novice_initiation from legacy tutorial progress if absent
+      const tutProgress = this.loadTutorialProgress();
+      if (tutProgress && Object.keys(tutProgress).length > 0) {
+        if (!data['novice_initiation']) {
+          data['novice_initiation'] = {};
+        }
+        for (const [key, val] of Object.entries(tutProgress)) {
+          const match = key.match(/\d+/);
+          if (match && val && val.completed) {
+            const chNum = match[0];
+            if (!data['novice_initiation'][chNum]) {
+              data['novice_initiation'][chNum] = { ...val };
+            }
+          }
+        }
+      }
+
+      return data;
+    } catch (e) {
+      console.error('[StorageManager] Failed to load story progress:', e);
+      return {};
+    }
+  }
+
+  /**
+   * Count completed chapters in a story
+   * @param {string} storyId
+   * @returns {number}
+   */
+  static getStoryCompletedCount(storyId) {
+    const progress = this.loadStoryProgress();
+    const storyData = progress[storyId];
+    if (!storyData) return 0;
+    return Object.values(storyData).filter(ch => ch && ch.completed).length;
+  }
+
 
   /**
    * Save editor auto-save level
@@ -355,6 +451,7 @@ export class StorageManager {
       progress: {
         campaign: this.loadCampaignProgress(),
         tutorial: this.loadTutorialProgress(),
+        stories: this.loadStoryProgress(),
       },
       projects: this.getSavedProjectsMap(),
       settings: this.loadSettings(),
@@ -364,7 +461,7 @@ export class StorageManager {
   /**
    * Import and restore a save profile into local storage
    * @param {object|string} rawSaveData
-   * @returns {{ success: boolean, stats: { campaignLevels: number, tutorialLevels: number, projects: number } }}
+   * @returns {{ success: boolean, stats: { campaignLevels: number, tutorialLevels: number, storyChapters: number, projects: number } }}
    */
   static importSaveProfile(rawSaveData) {
     try {
@@ -389,6 +486,12 @@ export class StorageManager {
         localStorage.setItem(STORAGE_KEYS.TUTORIAL_PROGRESS, JSON.stringify(tutorial));
       }
 
+      // Restore Stories Progress
+      const stories = data.progress?.stories || data.stories || {};
+      if (typeof stories === 'object') {
+        localStorage.setItem(STORAGE_KEYS.STORY_PROGRESS, JSON.stringify(stories));
+      }
+
       // Restore Projects
       const projects = data.projects || {};
       if (typeof projects === 'object') {
@@ -403,6 +506,12 @@ export class StorageManager {
 
       const campaignCount = Object.keys(campaign).length;
       const tutorialCount = Object.keys(tutorial).length;
+      let storyCount = 0;
+      for (const s of Object.values(stories)) {
+        if (s && typeof s === 'object') {
+          storyCount += Object.keys(s).length;
+        }
+      }
       const projectCount = Object.keys(projects).length;
 
       return {
@@ -410,6 +519,7 @@ export class StorageManager {
         stats: {
           campaignLevels: campaignCount,
           tutorialLevels: tutorialCount,
+          storyChapters: storyCount,
           projects: projectCount,
         },
       };

@@ -4,7 +4,7 @@
 
 import { TILES, DEFAULTS, LAYERS } from '../core/constants.js';
 import { StorageManager } from '../core/storage.js';
-import { CAMPAIGN_LEVELS, TUTORIAL_LEVELS } from './default-levels.js';
+import { CAMPAIGN_LEVELS, TUTORIAL_LEVELS, getStoryline, getStoryChapter, getAllStoryLevels } from './default-levels.js';
 
 export class LevelLoader {
   /**
@@ -33,6 +33,21 @@ export class LevelLoader {
         return this.normalizeLevel(customData);
       }
       console.warn('[MazeGame:LevelLoader] Custom maze requested but none found in session storage. Falling back to Level 1.');
+    }
+
+    // Comprehensive Story Parameter Detection:
+    // ?story=relics_of_the_guardians&chapter=1 or ?saga=... or ?story_id=...
+    const storyParam = params.get('story') ?? params.get('story_id') ?? params.get('saga');
+    const chapterParam = params.get('chapter') ?? params.get('ch') ?? params.get('level') ?? params.get('c');
+
+    if (storyParam || mode === 'story') {
+      const resolvedStoryId = storyParam || 'novice_initiation';
+      const resolvedChapterNum = chapterParam || params.get('id') || '1';
+      const storyChapter = getStoryChapter(resolvedStoryId, resolvedChapterNum);
+      if (storyChapter) {
+        console.info(`[MazeGame:LevelLoader] Loaded story chapter "${resolvedStoryId}" Ch.${resolvedChapterNum} ("${storyChapter.title}")`);
+        return this.normalizeLevel(JSON.parse(JSON.stringify(storyChapter)));
+      }
     }
 
     // Comprehensive Tutorial Parameter Detection:
@@ -74,6 +89,16 @@ export class LevelLoader {
       targetId = String(rawId ?? '1');
       cleanId = targetId;
     }
+
+    // Check story level match by targetId directly (e.g. story_guardians_1)
+    const directStoryMatch = getAllStoryLevels().find(lvl =>
+      lvl.id === targetId || String(lvl.id) === String(rawId)
+    );
+    if (directStoryMatch) {
+      console.info(`[MazeGame:LevelLoader] Loaded story level match: "${directStoryMatch.id}" ("${directStoryMatch.title}")`);
+      return this.normalizeLevel(JSON.parse(JSON.stringify(directStoryMatch)));
+    }
+
 
     // 1. Try fetching JSON file from /levels subdirectories
     if (typeof fetch === 'function') {
@@ -173,6 +198,11 @@ export class LevelLoader {
       id: String(raw.id || 'custom'),
       zone: raw.zone || (raw.id && String(raw.id).startsWith('tutorial') ? 'tutorial' : 'zone_1'),
       chapter: raw.chapter || raw.zone || undefined,
+      storyId: raw.storyId ? String(raw.storyId) : undefined,
+      chapterNumber: raw.chapterNumber !== undefined ? Number(raw.chapterNumber) : undefined,
+      chapterTitle: raw.chapterTitle ? String(raw.chapterTitle) : undefined,
+      chapterSubtitle: raw.chapterSubtitle ? String(raw.chapterSubtitle) : undefined,
+      prologueText: raw.prologueText ? String(raw.prologueText) : undefined,
       title: raw.title || 'Untitled Labyrinth',
       author: raw.author || 'Anonymous',
       architectNote: raw.architectNote ? String(raw.architectNote) : undefined,

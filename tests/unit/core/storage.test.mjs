@@ -83,5 +83,38 @@ describe('Core > StorageManager', () => {
     StorageManager.saveLevelCompletion('1', { time: 8500, steps: 25 });
     const levelProg = StorageManager.loadCampaignProgress();
     assert(levelProg['1'] && levelProg['1'].completed === true, '1 routed to campaign progress');
+
+    StorageManager.saveLevelCompletion('story_guardians_1', { time: 7200, steps: 19 });
+    const storyProg = StorageManager.loadStoryProgress();
+    assert(storyProg.relics_of_the_guardians && storyProg.relics_of_the_guardians['1'].completed === true, 'story_guardians_1 routed to story progress');
+  });
+
+  it('tracks storyline chapter completion and counts completed chapters', () => {
+    StorageManager.saveStoryProgress('relics_of_the_guardians', 1, { time: 5400, steps: 16 });
+    StorageManager.saveStoryProgress('relics_of_the_guardians', 2, { time: 8900, steps: 24 });
+
+    const prog = StorageManager.loadStoryProgress();
+    assert(prog.relics_of_the_guardians['1'].completed, 'Chapter 1 completed');
+    assert(prog.relics_of_the_guardians['2'].completed, 'Chapter 2 completed');
+    assertEqual(StorageManager.getStoryCompletedCount('relics_of_the_guardians'), 2, 'Two chapters completed');
+  });
+
+  it('exports and imports story progress in full save profiles', () => {
+    StorageManager.saveStoryProgress('relics_of_the_guardians', 1, { time: 4200, steps: 12 });
+    StorageManager.saveLevelCompletion('1', { time: 10000, steps: 30 });
+
+    const exported = StorageManager.exportSaveProfile();
+    assert(exported.progress.stories, 'Export includes stories progress');
+    assertEqual(exported.progress.stories.relics_of_the_guardians['1'].completed, true);
+
+    // Reset and restore
+    resetStorageMocks();
+    assertEqual(StorageManager.getStoryCompletedCount('relics_of_the_guardians'), 0);
+
+    const res = StorageManager.importSaveProfile(exported);
+    assertEqual(res.success, true);
+    assert(res.stats.storyChapters >= 1, 'Restored at least 1 story chapter');
+    assertEqual(StorageManager.getStoryCompletedCount('relics_of_the_guardians'), 1);
   });
 });
+
