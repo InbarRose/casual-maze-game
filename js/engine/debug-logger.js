@@ -145,6 +145,54 @@ export class DebugLogger {
   }
 
   /**
+   * Record camera rotation
+   * @param {object} params
+   */
+  logCameraRotation({ fromAngle, toAngle, elapsedMs }) {
+    this.log(
+      'camera:rotation',
+      {
+        fromAngle,
+        toAngle,
+      },
+      elapsedMs
+    );
+  }
+
+  /**
+   * Record riddle relic or pedestal interaction
+   * @param {object} params
+   */
+  logRiddleAction({ action, itemId, pedestalId, atX, atY, elapsedMs }) {
+    this.log(
+      'entity:riddle_action',
+      {
+        action,
+        itemId,
+        pedestalId,
+        position: { x: atX, y: atY },
+      },
+      elapsedMs
+    );
+  }
+
+  /**
+   * Record room transition in multi-room dungeon
+   * @param {object} params
+   */
+  logRoomTransition({ fromRoom, toRoom, spawn, elapsedMs }) {
+    this.log(
+      'room:transition',
+      {
+        fromRoom,
+        toRoom,
+        spawn,
+      },
+      elapsedMs
+    );
+  }
+
+  /**
    * Record runtime error or caught exception
    * @param {object} params
    */
@@ -226,6 +274,80 @@ export class DebugLogger {
   }
 
   /**
+   * Build deterministic replay payload from recorded session
+   * @returns {object}
+   */
+  toReplayPayload() {
+    const stepEvents = this.events.filter(e => e.type === 'step:completed');
+    const actions = [];
+
+    let prevPos = this.levelInfo.spawn || { x: 0, y: 0, elevation: 0 };
+    for (let i = 0; i < stepEvents.length; i++) {
+      const step = stepEvents[i];
+      const currPos = step.position || { x: 0, y: 0, elevation: 0 };
+      let dir = step.facing || 'none';
+      if (currPos.x > prevPos.x) dir = 'right';
+      else if (currPos.x < prevPos.x) dir = 'left';
+      else if (currPos.y > prevPos.y) dir = 'down';
+      else if (currPos.y < prevPos.y) dir = 'up';
+
+      actions.push({
+        stepIndex: i + 1,
+        action: 'move',
+        direction: dir,
+        from: { x: prevPos.x, y: prevPos.y, elevation: prevPos.elevation || 0 },
+        to: { x: currPos.x, y: currPos.y, elevation: currPos.elevation || 0 },
+        isWarp: false,
+        elapsedMs: step.elapsedMs || 0,
+      });
+
+      prevPos = currPos;
+    }
+
+    return {
+      schemaVersion: '1.0.0',
+      type: 'casual-maze-replay',
+      generator: 'session:recorded',
+      sessionId: this.sessionId,
+      createdAt: new Date().toISOString(),
+      levelId: String(this.levelInfo.id),
+      levelTitle: this.levelInfo.title,
+      spawn: this.levelInfo.spawn || { x: 0, y: 0, elevation: 0 },
+      exit: this.levelInfo.exit || { x: 0, y: 0, elevation: 0 },
+      summary: {
+        totalSteps: actions.length,
+        totalTimeMs: this.completionStats?.time ?? 0,
+        completed: this.isCompleted,
+      },
+      actions,
+    };
+  }
+
+  /**
+   * Export replay payload as JSON string
+   * @returns {string}
+   */
+  exportReplayJSON() {
+    return JSON.stringify(this.toReplayPayload(), null, 2);
+  }
+
+  /**
+   * Copy diagnostic JSON bundle directly to system clipboard
+   * @returns {Promise<boolean>}
+   */
+  async copyToClipboard() {
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(this.exportJSON());
+        return true;
+      }
+    } catch {
+      // Fallback
+    }
+    return false;
+  }
+
+  /**
    * Trigger browser file download of debug log
    * @param {string} [customFilename]
    */
@@ -234,6 +356,27 @@ export class DebugLogger {
 
     const filename = customFilename || `debug_log_level_${this.levelInfo.id}_${Date.now()}.json`;
     const jsonStr = this.exportJSON();
+    const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = filename;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
+  /**
+   * Trigger browser file download of replay payload
+   * @param {string} [customFilename]
+   */
+  downloadReplay(customFilename) {
+    if (typeof window === 'undefined' || typeof document === 'undefined') return;
+
+    const filename = customFilename || `replay_level_${this.levelInfo.id}_${Date.now()}.json`;
+    const jsonStr = this.exportReplayJSON();
     const blob = new Blob([jsonStr], { type: 'application/json;charset=utf-8' });
     const url = URL.createObjectURL(blob);
 

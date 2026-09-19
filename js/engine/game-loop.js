@@ -1636,6 +1636,22 @@ export class GameLoop {
   }
 
   /**
+   * Export the current session as a structured Replay payload
+   * @returns {object}
+   */
+  getReplayPayload() {
+    return this.logger.toReplayPayload();
+  }
+
+  /**
+   * Download session replay JSON file to client
+   * @param {string} [customFilename]
+   */
+  downloadReplay(customFilename) {
+    this.logger.downloadReplay(customFilename);
+  }
+
+  /**
    * Notify HUD / UI of state changes
    */
   notifyUI() {

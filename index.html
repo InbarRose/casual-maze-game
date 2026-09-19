@@ -657,6 +657,7 @@
           </div>
           <div style="display: flex; flex-direction: column; gap: 0.5rem;">
             <button id="btn-export-save" class="btn btn-primary" style="width: 100%; justify-content: center;">💾 Save Game Progress (.json)</button>
+            <button id="btn-copy-save" class="btn btn-secondary" style="width: 100%; justify-content: center;">📋 Copy Save State to Clipboard</button>
             <button id="btn-import-save" class="btn btn-secondary" style="width: 100%; justify-content: center;" onclick="document.getElementById('save-file-input').click()">📂 Restore Game Progress</button>
             <input type="file" id="save-file-input" accept=".json" style="display: none;" />
           </div>
@@ -700,6 +701,19 @@
             <a href="art-catalog.html" class="btn btn-secondary" style="width: 100%; justify-content: center;">Open Art Catalog</a>
           </div>
         </div>
+
+        <!-- Diagnostics, Test Lab & Replay Theater -->
+        <div class="card">
+          <div>
+            <span class="card-header-icon">🧪</span>
+            <div class="card-title">Diagnostics &amp; Replay Theater</div>
+            <div class="card-desc">Watch optimal walkthroughs of all 32 levels, replay exported runs, run 60+ test suites in your browser, and inspect diagnostics.</div>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+            <a href="test.html" class="btn btn-primary" style="width: 100%; justify-content: center;">🎬 Open Replay Theater</a>
+            <a href="test.html?mode=tests" class="btn btn-secondary" style="width: 100%; justify-content: center;">▶ Run In-Browser Tests</a>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -731,7 +745,11 @@
       <span>•</span>
       <a href="editor.html">Editor</a>
       <span>•</span>
-      <a href="maze.html?id=1">Play</a>
+      <a href="art-catalog.html">Art Catalog</a>
+      <span>•</span>
+      <a href="test.html">Test Lab &amp; Replay Theater</a>
+      <span>•</span>
+      <a href="https://github.com/InbarRose/casual-maze-game/issues" target="_blank" rel="noopener">Report Issue / Feedback</a>
     </footer>
   </div>
 
@@ -968,6 +986,15 @@
 
     document.getElementById('btn-hero-save-progress')?.addEventListener('click', handleSaveGameProgress);
     document.getElementById('btn-export-save')?.addEventListener('click', handleSaveGameProgress);
+    document.getElementById('btn-copy-save')?.addEventListener('click', async () => {
+      audioFX.playClick();
+      try {
+        await StorageManager.copySaveProfileToClipboard();
+        showToast('Save state JSON copied to clipboard! Ready to paste into GitHub.', 'success');
+      } catch (err) {
+        showToast('Failed to copy save state: ' + err.message, 'error');
+      }
+    });
 
     // Import Save Progress
     const saveFileInput = document.getElementById('save-file-input');

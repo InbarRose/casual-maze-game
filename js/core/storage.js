@@ -578,4 +578,18 @@ export class StorageManager {
       reader.readAsText(file);
     });
   }
+
+  /**
+   * Copy the full save state JSON to clipboard
+   * @returns {Promise<string>}
+   */
+  static async copySaveProfileToClipboard() {
+    const profile = this.exportSaveProfile();
+    const jsonString = JSON.stringify(profile, null, 2);
+    if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(jsonString);
+      return jsonString;
+    }
+    throw new Error('Clipboard API unavailable');
+  }
 }

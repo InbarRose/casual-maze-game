@@ -1,17 +1,11 @@
 /**
- * Master Test Suite Runner for Casual Maze Game
- * Discovers and executes all unit tests and end-to-end user journeys.
- *
- * Usage:
- *   node tests/run-all.mjs
- *   node tests/run-all.mjs --suite=collision
- *   node tests/run-all.mjs --grep=deadlock
- *   node tests/run-all.mjs --verbose
+ * Browser Test Suite Runner for Casual Maze Game
+ * Executes unit tests and journey simulations directly inside the browser DOM.
  */
 
-import { run } from './harness/index.mjs';
+import { runner } from './harness/runner.mjs';
 
-// 1. Core Subsystem Unit Tests
+// 1. Core Subsystems
 import './unit/core/prng.test.mjs';
 import './unit/core/events.test.mjs';
 import './unit/core/storage.test.mjs';
@@ -19,7 +13,7 @@ import './unit/core/constants.test.mjs';
 import './unit/core/coordinates-xyz.test.mjs';
 import './unit/core/versioning.test.mjs';
 
-// 2. Engine Subsystem Unit Tests
+// 2. Engine Subsystems
 import './unit/engine/collision.test.mjs';
 import './unit/engine/fog.test.mjs';
 import './unit/engine/camera.test.mjs';
@@ -29,7 +23,7 @@ import './unit/engine/perspective-renderer.test.mjs';
 import './unit/engine/solver.test.mjs';
 import './unit/engine/replay-player.test.mjs';
 
-// 3. Entity Subsystem Unit Tests
+// 3. Entity Subsystems
 import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
 import './unit/entities/dynamic-activities.test.mjs';
@@ -40,24 +34,22 @@ import './unit/entities/collectible.test.mjs';
 import './unit/entities/riddle-item.test.mjs';
 import './unit/entities/pedestal.test.mjs';
 
-// 4. Level & Story Subsystem Unit Tests
+// 4. Level Subsystems
 import './unit/levels/level-loader.test.mjs';
-import './unit/levels/json-integrity.test.mjs';
 import './unit/levels/campaign-levels.test.mjs';
 import './unit/levels/tutorial-levels.test.mjs';
 import './unit/levels/multi-room.test.mjs';
-import './unit/levels/level-drift.test.mjs';
 import './unit/stories/storylines.test.mjs';
 
-// 5. Editor Subsystem Unit Tests
+// 5. Editor Subsystems
 import './unit/editor/level-validator.test.mjs';
 import './unit/editor/json-exporter.test.mjs';
 import './unit/editor/editor-canvas.test.mjs';
 import './unit/editor/editor-buttons-and-functions.test.mjs';
 
-// 6. Asset & Vector Pipeline Unit Tests
-import './unit/assets/asset-catalog.test.mjs';
-import './unit/assets/asset-drift.test.mjs';
+// 6. UI & Audio Engine Subsystems
+import './unit/ui/audio-fx.test.mjs';
+import './unit/ui/game-menu.test.mjs';
 
 // 7. Modular Campaign Chapter Playthrough Tests (Levels 1–32)
 import './integration/campaign/chapter-1.test.mjs';
@@ -76,7 +68,6 @@ import './integration/journeys/editor-authoring.journey.test.mjs';
 import './integration/journeys/fog-exploration.journey.test.mjs';
 import './integration/journeys/multi-elevation.journey.test.mjs';
 import './integration/journeys/interactive-activities.journey.test.mjs';
-import './integration/journeys/campaign-progression.journey.test.mjs';
 import './integration/journeys/obstacle-interactions.journey.test.mjs';
 import './integration/journeys/checkpoints-and-lore.journey.test.mjs';
 import './integration/journeys/riddle-pedestals.journey.test.mjs';
@@ -84,10 +75,26 @@ import './integration/journeys/storylines-progression.journey.test.mjs';
 import './integration/journeys/camera-rotation.journey.test.mjs';
 import './integration/journeys/multi-room-dungeon.journey.test.mjs';
 
-// 9. Modern UI & Audio Engine Subsystem Unit Tests
-import './unit/ui/audio-fx.test.mjs';
-import './unit/ui/game-menu.test.mjs';
+/**
+ * Execute the registered test suites in the browser
+ * @param {Function} [onEvent] Listener callback for test progress updates
+ * @returns {Promise<object>}
+ */
+export async function executeBrowserTests(onEvent) {
+  if (typeof onEvent === 'function') {
+    runner.addListener(onEvent);
+  }
 
-// Run registered suites
+  // Reset counters before running
+  runner.results = {
+    passed: 0,
+    failed: 0,
+    skipped: 0,
+    totalAssertions: 0,
+    failures: [],
+    suitesCount: 0,
+  };
 
-await run();
+  const results = await runner.run();
+  return results;
+}

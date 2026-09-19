@@ -1,0 +1,37 @@
+name: "💬 General Feedback & Impressions"
+description: "Share your thoughts on game difficulty, balance, UX, or overall impressions"
+title: "[Feedback]: "
+labels: ["feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for playing Casual Maze Game!
+        We value your thoughts on the difficulty curve, controls, level pacing, or visual feel.
+
+  - type: textarea
+    id: impressions
+    attributes:
+      label: "Your Impressions & Experience"
+      description: "How was your overall experience playing the game?"
+      placeholder: "I really enjoyed Chapter 2's vertical bridges, but felt Chapter 5's timing was a bit unforgiving..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: difficulty_pacing
+    attributes:
+      label: "Difficulty & Pacing"
+      description: "Were any levels too easy, too tricky, or frustrating?"
+      placeholder: "Level 15 felt great, but Level 20 took 15 tries..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: suggestions
+    attributes:
+      label: "What could be improved?"
+      description: "What would make the experience smoother, more fun, or more accessible?"
+      placeholder: "Adding an undo button in the editor or an optional checkpoint toggle..."
+    validations:
+      required: false

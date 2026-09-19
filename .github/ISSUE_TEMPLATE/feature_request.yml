@@ -1,0 +1,62 @@
+name: "💡 Feature or Puzzle Suggestion"
+description: "Suggest a new puzzle mechanic, entity, theme, or game feature"
+title: "[Idea]: "
+labels: ["enhancement", "suggestion"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        We love new puzzle ideas and creative mechanics!
+        Share your vision for new tiles, dynamic entities, level mechanics, or visual styles.
+
+  - type: input
+    id: feature_title
+    attributes:
+      label: "Feature or Mechanic Summary"
+      description: "A short, descriptive title of your idea."
+      placeholder: "e.g., Ice tiles with inertia sliding mechanics"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: "Category"
+      description: "Which part of the game does this apply to?"
+      options:
+        - "Puzzle Mechanics & Entities"
+        - "Level Editor & Architect Studio"
+        - "Storylines & Lore"
+        - "UI & Controls"
+        - "Audio & Sound FX"
+        - "Visual Art & Biomes"
+        - "Other"
+    validations:
+      required: true
+
+  - type: textarea
+    id: problem_or_motivation
+    attributes:
+      label: "Motivation & Gameplay Context"
+      description: "What gameplay experience or puzzle dynamic would this enable?"
+      placeholder: "This would create tense puzzles where players must plan their sliding trajectory..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposed_solution
+    attributes:
+      label: "Proposed Design & Mechanics"
+      description: "Describe how you envision this working in detail."
+      placeholder: "When the player steps on an ice tile, they continue moving in their current heading until hitting a wall..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: "Alternative Approaches"
+      description: "Did you consider any other ways to solve this or introduce similar gameplay?"
+      placeholder: "Could also be conveyor belts or wind gusts..."
+    validations:
+      required: false

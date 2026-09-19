@@ -29,6 +29,8 @@ export class GameMenu {
     this.onToggleFreePan = options.onToggleFreePan || (() => {});
     this.onOpenLog = options.onOpenLog || (() => {});
     this.onOpenHint = options.onOpenHint || (() => {});
+    this.onWatchWalkthrough = options.onWatchWalkthrough || (() => {});
+    this.onReportIssue = options.onReportIssue || (() => {});
     this.onSaveProgress = options.onSaveProgress || (() => {});
     this.onToggleSound = options.onToggleSound || (() => {});
     this.onQuit = options.onQuit || (() => {
@@ -131,6 +133,14 @@ export class GameMenu {
 
     bindClick('#btn-pause-save', () => {
       this.onSaveProgress();
+    });
+
+    bindClick('#btn-pause-walkthrough', () => {
+      this.onWatchWalkthrough();
+    });
+
+    bindClick('#btn-pause-report-issue', () => {
+      this.onReportIssue();
     });
 
     bindClick('#btn-pause-sound', () => {
