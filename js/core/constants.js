@@ -231,6 +231,17 @@ export const CAMPAIGN_CHAPTERS = Object.freeze([
     mechanic: 'Master Megalabyrinths',
     levelCount: 4,
   },
+  {
+    id: 'chapter_8',
+    number: 8,
+    title: 'The Shifting Monolith',
+    subtitle: 'The Prism of Perspectives',
+    theme: 'dungeon',
+    icon: '🧭',
+    description: 'Rotate the world perspective 90 degrees to discover occluded underpasses, read cardinal inscriptions, and solve multi-room trials.',
+    mechanic: 'World Rotation & Branching',
+    levelCount: 4,
+  },
 ]);
 
 export const LAYERS = Object.freeze({
