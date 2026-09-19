@@ -51,9 +51,13 @@ casual-maze-game/
 ├── index.html                    # Hub / Level Select / Tutorial Academy
 ├── maze.html                     # Game canvas viewport interface
 ├── editor.html                   # Handcrafted maze architect and JSON level designer
+├── test.html                     # Diagnostics, Replay Theater & In-Browser Test Lab
+├── test/
+│   └── index.html                # Static redirect to `../test.html` for clean `/test` routing
 ├── package.json                  # Test script runner (`npm test`)
 ├── test-suite.mjs                # Backward-compatible proxy to `tests/run-all.mjs`
 ├── tests/                        # Modular Test Architecture & User Journeys
+│   ├── browser-test-runner.js    # Master in-browser test aggregator and runner
 │   ├── harness/                  # Test runner, assertions, and Node.js DOM/storage mocks
 │   │   ├── index.mjs             # Unified harness export
 │   │   ├── runner.mjs            # describe, it, suite grouping, filtering (--suite, --grep)
@@ -120,7 +124,9 @@ casual-maze-game/
 │   │   ├── game-loop.js          # Delta-time coordinator, entity cycles, screen-relative navigation, room transitions
 │   │   ├── minimap.js            # Dedicated HUD minimap canvas renderer
 │   │   ├── renderer.js           # 2D/2.5D canvas drawing pipeline, vignettes, decor, rotation transforms
-│   │   └── debug-logger.js       # Runtime debug telemetry & replay JSON export
+│   │   ├── debug-logger.js       # Runtime debug telemetry & replay JSON export
+│   │   ├── solver.js             # Standalone BFS pathfinder & deterministic walkthrough replay generator
+│   │   └── replay-player.js      # Interactive visual playback controller, scrub/seek, speed modulation
 │   ├── entities/
 │   │   ├── player.js             # Position, elevation state, inventory, carried riddle badges, screen facing
 │   │   ├── key.js                # Collectible colored key entities

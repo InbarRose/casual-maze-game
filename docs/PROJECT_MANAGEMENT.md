@@ -6,7 +6,37 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.15.0` (Completed & Verified)
+### Current Version: `v1.16.0` (Completed & Verified)
+
+- [x] **GitHub Community Issue Templates & Seed Tracking**:
+  - Issue templates: `.github/ISSUE_TEMPLATE/bug_report.yml` (structured forms for browser, level ID, OS, repro steps, and save state / debug logs), `feature_request.yml` (mechanics, entities, themes, editor tools), `feedback.yml` (difficulty curve, pacing, impressions), and `config.yml`.
+  - Created seed tracking issues on GitHub via MCP:
+    - Issue #20: `[Bug Reporting Guide] How to report bugs with Save State & Debug Logs` (labels: `bug`, `documentation`).
+    - Issue #21: `[Community Feedback] Gameplay Impressions, Pacing & Balance Feedback` (labels: `feedback`).
+    - Issue #22: `[Feature Suggestions] Ideas for Puzzles, Mechanics, Themes & Editor Tools` (labels: `enhancement`).
+- [x] **Core BFS Solver & Optimal Walkthrough Generator (`js/engine/solver.js`)**:
+  - Standalone zero-dependency BFS pathfinder `solveLevel(level, options)`.
+  - Walkthrough generator `generateWalkthroughReplay(level)` creating structured replay JSON schemas for all 32 campaign levels, tutorials, and storylines.
+- [x] **Interactive Replay Player Engine (`js/engine/replay-player.js`)**:
+  - Interactive canvas playback controller with states (`IDLE`, `PLAYING`, `PAUSED`, `COMPLETED`).
+  - Action playback (`move`, `teleport`, `rotate`), scrubbing slider, step-by-step navigation (`stepForward()`, `stepBackward()`), arbitrary seek (`seekTo(stepIndex)`), restart, and speed modulation (`0.5x`, `1.0x`, `2.0x`, `4.0x`).
+  - Headless-safe architecture for Node.js execution.
+- [x] **Diagnostics, Replay Theater & In-Browser Test Lab (`test.html`, `test/index.html`)**:
+  - Three glassmorphic tab panels:
+    - **Replay & Walkthrough Theater**: Viewport canvas, level selector for all 42 levels, "Compute Solver Walkthrough", JSON drag & drop / file picker, scrubber slider, step inspector, and playback controls.
+    - **In-Browser Test Runner**: Metric summary cards (Suites, Passed, Failed, Assertions, Duration), progress bar, live accordion event stream, and "Run All Tests in Browser" runner.
+    - **Diagnostics & GitHub Issue Reporting**: Client environment snapshot (User-Agent, screen, Canvas2D, Web Audio, localStorage), 1-click "Copy Diagnostics to Clipboard", 1-click "Copy Save State JSON", and direct issue creation links.
+  - URL parameter routing (`?mode=replay&level=<id>`, `?source=last_run`, `?autoplay=1`).
+  - Static redirect `/test` (`test/index.html`) forwarding query strings to `test.html`.
+- [x] **In-Game Issue Reporting & Replay Integration (`maze.html`, `index.html`)**:
+  - Pause Menu: `[🎬 Watch Solver Walkthrough]`, `[🐞 Report Issue on GitHub]`.
+  - Activity Log Modal: `[🎬 Watch Run Replay]`, `[🐞 Report Issue]`.
+  - Victory Modal: `[🎬 Watch Run Replay]`, `[🐞 Feedback / Report]`.
+  - Hub: Architect Studio card for "Diagnostics & Replay Theater", 1-click "Copy Save State to Clipboard", and footer links.
+- [x] **Automated Test Quality Assurance**:
+  - 60 test suites, 286 tests, 5,986 assertions passing 100% (0 failed).
+
+### Previous Milestone: `v1.15.0`
 
 - [x] **Modern & Sleek Game UI Design System**:
   - CSS3 glassmorphism system with surface layering (`--bg-deep`, `--bg-surface`, `--bg-glass`, `--bg-glass-elevated`, `--bg-glass-card`, `--border-glass-bright`, `--inset-highlight`).
