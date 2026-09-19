@@ -186,23 +186,42 @@ export function setupMocks() {
   }
 
   if (typeof globalThis.document === 'undefined') {
+    const createMockElement = (tagName) => {
+      if (tagName.toLowerCase() === 'canvas') {
+        return new MockCanvas();
+      }
+      return {
+        tagName: tagName.toUpperCase(),
+        style: {},
+        dataset: {},
+        classList: {
+          classes: new Set(),
+          add(c) { this.classes.add(c); },
+          remove(c) { this.classes.delete(c); },
+          toggle(c, force) {
+            if (force === true) this.classes.add(c);
+            else if (force === false) this.classes.delete(c);
+            else if (this.classes.has(c)) this.classes.delete(c);
+            else this.classes.add(c);
+          },
+          contains(c) { return this.classes.has(c); },
+        },
+        setAttribute: () => {},
+        getAttribute: () => null,
+        appendChild: () => {},
+        removeChild: () => {},
+        addEventListener: () => {},
+        removeEventListener: () => {},
+        querySelector: () => createMockElement('div'),
+        querySelectorAll: () => [],
+        click: () => {},
+      };
+    };
+
     globalThis.document = {
-      createElement: (tagName) => {
-        if (tagName.toLowerCase() === 'canvas') {
-          return new MockCanvas();
-        }
-        return {
-          tagName: tagName.toUpperCase(),
-          style: {},
-          setAttribute: () => {},
-          getAttribute: () => null,
-          appendChild: () => {},
-          removeChild: () => {},
-          addEventListener: () => {},
-          removeEventListener: () => {},
-          click: () => {},
-        };
-      },
+      createElement: createMockElement,
+      querySelector: () => createMockElement('div'),
+      querySelectorAll: () => [],
       body: {
         appendChild: () => {},
         removeChild: () => {},

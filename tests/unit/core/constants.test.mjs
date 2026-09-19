@@ -33,6 +33,14 @@ describe('Core > Constants & Registries', () => {
 
     assertEqual(ELEVATION.GROUND, 0);
     assertEqual(ELEVATION.OVERHEAD, 1);
+
+    assertEqual(ENTITY_TYPES.KEY, 'key');
+    assertEqual(ENTITY_TYPES.DOOR, 'door');
+    assertEqual(ENTITY_TYPES.LEVER, 'lever');
+    assertEqual(ENTITY_TYPES.TELEPORTER, 'teleporter');
+    assertEqual(ENTITY_TYPES.HAZARD, 'hazard');
+    assertEqual(ENTITY_TYPES.PATROLLER, 'patroller');
+    assertEqual(ENTITY_TYPES.PUZZLE_GATE, 'puzzle_gate');
   });
 
   it('defines inverse opposite directions consistently', () => {

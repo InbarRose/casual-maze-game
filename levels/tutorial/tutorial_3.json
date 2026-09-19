@@ -337,7 +337,7 @@
           "action": "toggle_tile",
           "layer": "ground",
           "x": 5,
-          "y": 3,
+          "y": 5,
           "stateA": 0,
           "stateB": 1
         }

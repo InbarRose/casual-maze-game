@@ -35,7 +35,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
     "exit": {
       "x": 7,
       "y": 7,
-      "style": "portal"
+      "style": "archway"
     },
     "layers": {
       "ground": [
@@ -575,7 +575,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "x": 3,
         "y": 3,
         "color": "#f43f5e",
-        "name": "Ruby Key"
+        "name": "Ruby Key",
+        "style": "classic",
+        "glowEffect": "vibrant"
       },
       {
         "id": "door_red_t2",
@@ -583,7 +585,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "x": 1,
         "y": 5,
         "requiresKey": "key_red_t2",
-        "color": "#f43f5e"
+        "color": "#f43f5e",
+        "style": "classic",
+        "orientation": "vertical"
       },
       {
         "id": "key_blue_t2",
@@ -591,7 +595,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "x": 7,
         "y": 3,
         "color": "#38bdf8",
-        "name": "Sapphire Key"
+        "name": "Sapphire Crystal",
+        "style": "crystal",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_blue_t2",
@@ -599,7 +605,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "x": 7,
         "y": 7,
         "requiresKey": "key_blue_t2",
-        "color": "#38bdf8"
+        "color": "#38bdf8",
+        "style": "portcullis",
+        "orientation": "horizontal"
       }
     ]
   },
@@ -619,7 +627,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "viewRadius": 6,
       "allowFreePan": true,
       "tileSize": 32,
-      "theme": "sunset"
+      "theme": "temple"
     },
     "help": {
       "title": "Interactive Switches",
@@ -629,12 +637,12 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "archway"
     },
     "exit": {
       "x": 9,
       "y": 9,
-      "style": "portal"
+      "style": "stairs_up"
     },
     "layers": {
       "ground": [
@@ -932,10 +940,11 @@ export const TUTORIAL_LEVELS = Object.freeze([
       {
         "id": "lever_t3_1",
         "type": "lever",
-        "x": 1,
-        "y": 9,
+        "x": 3,
+        "y": 7,
+        "name": "Sanctuary Lever",
+        "style": "switch_lever",
         "state": false,
-        "name": "Passage Lever",
         "targets": [
           {
             "action": "toggle_tile",
@@ -965,22 +974,22 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "viewRadius": 6,
       "allowFreePan": true,
       "tileSize": 32,
-      "theme": "emerald"
+      "theme": "jungle"
     },
     "help": {
-      "title": "Bridges & Ramps",
-      "message": "Walk onto a Ramp (▲) to climb to Elevation 1 (Overhead Bridge). You can cross over ground corridors, while ground traffic passes beneath."
+      "title": "3D Bridges & Underpasses",
+      "message": "Bridges allow two paths to cross in 3D without intersecting! Walk East UNDER the bridge to reach the sun key in the upper canopy, then climb the ramp to cross OVER the bridge to reach the shrine."
     },
     "spawn": {
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "camp"
     },
     "exit": {
       "x": 11,
       "y": 11,
-      "style": "portal"
+      "style": "shrine"
     },
     "layers": {
       "ground": [
@@ -1004,11 +1013,11 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           0,
           0,
+          1,
           0,
           0,
           0,
-          0,
-          0,
+          1,
           0,
           0,
           0,
@@ -1018,27 +1027,12 @@ export const TUTORIAL_LEVELS = Object.freeze([
           1,
           0,
           1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
           0,
-          1
-        ],
-        [
           1,
           0,
           1,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
+          1,
           0,
           1,
           0,
@@ -1050,11 +1044,26 @@ export const TUTORIAL_LEVELS = Object.freeze([
           1,
           0,
           1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
           1,
           0,
           1,
           1,
           0,
+          1,
+          1,
+          1,
           1,
           0,
           1
@@ -1069,7 +1078,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
           "R_S",
           1,
           1,
-          0,
+          1,
           1,
           0,
           1
@@ -1077,7 +1086,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
         [
           1,
           0,
-          0,
+          1,
           0,
           0,
           0,
@@ -1091,52 +1100,53 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ],
         [
           1,
-          0,
           1,
-          0,
+          1,
+          1,
           1,
           1,
           "R_N",
           1,
           1,
-          0,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
           1,
           0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
           1
         ],
         [
           1,
           0,
           1,
-          0,
-          1,
-          1,
-          0,
-          1,
-          1,
-          0,
-          1,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
           1,
           1,
           1,
@@ -1146,7 +1156,6 @@ export const TUTORIAL_LEVELS = Object.freeze([
           1,
           1,
           1,
-          0,
           1
         ],
         [
@@ -1378,7 +1387,28 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ]
       ]
     },
-    "entities": []
+    "entities": [
+      {
+        "id": "key_gold_t4",
+        "type": "key",
+        "x": 11,
+        "y": 1,
+        "color": "#fbbf24",
+        "name": "Sun Key",
+        "style": "crystal",
+        "glowEffect": "vibrant"
+      },
+      {
+        "id": "door_gold_t4",
+        "type": "door",
+        "x": 10,
+        "y": 11,
+        "requiresKey": "key_gold_t4",
+        "color": "#fbbf24",
+        "style": "classic",
+        "orientation": "vertical"
+      }
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1813,18 +1843,22 @@ export const TUTORIAL_LEVELS = Object.freeze([
       {
         "id": "key_gold_t5",
         "type": "key",
-        "x": 1,
-        "y": 11,
+        "x": 9,
+        "y": 3,
         "color": "#fbbf24",
-        "name": "Golden Key"
+        "name": "Crypt Bone Token",
+        "style": "skull",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_gold_t5",
         "type": "door",
         "x": 9,
-        "y": 11,
+        "y": 9,
         "requiresKey": "key_gold_t5",
-        "color": "#fbbf24"
+        "color": "#fbbf24",
+        "style": "magic_seal",
+        "orientation": "auto"
       }
     ]
   },
@@ -1844,22 +1878,22 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "viewRadius": 5,
       "allowFreePan": true,
       "tileSize": 32,
-      "theme": "sunset"
+      "theme": "temple"
     },
     "help": {
       "title": "The Master's Trial",
-      "message": "The final test! Navigate the shrouded darkness, collect multiple colored keys (Emerald, Sapphire, Ruby), trigger switch mechanisms, and cross elevated overpasses to reach the exit."
+      "message": "The final test! Navigate the shrouded darkness, pass under the central bridge to retrieve the sapphire orb, then cross over the bridge deck to trigger mechanisms and claim victory."
     },
     "spawn": {
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "archway"
     },
     "exit": {
       "x": 15,
       "y": 15,
-      "style": "portal"
+      "style": "chest"
     },
     "layers": {
       "ground": [
@@ -1891,49 +1925,11 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          1,
-          0,
-          1,
-          1,
-          1,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          0,
-          0,
           1,
           0,
           0,
           0,
           0,
-          0,
-          1,
-          0,
-          1,
           0,
           0,
           0,
@@ -1941,13 +1937,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ],
         [
           1,
-          1,
-          1,
           0,
           1,
-          1,
-          1,
-          1,
+          0,
           1,
           0,
           1,
@@ -1956,6 +1948,29 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           1,
           1,
+          1,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
           1
         ],
         [
@@ -1964,32 +1979,70 @@ export const TUTORIAL_LEVELS = Object.freeze([
           1,
           1,
           1,
+          0,
           1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
           1,
           1,
           "R_S",
-          0,
-          1,
-          0,
-          1,
-          0,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          0,
-          0,
           1,
           1,
           1,
-          0,
-          0,
-          0,
-          1,
-          0,
           1,
           1,
           1,
@@ -1998,9 +2051,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ],
         [
           1,
-          0,
           1,
-          0,
+          1,
+          1,
           1,
           0,
           0,
@@ -2011,91 +2064,31 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           0,
           0,
-          1,
+          0,
           0,
           1
         ],
         [
           1,
-          0,
-          1,
-          0,
-          1,
-          0,
-          1,
-          0,
-          0,
-          0,
           1,
           1,
           1,
-          0,
           1,
-          0,
-          1
-        ],
-        [
           1,
-          0,
-          1,
-          0,
-          1,
-          0,
           1,
           1,
           "R_N",
           1,
           1,
-          0,
           1,
-          0,
           1,
-          0,
+          1,
+          1,
+          1,
           1
         ],
         [
           1,
-          0,
-          1,
-          0,
-          1,
-          0,
-          1,
-          1,
-          0,
-          1,
-          1,
-          0,
-          1,
-          0,
-          1,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          1,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          1,
-          0,
-          1,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          1,
-          0,
           1,
           1,
           1,
@@ -2104,29 +2097,13 @@ export const TUTORIAL_LEVELS = Object.freeze([
           1,
           1,
           0,
-          1,
-          0,
-          1,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
           0,
           0,
           0,
           1,
-          0,
+          1,
+          1,
+          1,
           1
         ],
         [
@@ -2141,9 +2118,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
           1,
           1,
           1,
-          1,
-          1,
           0,
+          1,
+          1,
           1,
           1,
           1
@@ -2153,6 +2130,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           0,
           0,
+          1,
           0,
           0,
           0,
@@ -2160,9 +2138,65 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           0,
           0,
+          1,
           0,
           0,
           0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1,
           0,
           0,
           1
@@ -2311,7 +2345,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           0,
           0,
-          "B_EW",
+          0,
           0,
           0,
           0,
@@ -2330,7 +2364,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           0,
           0,
-          "B_EW",
+          0,
           0,
           0,
           0,
@@ -2520,15 +2554,19 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "x": 3,
         "y": 3,
         "color": "#34d399",
-        "name": "Emerald Key"
+        "name": "Emerald Scarab",
+        "style": "relic",
+        "glowEffect": "vibrant"
       },
       {
         "id": "door_green_t6",
         "type": "door",
-        "x": 5,
+        "x": 4,
         "y": 1,
         "requiresKey": "key_green_t6",
-        "color": "#34d399"
+        "color": "#34d399",
+        "style": "portcullis",
+        "orientation": "vertical"
       },
       {
         "id": "key_blue_t6",
@@ -2536,29 +2574,34 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "x": 15,
         "y": 1,
         "color": "#38bdf8",
-        "name": "Sapphire Key"
+        "name": "Sapphire Orb",
+        "style": "orb",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_blue_t6",
         "type": "door",
         "x": 11,
-        "y": 4,
+        "y": 11,
         "requiresKey": "key_blue_t6",
-        "color": "#38bdf8"
+        "color": "#38bdf8",
+        "style": "magic_seal",
+        "orientation": "vertical"
       },
       {
         "id": "lever_t6",
         "type": "lever",
         "x": 11,
-        "y": 11,
-        "state": false,
+        "y": 12,
         "name": "Sanctuary Switch",
+        "style": "pressure_pedestal",
+        "state": false,
         "targets": [
           {
             "action": "toggle_tile",
             "layer": "ground",
-            "x": 13,
-            "y": 13,
+            "x": 2,
+            "y": 14,
             "stateA": 0,
             "stateB": 1
           }
@@ -2570,7 +2613,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "x": 1,
         "y": 15,
         "color": "#f43f5e",
-        "name": "Ruby Key"
+        "name": "Ruby Sun Shard",
+        "style": "crystal",
+        "glowEffect": "vibrant"
       },
       {
         "id": "door_red_t6",
@@ -2578,7 +2623,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "x": 14,
         "y": 15,
         "requiresKey": "key_red_t6",
-        "color": "#f43f5e"
+        "color": "#f43f5e",
+        "style": "vault_hatch",
+        "orientation": "vertical"
       }
     ]
   }
@@ -2611,7 +2658,7 @@ export const CAMPAIGN_LEVELS = Object.freeze([
     "exit": {
       "x": 13,
       "y": 13,
-      "style": "stairs_up"
+      "style": "archway"
     },
     "layers": {
       "ground": [
@@ -3136,15 +3183,19 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "x": 1,
         "y": 11,
         "color": "#fbbf24",
-        "name": "Gold Key"
+        "name": "Dungeon Master Key",
+        "style": "classic",
+        "glowEffect": "vibrant"
       },
       {
         "id": "door_gold_1",
         "type": "door",
-        "x": 11,
-        "y": 13,
+        "x": 7,
+        "y": 7,
         "requiresKey": "key_gold_1",
-        "color": "#fbbf24"
+        "color": "#fbbf24",
+        "style": "classic",
+        "orientation": "vertical"
       }
     ]
   },
@@ -3163,7 +3214,7 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       "viewRadius": 6,
       "allowFreePan": true,
       "tileSize": 32,
-      "theme": "emerald"
+      "theme": "dungeon"
     },
     "spawn": {
       "x": 1,
@@ -3832,18 +3883,22 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       {
         "id": "key_emerald_2",
         "type": "key",
-        "x": 13,
-        "y": 7,
+        "x": 7,
+        "y": 1,
         "color": "#34d399",
-        "name": "Emerald Key"
+        "name": "Overpass Skeleton Key",
+        "style": "ornate",
+        "glowEffect": "vibrant"
       },
       {
         "id": "door_emerald_2",
         "type": "door",
-        "x": 14,
-        "y": 15,
+        "x": 13,
+        "y": 9,
         "requiresKey": "key_emerald_2",
-        "color": "#34d399"
+        "color": "#34d399",
+        "style": "portcullis",
+        "orientation": "horizontal"
       }
     ]
   },
@@ -3862,7 +3917,7 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       "viewRadius": 6,
       "allowFreePan": true,
       "tileSize": 32,
-      "theme": "sunset"
+      "theme": "dungeon"
     },
     "spawn": {
       "x": 1,
@@ -4684,15 +4739,16 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "id": "lever_crypt_1",
         "type": "lever",
         "x": 1,
-        "y": 17,
+        "y": 15,
+        "name": "Crypt Iron Switch",
+        "style": "switch_lever",
         "state": false,
-        "name": "Secret Passage Switch",
         "targets": [
           {
             "action": "toggle_tile",
             "layer": "ground",
             "x": 9,
-            "y": 16,
+            "y": 7,
             "stateA": 0,
             "stateB": 1
           }
@@ -4701,18 +4757,22 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       {
         "id": "key_sunset_3",
         "type": "key",
-        "x": 17,
+        "x": 15,
         "y": 1,
         "color": "#f43f5e",
-        "name": "Ruby Key"
+        "name": "Ruby Crypt Orb",
+        "style": "orb",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_sunset_3",
         "type": "door",
-        "x": 11,
-        "y": 17,
+        "x": 9,
+        "y": 13,
         "requiresKey": "key_sunset_3",
-        "color": "#f43f5e"
+        "color": "#f43f5e",
+        "style": "classic",
+        "orientation": "vertical"
       }
     ]
   },
@@ -5723,7 +5783,9 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "x": 15,
         "y": 1,
         "color": "#38bdf8",
-        "name": "Azure Key"
+        "name": "Azure Crystal",
+        "style": "crystal",
+        "glowEffect": "vibrant"
       },
       {
         "id": "key_gold_4",
@@ -5731,7 +5793,9 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "x": 1,
         "y": 19,
         "color": "#fbbf24",
-        "name": "Golden Crest"
+        "name": "Imperial Relic Crown",
+        "style": "relic",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_blue_4",
@@ -5739,7 +5803,9 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "x": 17,
         "y": 19,
         "requiresKey": "key_blue_4",
-        "color": "#38bdf8"
+        "color": "#38bdf8",
+        "style": "portcullis",
+        "orientation": "vertical"
       },
       {
         "id": "door_gold_4",
@@ -5747,7 +5813,9 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "x": 18,
         "y": 19,
         "requiresKey": "key_gold_4",
-        "color": "#fbbf24"
+        "color": "#fbbf24",
+        "style": "classic",
+        "orientation": "horizontal"
       }
     ]
   },
@@ -5777,7 +5845,7 @@ export const CAMPAIGN_LEVELS = Object.freeze([
     "exit": {
       "x": 21,
       "y": 21,
-      "style": "stairs_up"
+      "style": "chest"
     },
     "layers": {
       "ground": [
@@ -6937,38 +7005,43 @@ export const CAMPAIGN_LEVELS = Object.freeze([
     },
     "entities": [
       {
-        "id": "key_gold_5",
-        "type": "key",
-        "x": 21,
-        "y": 1,
-        "color": "#fbbf24",
-        "name": "Golden Sanctuary Key"
-      },
-      {
-        "id": "door_gold_5",
-        "type": "door",
-        "x": 20,
-        "y": 21,
-        "requiresKey": "key_gold_5",
-        "color": "#fbbf24"
-      },
-      {
         "id": "lever_vault_1",
         "type": "lever",
         "x": 1,
-        "y": 21,
+        "y": 19,
+        "name": "Sunken Vault Pedestal",
+        "style": "pressure_pedestal",
         "state": false,
-        "name": "Vault Gate Lever",
         "targets": [
           {
             "action": "toggle_tile",
             "layer": "ground",
-            "x": 19,
-            "y": 20,
+            "x": 11,
+            "y": 11,
             "stateA": 0,
             "stateB": 1
           }
         ]
+      },
+      {
+        "id": "key_gold_5",
+        "type": "key",
+        "x": 19,
+        "y": 1,
+        "color": "#fbbf24",
+        "name": "Grand Vault Key",
+        "style": "ornate",
+        "glowEffect": "pulse"
+      },
+      {
+        "id": "door_gold_5",
+        "type": "door",
+        "x": 19,
+        "y": 13,
+        "requiresKey": "key_gold_5",
+        "color": "#fbbf24",
+        "style": "vault_hatch",
+        "orientation": "auto"
       }
     ]
   },
@@ -6994,12 +7067,12 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "camp"
     },
     "exit": {
       "x": 13,
       "y": 13,
-      "style": "portal"
+      "style": "shrine"
     },
     "layers": {
       "ground": [
@@ -7521,20 +7594,22 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       {
         "id": "key_green_6",
         "type": "key",
-        "x": 13,
-        "y": 1,
+        "x": 1,
+        "y": 11,
         "color": "#34d399",
-        "name": "Emerald Key",
-        "elevation": 0
+        "name": "Jade Shard",
+        "style": "crystal",
+        "glowEffect": "vibrant"
       },
       {
         "id": "door_green_6",
         "type": "door",
-        "x": 11,
-        "y": 13,
+        "x": 7,
+        "y": 7,
         "requiresKey": "key_green_6",
         "color": "#34d399",
-        "elevation": 0
+        "style": "portcullis",
+        "orientation": "vertical"
       }
     ]
   },
@@ -7560,12 +7635,12 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "archway"
     },
     "exit": {
       "x": 15,
       "y": 15,
-      "style": "stairs_up"
+      "style": "portal"
     },
     "layers": {
       "ground": [
@@ -8224,37 +8299,41 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "id": "key_green_7",
         "type": "key",
         "x": 1,
-        "y": 5,
+        "y": 13,
         "color": "#34d399",
-        "name": "Emerald Key",
-        "elevation": 0
+        "name": "Vine Skeleton Key",
+        "style": "ornate",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_green_7",
         "type": "door",
-        "x": 5,
-        "y": 1,
+        "x": 7,
+        "y": 7,
         "requiresKey": "key_green_7",
         "color": "#34d399",
-        "elevation": 0
+        "style": "portcullis",
+        "orientation": "horizontal"
       },
       {
         "id": "key_blue_7",
         "type": "key",
-        "x": 15,
+        "x": 13,
         "y": 1,
         "color": "#38bdf8",
-        "name": "Sapphire Key",
-        "elevation": 0
+        "name": "Canopy Crystal",
+        "style": "crystal",
+        "glowEffect": "vibrant"
       },
       {
         "id": "door_blue_7",
         "type": "door",
-        "x": 14,
-        "y": 15,
+        "x": 13,
+        "y": 9,
         "requiresKey": "key_blue_7",
         "color": "#38bdf8",
-        "elevation": 0
+        "style": "magic_seal",
+        "orientation": "auto"
       }
     ]
   },
@@ -8280,12 +8359,12 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "camp"
     },
     "exit": {
       "x": 15,
       "y": 15,
-      "style": "portal"
+      "style": "shrine"
     },
     "layers": {
       "ground": [
@@ -8943,20 +9022,22 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       {
         "id": "key_purple_8",
         "type": "key",
-        "x": 15,
-        "y": 1,
+        "x": 1,
+        "y": 13,
         "color": "#a855f7",
-        "name": "Amethyst Key",
-        "elevation": 0
+        "name": "Jungle Heart Relic",
+        "style": "relic",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_purple_8",
         "type": "door",
-        "x": 14,
-        "y": 15,
+        "x": 7,
+        "y": 7,
         "requiresKey": "key_purple_8",
         "color": "#a855f7",
-        "elevation": 0
+        "style": "portcullis",
+        "orientation": "vertical"
       }
     ]
   },
@@ -8982,7 +9063,7 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "archway"
     },
     "exit": {
       "x": 13,
@@ -9509,20 +9590,22 @@ export const CAMPAIGN_LEVELS = Object.freeze([
       {
         "id": "key_red_9",
         "type": "key",
-        "x": 13,
-        "y": 1,
+        "x": 1,
+        "y": 11,
         "color": "#f43f5e",
-        "name": "Ruby Key",
-        "elevation": 0
+        "name": "Molten Ruby Shard",
+        "style": "crystal",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_red_9",
         "type": "door",
-        "x": 11,
-        "y": 13,
+        "x": 7,
+        "y": 7,
         "requiresKey": "key_red_9",
         "color": "#f43f5e",
-        "elevation": 0
+        "style": "laser_barrier",
+        "orientation": "horizontal"
       }
     ]
   },
@@ -9553,7 +9636,7 @@ export const CAMPAIGN_LEVELS = Object.freeze([
     "exit": {
       "x": 15,
       "y": 15,
-      "style": "stairs_up"
+      "style": "chest"
     },
     "layers": {
       "ground": [
@@ -10212,37 +10295,41 @@ export const CAMPAIGN_LEVELS = Object.freeze([
         "id": "key_red_10",
         "type": "key",
         "x": 1,
-        "y": 15,
+        "y": 13,
         "color": "#f43f5e",
-        "name": "Magma Key",
-        "elevation": 0
+        "name": "Magma Core Shard",
+        "style": "crystal",
+        "glowEffect": "vibrant"
       },
       {
         "id": "door_red_10",
         "type": "door",
-        "x": 5,
-        "y": 13,
+        "x": 7,
+        "y": 7,
         "requiresKey": "key_red_10",
         "color": "#f43f5e",
-        "elevation": 0
+        "style": "laser_barrier",
+        "orientation": "vertical"
       },
       {
         "id": "key_gold_10",
         "type": "key",
-        "x": 15,
+        "x": 13,
         "y": 1,
         "color": "#fbbf24",
-        "name": "Obsidian Seal",
-        "elevation": 0
+        "name": "Obsidian Bone Seal",
+        "style": "skull",
+        "glowEffect": "pulse"
       },
       {
         "id": "door_gold_10",
         "type": "door",
-        "x": 14,
-        "y": 15,
+        "x": 13,
+        "y": 9,
         "requiresKey": "key_gold_10",
         "color": "#fbbf24",
-        "elevation": 0
+        "style": "vault_hatch",
+        "orientation": "auto"
       }
     ]
   }

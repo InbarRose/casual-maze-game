@@ -17,8 +17,8 @@
     "theme": "jungle"
   },
   "help": {
-    "title": "Bridges & Ramps",
-    "message": "Walk onto a Ramp (▲) to climb to Elevation 1 (Overhead Bridge). You can cross over ground corridors, while ground traffic passes beneath."
+    "title": "3D Bridges & Underpasses",
+    "message": "Bridges allow two paths to cross in 3D without intersecting! Walk East UNDER the bridge to reach the sun key in the upper canopy, then climb the ramp to cross OVER the bridge to reach the shrine."
   },
   "spawn": {
     "x": 1,
@@ -53,11 +53,11 @@
         0,
         0,
         0,
+        1,
         0,
         0,
         0,
-        0,
-        0,
+        1,
         0,
         0,
         0,
@@ -67,27 +67,12 @@
         1,
         0,
         1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1,
         0,
-        1
-      ],
-      [
         1,
         0,
         1,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        1,
         0,
         1,
         0,
@@ -99,11 +84,26 @@
         1,
         0,
         1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
         1,
         0,
         1,
         1,
         0,
+        1,
+        1,
+        1,
         1,
         0,
         1
@@ -118,7 +118,7 @@
         "R_S",
         1,
         1,
-        0,
+        1,
         1,
         0,
         1
@@ -126,7 +126,7 @@
       [
         1,
         0,
-        0,
+        1,
         0,
         0,
         0,
@@ -140,52 +140,53 @@
       ],
       [
         1,
-        0,
         1,
-        0,
+        1,
+        1,
         1,
         1,
         "R_N",
         1,
         1,
-        0,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
         1,
         0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
         1
       ],
       [
         1,
         0,
         1,
-        0,
-        1,
-        1,
-        0,
-        1,
-        1,
-        0,
-        1,
-        0,
-        1
-      ],
-      [
-        1,
-        0,
-        1,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        1,
-        0,
-        1
-      ],
-      [
-        1,
-        0,
         1,
         1,
         1,
@@ -195,7 +196,6 @@
         1,
         1,
         1,
-        0,
         1
       ],
       [
@@ -427,5 +427,26 @@
       ]
     ]
   },
-  "entities": []
+  "entities": [
+    {
+      "id": "key_gold_t4",
+      "type": "key",
+      "x": 11,
+      "y": 1,
+      "color": "#fbbf24",
+      "name": "Sun Key",
+      "style": "crystal",
+      "glowEffect": "vibrant"
+    },
+    {
+      "id": "door_gold_t4",
+      "type": "door",
+      "x": 10,
+      "y": 11,
+      "requiresKey": "key_gold_t4",
+      "color": "#fbbf24",
+      "style": "classic",
+      "orientation": "vertical"
+    }
+  ]
 }

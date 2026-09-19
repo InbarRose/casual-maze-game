@@ -6,19 +6,45 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.6.0` (Completed & Verified)
+### Current Version: `v1.8.0` (Completed & Verified)
 
-- [x] **Modular Test Directory Architecture (`tests/`)**: Extracted monolithic `test-suite.mjs` into dedicated subsystem unit suites across `core`, `engine`, `entities`, `levels`, and `editor`.
-- [x] **Zero-Dependency Test Harness & Assertions**: Custom ES-module runner (`describe`, `it`, hooks, timers, filtering via `--suite` and `--grep`) with deep equality, numeric ranges, and mock polyfills.
-- [x] **End-to-End User Journey Suites**:
-  - 🎓 *Novice Tutorial Academy Journey*: Full sequential 6-level onboarding from basic movement to multi-elevation bridges and fog.
-  - 🗺️ *Campaign Solvability & Replay Journey*: Multi-zone BFS solvability and telemetry event stream verification.
-  - 📐 *Dungeon Architect Journey*: Level creation, deadlock and missing key detection, error correction, and JSON roundtrip export.
-  - 🕯️ *Fog & Line-of-Sight Exploration Journey*: Dynamic raycasting line-of-sight and corner shadow casting.
-  - 🌉 *Multi-Elevation Traversal Journey*: 3D-feel ramps, East-West and North-South bridges, railings, and overhead void boundaries.
-- [x] **Comprehensive Testing Strategy (`docs/TESTING_PLAN.md`)**: Subsystem matrices, user journey playbooks, future activity test patterns (audio, touch, hazards, portals), and CI gating standards.
-- [x] **Multi-Stage GitHub Actions CI Matrix**: Automated CI workflow across Node.js 18.x, 20.x, and 22.x running static file validation, zero-dependency audit, syntax integrity check, unit suites, user journeys, and master test suite.
-- [x] **Automated Test Coverage**: 87 test cases and 1,202 automated assertions running in ~60ms (0 failed).
+- [x] **Angled Top-Down (2.5D) Perspective Renderer**:
+  - Dual-perspective engine (`ANGLED` default, `TOPDOWN` flat toggleable with `[V]` and HUD button).
+  - Dual-plane wall rendering with elevated top caps (`wallH = 12px`), vertical south-facing drop facades with brick/mortar relief, and cast shadows.
+  - Elevated multi-layer overpass spans with physical elevation lift (`heightOffset = 14px`), vertical support pillars anchored to ground, and drop shadows.
+  - Back-to-front Y-depth sorting pipeline (`renderYSortedEntities`) for proper occlusion between sprites, players, and wall facades.
+- [x] **Dynamic Interactive Activities & Entities**:
+  - `Teleporter`: Instant 3D coordinate warping `(x, y, z)` with cooldown looping prevention and concentric portal animation.
+  - `TimedHazard`: Cyclical phase machine (`DORMANT` -> `WARNING` -> `ACTIVE` -> `DECAYING`) for flame vents and spike traps with checkpoint respawning on contact.
+  - `Patroller`: Continuous waypoint navigation with cyclic loops and ping-pong paths, dynamic heading angles, and circular player collision.
+  - `PuzzleGate`: Impassable barriers unlocked by completing mental minigames.
+- [x] **Static Puzzle Minigame Modal Overlay (`PuzzleModal`)**:
+  - Simon-style sequential pattern memorization (`Rune Memory`).
+  - 3-ring celestial rotary combination dial lock (`Cipher Dial`).
+  - Responsive mouse and keyboard accessibility with solve animations and event bus dispatches.
+- [x] **Automated Test Coverage**: 28 test suites, 124 test cases, and 2,099 automated assertions running in ~200ms (0 failed).
+
+### Previous Milestone: `v1.7.0`
+- [x] **3D `(X, Y, Z)` Coordinate Standardization**:
+  - Unified integer spatial model with `Z = 0` (Ground), `Z = 1` (Overhead), and `Z = -1` (Basement).
+  - Canonical formatters `formatXYZ(x, y, z)` and `getElevationLabel(z)`.
+  - Player, Key, Door, and Lever models with synchronized `z` and `elevation` properties and `.getCoordString()`.
+  - Editor 3D cursor readout, layer switcher, and Entity Inspector 3D coordinate support.
+- [x] **Advanced Editor Toolset & Precision Drawing**:
+  - Bresenham Line-Drawing Tool for straight and diagonal wall segments.
+  - Multi-Sized Brush Footprints (`1x1` to `5x5`) for rapid stamping and painting.
+  - Object Grab & Move Tool with real-time collision checks and relocation logging.
+  - Official Preset Level Loading & Remix Cloning for rapid level iteration.
+  - Entity Inspector with custom art style variants, orientation selection, and trigger wiring.
+- [x] **Standalone Asset Catalog & Vector System**:
+  - Decoupled SVG vector graphics catalog in `assets/` with `assets/manifest.json`.
+  - Full tileset variations across all themes (Dungeon, Jungle, Lava, Snow, Cave, Sunset).
+  - 4-way directional player classes and facing-aware passage/gate graphics.
+
+### Previous Milestone: `v1.6.0`
+- [x] **Modular Test Directory Architecture (`tests/`)**: Subsystem unit suites across `core`, `engine`, `entities`, `levels`, and `editor`.
+- [x] **Zero-Dependency Test Harness & Assertions**: Custom ES-module runner with deep equality and mocks.
+- [x] **End-to-End User Journey Suites**: Tutorial Academy, Campaign Solvability, Dungeon Architect, Fog Exploration, and Multi-Elevation Traversal.
 
 ---
 
@@ -42,10 +68,14 @@ This document tracks project milestones, current release status, active developm
 - [x] **Tutorial Academy & Hint Banner**: Progressive 6-level onboarding and in-game hints.
 - [x] **Multi-Colored Keys & Gates**: Multiple distinct key colors and locked doors.
 - [x] **Zone-Batched Progression (Zones 1-3)**: 16 total levels across Dungeon, Jungle, and Lava biomes.
+- [x] **Interactive Activities & Dynamic Entities**:
+  - [x] Dimensional Teleporters with 3D coordinate warping.
+  - [x] Timed cyclical hazards (flames, spikes) and checkpoint respawn.
+  - [x] Waypoint-navigating patroller hazards.
+  - [x] Minigame puzzle gates (Rune Memory, Cipher Dial).
 - [ ] **Additional Puzzle Entities**:
   - Pressure plates (momentary activation when stepped on).
   - One-way gates / sliding doors.
-  - Teleporters / portals.
 
 ---
 
@@ -59,6 +89,7 @@ All architectural decisions are documented in `docs/adr/`:
 | [0002](adr/0002-multi-elevation-bridge-system.md) | Two-Layer Elevation and Directional Bridges | Accepted | 2026-08-30 |
 | [0003](adr/0003-tutorial-system-and-level-toggles.md) | Tutorial Academy, In-Game Hint System, and Level Design Toggles | Accepted | 2026-08-30 |
 | [0004](adr/0004-zone-grouping-and-thematic-tilesets.md) | Zone Grouping, Thematic Tilesets, and Directional Graphics | Accepted | 2026-08-30 |
+| [0005](adr/0005-angled-topdown-perspective-and-dynamic-activities.md) | Angled Top-Down (2.5D) Perspective and Dynamic Activities | Accepted | 2026-09-18 |
 
 ---
 

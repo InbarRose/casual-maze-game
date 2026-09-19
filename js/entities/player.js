@@ -15,6 +15,7 @@ export class Player {
   constructor(startX = 1, startY = 1, startElevation = 0, tileSize = 32, initialInventory = []) {
     this.gridX = startX;
     this.gridY = startY;
+    this.gridZ = startElevation;
     this.fromGridX = startX;
     this.fromGridY = startY;
     this.targetGridX = startX;
@@ -39,6 +40,23 @@ export class Player {
     this.pulseTimer = 0;
   }
 
+  get z() {
+    return this.elevation;
+  }
+
+  set z(value) {
+    this.elevation = value;
+    this.gridZ = value;
+  }
+
+  /**
+   * Returns current canonical (X, Y, Z) coordinate string
+   * @returns {string} E.g. "(6, 6, 1)"
+   */
+  getCoordString() {
+    return `(${this.gridX}, ${this.gridY}, ${this.elevation ?? 0})`;
+  }
+
   /**
    * Reset player to initial spawn coordinates
    * @param {number} spawnX
@@ -49,6 +67,7 @@ export class Player {
   reset(spawnX, spawnY, elevation = 0, initialInventory = []) {
     this.gridX = spawnX;
     this.gridY = spawnY;
+    this.gridZ = elevation;
     this.fromGridX = spawnX;
     this.fromGridY = spawnY;
     this.targetGridX = spawnX;
@@ -109,6 +128,7 @@ export class Player {
         this.gridX = this.targetGridX;
         this.gridY = this.targetGridY;
         this.elevation = this.targetElevation;
+        this.gridZ = this.targetElevation;
         this.isMoving = false;
       }
 

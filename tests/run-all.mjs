@@ -16,16 +16,19 @@ import './unit/core/prng.test.mjs';
 import './unit/core/events.test.mjs';
 import './unit/core/storage.test.mjs';
 import './unit/core/constants.test.mjs';
+import './unit/core/coordinates-xyz.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
 import './unit/engine/fog.test.mjs';
 import './unit/engine/camera.test.mjs';
 import './unit/engine/debug-logger.test.mjs';
+import './unit/engine/perspective-renderer.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
+import './unit/entities/dynamic-activities.test.mjs';
 
 // 4. Level Subsystem Unit Tests
 import './unit/levels/level-loader.test.mjs';
@@ -37,6 +40,7 @@ import './unit/levels/tutorial-levels.test.mjs';
 import './unit/editor/level-validator.test.mjs';
 import './unit/editor/json-exporter.test.mjs';
 import './unit/editor/editor-canvas.test.mjs';
+import './unit/editor/editor-buttons-and-functions.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
@@ -47,6 +51,7 @@ import './integration/journeys/campaign-solvability.journey.test.mjs';
 import './integration/journeys/editor-authoring.journey.test.mjs';
 import './integration/journeys/fog-exploration.journey.test.mjs';
 import './integration/journeys/multi-elevation.journey.test.mjs';
+import './integration/journeys/interactive-activities.journey.test.mjs';
 
 // Run registered suites
 await run();

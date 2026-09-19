@@ -18,11 +18,28 @@ export class Door {
     this.color = config.color || '#fbbf24';
     this.style = config.style || 'classic'; // 'classic' | 'portcullis' | 'laser_barrier' | 'magic_seal' | 'crystal_spikes' | 'vault_hatch'
     this.isOpen = !!config.isOpen;
-    this.elevation = config.elevation ?? 0;
+    this.z = config.z ?? config.elevation ?? 0;
+    this.elevation = this.z;
     this.orientation = config.orientation || 'auto'; // 'auto' | 'horizontal' | 'vertical'
 
     // Animation progress: 0 = fully closed, 1 = fully open
     this.openProgress = this.isOpen ? 1 : 0;
+  }
+
+  get elevation() {
+    return this.z;
+  }
+
+  set elevation(value) {
+    this.z = value;
+  }
+
+  /**
+   * Returns canonical (X, Y, Z) coordinate string
+   * @returns {string}
+   */
+  getCoordString() {
+    return `(${this.x}, ${this.y}, ${this.z ?? 0})`;
   }
 
   /**

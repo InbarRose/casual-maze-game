@@ -18,13 +18,30 @@ export class Lever {
     this.state = !!config.state; // false = unpulled, true = pulled
     this.style = config.style || 'switch_lever'; // 'switch_lever' | 'pressure_pedestal' | 'crystal_switch' | 'runic_plate' | 'cog_wheel'
     this.oneWay = !!config.oneWay;
-    this.elevation = config.elevation ?? 0;
+    this.z = config.z ?? config.elevation ?? 0;
+    this.elevation = this.z;
     this.name = config.name || 'Switch';
     this.targets = Array.isArray(config.targets) ? JSON.parse(JSON.stringify(config.targets)) : [];
 
     // Visual animation for switch handle / cog rotation
     this.handleAngle = this.state ? 0.6 : -0.6;
     this.cogRotation = this.state ? Math.PI : 0;
+  }
+
+  get elevation() {
+    return this.z;
+  }
+
+  set elevation(value) {
+    this.z = value;
+  }
+
+  /**
+   * Returns canonical (X, Y, Z) coordinate string
+   * @returns {string}
+   */
+  getCoordString() {
+    return `(${this.x}, ${this.y}, ${this.z ?? 0})`;
   }
 
   /**
