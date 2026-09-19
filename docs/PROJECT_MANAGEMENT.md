@@ -6,7 +6,32 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.17.0` (Completed & Verified)
+### Current Version: `v1.18.0` (Completed & Verified)
+
+- [x] **Hotkey "R" Conflict Fix & Restart Separation**:
+  - Removed `KeyR` from `KEY_CODES.RESTART` (now bound strictly to `KeyT`).
+  - Added dedicated bindings `KEY_CODES.ROTATE_LEFT` (`KeyQ`, `BracketLeft`) and `KEY_CODES.ROTATE_RIGHT` (`KeyR`, `BracketRight`).
+  - Cleaned `KeyL` from `KEY_CODES.RIGHT` to prevent collision with Activity Log toggle `L`.
+  - Added unit tests in `tests/unit/core/constants.test.mjs` asserting key isolation.
+- [x] **Hotkeys Toggle & Simple Keyboard Mode**:
+  - Added `areHotkeysEnabled()` and `setHotkeysEnabled()` in `GameLoop`.
+  - Added "Simple Keyboard Mode" toggle in `SettingsModal` and Pause Menu (`#btn-pause-hotkeys`), persisting `hotkeys_enabled` and `simple_keyboard_mode` in `StorageManager`.
+  - In Simple Keyboard Mode, single-letter shortcuts (`Q`, `R`, `T`, `M`, `V`, `L`) are bypassed, restricting input to movement (`WASD`/Arrows) and interaction (`Space`/`Enter`) to prevent unintended resets or UI shifts.
+- [x] **Click-to-Move BFS Pathfinding Engine**:
+  - Implemented `GameLoop.findPathTo(targetX, targetY)` with multi-elevation awareness (bridges, ramps, closed vs. open doors).
+  - Handles clicks on solid obstacles (levers, pedestals, locked doors) by routing to the nearest adjacent walkable cell.
+  - Added canvas `pointerdown` listener converting coordinates via `camera.screenToWorld()`, respecting active camera rotations.
+  - Added animated cyan pulsing target indicator (`GameRenderer.renderClickTarget`).
+  - Automatic cancellation on manual directional keydown.
+- [x] **Floating Contextual Action Button (`#hud-contextual-interact`)**:
+  - Implemented `GameLoop.getAvailableInteraction()` checking player and adjacent tiles with facing-direction prioritization.
+  - Supports levers, puzzle gates, pedestals, signposts, wall decor, riddle items, doors, and exits.
+  - Dynamically positions a glassmorphic floating pill (`.contextual-interact-btn`) 36px above character in screen space.
+  - Click & pointerdown handlers with `stopPropagation()` enabling one-tap mobile and mouse interactions without triggering click-to-move under the button.
+- [x] **Automated Test Coverage**:
+  - 63 test suites, 307 tests, 6,092 assertions passing 100% (0 failed, 0 drift).
+
+### Previous Milestone: `v1.17.0` (Completed & Verified)
 
 - [x] **Camera World Rotation Fix & Synchronized Rigid Transforms**:
   - Unified coordinate projection in `GameRenderer`: discrete coordinates for all world elements; rigid Canvas 2D matrix transformation `ctx.rotate(-deltaRad)` around screen center during camera rotation.
