@@ -17,7 +17,40 @@ export const ENTITY_TYPES = Object.freeze({
   KEY: 'key',
   DOOR: 'door',
   LEVER: 'lever',
+  TELEPORTER: 'teleporter',
+  HAZARD: 'hazard',
+  PATROLLER: 'patroller',
+  PUZZLE_GATE: 'puzzle_gate',
 });
+
+export const VIEW_PERSPECTIVES = Object.freeze({
+  ANGLED: 'angled',
+  TOPDOWN: 'topdown',
+});
+
+export const PUZZLE_TYPES = Object.freeze({
+  RUNE_MEMORY: 'rune_memory',
+  CIPHER_DIAL: 'cipher_dial',
+});
+
+export const TELEPORTER_STYLES = Object.freeze([
+  { id: 'vortex', icon: '🌀', label: 'Dimensional Vortex', desc: 'Swirling celestial rift that warps across space' },
+  { id: 'runic_circle', icon: '🔯', label: 'Runic Teleport Circle', desc: 'Ancient arcane circle glowing on the floor' },
+  { id: 'techno_pad', icon: '⚡', label: 'Quantum Warp Pad', desc: 'High-energy matter transmission pad' },
+  { id: 'crystal_well', icon: '💠', label: 'Resonance Well', desc: 'Subterranean crystal spring warping between elevations' },
+]);
+
+export const HAZARD_STYLES = Object.freeze([
+  { id: 'spikes', icon: '🗡️', label: 'Floor Spikes', desc: 'Retracting lethal metal floor spikes' },
+  { id: 'fire_jet', icon: '🔥', label: 'Flame Vent', desc: 'Periodic bursts of molten volcanic fire' },
+  { id: 'sentinel', icon: '👁️', label: 'Clockwork Sentinel', desc: 'Autonomous patrolling dungeon guardian' },
+  { id: 'boulder', icon: '🪨', label: 'Rolling Boulder', desc: 'Heavy kinetic stone moving back and forth' },
+]);
+
+export const PUZZLE_GATE_STYLES = Object.freeze([
+  { id: 'rune_memory', icon: '🔮', label: 'Rune Memory Seal', desc: 'Requires memorizing and repeating an illuminated 4-rune sequence' },
+  { id: 'cipher_dial', icon: '🔐', label: 'Cipher Dial Barrier', desc: 'Requires aligning concentric runic dials to decipher the clue' },
+]);
 
 export const LAYERS = Object.freeze({
   GROUND: 'ground',
@@ -140,6 +173,7 @@ export const KEY_CODES = Object.freeze({
   MAP: ['KeyM', 'm', 'M'],
   RESTART: ['KeyR', 'r', 'R'],
   PAUSE: ['Escape', 'KeyP', 'p', 'P', 'Esc'],
+  VIEW_MODE: ['KeyV', 'v', 'V'],
 });
 
 export const KEY_COLORS = Object.freeze({
@@ -179,6 +213,7 @@ export const DEFAULTS = Object.freeze({
   PLAYER_SPEED: 4.8, // tiles per second during smooth walk
   MINIMAP_SIZE: 180,
   THEME: 'dungeon',
+  VIEW_PERSPECTIVE: 'angled',
 });
 
 export const THEMES = Object.freeze({
