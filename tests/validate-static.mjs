@@ -28,6 +28,8 @@ check('index.html exists (Hub / Level Select)', existsSync(join(ROOT_DIR, 'index
 check('maze.html exists (Game Viewport)', existsSync(join(ROOT_DIR, 'maze.html')));
 check('editor.html exists (Level Architect)', existsSync(join(ROOT_DIR, 'editor.html')));
 check('package.json exists', existsSync(join(ROOT_DIR, 'package.json')));
+check('assets/schema.json exists', existsSync(join(ROOT_DIR, 'assets', 'schema.json')));
+check('assets/manifest.json exists', existsSync(join(ROOT_DIR, 'assets', 'manifest.json')));
 
 // 2. Pure Static Dependency Rule
 console.log('\n[Phase 2] Enforcing Pure Static (Zero Backend) Architecture...');
@@ -60,6 +62,7 @@ if (existsSync(manifestPath)) {
     if (fileExists) {
       const data = JSON.parse(readFileSync(filePath, 'utf8'));
       check(`  -> ${item.file} matches id "${item.id}"`, String(data.id) === String(item.id));
+      check(`  -> ${item.file} has valid SHA-256 hash`, typeof item.hash === 'string' && item.hash.length === 64);
     }
   }
 }
