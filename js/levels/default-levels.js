@@ -12,10 +12,9 @@ import { CAMPAIGN_CH5_LEVELS } from './campaign-ch5.js';
 import { CAMPAIGN_CH6_LEVELS } from './campaign-ch6.js';
 import { CAMPAIGN_CH7_LEVELS } from './campaign-ch7.js';
 import { CAMPAIGN_CH8_LEVELS } from './campaign-ch8.js';
+import { getStoryline, getStoryChapter, getAllStoryLevels, STORYLINES } from '../stories/storylines.js';
 
-import { STORYLINES, getStoryline, getStoryChapter, getNextStoryChapter, getAllStoryLevels } from '../stories/storylines.js';
-
-export { TUTORIAL_LEVELS, STORYLINES, getStoryline, getStoryChapter, getNextStoryChapter, getAllStoryLevels, CAMPAIGN_CH8_LEVELS };
+export { TUTORIAL_LEVELS, getStoryline, getStoryChapter, getAllStoryLevels, STORYLINES };
 
 export const CAMPAIGN_LEVELS = Object.freeze([
   ...CAMPAIGN_CH1_LEVELS,
@@ -27,4 +26,3 @@ export const CAMPAIGN_LEVELS = Object.freeze([
   ...CAMPAIGN_CH7_LEVELS,
   ...CAMPAIGN_CH8_LEVELS,
 ]);
-

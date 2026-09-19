@@ -5,7 +5,17 @@
     "zone": "tutorial",
     "title": "First Steps",
     "file": "levels/tutorial/tutorial_1.json",
-    "theme": "dungeon"
+    "theme": "dungeon",
+    "version": 1,
+    "hash": "6b005e6606013723d367db2602e7c1b40e60d4685f7ead345622a52e7bf3db1f",
+    "size": 3120,
+    "dimensions": {
+      "width": 9,
+      "height": 9
+    },
+    "entityCount": 0,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "tutorial_2",
@@ -13,7 +23,17 @@
     "zone": "tutorial",
     "title": "Keys & Colored Gates",
     "file": "levels/tutorial/tutorial_2.json",
-    "theme": "dungeon"
+    "theme": "dungeon",
+    "version": 1,
+    "hash": "2553a6b61b2b4b07453ae8f10d0b13aa9f696a7d651ea5ffe452d15d4560c953",
+    "size": 5061,
+    "dimensions": {
+      "width": 11,
+      "height": 11
+    },
+    "entityCount": 4,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "tutorial_3",
@@ -21,7 +41,17 @@
     "zone": "tutorial",
     "title": "Mechanisms & Levers",
     "file": "levels/tutorial/tutorial_3.json",
-    "theme": "temple"
+    "theme": "temple",
+    "version": 1,
+    "hash": "94515a63844340285c1092fafb181a477e20b8fce9ad029255a51c9594774b57",
+    "size": 4557,
+    "dimensions": {
+      "width": 11,
+      "height": 11
+    },
+    "entityCount": 1,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "tutorial_4",
@@ -29,7 +59,17 @@
     "zone": "tutorial",
     "title": "Bridges & Elevation",
     "file": "levels/tutorial/tutorial_4.json",
-    "theme": "jungle"
+    "theme": "jungle",
+    "version": 1,
+    "hash": "81949a44b6d4c2f3529149c9656820b031dd560a7c4b1298b6dfb2627f74057c",
+    "size": 5913,
+    "dimensions": {
+      "width": 13,
+      "height": 13
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "tutorial_5",
@@ -37,7 +77,17 @@
     "zone": "tutorial",
     "title": "The Shrouded Path",
     "file": "levels/tutorial/tutorial_5.json",
-    "theme": "dungeon"
+    "theme": "dungeon",
+    "version": 1,
+    "hash": "52ec7356c7d3859f4d997663930f2ab4177a448755294fab6ee1e412b711ac7b",
+    "size": 5853,
+    "dimensions": {
+      "width": 13,
+      "height": 13
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "tutorial_6",
@@ -45,7 +95,17 @@
     "zone": "tutorial",
     "title": "Master's Trial",
     "file": "levels/tutorial/tutorial_6.json",
-    "theme": "temple"
+    "theme": "temple",
+    "version": 1,
+    "hash": "374d43c13bdd59a6251d1ebae67aa35014dc122e14bd1e737396662f1ddf7e1e",
+    "size": 10185,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 7,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "1",
@@ -56,7 +116,17 @@
     "file": "levels/chapter_1/level_1.json",
     "theme": "dungeon",
     "parSteps": 35,
-    "parTime": 20
+    "parTime": 20,
+    "version": 1,
+    "hash": "00cad9931e73d6123e7941e93ce3ce4915fdcf36856af82efe6c3a348fcc67a8",
+    "size": 7640,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "2",
@@ -67,7 +137,17 @@
     "file": "levels/chapter_1/level_2.json",
     "theme": "dungeon",
     "parSteps": 38,
-    "parTime": 22
+    "parTime": 22,
+    "version": 1,
+    "hash": "4d53875b160eb9f23b5db2453f2278ce3b3f9f49e022bdae788e5fe2cfff7962",
+    "size": 7537,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "3",
@@ -78,7 +158,17 @@
     "file": "levels/chapter_1/level_3.json",
     "theme": "dungeon",
     "parSteps": 54,
-    "parTime": 32
+    "parTime": 32,
+    "version": 1,
+    "hash": "8e5393a0ca730bdd58ea53440c1ef7c95c158e62b070ed5a0ec34cbc94a592b3",
+    "size": 10061,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 7,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "4",
@@ -89,7 +179,17 @@
     "file": "levels/chapter_1/level_4.json",
     "theme": "dungeon",
     "parSteps": 68,
-    "parTime": 40
+    "parTime": 40,
+    "version": 1,
+    "hash": "d25b55ef93ccacb6dec7c4fda72f28a940bb2056a1e7d668630683905e7d5312",
+    "size": 10124,
+    "dimensions": {
+      "width": 19,
+      "height": 19
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "5",
@@ -100,7 +200,17 @@
     "file": "levels/chapter_2/level_5.json",
     "theme": "jungle",
     "parSteps": 36,
-    "parTime": 22
+    "parTime": 22,
+    "version": 1,
+    "hash": "d1abeee609363a314adf35fa04c56e9216352109014c389d16317caf41d4eae7",
+    "size": 7619,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "6",
@@ -111,7 +221,17 @@
     "file": "levels/chapter_2/level_6.json",
     "theme": "jungle",
     "parSteps": 48,
-    "parTime": 28
+    "parTime": 28,
+    "version": 1,
+    "hash": "a5ce107d063f1f16f2987c3a8d5531fff808395a5956be7167aa96d8badfe276",
+    "size": 9236,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "7",
@@ -122,7 +242,17 @@
     "file": "levels/chapter_2/level_7.json",
     "theme": "jungle",
     "parSteps": 56,
-    "parTime": 34
+    "parTime": 34,
+    "version": 1,
+    "hash": "5cb4cb2d38fa65ecf8c91f30be2fc3c6ab0e5ef72771c9e4348a3b72975bd3f5",
+    "size": 11021,
+    "dimensions": {
+      "width": 19,
+      "height": 19
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "8",
@@ -133,7 +263,17 @@
     "file": "levels/chapter_2/level_8.json",
     "theme": "jungle",
     "parSteps": 75,
-    "parTime": 45
+    "parTime": 45,
+    "version": 1,
+    "hash": "6148e213a6796e8fcc6cf725d536fc232c7337af9e3272d04fa28ccd6c775b8b",
+    "size": 13045,
+    "dimensions": {
+      "width": 21,
+      "height": 21
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "9",
@@ -144,7 +284,17 @@
     "file": "levels/chapter_3/level_9.json",
     "theme": "temple",
     "parSteps": 40,
-    "parTime": 24
+    "parTime": 24,
+    "version": 1,
+    "hash": "ed7958c1a40ddf54cc5ac13218d4ee0f02225308756aa8cb7fdfece360612913",
+    "size": 7484,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "10",
@@ -155,7 +305,17 @@
     "file": "levels/chapter_3/level_10.json",
     "theme": "temple",
     "parSteps": 50,
-    "parTime": 30
+    "parTime": 30,
+    "version": 1,
+    "hash": "0a11567bd78fe415cf2873af9535188461fd74ef6cac1e1f85a620dd82463343",
+    "size": 9060,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "11",
@@ -166,7 +326,17 @@
     "file": "levels/chapter_3/level_11.json",
     "theme": "temple",
     "parSteps": 58,
-    "parTime": 35
+    "parTime": 35,
+    "version": 1,
+    "hash": "5851f2be7487981a75bd57b9b7dbb9b987cd6d820a42035004eec18827b841c4",
+    "size": 10904,
+    "dimensions": {
+      "width": 19,
+      "height": 19
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "12",
@@ -177,7 +347,17 @@
     "file": "levels/chapter_3/level_12.json",
     "theme": "temple",
     "parSteps": 78,
-    "parTime": 48
+    "parTime": 48,
+    "version": 1,
+    "hash": "b13eb9645141b305537cd49abdee0c3138963c8c2cab1a221bf345326c3929a1",
+    "size": 12867,
+    "dimensions": {
+      "width": 21,
+      "height": 21
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "13",
@@ -188,7 +368,17 @@
     "file": "levels/chapter_4/level_13.json",
     "theme": "cave",
     "parSteps": 38,
-    "parTime": 22
+    "parTime": 22,
+    "version": 1,
+    "hash": "9a01fa518ddb303cfc1ee860fdb21dfa60daec4916f27fcc1226e5c49398f21d",
+    "size": 6738,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "14",
@@ -199,7 +389,17 @@
     "file": "levels/chapter_4/level_14.json",
     "theme": "cave",
     "parSteps": 46,
-    "parTime": 26
+    "parTime": 26,
+    "version": 1,
+    "hash": "22e6b33147e58581813afa3907a17ad20daf13bc2d092dddef9b7ceb3a7ed199",
+    "size": 8189,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "15",
@@ -210,7 +410,17 @@
     "file": "levels/chapter_4/level_15.json",
     "theme": "cave",
     "parSteps": 54,
-    "parTime": 32
+    "parTime": 32,
+    "version": 1,
+    "hash": "94f6d25cdf613171bec42283fdd5379cbf367b0fb2d93fd02c85f79fc46b72eb",
+    "size": 9846,
+    "dimensions": {
+      "width": 19,
+      "height": 19
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "16",
@@ -221,7 +431,17 @@
     "file": "levels/chapter_4/level_16.json",
     "theme": "cave",
     "parSteps": 72,
-    "parTime": 44
+    "parTime": 44,
+    "version": 1,
+    "hash": "5cda24892988a4c9abb067348a46bce61763695fdc2df0f3001fcdbb81622c45",
+    "size": 11657,
+    "dimensions": {
+      "width": 21,
+      "height": 21
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "17",
@@ -232,7 +452,17 @@
     "file": "levels/chapter_5/level_17.json",
     "theme": "lava",
     "parSteps": 40,
-    "parTime": 24
+    "parTime": 24,
+    "version": 1,
+    "hash": "bb886d29dddf7ed13f7bf66512ef5396b482191ce04140a597edb7a94b49bd98",
+    "size": 6790,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "18",
@@ -243,7 +473,17 @@
     "file": "levels/chapter_5/level_18.json",
     "theme": "lava",
     "parSteps": 48,
-    "parTime": 28
+    "parTime": 28,
+    "version": 1,
+    "hash": "aad2ebf3df7b1d0c876e8e5ee696af2e5093d7a4703783b3e46379ef2a48ba1a",
+    "size": 8260,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "19",
@@ -254,7 +494,17 @@
     "file": "levels/chapter_5/level_19.json",
     "theme": "lava",
     "parSteps": 60,
-    "parTime": 36
+    "parTime": 36,
+    "version": 1,
+    "hash": "1d5eb9345b1e22bf0da6994b5694f82b91f728df483fec1088054b7dddeed841",
+    "size": 9914,
+    "dimensions": {
+      "width": 19,
+      "height": 19
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "20",
@@ -265,7 +515,17 @@
     "file": "levels/chapter_5/level_20.json",
     "theme": "lava",
     "parSteps": 80,
-    "parTime": 50
+    "parTime": 50,
+    "version": 1,
+    "hash": "7fc057377c309ca54d7078925edb1cd55dfa8fc8bf64e1880ce8d8ee40d5077b",
+    "size": 11742,
+    "dimensions": {
+      "width": 21,
+      "height": 21
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "21",
@@ -276,7 +536,17 @@
     "file": "levels/chapter_6/level_21.json",
     "theme": "sunset",
     "parSteps": 38,
-    "parTime": 24
+    "parTime": 24,
+    "version": 1,
+    "hash": "e4572f78522d54f518d1841e072cf8d678a57bcce29091a9b93b3f53e93b6ec0",
+    "size": 7355,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "22",
@@ -287,7 +557,17 @@
     "file": "levels/chapter_6/level_22.json",
     "theme": "sunset",
     "parSteps": 48,
-    "parTime": 28
+    "parTime": 28,
+    "version": 1,
+    "hash": "09b9847819d952ccae225738920fd31bbe80cab6981bde15c5a3ead8870eb8ef",
+    "size": 8895,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "23",
@@ -298,7 +578,17 @@
     "file": "levels/chapter_6/level_23.json",
     "theme": "sunset",
     "parSteps": 62,
-    "parTime": 38
+    "parTime": 38,
+    "version": 1,
+    "hash": "1ebed7f847b370203e11825c509706814d32af5820da713686c38ea50c2c22f4",
+    "size": 10734,
+    "dimensions": {
+      "width": 19,
+      "height": 19
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "24",
@@ -309,7 +599,17 @@
     "file": "levels/chapter_6/level_24.json",
     "theme": "sunset",
     "parSteps": 82,
-    "parTime": 52
+    "parTime": 52,
+    "version": 1,
+    "hash": "6bc065ef0d96607fb2439f95d93cae3a71a13e5b01b6c4caebca084d9f5cda36",
+    "size": 12753,
+    "dimensions": {
+      "width": 21,
+      "height": 21
+    },
+    "entityCount": 2,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "25",
@@ -320,7 +620,17 @@
     "file": "levels/chapter_7/level_25.json",
     "theme": "snow",
     "parSteps": 68,
-    "parTime": 42
+    "parTime": 42,
+    "version": 1,
+    "hash": "dd96609ac18debac92aa4875df62267fff31cedfe577a9e81799cf26a9481723",
+    "size": 11010,
+    "dimensions": {
+      "width": 19,
+      "height": 19
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "26",
@@ -331,7 +641,17 @@
     "file": "levels/chapter_7/level_26.json",
     "theme": "snow",
     "parSteps": 78,
-    "parTime": 48
+    "parTime": 48,
+    "version": 1,
+    "hash": "bd99b204c176a382d3b455e11c2e6f103cec4150f6febd81984f9c943dc382ee",
+    "size": 12973,
+    "dimensions": {
+      "width": 21,
+      "height": 21
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "27",
@@ -342,7 +662,17 @@
     "file": "levels/chapter_7/level_27.json",
     "theme": "snow",
     "parSteps": 90,
-    "parTime": 56
+    "parTime": 56,
+    "version": 1,
+    "hash": "741f3b1556e8b8c3c972ebe9a2309fb52675b08e5cebe38cae8aad3dc7be653b",
+    "size": 15199,
+    "dimensions": {
+      "width": 23,
+      "height": 23
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "28",
@@ -353,7 +683,17 @@
     "file": "levels/chapter_7/level_28.json",
     "theme": "snow",
     "parSteps": 110,
-    "parTime": 70
+    "parTime": 70,
+    "version": 1,
+    "hash": "8e90ec73c76b1a507db2c6320bd40de54b1411a127b21c680f3878cae7c70190",
+    "size": 17716,
+    "dimensions": {
+      "width": 25,
+      "height": 25
+    },
+    "entityCount": 3,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "29",
@@ -364,7 +704,17 @@
     "file": "levels/chapter_8/level_29.json",
     "theme": "dungeon",
     "parSteps": 48,
-    "parTime": 30
+    "parTime": 30,
+    "version": 1,
+    "hash": "a2ac6655fa5b66ce201885190591db211ead1f3633226d90bf2c0c98acaa931b",
+    "size": 8033,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 6,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "30",
@@ -375,7 +725,17 @@
     "file": "levels/chapter_8/level_30.json",
     "theme": "dungeon",
     "parSteps": 54,
-    "parTime": 36
+    "parTime": 36,
+    "version": 1,
+    "hash": "0ac60e79f67f8b7a6e8536a49026cb9292e4320766235a5f2b3f8eabd5fccfc2",
+    "size": 7536,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 4,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "31",
@@ -386,7 +746,17 @@
     "file": "levels/chapter_8/level_31.json",
     "theme": "temple",
     "parSteps": 58,
-    "parTime": 38
+    "parTime": 38,
+    "version": 1,
+    "hash": "a092cad0f89b227e25fc883294dc020eb0d90910af39c28f90dc39e99470d93a",
+    "size": 8242,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 6,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "32",
@@ -397,7 +767,17 @@
     "file": "levels/chapter_8/level_32.json",
     "theme": "snow",
     "parSteps": 72,
-    "parTime": 46
+    "parTime": 46,
+    "version": 1,
+    "hash": "aaa2f257cfa40fa5fbf5ee70bc1d745dc9e7c484ace410666012ab8f16412f7f",
+    "size": 9348,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 4,
+    "hasMultiRoom": false,
+    "exitCount": 2
   },
   {
     "id": "story_guardians_1",
@@ -407,7 +787,17 @@
     "chapter": 1,
     "title": "The Whispering Ruins",
     "file": "levels/stories/story_guardians_1.json",
-    "theme": "temple"
+    "theme": "temple",
+    "version": 1,
+    "hash": "7a4b910771639b6c0e2bb080cab34ce32dfeb0ffe086e8b6d0c67ea36afe189b",
+    "size": 6460,
+    "dimensions": {
+      "width": 11,
+      "height": 11
+    },
+    "entityCount": 8,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "story_guardians_2",
@@ -417,7 +807,17 @@
     "chapter": 2,
     "title": "The Falcon's Plinth",
     "file": "levels/stories/story_guardians_2.json",
-    "theme": "temple"
+    "theme": "temple",
+    "version": 1,
+    "hash": "a70ab09f1df637962531c240085bc65aa2825b2fecb4c29c014d39a507d05d34",
+    "size": 6196,
+    "dimensions": {
+      "width": 11,
+      "height": 11
+    },
+    "entityCount": 6,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "story_guardians_3",
@@ -427,7 +827,17 @@
     "chapter": 3,
     "title": "Sanctum of the Four Guardians",
     "file": "levels/stories/story_guardians_3.json",
-    "theme": "temple"
+    "theme": "temple",
+    "version": 1,
+    "hash": "55d97168224a592bbde38ece42ef673d34b8bfd8771c0fe262098781ed887b8c",
+    "size": 10938,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 11,
+    "hasMultiRoom": false,
+    "exitCount": 1
   },
   {
     "id": "story_citadel_1",
@@ -437,6 +847,16 @@
     "chapter": 1,
     "title": "The Whispering Citadel",
     "file": "levels/stories/story_citadel_1.json",
-    "theme": "temple"
+    "theme": "temple",
+    "version": 1,
+    "hash": "932fd484f77131bbe2b4c384d4358513e97ebd8b7820bb50047b1fca753d776a",
+    "size": 31093,
+    "dimensions": {
+      "width": 13,
+      "height": 13
+    },
+    "entityCount": 4,
+    "hasMultiRoom": true,
+    "exitCount": 2
   }
 ]

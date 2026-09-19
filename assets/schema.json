@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Casual Maze Game Asset Manifest",
+  "description": "Schema definition for the vector assets manifest registry and drift tracking",
+  "type": "object",
+  "required": [
+    "version",
+    "generatedAt",
+    "totalAssets",
+    "themes",
+    "playerClasses",
+    "facings",
+    "categories",
+    "assets"
+  ],
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "totalAssets": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "themes": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "playerClasses": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "facings": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "categories": {
+      "type": "object"
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "category",
+          "path",
+          "hash",
+          "size",
+          "viewBox"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "style": {
+            "type": "string"
+          },
+          "facing": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          },
+          "hash": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$"
+          },
+          "size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "viewBox": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        }
+      }
+    }
+  }
+}
