@@ -117,7 +117,8 @@ Levels are defined as static JSON files conforming to the following structure:
 * `mapRevealed` (`boolean`): When true, initialized in memory/explored state `1` instead of pitch black `0`.
 * `viewRadius` (`number`): Sight radius in tiles (default: `6`).
 * `allowFreePan` (`boolean`): Enables `[M]` free-pan mode.
-* `theme` (`string`): Visual palette token (`dungeon`, `castle`, `crypt`, `garden`, `temple`).
+* `viewPerspective` (`string`): Default visual rendering perspective (`'angled'` or `'topdown'`).
+* `theme` (`string`): Visual palette token (`dungeon`, `castle`, `crypt`, `garden`, `temple`, `lava`, `snow`, `cave`, `sunset`).
 
 ---
 
@@ -137,6 +138,8 @@ Levels are defined as static JSON files conforming to the following structure:
 
 ### Entity Types
 
+All entities accept 3D coordinates `x`, `y`, `z` (where `z = 0` is Ground, `z = 1` is Overhead, and `z = -1` is Basement).
+
 #### 1. Key (`key`)
 ```json
 {
@@ -144,6 +147,7 @@ Levels are defined as static JSON files conforming to the following structure:
   "type": "key",
   "x": 4,
   "y": 7,
+  "z": 0,
   "color": "#38bdf8",
   "name": "Sapphire Key"
 }
@@ -156,6 +160,7 @@ Levels are defined as static JSON files conforming to the following structure:
   "type": "door",
   "x": 8,
   "y": 7,
+  "z": 0,
   "requiresKey": "key_sapphire",
   "color": "#38bdf8"
 }
@@ -168,6 +173,7 @@ Levels are defined as static JSON files conforming to the following structure:
   "type": "lever",
   "x": 2,
   "y": 4,
+  "z": 0,
   "state": false,
   "targets": [
     {
@@ -181,6 +187,84 @@ Levels are defined as static JSON files conforming to the following structure:
   ]
 }
 ```
+
+#### 4. Teleporter (`teleporter`)
+Warps the player to the target 3D coordinate upon stepping onto the portal pad.
+```json
+{
+  "id": "teleporter_alpha",
+  "type": "teleporter",
+  "x": 2,
+  "y": 2,
+  "z": 0,
+  "targetX": 15,
+  "targetY": 15,
+  "targetZ": 1,
+  "cooldown": 1.0,
+  "style": "runic"
+}
+```
+
+#### 5. Timed Hazard (`hazard`)
+Cyclically activates danger zones (flame jets, spike traps). Stepping onto an active hazard respawns the player to the last safe checkpoint.
+```json
+{
+  "id": "hazard_flame_1",
+  "type": "hazard",
+  "x": 6,
+  "y": 8,
+  "z": 0,
+  "hazardType": "flame_vent",
+  "intervalMs": 3000,
+  "activeDurationMs": 1500,
+  "warningDurationMs": 800,
+  "radius": 0.45,
+  "style": "fire"
+}
+```
+
+#### 6. Patroller (`patroller`)
+Autonomous entity that moves along defined waypoints. Collision with player triggers checkpoint respawn.
+```json
+{
+  "id": "patroller_guard_1",
+  "type": "patroller",
+  "x": 10,
+  "y": 5,
+  "z": 0,
+  "waypoints": [
+    { "x": 10, "y": 5 },
+    { "x": 14, "y": 5 },
+    { "x": 14, "y": 9 },
+    { "x": 10, "y": 9 }
+  ],
+  "speed": 1.5,
+  "patrolType": "loop",
+  "radius": 0.4,
+  "color": "#f97316",
+  "patrollerType": "sentry"
+}
+```
+
+#### 7. Puzzle Gate (`puzzle_gate`)
+Solid barrier unlocked by completing an interactive modal minigame.
+```json
+{
+  "id": "gate_celestial",
+  "type": "puzzle_gate",
+  "x": 12,
+  "y": 6,
+  "z": 0,
+  "puzzleType": "rune_memory",
+  "puzzleConfig": {
+    "sequenceLength": 4
+  },
+  "targetGateId": "gate_celestial",
+  "name": "Celestial Gate",
+  "color": "#a855f7"
+}
+```
+*(Or `puzzleType: "cipher_dial"` with `"puzzleConfig": { "solution": [2, 0, 3] }`)*
 
 ---
 

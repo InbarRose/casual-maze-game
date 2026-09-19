@@ -62,7 +62,7 @@ casual-maze-game/
 │   ├── unit/                     # Granular subsystem unit test suites
 │   │   ├── core/                 # prng, events, storage, constants
 │   │   ├── engine/               # collision, fog, camera, debug-logger
-│   │   ├── entities/             # player, key, door, lever
+│   │   ├── entities/             # player, key, door, lever, dynamic-activities
 │   │   ├── levels/               # level-loader, json-integrity, campaign, tutorial
 │   │   └── editor/               # level-validator, json-exporter
 │   ├── integration/
@@ -71,7 +71,8 @@ casual-maze-game/
 │   │       ├── campaign-solvability.journey.test.mjs
 │   │       ├── editor-authoring.journey.test.mjs
 │   │       ├── fog-exploration.journey.test.mjs
-│   │       └── multi-elevation.journey.test.mjs
+│   │       ├── multi-elevation.journey.test.mjs
+│   │       └── interactive-activities.journey.test.mjs
 │   └── run-all.mjs               # Master test runner entrypoint
 ├── docs/                         # Documentation & Architecture Records
 │   ├── ARCHITECTURE.md           # Deep subsystem architecture & engine details (this file)
@@ -83,10 +84,11 @@ casual-maze-game/
 │       ├── 0001-static-canvas-modular-engine.md
 │       ├── 0002-multi-elevation-bridge-system.md
 │       ├── 0003-tutorial-system-and-level-toggles.md
-│       └── 0004-zone-grouping-and-thematic-tilesets.md
+│       ├── 0004-zone-grouping-and-thematic-tilesets.md
+│       └── 0005-angled-topdown-perspective-and-dynamic-activities.md
 ├── css/
 │   ├── main.css                  # Shared UI design tokens, typography, hub styling
-│   ├── game.css                  # Canvas overlay, HUD, minimap, mobile d-pad
+│   ├── game.css                  # Canvas overlay, HUD, minimap, mobile d-pad, puzzle modal
 │   └── editor.css                # Editor toolbars, entity inspector, palette, validator
 ├── js/
 │   ├── core/
@@ -98,18 +100,23 @@ casual-maze-game/
 │   │   ├── camera.js             # Viewport translation, lerp follow, free-pan mode
 │   │   ├── collision.js          # Elevation-aware collision & directional bridge traversal
 │   │   ├── fog.js                # 3-state fog-of-war (Unexplored, Explored, Visible)
-│   │   ├── game-loop.js          # Delta-time coordinator and animation loop
+│   │   ├── game-loop.js          # Delta-time coordinator, entity cycles, animation loop
 │   │   ├── minimap.js            # Dedicated HUD minimap canvas renderer
-│   │   ├── renderer.js           # 2D canvas drawing pipeline (clamped to viewport)
+│   │   ├── renderer.js           # 2D/2.5D canvas drawing pipeline with Y-depth sorting
 │   │   └── debug-logger.js       # Runtime debug telemetry & replay JSON export
 │   ├── entities/
 │   │   ├── player.js             # Position, elevation state, inventory, input listener
 │   │   ├── key.js                # Collectible colored key entities
 │   │   ├── door.js               # Locked barrier entities
-│   │   └── lever.js              # State-switching trigger entities (mutates grid tiles)
+│   │   ├── lever.js              # State-switching trigger entities (mutates grid tiles)
+│   │   ├── teleporter.js         # Dimensional warp portals with 3D coordinate translation
+│   │   ├── hazard.js             # Timed cyclical hazards & waypoint-navigating patrollers
+│   │   └── puzzle-gate.js        # Interactive minigame puzzle barrier entities
+│   ├── ui/
+│   │   └── puzzle-modal.js       # Pure static DOM modal for rune sequence and cipher dials
 │   ├── levels/
 │   │   ├── level-loader.js       # Schema validator, URL param parser, static level loader
-│   │   └── default-levels.js     # Hardcoded fallback campaign levels (Levels 1–5)
+│   │   └── default-levels.js     # Hardcoded fallback campaign levels (Levels 1–10)
 │   └── editor/
 │       ├── editor-canvas.js      # Grid painting, drag-placement, coordinate preview
 │       ├── editor-ui.js          # Palette selection, layer toggling, toolbar bindings
@@ -119,7 +126,7 @@ casual-maze-game/
 └── levels/
     ├── manifest.json             # Manifest of campaign and tutorial levels
     ├── tutorial_1.json .. tutorial_6.json # Handcrafted tutorial levels
-    └── level_1.json .. level_5.json       # Canonical JSON campaign levels
+    └── level_1.json .. level_10.json      # Canonical JSON campaign levels (Zones 1-3)
 ```
 
 ---
@@ -168,3 +175,43 @@ casual-maze-game/
 ### F. Debug Logger & Teleplay
 * Records timestamped events: movement attempts, rejection reasons (`wall`, `door_locked`), elevation changes, key acquisitions, and door opens.
 * Exports complete session telemetry to JSON for replay verification and debugging.
+
+### G. Angled Top-Down (2.5D) Perspective & Depth Pipeline
+* **Dual Perspectives (`VIEW_PERSPECTIVES`):**
+  * `TOPDOWN`: Orthographic flat plan-view rendering.
+  * `ANGLED` (Default): 2.5D oblique perspective inspired by classic 16-bit action RPGs, rendering physical wall facades, vertical height displacement, and bridge pillars.
+  * Toggled dynamically via `[V]` hotkey or HUD button (`📐 Perspective [V]`), preserving camera focus and state.
+* **Dual-Plane Wall Rendering (`renderAngledWall`):**
+  * Top cap face elevated upward by `wallH` (12px), rendered in lighter wall shade (`wallTop`) with inner highlights.
+  * Vertical drop facade (front face) rendered in primary wall color with brick mortar joints, corner bevels, and ground cast shadows when adjacent south tile (`y + 1`) is open or at lower elevation.
+* **Elevated Overpasses & Bridge Pillars (`renderAngledBridgeSpan`):**
+  * Bridge spans rendered with physical vertical elevation (`heightOffset = 14px`).
+  * Vertical support pillars anchored to the ground floor beneath bridge edges, featuring masonry texture and drop shadows.
+  * Directional railings with corner posts and depth shadows.
+* **Y-Depth Sorted Render Pipeline (`renderYSortedEntities`):**
+  * Merges player avatar, keys, doors, levers, teleporters, hazards, and patrollers into a unified array.
+  * Sorted back-to-front by `bottomY = worldY + tileSize * 0.4` (or `cy` for player).
+  * Guarantees entities properly pass behind elevated wall caps and in front of lower wall facades.
+
+### H. Dynamic Entities & Interactive Activities
+* **Teleporter (`Teleporter`):**
+  * Instantaneous 3D spatial warping between `(x, y, z)` and `(targetX, targetY, targetZ)`.
+  * Cooldown timer (`cooldown = 1.0s`) prevents infinite ping-pong loops upon arrival.
+  * Visual rendering includes rotating concentric portal rings, dimensional runes, and warping aura.
+* **Timed Hazards (`TimedHazard`):**
+  * Cyclical phase state machine: `DORMANT` -> `WARNING` -> `ACTIVE` -> `DECAYING`.
+  * Configurable intervals (`intervalMs`), active durations (`activeDurationMs`), and warning windows (`warningDurationMs`).
+  * Visual cues: telegraphing warning rings on floor, erupting flame jets or spike grids during active window.
+  * Contact during active state triggers player respawn to last safe checkpoint and screen flash.
+* **Patrollers (`Patroller`):**
+  * Continuous waypoint navigation along cyclic loops (`LOOP`) or back-and-forth paths (`PING_PONG`).
+  * Real-time linear interpolation (`x, y`), heading angle calculation (`angle`), and smooth visual orientation.
+  * Circular bounding collision detection against player radius.
+* **Puzzle Gates (`PuzzleGate`) & Modal UI (`PuzzleModal`):**
+  * Impassable barrier gates that trigger interactive mental minigames when inspected or touched.
+  * Supported puzzle types:
+    * `RUNE_MEMORY`: Simon-style sequential pattern memorization across 4 celestial runes.
+    * `CIPHER_DIAL`: 3-ring celestial rotary lock requiring alignment to secret target runes.
+  * Pure static modal UI (`js/ui/puzzle-modal.js`) with responsive mouse and keyboard controls.
+  * Successful solve unlocks the gate, removes collision obstacle, and dispatches `puzzle:solved` event.
+
