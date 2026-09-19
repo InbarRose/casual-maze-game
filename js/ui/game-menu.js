@@ -93,54 +93,52 @@ export class GameMenu {
       window.addEventListener('keydown', this._boundKeyHandler);
     }
 
-    if (!this.modalEl) return;
+    if (!this.modalEl || typeof this.modalEl.querySelector !== 'function') return;
 
-    const btnResume = this.modalEl.querySelector('#btn-pause-resume');
-    if (btnResume) btnResume.addEventListener('click', () => this.resume());
+    const bindClick = (sel, handler) => {
+      const btn = this.modalEl.querySelector(sel);
+      if (btn && typeof btn.addEventListener === 'function') {
+        btn.addEventListener('click', handler);
+      }
+    };
 
-    const btnRestart = this.modalEl.querySelector('#btn-pause-restart');
-    if (btnRestart) btnRestart.addEventListener('click', () => {
+    bindClick('#btn-pause-resume', () => this.resume());
+
+    bindClick('#btn-pause-restart', () => {
       this.resume();
       this.onRestart();
     });
 
-    const btnPerspective = this.modalEl.querySelector('#btn-pause-perspective');
-    if (btnPerspective) btnPerspective.addEventListener('click', () => {
+    bindClick('#btn-pause-perspective', () => {
       this.onTogglePerspective();
-      this._updatePerspectiveButtonLabel();
+      this.updatePerspectiveButtonLabel();
     });
 
-    const btnFreePan = this.modalEl.querySelector('#btn-pause-freepan');
-    if (btnFreePan) btnFreePan.addEventListener('click', () => {
+    bindClick('#btn-pause-freepan', () => {
       this.resume();
       this.onToggleFreePan();
     });
 
-    const btnLog = this.modalEl.querySelector('#btn-pause-log');
-    if (btnLog) btnLog.addEventListener('click', () => {
+    bindClick('#btn-pause-log', () => {
       this.resume();
       this.onOpenLog();
     });
 
-    const btnHint = this.modalEl.querySelector('#btn-pause-hint');
-    if (btnHint) btnHint.addEventListener('click', () => {
+    bindClick('#btn-pause-hint', () => {
       this.resume();
       this.onOpenHint();
     });
 
-    const btnSave = this.modalEl.querySelector('#btn-pause-save');
-    if (btnSave) btnSave.addEventListener('click', () => {
+    bindClick('#btn-pause-save', () => {
       this.onSaveProgress();
     });
 
-    const btnSound = this.modalEl.querySelector('#btn-pause-sound');
-    if (btnSound) btnSound.addEventListener('click', () => {
+    bindClick('#btn-pause-sound', () => {
       const isMuted = this.onToggleSound();
       this.updateSoundButtonLabel(isMuted);
     });
 
-    const btnQuit = this.modalEl.querySelector('#btn-pause-quit');
-    if (btnQuit) btnQuit.addEventListener('click', () => {
+    bindClick('#btn-pause-quit', () => {
       this.onQuit();
     });
   }

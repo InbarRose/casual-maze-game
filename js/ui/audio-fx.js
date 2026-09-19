@@ -50,20 +50,25 @@ class SoundFXEngine {
    * @returns {AudioContext|null}
    */
   getContext() {
+    if (this._audioCtx) {
+      if (this._audioCtx.state === 'suspended' && typeof this._audioCtx.resume === 'function') {
+        this._audioCtx.resume().catch(() => {});
+      }
+      return this._audioCtx;
+    }
+
     if (typeof window === 'undefined') return null;
     
     const AudioCtxClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioCtxClass) return null;
 
-    if (!this._audioCtx) {
-      try {
-        this._audioCtx = new AudioCtxClass();
-      } catch {
-        return null;
-      }
+    try {
+      this._audioCtx = new AudioCtxClass();
+    } catch {
+      return null;
     }
 
-    if (this._audioCtx && this._audioCtx.state === 'suspended') {
+    if (this._audioCtx && this._audioCtx.state === 'suspended' && typeof this._audioCtx.resume === 'function') {
       this._audioCtx.resume().catch(() => {});
     }
 
