@@ -42,6 +42,7 @@ import './unit/levels/level-loader.test.mjs';
 import './unit/levels/json-integrity.test.mjs';
 import './unit/levels/campaign-levels.test.mjs';
 import './unit/levels/tutorial-levels.test.mjs';
+import './unit/levels/multi-room.test.mjs';
 import './unit/stories/storylines.test.mjs';
 
 // 5. Editor Subsystem Unit Tests
@@ -53,7 +54,7 @@ import './unit/editor/editor-buttons-and-functions.test.mjs';
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
 
-// 7. Modular Campaign Chapter Playthrough Tests (Levels 1–28)
+// 7. Modular Campaign Chapter Playthrough Tests (Levels 1–32)
 import './integration/campaign/chapter-1.test.mjs';
 import './integration/campaign/chapter-2.test.mjs';
 import './integration/campaign/chapter-3.test.mjs';
@@ -61,6 +62,7 @@ import './integration/campaign/chapter-4.test.mjs';
 import './integration/campaign/chapter-5.test.mjs';
 import './integration/campaign/chapter-6.test.mjs';
 import './integration/campaign/chapter-7.test.mjs';
+import './integration/campaign/chapter-8.test.mjs';
 
 // 8. End-to-End User Journey Tests
 import './integration/journeys/tutorial-progression.journey.test.mjs';
@@ -74,6 +76,8 @@ import './integration/journeys/obstacle-interactions.journey.test.mjs';
 import './integration/journeys/checkpoints-and-lore.journey.test.mjs';
 import './integration/journeys/riddle-pedestals.journey.test.mjs';
 import './integration/journeys/storylines-progression.journey.test.mjs';
+import './integration/journeys/camera-rotation.journey.test.mjs';
+import './integration/journeys/multi-room-dungeon.journey.test.mjs';
 
 // Run registered suites
 

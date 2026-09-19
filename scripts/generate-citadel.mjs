@@ -201,7 +201,7 @@ const rSpireOverhead = createGrid(13, 13, 0);
 
 // Spire bridge spanning across central chasm
 for (let x = 4; x <= 8; x++) {
-  rSpireOverhead[6][x] = TILES.BRIDGE_EW;
+  rSpireOverhead[6][x] = TILES.BRIDGE_NS;
 }
 rSpireGround[6][3] = TILES.RAMP_E; // Climb up east
 rSpireGround[6][9] = TILES.RAMP_W; // Climb up west
@@ -370,13 +370,18 @@ const citadelStorylineEntry = `  {
   },
 `;
 
-if (!storylinesCode.includes('CITADEL_CHAPTER_1')) {
-  // Insert CITADEL_CHAPTER_1 before export const STORYLINES
+if (storylinesCode.includes('CITADEL_CHAPTER_1')) {
+  // Replace existing CITADEL_CHAPTER_1
+  storylinesCode = storylinesCode.replace(
+    /\/\/ Story 3: The Whispering Citadel[\s\S]*?const CITADEL_CHAPTER_1 = \{[\s\S]*?\n\};\n\n/,
+    citadelChapterCode
+  );
+  fs.writeFileSync(storylinesPath, storylinesCode, 'utf8');
+  console.log(`Replaced CITADEL_CHAPTER_1 in ${storylinesPath}`);
+} else {
   const exportTarget = 'export const STORYLINES = Object.freeze([';
   storylinesCode = storylinesCode.replace(exportTarget, `${citadelChapterCode}${exportTarget}\n${citadelStorylineEntry}`);
   fs.writeFileSync(storylinesPath, storylinesCode, 'utf8');
   console.log(`Updated ${storylinesPath}`);
-} else {
-  console.log(`${storylinesPath} already contains CITADEL_CHAPTER_1`);
 }
 

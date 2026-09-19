@@ -51,6 +51,28 @@ export class Player {
     this.pulseTimer = 0;
   }
 
+  get x() {
+    return this.gridX;
+  }
+
+  set x(value) {
+    this.gridX = value;
+    this.fromGridX = value;
+    this.targetGridX = value;
+    this.worldX = value * this.tileSize + this.tileSize / 2;
+  }
+
+  get y() {
+    return this.gridY;
+  }
+
+  set y(value) {
+    this.gridY = value;
+    this.fromGridY = value;
+    this.targetGridY = value;
+    this.worldY = value * this.tileSize + this.tileSize / 2;
+  }
+
   get z() {
     return this.elevation;
   }

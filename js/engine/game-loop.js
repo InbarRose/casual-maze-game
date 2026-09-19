@@ -35,11 +35,20 @@ export class GameLoop {
    * @param {object} options.level
    * @param {object} [options.uiCallbacks]
    */
-  constructor({ mainCanvas, minimapCanvas, level, uiCallbacks = {} }) {
+  constructor(optionsOrLevel, maybeMainCanvas, maybeMinimapCanvas, maybeUiCallbacks = {}) {
+    let mainCanvas, minimapCanvas, level, uiCallbacks;
+    if (optionsOrLevel && optionsOrLevel.mainCanvas) {
+      ({ mainCanvas, minimapCanvas, level, uiCallbacks = {} } = optionsOrLevel);
+    } else {
+      level = optionsOrLevel;
+      mainCanvas = maybeMainCanvas;
+      minimapCanvas = maybeMinimapCanvas;
+      uiCallbacks = maybeUiCallbacks;
+    }
     this.mainCanvas = mainCanvas;
     this.minimapCanvas = minimapCanvas;
     this.level = JSON.parse(JSON.stringify(level));
-    this.uiCallbacks = uiCallbacks;
+    this.uiCallbacks = uiCallbacks || {};
 
     this.isRunning = false;
     this.isPaused = false;
@@ -61,7 +70,7 @@ export class GameLoop {
     this.roomStates = {};
     this.activeRoomId = null;
     this.currentRoom = null;
-    this.lastRoomTransitionTime = 0;
+    this.lastRoomTransitionTime = -10000;
     this.isMultiRoom = Boolean(this.level.rooms && Object.keys(this.level.rooms).length > 0);
 
     let initialRoomDef = null;
@@ -79,16 +88,16 @@ export class GameLoop {
     }
 
     // Subsystems
-    const tileSize = this.level.config.tileSize || 32;
+    const tileSize = this.level.config?.tileSize || 32;
     this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize);
-    this.fog = this.level.config.fogOfWar
+    this.fog = this.level.config?.fogOfWar
       ? new FogOfWar(this.level.dimensions.width, this.level.dimensions.height)
       : null;
-    if (this.fog && this.level.config.mapRevealed) {
+    if (this.fog && this.level.config?.mapRevealed) {
       this.fog.reset(true);
     }
     const savedPerspective = StorageManager.getSetting('perspective');
-    const initialPerspective = savedPerspective || this.level.config.viewPerspective || 'angled';
+    const initialPerspective = savedPerspective || this.level.config?.viewPerspective || 'angled';
     this.renderer = new GameRenderer(mainCanvas);
     this.renderer.setPerspective(initialPerspective);
     this.minimap = new Minimap(minimapCanvas);
@@ -330,9 +339,9 @@ export class GameLoop {
    * @param {string} targetRoomId
    * @param {object|null} [targetSpawn=null]
    */
-  transitionToRoom(targetRoomId, targetSpawn = null) {
+  transitionToRoom(targetRoomId, targetSpawn = null, force = false) {
     const now = performance.now();
-    if (now - this.lastRoomTransitionTime < 300) return;
+    if (!force && now - this.lastRoomTransitionTime < 300) return;
     this.lastRoomTransitionTime = now;
 
     if (!this.level.rooms || !this.level.rooms[targetRoomId]) {

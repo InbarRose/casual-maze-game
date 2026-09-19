@@ -19,7 +19,8 @@ export class Signpost {
     this.elevation = this.z;
 
     this.title = config.title || "Architect's Journal";
-    this.text = config.text || 'The stones whisper of hidden pathways ahead.';
+    this.text = config.text || config.message || 'The stones whisper of hidden pathways ahead.';
+    this.message = this.text;
     this.author = config.author || 'The Architect';
     this.style = config.style || 'stone_tablet'; // 'stone_tablet' | 'wooden_sign' | 'astral_scroll'
     this.read = !!config.read;
