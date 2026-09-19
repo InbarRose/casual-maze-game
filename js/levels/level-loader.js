@@ -3,6 +3,7 @@
  */
 
 import { TILES, DEFAULTS, LAYERS } from '../core/constants.js';
+import { LEVEL_SCHEMA_VERSION, validateLevelVersion } from '../core/version.js';
 import { StorageManager } from '../core/storage.js';
 import { CAMPAIGN_LEVELS, TUTORIAL_LEVELS, getStoryline, getStoryChapter, getAllStoryLevels } from './default-levels.js';
 
@@ -292,7 +293,8 @@ export class LevelLoader {
       architectNote: raw.architectNote ? String(raw.architectNote) : undefined,
       parSteps: raw.parSteps !== undefined ? Number(raw.parSteps) : undefined,
       parTime: raw.parTime !== undefined ? Number(raw.parTime) : undefined,
-      version: raw.version || 1,
+      version: Number(raw.version || 1),
+      schemaVersion: raw.schemaVersion || LEVEL_SCHEMA_VERSION,
       dimensions: { width, height },
       config: {
         fogOfWar: raw.config?.fogOfWar !== undefined ? !!raw.config.fogOfWar : DEFAULTS.FOG_OF_WAR,

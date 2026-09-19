@@ -2,6 +2,15 @@
  * Casual Maze Game - Constants & Enumerations
  */
 
+export {
+  ENGINE_VERSION,
+  LEVEL_SCHEMA_VERSION,
+  ASSET_MANIFEST_VERSION,
+  LEVEL_MANIFEST_VERSION,
+  SAVE_PROFILE_SCHEMA_VERSION,
+  VERSION_METADATA,
+} from './version.js';
+
 export const TILES = Object.freeze({
   FLOOR: 0,
   WALL: 1,
