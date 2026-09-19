@@ -1,8 +1,12 @@
 {
   "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
   "id": "1",
+  "chapter": "chapter_1",
   "title": "The Training Hall",
   "author": "Inbar Rose",
+  "architectNote": "Every grand labyrinth begins with a single step. Seek the golden key to break the seal.",
+  "parSteps": 35,
+  "parTime": 20,
   "version": 1,
   "dimensions": {
     "width": 15,
@@ -562,6 +566,17 @@
       "color": "#fbbf24",
       "style": "classic",
       "orientation": "vertical"
+    },
+    {
+      "id": "sign_arch_1",
+      "type": "signpost",
+      "x": 2,
+      "y": 1,
+      "z": 0,
+      "title": "Architect's Note #1",
+      "text": "Every grand labyrinth begins with a single step. Seek the golden key to break the seal.",
+      "author": "The Chief Architect",
+      "style": "stone_tablet"
     }
   ]
 }

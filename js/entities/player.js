@@ -58,6 +58,15 @@ export class Player {
   }
 
   /**
+   * Check if player holds a specific key ID
+   * @param {string} keyId
+   * @returns {boolean}
+   */
+  hasKey(keyId) {
+    return this.inventory.includes(keyId);
+  }
+
+  /**
    * Reset player to initial spawn coordinates
    * @param {number} spawnX
    * @param {number} spawnY

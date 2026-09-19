@@ -53,6 +53,7 @@ import './integration/journeys/editor-authoring.journey.test.mjs';
 import './integration/journeys/fog-exploration.journey.test.mjs';
 import './integration/journeys/multi-elevation.journey.test.mjs';
 import './integration/journeys/interactive-activities.journey.test.mjs';
+import './integration/journeys/campaign-progression.journey.test.mjs';
 
 // Run registered suites
 await run();
