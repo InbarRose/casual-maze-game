@@ -149,6 +149,25 @@ export class LevelValidator {
       }
     }
 
+    // Cross-room entity registration for multi-room levels
+    if (level.rooms && typeof level.rooms === 'object') {
+      for (const room of Object.values(level.rooms)) {
+        if (Array.isArray(room.entities)) {
+          for (const rent of room.entities) {
+            if (rent.type === ENTITY_TYPES.KEY && !keyEntities.has(rent.id)) {
+              keyEntities.set(rent.id, rent);
+            }
+            if (rent.type === ENTITY_TYPES.RIDDLE_ITEM && !riddleItemEntities.has(rent.id)) {
+              riddleItemEntities.set(rent.id, rent);
+            }
+            if (rent.type === ENTITY_TYPES.DOOR && !doorEntities.some(d => d.id === rent.id)) {
+              doorEntities.push(rent);
+            }
+          }
+        }
+      }
+    }
+
     // Check Pedestals for accepted items and target doors
     for (const ped of pedestalEntities) {
       const pz = ped.z ?? ped.elevation ?? 0;
@@ -286,7 +305,28 @@ export class LevelValidator {
     // 6. Solvability & Reachability Simulation (BFS)
     const reachability = this.analyzeReachability(level, keyEntities, doorEntities);
 
-    if (level.spawn && level.exit && errors.length === 0) {
+    if (level.rooms && typeof level.rooms === 'object') {
+      // Validate individual room structure for multi-room dungeons
+      for (const [roomId, room] of Object.entries(level.rooms)) {
+        const rw = room.dimensions?.width ?? 0;
+        const rh = room.dimensions?.height ?? 0;
+        if (rw < 5 || rh < 5) {
+          errors.push({ message: `Room "${roomId}" dimensions (${rw}x${rh}) are too small (minimum 5x5).` });
+        }
+        if (!room.spawn) {
+          errors.push({ message: `Room "${roomId}" is missing a spawn point.` });
+        }
+        if (!Array.isArray(room.exits) || room.exits.length === 0) {
+          warnings.push({ message: `Room "${roomId}" has no exits defined.` });
+        } else {
+          for (const exit of room.exits) {
+            if (exit.x < 0 || exit.x >= rw || exit.y < 0 || exit.y >= rh) {
+              errors.push({ message: `Room "${roomId}" exit "${exit.id || 'unnamed'}" at (${exit.x}, ${exit.y}) is outside room bounds.` });
+            }
+          }
+        }
+      }
+    } else if (level.spawn && level.exit && errors.length === 0) {
       const sz = level.spawn.z ?? level.spawn.elevation ?? 0;
       const ez = level.exit.z ?? level.exit.elevation ?? 0;
       if (!reachability.exitReached) {

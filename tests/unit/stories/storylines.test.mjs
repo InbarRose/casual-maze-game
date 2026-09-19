@@ -70,7 +70,25 @@ describe('Storylines > Registry & Chapter Structure', () => {
 
   it('flattens all story levels via getAllStoryLevels()', () => {
     const all = getAllStoryLevels();
-    assertEqual(all.length, 6 + 3, 'Total 9 story levels in registry');
+    assertEqual(all.length, 6 + 3 + 1, 'Total 10 story levels in registry');
+  });
+
+  it('registers The Whispering Citadel multi-room dungeon story', () => {
+    const citadel = getStoryline('the_whispering_citadel');
+    assert(citadel !== null, 'The Whispering Citadel story exists');
+    assertEqual(citadel.totalChapters, 1);
+    assertEqual(citadel.title, 'The Whispering Citadel');
+    assertEqual(citadel.chapters.length, 1);
+
+    const ch1 = citadel.chapters[0];
+    assert(ch1.rooms !== undefined, 'Has rooms dictionary');
+    assert(ch1.rooms.courtyard !== undefined, 'Has courtyard room');
+    assert(ch1.rooms.catacombs !== undefined, 'Has catacombs room');
+    assert(ch1.rooms.high_spire !== undefined, 'Has high_spire room');
+
+    const rep = LevelValidator.validate(ch1);
+    assertEqual(rep.valid, true, 'Whispering Citadel passes validation');
+    assertEqual(rep.errors.length, 0, '0 validation errors');
   });
 });
 
