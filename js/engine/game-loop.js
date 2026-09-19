@@ -1174,6 +1174,9 @@ export class GameLoop {
             pedestalName: pedestal.name,
             riddleHint: pedestal.riddleHint,
             puzzleGroupId: pedestal.puzzleGroupId,
+            socketedItem: pedestal.item ? { id: pedestal.item.id, name: pedestal.item.name, symbol: pedestal.item.symbol } : null,
+            isSatisfied: pedestal.isSatisfied(),
+            acceptedItemId: pedestal.acceptedItemId,
           });
         }
         return;

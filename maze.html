@@ -47,6 +47,15 @@
           </div>
         </div>
 
+        <!-- Carried Riddle Item Badge -->
+        <div class="hud-card hud-riddle-item-card" id="hud-riddle-item-card" style="display: none; align-items: center; gap: 0.45rem; border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.08);" title="Carried Riddle Relic">
+          <span id="hud-riddle-item-symbol" style="font-size: 1.15rem;">🦅</span>
+          <div style="display: flex; flex-direction: column;">
+            <span id="hud-riddle-item-name" style="font-weight: 700; font-size: 0.8rem; color: var(--gold);">Falcon Statue</span>
+            <span style="font-size: 0.68rem; color: var(--text-muted);">(E: Place)</span>
+          </div>
+        </div>
+
         <!-- Timer, Steps, & Score -->
         <div class="hud-card">
           <div class="hud-stat">⏱ <strong id="hud-timer">00:00.0</strong></div>
@@ -238,6 +247,34 @@
           </div>
           <div style="display: flex; justify-content: flex-end;">
             <button class="btn btn-primary btn-sm" id="btn-close-inspect">Dismiss [E / Space / Esc]</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Riddle Inscription & Pedestal Modal -->
+    <div class="modal-backdrop" id="pedestal-modal">
+      <div class="modal-dialog" style="max-width: 500px;">
+        <div class="modal-body" style="padding: 1.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.75rem;">
+            <span id="pedestal-modal-icon" style="font-size: 2.2rem;">🏛️</span>
+            <div>
+              <h3 id="pedestal-modal-title" style="margin: 0; font-size: 1.25rem; color: var(--gold);">Ancient Pedestal</h3>
+              <span id="pedestal-modal-status" style="font-size: 0.8rem; color: var(--text-muted);">Empty socket awaiting an offering</span>
+            </div>
+          </div>
+          
+          <!-- Riddle Inscription Box -->
+          <div style="margin-bottom: 1rem;">
+            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; font-weight: 700; margin-bottom: 0.35rem;">Carved Inscription</div>
+            <div id="pedestal-modal-hint" style="font-size: 0.95rem; line-height: 1.6; color: var(--text); background: rgba(0,0,0,0.25); padding: 0.85rem 1rem; border-radius: 6px; border-left: 3px solid var(--gold); font-style: italic;">
+              "The sky watcher who pierces the veil of northern storms."
+            </div>
+          </div>
+
+          <!-- Socket State & Action Options -->
+          <div id="pedestal-modal-action-box" style="display: flex; gap: 0.6rem; justify-content: flex-end; margin-top: 1.25rem;">
+            <button class="btn btn-primary btn-sm" id="btn-pedestal-close">Got It [E / Space / Esc]</button>
           </div>
         </div>
       </div>
@@ -470,9 +507,41 @@
               keysListEl.appendChild(emptySpan);
             }
           }
+
+          // Render carried riddle relic badge in HUD
+          const riddleCardEl = document.getElementById('hud-riddle-item-card');
+          const riddleSymbolEl = document.getElementById('hud-riddle-item-symbol');
+          const riddleNameEl = document.getElementById('hud-riddle-item-name');
+          if (riddleCardEl) {
+            if (state.carriedRiddleItem) {
+              riddleCardEl.style.display = 'flex';
+              if (riddleSymbolEl) riddleSymbolEl.textContent = state.carriedRiddleItem.symbol || '🦅';
+              if (riddleNameEl) riddleNameEl.textContent = state.carriedRiddleItem.name || 'Riddle Relic';
+            } else {
+              riddleCardEl.style.display = 'none';
+            }
+          }
         },
         onWallDecorInspected: (data) => {
           openInspectModal(data);
+        },
+        onPedestalInspect: (data) => {
+          openPedestalModal(data);
+        },
+        onPedestalInteract: (data) => {
+          if (data.action === 'placed') {
+            showToast(`Placed ${data.placedItem?.name || 'Relic'} onto ${data.pedestal?.name || 'Pedestal'}!`, 'success');
+          } else if (data.action === 'swapped') {
+            showToast(`Swapped relics on ${data.pedestal?.name || 'Pedestal'}!`, 'success');
+          } else if (data.action === 'retrieved') {
+            showToast(`Retrieved ${data.retrievedItem?.name || 'Relic'} from pedestal.`, 'info');
+          }
+        },
+        onRiddleItemCollected: (item) => {
+          showToast(`🦅 Picked up ${item.name || 'Riddle Relic'}!`, 'success');
+        },
+        onRiddleSolved: (data) => {
+          showToast('✨ The sanctum riddle has been solved! Gate unlocked!', 'success');
         },
         onCheckpointActivated: (cp) => {
           showToast(`🚩 Checkpoint Activated: ${cp.name}`, 'info');
@@ -722,6 +791,35 @@
 
     if (btnCloseInspect) btnCloseInspect.addEventListener('click', closeInspectModal);
 
+    // Pedestal Riddle Dialog Elements & Logic
+    const pedestalModal = document.getElementById('pedestal-modal');
+    const pedestalModalTitle = document.getElementById('pedestal-modal-title');
+    const pedestalModalStatus = document.getElementById('pedestal-modal-status');
+    const pedestalModalHint = document.getElementById('pedestal-modal-hint');
+    const btnClosePedestal = document.getElementById('btn-pedestal-close');
+
+    function openPedestalModal(data) {
+      if (!pedestalModal) return;
+      if (pedestalModalTitle) pedestalModalTitle.textContent = data.pedestalName || 'Ancient Pedestal';
+      if (pedestalModalHint) pedestalModalHint.textContent = `"${data.riddleHint || 'A quiet plinth awaiting a relic.'}"`;
+      if (pedestalModalStatus) {
+        if (data.socketedItem) {
+          pedestalModalStatus.textContent = `Holding: ${data.socketedItem.symbol || ''} ${data.socketedItem.name || 'Relic'}`;
+        } else {
+          pedestalModalStatus.textContent = 'Empty socket awaiting an offering';
+        }
+      }
+      pedestalModal.classList.add('active');
+    }
+
+    function closePedestalModal() {
+      if (pedestalModal) {
+        pedestalModal.classList.remove('active');
+      }
+    }
+
+    if (btnClosePedestal) btnClosePedestal.addEventListener('click', closePedestalModal);
+
     // Restart Confirmation Dialog Elements & Logic
     const restartConfirmModal = document.getElementById('restart-confirm-modal');
     const btnConfirmRestart = document.getElementById('btn-confirm-restart');
@@ -756,6 +854,15 @@
         if (e.code === 'Escape' || e.code === 'Space' || e.code === 'Enter' || e.code === 'KeyE') {
           e.preventDefault();
           closeInspectModal();
+          return;
+        }
+      }
+
+      // If pedestal modal is active
+      if (pedestalModal && pedestalModal.classList.contains('active')) {
+        if (e.code === 'Escape' || e.code === 'Space' || e.code === 'Enter' || e.code === 'KeyE') {
+          e.preventDefault();
+          closePedestalModal();
           return;
         }
       }
