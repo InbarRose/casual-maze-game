@@ -59,4 +59,60 @@ describe('Entities > Player', () => {
     assertEqual(player.isMoving, false);
     assertDeepEqual(player.inventory, ['key_spawn']);
   });
+
+  it('renders human explorer character in 2.5D angled view across all 4 facings', () => {
+    const player = new Player(2, 2, ELEVATION.GROUND, 32);
+    const mockCtx = {
+      save: () => {},
+      restore: () => {},
+      beginPath: () => {},
+      closePath: () => {},
+      moveTo: () => {},
+      lineTo: () => {},
+      arc: () => {},
+      ellipse: () => {},
+      rect: () => {},
+      roundRect: () => {},
+      fill: () => {},
+      stroke: () => {},
+      fillRect: () => {},
+    };
+
+    for (const facing of ['north', 'south', 'east', 'west']) {
+      player.facing = facing;
+      // Idle
+      player.render(mockCtx, 64, 64, 32, 'angled');
+      // Moving
+      player.isMoving = true;
+      player.moveProgress = 0.5;
+      player.render(mockCtx, 64, 64, 32, 'angled');
+      // Overhead
+      player.elevation = ELEVATION.OVERHEAD;
+      player.render(mockCtx, 64, 64, 32, 'angled');
+    }
+  });
+
+  it('renders human explorer character in top-down view across all 4 facings', () => {
+    const player = new Player(2, 2, ELEVATION.GROUND, 32);
+    const mockCtx = {
+      save: () => {},
+      restore: () => {},
+      beginPath: () => {},
+      arc: () => {},
+      ellipse: () => {},
+      rect: () => {},
+      roundRect: () => {},
+      fill: () => {},
+      stroke: () => {},
+      fillRect: () => {},
+    };
+
+    for (const facing of ['north', 'south', 'east', 'west']) {
+      player.facing = facing;
+      player.render(mockCtx, 64, 64, 32, 'topdown');
+      player.isMoving = true;
+      player.moveProgress = 0.5;
+      player.render(mockCtx, 64, 64, 32, 'topdown');
+    }
+  });
 });

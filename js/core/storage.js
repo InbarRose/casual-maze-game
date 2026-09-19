@@ -315,6 +315,30 @@ export class StorageManager {
     }
   }
 
+  /**
+   * Get a specific setting value
+   * @param {string} key
+   * @param {*} [defaultValue=null]
+   * @returns {*}
+   */
+  static getSetting(key, defaultValue = null) {
+    const settings = this.loadSettings();
+    return settings[key] !== undefined ? settings[key] : defaultValue;
+  }
+
+  /**
+   * Set a specific setting value and persist
+   * @param {string} key
+   * @param {*} value
+   * @returns {*}
+   */
+  static setSetting(key, value) {
+    const settings = this.loadSettings();
+    settings[key] = value;
+    this.saveSettings(settings);
+    return value;
+  }
+
   /* =========================================================
    * FULL GAME PROGRESS EXPORT & IMPORT (JSON BACKUP)
    * ========================================================= */

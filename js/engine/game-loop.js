@@ -61,7 +61,10 @@ export class GameLoop {
     if (this.fog && this.level.config.mapRevealed) {
       this.fog.reset(true);
     }
+    const savedPerspective = StorageManager.getSetting('perspective');
+    const initialPerspective = savedPerspective || this.level.config.viewPerspective || 'angled';
     this.renderer = new GameRenderer(mainCanvas);
+    this.renderer.setPerspective(initialPerspective);
     this.minimap = new Minimap(minimapCanvas);
 
     // Determine effective spawn coordinates (custom test spawn takes precedence in playtest mode)
@@ -132,6 +135,7 @@ export class GameLoop {
     const current = this.renderer.perspective || 'angled';
     const next = current === 'angled' ? 'topdown' : 'angled';
     this.renderer.setPerspective(next);
+    StorageManager.setSetting('perspective', next);
     globalEvents.emit('perspective:toggled', { mode: next });
     if (this.uiCallbacks.onPerspectiveChange) {
       this.uiCallbacks.onPerspectiveChange(next);

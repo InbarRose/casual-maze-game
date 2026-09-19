@@ -824,13 +824,37 @@
       addActivityLog(`<strong>${data.name || 'Switch'}</strong>${coords} toggled ${stateName}${targetDesc}`, type, icon, 'lever');
     });
 
-    document.getElementById('btn-perspective')?.addEventListener('click', () => {
+    const btnPerspective = document.getElementById('btn-perspective');
+    function updatePerspectiveButton(mode) {
+      if (!btnPerspective) return;
+      const isAngled = mode === 'angled';
+      btnPerspective.innerHTML = isAngled
+        ? `📐 <span class="hide-mobile">2.5D View [V]</span>`
+        : `🗺️ <span class="hide-mobile">Top-Down [V]</span>`;
+      btnPerspective.title = isAngled
+        ? 'Current: Angled 2.5D Perspective (Press V to switch to Top-Down)'
+        : 'Current: Classic Top-Down Perspective (Press V to switch to Angled 2.5D)';
+      if (isAngled) {
+        btnPerspective.classList.add('btn-primary');
+        btnPerspective.classList.remove('btn-secondary');
+      } else {
+        btnPerspective.classList.remove('btn-primary');
+        btnPerspective.classList.add('btn-secondary');
+      }
+    }
+
+    if (window.gameLoop?.renderer) {
+      updatePerspectiveButton(window.gameLoop.renderer.perspective);
+    }
+
+    btnPerspective?.addEventListener('click', () => {
       if (window.gameLoop) {
         window.gameLoop.togglePerspective();
       }
     });
 
     globalEvents.on('perspective:toggled', ({ mode }) => {
+      updatePerspectiveButton(mode);
       const modeName = mode === 'angled' ? 'Angled 2.5D Sprite View' : 'Classic Top-Down View';
       showToast(`Perspective: ${modeName}`, 'info');
       addActivityLog(`View perspective switched to <strong>${modeName}</strong>`, 'info', '📐', 'info');

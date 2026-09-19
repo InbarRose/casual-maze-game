@@ -85,4 +85,39 @@ describe('Engine > Perspective Renderer', () => {
     assertEqual(renderedOrder[1], 'player');
     assertEqual(renderedOrder[2], 'k_south');
   });
+
+  it('preserves explicitly toggled perspective across render frames', () => {
+    const mockCanvas = {
+      width: 800,
+      height: 600,
+      getContext: () => ({
+        fillRect: () => {},
+        strokeRect: () => {},
+        save: () => {},
+        restore: () => {},
+        beginPath: () => {},
+        arc: () => {},
+        fill: () => {},
+        stroke: () => {},
+        rect: () => {},
+        roundRect: () => {},
+        ellipse: () => {},
+        createRadialGradient: () => ({ addColorStop: () => {} }),
+      }),
+    };
+    const renderer = new GameRenderer(mockCanvas);
+    renderer.setPerspective('topdown');
+
+    const fakeLevel = {
+      dimensions: { width: 5, height: 5 },
+      config: { theme: 'dungeon', tileSize: 32, viewPerspective: 'angled' },
+      layers: { ground: [[0, 0], [0, 0]], overhead: [[0, 0], [0, 0]] },
+      entities: [],
+    };
+    const camera = new Camera(800, 600, 32);
+    const player = new Player(1, 1, 0, 32);
+
+    renderer.render(fakeLevel, player, [], camera, null, 0.016);
+    assertEqual(renderer.perspective, 'topdown', 'Explicit topdown perspective must not be overwritten by level config');
+  });
 });

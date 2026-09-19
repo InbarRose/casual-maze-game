@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Dimensional Teleporter Portal -->
+  <defs>
+    <radialGradient id="tpVortex" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="30%" stop-color="#c084fc" />
+      <stop offset="70%" stop-color="#7e22ce" />
+      <stop offset="100%" stop-color="#3b0764" />
+    </radialGradient>
+  </defs>
+  <!-- Base Ground Shadow / Aperture -->
+  <ellipse cx="32" cy="34" rx="26" ry="24" fill="#0f172a" opacity="0.6" />
+  <!-- Outer Runic Ring -->
+  <circle cx="32" cy="32" r="25" fill="none" stroke="#a855f7" stroke-width="2.5" stroke-dasharray="8 4" />
+  <!-- Middle Pulse Ring -->
+  <circle cx="32" cy="32" r="19" fill="none" stroke="#c084fc" stroke-width="2" />
+  <!-- Swirling Core Vortex -->
+  <circle cx="32" cy="32" r="15" fill="url(#tpVortex)" />
+  <!-- Dimensional Eye / Singularity -->
+  <ellipse cx="32" cy="32" rx="4" ry="7" fill="#ffffff" />
+  <!-- Orbiting Runes -->
+  <circle cx="32" cy="11" r="2.5" fill="#f0abfc" />
+  <circle cx="32" cy="53" r="2.5" fill="#f0abfc" />
+  <circle cx="11" cy="32" r="2.5" fill="#f0abfc" />
+  <circle cx="53" cy="32" r="2.5" fill="#f0abfc" />
+</svg>

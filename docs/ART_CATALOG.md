@@ -33,21 +33,28 @@ The engine provides **5 fully realized biome themes**, each equipped with comple
 
 ```
 assets/
-├── manifest.json                     # Canonical asset index & metadata registry
+├── manifest.json                     # Canonical asset index & metadata registry (147 assets)
 ├── tiles/                            # Map & terrain tiles
 │   ├── ground/                       # Base floor pavers and solid theme walls
 │   ├── variations/                   # Variable tiles: cracked floors, runic glyphs, torch walls, grate walls
 │   ├── bridges/                      # Theme-specific multi-elevation 3D bridges (EW & NS)
-│   └── ramps/                        # Theme-specific elevation incline ramps (North, South, East, West)
-├── entities/                         # Interactive items, doors & switches
+│   ├── ramps/                        # Theme-specific elevation incline ramps (North, South, East, West)
+│   └── angled/                       # 2.5D angled perspective tiles (Elevated wall drop facades, bridge support decks)
+├── entities/                         # Interactive items, doors, switches & dynamic hazards
 │   ├── keys/                         # Themed keys (Dungeon Iron, Jungle Jade, Magma Ruby, Temple Scarab, Glacial Frost) + Classic styles
 │   ├── doors/                        # Directional gates (Horizontal crossbars & Vertical portcullis) + Forcefields & Vaults
-│   └── levers/                       # Mechanism switches (OFF/ON states for Switches, Pedestals, Crystals, Runes, Valves)
+│   ├── levers/                       # Mechanism switches (OFF/ON states for Switches, Pedestals, Crystals, Runes, Valves)
+│   ├── teleporters/                  # Dimensional portals (swirling rune rings, ethereal core)
+│   ├── hazards/                      # Timed environmental traps (flame vents, glowing ember coils)
+│   ├── patrollers/                   # Autonomous sentinels (spherical core, sensor visor)
+│   ├── puzzle_gates/                 # Minigame barrier seals (rune memory locks, celestial cipher dials)
+│   └── signposts/                    # Architect lore tablets & standing signposts
 ├── environment/                      # Spawns, portals & landmarks
 │   ├── spawn/                        # Freestanding entrance styles (Stairs Down, Portal, Archway, Pentagram, Camp)
 │   ├── exit/                         # Freestanding exit styles (Cosmic Portal, Stairs Up, Archway, Treasure Chest, Shrine)
 │   └── edge_passages/                # Perimeter edge-wall inset entrances & exits (North, South, East, West)
 ├── player/                           # Character avatars with 4-Way directional facing
+│   ├── explorer/                     # Human explorer in blue jeans, red buffalo flannel shirt & brown backpack (North, South, East, West)
 │   ├── adventurer/                   # Classic explorer (North, South, East, West)
 │   ├── knight/                       # Armored vanguard with helm (North, South, East, West)
 │   ├── mage/                         # Robed wizard with cowl (North, South, East, West)
@@ -66,9 +73,16 @@ Instead of only entering or exiting via free-standing staircases or magic portal
 * These visually integrate into perimeter walls, rendering an inset entry tunnel opening directly through the outer boundary wall.
 
 ### B. Player 4-Way Directional Facings
-Each of the **4 player classes** has dedicated vector sprites for 4-way navigation:
-* **North (`_north.svg`)**: Upward facing / back view
-* **South (`_south.svg`)**: Downward facing / front visor view
+Each of the **5 player classes** has dedicated vector sprites for 4-way navigation:
+* **Explorer (`player/explorer/`)**: A generic human explorer wearing blue denim jeans, a red-and-black buffalo plaid flannel shirt, brown leather hiking boots, and a brown expedition backpack with top blanket bedroll and brass hardware buckles.
+* **Adventurer (`player/adventurer/`)**: Classic explorer with expedition cap and leather vest.
+* **Knight (`player/knight/`)**: Armored vanguard with iron helmet and crest.
+* **Mage (`player/mage/`)**: Robed wizard with mystic cowl and celestial runic trim.
+* **Rogue (`player/rogue/`)**: Shadow scout in midnight hooded cowl.
+
+Facings available for all classes:
+* **North (`_north.svg`)**: Upward facing / back view (backpack prominent for Explorer)
+* **South (`_south.svg`)**: Downward facing / front visor view (flannel shirt, collar, placket, and backpack chest harness)
 * **East (`_east.svg`)**: Rightward facing profile
 * **West (`_west.svg`)**: Leftward facing profile
 
@@ -86,6 +100,9 @@ Each of the **4 player classes** has dedicated vector sprites for 4-way navigati
   * Minimum stroke width of `1.5px` (recommended `2px` to `3px`) for clear visibility at low zoom levels.
 * **Palette & Theming**:
   * **Accent / Sky Blue**: `#38bdf8` / `#0284c7`
+  * **Denim Blue**: `#2563eb` / `#1d4ed8`
+  * **Plaid Red**: `#b91c1c` / `#991b1b` / `#450a0a`
+  * **Leather Brown**: `#854d0e` / `#713f12` / `#a16207`
   * **Emerald Green**: `#34d399` / `#059669`
   * **Gold / Amber**: `#fbbf24` / `#d97706`
   * **Ruby / Rose**: `#f43f5e` / `#be123c`
@@ -96,11 +113,13 @@ Each of the **4 player classes** has dedicated vector sprites for 4-way navigati
 
 ## 6. Offline Viewing & Tooling
 
-1. **In-Browser Asset Studio**: Open [`art-catalog.html`](../art-catalog.html) in any browser offline.
-   * Filter by Theme: `Dungeon`, `Jungle`, `Magma`, `Temple`, `Glacial`.
-   * Filter by Type: `Tiles`, `Entities`, `Environment`, `Player`, `UI`.
-   * Filter by Category: `Ground`, `Variations`, `Bridges`, `Ramps`, `Keys`, `Doors`, `Levers`, `Spawn`, `Exit`, `Edge Passages`, `Player Classes`, `Tools`.
-   * Copy SVG source code or asset paths directly to clipboard.
+1. **In-Browser Asset Studio (`art-catalog.html`)**: Open in any browser offline.
+   * **Perspective Preview Toggle**: Toggle between **2.5D Angled** (simulating 24° isometric pitch, depth elevation, and cast drop shadows) and **Top-Down** orthographic plan view. Persisted in `localStorage`.
+   * **Filter by Theme**: `Dungeon`, `Jungle`, `Magma`, `Temple`, `Glacial`.
+   * **Filter by Type**: `Tiles`, `Entities`, `Environment`, `Player`, `UI`.
+   * **Filter by Category**: `Ground`, `2.5D Angled`, `Variations`, `Bridges`, `Ramps`, `Keys`, `Doors`, `Levers`, `Teleporters`, `Hazards`, `Patrollers`, `Puzzle Gates`, `Signposts`, `Spawn`, `Exit`, `Edge Passages`, `Player`, `Tools`.
+   * **Filter by Character Class**: `Explorer` (Jeans & Flannel), `Adventurer`, `Knight`, `Mage`, `Rogue`.
+   * **Clipboard Export**: Copy SVG source code or asset paths directly to clipboard.
 2. **Rebuilding Asset Pipeline**:
    ```bash
    node scripts/build-asset-pipeline.mjs

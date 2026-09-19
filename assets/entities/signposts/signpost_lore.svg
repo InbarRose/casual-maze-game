@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Architect's Journal / Lore Signpost Tablet -->
+  <!-- Drop Shadow -->
+  <ellipse cx="32" cy="54" rx="16" ry="6" fill="#000000" opacity="0.35" />
+  <!-- Carved Stone Pedestal Plinth -->
+  <rect x="22" y="44" width="20" height="9" rx="2" fill="#334155" stroke="#1e293b" stroke-width="1.5" />
+  <rect x="25" y="32" width="14" height="14" fill="#475569" stroke="#1e293b" stroke-width="1.5" />
+  <!-- Angled Lore Tablet Slate -->
+  <rect x="12" y="10" width="40" height="26" rx="3" fill="#f8fafc" stroke="#475569" stroke-width="2" />
+  <!-- Parchment Texture / Inscribed Lines -->
+  <line x1="18" y1="18" x2="46" y2="18" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="18" y1="23" x2="42" y2="23" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+  <line x1="18" y1="28" x2="36" y2="28" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Glowing Golden Runic Eye Symbol -->
+  <circle cx="32" cy="14" r="3" fill="#fbbf24" />
+  <circle cx="32" cy="14" r="1.2" fill="#ffffff" />
+</svg>

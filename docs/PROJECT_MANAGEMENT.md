@@ -6,8 +6,25 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.9.0` (Completed & Verified)
+### Current Version: `v1.10.0` (Completed & Verified)
 
+- [x] **Perspective Toggle Reliability & Persistent User Settings**:
+  - Identified and resolved renderer regression in `js/engine/renderer.js` where per-frame execution was overriding runtime perspective choices.
+  - Added user settings persistence in `StorageManager` (`getSetting`, `setSetting`) for perspective choice across level transitions and browser sessions.
+  - Updated HUD button `#btn-perspective` in `maze.html` with active indicators and hotkey `[V]` listener.
+- [x] **Human Explorer Character Art (Jeans, Plaid Flannel & Backpack)**:
+  - Procedural Canvas 2D player renderer overhaul in `js/entities/player.js` supporting both 2.5D angled and top-down perspectives.
+  - **2.5D Angled View**: Upright human explorer with messy brown hair, friendly facial expression, red-and-black Buffalo plaid flannel shirt (check patterns, collar, front placket), blue denim jeans with animated walking stride, brown leather boots, and brown backpack with rolled sleeping bedroll, side pouches, and brass buckles.
+  - **Top-Down View**: Orthographic plan view with flannel shoulders, directional indicator, and backpack.
+  - Created 4 standalone vector SVG sprites in `assets/player/explorer/` (`north`, `south`, `east`, `west`).
+- [x] **Art DB & Asset Catalog Expansion (`art-catalog.html`)**:
+  - Registered 12 new SVG assets into `assets/manifest.json` (total 147 assets): 4 explorer facings, teleporter, flame vent, patroller sentinel, rune & cipher puzzle gates, signpost, and 2.5D angled wall and bridge tiles.
+  - Added in-browser **2.5D Perspective Preview Toggle** with CSS 3D card tilt (`rotateX(24deg)`) and realistic drop shadows.
+  - Added filter pills for all new categories (`angled`, `teleporters`, `hazards`, `patrollers`, `puzzle_gates`, `signposts`) and character classes (`explorer`, `adventurer`, `knight`, `mage`, `rogue`).
+- [x] **Comprehensive Automated Test Coverage**:
+  - 31 test suites, 178 tests, 3,532 assertions passing 100% (0 failed) in ~170ms.
+
+### Previous Milestone: `v1.9.0`
 - [x] **Progressive Campaign Architecture (7 Chapters, 28 Levels)**:
   - Structured progression inspired by *World of Goo*: introducing core mechanics, scaling, twisting, and culminating in grand synthesis.
   - 7 curated chapters conforming to Kishōtenketsu 4-act progression:
