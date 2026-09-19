@@ -35,9 +35,16 @@ This document tracks project milestones, current release status, active developm
   - Multi-room episodic saga featuring 3 interconnected rooms (Courtyard, Catacombs, High Spire).
   - Puzzle flow: retrieve crypt key from catacombs, unlock spire gate in courtyard, cross high spire overpass to the apex altar.
   - Secret branching exit to Level 29 (*The Cardinal Needle*).
+- [x] **Comprehensive Asset, Logic & Level Versioning & Drift Protection**:
+  - Central versioning module `js/core/version.js` (`ENGINE_VERSION = '1.14.0'`) synchronized with `package.json`.
+  - Level version normalization (`version: 1`, `schemaVersion: '1.0.0'`) and version validation in `LevelValidator`.
+  - Cryptographic asset manifest (`assets/manifest.json`, `assets/schema.json`) tracking SHA-256 hashes and file sizes for all 160 SVG assets, resolving 13 previously unmanifested assets.
+  - Cryptographic level manifest (`levels/manifest.json`) tracking SHA-256 hashes, file sizes, dimensions, entity counts, multi-room flags, and versions for all 42 levels.
+  - Zero-dependency drift detection tool (`npm run validate:drift`) and universal manifest synchronizer (`npm run manifests:update`).
+  - GitHub Actions CI gate `Validate Asset, Level & Version Drift Integrity` in `.github/workflows/ci.yml` protecting PRs into `main`.
 - [x] **Automated Test Coverage & Quality Assurance**:
-  - 53 test suites, 250 tests, 4,748 assertions passing 100% (0 failed) in ~260ms.
-  - Integration suite `chapter-8.test.mjs`, unit suite `multi-room.test.mjs`, and journey suites `camera-rotation.journey.test.mjs` and `multi-room-dungeon.journey.test.mjs`.
+  - 56 test suites, 265 tests, 5,882 assertions passing 100% (0 failed) in ~300ms.
+  - Dedicated suites for versioning (`versioning.test.mjs`), asset drift (`asset-drift.test.mjs`), and level drift (`level-drift.test.mjs`).
 
 ### Previous Milestone: `v1.13.0`
 

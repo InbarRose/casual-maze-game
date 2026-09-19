@@ -32,6 +32,9 @@ jobs:
       - name: Validate Static Architecture & Assets
         run: npm run validate:static
 
+      - name: Validate Asset, Level & Version Drift Integrity
+        run: npm run validate:drift
+
       - name: Validate ES Module & Syntax Integrity
         run: npm run validate:syntax
 

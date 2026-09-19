@@ -197,20 +197,20 @@ Every Pull Request targeting `main` and push to `main` executes a multi-stage au
 flowchart TD
     A["PR Opened / Pushed to main"] --> B["Stage 1: Static Asset Integrity\n(CNAME, HTML, Manifest, JSON Levels)"]
     B --> C["Stage 2: Static Architecture & Dependency Audit\n(Zero Runtime Backend Dependencies)"]
-    C --> D["Stage 3: ES Module Syntax Validation\n(node tests/validate-syntax.mjs)"]
-    D --> E["Stage 4: Multi-Node Test Matrix\n(Node.js 18.x, 20.x, 22.x)"]
+    C --> D["Stage 3: Cryptographic Drift & Hash Integrity\n(npm run validate:drift: 160 SVGs + 42 Levels)"]
+    D --> E["Stage 4: ES Module Syntax Validation\n(npm run validate:syntax: 113 modules)"]
     E --> F["Stage 5: Subsystem Unit Tests\n(npm run test:unit)"]
     F --> G["Stage 6: End-to-End User Journey Tests\n(npm run test:journeys)"]
-    G --> H["Stage 7: Full Automated Suite\n(npm test: 87/87 pass, 0 failed)"]
+    G --> H["Stage 7: Full Automated Suite\n(npm test: 265/265 pass, 0 failed)"]
     H --> I["✅ CI Status: Green / Merge Allowed"]
 ```
 
 ### CI Quality Gates
-1. **Static Files Check**: `CNAME`, `index.html`, `maze.html`, `editor.html`, and all 16 JSON level files must exist.
+1. **Static Files Check**: `CNAME`, `index.html`, `maze.html`, `editor.html`, `assets/schema.json`, and all 42 JSON level files must exist.
 2. **Zero Dependencies Check**: `package.json` must contain zero production `dependencies` to maintain static GitHub Pages compatibility.
-3. **Syntax Check**: All JS and MJS modules must parse cleanly without syntax errors.
-4. **Unit & Journey Suites**: 100% test pass rate (`0 failed`).
-5. **Multi-Node Support**: Pipeline must pass cleanly across Node 18.x, 20.x, and 22.x.
+3. **Cryptographic Drift Check (`npm run validate:drift`)**: 100% of the 160 SVG vector assets and 42 level files must match their registered SHA-256 hashes and dimensions; zero unmanifested or missing files allowed.
+4. **Syntax Check**: All 113 JS and MJS modules must parse cleanly without syntax errors.
+5. **Unit & Journey Suites**: 100% test pass rate (`0 failed` across 56 test suites, 265 tests).
 
 ---
 
@@ -218,11 +218,13 @@ flowchart TD
 
 | Command | Purpose |
 | :--- | :--- |
-| `npm test` | Run complete automated test suite (21 suites, 87 tests) |
+| `npm test` | Run complete automated test suite (56 suites, 265 tests) |
 | `npm run test:unit` | Run all subsystem unit tests |
-| `npm run test:journeys` | Run all 5 end-to-end user journey tests |
+| `npm run test:journeys` | Run all end-to-end user journey tests |
 | `npm run validate:syntax` | Validate JavaScript syntax across all source and test files |
-| `npm run validate:static` | Validate static file presence and zero production dependencies |
+| `npm run validate:static` | Validate static file presence, manifest schemas, and zero production dependencies |
+| `npm run validate:drift` | Recompute SHA-256 hashes across 160 assets and 42 levels to verify zero drift |
+| `npm run manifests:update` | Automatically synchronize and hash all assets, levels, and modular chapter files |
 | `node tests/run-all.mjs --suite=<name>` | Run test suites matching `<name>` filter (e.g. `--suite=collision`) |
 | `node tests/run-all.mjs --grep=<pattern>` | Run specific test cases matching regex pattern (e.g. `--grep=deadlock`) |
 | `node tests/run-all.mjs --verbose` | Run test runner in verbose mode with detailed step logs |
