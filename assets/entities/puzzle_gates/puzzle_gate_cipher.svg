@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Celestial Cipher Dial Barrier Gate -->
+  <!-- Outer Gate Frame -->
+  <rect x="6" y="8" width="10" height="48" rx="2" fill="#475569" stroke="#1e293b" stroke-width="2" />
+  <rect x="48" y="8" width="10" height="48" rx="2" fill="#475569" stroke="#1e293b" stroke-width="2" />
+  <rect x="6" y="6" width="52" height="10" rx="3" fill="#334155" stroke="#0f172a" stroke-width="2" />
+  <!-- Triple Rotary Ring Dial Mechanism -->
+  <circle cx="32" cy="34" r="18" fill="#1e293b" stroke="#fbbf24" stroke-width="2" />
+  <circle cx="32" cy="34" r="12" fill="#0f172a" stroke="#38bdf8" stroke-width="1.5" />
+  <circle cx="32" cy="34" r="6" fill="#334155" stroke="#f43f5e" stroke-width="1.2" />
+  <!-- Dial Pointer Needles -->
+  <line x1="32" y1="34" x2="32" y2="18" stroke="#fbbf24" stroke-width="2" stroke-linecap="round" />
+  <line x1="32" y1="34" x2="42" y2="34" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" />
+  <!-- Center Jewel -->
+  <circle cx="32" cy="34" r="2.5" fill="#ffffff" />
+</svg>

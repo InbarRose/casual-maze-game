@@ -79,11 +79,11 @@ describe('Assets > Manifest & SVG Vector Files Integrity', () => {
     }
   });
 
-  it('tests 4-way directional facings across all player classes', () => {
+  it('tests 4-way directional facings across all player classes including explorer', () => {
     const loader = new AssetLoader();
     loader.manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
-    const classes = ['adventurer', 'knight', 'mage', 'rogue'];
+    const classes = ['explorer', 'adventurer', 'knight', 'mage', 'rogue'];
     const facings = ['north', 'south', 'east', 'west'];
 
     for (const cls of classes) {
@@ -93,6 +93,29 @@ describe('Assets > Manifest & SVG Vector Files Integrity', () => {
         assertEqual(asset.type, 'player');
         assertEqual(asset.style, cls);
       }
+    }
+  });
+
+  it('tests dynamic activity and 2.5D angled assets in manifest', () => {
+    const loader = new AssetLoader();
+    loader.manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+
+    const newAssets = [
+      'teleporter_portal',
+      'hazard_flame_vent',
+      'patroller_sentinel',
+      'puzzle_gate_rune',
+      'puzzle_gate_cipher',
+      'signpost_lore',
+      'tile_wall_angled_dungeon',
+      'tile_bridge_pillar_deck',
+    ];
+
+    for (const id of newAssets) {
+      const asset = loader.getAssetInfo(id);
+      assert(asset !== null, `Asset ${id} exists in manifest`);
+      const fullPath = path.resolve(process.cwd(), asset.path);
+      assert(fs.existsSync(fullPath), `Asset file exists on disk: ${asset.path}`);
     }
   });
 });

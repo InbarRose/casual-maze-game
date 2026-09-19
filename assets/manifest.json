@@ -1,8 +1,8 @@
 {
   "$schema": "./schema.json",
-  "version": "1.3.0",
-  "generatedAt": "2026-08-31T05:25:34.284Z",
-  "totalAssets": 135,
+  "version": "1.4.0",
+  "generatedAt": "2026-09-18T22:35:00.000Z",
+  "totalAssets": 147,
   "themes": [
     "dungeon",
     "jungle",
@@ -11,6 +11,7 @@
     "glacial"
   ],
   "playerClasses": [
+    "explorer",
     "adventurer",
     "knight",
     "mage",
@@ -27,12 +28,18 @@
       "ground",
       "bridges",
       "ramps",
-      "variations"
+      "variations",
+      "angled"
     ],
     "entities": [
       "keys",
       "doors",
-      "levers"
+      "levers",
+      "teleporters",
+      "hazards",
+      "patrollers",
+      "puzzle_gates",
+      "signposts"
     ],
     "environment": [
       "spawn",
@@ -2205,6 +2212,224 @@
         "ui",
         "tool",
         "editor"
+      ]
+    },
+    {
+      "id": "player_explorer_north",
+      "name": "Casual Explorer (North (Back View))",
+      "type": "player",
+      "category": "player",
+      "style": "explorer",
+      "path": "assets/player/explorer/player_explorer_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Casual explorer human with blue jeans, flannel shirt, and brown backpack facing north",
+      "tags": [
+        "player",
+        "hero",
+        "explorer",
+        "human",
+        "backpack",
+        "flannel",
+        "north",
+        "character"
+      ]
+    },
+    {
+      "id": "player_explorer_south",
+      "name": "Casual Explorer (South (Front View))",
+      "type": "player",
+      "category": "player",
+      "style": "explorer",
+      "path": "assets/player/explorer/player_explorer_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Casual explorer human with blue jeans, flannel shirt, and brown backpack facing south",
+      "tags": [
+        "player",
+        "hero",
+        "explorer",
+        "human",
+        "backpack",
+        "flannel",
+        "south",
+        "character"
+      ]
+    },
+    {
+      "id": "player_explorer_east",
+      "name": "Casual Explorer (East (Right Profile))",
+      "type": "player",
+      "category": "player",
+      "style": "explorer",
+      "path": "assets/player/explorer/player_explorer_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Casual explorer human with blue jeans, flannel shirt, and brown backpack facing east",
+      "tags": [
+        "player",
+        "hero",
+        "explorer",
+        "human",
+        "backpack",
+        "flannel",
+        "east",
+        "character"
+      ]
+    },
+    {
+      "id": "player_explorer_west",
+      "name": "Casual Explorer (West (Left Profile))",
+      "type": "player",
+      "category": "player",
+      "style": "explorer",
+      "path": "assets/player/explorer/player_explorer_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Casual explorer human with blue jeans, flannel shirt, and brown backpack facing west",
+      "tags": [
+        "player",
+        "hero",
+        "explorer",
+        "human",
+        "backpack",
+        "flannel",
+        "west",
+        "character"
+      ]
+    },
+    {
+      "id": "teleporter_portal",
+      "name": "Dimensional Teleporter Portal",
+      "type": "entity",
+      "category": "teleporters",
+      "style": "cave",
+      "path": "assets/entities/teleporters/teleporter_portal.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Dimensional warp portal with concentric runic rings and swirling core",
+      "tags": [
+        "teleporter",
+        "portal",
+        "warp",
+        "astral",
+        "dimension"
+      ]
+    },
+    {
+      "id": "hazard_flame_vent",
+      "name": "Timed Magma Flame Vent",
+      "type": "entity",
+      "category": "hazards",
+      "style": "magma",
+      "path": "assets/entities/hazards/hazard_flame_vent.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Timed erupting volcanic fire vent with protective basalt grill",
+      "tags": [
+        "hazard",
+        "flame",
+        "lava",
+        "fire",
+        "trap",
+        "timed"
+      ]
+    },
+    {
+      "id": "patroller_sentinel",
+      "name": "Waypoint Patroller Sentinel",
+      "type": "entity",
+      "category": "patrollers",
+      "style": "lava",
+      "path": "assets/entities/patrollers/patroller_sentinel.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Autonomous waypoint patrol drone sentinel with scanning visor",
+      "tags": [
+        "patroller",
+        "sentinel",
+        "drone",
+        "enemy",
+        "sentry"
+      ]
+    },
+    {
+      "id": "puzzle_gate_rune",
+      "name": "Rune Memory Barrier Gate",
+      "type": "entity",
+      "category": "puzzle_gates",
+      "style": "sunset",
+      "path": "assets/entities/puzzle_gates/puzzle_gate_rune.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Arcane barrier gate unlocked by repeating sequential celestial rune patterns",
+      "tags": [
+        "puzzle",
+        "gate",
+        "rune",
+        "memory",
+        "seal"
+      ]
+    },
+    {
+      "id": "puzzle_gate_cipher",
+      "name": "Celestial Cipher Dial Gate",
+      "type": "entity",
+      "category": "puzzle_gates",
+      "style": "sunset",
+      "path": "assets/entities/puzzle_gates/puzzle_gate_cipher.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Triple-ring rotary combination cipher dial barrier gate",
+      "tags": [
+        "puzzle",
+        "gate",
+        "cipher",
+        "dial",
+        "lock"
+      ]
+    },
+    {
+      "id": "signpost_lore",
+      "name": "Architect's Lore Tablet Signpost",
+      "type": "entity",
+      "category": "signposts",
+      "style": "dungeon",
+      "path": "assets/entities/signposts/signpost_lore.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Carved stone pedestal holding ancient parchment journal and glowing eye glyph",
+      "tags": [
+        "signpost",
+        "lore",
+        "tablet",
+        "journal",
+        "guide"
+      ]
+    },
+    {
+      "id": "tile_wall_angled_dungeon",
+      "name": "2.5D Angled Dungeon Wall",
+      "type": "tile",
+      "category": "angled",
+      "style": "dungeon",
+      "path": "assets/tiles/angled/wall_angled_dungeon.svg",
+      "viewBox": "0 0 64 64",
+      "description": "2.5D oblique perspective wall with elevated top cap and vertical front facade",
+      "tags": [
+        "tile",
+        "wall",
+        "angled",
+        "2.5d",
+        "dungeon"
+      ]
+    },
+    {
+      "id": "tile_bridge_pillar_deck",
+      "name": "2.5D Bridge Deck with Pillars",
+      "type": "tile",
+      "category": "angled",
+      "style": "dungeon",
+      "path": "assets/tiles/angled/bridge_pillar_deck.svg",
+      "viewBox": "0 0 64 64",
+      "description": "2.5D elevated wooden bridge deck supported by vertical stone pillars",
+      "tags": [
+        "tile",
+        "bridge",
+        "pillar",
+        "angled",
+        "2.5d",
+        "deck"
       ]
     }
   ]

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- 2.5D Elevated Bridge Deck with Support Pillars -->
+  <!-- Ground Shadow Beneath Bridge -->
+  <rect x="12" y="46" width="40" height="14" rx="3" fill="#000000" opacity="0.4" />
+  <!-- Vertical Stone Support Pillars -->
+  <rect x="8" y="24" width="10" height="32" rx="2" fill="#475569" stroke="#1e293b" stroke-width="1.5" />
+  <rect x="46" y="24" width="10" height="32" rx="2" fill="#475569" stroke="#1e293b" stroke-width="1.5" />
+  <!-- Pillar Mortar Joints -->
+  <line x1="8" y1="36" x2="18" y2="36" stroke="#1e293b" stroke-width="1.2" />
+  <line x1="46" y1="36" x2="56" y2="36" stroke="#1e293b" stroke-width="1.2" />
+  <!-- Elevated Wood Bridge Deck -->
+  <rect x="0" y="8" width="64" height="24" rx="3" fill="#78350f" stroke="#451a03" stroke-width="2" />
+  <!-- Wooden Planks -->
+  <line x1="16" y1="8" x2="16" y2="32" stroke="#451a03" stroke-width="2" />
+  <line x1="32" y1="8" x2="32" y2="32" stroke="#451a03" stroke-width="2" />
+  <line x1="48" y1="8" x2="48" y2="32" stroke="#451a03" stroke-width="2" />
+  <!-- Railing Post & Bar -->
+  <line x1="0" y1="8" x2="64" y2="8" stroke="#92400e" stroke-width="3" />
+  <circle cx="16" cy="8" r="2.5" fill="#fbbf24" />
+  <circle cx="48" cy="8" r="2.5" fill="#fbbf24" />
+</svg>

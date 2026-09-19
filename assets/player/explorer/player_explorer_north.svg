@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Explorer Character: North Facing (Back View) -->
+  <!-- Drop Shadow -->
+  <ellipse cx="32" cy="56" rx="16" ry="6" fill="#000000" opacity="0.35" />
+
+  <!-- Hiking Boots (Back View) -->
+  <rect x="20" y="49" width="10" height="7" rx="2" fill="#5c2e0b" stroke="#271304" stroke-width="1.5" />
+  <rect x="19" y="53" width="12" height="3" rx="1" fill="#271304" />
+  <rect x="34" y="49" width="10" height="7" rx="2" fill="#5c2e0b" stroke="#271304" stroke-width="1.5" />
+  <rect x="33" y="53" width="12" height="3" rx="1" fill="#271304" />
+
+  <!-- Blue Jeans (Back View with Pockets) -->
+  <path d="M 21 38 L 21 50 L 30 50 L 31 43 L 33 43 L 34 50 L 43 50 L 43 38 Z" fill="#2563eb" stroke="#1d4ed8" stroke-width="1.5" />
+  <rect x="23" y="39" width="6.5" height="6" rx="1" fill="#1d4ed8" stroke="#fbbf24" stroke-width="0.8" />
+  <rect x="34.5" y="39" width="6.5" height="6" rx="1" fill="#1d4ed8" stroke="#fbbf24" stroke-width="0.8" />
+
+  <!-- Flannel Shirt Underneath -->
+  <rect x="20" y="24" width="24" height="14" rx="2" fill="#dc2626" />
+  <rect x="20" y="27" width="24" height="3" fill="#991b1b" />
+  <rect x="20" y="33" width="24" height="3" fill="#991b1b" />
+
+  <!-- Arms with Flannel Sleeves -->
+  <rect x="15.5" y="25" width="5" height="11" rx="2" fill="#dc2626" />
+  <rect x="15.5" y="33.5" width="5" height="2.5" fill="#991b1b" />
+  <circle cx="18" cy="38" r="2.5" fill="#fed7aa" />
+
+  <rect x="43.5" y="25" width="5" height="11" rx="2" fill="#dc2626" />
+  <rect x="43.5" y="33.5" width="5" height="2.5" fill="#991b1b" />
+  <circle cx="46" cy="38" r="2.5" fill="#fed7aa" />
+
+  <!-- Large Brown Leather Backpack (The Centerpiece of North View) -->
+  <rect x="17" y="21" width="30" height="23" rx="5" fill="#78350f" stroke="#451a03" stroke-width="2" />
+  <!-- Backpack Flap -->
+  <path d="M 18 22 L 46 22 L 44 33 L 20 33 Z" fill="#92400e" stroke="#451a03" stroke-width="1.2" />
+  <!-- Leather Buckle Straps -->
+  <rect x="23" y="23" width="3.5" height="15" fill="#5c2e0b" stroke="#451a03" stroke-width="0.8" />
+  <rect x="37.5" y="23" width="3.5" height="15" fill="#5c2e0b" stroke="#451a03" stroke-width="0.8" />
+  <rect x="23" y="32" width="3.5" height="3" fill="#fbbf24" />
+  <rect x="37.5" y="32" width="3.5" height="3" fill="#fbbf24" />
+
+  <!-- Bedroll Lashed to Top of Pack -->
+  <rect x="18" y="16" width="28" height="7" rx="3.5" fill="#d97706" stroke="#451a03" stroke-width="1.5" />
+  <rect x="23" y="16" width="3.5" height="7" fill="#451a03" />
+  <rect x="37.5" y="16" width="3.5" height="7" fill="#451a03" />
+
+  <!-- Back of Head & Messy Brown Hair -->
+  <circle cx="32" cy="14" r="9" fill="#451a03" stroke="#271304" stroke-width="1.2" />
+  <!-- Hair Layer Tufts -->
+  <path d="M 23 14 C 23 7 41 7 41 14 C 42 16 39 18 36 17 C 32 19 28 17 25 18 C 23 16 23 14 23 14 Z" fill="#5c2406" />
+</svg>
