@@ -10,6 +10,10 @@ import { JsonExporter } from './json-exporter.js';
 import { EntityInspector } from './entity-inspector.js';
 import { EditorCanvas } from './editor-canvas.js';
 import { LevelValidator } from './level-validator.js';
+import { ProjectsModal } from './modals/projects-modal.js';
+import { ValidationModal } from './modals/validation-modal.js';
+import { PlaytestModal } from './modals/playtest-modal.js';
+import { GuideModal } from './modals/guide-modal.js';
 
 export class EditorUI {
   constructor() {
@@ -34,10 +38,10 @@ export class EditorUI {
     this.initInspector();
     this.initUI();
     this.initKeyboardShortcuts();
-    this.initProjectsModal();
-    this.initValidationModal();
-    this.initPlaytestModal();
-    this.initGuideModal();
+    this.projectsModal = new ProjectsModal(this);
+    this.validationModal = new ValidationModal(this);
+    this.playtestModal = new PlaytestModal(this);
+    this.guideModal = new GuideModal(this);
     this.pushHistory();
     this.updateValidationState();
 
@@ -581,273 +585,20 @@ export class EditorUI {
   /* =========================================================
    * PROJECTS & TEMPLATES SYSTEM
    * ========================================================= */
-  initProjectsModal() {
-    const modal = document.getElementById('projects-modal');
-    const btnOpen = document.getElementById('btn-projects');
-    const btnClose = document.getElementById('projects-btn-close');
-    const btnSaveAs = document.getElementById('btn-save-as-project');
-
-    // Tab Navigation within Projects Modal (Official Presets / Saved / Blank)
-    document.querySelectorAll('#project-modal-tabs .modal-tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const targetTab = btn.dataset.tab;
-        document.querySelectorAll('#project-modal-tabs .modal-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-        document.querySelectorAll('#projects-modal .modal-tab-pane').forEach(pane => {
-          pane.classList.toggle('active', pane.id === `pane-proj-${targetTab}`);
-          pane.style.display = pane.id === `pane-proj-${targetTab}` ? 'flex' : 'none';
-        });
-      });
-    });
-
-    // Preset Search Input & Category Filter Pills
-    const searchInput = document.getElementById('preset-search-input');
-    let currentFilter = 'all';
-
-    searchInput?.addEventListener('input', () => {
-      this.renderOfficialPresets(currentFilter, searchInput.value.trim().toLowerCase());
-    });
-
-    document.querySelectorAll('#preset-filter-pills button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('#preset-filter-pills button').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        currentFilter = btn.dataset.filter || 'all';
-        this.renderOfficialPresets(currentFilter, searchInput?.value.trim().toLowerCase() || '');
-      });
-    });
-
-    btnOpen?.addEventListener('click', () => {
-      this.renderProjectsModalContent();
-      // Default to official tab
-      document.querySelector('#project-modal-tabs .modal-tab-btn[data-tab="official"]')?.click();
-      modal.classList.add('active');
-    });
-
-    btnClose?.addEventListener('click', () => modal.classList.remove('active'));
-
-    btnSaveAs?.addEventListener('click', () => {
-      const nameInput = document.getElementById('project-save-name');
-      const name = nameInput.value.trim() || this.level.title || 'My Labyrinth';
-      this.level.title = name;
-      this.level.id = name.toLowerCase().replace(/[^a-z0-9_]+/g, '_');
-      StorageManager.saveProject(this.level);
-      this.currentProjectId = this.level.id;
-      document.getElementById('level-title-input').value = this.level.title;
-      this.renderProjectsModalContent();
-      this.showToast(`Saved project "${name}"!`, 'success');
-    });
-
-    // Preset Buttons
-    document.getElementById('btn-preset-small')?.addEventListener('click', () => {
-      if (confirm('Create new Small (15×15) labyrinth? Unsaved changes in active draft will be replaced.')) {
-        this.createNewLevel(15, 15, 'Small Labyrinth');
-        modal.classList.remove('active');
-      }
-    });
-
-    document.getElementById('btn-preset-medium')?.addEventListener('click', () => {
-      if (confirm('Create new Standard (21×21) labyrinth? Unsaved changes in active draft will be replaced.')) {
-        this.createNewLevel(21, 21, 'Standard Labyrinth');
-        modal.classList.remove('active');
-      }
-    });
-
-    document.getElementById('btn-preset-large')?.addEventListener('click', () => {
-      if (confirm('Create new Large (31×31) labyrinth? Unsaved changes in active draft will be replaced.')) {
-        this.createNewLevel(31, 31, 'Large Labyrinth');
-        modal.classList.remove('active');
-      }
-    });
+  openProjectsModal() {
+    this.projectsModal.open();
   }
 
   renderProjectsModalContent() {
-    this.renderOfficialPresets('all', '');
-    this.renderSavedProjects();
+    this.projectsModal.renderProjectsModalContent();
   }
 
   renderOfficialPresets(filterCategory = 'all', searchTerm = '') {
-    const container = document.getElementById('official-presets-container');
-    if (!container) return;
-
-    container.innerHTML = '';
-
-    // Aggregate all 16 levels
-    const allPresets = [];
-
-    TUTORIAL_LEVELS.forEach((lvl, idx) => {
-      allPresets.push({
-        raw: lvl,
-        id: lvl.id || `tutorial_${idx + 1}`,
-        badge: `T${idx + 1}`,
-        category: 'tutorial',
-        categoryLabel: 'Tutorial Academy',
-        badgeClass: 'tutorial',
-        zoneLabel: 'Tutorial',
-      });
-    });
-
-    CAMPAIGN_LEVELS.forEach(lvl => {
-      const num = parseInt(lvl.id, 10) || 1;
-      let cat = 'zone_1';
-      let catLabel = 'Zone 1: Crypts';
-      let badgeClass = 'zone_1';
-
-      if (num >= 6 && num <= 8) {
-        cat = 'zone_2';
-        catLabel = 'Zone 2: Jungle';
-        badgeClass = 'zone_2';
-      } else if (num >= 9) {
-        cat = 'zone_3';
-        catLabel = 'Zone 3: Magma';
-        badgeClass = 'zone_3';
-      }
-
-      allPresets.push({
-        raw: lvl,
-        id: lvl.id,
-        badge: `L${lvl.id}`,
-        category: cat,
-        categoryLabel: catLabel,
-        badgeClass: badgeClass,
-        zoneLabel: catLabel,
-      });
-    });
-
-    // Filter by Category & Search Term
-    const filtered = allPresets.filter(item => {
-      if (filterCategory !== 'all' && item.category !== filterCategory) {
-        return false;
-      }
-      if (searchTerm) {
-        const titleMatch = (item.raw.title || '').toLowerCase().includes(searchTerm);
-        const idMatch = String(item.id).toLowerCase().includes(searchTerm);
-        const themeMatch = (item.raw.config?.theme || '').toLowerCase().includes(searchTerm);
-        const zoneMatch = item.zoneLabel.toLowerCase().includes(searchTerm);
-        return titleMatch || idMatch || themeMatch || zoneMatch;
-      }
-      return true;
-    });
-
-    if (filtered.length === 0) {
-      container.innerHTML = `<div style="font-size: 0.8rem; color: var(--text-muted); padding: 0.75rem; text-align: center;">No official levels match "${searchTerm}".</div>`;
-      return;
-    }
-
-    filtered.forEach(item => {
-      const lvl = item.raw;
-      const card = document.createElement('div');
-      card.className = 'official-preset-card';
-
-      const keyCount = (lvl.entities || []).filter(e => e.type === 'key').length;
-      const doorCount = (lvl.entities || []).filter(e => e.type === 'door').length;
-      const leverCount = (lvl.entities || []).filter(e => e.type === 'lever').length;
-      const entityStr = [
-        keyCount > 0 ? `🔑 ${keyCount}` : '',
-        doorCount > 0 ? `🚪 ${doorCount}` : '',
-        leverCount > 0 ? `🕹️ ${leverCount}` : '',
-      ].filter(Boolean).join(' • ') || 'Standard Run';
-
-      const theme = lvl.config?.theme || 'dungeon';
-      const themeIcon = theme === 'jungle' ? '🌴' : (theme === 'lava' || theme === 'magma' ? '🌋' : (theme === 'temple' ? '🏛️' : (theme === 'snow' ? '❄️' : '🏰')));
-
-      card.innerHTML = `
-        <div class="official-preset-meta">
-          <span class="official-preset-badge ${item.badgeClass}">${item.badge}</span>
-          <div style="min-width: 0; flex: 1;">
-            <div style="font-weight: 700; font-size: 0.85rem; color: var(--text); display: flex; align-items: center; gap: 0.4rem;">
-              <span>${this.escapeHtml(lvl.title)}</span>
-              <span style="font-size: 0.72rem; color: var(--text-muted); font-weight: 400;">(${item.zoneLabel})</span>
-            </div>
-            <div style="font-size: 0.73rem; color: var(--text-muted); margin-top: 0.15rem;">
-              ${lvl.dimensions.width}×${lvl.dimensions.height} • ${themeIcon} ${theme.toUpperCase()} • ${entityStr}
-            </div>
-          </div>
-        </div>
-        <div style="display: flex; gap: 0.4rem;">
-          <button class="btn btn-primary btn-sm btn-edit-level" title="Load this official level directly into editor to tweak and test" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
-            ✏️ Edit Level
-          </button>
-          <button class="btn btn-secondary btn-sm btn-clone-remix" title="Clone this level with a new remix ID and custom copy" style="font-size: 0.75rem; padding: 0.25rem 0.6rem;">
-            📋 Clone Copy
-          </button>
-        </div>
-      `;
-
-      card.querySelector('.btn-edit-level').addEventListener('click', () => {
-        this.loadPresetLevel(item.id, false);
-        document.getElementById('projects-modal')?.classList.remove('active');
-      });
-
-      card.querySelector('.btn-clone-remix').addEventListener('click', () => {
-        this.loadPresetLevel(item.id, true);
-        document.getElementById('projects-modal')?.classList.remove('active');
-      });
-
-      container.appendChild(card);
-    });
+    this.projectsModal.renderOfficialPresets(filterCategory, searchTerm);
   }
 
   renderSavedProjects() {
-    const savedContainer = document.getElementById('saved-projects-container');
-    const nameInput = document.getElementById('project-save-name');
-
-    if (nameInput) {
-      nameInput.value = this.level.title || 'My Labyrinth';
-    }
-
-    const projects = StorageManager.listProjects();
-    if (savedContainer) {
-      savedContainer.innerHTML = '';
-      if (projects.length === 0) {
-        savedContainer.innerHTML = `<div style="font-size: 0.8rem; color: var(--text-muted); padding: 0.5rem;">No saved projects yet. Click "Save Project" above to store your creations locally!</div>`;
-      } else {
-        projects.forEach(p => {
-          const card = document.createElement('div');
-          card.className = 'saved-project-card';
-          const dateStr = p.updatedAt ? new Date(p.updatedAt).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : '';
-          
-          card.innerHTML = `
-            <div>
-              <div style="font-weight: 700; font-size: 0.85rem; color: var(--text);">${this.escapeHtml(p.title)}</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted);">${p.dimensions.width}×${p.dimensions.height} • ${dateStr}</div>
-            </div>
-            <div style="display: flex; gap: 0.35rem;">
-              <button class="btn btn-primary btn-sm btn-load" title="Load this project into editor">Load</button>
-              <button class="btn btn-secondary btn-sm btn-save-over" title="Overwrite with current working maze">Save Over</button>
-              <button class="btn btn-danger btn-sm btn-delete" title="Delete project">🗑</button>
-            </div>
-          `;
-
-          card.querySelector('.btn-load').addEventListener('click', () => {
-            const data = StorageManager.loadProject(p.id);
-            if (data) {
-              this.loadLevel(data);
-              this.currentProjectId = p.id;
-              document.getElementById('projects-modal').classList.remove('active');
-              this.showToast(`Loaded "${p.title}"`, 'success');
-            }
-          });
-
-          card.querySelector('.btn-save-over').addEventListener('click', () => {
-            this.level.id = p.id;
-            this.level.title = p.title;
-            StorageManager.saveProject(this.level);
-            this.renderSavedProjects();
-            this.showToast(`Overwrote project "${p.title}"!`, 'success');
-          });
-
-          card.querySelector('.btn-delete').addEventListener('click', () => {
-            if (confirm(`Delete project "${p.title}"?`)) {
-              StorageManager.deleteProject(p.id);
-              this.renderSavedProjects();
-              this.showToast(`Deleted "${p.title}"`, 'info');
-            }
-          });
-
-          savedContainer.appendChild(card);
-        });
-      }
-    }
+    this.projectsModal.renderSavedProjects();
   }
 
   quickSaveProject() {
@@ -879,129 +630,16 @@ export class EditorUI {
   /* =========================================================
    * VALIDATOR MODAL & LIVE STATUS
    * ========================================================= */
-  initValidationModal() {
-    const modal = document.getElementById('validation-modal');
-    const btnBadge = document.getElementById('btn-validate');
-    const btnClose = document.getElementById('val-btn-close');
-    const btnDismiss = document.getElementById('val-btn-dismiss');
-    const btnRecheck = document.getElementById('val-btn-recheck');
-
-    btnBadge?.addEventListener('click', () => this.openValidationModal());
-    btnClose?.addEventListener('click', () => modal.classList.remove('active'));
-    btnDismiss?.addEventListener('click', () => modal.classList.remove('active'));
-    btnRecheck?.addEventListener('click', () => {
-      this.updateValidationState();
-      this.renderValidationModalContent();
-      this.showToast('Validation refreshed!', 'info');
-    });
+  openValidationModal() {
+    this.validationModal.open();
   }
 
   updateValidationState() {
-    const report = LevelValidator.validate(this.level);
-    const badge = document.getElementById('btn-validate');
-    const iconEl = document.getElementById('val-badge-icon');
-    const textEl = document.getElementById('val-badge-text');
-
-    if (!badge) return report;
-
-    badge.classList.remove('valid', 'warning', 'error');
-
-    if (!report.valid) {
-      badge.classList.add('error');
-      if (iconEl) iconEl.textContent = '❌';
-      if (textEl) textEl.textContent = `${report.errors.length} Issue${report.errors.length > 1 ? 's' : ''}`;
-    } else if (report.warnings.length > 0) {
-      badge.classList.add('warning');
-      if (iconEl) iconEl.textContent = '⚠️';
-      if (textEl) textEl.textContent = `${report.warnings.length} Warn`;
-    } else {
-      badge.classList.add('valid');
-      if (iconEl) iconEl.textContent = '✅';
-      if (textEl) textEl.textContent = 'Valid';
-    }
-
-    return report;
-  }
-
-  openValidationModal() {
-    const modal = document.getElementById('validation-modal');
-    this.updateValidationState();
-    this.renderValidationModalContent();
-    modal.classList.add('active');
+    return this.validationModal.updateValidationState();
   }
 
   renderValidationModalContent() {
-    const body = document.getElementById('val-modal-body');
-    const title = document.getElementById('val-modal-title');
-    if (!body) return;
-
-    const report = LevelValidator.validate(this.level);
-
-    if (title) {
-      title.textContent = report.valid ? 'Level Validation Report (Passed)' : 'Level Validation Report (Issues Found)';
-    }
-
-    let html = '';
-
-    // Summary banner
-    if (report.valid && report.warnings.length === 0) {
-      html += `
-        <div style="background: rgba(52, 211, 153, 0.1); border: 1px solid rgba(52, 211, 153, 0.3); border-radius: var(--radius-sm); padding: 0.75rem; color: var(--emerald); font-size: 0.875rem;">
-          <strong>✓ All checks passed!</strong> The labyrinth is structurally sound, has a valid spawn and exit, and is 100% solvable.
-        </div>
-      `;
-    } else if (report.valid && report.warnings.length > 0) {
-      html += `
-        <div style="background: rgba(251, 191, 36, 0.1); border: 1px solid rgba(251, 191, 36, 0.3); border-radius: var(--radius-sm); padding: 0.75rem; color: var(--gold); font-size: 0.875rem;">
-          <strong>⚠️ Solvable with warnings.</strong> The maze can be completed, but check the non-blocking notes below.
-        </div>
-      `;
-    } else {
-      html += `
-        <div style="background: rgba(248, 113, 113, 0.1); border: 1px solid rgba(248, 113, 113, 0.3); border-radius: var(--radius-sm); padding: 0.75rem; color: var(--rose); font-size: 0.875rem;">
-          <strong>❌ Solvability blockers detected!</strong> The maze cannot be completed in its current state. Please fix the errors below.
-        </div>
-      `;
-    }
-
-    // Diagnostics List
-    html += `<div class="diag-list">`;
-
-    for (const err of report.errors) {
-      html += `
-        <div class="diag-item error">
-          <span>❌</span>
-          <div style="flex: 1;">
-            <div>${this.escapeHtml(err.message)}</div>
-            ${err.x !== undefined ? `<div style="font-family: var(--font-mono); font-size: 0.75rem; margin-top: 0.2rem; opacity: 0.8;">Coordinate: (${err.x}, ${err.y})</div>` : ''}
-          </div>
-        </div>
-      `;
-    }
-
-    for (const warn of report.warnings) {
-      html += `
-        <div class="diag-item warning">
-          <span>⚠️</span>
-          <div style="flex: 1;">
-            <div>${this.escapeHtml(warn.message)}</div>
-            ${warn.x !== undefined ? `<div style="font-family: var(--font-mono); font-size: 0.75rem; margin-top: 0.2rem; opacity: 0.8;">Coordinate: (${warn.x}, ${warn.y})</div>` : ''}
-          </div>
-        </div>
-      `;
-    }
-
-    for (const inf of report.info) {
-      html += `
-        <div class="diag-item info">
-          <span>ℹ️</span>
-          <div>${this.escapeHtml(inf)}</div>
-        </div>
-      `;
-    }
-
-    html += `</div>`;
-    body.innerHTML = html;
+    this.validationModal.renderValidationModalContent();
   }
 
   /* =========================================================
@@ -1049,120 +687,15 @@ export class EditorUI {
   /* =========================================================
    * PLAYTEST OPTIONS & INVENTORY PRELOAD MODAL
    * ========================================================= */
-  initPlaytestModal() {
-    const modal = document.getElementById('playtest-modal');
-    const btnClose = document.getElementById('playtest-btn-close');
-    const btnCancel = document.getElementById('playtest-btn-cancel');
-    const btnLaunch = document.getElementById('playtest-btn-launch');
-    const btnSelectAll = document.getElementById('btn-inv-select-all');
-    const btnClear = document.getElementById('btn-inv-clear');
-
-    btnClose?.addEventListener('click', () => modal?.classList.remove('active'));
-    btnCancel?.addEventListener('click', () => modal?.classList.remove('active'));
-
-    btnSelectAll?.addEventListener('click', () => {
-      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]');
-      chks?.forEach(c => { c.checked = true; });
-    });
-
-    btnClear?.addEventListener('click', () => {
-      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]');
-      chks?.forEach(c => { c.checked = false; });
-    });
-
-    btnLaunch?.addEventListener('click', () => {
-      const radChoice = modal?.querySelector('input[name="test-spawn-choice"]:checked')?.value;
-      let testSpawn = null;
-
-      if (radChoice === 'custom') {
-        const x = parseInt(document.getElementById('test-spawn-x')?.value, 10) || this.level.spawn?.x || 1;
-        const y = parseInt(document.getElementById('test-spawn-y')?.value, 10) || this.level.spawn?.y || 1;
-        const elev = parseInt(document.getElementById('test-spawn-elev')?.value, 10) || 0;
-        testSpawn = { x, y, elevation: elev };
-      }
-
-      // Collect checked test inventory keys
-      const testInventory = [];
-      const chks = modal?.querySelectorAll('#test-inventory-checklist input[type="checkbox"]:checked');
-      chks?.forEach(c => {
-        testInventory.push(c.value);
-      });
-
-      modal?.classList.remove('active');
-      this.playTest({ testSpawn, testInventory });
-    });
-  }
-
   openPlaytestModal() {
-    const modal = document.getElementById('playtest-modal');
-    if (!modal) return;
-
-    // Set default spawn label
-    const lblDefault = document.getElementById('lbl-spawn-default');
-    if (lblDefault && this.level.spawn) {
-      lblDefault.textContent = `(${this.level.spawn.x}, ${this.level.spawn.y}) • ${this.level.spawn.elevation === 1 ? 'Overhead' : 'Ground'}`;
-    }
-
-    // Set custom coordinates inputs
-    const inputX = document.getElementById('test-spawn-x');
-    const inputY = document.getElementById('test-spawn-y');
-    const selElev = document.getElementById('test-spawn-elev');
-
-    const sourceSpawn = this.level.testSpawn || this.level.spawn || { x: 1, y: 1, elevation: 0 };
-    if (inputX) inputX.value = sourceSpawn.x;
-    if (inputY) inputY.value = sourceSpawn.y;
-    if (selElev) selElev.value = sourceSpawn.elevation || 0;
-
-    const radCustom = document.getElementById('rad-spawn-custom');
-    const radDefault = document.getElementById('rad-spawn-default');
-    if (this.level.testSpawn && radCustom) {
-      radCustom.checked = true;
-    } else if (radDefault) {
-      radDefault.checked = true;
-    }
-
-    // Render key inventory checklist
-    const container = document.getElementById('test-inventory-checklist');
-    if (container) {
-      container.innerHTML = '';
-      const existingKeys = (this.level.entities || []).filter(e => e.type === 'key');
-
-      if (existingKeys.length === 0) {
-        container.innerHTML = '<span style="font-size:0.75rem; color:var(--text-muted); padding:0.4rem;">No keys placed in labyrinth yet.</span>';
-      } else {
-        existingKeys.forEach(k => {
-          const card = document.createElement('label');
-          card.className = 'key-chk-card';
-          card.innerHTML = `
-            <input type="checkbox" value="${k.id}" />
-            <span style="color:${k.color || '#fbbf24'};">🔑</span>
-            <span style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${this.escapeHtml(k.name || k.id)}</span>
-          `;
-          container.appendChild(card);
-        });
-      }
-    }
-
-    modal.classList.add('active');
+    this.playtestModal.open();
   }
 
   /* =========================================================
    * ARCHITECT HANDBOOK & GUIDE MODAL
    * ========================================================= */
-  initGuideModal() {
-    const modal = document.getElementById('guide-modal');
-    const btnClose = document.getElementById('guide-btn-close');
-    const btnDismiss = document.getElementById('guide-btn-dismiss');
-
-    btnClose?.addEventListener('click', () => modal?.classList.remove('active'));
-    btnDismiss?.addEventListener('click', () => modal?.classList.remove('active'));
-  }
-
   openGuideModal() {
-    const modal = document.getElementById('guide-modal');
-    if (modal) {
-      modal.classList.add('active');
-    }
+    this.guideModal.open();
   }
 
   autoSave() {
