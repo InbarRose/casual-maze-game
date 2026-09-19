@@ -9,7 +9,7 @@ import { setTestContext } from './assertions.mjs';
 setupMocks();
 
 // ANSI Color Helpers
-const isTTY = process.stdout && process.stdout.isTTY;
+const isTTY = typeof process !== 'undefined' && process.stdout && process.stdout.isTTY;
 const colors = {
   reset: isTTY ? '\x1b[0m' : '',
   bold: isTTY ? '\x1b[1m' : '',
@@ -47,6 +47,7 @@ class TestRunner {
   constructor() {
     this.rootSuite = new Suite('');
     this.currentSuite = this.rootSuite;
+    this.listeners = [];
     this.results = {
       passed: 0,
       failed: 0,
@@ -58,8 +59,24 @@ class TestRunner {
     this.cliOptions = this.parseArgs();
   }
 
+  addListener(fn) {
+    if (typeof fn === 'function') {
+      this.listeners.push(fn);
+    }
+  }
+
+  emit(event) {
+    for (const listener of this.listeners) {
+      try {
+        listener(event);
+      } catch {
+        // Ignore listener error
+      }
+    }
+  }
+
   parseArgs() {
-    const args = process.argv.slice(2);
+    const args = typeof process !== 'undefined' && process.argv ? process.argv.slice(2) : [];
     const options = {
       grep: null,
       suite: null,
@@ -209,9 +226,11 @@ class TestRunner {
 
       if (!error) {
         this.results.passed++;
+        this.emit({ type: 'test:pass', suite: suite.getFullName(), test: testCase.name, durationMs });
         console.log(`${indent}  ${colors.green}✓${colors.reset} ${testCase.name} ${colors.gray}(${durationMs}ms)${colors.reset}`);
       } else {
         this.results.failed++;
+        this.emit({ type: 'test:fail', suite: suite.getFullName(), test: testCase.name, error: error.message, durationMs });
         console.log(`${indent}  ${colors.red}✗ FAIL: ${testCase.name} (${durationMs}ms)${colors.reset}`);
         console.log(`${indent}    ${colors.red}${error.message}${colors.reset}`);
         if (error.stack && this.cliOptions.verbose) {
@@ -261,18 +280,25 @@ class TestRunner {
     console.log(`  Duration:   ${totalDuration}ms`);
     console.log('-'.repeat(40));
 
-    if (this.results.failed > 0) {
-      console.log(`\n${colors.bold}${colors.red}❌ ${this.results.failed} TEST(S) FAILED${colors.reset}\n`);
-      process.exit(1);
-    } else {
-      console.log(`\n${colors.bold}${colors.green}✨ ALL ${this.results.passed} TESTS PASSED (0 FAILED)${colors.reset}\n`);
-      process.exit(0);
+    this.emit({ type: 'run:end', results: this.results, duration: totalDuration });
+
+    if (typeof process !== 'undefined' && typeof process.exit === 'function') {
+      if (this.results.failed > 0) {
+        console.log(`\n${colors.bold}${colors.red}❌ ${this.results.failed} TEST(S) FAILED${colors.reset}\n`);
+        process.exit(1);
+      } else {
+        console.log(`\n${colors.bold}${colors.green}✨ ALL ${this.results.passed} TESTS PASSED (0 FAILED)${colors.reset}\n`);
+        process.exit(0);
+      }
     }
+
+    return this.results;
   }
 }
 
 const runner = new TestRunner();
 
+export { runner, TestRunner };
 export const describe = runner.describe.bind(runner);
 export const it = runner.it.bind(runner);
 export const test = runner.test.bind(runner);

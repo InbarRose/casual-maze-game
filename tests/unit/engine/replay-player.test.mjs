@@ -96,4 +96,19 @@ describe('Engine > ReplayPlayer', () => {
 
     player.destroy();
   });
+
+  it('loads new levels and replays dynamically on the fly', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({ canvas: mockCanvas });
+
+    player.load(level1, replay1);
+    assertEqual(player.totalSteps, replay1.actions.length);
+    assertEqual(player.currentStep, 0);
+
+    const stepSuccess = player.stepForward();
+    assertEqual(stepSuccess, true);
+    assertEqual(player.currentStep, 1);
+
+    player.destroy();
+  });
 });

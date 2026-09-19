@@ -180,9 +180,21 @@ export function setupMocks() {
   }
 
   if (typeof globalThis.navigator === 'undefined') {
-    globalThis.navigator = { clipboard: new MockClipboard() };
+    Object.defineProperty(globalThis, 'navigator', {
+      value: { clipboard: new MockClipboard() },
+      configurable: true,
+      writable: true,
+    });
   } else if (!globalThis.navigator.clipboard) {
-    globalThis.navigator.clipboard = new MockClipboard();
+    try {
+      globalThis.navigator.clipboard = new MockClipboard();
+    } catch {
+      Object.defineProperty(globalThis.navigator, 'clipboard', {
+        value: new MockClipboard(),
+        configurable: true,
+        writable: true,
+      });
+    }
   }
 
   if (typeof globalThis.window === 'undefined') {
