@@ -1,7 +1,7 @@
 {
   "$schema": "./schema.json",
   "version": "1.5.0",
-  "generatedAt": "2026-09-19T17:28:04.523Z",
+  "generatedAt": "2026-09-19T20:21:49.078Z",
   "totalAssets": 160,
   "themes": [
     "dungeon",
@@ -67,8 +67,8 @@
         "valve",
         "off"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "cog_valve_on",
@@ -83,8 +83,8 @@
         "valve",
         "on"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "crystal_active",
@@ -99,8 +99,8 @@
         "crystal",
         "on"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "crystal_inactive",
@@ -115,8 +115,8 @@
         "crystal",
         "off"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "door_classic",
@@ -133,8 +133,8 @@
         "barrier",
         "entry"
       ],
-      "hash": "1e514d41ea8b51dcc8263defbf10223d1198bf7d3f860a5fda50a1f4eb19aa70",
-      "size": 539
+      "hash": "1e075ace5ccf3133529aff1a6cf50ad96a61fa8471459ef460d470c6ff490eb3",
+      "size": 532
     },
     {
       "id": "door_crystal_spikes",
@@ -150,8 +150,8 @@
         "crystal",
         "spikes"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "door_dungeon_horizontal",
@@ -168,8 +168,8 @@
         "horizontal",
         "dungeon"
       ],
-      "hash": "55b9da8a9d318751ea88125c70a197e86aad38173c43621f26608a2dc63a700d",
-      "size": 476
+      "hash": "b4a0c436fcf8a97892698af4baf7cc17a6382fde57ff6d97cb173ede68fc645d",
+      "size": 470
     },
     {
       "id": "door_dungeon_vertical",
@@ -186,8 +186,8 @@
         "vertical",
         "dungeon"
       ],
-      "hash": "53b247d079ec0c46a83427eccbe2de987e820e509df9286df449472625daef9d",
-      "size": 476
+      "hash": "46681b1810a0f8aa38cd8ff73836d37445ad4410ae7d6e27f2ff2116dc97e62d",
+      "size": 470
     },
     {
       "id": "door_glacial_horizontal",
@@ -204,8 +204,8 @@
         "horizontal",
         "glacial"
       ],
-      "hash": "32a538e1c551e31da913d4ffde2569bf75cbadae5f1d4b5de4eec90a19ab997b",
-      "size": 476
+      "hash": "2396e0e2f6e658e00f5c723c2f08be3f84568f5f5c4287f6ed072df4f6aedb57",
+      "size": 470
     },
     {
       "id": "door_glacial_vertical",
@@ -222,8 +222,8 @@
         "vertical",
         "glacial"
       ],
-      "hash": "6fb3d7c54eed2da3d8b18a9314ebd2a4e76363a76e6e5c5b5492ccb08cf6e507",
-      "size": 476
+      "hash": "fe769ae38c8144ed35725ccd3c0776f4a9d17c2174067932c42fa5ea29bbe694",
+      "size": 470
     },
     {
       "id": "door_jungle_horizontal",
@@ -240,8 +240,8 @@
         "horizontal",
         "jungle"
       ],
-      "hash": "da9e969babb31b750c0fb7421bf7bc240718913800cf6b01de6e8fb2cbfefdf4",
-      "size": 476
+      "hash": "1139fb82490d1a4b33e4c8abc3d279cd054c4ee0ab3e5423d7f9c1128f7db5be",
+      "size": 470
     },
     {
       "id": "door_jungle_vertical",
@@ -258,8 +258,8 @@
         "vertical",
         "jungle"
       ],
-      "hash": "1f5156bd4b07950d212d70d095c58290a7f6803ff75adf40eda2d28a5c1f7704",
-      "size": 476
+      "hash": "b3b064e764d10ed508a6059fcbe4c202f12fe0333920eb02a0540680b0a3b965",
+      "size": 470
     },
     {
       "id": "door_laser_barrier",
@@ -275,8 +275,8 @@
         "laser",
         "barrier"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "door_magic_seal",
@@ -292,8 +292,8 @@
         "magic",
         "seal"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "door_magma_horizontal",
@@ -310,8 +310,8 @@
         "horizontal",
         "magma"
       ],
-      "hash": "171a14f900a781d224382ff10329efe80b5f22996bdb764d13446985303e0513",
-      "size": 476
+      "hash": "bead7b50796819a21963fd93684c9d0e11b6736e4ca7eed5e5d8c84c0ada273f",
+      "size": 470
     },
     {
       "id": "door_magma_vertical",
@@ -328,8 +328,8 @@
         "vertical",
         "magma"
       ],
-      "hash": "e6e0157fe39237c1790ba53b6c49f474422c4e249b12a9028b94bdeeda4bc185",
-      "size": 476
+      "hash": "1723e8959c8cab6e60b51393409575c6eb9d41a128e4b4ed6cbe5b07ad085c20",
+      "size": 470
     },
     {
       "id": "door_portcullis",
@@ -346,8 +346,8 @@
         "iron",
         "gate"
       ],
-      "hash": "891a9276ef0e08ce302668f08bb3d193d76c5dd50d8983f2cdd80230f48243ab",
-      "size": 750
+      "hash": "573559d0b1129a654a1358a149dd4b214e2aae3394bf6a7b552499075ad3f0f1",
+      "size": 740
     },
     {
       "id": "door_temple_horizontal",
@@ -364,8 +364,8 @@
         "horizontal",
         "temple"
       ],
-      "hash": "ed32bad74bf94129dfaa70506d3ad6ed08f04df24ce0f5aeecd430278d5447c7",
-      "size": 476
+      "hash": "ef713b768592895d7bc1892d9525024d1820cfd4e9113cd56f769db85f8239ae",
+      "size": 470
     },
     {
       "id": "door_temple_vertical",
@@ -382,8 +382,8 @@
         "vertical",
         "temple"
       ],
-      "hash": "0cfbe6a1da16f73028b526c701f0af8f5e77c40d48829f6863fa7cc2af32e9ae",
-      "size": 476
+      "hash": "5d57c4f4cfc023ec93c1e9ce54fb6fdf976287bd0bed77a5c4efc9826cba5fa9",
+      "size": 470
     },
     {
       "id": "door_vault_hatch",
@@ -399,8 +399,8 @@
         "vault",
         "hatch"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "exit_archway",
@@ -417,8 +417,8 @@
         "goal",
         "archway"
       ],
-      "hash": "c7f4c42263e41c5ccef8c9653e41645d3f0fe164a3fda5b321f5f99147129672",
-      "size": 351
+      "hash": "e368cf76f8d214b6b50cb842f8d3815da642865079e0683b41c36be35b9d261f",
+      "size": 347
     },
     {
       "id": "exit_edge_wall_east",
@@ -436,8 +436,8 @@
         "wall",
         "east"
       ],
-      "hash": "f838406e20d84c17b6b95338c225a57c361fc16e6ed47fb802d36f297965d1a2",
-      "size": 566
+      "hash": "2a23864ff060a6c0f89d0b46bf66140ec157189b960f2f475aecf9ce62a92dfa",
+      "size": 557
     },
     {
       "id": "exit_edge_wall_north",
@@ -455,8 +455,8 @@
         "wall",
         "north"
       ],
-      "hash": "574fd25599ee16680d2c4b40814619de17157d8b34a6a8ca36423874644bcd73",
-      "size": 564
+      "hash": "3be32b980b464ce280dc1300ee42b7d16842860ba030bbc427105a0b2c088a4f",
+      "size": 555
     },
     {
       "id": "exit_edge_wall_south",
@@ -474,8 +474,8 @@
         "wall",
         "south"
       ],
-      "hash": "15291db1b426703142d37af235444c513b56e17eaaea7bdde167d388d4de960c",
-      "size": 566
+      "hash": "80b823f7d87806fbd20341615cbada284ff23f5ebc1d469c662f7b870f258d5a",
+      "size": 557
     },
     {
       "id": "exit_edge_wall_west",
@@ -493,8 +493,8 @@
         "wall",
         "west"
       ],
-      "hash": "05699ef21107a5eb6fac7bbeda0498995a0e4f4316d5904a2801311dc966b902",
-      "size": 564
+      "hash": "a61872f8866a6bc8a22aae28cf778b2eafda7a709983b25dfe42c9183ea21be2",
+      "size": 555
     },
     {
       "id": "exit_portal",
@@ -511,8 +511,8 @@
         "goal",
         "portal"
       ],
-      "hash": "5b361e9313638b1a0462249afbc34b0df320b238f2c76901b7c97aff874586bb",
-      "size": 348
+      "hash": "860b0e8b8bfa4ea8c7cef20022c04e912a0c2b40e37a886877ebea8e44ee1f54",
+      "size": 344
     },
     {
       "id": "exit_shrine",
@@ -529,8 +529,8 @@
         "goal",
         "shrine"
       ],
-      "hash": "bd04594003eba8839ba3e790d9a061ba39c600453f2f2e0b668f1526ca4b626a",
-      "size": 350
+      "hash": "836e3a2d38af3bc2d7c293114f85576f4f9cb6a7ea4a93c3e6c96ac401a4336a",
+      "size": 346
     },
     {
       "id": "exit_stairs_up",
@@ -547,8 +547,8 @@
         "goal",
         "stairs_up"
       ],
-      "hash": "31646f836c9eb7c870a3eb330bdf698ff7c9b2d151e8ec30c1b20c3ab846dd0c",
-      "size": 347
+      "hash": "2838550009103a03aa390595328833684018eb766ec1a275a0a5716145118783",
+      "size": 343
     },
     {
       "id": "exit_treasure_chest",
@@ -565,8 +565,8 @@
         "goal",
         "chest"
       ],
-      "hash": "9b3bfe0444c2463fc59c6049ea876b24a536af64b027137738a5b32f27e0259f",
-      "size": 348
+      "hash": "cb4785d90541721821628a265684b1206336d7bd80316b8a410db18d96dc9bad",
+      "size": 344
     },
     {
       "id": "hazard_flame_vent",
@@ -585,8 +585,8 @@
         "trap",
         "timed"
       ],
-      "hash": "119283e63a617775ba20eea52b8c3f4bb594bee2f4baf5c1cceee202691a26a0",
-      "size": 1281
+      "hash": "73f8aa024a4294d0c4de3151bfdb08826c96b9a0cbf7f00bca8d672a8db5eb80",
+      "size": 1259
     },
     {
       "id": "key_classic",
@@ -602,8 +602,8 @@
         "classic",
         "gold"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "key_crystal",
@@ -619,8 +619,8 @@
         "crystal",
         "gem"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "key_dungeon_iron",
@@ -637,8 +637,8 @@
         "unlock",
         "dungeon"
       ],
-      "hash": "19906a4a7d95480f5f3a335a117876f10f3b001800476d37126003a93b43c668",
-      "size": 469
+      "hash": "92433cec555a8f91b504fa932e8a98eec6d05dc9f61a5321a41963d9a0e186fd",
+      "size": 462
     },
     {
       "id": "key_glacial_frost",
@@ -655,8 +655,8 @@
         "unlock",
         "glacial"
       ],
-      "hash": "a02a2cce50d57569caa0211093b71714879125639224cf6a4df5cb3e1b7d308d",
-      "size": 469
+      "hash": "c00d57a74b0cc42b76ad1f2cfa4299a63c5048854954a182eafa5abcfe468363",
+      "size": 462
     },
     {
       "id": "key_jungle_jade",
@@ -673,8 +673,8 @@
         "unlock",
         "jungle"
       ],
-      "hash": "87f5948ce932b1932acbb2b25df5d323ad0fbebdc3376c771319033a2849a5bd",
-      "size": 469
+      "hash": "92623a762708a7b5181cc9fc8e034ed0b154c69faac65e39cc93e1ce17c57c73",
+      "size": 462
     },
     {
       "id": "key_magma_ruby",
@@ -691,8 +691,8 @@
         "unlock",
         "magma"
       ],
-      "hash": "290b4282db0fe2a30d0b700dd5496562122545c9f40fd2f58510f85977cd7962",
-      "size": 469
+      "hash": "35859db8c5aca71773555dea5908e6617c7f5d841a0856339444c933da5dd244",
+      "size": 462
     },
     {
       "id": "key_orb",
@@ -708,8 +708,8 @@
         "orb",
         "arcane"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "key_ornate",
@@ -725,8 +725,8 @@
         "ornate",
         "skeleton"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "key_relic",
@@ -742,8 +742,8 @@
         "relic",
         "crown"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "key_skull",
@@ -759,8 +759,8 @@
         "skull",
         "crypt"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "key_temple_scarab",
@@ -777,8 +777,8 @@
         "unlock",
         "temple"
       ],
-      "hash": "08af4253daf7ed10963388db3211cd9e1ebe5440bd6a3c56ce46075c8956e241",
-      "size": 469
+      "hash": "dc755a404b2e4158a88d2df50366babbdb80b58417752975053b0dfc0236d082",
+      "size": 462
     },
     {
       "id": "lever_switch_off",
@@ -794,8 +794,8 @@
         "switch",
         "off"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "lever_switch_on",
@@ -811,8 +811,8 @@
         "switch",
         "on"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "patroller_sentinel",
@@ -830,8 +830,8 @@
         "enemy",
         "sentry"
       ],
-      "hash": "30378b87fa86b437e179128c9b01519ceb280519e65bc42480edc6b21929801a",
-      "size": 1041
+      "hash": "c5de74692d0d836350a7a35f5ac4126d1379fc30de2a4d9171b7bdaf18247265",
+      "size": 1022
     },
     {
       "id": "pedestal_active",
@@ -846,8 +846,8 @@
         "pedestal",
         "on"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "pedestal_inactive",
@@ -862,8 +862,8 @@
         "pedestal",
         "off"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "player_adventurer_east",
@@ -881,8 +881,8 @@
         "east",
         "character"
       ],
-      "hash": "42a96d97895ec94601f19851f7dbe8d204a599dae7749c4053c6e100cfba07ef",
-      "size": 453
+      "hash": "025b630f87675b32cbe0ee59f54827e6e4b3b80401c5372880b36fbefd3a14e1",
+      "size": 445
     },
     {
       "id": "player_adventurer_north",
@@ -900,8 +900,8 @@
         "north",
         "character"
       ],
-      "hash": "c91315b45a78ad78d4a97b6989d8d0389323818f0108145b04200400e63b0b78",
-      "size": 453
+      "hash": "abbbfa02c540b4ba7d08e41282931545e3338e8daad3c52352970da8f3f3da32",
+      "size": 445
     },
     {
       "id": "player_adventurer_south",
@@ -919,8 +919,8 @@
         "south",
         "character"
       ],
-      "hash": "450643b4bd725b1b73fb0925e2d2a9a88192a6524399e7da75144171ca5b5821",
-      "size": 453
+      "hash": "262ee2b2b2aafb5dc56280a469e46ddc2b9ce065428c76181b0aa1e9e7c6a893",
+      "size": 445
     },
     {
       "id": "player_adventurer_west",
@@ -938,8 +938,8 @@
         "west",
         "character"
       ],
-      "hash": "e4e1019c09f509ed27cf28be8d9ca15a966120182c2c5875fc2dd4db8e2d51a9",
-      "size": 453
+      "hash": "cb57939ddfe694f45e191e9b8335aeb3e759693584c6124128b9cf67bf002984",
+      "size": 445
     },
     {
       "id": "player_compass",
@@ -956,8 +956,8 @@
         "hud",
         "direction"
       ],
-      "hash": "6feff7721cf3f625f79aa01f1a170c78b6f495697d9bcacd965611825cf6c7b6",
-      "size": 355
+      "hash": "1d2aff4e0d24b9b39d2f0fe3b78a69d958d81199144ed475f71541fc315e6f9b",
+      "size": 350
     },
     {
       "id": "player_explorer_east",
@@ -978,8 +978,8 @@
         "east",
         "character"
       ],
-      "hash": "e6d4aaea135621668faba41ca4e3a633b50509e38b85b1e0788bcb733d00ee74",
-      "size": 3052
+      "hash": "3efbd286b913ac126459ae488035c54f90a983a42b83cfabda37c146d2141166",
+      "size": 2997
     },
     {
       "id": "player_explorer_north",
@@ -1000,8 +1000,8 @@
         "north",
         "character"
       ],
-      "hash": "42af5dc8de9dfb6081117d8129d87e9576820b0896b8426481cf67fef20be8d3",
-      "size": 2942
+      "hash": "a54950f11a0d8a4f212cd9f7f605e8bbf9194b5dc6c7987df7969f1bd2a3bb03",
+      "size": 2892
     },
     {
       "id": "player_explorer_south",
@@ -1022,8 +1022,8 @@
         "south",
         "character"
       ],
-      "hash": "afb7dec1c31d3e68fe629cdfc506989a21145819ccb277fb26de60bffe4e5350",
-      "size": 4390
+      "hash": "58d957885ce79b31dee46e5bdd9a01b77ba2bbff2df85b8eb73f5d03b6ab9b08",
+      "size": 4311
     },
     {
       "id": "player_explorer_west",
@@ -1044,8 +1044,8 @@
         "west",
         "character"
       ],
-      "hash": "8cfad9c647b21a0016a1a9748f8f09a45fa9dce742ce5a5abf7fb9e0959536f1",
-      "size": 3064
+      "hash": "b19a7a6aa3a0b2bfc09d577969378af1d8b2435ec1e9fabe0dc8b6a17f920fc9",
+      "size": 3009
     },
     {
       "id": "player_ground",
@@ -1062,8 +1062,8 @@
         "avatar",
         "elevation_0"
       ],
-      "hash": "593256a2d472aad05c4a9f86552764b93c88b1dc2da946f41a4ae9c6bc7693be",
-      "size": 280
+      "hash": "f82770fbcaf71723ca5ae78631fa4d5befa21c1237f44c875e2a43a5776814e5",
+      "size": 276
     },
     {
       "id": "player_knight_east",
@@ -1081,8 +1081,8 @@
         "east",
         "character"
       ],
-      "hash": "2865b23aeae3dbe68c1f27d04ddecc070d00b61f8c053a6ecc61cdf0e7f371ac",
-      "size": 453
+      "hash": "8f32dff6136734dd7112a3cc5a559e0204f40cacf3a597ff2f8084d6acb43492",
+      "size": 445
     },
     {
       "id": "player_knight_north",
@@ -1100,8 +1100,8 @@
         "north",
         "character"
       ],
-      "hash": "84bd80e499f36223b4951aab6f34ad9556f10a6f32e67a72adc12ac518dff72c",
-      "size": 453
+      "hash": "ad1c2eace3135f8cc69e00f5a393ba7955f730d1571e80f5b8030a6fb8d1fd09",
+      "size": 445
     },
     {
       "id": "player_knight_south",
@@ -1119,8 +1119,8 @@
         "south",
         "character"
       ],
-      "hash": "fc460e6c07e428d34e1fdc6548cd9e5861fdbacb5d554615f5803443078004dc",
-      "size": 453
+      "hash": "6bee4864632519fe7900749fd968f578ac883fbc98d7de0b9f6c11513a9d4668",
+      "size": 445
     },
     {
       "id": "player_knight_west",
@@ -1138,8 +1138,8 @@
         "west",
         "character"
       ],
-      "hash": "9387a8be7cc082853ca97d89e29b93aa3058a74bad70b7af873a54c1aeb42a36",
-      "size": 453
+      "hash": "9196e9e787d709468e25912927f3d0c92340d6b5f5d8a8290b1429ba10066134",
+      "size": 445
     },
     {
       "id": "player_mage_east",
@@ -1157,8 +1157,8 @@
         "east",
         "character"
       ],
-      "hash": "5b3316e1c4494a26e2066ec2028fbf792466b4428da0b2dec9d2de35fbd55dbb",
-      "size": 453
+      "hash": "ab894bdc642874ad816934e68acb6a788260f5a152aa1240cf5d00137f7f71b4",
+      "size": 445
     },
     {
       "id": "player_mage_north",
@@ -1176,8 +1176,8 @@
         "north",
         "character"
       ],
-      "hash": "cc20114d4f6581e3368a66488a87a6df51846f7973ce4e6c8216a6434b17210e",
-      "size": 453
+      "hash": "bd917e263d67342f8074104b5d02e6be9882aa4d41de6ea3229268a06dc00754",
+      "size": 445
     },
     {
       "id": "player_mage_south",
@@ -1195,8 +1195,8 @@
         "south",
         "character"
       ],
-      "hash": "274f13971942d2b55b7a9fc90eb4ad2635ad60149a28caab20911a61cc9b0591",
-      "size": 453
+      "hash": "11ec9e0e8a7ffb1c4cbe3d434714bf675b06c06706e3ccf83b505db4dcf46f73",
+      "size": 445
     },
     {
       "id": "player_mage_west",
@@ -1214,8 +1214,8 @@
         "west",
         "character"
       ],
-      "hash": "57651f09c70f0180eb6417acb11a023bec62149617c577f118492c8937e7feb4",
-      "size": 453
+      "hash": "afb424912f98d85caf81f49e15bf1c3874f3d9923aeb3ef31ee4cbc1dde37c83",
+      "size": 445
     },
     {
       "id": "player_overhead",
@@ -1232,8 +1232,8 @@
         "avatar",
         "elevation_1"
       ],
-      "hash": "2862256bb4bbbf3f2cb645075727a44b5e10121290dcaf784067047c8060793f",
-      "size": 357
+      "hash": "4bc8e1b181c268269dffb998134a8fe4f89e0a8a27b64047c5c6820038d17596",
+      "size": 352
     },
     {
       "id": "player_rogue_east",
@@ -1251,8 +1251,8 @@
         "east",
         "character"
       ],
-      "hash": "bbfefeb7576fbdf568f5c3ce41c50eb5ec64b957dbab60bf5b4e666111c0ef9e",
-      "size": 453
+      "hash": "c23be89ed48a9e1851b2de4d093c47ee4cf9ca525cf1e99c68663d6a04bc2061",
+      "size": 445
     },
     {
       "id": "player_rogue_north",
@@ -1270,8 +1270,8 @@
         "north",
         "character"
       ],
-      "hash": "67ebf47388f68086abb794c871dfd37c10d5f1d31d3679dec7b15a829e7dbf99",
-      "size": 453
+      "hash": "831f072821461ae6bf5ea6f40a95c389ae1006bc5f80f017674d5b96a99ac098",
+      "size": 445
     },
     {
       "id": "player_rogue_south",
@@ -1289,8 +1289,8 @@
         "south",
         "character"
       ],
-      "hash": "e7ec5bfa099471135f6569ff9991d64171b78f4ea2862420e68973d5eae1bfa5",
-      "size": 453
+      "hash": "e8d512dca279117e844ff96bc405735695e7698ba378153e8fa92ca3cf376291",
+      "size": 445
     },
     {
       "id": "player_rogue_west",
@@ -1308,8 +1308,8 @@
         "west",
         "character"
       ],
-      "hash": "bb4d09f5583baf6ab697b83b14fbba3fabc412c5c918659dc497f96de1d8ac60",
-      "size": 453
+      "hash": "f347c135a8aa1887cf2220ef6b206b764fc0ca80eb75d4072dcbec9f8347bce4",
+      "size": 445
     },
     {
       "id": "puzzle_gate_cipher",
@@ -1327,8 +1327,8 @@
         "dial",
         "lock"
       ],
-      "hash": "548ea8f951d3f9fb0ac0bda977915dc55437679eb096d1401ea6d487f9d328f7",
-      "size": 1101
+      "hash": "a22e4e984aaba06cbb05bffc2afa6eb539fc906eefd1c996e4526baa9ff06461",
+      "size": 1085
     },
     {
       "id": "puzzle_gate_rune",
@@ -1346,8 +1346,8 @@
         "memory",
         "seal"
       ],
-      "hash": "22db5a59c2e55d0281a24fd91c66f102f6874cb4c2ba5e6df9ad29543771210d",
-      "size": 1064
+      "hash": "6582ff83c03d45f2dc061ad40d5be05adc60660cd6c8ab6f8a0669f75b2c4a09",
+      "size": 1048
     },
     {
       "id": "runic_plate_off",
@@ -1362,8 +1362,8 @@
         "rune",
         "off"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "runic_plate_on",
@@ -1378,8 +1378,8 @@
         "rune",
         "on"
       ],
-      "hash": "c43b0ef7e22aade22d5a8ba2bdc67d71163208ee5e9cccc22c2065ab5e9c12cb",
-      "size": 285
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "signpost_lore",
@@ -1397,8 +1397,8 @@
         "journal",
         "guide"
       ],
-      "hash": "4b5f5892137871774bbb2fdd6544d0dab56496ce4d0c7f766befcbca6f9484f6",
-      "size": 1142
+      "hash": "e9a657379d7b8d0806acd0c521b6f367266f7950d066a624f3e61d61238e5e32",
+      "size": 1125
     },
     {
       "id": "spawn_archway",
@@ -1414,8 +1414,8 @@
         "entrance",
         "archway"
       ],
-      "hash": "9ecf3d48b83f2923d37aba11a981d6fccac9c50923dcdf0664310a4a99db3ea9",
-      "size": 370
+      "hash": "4133dc9599be359d7edc43dea487984313dfce8487f3cb9fabb5e084cd637dbd",
+      "size": 366
     },
     {
       "id": "spawn_camp",
@@ -1431,8 +1431,8 @@
         "entrance",
         "camp"
       ],
-      "hash": "ab2bfca21adee611c2a9c727b97f60a81c7d00d57d4bdb08ea563e423599a182",
-      "size": 366
+      "hash": "fed1d5931bcc3225e097d2f9c9e1360b2ec9819725f749e1c254b30ab57c7197",
+      "size": 362
     },
     {
       "id": "spawn_edge_wall_east",
@@ -1450,8 +1450,8 @@
         "wall",
         "east"
       ],
-      "hash": "2ef6563f6f7e8369418fcd160b3cc899a021ec4dbbf4da452f3ea68c2840684d",
-      "size": 437
+      "hash": "8bb1173ae812021f5037ba4162c7e5c09424540e73180d58cd368a13c06954b0",
+      "size": 429
     },
     {
       "id": "spawn_edge_wall_north",
@@ -1469,8 +1469,8 @@
         "wall",
         "north"
       ],
-      "hash": "a2404ce809d859fc43a24fc3438fb1f706ba92cf6e44963a482686a88a4aea9a",
-      "size": 435
+      "hash": "4bfac0e13cc5c51cab26fefcb3ebe7c57890fc82c950fa4ecdd188638c1644c1",
+      "size": 427
     },
     {
       "id": "spawn_edge_wall_south",
@@ -1488,8 +1488,8 @@
         "wall",
         "south"
       ],
-      "hash": "9ca4ea79a505d59355e7cd638d9177184156ff773350ac48671f86df55da595d",
-      "size": 437
+      "hash": "0213d610ab2c941f2ff7130a812d94433f2fdd9ec1a4d90db32225c4d322173e",
+      "size": 429
     },
     {
       "id": "spawn_edge_wall_west",
@@ -1507,8 +1507,8 @@
         "wall",
         "west"
       ],
-      "hash": "b97f8abb2a37ea636ec45ad45c0fb6f67709feece39ef13731d5d83bbe8d1c48",
-      "size": 435
+      "hash": "65fe3f21fc59bc9482cf2a244fa12888b8453f847bcb5d5b470c2d6cae0e4ae2",
+      "size": 427
     },
     {
       "id": "spawn_pentagram",
@@ -1524,8 +1524,8 @@
         "entrance",
         "pentagram"
       ],
-      "hash": "fb5ffde9b5aeee76e3f4071244ce34b3431dc12295467df35127073873044266",
-      "size": 367
+      "hash": "c42942b1127fe0914d2a834544d7e788d01a9ed1f8225b0f57c33330d3786a6a",
+      "size": 363
     },
     {
       "id": "spawn_portal",
@@ -1541,8 +1541,8 @@
         "entrance",
         "portal"
       ],
-      "hash": "302df097d1a8dee6f8ca2af99a8386b83d11860da9d1f2f4e9b627f078dfa5c4",
-      "size": 366
+      "hash": "c162b6dd74cb6148a140c8a515e7f1b127f70fe6bee74c6ebb1959a3ba15c752",
+      "size": 362
     },
     {
       "id": "spawn_stairs_down",
@@ -1558,8 +1558,8 @@
         "entrance",
         "stairs_down"
       ],
-      "hash": "8d49f6c5550ffa3f71f153c0dfb400ebed6fd1d474e9a110b15bea914663f367",
-      "size": 368
+      "hash": "4f7d07f4e6995b60eccd9ed09135f5f1416fa2ca2f8ecd25bfc5297376ccc8f9",
+      "size": 364
     },
     {
       "id": "teleporter_portal",
@@ -1577,8 +1577,8 @@
         "astral",
         "dimension"
       ],
-      "hash": "d8bc48530ef6977d368de382301a5c57a2bf3ede726ce0cb124975f32c319631",
-      "size": 1242
+      "hash": "c4f491268ed0aadc24d78dcea74c7e262d4aff30ffd370bdd2b5526f2922e26a",
+      "size": 1216
     },
     {
       "id": "tile_bridge_dungeon_ew",
@@ -1595,8 +1595,8 @@
         "overhead",
         "dungeon"
       ],
-      "hash": "e4c11326adedef673364adc273ca5e4961669db78dc529d471e1950ac96ec669",
-      "size": 488
+      "hash": "f28cdc409c926d17522a47a0c98377da9b9f6866ce83a9c73728d5291a9efaf7",
+      "size": 482
     },
     {
       "id": "tile_bridge_dungeon_ns",
@@ -1613,8 +1613,8 @@
         "overhead",
         "dungeon"
       ],
-      "hash": "0ffe95a78c09f6e0f7b25e6605ebcd40f624cd83ed8fd597ca23f09c19263804",
-      "size": 488
+      "hash": "b2d9a120bd85e1314e48f10adbac2398399966b2f4bc7059967d46d950c6fbbb",
+      "size": 482
     },
     {
       "id": "tile_bridge_generic_ew",
@@ -1631,8 +1631,8 @@
         "b_ew",
         "overpass"
       ],
-      "hash": "1f0f3d0e86bb0b250624d675e15cc737de4528238c97b062b59e78522d06f23c",
-      "size": 704
+      "hash": "0699f6c25d75dc5b1695444dac41136b47c8f17b22c0019d891ea3ec978a00f6",
+      "size": 694
     },
     {
       "id": "tile_bridge_generic_ns",
@@ -1649,8 +1649,8 @@
         "b_ns",
         "overpass"
       ],
-      "hash": "7420439a5a45b8f8192f3dafef05a8d3f846a4d145c524994bbb8abeb55fd7d1",
-      "size": 704
+      "hash": "c308bb6507922d2d1ea9b7e00937ae4bbfcd0d8e1e80673127f5fbfc899e074b",
+      "size": 694
     },
     {
       "id": "tile_bridge_glacial_ew",
@@ -1667,8 +1667,8 @@
         "overhead",
         "glacial"
       ],
-      "hash": "dcaabb70b7b1a556198690e1d7052db6799eb37aaf4eb3028fab976f454e9dd3",
-      "size": 488
+      "hash": "ca89a2262c790c298733ff4845d76c7ffb9044f39e7703d5c1186dc1c58b0ba8",
+      "size": 482
     },
     {
       "id": "tile_bridge_glacial_ns",
@@ -1685,8 +1685,8 @@
         "overhead",
         "glacial"
       ],
-      "hash": "1bc32e1e6f97eda5eb9f19aff193dc0d20d2dcaaace9cdc2fb58196f8e1e04bb",
-      "size": 488
+      "hash": "1fcb26ab58e6f2c531783af79aa82850700aa0ca400ee859687c3501a42d1c2f",
+      "size": 482
     },
     {
       "id": "tile_bridge_jungle_ew",
@@ -1703,8 +1703,8 @@
         "overhead",
         "jungle"
       ],
-      "hash": "0e5ca0c081007efa16529a83b2d8d6ab82a9d996c331fab2bb872b500070413c",
-      "size": 488
+      "hash": "8065c6b30b117c2d3e56c8ad444c1f4b220e332395e0ac57882277eff0957dc8",
+      "size": 482
     },
     {
       "id": "tile_bridge_jungle_ns",
@@ -1721,8 +1721,8 @@
         "overhead",
         "jungle"
       ],
-      "hash": "9f53d8fe65a897d775d9901796a2a78abac7d16661d9c8c8f43de98dd9ba2f26",
-      "size": 488
+      "hash": "c9adee4005bfb2095fc97c7d063e886165e4cfd5b0d7bfb4b7bd16af539b84ae",
+      "size": 482
     },
     {
       "id": "tile_bridge_magma_ew",
@@ -1739,8 +1739,8 @@
         "overhead",
         "magma"
       ],
-      "hash": "96b5110e4621c06b7fc577c58fa464cdcf03d4e35c059a19a3409ed48d189a94",
-      "size": 488
+      "hash": "f6c90c3ffd4cc34ee7f57fa3dd59565cfcfaa22a20a1ebf759813873eedeb190",
+      "size": 482
     },
     {
       "id": "tile_bridge_magma_ns",
@@ -1757,8 +1757,8 @@
         "overhead",
         "magma"
       ],
-      "hash": "4f5bc14061ed80ce715157c16aee991831e319c99c54d1d3f5334a860b38f4d3",
-      "size": 488
+      "hash": "9b02c2e2bb48607aeab7b8c752e2fa69e05c2d23e438ccff151bd81abc8556e3",
+      "size": 482
     },
     {
       "id": "tile_bridge_pillar_deck",
@@ -1777,8 +1777,8 @@
         "2.5d",
         "deck"
       ],
-      "hash": "22b74eb89b11d2666720e2668427f41a53fb649368db4bc552258288b68310bf",
-      "size": 1334
+      "hash": "42e0170e0cfeea6db2f65617f7b2cc2cd35c94c10485a59b099c9f2ba3c10bd9",
+      "size": 1313
     },
     {
       "id": "tile_bridge_temple_ew",
@@ -1795,8 +1795,8 @@
         "overhead",
         "temple"
       ],
-      "hash": "a76d0b97f558e40d91415c87cf7b2518bdf4ff2c266587ce3605591d5ff84d38",
-      "size": 488
+      "hash": "8dc0b5ad5fc29b373725c6c069d007a6fadded1fdacf5a261a81c70941dbfe8a",
+      "size": 482
     },
     {
       "id": "tile_bridge_temple_ns",
@@ -1813,8 +1813,8 @@
         "overhead",
         "temple"
       ],
-      "hash": "27d8ff9c535eedc7ac9ce6279969e2a738becf1546da36c88657992ec5a87e57",
-      "size": 488
+      "hash": "0bb4c10b419f6240a4d60fd37ae8b767dc774bc625f0c59612b0278a8948f40f",
+      "size": 482
     },
     {
       "id": "tile_floor_dungeon",
@@ -1831,8 +1831,8 @@
         "ground",
         "walkable"
       ],
-      "hash": "b911727e7c9962af17976e2c1c80affbd5847a9f31f25c35dadc4df62b6bfe20",
-      "size": 683
+      "hash": "3aa160b7b14774fa8ab22dbf33b6694bdd0be715382066689dcd5b56c0cc5867",
+      "size": 671
     },
     {
       "id": "tile_floor_dungeon_cracked",
@@ -1849,8 +1849,8 @@
         "variation",
         "dungeon"
       ],
-      "hash": "2c73252abffcea7202e778e2d6405a9c342e46cc7e3315ac9d9ff743fd06fdc5",
-      "size": 713
+      "hash": "7db484432abe0d7e29dbd9e26a70e05ae25f51a45d7f1d8f91f0b92533f5508d",
+      "size": 701
     },
     {
       "id": "tile_floor_dungeon_runic",
@@ -1868,8 +1868,8 @@
         "magic",
         "dungeon"
       ],
-      "hash": "7b8df107616b510474ad4dfce60e526fd1b271e0359387fce02a4aad065792ad",
-      "size": 618
+      "hash": "3580a0e4a6b4bc29153ee81573748fcadcf1b29da3b4417effee961fcd765ad2",
+      "size": 611
     },
     {
       "id": "tile_floor_generic",
@@ -1886,8 +1886,8 @@
         "walkable",
         "ground"
       ],
-      "hash": "80a2893eb47bb814316e5196582a1b2c6e7928b06b52a9fa158e305d061fb097",
-      "size": 675
+      "hash": "77147a939c7dabeb400049da54d2c116dddcfba61bfa8e550ec41dc61234fc96",
+      "size": 663
     },
     {
       "id": "tile_floor_glacial",
@@ -1904,8 +1904,8 @@
         "ground",
         "walkable"
       ],
-      "hash": "ff335571b233bfcc33a0c677b20a6d423102d7fa95cec3a9361618d65cdde415",
-      "size": 683
+      "hash": "f19a779f855295d1e5d6c4fd7dd2c8f7fb54ddc1b87c00d05dc2ba96b6aecbc5",
+      "size": 671
     },
     {
       "id": "tile_floor_glacial_cracked",
@@ -1922,8 +1922,8 @@
         "variation",
         "glacial"
       ],
-      "hash": "ccabf8250d79834aff65b2644202299fa93eb5f72b5d798da8b25d9c188c8a3b",
-      "size": 713
+      "hash": "d284c3771cd2b479a85692f7644891b54cefce8bede825285fcf66461931f87b",
+      "size": 701
     },
     {
       "id": "tile_floor_glacial_runic",
@@ -1941,8 +1941,8 @@
         "magic",
         "glacial"
       ],
-      "hash": "1e546c235644d38cf8051186f6c915ebfb1a2418b35c1df59a24ce24d3fbbc6a",
-      "size": 618
+      "hash": "05a92a26c7fd34980a108a60ff5b4465f81d2720eb6839ee0b578c2adc771282",
+      "size": 611
     },
     {
       "id": "tile_floor_jungle",
@@ -1959,8 +1959,8 @@
         "ground",
         "walkable"
       ],
-      "hash": "da75a9359b851779bee1a3beaa9742790d832cea68e25688c022ba292011365b",
-      "size": 681
+      "hash": "12df9f29c431a9a4ee84282845584f63437b759b7aed0c18513000f70c3e283e",
+      "size": 669
     },
     {
       "id": "tile_floor_jungle_cracked",
@@ -1977,8 +1977,8 @@
         "variation",
         "jungle"
       ],
-      "hash": "21a39818090a88b1ab79e6aec37f627b3b85be450e732f578f7629279ef979b8",
-      "size": 711
+      "hash": "fc0de8cc934d9c9ebabfa789e7a73f39c4e47e7d6b7ab0581f4980053dcc2da7",
+      "size": 699
     },
     {
       "id": "tile_floor_jungle_runic",
@@ -1996,8 +1996,8 @@
         "magic",
         "jungle"
       ],
-      "hash": "58f591a9bf3e1a2be7796c8967896c9003935decc1e0e8d5858c7e3e9de13fd0",
-      "size": 618
+      "hash": "eef2c1d554c0ec82e15b4440c6df187e4ffffac9c448fc0c42eb4d1601379ae6",
+      "size": 611
     },
     {
       "id": "tile_floor_magma",
@@ -2014,8 +2014,8 @@
         "ground",
         "walkable"
       ],
-      "hash": "dfa8a940a169764991c41e4cd55b0b18e4dc7190267355145ee768111ef7cced",
-      "size": 679
+      "hash": "309ad131d338176a5d08472e9ee234051c445b0572e5e796fcce65a154c3315b",
+      "size": 667
     },
     {
       "id": "tile_floor_magma_cracked",
@@ -2032,8 +2032,8 @@
         "variation",
         "magma"
       ],
-      "hash": "9bf46c2fcf07b40bb1e9c2d43d15494051ee38fcda0309aca2238f0a5e7d1e1a",
-      "size": 709
+      "hash": "65946f244b6404bec931afa6b09619b2fde44368a442723114717a6757cac0ee",
+      "size": 697
     },
     {
       "id": "tile_floor_magma_runic",
@@ -2051,8 +2051,8 @@
         "magic",
         "magma"
       ],
-      "hash": "74781918787e7d3fda1c4473a310043bfe24c77e9a81d09b90f4d8720007f1ec",
-      "size": 618
+      "hash": "68799a40d06fad413cb94e01b828b373421634e868c25e71e25f83b550a9a81d",
+      "size": 611
     },
     {
       "id": "tile_floor_temple",
@@ -2069,8 +2069,8 @@
         "ground",
         "walkable"
       ],
-      "hash": "eb7922027ebf314ad2167e81b43364a885d00b0c6252d88cab374d05e88e5110",
-      "size": 681
+      "hash": "36434b598c501a24d7da2690c9ea3cc5f08a12e7290185499ac925693ad87e84",
+      "size": 669
     },
     {
       "id": "tile_floor_temple_cracked",
@@ -2087,8 +2087,8 @@
         "variation",
         "temple"
       ],
-      "hash": "f312abdefa2bb253a1d16871a1b2fea0e51e35abe96cc7024cfb1abd5bd16b74",
-      "size": 711
+      "hash": "c277f291c80c3754c42ae0eab37457d63a9668e2482f552f61851789bda07ec5",
+      "size": 699
     },
     {
       "id": "tile_floor_temple_runic",
@@ -2106,8 +2106,8 @@
         "magic",
         "temple"
       ],
-      "hash": "2480bbee010b7d2aad123c88d11e848c7e38d449417df681111bdb2469d628fd",
-      "size": 618
+      "hash": "30b45e2391314a5735eac38d5867664d4f8998a39fb21150f4072dc2e591826a",
+      "size": 611
     },
     {
       "id": "tile_ramp_dungeon_east",
@@ -2124,8 +2124,8 @@
         "east",
         "dungeon"
       ],
-      "hash": "4150dade43f82e8d476d91abb461ec5c22ef7e9be37e034a6f0dd12cf45d5261",
-      "size": 274
+      "hash": "85923d1cc0c6b466e4cb70e1b6859c64a58afcd03fdfddbda8bd96a084050332",
+      "size": 271
     },
     {
       "id": "tile_ramp_dungeon_north",
@@ -2142,8 +2142,8 @@
         "north",
         "dungeon"
       ],
-      "hash": "e081463e0e99e5a2cf802866e1758f417e5b19501ccd3708104dff69d9647994",
-      "size": 274
+      "hash": "b9aad679e9692b0f81fbb9ac9bfdb3244867137f800b839cc0f33caa13afd3a8",
+      "size": 271
     },
     {
       "id": "tile_ramp_dungeon_south",
@@ -2160,8 +2160,8 @@
         "south",
         "dungeon"
       ],
-      "hash": "d42ea56828adc2609815dcc077ec5ca883f4226a8f38d2f7f0d1a62a0430a3a8",
-      "size": 274
+      "hash": "5bd6192b204e1ee04ae65364234eee70525c85ae1e21784d78571b24575b8d40",
+      "size": 271
     },
     {
       "id": "tile_ramp_dungeon_west",
@@ -2178,8 +2178,8 @@
         "west",
         "dungeon"
       ],
-      "hash": "6e430fcfd4fd4d209abd3bc5e78e51cf033f958ac31e60c3f1c34b5e844458af",
-      "size": 274
+      "hash": "a6b2ce57cd84ca0e52421a522299acc6e841bbbf80613c244450da8eab64a831",
+      "size": 271
     },
     {
       "id": "tile_ramp_generic_east",
@@ -2196,8 +2196,8 @@
         "ramp_e",
         "east"
       ],
-      "hash": "91995d54380de12f63f3e4a380ff793822ba8be6d4ad8a8dd76efeafe63cb72b",
-      "size": 525
+      "hash": "bf96f53bcf3ce08e3417747234af96b60bfa2d9fa740d46389a3d89906960545",
+      "size": 518
     },
     {
       "id": "tile_ramp_generic_north",
@@ -2214,8 +2214,8 @@
         "ramp_n",
         "north"
       ],
-      "hash": "2035b66ef88401d6c3471f5e085ae4aee7c672c306caf4d8e17f46b161fb83a8",
-      "size": 525
+      "hash": "3e534309f3887adafca21d8e3224c84cc6e420d458f87c9168e00f3310551947",
+      "size": 518
     },
     {
       "id": "tile_ramp_generic_south",
@@ -2232,8 +2232,8 @@
         "ramp_s",
         "south"
       ],
-      "hash": "7b038de3538ce9a2b541f87f58b2f431a1129ddc438bd7c11f4c3a5e35931bf3",
-      "size": 525
+      "hash": "833fa6434e2d70784ba097170f3adb9ca71e5a29f83ef3e17648093e2141728c",
+      "size": 518
     },
     {
       "id": "tile_ramp_generic_west",
@@ -2250,8 +2250,8 @@
         "ramp_w",
         "west"
       ],
-      "hash": "de1d8c7575b5b6a0c9ea90c4def850c5f0abfe68849a95bfbafcde1d09decd4c",
-      "size": 525
+      "hash": "fb9ee6a8ec536cdf44cf6a789bc8362b1d65483d6f9df9e5c60e3596321585b4",
+      "size": 518
     },
     {
       "id": "tile_ramp_glacial_east",
@@ -2268,8 +2268,8 @@
         "east",
         "glacial"
       ],
-      "hash": "f67e28a1397c3031459d910597bf52cb5f89b821299b9eb8ac390a642a778c01",
-      "size": 274
+      "hash": "a6a9851272c34fbab3981c1a4702f37a4e25536e0ebe654f027324310cb8d539",
+      "size": 271
     },
     {
       "id": "tile_ramp_glacial_north",
@@ -2286,8 +2286,8 @@
         "north",
         "glacial"
       ],
-      "hash": "72c0752c3831afa9f48718272fca704751316ec1827f2748232c53314bad0f71",
-      "size": 274
+      "hash": "88ab3a3ce5f7ef64f047735de2e61c4bec6cf2f0efee42c160c8e819d6d9e065",
+      "size": 271
     },
     {
       "id": "tile_ramp_glacial_south",
@@ -2304,8 +2304,8 @@
         "south",
         "glacial"
       ],
-      "hash": "3d53ef5f92e50f0951800c0c2fa7f35fdd84c0333cd3e2a5d76f7539fe94a3c2",
-      "size": 274
+      "hash": "a07cd7db2eb88ca63c078703a2267a8a9176ef5299170666694899540df51fe3",
+      "size": 271
     },
     {
       "id": "tile_ramp_glacial_west",
@@ -2322,8 +2322,8 @@
         "west",
         "glacial"
       ],
-      "hash": "a50286d4cc8379ac6b8064c2dac71e188b09c175d79ea3cb4e5f96075566c5c9",
-      "size": 274
+      "hash": "c37e83478b6d69cc2979896ca9679d46a4764e2838b30bdf744e1da26418c91e",
+      "size": 271
     },
     {
       "id": "tile_ramp_jungle_east",
@@ -2340,8 +2340,8 @@
         "east",
         "jungle"
       ],
-      "hash": "c25168aa141880ea805df45988a9380f43f82dcead9473d06d119ff7f3f82af4",
-      "size": 274
+      "hash": "4e9e1674bef8ac7c8ee5699a2f752c51aec296c3f4a679a0c43af7d3408336d8",
+      "size": 271
     },
     {
       "id": "tile_ramp_jungle_north",
@@ -2358,8 +2358,8 @@
         "north",
         "jungle"
       ],
-      "hash": "8fc9fe728ff4c9eb1eb351e9b3e472c5d27e88b92149ef27634febbcfa2028d7",
-      "size": 274
+      "hash": "4b3651398ee4ca10d60475dc14c4d5340745a9b3b0500e770a774eb469c94ec6",
+      "size": 271
     },
     {
       "id": "tile_ramp_jungle_south",
@@ -2376,8 +2376,8 @@
         "south",
         "jungle"
       ],
-      "hash": "eb210f476ba337e1ca5e2198ddbb57415c7a673c804a276f33c546f0e7b681b3",
-      "size": 274
+      "hash": "3e980b83e3faa9d4b34bf7d7a1520c77e26106e34b4688ce81b2214d941c9e43",
+      "size": 271
     },
     {
       "id": "tile_ramp_jungle_west",
@@ -2394,8 +2394,8 @@
         "west",
         "jungle"
       ],
-      "hash": "1659352d002827fc08bcb8f9276cee31350120d4b948611d0727abf99fdeea04",
-      "size": 274
+      "hash": "8a402c7357a82a0be23f1daa2f691c51c30b981b91c18aa6c31a335db3f41306",
+      "size": 271
     },
     {
       "id": "tile_ramp_magma_east",
@@ -2412,8 +2412,8 @@
         "east",
         "magma"
       ],
-      "hash": "cd507741371680c93dfe01f51892dedd386d6b04edd8a2fa526afa7be062c7cd",
-      "size": 274
+      "hash": "82678eed227c3d4c9f2721745f38d10cd6d86aab9506a6eb4a581df059f27be9",
+      "size": 271
     },
     {
       "id": "tile_ramp_magma_north",
@@ -2430,8 +2430,8 @@
         "north",
         "magma"
       ],
-      "hash": "ea49e02700d171f3ffd8caef06b0e311c4e90ce4a60bc88d850f7a44eeb03e20",
-      "size": 274
+      "hash": "2ba6f946701dd6a2c6cf92543f124fcff18add410e373b6c0656b928028bbd3c",
+      "size": 271
     },
     {
       "id": "tile_ramp_magma_south",
@@ -2448,8 +2448,8 @@
         "south",
         "magma"
       ],
-      "hash": "90037b3e6bf71299c8ca4c733b9a717c3491ec0368789ad7c7e532c90d0ce92f",
-      "size": 274
+      "hash": "5c298cfa588bfa295abe614720189b0261899e9e7bedbfcb9eb8262cd9616994",
+      "size": 271
     },
     {
       "id": "tile_ramp_magma_west",
@@ -2466,8 +2466,8 @@
         "west",
         "magma"
       ],
-      "hash": "17ae5f2556b4ff6ceb7a159b680fae8e0189836ace374d6c1a66caf2513a1016",
-      "size": 274
+      "hash": "8fe338f7e06aab50e3a1b9eb6b112751d331e33282354b6223e4a40bc94df71e",
+      "size": 271
     },
     {
       "id": "tile_ramp_temple_east",
@@ -2484,8 +2484,8 @@
         "east",
         "temple"
       ],
-      "hash": "c7f92028ec5bda510fe25973e9ce88c1ebdf9d9642081c738851fa76e6aa3002",
-      "size": 274
+      "hash": "ba9fc1cf9d9b51ad4e6699031d884e66b83807cf2095579c15f5631e731ac177",
+      "size": 271
     },
     {
       "id": "tile_ramp_temple_north",
@@ -2502,8 +2502,8 @@
         "north",
         "temple"
       ],
-      "hash": "4dfbf262dc1ade8879f62d1fbfc15f74af70044b54059df7652277e761a80115",
-      "size": 274
+      "hash": "fecad7aea87a7e314f6c624efdc0f96008bfa83d8d939dd3a944c249d773e7ef",
+      "size": 271
     },
     {
       "id": "tile_ramp_temple_south",
@@ -2520,8 +2520,8 @@
         "south",
         "temple"
       ],
-      "hash": "c2a246e9966bf84134afa87edfcb1a00d4ba1340ea898f2136bb90bd9f3dbca4",
-      "size": 274
+      "hash": "266a341d84e1f5d22ac94ac322525441bf38fd0001e0ed5d8a3131b4b387dba0",
+      "size": 271
     },
     {
       "id": "tile_ramp_temple_west",
@@ -2538,8 +2538,8 @@
         "west",
         "temple"
       ],
-      "hash": "7a8f19424508028bc5b9626780bb02a6a91606a3d6e03ef65150a018907dd838",
-      "size": 274
+      "hash": "4fa2a81550d956f725f2555c2399343e2867f178d52562a930c9a3349bc16374",
+      "size": 271
     },
     {
       "id": "tile_wall_angled_dungeon",
@@ -2557,8 +2557,8 @@
         "2.5d",
         "dungeon"
       ],
-      "hash": "ca0c9dd3f186080ce231121e7465a56b92cab382ecb7eb1b75f53786475df7c4",
-      "size": 1226
+      "hash": "bcfcc0fc081f7043acc203fe888ac9847cf561ebb1d5319920a3cbcf89a0e41b",
+      "size": 1208
     },
     {
       "id": "tile_wall_dungeon",
@@ -2575,8 +2575,8 @@
         "barrier",
         "dungeon"
       ],
-      "hash": "05102f0e6a6b73726e24e8b4cc2936dfbc8119ce61cb96e1c7647a0961a83862",
-      "size": 716
+      "hash": "62aa22be480a9c6bb5c72740d73fbbe652ff8fabe14526e1ad404eae2999c1f7",
+      "size": 704
     },
     {
       "id": "tile_wall_dungeon_grate",
@@ -2594,8 +2594,8 @@
         "bars",
         "dungeon"
       ],
-      "hash": "8ccc69a2e4517540c8fc5d8a089e27b3fd22e3f849849e7ea7fd856e5fea097e",
-      "size": 682
+      "hash": "21d8d840f75f8433a8a84ea2d9c9fa949f12168b415bb73fb25acb30ac64f4f3",
+      "size": 672
     },
     {
       "id": "tile_wall_dungeon_torch",
@@ -2613,8 +2613,8 @@
         "light",
         "dungeon"
       ],
-      "hash": "193a29f83b337d3e23f268ffa7d2fff7f505b6bd82e0c3cf4b16120bdafae7d6",
-      "size": 865
+      "hash": "76e9ac2445fba993b989a93b3f85bd73149591660136043a7f4b08dd2ee4af0b",
+      "size": 848
     },
     {
       "id": "tile_wall_glacial",
@@ -2631,8 +2631,8 @@
         "barrier",
         "glacial"
       ],
-      "hash": "e686bf2c96051d96baf642affbd9a604b0db88333cbc681360e1c8bfb18e71db",
-      "size": 716
+      "hash": "210ff4fa72f811f93b41e3100bd6246ac7222afdc31d6f85838e9afe69b9face",
+      "size": 704
     },
     {
       "id": "tile_wall_glacial_grate",
@@ -2650,8 +2650,8 @@
         "bars",
         "glacial"
       ],
-      "hash": "1d4a226302eaeb4f25923ff1c67656918a680f31287a618db7d890487a33e560",
-      "size": 682
+      "hash": "c4636a0c335e2608cd11cc1c22723cf4e4593a4104b2289774f5fe4cad760907",
+      "size": 672
     },
     {
       "id": "tile_wall_glacial_torch",
@@ -2669,8 +2669,8 @@
         "light",
         "glacial"
       ],
-      "hash": "fb436be8b0393e7fa73add450052ff258f9fa5ef3c55e2c1e8ce5bb54582190e",
-      "size": 865
+      "hash": "29545676640ae642de77b63afb1102f46097b9ded054325f29afbea3d638cac6",
+      "size": 848
     },
     {
       "id": "tile_wall_jungle",
@@ -2687,8 +2687,8 @@
         "barrier",
         "jungle"
       ],
-      "hash": "6f0f2c22e63045ffa9e0eedf17f2c9d901b408f42e310766ae770bd99b1de97e",
-      "size": 714
+      "hash": "160db453b5d970d30dd71a458129ec9d707526e876cf417617a3bbdcd507c2c1",
+      "size": 702
     },
     {
       "id": "tile_wall_jungle_grate",
@@ -2706,8 +2706,8 @@
         "bars",
         "jungle"
       ],
-      "hash": "04daac9a4698c6694aa6ba5ef95200378e22d510f29c732bf4d8ef3712cae061",
-      "size": 682
+      "hash": "edf7270019d6c6f17e66977659eb77f4c0429a0f71112bb760410889ef2ec95f",
+      "size": 672
     },
     {
       "id": "tile_wall_jungle_torch",
@@ -2725,8 +2725,8 @@
         "light",
         "jungle"
       ],
-      "hash": "f820a6d8f1fcfd3d49edc0605ff259e4630bfd7353eaa8965c6c0bdb01c3b303",
-      "size": 863
+      "hash": "c49e2b0969e9da7bb7988972ad7dcf76ae0440d93bb551f44387b67dedb794ba",
+      "size": 846
     },
     {
       "id": "tile_wall_magma",
@@ -2743,8 +2743,8 @@
         "barrier",
         "magma"
       ],
-      "hash": "a301b027ef269dcd75ded457a2341baeeb4254effd9fddff6c691dce5e92bd1f",
-      "size": 712
+      "hash": "a48f3e22ded78d1770bec9edc19a8e097def83f77c6e5bdf5e6f4f7919a34ca7",
+      "size": 700
     },
     {
       "id": "tile_wall_magma_grate",
@@ -2762,8 +2762,8 @@
         "bars",
         "magma"
       ],
-      "hash": "da7912888c777c4a96f23c01dea3bc2ae6e94f1b698ff0c8bece38f50ed2096b",
-      "size": 682
+      "hash": "a97c966ac69fa4afdaff4c31e39f2338dc3e90bd2fcc162c5c0b4240460ebbee",
+      "size": 672
     },
     {
       "id": "tile_wall_magma_torch",
@@ -2781,8 +2781,8 @@
         "light",
         "magma"
       ],
-      "hash": "f13414ead00d75a5fba3d7cb27fc9028ca1ba25ae6caaadef4523be0e24a8b80",
-      "size": 861
+      "hash": "ddb8c7ada9ca863a032b1044501b7004345390a06b533a9f23a9149c5d0ec427",
+      "size": 844
     },
     {
       "id": "tile_wall_overgrowth",
@@ -2799,8 +2799,8 @@
         "jungle",
         "overgrowth"
       ],
-      "hash": "b0dfb9dce0e121dce253860af0b0759b8f757de3c04c2d4b79a60275cc815867",
-      "size": 782
+      "hash": "80684993d6f144a6dbe0b6b9b2d06a1b4a205f418d9bb2adef363082add80ee5",
+      "size": 769
     },
     {
       "id": "tile_wall_temple",
@@ -2817,8 +2817,8 @@
         "barrier",
         "temple"
       ],
-      "hash": "da8b0e2a8636884de9a49c62b7f9aa548940dbeb36aa7fe43daf72228e346678",
-      "size": 714
+      "hash": "f09679b5d245bdc29380f938f9a03b8a7039a23c970c3143bc4534d9d5a69b8b",
+      "size": 702
     },
     {
       "id": "tile_wall_temple_grate",
@@ -2836,8 +2836,8 @@
         "bars",
         "temple"
       ],
-      "hash": "42749bd75f4abce1acc2ac80f8a2f3375d428c3493787574f8963e6f93d8a74e",
-      "size": 682
+      "hash": "7629f670ad47991e26cd10a1ff681b144c3806c5e33192c3f0e554e25c3eb638",
+      "size": 672
     },
     {
       "id": "tile_wall_temple_torch",
@@ -2855,8 +2855,8 @@
         "light",
         "temple"
       ],
-      "hash": "816c1526356f6b5c2e09e720b94515f16b0f6222b84ccbfe87de416289b6a089",
-      "size": 863
+      "hash": "81d5b438c039018498d6498c45a641d3cb1bfa4902517ff5fb7ecdff14264c6b",
+      "size": 846
     },
     {
       "id": "tool_eraser",
@@ -2872,8 +2872,8 @@
         "tool",
         "editor"
       ],
-      "hash": "8361f63d8796b57e55c1b3b1e4a9cf5021ff22564d62fa4e6b9d090399868105",
-      "size": 253
+      "hash": "f1e71aadb579491cfd95568fa089db2594e57edfd742aa0f5a8e35cb56e35ba2",
+      "size": 250
     },
     {
       "id": "tool_fill",
@@ -2889,8 +2889,8 @@
         "tool",
         "editor"
       ],
-      "hash": "8a33b9e9ce2293f07a13150eda62c3c9f6b9218239a8450e8f874c70038c7766",
-      "size": 253
+      "hash": "cd33587e25e9fcf3370ac984fe0b6332161987f9e8712d656e4541ee19390637",
+      "size": 250
     },
     {
       "id": "tool_line",
@@ -2906,8 +2906,8 @@
         "tool",
         "editor"
       ],
-      "hash": "2bcf5ecfd6a7ab8b5cecec1c3115c9711b5b54455ed5a719248cdd06d015a43d",
-      "size": 253
+      "hash": "ae4a3caf60c4920607e21dabf20f2962d65ae87471c4fcae3b38d5d725cd7390",
+      "size": 250
     },
     {
       "id": "tool_move",
@@ -2923,8 +2923,8 @@
         "tool",
         "editor"
       ],
-      "hash": "fc9b078720edd599ef73e4357eb6af560da19e7121ca687989b2320160e01825",
-      "size": 252
+      "hash": "960e551168d81a41efa34a58fbc882438ccb59cf80a40c4a427846c403d7f4cd",
+      "size": 249
     },
     {
       "id": "tool_pencil",
@@ -2940,8 +2940,8 @@
         "tool",
         "editor"
       ],
-      "hash": "624807407efb96257631a1dde06530b555ea978a2899580a592a65d61022353f",
-      "size": 255
+      "hash": "cbc7daf0667636ddf75429f352c901f4c57fde50920e09b21a06686976bb2556",
+      "size": 252
     },
     {
       "id": "tool_select",
@@ -2957,8 +2957,8 @@
         "tool",
         "editor"
       ],
-      "hash": "e389d74aaa36996745214bd78887f7ffec2d003baeebea8aa1fa238378480dab",
-      "size": 253
+      "hash": "ae1f822f5cd9e768fa9b1851845318d27fc39af73ecc2f408be17228021a5719",
+      "size": 250
     }
   ]
 }

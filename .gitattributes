@@ -1,0 +1,13 @@
+# Casual Maze Game — Git Attributes Configuration
+# Enforces LF line endings across all platforms (Windows, Linux, macOS)
+# to prevent cryptographic hash drift and CI check failures.
+
+* text=auto eol=lf
+*.svg text eol=lf
+*.json text eol=lf
+*.js text eol=lf
+*.mjs text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.md text eol=lf
+*.yml text eol=lf

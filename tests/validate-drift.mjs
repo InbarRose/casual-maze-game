@@ -13,9 +13,9 @@
 
 import fs from 'fs';
 import path from 'path';
-import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { ENGINE_VERSION, ASSET_MANIFEST_VERSION, LEVEL_SCHEMA_VERSION } from '../js/core/version.js';
+import { computeNormalizedFileHashAndSize } from './helpers/crypto-utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -39,11 +39,7 @@ function check(description, condition, detail = '') {
   }
 }
 
-function computeFileHashAndSize(filePath) {
-  const content = fs.readFileSync(filePath);
-  const hash = crypto.createHash('sha256').update(content).digest('hex');
-  return { hash, size: content.length };
-}
+const computeFileHashAndSize = computeNormalizedFileHashAndSize;
 
 console.log('=== CASUAL MAZE GAME: DRIFT & INTEGRITY AUDIT ===\n');
 

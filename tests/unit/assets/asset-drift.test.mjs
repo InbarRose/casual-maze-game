@@ -4,9 +4,9 @@
 
 import fs from 'fs';
 import path from 'path';
-import crypto from 'crypto';
 import { describe, it, assert, assertEqual } from '../../harness/index.mjs';
 import { ASSET_MANIFEST_VERSION } from '../../../js/core/version.js';
+import { computeNormalizedFileHashAndSize, computeNormalizedHashAndSize } from '../../helpers/crypto-utils.mjs';
 
 describe('Assets > Cryptographic Integrity & Drift Prevention', () => {
   const rootDir = process.cwd();
@@ -60,11 +60,10 @@ describe('Assets > Cryptographic Integrity & Drift Prevention', () => {
       const fullPath = path.resolve(rootDir, asset.path);
       assert(fs.existsSync(fullPath), `Asset file exists: ${asset.path}`);
 
-      const content = fs.readFileSync(fullPath);
-      const hash = crypto.createHash('sha256').update(content).digest('hex');
+      const { hash, size } = computeNormalizedFileHashAndSize(fullPath);
 
       assertEqual(hash, asset.hash, `SHA-256 hash matches for "${asset.id}" (${asset.path})`);
-      assertEqual(content.length, asset.size, `File size matches for "${asset.id}" (${asset.path})`);
+      assertEqual(size, asset.size, `File size matches for "${asset.id}" (${asset.path})`);
     }
   });
 
@@ -72,8 +71,8 @@ describe('Assets > Cryptographic Integrity & Drift Prevention', () => {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const sampleAsset = manifest.assets[0];
 
-    const fakeContent = Buffer.from('<svg xmlns="http://www.w3.org/2000/svg">tampered</svg>');
-    const fakeHash = crypto.createHash('sha256').update(fakeContent).digest('hex');
+    const fakeContent = '<svg xmlns="http://www.w3.org/2000/svg">tampered</svg>';
+    const { hash: fakeHash } = computeNormalizedHashAndSize(fakeContent);
 
     assert(fakeHash !== sampleAsset.hash, 'Tampered content produces different SHA-256 hash');
   });

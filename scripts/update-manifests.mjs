@@ -7,18 +7,14 @@
 
 import fs from 'fs';
 import path from 'path';
-import crypto from 'crypto';
 import { fileURLToPath } from 'url';
+import { computeNormalizedFileHashAndSize } from '../tests/helpers/crypto-utils.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const rootDir = path.resolve(__dirname, '..');
 
-function computeFileHashAndSize(filePath) {
-  const content = fs.readFileSync(filePath);
-  const hash = crypto.createHash('sha256').update(content).digest('hex');
-  return { hash, size: content.length };
-}
+const computeFileHashAndSize = computeNormalizedFileHashAndSize;
 
 // -------------------------------------------------------------
 // 1. Synchronize assets/manifest.json

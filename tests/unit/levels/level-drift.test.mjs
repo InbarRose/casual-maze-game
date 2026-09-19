@@ -4,11 +4,11 @@
 
 import fs from 'fs';
 import path from 'path';
-import crypto from 'crypto';
 import { describe, it, assert, assertEqual } from '../../harness/index.mjs';
 import { LevelValidator } from '../../../js/editor/level-validator.js';
 import { LevelLoader } from '../../../js/levels/level-loader.js';
 import { LEVEL_SCHEMA_VERSION } from '../../../js/core/version.js';
+import { computeNormalizedFileHashAndSize } from '../../helpers/crypto-utils.mjs';
 
 describe('Levels > Cryptographic Integrity & Versioning', () => {
   const rootDir = process.cwd();
@@ -69,13 +69,13 @@ describe('Levels > Cryptographic Integrity & Versioning', () => {
       const fullPath = path.resolve(rootDir, entry.file);
       assert(fs.existsSync(fullPath), `Level file exists on disk: ${entry.file}`);
 
-      const content = fs.readFileSync(fullPath);
-      const hash = crypto.createHash('sha256').update(content).digest('hex');
+      const { hash, size } = computeNormalizedFileHashAndSize(fullPath);
 
       assertEqual(hash, entry.hash, `SHA-256 hash matches for Level "${entry.id}" (${entry.file})`);
-      assertEqual(content.length, entry.size, `File size matches for Level "${entry.id}" (${entry.file})`);
+      assertEqual(size, entry.size, `File size matches for Level "${entry.id}" (${entry.file})`);
 
-      const data = JSON.parse(content.toString('utf8'));
+      const content = fs.readFileSync(fullPath, 'utf8');
+      const data = JSON.parse(content);
       assertEqual(data.version, entry.version, `Level "${entry.id}" version matches manifest`);
       assertEqual(data.dimensions.width, entry.dimensions.width, `Level "${entry.id}" width matches manifest`);
       assertEqual(data.dimensions.height, entry.dimensions.height, `Level "${entry.id}" height matches manifest`);
