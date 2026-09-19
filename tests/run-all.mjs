@@ -27,6 +27,7 @@ import './unit/engine/debug-logger.test.mjs';
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
+import './unit/entities/dynamic-activities.test.mjs';
 
 // 4. Level Subsystem Unit Tests
 import './unit/levels/level-loader.test.mjs';
