@@ -61,6 +61,16 @@ describe('Core > Constants & Registries', () => {
     assertDeepEqual(DIRECTIONS.EAST, { x: 1, y: 0, name: 'east' });
   });
 
+  it('defines robust key codes with clean separation of restart (T) and rotation (R)', () => {
+    assert(KEY_CODES.RESTART.includes('KeyT'), 'RESTART includes KeyT');
+    assert(!KEY_CODES.RESTART.includes('KeyR'), 'RESTART does NOT include KeyR (avoid rotation collision)');
+    assert(KEY_CODES.ROTATE_RIGHT.includes('KeyR'), 'ROTATE_RIGHT includes KeyR');
+    assert(KEY_CODES.ROTATE_LEFT.includes('KeyQ'), 'ROTATE_LEFT includes KeyQ');
+    assert(!KEY_CODES.RIGHT.includes('KeyL'), 'RIGHT does NOT include KeyL (avoid log modal collision)');
+    assert(KEY_CODES.RIGHT.includes('KeyD'), 'RIGHT includes KeyD');
+    assert(KEY_CODES.INTERACT.includes('Space'), 'INTERACT includes Space');
+  });
+
   it('contains key color presets and lever tile mutation options', () => {
     assert(Array.isArray(KEY_COLOR_PRESETS), 'KEY_COLOR_PRESETS is an array');
     assert(KEY_COLOR_PRESETS.length >= 5, 'Has at least 5 key presets');
