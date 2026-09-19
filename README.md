@@ -8,13 +8,17 @@ Hosted statically on GitHub Pages at [casual-maze-game.inbarrose.com](https://ca
 
 ## 🎮 Features
 
+* **Universal Glassmorphic Navigation**: Sleek persistent top header and bottom footer with direct tab navigation, Player Profile pill, live stars counter, global Settings modal, and GitHub issue reporting.
+* **Player Profile & Save Management**: Dynamic Explorer codenames, computed progression ranks (from *Novice Pathfinder* to *Grand Labyrinth Sovereign*), and 1-click JSON save backups, downloads, and clipboard exports.
+* **Global Settings Modal**: Real-time procedural audio sliders (Master, SFX, BGM), 2.5D Angled vs Flat Top-Down perspective toggling, animated smooth camera rotation, and High Contrast accessibility mode.
+* **Synchronized Camera World Rotation**: Turn the world 90° clockwise/counter-clockwise (`Q`/`E`) with unified Canvas 2D matrix transformation keeping multi-elevation bridges and explorers in rigid lockstep, with screen-relative input translation.
 * **Multi-Elevation Bridges & Ramps**: Walk over bridges or tunnel beneath them (`B_EW`, `B_NS`) using directional ramps (`R_N`, `R_S`, `R_E`, `R_W`).
 * **Thematic Visual Tilesets (6 Biomes)**: Authentic Canvas 2D renderers for 🏰 Dungeon, 🌴 Emerald Jungle, 🌋 Molten Core, ❄️ Glacial Expanse, 🔮 Amethyst Caverns, and 🌅 Sunset Citadel.
-* **Reactive Puzzle Mechanics**: Collect color-coded keys (Ruby, Sapphire, Emerald, Gold, Purple), unlock matching gates, and pull levers to dynamically open passages.
-* **Persistent Inventory HUD Bar**: Always-visible top interface displaying held items, color-coded badges, and empty slot status.
+* **Reactive Puzzle Mechanics**: Collect color-coded keys (Ruby, Sapphire, Emerald, Gold, Purple), unlock matching gates, carry riddle relics into pedestal sockets, and pull levers to dynamically open passages.
+* **Architect Studio Map Editor Overhaul**: Modern grouped toolbars, multi-layer switching (Ground Floor Z=0 vs Overhead Walkway Z=1), multi-colored entity palettes, brush sizing (1x1 to 5x5), grab & move tool, live solvability diagnostic reports, and test play with custom spawns.
+* **Replay Theater & Diagnostics Lab**: In-browser test runner, deterministic solver walkthrough replay visualizer, and diagnostic reporting bundle generator.
 * **Dynamic Fog-of-War & Minimap**: 3-state raycasting line-of-sight with memory dimming and an interactive HUD minimap.
-* **Tutorial Academy & Campaign Progression**: 6 structured introductory onboarding lessons plus 10 campaign labyrinths across 3 themed zones.
-* **In-Browser Level Architect**: Design custom mazes with stroke-batched Undo/Redo, live theme previewing, and an intelligent topological BFS solvability validator with bypass & deadlock warnings.
+* **Tutorial Academy & 32-Level Campaign Progression**: 6 structured introductory onboarding lessons plus 32 megalabyrinths across 8 themed zones.
 * **Zero Backend**: 100% static client-side architecture with zero runtime dependencies.
 
 ---
@@ -23,10 +27,15 @@ Hosted statically on GitHub Pages at [casual-maze-game.inbarrose.com](https://ca
 
 | Action | Keyboard | Touch / Mobile |
 | :--- | :--- | :--- |
-| **Move** | `W`, `A`, `S`, `D` / Arrow Keys | On-screen Virtual D-Pad |
-| **Interact / Pull Lever** | `E`, `Space`, or `Enter` | `USE` button |
+| **Move Explorer** | `W`, `A`, `S`, `D` / Arrow Keys | On-screen Virtual D-Pad |
+| **Rotate Camera 90°** | `Q` (CCW) / `E` or `R` (CW) | Compass Dial Buttons `↺` / `↻` |
+| **Interact / Pull Lever** | `Space`, `Enter`, or `E` | `USE` button |
+| **Toggle Perspective** | `V` | Pause Menu / Settings |
 | **Free-Pan Map** | `M` | Tap Map Button / Minimap |
-| **Restart Level** | `R` | Restart Button `🔄` |
+| **Activity Log** | `L` | Pause Menu `📜` |
+| **Pause & Options** | `P` or `Esc` | Menu Button `⏸️` |
+| **Restart Level** | `T` | Restart Button `🔄` |
+
 
 ---
 
@@ -86,10 +95,23 @@ Once the server is running, open your web browser to:
 Before committing or pushing changes to GitHub, run the local automated test suite to ensure all collision rules, level schemas, BFS reachability paths, and validator diagnostics pass:
 
 ```bash
+# Full test suite (all 62+ suites including 32-level campaign solver)
 npm test
+
+# Instant fast test run (skips heavy 32-level campaign solver, ~350ms)
+npm run test:fast
+
+# Granular targeted test suites
+npm run test:unit       # Core, engine, entities, editor, UI unit tests
+npm run test:engine     # Collision, raycasting, camera, solver, replay
+npm run test:levels     # Storylines, JSON integrity, bypass routing
+npm run test:entities   # Player, collectibles, pedestals, mechanisms
+npm run test:journeys   # End-to-end multi-elevation user journeys
+npm run test:campaign   # 32-level campaign walkthrough solvers
 ```
 
 All test assertions will report `0 FAILED` with exit code `0`.
+
 
 ---
 

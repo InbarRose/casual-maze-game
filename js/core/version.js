@@ -4,7 +4,7 @@
  * across the engine, level schema, asset catalog, and save data.
  */
 
-export const ENGINE_VERSION = '1.16.0';
+export const ENGINE_VERSION = '1.17.0';
 export const LEVEL_SCHEMA_VERSION = '1.0.0';
 export const ASSET_MANIFEST_VERSION = '1.5.0';
 export const LEVEL_MANIFEST_VERSION = '1.2.0';

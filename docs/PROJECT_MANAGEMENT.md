@@ -6,7 +6,45 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.16.0` (Completed & Verified)
+### Current Version: `v1.17.0` (Completed & Verified)
+
+- [x] **Camera World Rotation Fix & Synchronized Rigid Transforms**:
+  - Unified coordinate projection in `GameRenderer`: discrete coordinates for all world elements; rigid Canvas 2D matrix transformation `ctx.rotate(-deltaRad)` around screen center during camera rotation.
+  - Guarantees 0 relative displacement between player avatar, multi-elevation bridges, ramps, and tiles during camera turning.
+  - Gated player movement during camera rotation lerps (`camera.isRotating()`) in `GameLoop.tryMoveDirection()`, `processPlayerMovement()`, and `tryMove()`, preventing players from stepping off elevated bridge decks.
+  - Added unit test suite `tests/unit/engine/camera-rotation.test.mjs` verifying rigid distance invariance across all 4 quadrants (0°, 90°, 180°, 270°).
+- [x] **Story 1 (Tutorial Academy) Gate Routing & Bypass Prevention**:
+  - Fixed `tutorial_3.json`: Sealed bypass corridor at rows 1-3 col 5, opened path at (4,5) leading into the (5,5) gate, making the mechanism lever at (3,7) strictly mandatory.
+  - Fixed `tutorial_6.json`: Sealed perimeter bypass at (1,14) and opened corridor at (2,15), making the clockwork switch `lever_t6` at (11,12) strictly mandatory to reach the Red Key.
+  - Added regression test suite `tests/unit/levels/story-1-unbypassable.test.mjs` verifying that attempting to skip keys, levers, or bridges results in 0 solvable paths to the exit.
+  - Re-synchronized SHA-256 hashes and dimensions in `levels/manifest.json`, `assets/manifest.json`, and `js/levels/tutorials.js`.
+- [x] **Universal App Navigation Header & Footer**:
+  - Created `js/ui/app-header.js` mounting a modern glassmorphic header (`.app-nav-header`) and footer (`.app-nav-footer`) across all pages (`index.html`, `maze.html`, `editor.html`, `test.html`, `art-catalog.html`).
+  - Active tab highlighting (`Play Hub`, `Play Maze`, `Architect Studio`, `Replay & Lab`, `Art Catalog`).
+  - Responsive design with mobile icon-only compression and horizontal scroll protection.
+- [x] **Player Profile & Save Management Modal (`js/ui/profile-modal.js`)**:
+  - Dynamic Explorer codename editor with instant persistence.
+  - Computed player ranking system based on stars earned across campaign, tutorials, and story chapters (Novice Pathfinder 🧭 ➔ Labyrinth Scout 🗺️ ➔ Dungeon Cartographer 📜 ➔ Master Architect 🏛️ ➔ Grand Labyrinth Sovereign 👑).
+  - 1-click JSON save copy to clipboard, file download backup, and file upload restoration.
+- [x] **Universal Game Settings Modal (`js/ui/settings-modal.js`)**:
+  - Live procedural audio sliders for Master, SFX, and BGM volume with instantaneous sound preview.
+  - 2.5D Angled vs. Flat Top-Down perspective mode switcher.
+  - Smooth camera rotation toggle (`smooth_rotation`).
+  - High Contrast accessibility mode toggle (`high_contrast`).
+  - Comprehensive controls cheatsheet and direct link to Replay Theater & Diagnostics Lab.
+  - Integrated into game pause menu (`#btn-pause-settings`, `#btn-pause-profile`).
+- [x] **Architect Studio Map Editor Overhaul (`editor.html`, `css/editor.css`)**:
+  - Reorganized toolbar into structured `.toolbar-group` modules (Project, History, Health/Validation, Properties, File Operations, Playtest).
+  - Modernized sidebar with theme selector, layer switcher (Ground Floor Z=0 vs Overhead Walkway Z=1), brush sizing (1x1 to 5x5), tiles & ramp palettes, and multi-colored key/door/relic palettes.
+  - High-contrast active tool glows, smooth hover micro-transitions, and thin glass scrollbars.
+- [x] **Modular Test Runner Splitting & Fast Execution**:
+  - Added `--fast` flag and category filters (`--filter=`) to `tests/harness/runner.mjs`.
+  - Created granular aggregator suites in `tests/suites/`: `unit.mjs`, `engine.mjs`, `levels.mjs`, `entities.mjs`, `journeys.mjs`, `campaign.mjs`.
+  - Added npm scripts: `npm run test:fast` (299 tests in ~330ms), `test:unit`, `test:engine`, `test:levels`, `test:entities`, `test:journeys`, `test:campaign`.
+- [x] **Automated Test Coverage**:
+  - 62 test suites, 299 tests, 6,045 assertions passing 100% (0 failed).
+
+### Previous Milestone: `v1.16.0`
 
 - [x] **GitHub Community Issue Templates & Seed Tracking**:
   - Issue templates: `.github/ISSUE_TEMPLATE/bug_report.yml` (structured forms for browser, level ID, OS, repro steps, and save state / debug logs), `feature_request.yml` (mechanics, entities, themes, editor tools), `feedback.yml` (difficulty curve, pacing, impressions), and `config.yml`.

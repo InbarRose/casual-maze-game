@@ -65,14 +65,21 @@ casual-maze-game/
 │   │   └── mocks.mjs             # Storage polyfills, mock canvas/DOM, FileReader/Blob
 │   ├── helpers/                  # Test utilities & game simulation helpers
 │   │   └── campaign-solver.mjs   # BFS state-space solver & GameLoop simulation runner
+│   ├── suites/                   # Fast & targeted modular test suite aggregators
+│   │   ├── unit.mjs              # Non-journey unit test suite (~250ms)
+│   │   ├── engine.mjs            # Physics, LoS, camera, solver, replay
+│   │   ├── levels.mjs            # Storylines, JSON integrity, bypass routing
+│   │   ├── entities.mjs          # Entity interactions, collectibles, pedestals
+│   │   ├── journeys.mjs          # End-to-end player journeys
+│   │   └── campaign.mjs          # Full 32-level campaign solver suite
 │   ├── unit/                     # Granular subsystem unit test suites
 │   │   ├── core/                 # prng, events, storage, constants
-│   │   ├── engine/               # collision, fog, camera, debug-logger, perspective-renderer
+│   │   ├── engine/               # collision, fog, camera, camera-rotation, debug-logger, perspective-renderer
 │   │   ├── entities/             # player, key, door, lever, signpost, dynamic-activities, riddle-item, pedestal
-│   │   ├── levels/               # level-loader, json-integrity, campaign, tutorial
+│   │   ├── levels/               # level-loader, json-integrity, campaign, tutorial, story-1-unbypassable
 │   │   ├── stories/              # storylines registry, chapter navigation, level validation
-│   │   ├── editor/               # level-validator, json-exporter
-│   │   └── ui/                   # audio-fx synthesizer, in-game pause & action menu
+│   │   ├── editor/               # level-validator, json-exporter, canvas, buttons
+│   │   └── ui/                   # audio-fx synthesizer, game-menu, app-header & modals
 │   ├── integration/
 │   │   ├── campaign/             # Per-chapter modular campaign playthrough test suites
 │   │   │   ├── chapter-1.test.mjs ... chapter-7.test.mjs
@@ -142,6 +149,9 @@ casual-maze-game/
 │   │   ├── riddle-item.js        # Carryable statues/relics for environmental puzzles
 │   │   └── pedestal.js           # Inscribed socket pedestals with verification logic
 │   ├── ui/
+│   │   ├── app-header.js         # Universal global top header and bottom footer injector & manager
+│   │   ├── profile-modal.js      # Player profile, codenames, computed ranks, and 1-click save backup/restore
+│   │   ├── settings-modal.js     # Universal settings: procedural audio sliders, perspective, smooth rotation
 │   │   ├── audio-fx.js           # Procedural Web Audio API sound FX synthesizer (zero audio files)
 │   │   ├── game-menu.js          # In-game Pause & Action Menu controller and modal bindings
 │   │   └── puzzle-modal.js       # Pure static DOM modal for rune sequence and cipher dials

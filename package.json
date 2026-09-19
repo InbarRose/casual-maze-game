@@ -1,6 +1,6 @@
 {
   "name": "casual-maze-game",
-  "version": "1.16.0",
+  "version": "1.17.0",
   "type": "module",
   "private": true,
   "description": "Casual Maze Game - Top-Down Puzzle Labyrinth Engine",
