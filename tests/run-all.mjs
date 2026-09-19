@@ -48,6 +48,7 @@ import './unit/levels/tutorial-levels.test.mjs';
 import './unit/levels/multi-room.test.mjs';
 import './unit/levels/level-drift.test.mjs';
 import './unit/stories/storylines.test.mjs';
+import './unit/levels/story-1-unbypassable.test.mjs';
 
 // 5. Editor Subsystem Unit Tests
 import './unit/editor/level-validator.test.mjs';
