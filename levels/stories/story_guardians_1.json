@@ -380,12 +380,14 @@
     {
       "id": "door_ruins_gold",
       "type": "door",
+      "requiresKey": "key_ruins_gold",
       "color": "#fbbf24",
       "name": "Sun Sanctum Gate",
       "x": 5,
       "y": 6,
       "elevation": 0
     },
+
     {
       "id": "gem_sun_2",
       "type": "collectible",

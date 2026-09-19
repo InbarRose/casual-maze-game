@@ -72,6 +72,8 @@ import './integration/journeys/campaign-progression.journey.test.mjs';
 import './integration/journeys/obstacle-interactions.journey.test.mjs';
 import './integration/journeys/checkpoints-and-lore.journey.test.mjs';
 import './integration/journeys/riddle-pedestals.journey.test.mjs';
+import './integration/journeys/storylines-progression.journey.test.mjs';
 
 // Run registered suites
+
 await run();
