@@ -81,16 +81,19 @@ class TestRunner {
       grep: null,
       suite: null,
       suiteRaw: null,
+      fast: false,
       verbose: false,
     };
 
     for (const arg of args) {
       if (arg.startsWith('--grep=')) {
         options.grep = new RegExp(arg.slice(7), 'i');
-      } else if (arg.startsWith('--suite=')) {
-        const raw = arg.slice(8);
+      } else if (arg.startsWith('--suite=') || arg.startsWith('--filter=')) {
+        const raw = arg.startsWith('--suite=') ? arg.slice(8) : arg.slice(9);
         options.suiteRaw = raw;
         options.suite = new RegExp(raw, 'i');
+      } else if (arg === '--fast') {
+        options.fast = true;
       } else if (arg === '-v' || arg === '--verbose') {
         options.verbose = true;
       }
@@ -164,14 +167,33 @@ class TestRunner {
 
     if (!isRoot) {
       this.results.suitesCount++;
+      const fullName = suite.getFullName();
+      const lowerName = fullName.toLowerCase();
+
+      // --fast flag skips heavy campaign chapter BFS playthroughs
+      if (this.cliOptions.fast && lowerName.includes('campaign chapter')) {
+        return;
+      }
+
       if (this.cliOptions.suiteRaw) {
-        const fullName = suite.getFullName();
         const filter = this.cliOptions.suiteRaw.toLowerCase();
         let matches = false;
         if (filter === 'unit') {
-          matches = !fullName.toLowerCase().includes('journey');
+          matches = !lowerName.includes('journey');
         } else if (filter === 'journey' || filter === 'journeys') {
-          matches = fullName.toLowerCase().includes('journey');
+          matches = lowerName.includes('journey');
+        } else if (filter === 'engine') {
+          matches = lowerName.includes('engine');
+        } else if (filter === 'level' || filter === 'levels') {
+          matches = lowerName.includes('level') || lowerName.includes('story');
+        } else if (filter === 'entity' || filter === 'entities') {
+          matches = lowerName.includes('entit') || lowerName.includes('player');
+        } else if (filter === 'editor') {
+          matches = lowerName.includes('editor');
+        } else if (filter === 'campaign') {
+          matches = lowerName.includes('campaign');
+        } else if (filter === 'ui') {
+          matches = lowerName.includes('ui') || lowerName.includes('menu') || lowerName.includes('audio');
         } else {
           matches = this.cliOptions.suite.test(fullName);
         }
