@@ -42,12 +42,14 @@ check('levels/manifest.json exists', existsSync(manifestPath));
 
 if (existsSync(manifestPath)) {
   const manifest = JSON.parse(readFileSync(manifestPath, 'utf8'));
-  check('manifest.json is an array of 34 levels', Array.isArray(manifest) && manifest.length === 34);
+  check('manifest.json is an array of 37 levels', Array.isArray(manifest) && manifest.length === 37);
 
   const tutorials = manifest.filter(m => m.category === 'tutorial');
+  const stories = manifest.filter(m => m.category === 'story');
   const campaign = manifest.filter(m => m.category === 'campaign');
 
-  check('manifest contains 6 tutorial levels', tutorials.length === 6);
+  check('manifest contains 6 tutorial/novice levels', tutorials.length === 6);
+  check('manifest contains 3 story levels', stories.length === 3);
   check('manifest contains 28 campaign levels', campaign.length === 28);
 
   // Check each level file exists on disk

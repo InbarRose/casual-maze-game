@@ -1,0 +1,410 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "story_guardians_1",
+  "storyId": "relics_of_the_guardians",
+  "chapterNumber": 1,
+  "chapterTitle": "The Whispering Ruins",
+  "chapterSubtitle": "Inscriptions, Relic Gems & Respawn Beacons",
+  "prologueText": "You arrive at the outer perimeter of the Sunken Sun Temple. Weathered wall carvings whisper forgotten lore, while pulsing respawn beacons promise sanctuary amidst ancient fire traps.",
+  "title": "The Whispering Ruins",
+  "author": "Ancient Guild of Cartographers",
+  "dimensions": {
+    "width": 11,
+    "height": 11
+  },
+  "config": {
+    "fogOfWar": false,
+    "mapRevealed": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "temple"
+  },
+  "help": {
+    "title": "Chapter 1: The Whispering Ruins",
+    "message": "Inspect wall carvings [E], collect bonus sun gems, activate the respawn beacon, and safely bypass the flame vents."
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "stairs_down"
+  },
+  "exit": {
+    "x": 9,
+    "y": 9,
+    "elevation": 0,
+    "style": "portal"
+  },
+  "layers": {
+    "ground": [
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1
+      ],
+      [
+        1,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        1
+      ]
+    ],
+    "overhead": [
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ]
+  },
+  "entities": [
+    {
+      "id": "wall_note_entry",
+      "type": "wall_decor",
+      "decorType": "note",
+      "text": "The Four Guardians sleep in the temple heart. Heed the stone plinths.",
+      "playerDialogue": "An ancient inscription... it speaks of four guardian totems.",
+      "x": 1,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "gem_sun_1",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Sunstone Crystal",
+      "scoreValue": 150,
+      "x": 3,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "chk_ruins_beacon",
+      "type": "checkpoint",
+      "name": "Outer Ruins Beacon",
+      "x": 5,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "hazard_fire_1",
+      "type": "timed_hazard",
+      "hazardType": "fire_vent",
+      "activeDuration": 1200,
+      "period": 2600,
+      "offset": 0,
+      "x": 7,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "key_ruins_gold",
+      "type": "key",
+      "color": "#fbbf24",
+      "name": "Golden Sun Key",
+      "x": 9,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "door_ruins_gold",
+      "type": "door",
+      "color": "#fbbf24",
+      "name": "Sun Sanctum Gate",
+      "x": 5,
+      "y": 6,
+      "elevation": 0
+    },
+    {
+      "id": "gem_sun_2",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Solar Amber",
+      "scoreValue": 200,
+      "x": 1,
+      "y": 9,
+      "elevation": 0
+    },
+    {
+      "id": "wall_note_exit",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "The Falcon watches from the winds of the eastern terrace.",
+      "playerDialogue": "The first guardian is the Falcon...",
+      "x": 7,
+      "y": 9,
+      "elevation": 0
+    }
+  ]
+}
