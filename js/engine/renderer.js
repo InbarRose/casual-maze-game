@@ -98,7 +98,8 @@ export class GameRenderer {
       ctx.fill();
       ctx.restore();
     }
-    player.render(ctx, playerScreen.x, playerScreen.y, tileSize, this.perspective);
+    const angle = camera ? camera.getDiscreteRotation() : 0;
+    player.render(ctx, playerScreen.x, playerScreen.y, tileSize, this.perspective, angle);
 
     if (level.config.fogOfWar && fog) {
       this.renderFogOfWar(ctx, fog, bounds, camera, theme);
@@ -472,7 +473,8 @@ export class GameRenderer {
           ctx.fill();
           ctx.restore();
         }
-        player.render(ctx, screen.x, screen.y - heightOffset, tileSize, this.perspective);
+        const angle = camera ? camera.getDiscreteRotation() : 0;
+        player.render(ctx, screen.x, screen.y - heightOffset, tileSize, this.perspective, angle);
       } else {
         const entity = item.ref;
         const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
