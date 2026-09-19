@@ -67,7 +67,8 @@ casual-maze-game/
 │   │   ├── entities/             # player, key, door, lever, signpost, dynamic-activities, riddle-item, pedestal
 │   │   ├── levels/               # level-loader, json-integrity, campaign, tutorial
 │   │   ├── stories/              # storylines registry, chapter navigation, level validation
-│   │   └── editor/               # level-validator, json-exporter
+│   │   ├── editor/               # level-validator, json-exporter
+│   │   └── ui/                   # audio-fx synthesizer, in-game pause & action menu
 │   ├── integration/
 │   │   ├── campaign/             # Per-chapter modular campaign playthrough test suites
 │   │   │   ├── chapter-1.test.mjs ... chapter-7.test.mjs
@@ -135,6 +136,8 @@ casual-maze-game/
 │   │   ├── riddle-item.js        # Carryable statues/relics for environmental puzzles
 │   │   └── pedestal.js           # Inscribed socket pedestals with verification logic
 │   ├── ui/
+│   │   ├── audio-fx.js           # Procedural Web Audio API sound FX synthesizer (zero audio files)
+│   │   ├── game-menu.js          # In-game Pause & Action Menu controller and modal bindings
 │   │   └── puzzle-modal.js       # Pure static DOM modal for rune sequence and cipher dials
 │   ├── levels/
 │   │   ├── level-loader.js       # Schema validator, URL param parser, static level loader, room normalizer
