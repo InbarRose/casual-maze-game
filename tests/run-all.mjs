@@ -29,6 +29,7 @@ import './unit/engine/perspective-renderer.test.mjs';
 import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
 import './unit/entities/dynamic-activities.test.mjs';
+import './unit/entities/signpost.test.mjs';
 
 // 4. Level Subsystem Unit Tests
 import './unit/levels/level-loader.test.mjs';
