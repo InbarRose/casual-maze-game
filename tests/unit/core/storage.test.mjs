@@ -116,5 +116,28 @@ describe('Core > StorageManager', () => {
     assert(res.stats.storyChapters >= 1, 'Restored at least 1 story chapter');
     assertEqual(StorageManager.getStoryCompletedCount('relics_of_the_guardians'), 1);
   });
+
+  it('copies save profile JSON to clipboard and triggers file download', async () => {
+    StorageManager.saveLevelCompletion('1', { time: 5000, steps: 20 });
+
+    let writtenText = null;
+    const originalWrite = globalThis.navigator.clipboard.writeText;
+    globalThis.navigator.clipboard.writeText = async (text) => {
+      writtenText = text;
+    };
+
+    const copied = await StorageManager.copySaveProfileToClipboard();
+    assert(typeof copied === 'string', 'Returns JSON string');
+    assertEqual(writtenText, copied, 'writeText called with save profile JSON');
+    const parsed = JSON.parse(copied);
+    assertEqual(parsed.game, 'casual-maze-game');
+    assertEqual(parsed.progress.campaign['1'].completed, true);
+
+    const filename = StorageManager.downloadSaveFile('custom_backup.json');
+    assertEqual(filename, 'custom_backup.json');
+
+    globalThis.navigator.clipboard.writeText = originalWrite;
+  });
 });
+
 

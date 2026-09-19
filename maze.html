@@ -194,6 +194,12 @@
             <button class="btn btn-secondary pause-action-btn" id="btn-pause-log">
               📜 <span>Activity Log &amp; Telemetry [L]</span>
             </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-walkthrough">
+              🎬 <span>Watch Solver Walkthrough</span>
+            </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-report-issue">
+              🐞 <span>Report Issue on GitHub</span>
+            </button>
             <button class="btn btn-secondary pause-action-btn" id="btn-pause-sound">
               🔊 <span>Sound FX: ON</span>
             </button>
@@ -239,8 +245,10 @@
         </div>
         <div class="modal-footer" style="justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
           <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-            <button id="btn-modal-download-log" class="btn btn-primary btn-sm">📥 Download JSON Log</button>
+            <button id="btn-modal-watch-replay" class="btn btn-primary btn-sm">🎬 Watch Run Replay</button>
+            <button id="btn-modal-download-log" class="btn btn-secondary btn-sm">📥 Download JSON Log</button>
             <button id="btn-modal-copy-log" class="btn btn-secondary btn-sm">📋 Copy JSON</button>
+            <button id="btn-modal-report-issue" class="btn btn-secondary btn-sm">🐞 Report Issue</button>
           </div>
           <button class="btn btn-secondary btn-sm" id="btn-modal-dismiss-log">Close [Esc]</button>
         </div>
@@ -270,8 +278,10 @@
         </div>
         <div class="modal-footer" style="justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
           <a href="index.html" class="btn btn-secondary">Level Select</a>
+          <button id="btn-vic-watch-replay" class="btn btn-primary" title="Watch an interactive visual replay of this run">🎬 Watch Run Replay</button>
           <button id="btn-save-progress" class="btn btn-secondary" title="Export game save progress backup to a JSON file">💾 Save Game Progress</button>
           <button id="btn-download-log" class="btn btn-secondary" title="Download level replay and debug telemetry">📥 Debug Logs</button>
+          <button id="btn-vic-report-issue" class="btn btn-secondary" title="Report an issue or give feedback on GitHub">🐞 Feedback / Report</button>
           <button id="btn-replay" class="btn btn-secondary">Replay</button>
           <button id="btn-next-level" class="btn btn-primary">Next Level →</button>
         </div>
@@ -922,6 +932,20 @@
       });
     }
 
+    document.getElementById('btn-modal-watch-replay')?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        const replay = window.gameLoop.getReplayPayload();
+        sessionStorage.setItem('casual_maze_last_replay', JSON.stringify(replay));
+        window.open('test.html?mode=replay&source=last_run&autoplay=1', '_blank');
+      }
+    });
+
+    document.getElementById('btn-modal-report-issue')?.addEventListener('click', () => {
+      audioFX.playClick();
+      window.open('https://github.com/InbarRose/casual-maze-game/issues/new?template=bug_report.yml', '_blank');
+    });
+
     // Inspection Dialog Elements & Logic
     const inspectModal = document.getElementById('inspect-modal');
     const inspectIconEl = document.getElementById('inspect-icon');
@@ -1100,6 +1124,14 @@
           tutorialHintCard.classList.remove('minimized');
         }
       },
+      onWatchWalkthrough: () => {
+        audioFX.playClick();
+        window.open(`test.html?mode=replay&level=${currentLevel.id}&autoplay=1`, '_blank');
+      },
+      onReportIssue: () => {
+        audioFX.playClick();
+        window.open('https://github.com/InbarRose/casual-maze-game/issues/new?template=bug_report.yml', '_blank');
+      },
       onSaveProgress: () => {
         audioFX.playClick();
         handleSaveGameProgress();
@@ -1183,6 +1215,18 @@
     btnDownloadLog.addEventListener('click', () => {
       gameLoop.downloadDebugLog();
       showToast('Debug log downloaded!', 'success');
+    });
+    document.getElementById('btn-vic-watch-replay')?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        const replay = window.gameLoop.getReplayPayload();
+        sessionStorage.setItem('casual_maze_last_replay', JSON.stringify(replay));
+        window.open('test.html?mode=replay&source=last_run&autoplay=1', '_blank');
+      }
+    });
+    document.getElementById('btn-vic-report-issue')?.addEventListener('click', () => {
+      audioFX.playClick();
+      window.open('https://github.com/InbarRose/casual-maze-game/issues', '_blank');
     });
     const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
