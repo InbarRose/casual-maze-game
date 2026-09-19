@@ -6,7 +6,26 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.10.0` (Completed & Verified)
+### Current Version: `v1.11.0` (Completed & Verified)
+
+- [x] **Mandatory Labyrinth Chokepoints & Non-Bypassable Obstacles**:
+  - Audited all 28 campaign levels and redesigned corridor geometry across Chapters 1, 2, 3, 6, and 7 to seal unintended perimeter bypasses.
+  - Formally proved that 100% of levels with locked doors, levers, teleporters, or puzzle gates *cannot* reach victory if those mechanisms are ignored or skipped (`canReachExitWithoutGates === false`, `canReachExitWithoutLevers === false`, etc.).
+- [x] **Active Obstacle Interaction & 100% Clearance Test Suite**:
+  - `tests/integration/journeys/campaign-playthrough.journey.test.mjs` enhanced with pre-run non-bypassability checks, real-time blocked movement validation on locked doors/puzzle gates, key collection & inventory consumption, lever tile mutations (`stateA`), and post-run 100% obstacle clearance audits (`door.isOpen === true`, `key.isCollected === true`, `lever.state === true`, `puzzleGate.isUnlocked === true`).
+- [x] **Dedicated Gate & Obstacle Interaction Journey (`obstacle-interactions.journey.test.mjs`)**:
+  - Key color isolation (Gold, Ruby, Sapphire keys strictly isolated).
+  - Multi-elevation isolation (ground players at Z=0 cannot pick up or unlock overhead items at Z=1).
+  - Multi-target levers with two-way toggle, tile state inversion, and one-way locks.
+  - TimedHazard rhythm (active lethal phase vs dormant safe phase).
+  - Patroller continuous navigation and circular collision detection.
+  - PuzzleGate minigame validation (`rune_memory` and `cipher_dial` logic).
+- [x] **LevelValidator Reachability Simulation**:
+  - Multi-pass reachability analysis in `js/editor/level-validator.js` now simulates lever stepping and dynamic wall-to-floor tile mutations.
+- [x] **Comprehensive Automated Test Coverage**:
+  - 32 test suites, 184 test cases, 3,876 assertions running with 0 failures in under 200ms.
+
+### Previous Milestone: `v1.10.0`
 
 - [x] **Perspective Toggle Reliability & Persistent User Settings**:
   - Identified and resolved renderer regression in `js/engine/renderer.js` where per-frame execution was overriding runtime perspective choices.
