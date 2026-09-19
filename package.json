@@ -1,6 +1,6 @@
 {
   "name": "casual-maze-game",
-  "version": "1.0.0",
+  "version": "1.14.0",
   "type": "module",
   "private": true,
   "description": "Casual Maze Game - Top-Down Puzzle Labyrinth Engine",
@@ -11,6 +11,8 @@
     "test:unit": "node tests/run-all.mjs --suite=unit",
     "test:journeys": "node tests/run-all.mjs --suite=journey",
     "validate:syntax": "node tests/validate-syntax.mjs",
-    "validate:static": "node tests/validate-static.mjs"
+    "validate:static": "node tests/validate-static.mjs",
+    "validate:drift": "node tests/validate-drift.mjs",
+    "manifests:update": "node scripts/update-manifests.mjs"
   }
 }

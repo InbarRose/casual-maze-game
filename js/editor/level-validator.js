@@ -3,6 +3,7 @@
  */
 
 import { TILES, ELEVATION, ENTITY_TYPES, LAYERS, formatXYZ } from '../core/constants.js';
+import { validateLevelVersion, LEVEL_SCHEMA_VERSION } from '../core/version.js';
 import { CollisionEngine } from '../engine/collision.js';
 
 export class LevelValidator {
@@ -24,6 +25,16 @@ export class LevelValidator {
         info: [],
         stats: {},
       };
+    }
+
+    // 0. Version & Schema check
+    if (level.version !== undefined) {
+      const vNum = Number(level.version);
+      if (Number.isNaN(vNum) || vNum < 1 || !Number.isInteger(vNum)) {
+        errors.push({ message: `Invalid level version: ${JSON.stringify(level.version)}. Version must be a positive integer.` });
+      }
+    } else {
+      info.push('Level has no explicit version property (defaulting to v1).');
     }
 
     const { width, height } = level.dimensions || { width: 0, height: 0 };
@@ -588,5 +599,14 @@ export class LevelValidator {
       reachableKeys,
       reachableTilesCount: reachableTiles.size,
     };
+  }
+
+  /**
+   * Validate level version against engine compatibility
+   * @param {object} level
+   * @returns {{ valid: boolean, error?: string, version: number, schemaVersion: string }}
+   */
+  static validateVersion(level) {
+    return validateLevelVersion(level);
   }
 }

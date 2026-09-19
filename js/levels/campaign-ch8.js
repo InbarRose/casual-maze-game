@@ -1,5 +1,5 @@
 /**
- * Casual Maze Game - Campaign Chapter 8 Levels: The Shifting Monolith
+ * Casual Maze Game - Campaign Chapter 8 Levels
  */
 
 export const CAMPAIGN_CH8_LEVELS = Object.freeze([

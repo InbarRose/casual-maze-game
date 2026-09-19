@@ -17,6 +17,7 @@ import './unit/core/events.test.mjs';
 import './unit/core/storage.test.mjs';
 import './unit/core/constants.test.mjs';
 import './unit/core/coordinates-xyz.test.mjs';
+import './unit/core/versioning.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
@@ -43,6 +44,7 @@ import './unit/levels/json-integrity.test.mjs';
 import './unit/levels/campaign-levels.test.mjs';
 import './unit/levels/tutorial-levels.test.mjs';
 import './unit/levels/multi-room.test.mjs';
+import './unit/levels/level-drift.test.mjs';
 import './unit/stories/storylines.test.mjs';
 
 // 5. Editor Subsystem Unit Tests
@@ -53,6 +55,7 @@ import './unit/editor/editor-buttons-and-functions.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
+import './unit/assets/asset-drift.test.mjs';
 
 // 7. Modular Campaign Chapter Playthrough Tests (Levels 1–32)
 import './integration/campaign/chapter-1.test.mjs';

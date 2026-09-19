@@ -1,6 +1,7 @@
 {
   "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
   "id": "story_guardians_3",
+  "version": 1,
   "storyId": "relics_of_the_guardians",
   "chapterNumber": 3,
   "chapterTitle": "Sanctum of the Four Guardians",

@@ -1,8 +1,8 @@
 {
   "$schema": "./schema.json",
-  "version": "1.4.0",
-  "generatedAt": "2026-09-18T22:35:00.000Z",
-  "totalAssets": 147,
+  "version": "1.5.0",
+  "generatedAt": "2026-09-19T20:21:49.078Z",
+  "totalAssets": 160,
   "themes": [
     "dungeon",
     "jungle",
@@ -55,1075 +55,103 @@
   },
   "assets": [
     {
-      "id": "tile_floor_dungeon",
-      "name": "Whispering Dungeon Floor (Plain)",
-      "type": "tile",
-      "category": "ground",
-      "style": "dungeon",
-      "path": "assets/tiles/ground/floor_dungeon.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Standard stone floor paver for Whispering Dungeon tileset",
-      "tags": [
-        "floor",
-        "dungeon",
-        "ground",
-        "walkable"
-      ]
-    },
-    {
-      "id": "tile_floor_dungeon_cracked",
-      "name": "Whispering Dungeon Floor (Cracked)",
-      "type": "tile",
-      "category": "variations",
-      "style": "dungeon",
-      "path": "assets/tiles/variations/floor_dungeon_cracked.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Aged paver with deep fractures for Whispering Dungeon tileset",
-      "tags": [
-        "floor",
-        "cracked",
-        "variation",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_floor_dungeon_runic",
-      "name": "Whispering Dungeon Floor (Runic Inscribed)",
-      "type": "tile",
-      "category": "variations",
-      "style": "dungeon",
-      "path": "assets/tiles/variations/floor_dungeon_runic.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Paver carved with mystical glowing symbols for Whispering Dungeon",
-      "tags": [
-        "floor",
-        "runic",
-        "glyph",
-        "magic",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_wall_dungeon",
-      "name": "Whispering Dungeon Wall (Solid)",
-      "type": "tile",
-      "category": "ground",
-      "style": "dungeon",
-      "path": "assets/tiles/ground/wall_dungeon.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Solid stone barrier block for Whispering Dungeon",
-      "tags": [
-        "wall",
-        "solid",
-        "barrier",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_wall_dungeon_torch",
-      "name": "Whispering Dungeon Wall (Torch Sconce)",
-      "type": "tile",
-      "category": "variations",
-      "style": "dungeon",
-      "path": "assets/tiles/variations/wall_dungeon_torch.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
-      "tags": [
-        "wall",
-        "torch",
-        "sconce",
-        "light",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_wall_dungeon_grate",
-      "name": "Whispering Dungeon Wall (Iron Grate Window)",
-      "type": "tile",
-      "category": "variations",
-      "style": "dungeon",
-      "path": "assets/tiles/variations/wall_dungeon_grate.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with recessed barred peek grate",
-      "tags": [
-        "wall",
-        "grate",
-        "window",
-        "bars",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_bridge_dungeon_ew",
-      "name": "Whispering Dungeon Bridge EW",
-      "type": "tile",
-      "category": "bridges",
-      "style": "dungeon",
-      "path": "assets/tiles/bridges/bridge_dungeon_ew.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing north-south over east-west tunnel for Whispering Dungeon",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_bridge_dungeon_ns",
-      "name": "Whispering Dungeon Bridge NS",
-      "type": "tile",
-      "category": "bridges",
-      "style": "dungeon",
-      "path": "assets/tiles/bridges/bridge_dungeon_ns.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing east-west over north-south tunnel for Whispering Dungeon",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_ramp_dungeon_north",
-      "name": "Whispering Dungeon Ramp (NORTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "dungeon",
-      "path": "assets/tiles/ramps/ramp_dungeon_north.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward north for Whispering Dungeon",
-      "tags": [
-        "ramp",
-        "elevation",
-        "north",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_ramp_dungeon_south",
-      "name": "Whispering Dungeon Ramp (SOUTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "dungeon",
-      "path": "assets/tiles/ramps/ramp_dungeon_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward south for Whispering Dungeon",
-      "tags": [
-        "ramp",
-        "elevation",
-        "south",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_ramp_dungeon_east",
-      "name": "Whispering Dungeon Ramp (EAST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "dungeon",
-      "path": "assets/tiles/ramps/ramp_dungeon_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward east for Whispering Dungeon",
-      "tags": [
-        "ramp",
-        "elevation",
-        "east",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_ramp_dungeon_west",
-      "name": "Whispering Dungeon Ramp (WEST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "dungeon",
-      "path": "assets/tiles/ramps/ramp_dungeon_west.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward west for Whispering Dungeon",
-      "tags": [
-        "ramp",
-        "elevation",
-        "west",
-        "dungeon"
-      ]
-    },
-    {
-      "id": "tile_floor_jungle",
-      "name": "Emerald Overgrowth Floor (Plain)",
-      "type": "tile",
-      "category": "ground",
-      "style": "jungle",
-      "path": "assets/tiles/ground/floor_jungle.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Standard stone floor paver for Emerald Overgrowth tileset",
-      "tags": [
-        "floor",
-        "jungle",
-        "ground",
-        "walkable"
-      ]
-    },
-    {
-      "id": "tile_floor_jungle_cracked",
-      "name": "Emerald Overgrowth Floor (Cracked)",
-      "type": "tile",
-      "category": "variations",
-      "style": "jungle",
-      "path": "assets/tiles/variations/floor_jungle_cracked.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Aged paver with deep fractures for Emerald Overgrowth tileset",
-      "tags": [
-        "floor",
-        "cracked",
-        "variation",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_floor_jungle_runic",
-      "name": "Emerald Overgrowth Floor (Runic Inscribed)",
-      "type": "tile",
-      "category": "variations",
-      "style": "jungle",
-      "path": "assets/tiles/variations/floor_jungle_runic.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Paver carved with mystical glowing symbols for Emerald Overgrowth",
-      "tags": [
-        "floor",
-        "runic",
-        "glyph",
-        "magic",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_wall_jungle",
-      "name": "Emerald Overgrowth Wall (Solid)",
-      "type": "tile",
-      "category": "ground",
-      "style": "jungle",
-      "path": "assets/tiles/ground/wall_jungle.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Solid stone barrier block for Emerald Overgrowth",
-      "tags": [
-        "wall",
-        "solid",
-        "barrier",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_wall_jungle_torch",
-      "name": "Emerald Overgrowth Wall (Torch Sconce)",
-      "type": "tile",
-      "category": "variations",
-      "style": "jungle",
-      "path": "assets/tiles/variations/wall_jungle_torch.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
-      "tags": [
-        "wall",
-        "torch",
-        "sconce",
-        "light",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_wall_jungle_grate",
-      "name": "Emerald Overgrowth Wall (Iron Grate Window)",
-      "type": "tile",
-      "category": "variations",
-      "style": "jungle",
-      "path": "assets/tiles/variations/wall_jungle_grate.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with recessed barred peek grate",
-      "tags": [
-        "wall",
-        "grate",
-        "window",
-        "bars",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_bridge_jungle_ew",
-      "name": "Emerald Overgrowth Bridge EW",
-      "type": "tile",
-      "category": "bridges",
-      "style": "jungle",
-      "path": "assets/tiles/bridges/bridge_jungle_ew.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing north-south over east-west tunnel for Emerald Overgrowth",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_bridge_jungle_ns",
-      "name": "Emerald Overgrowth Bridge NS",
-      "type": "tile",
-      "category": "bridges",
-      "style": "jungle",
-      "path": "assets/tiles/bridges/bridge_jungle_ns.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing east-west over north-south tunnel for Emerald Overgrowth",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_ramp_jungle_north",
-      "name": "Emerald Overgrowth Ramp (NORTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "jungle",
-      "path": "assets/tiles/ramps/ramp_jungle_north.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward north for Emerald Overgrowth",
-      "tags": [
-        "ramp",
-        "elevation",
-        "north",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_ramp_jungle_south",
-      "name": "Emerald Overgrowth Ramp (SOUTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "jungle",
-      "path": "assets/tiles/ramps/ramp_jungle_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward south for Emerald Overgrowth",
-      "tags": [
-        "ramp",
-        "elevation",
-        "south",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_ramp_jungle_east",
-      "name": "Emerald Overgrowth Ramp (EAST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "jungle",
-      "path": "assets/tiles/ramps/ramp_jungle_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward east for Emerald Overgrowth",
-      "tags": [
-        "ramp",
-        "elevation",
-        "east",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_ramp_jungle_west",
-      "name": "Emerald Overgrowth Ramp (WEST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "jungle",
-      "path": "assets/tiles/ramps/ramp_jungle_west.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward west for Emerald Overgrowth",
-      "tags": [
-        "ramp",
-        "elevation",
-        "west",
-        "jungle"
-      ]
-    },
-    {
-      "id": "tile_floor_magma",
-      "name": "Molten Chasm Floor (Plain)",
-      "type": "tile",
-      "category": "ground",
-      "style": "magma",
-      "path": "assets/tiles/ground/floor_magma.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Standard stone floor paver for Molten Chasm tileset",
-      "tags": [
-        "floor",
-        "magma",
-        "ground",
-        "walkable"
-      ]
-    },
-    {
-      "id": "tile_floor_magma_cracked",
-      "name": "Molten Chasm Floor (Cracked)",
-      "type": "tile",
-      "category": "variations",
-      "style": "magma",
-      "path": "assets/tiles/variations/floor_magma_cracked.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Aged paver with deep fractures for Molten Chasm tileset",
-      "tags": [
-        "floor",
-        "cracked",
-        "variation",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_floor_magma_runic",
-      "name": "Molten Chasm Floor (Runic Inscribed)",
-      "type": "tile",
-      "category": "variations",
-      "style": "magma",
-      "path": "assets/tiles/variations/floor_magma_runic.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Paver carved with mystical glowing symbols for Molten Chasm",
-      "tags": [
-        "floor",
-        "runic",
-        "glyph",
-        "magic",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_wall_magma",
-      "name": "Molten Chasm Wall (Solid)",
-      "type": "tile",
-      "category": "ground",
-      "style": "magma",
-      "path": "assets/tiles/ground/wall_magma.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Solid stone barrier block for Molten Chasm",
-      "tags": [
-        "wall",
-        "solid",
-        "barrier",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_wall_magma_torch",
-      "name": "Molten Chasm Wall (Torch Sconce)",
-      "type": "tile",
-      "category": "variations",
-      "style": "magma",
-      "path": "assets/tiles/variations/wall_magma_torch.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
-      "tags": [
-        "wall",
-        "torch",
-        "sconce",
-        "light",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_wall_magma_grate",
-      "name": "Molten Chasm Wall (Iron Grate Window)",
-      "type": "tile",
-      "category": "variations",
-      "style": "magma",
-      "path": "assets/tiles/variations/wall_magma_grate.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with recessed barred peek grate",
-      "tags": [
-        "wall",
-        "grate",
-        "window",
-        "bars",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_bridge_magma_ew",
-      "name": "Molten Chasm Bridge EW",
-      "type": "tile",
-      "category": "bridges",
-      "style": "magma",
-      "path": "assets/tiles/bridges/bridge_magma_ew.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing north-south over east-west tunnel for Molten Chasm",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_bridge_magma_ns",
-      "name": "Molten Chasm Bridge NS",
-      "type": "tile",
-      "category": "bridges",
-      "style": "magma",
-      "path": "assets/tiles/bridges/bridge_magma_ns.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing east-west over north-south tunnel for Molten Chasm",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_ramp_magma_north",
-      "name": "Molten Chasm Ramp (NORTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "magma",
-      "path": "assets/tiles/ramps/ramp_magma_north.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward north for Molten Chasm",
-      "tags": [
-        "ramp",
-        "elevation",
-        "north",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_ramp_magma_south",
-      "name": "Molten Chasm Ramp (SOUTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "magma",
-      "path": "assets/tiles/ramps/ramp_magma_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward south for Molten Chasm",
-      "tags": [
-        "ramp",
-        "elevation",
-        "south",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_ramp_magma_east",
-      "name": "Molten Chasm Ramp (EAST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "magma",
-      "path": "assets/tiles/ramps/ramp_magma_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward east for Molten Chasm",
-      "tags": [
-        "ramp",
-        "elevation",
-        "east",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_ramp_magma_west",
-      "name": "Molten Chasm Ramp (WEST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "magma",
-      "path": "assets/tiles/ramps/ramp_magma_west.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward west for Molten Chasm",
-      "tags": [
-        "ramp",
-        "elevation",
-        "west",
-        "magma"
-      ]
-    },
-    {
-      "id": "tile_floor_temple",
-      "name": "Sunken Temple Floor (Plain)",
-      "type": "tile",
-      "category": "ground",
-      "style": "temple",
-      "path": "assets/tiles/ground/floor_temple.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Standard stone floor paver for Sunken Temple tileset",
-      "tags": [
-        "floor",
-        "temple",
-        "ground",
-        "walkable"
-      ]
-    },
-    {
-      "id": "tile_floor_temple_cracked",
-      "name": "Sunken Temple Floor (Cracked)",
-      "type": "tile",
-      "category": "variations",
-      "style": "temple",
-      "path": "assets/tiles/variations/floor_temple_cracked.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Aged paver with deep fractures for Sunken Temple tileset",
-      "tags": [
-        "floor",
-        "cracked",
-        "variation",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_floor_temple_runic",
-      "name": "Sunken Temple Floor (Runic Inscribed)",
-      "type": "tile",
-      "category": "variations",
-      "style": "temple",
-      "path": "assets/tiles/variations/floor_temple_runic.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Paver carved with mystical glowing symbols for Sunken Temple",
-      "tags": [
-        "floor",
-        "runic",
-        "glyph",
-        "magic",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_wall_temple",
-      "name": "Sunken Temple Wall (Solid)",
-      "type": "tile",
-      "category": "ground",
-      "style": "temple",
-      "path": "assets/tiles/ground/wall_temple.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Solid stone barrier block for Sunken Temple",
-      "tags": [
-        "wall",
-        "solid",
-        "barrier",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_wall_temple_torch",
-      "name": "Sunken Temple Wall (Torch Sconce)",
-      "type": "tile",
-      "category": "variations",
-      "style": "temple",
-      "path": "assets/tiles/variations/wall_temple_torch.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
-      "tags": [
-        "wall",
-        "torch",
-        "sconce",
-        "light",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_wall_temple_grate",
-      "name": "Sunken Temple Wall (Iron Grate Window)",
-      "type": "tile",
-      "category": "variations",
-      "style": "temple",
-      "path": "assets/tiles/variations/wall_temple_grate.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with recessed barred peek grate",
-      "tags": [
-        "wall",
-        "grate",
-        "window",
-        "bars",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_bridge_temple_ew",
-      "name": "Sunken Temple Bridge EW",
-      "type": "tile",
-      "category": "bridges",
-      "style": "temple",
-      "path": "assets/tiles/bridges/bridge_temple_ew.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing north-south over east-west tunnel for Sunken Temple",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_bridge_temple_ns",
-      "name": "Sunken Temple Bridge NS",
-      "type": "tile",
-      "category": "bridges",
-      "style": "temple",
-      "path": "assets/tiles/bridges/bridge_temple_ns.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing east-west over north-south tunnel for Sunken Temple",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_ramp_temple_north",
-      "name": "Sunken Temple Ramp (NORTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "temple",
-      "path": "assets/tiles/ramps/ramp_temple_north.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward north for Sunken Temple",
-      "tags": [
-        "ramp",
-        "elevation",
-        "north",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_ramp_temple_south",
-      "name": "Sunken Temple Ramp (SOUTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "temple",
-      "path": "assets/tiles/ramps/ramp_temple_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward south for Sunken Temple",
-      "tags": [
-        "ramp",
-        "elevation",
-        "south",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_ramp_temple_east",
-      "name": "Sunken Temple Ramp (EAST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "temple",
-      "path": "assets/tiles/ramps/ramp_temple_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward east for Sunken Temple",
-      "tags": [
-        "ramp",
-        "elevation",
-        "east",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_ramp_temple_west",
-      "name": "Sunken Temple Ramp (WEST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "temple",
-      "path": "assets/tiles/ramps/ramp_temple_west.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward west for Sunken Temple",
-      "tags": [
-        "ramp",
-        "elevation",
-        "west",
-        "temple"
-      ]
-    },
-    {
-      "id": "tile_floor_glacial",
-      "name": "Glacial Expanse Floor (Plain)",
-      "type": "tile",
-      "category": "ground",
-      "style": "glacial",
-      "path": "assets/tiles/ground/floor_glacial.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Standard stone floor paver for Glacial Expanse tileset",
-      "tags": [
-        "floor",
-        "glacial",
-        "ground",
-        "walkable"
-      ]
-    },
-    {
-      "id": "tile_floor_glacial_cracked",
-      "name": "Glacial Expanse Floor (Cracked)",
-      "type": "tile",
-      "category": "variations",
-      "style": "glacial",
-      "path": "assets/tiles/variations/floor_glacial_cracked.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Aged paver with deep fractures for Glacial Expanse tileset",
-      "tags": [
-        "floor",
-        "cracked",
-        "variation",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_floor_glacial_runic",
-      "name": "Glacial Expanse Floor (Runic Inscribed)",
-      "type": "tile",
-      "category": "variations",
-      "style": "glacial",
-      "path": "assets/tiles/variations/floor_glacial_runic.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Paver carved with mystical glowing symbols for Glacial Expanse",
-      "tags": [
-        "floor",
-        "runic",
-        "glyph",
-        "magic",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_wall_glacial",
-      "name": "Glacial Expanse Wall (Solid)",
-      "type": "tile",
-      "category": "ground",
-      "style": "glacial",
-      "path": "assets/tiles/ground/wall_glacial.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Solid stone barrier block for Glacial Expanse",
-      "tags": [
-        "wall",
-        "solid",
-        "barrier",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_wall_glacial_torch",
-      "name": "Glacial Expanse Wall (Torch Sconce)",
-      "type": "tile",
-      "category": "variations",
-      "style": "glacial",
-      "path": "assets/tiles/variations/wall_glacial_torch.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
-      "tags": [
-        "wall",
-        "torch",
-        "sconce",
-        "light",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_wall_glacial_grate",
-      "name": "Glacial Expanse Wall (Iron Grate Window)",
-      "type": "tile",
-      "category": "variations",
-      "style": "glacial",
-      "path": "assets/tiles/variations/wall_glacial_grate.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Stone wall with recessed barred peek grate",
-      "tags": [
-        "wall",
-        "grate",
-        "window",
-        "bars",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_bridge_glacial_ew",
-      "name": "Glacial Expanse Bridge EW",
-      "type": "tile",
-      "category": "bridges",
-      "style": "glacial",
-      "path": "assets/tiles/bridges/bridge_glacial_ew.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing north-south over east-west tunnel for Glacial Expanse",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_bridge_glacial_ns",
-      "name": "Glacial Expanse Bridge NS",
-      "type": "tile",
-      "category": "bridges",
-      "style": "glacial",
-      "path": "assets/tiles/bridges/bridge_glacial_ns.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Overhead bridge span crossing east-west over north-south tunnel for Glacial Expanse",
-      "tags": [
-        "bridge",
-        "elevation",
-        "overhead",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_ramp_glacial_north",
-      "name": "Glacial Expanse Ramp (NORTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "glacial",
-      "path": "assets/tiles/ramps/ramp_glacial_north.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward north for Glacial Expanse",
-      "tags": [
-        "ramp",
-        "elevation",
-        "north",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_ramp_glacial_south",
-      "name": "Glacial Expanse Ramp (SOUTH)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "glacial",
-      "path": "assets/tiles/ramps/ramp_glacial_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward south for Glacial Expanse",
-      "tags": [
-        "ramp",
-        "elevation",
-        "south",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_ramp_glacial_east",
-      "name": "Glacial Expanse Ramp (EAST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "glacial",
-      "path": "assets/tiles/ramps/ramp_glacial_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward east for Glacial Expanse",
-      "tags": [
-        "ramp",
-        "elevation",
-        "east",
-        "glacial"
-      ]
-    },
-    {
-      "id": "tile_ramp_glacial_west",
-      "name": "Glacial Expanse Ramp (WEST)",
-      "type": "tile",
-      "category": "ramps",
-      "style": "glacial",
-      "path": "assets/tiles/ramps/ramp_glacial_west.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Elevation ramp sloping toward west for Glacial Expanse",
-      "tags": [
-        "ramp",
-        "elevation",
-        "west",
-        "glacial"
-      ]
-    },
-    {
-      "id": "key_dungeon_iron",
-      "name": "Dungeon Iron Key",
+      "id": "cog_valve_off",
+      "name": "Mechanical Valve (OFF)",
       "type": "entity",
-      "category": "keys",
-      "style": "dungeon",
-      "path": "assets/entities/keys/key_dungeon_iron.svg",
+      "category": "levers",
+      "style": "cog_wheel",
+      "path": "assets/entities/levers/cog_valve_off.svg",
       "viewBox": "0 0 64 64",
-      "description": "Collectible key for dungeon biome",
+      "description": "Specialized game asset: Mechanical Valve (OFF)",
       "tags": [
-        "key",
-        "item",
-        "unlock",
-        "dungeon"
-      ]
+        "valve",
+        "off"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
-      "id": "key_jungle_jade",
-      "name": "Jungle Jade Key",
+      "id": "cog_valve_on",
+      "name": "Mechanical Valve (ON)",
       "type": "entity",
-      "category": "keys",
-      "style": "jungle",
-      "path": "assets/entities/keys/key_jungle_jade.svg",
+      "category": "levers",
+      "style": "cog_wheel",
+      "path": "assets/entities/levers/cog_valve_on.svg",
       "viewBox": "0 0 64 64",
-      "description": "Collectible key for jungle biome",
+      "description": "Specialized game asset: Mechanical Valve (ON)",
       "tags": [
-        "key",
-        "item",
-        "unlock",
-        "jungle"
-      ]
+        "valve",
+        "on"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
-      "id": "key_magma_ruby",
-      "name": "Molten Core Ruby Key",
+      "id": "crystal_active",
+      "name": "Resonance Crystal (Active)",
       "type": "entity",
-      "category": "keys",
-      "style": "magma",
-      "path": "assets/entities/keys/key_magma_ruby.svg",
+      "category": "levers",
+      "style": "crystal_switch",
+      "path": "assets/entities/levers/crystal_active.svg",
       "viewBox": "0 0 64 64",
-      "description": "Collectible key for magma biome",
+      "description": "Specialized game asset: Resonance Crystal (Active)",
       "tags": [
-        "key",
-        "item",
-        "unlock",
-        "magma"
-      ]
+        "crystal",
+        "on"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
-      "id": "key_temple_scarab",
-      "name": "Sunken Temple Gold Key",
+      "id": "crystal_inactive",
+      "name": "Resonance Crystal (Rest)",
       "type": "entity",
-      "category": "keys",
-      "style": "temple",
-      "path": "assets/entities/keys/key_temple_scarab.svg",
+      "category": "levers",
+      "style": "crystal_switch",
+      "path": "assets/entities/levers/crystal_inactive.svg",
       "viewBox": "0 0 64 64",
-      "description": "Collectible key for temple biome",
+      "description": "Specialized game asset: Resonance Crystal (Rest)",
       "tags": [
-        "key",
-        "item",
-        "unlock",
-        "temple"
-      ]
+        "crystal",
+        "off"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
-      "id": "key_glacial_frost",
-      "name": "Glacial Sapphire Key",
-      "type": "entity",
-      "category": "keys",
-      "style": "glacial",
-      "path": "assets/entities/keys/key_glacial_frost.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Collectible key for glacial biome",
-      "tags": [
-        "key",
-        "item",
-        "unlock",
-        "glacial"
-      ]
-    },
-    {
-      "id": "door_dungeon_vertical",
-      "name": "Dungeon Iron Gate (Vertical Facing)",
-      "type": "entity",
+      "id": "door_classic",
+      "name": "Classic Reinforced Door",
+      "type": "door",
       "category": "doors",
-      "style": "dungeon",
-      "path": "assets/entities/doors/door_dungeon_v.svg",
+      "style": "classic",
+      "path": "assets/entities/doors/door_classic.svg",
       "viewBox": "0 0 64 64",
-      "description": "Locked gate with vertical portcullis bars for dungeon theme",
+      "description": "Heavy reinforced dungeon door with golden keyhole escutcheon",
       "tags": [
         "door",
-        "gate",
-        "vertical",
-        "dungeon"
-      ]
+        "classic",
+        "barrier",
+        "entry"
+      ],
+      "hash": "1e075ace5ccf3133529aff1a6cf50ad96a61fa8471459ef460d470c6ff490eb3",
+      "size": 532
+    },
+    {
+      "id": "door_crystal_spikes",
+      "name": "Crystal Spikes Barrier",
+      "type": "entity",
+      "category": "doors",
+      "style": "crystal_spikes",
+      "path": "assets/entities/doors/door_crystal_spikes.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Crystal Spikes Barrier",
+      "tags": [
+        "door",
+        "crystal",
+        "spikes"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "door_dungeon_horizontal",
@@ -1139,119 +167,27 @@
         "gate",
         "horizontal",
         "dungeon"
-      ]
+      ],
+      "hash": "b4a0c436fcf8a97892698af4baf7cc17a6382fde57ff6d97cb173ede68fc645d",
+      "size": 470
     },
     {
-      "id": "door_jungle_vertical",
-      "name": "Jungle Vine Gate (Vertical Facing)",
+      "id": "door_dungeon_vertical",
+      "name": "Dungeon Iron Gate (Vertical Facing)",
       "type": "entity",
       "category": "doors",
-      "style": "jungle",
-      "path": "assets/entities/doors/door_jungle_v.svg",
+      "style": "dungeon",
+      "path": "assets/entities/doors/door_dungeon_v.svg",
       "viewBox": "0 0 64 64",
-      "description": "Locked gate with vertical portcullis bars for jungle theme",
+      "description": "Locked gate with vertical portcullis bars for dungeon theme",
       "tags": [
         "door",
         "gate",
         "vertical",
-        "jungle"
-      ]
-    },
-    {
-      "id": "door_jungle_horizontal",
-      "name": "Jungle Vine Gate (Horizontal Facing)",
-      "type": "entity",
-      "category": "doors",
-      "style": "jungle",
-      "path": "assets/entities/doors/door_jungle_h.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Locked gate with horizontal crossbars for jungle theme",
-      "tags": [
-        "door",
-        "gate",
-        "horizontal",
-        "jungle"
-      ]
-    },
-    {
-      "id": "door_magma_vertical",
-      "name": "Molten Obsidian Bulkhead (Vertical Facing)",
-      "type": "entity",
-      "category": "doors",
-      "style": "magma",
-      "path": "assets/entities/doors/door_magma_v.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Locked gate with vertical portcullis bars for magma theme",
-      "tags": [
-        "door",
-        "gate",
-        "vertical",
-        "magma"
-      ]
-    },
-    {
-      "id": "door_magma_horizontal",
-      "name": "Molten Obsidian Bulkhead (Horizontal Facing)",
-      "type": "entity",
-      "category": "doors",
-      "style": "magma",
-      "path": "assets/entities/doors/door_magma_h.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Locked gate with horizontal crossbars for magma theme",
-      "tags": [
-        "door",
-        "gate",
-        "horizontal",
-        "magma"
-      ]
-    },
-    {
-      "id": "door_temple_vertical",
-      "name": "Sunken Sandstone Gate (Vertical Facing)",
-      "type": "entity",
-      "category": "doors",
-      "style": "temple",
-      "path": "assets/entities/doors/door_temple_v.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Locked gate with vertical portcullis bars for temple theme",
-      "tags": [
-        "door",
-        "gate",
-        "vertical",
-        "temple"
-      ]
-    },
-    {
-      "id": "door_temple_horizontal",
-      "name": "Sunken Sandstone Gate (Horizontal Facing)",
-      "type": "entity",
-      "category": "doors",
-      "style": "temple",
-      "path": "assets/entities/doors/door_temple_h.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Locked gate with horizontal crossbars for temple theme",
-      "tags": [
-        "door",
-        "gate",
-        "horizontal",
-        "temple"
-      ]
-    },
-    {
-      "id": "door_glacial_vertical",
-      "name": "Glacial Frost Gate (Vertical Facing)",
-      "type": "entity",
-      "category": "doors",
-      "style": "glacial",
-      "path": "assets/entities/doors/door_glacial_v.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Locked gate with vertical portcullis bars for glacial theme",
-      "tags": [
-        "door",
-        "gate",
-        "vertical",
-        "glacial"
-      ]
+        "dungeon"
+      ],
+      "hash": "46681b1810a0f8aa38cd8ff73836d37445ad4410ae7d6e27f2ff2116dc97e62d",
+      "size": 470
     },
     {
       "id": "door_glacial_horizontal",
@@ -1267,92 +203,222 @@
         "gate",
         "horizontal",
         "glacial"
-      ]
+      ],
+      "hash": "2396e0e2f6e658e00f5c723c2f08be3f84568f5f5c4287f6ed072df4f6aedb57",
+      "size": 470
     },
     {
-      "id": "spawn_edge_wall_north",
-      "name": "Edge Wall Entrance (North Edge)",
-      "type": "environment",
-      "category": "edge_passages",
-      "style": "wall_passage",
-      "path": "assets/environment/edge_passages/spawn_edge_north.svg",
+      "id": "door_glacial_vertical",
+      "name": "Glacial Frost Gate (Vertical Facing)",
+      "type": "entity",
+      "category": "doors",
+      "style": "glacial",
+      "path": "assets/entities/doors/door_glacial_v.svg",
       "viewBox": "0 0 64 64",
-      "description": "Seamless entrance passage cut into the North Edge perimeter wall",
+      "description": "Locked gate with vertical portcullis bars for glacial theme",
       "tags": [
-        "spawn",
-        "entrance",
-        "edge",
-        "wall",
-        "north"
-      ]
+        "door",
+        "gate",
+        "vertical",
+        "glacial"
+      ],
+      "hash": "fe769ae38c8144ed35725ccd3c0776f4a9d17c2174067932c42fa5ea29bbe694",
+      "size": 470
     },
     {
-      "id": "exit_edge_wall_north",
-      "name": "Edge Wall Exit (North Edge)",
-      "type": "environment",
-      "category": "edge_passages",
-      "style": "wall_passage",
-      "path": "assets/environment/edge_passages/exit_edge_north.svg",
+      "id": "door_jungle_horizontal",
+      "name": "Jungle Vine Gate (Horizontal Facing)",
+      "type": "entity",
+      "category": "doors",
+      "style": "jungle",
+      "path": "assets/entities/doors/door_jungle_h.svg",
       "viewBox": "0 0 64 64",
-      "description": "Escape tunnel doorway leading out through the North Edge perimeter wall",
+      "description": "Locked gate with horizontal crossbars for jungle theme",
+      "tags": [
+        "door",
+        "gate",
+        "horizontal",
+        "jungle"
+      ],
+      "hash": "1139fb82490d1a4b33e4c8abc3d279cd054c4ee0ab3e5423d7f9c1128f7db5be",
+      "size": 470
+    },
+    {
+      "id": "door_jungle_vertical",
+      "name": "Jungle Vine Gate (Vertical Facing)",
+      "type": "entity",
+      "category": "doors",
+      "style": "jungle",
+      "path": "assets/entities/doors/door_jungle_v.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Locked gate with vertical portcullis bars for jungle theme",
+      "tags": [
+        "door",
+        "gate",
+        "vertical",
+        "jungle"
+      ],
+      "hash": "b3b064e764d10ed508a6059fcbe4c202f12fe0333920eb02a0540680b0a3b965",
+      "size": 470
+    },
+    {
+      "id": "door_laser_barrier",
+      "name": "Laser Forcefield Barrier",
+      "type": "entity",
+      "category": "doors",
+      "style": "laser_barrier",
+      "path": "assets/entities/doors/door_laser_barrier.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Laser Forcefield Barrier",
+      "tags": [
+        "door",
+        "laser",
+        "barrier"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "door_magic_seal",
+      "name": "Arcane Runic Seal",
+      "type": "entity",
+      "category": "doors",
+      "style": "magic_seal",
+      "path": "assets/entities/doors/door_magic_seal.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Arcane Runic Seal",
+      "tags": [
+        "door",
+        "magic",
+        "seal"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "door_magma_horizontal",
+      "name": "Molten Obsidian Bulkhead (Horizontal Facing)",
+      "type": "entity",
+      "category": "doors",
+      "style": "magma",
+      "path": "assets/entities/doors/door_magma_h.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Locked gate with horizontal crossbars for magma theme",
+      "tags": [
+        "door",
+        "gate",
+        "horizontal",
+        "magma"
+      ],
+      "hash": "bead7b50796819a21963fd93684c9d0e11b6736e4ca7eed5e5d8c84c0ada273f",
+      "size": 470
+    },
+    {
+      "id": "door_magma_vertical",
+      "name": "Molten Obsidian Bulkhead (Vertical Facing)",
+      "type": "entity",
+      "category": "doors",
+      "style": "magma",
+      "path": "assets/entities/doors/door_magma_v.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Locked gate with vertical portcullis bars for magma theme",
+      "tags": [
+        "door",
+        "gate",
+        "vertical",
+        "magma"
+      ],
+      "hash": "1723e8959c8cab6e60b51393409575c6eb9d41a128e4b4ed6cbe5b07ad085c20",
+      "size": 470
+    },
+    {
+      "id": "door_portcullis",
+      "name": "Iron Portcullis Grate",
+      "type": "door",
+      "category": "doors",
+      "style": "iron",
+      "path": "assets/entities/doors/door_portcullis.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Spiked iron portcullis barrier with heavy crossbars",
+      "tags": [
+        "door",
+        "portcullis",
+        "iron",
+        "gate"
+      ],
+      "hash": "573559d0b1129a654a1358a149dd4b214e2aae3394bf6a7b552499075ad3f0f1",
+      "size": 740
+    },
+    {
+      "id": "door_temple_horizontal",
+      "name": "Sunken Sandstone Gate (Horizontal Facing)",
+      "type": "entity",
+      "category": "doors",
+      "style": "temple",
+      "path": "assets/entities/doors/door_temple_h.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Locked gate with horizontal crossbars for temple theme",
+      "tags": [
+        "door",
+        "gate",
+        "horizontal",
+        "temple"
+      ],
+      "hash": "ef713b768592895d7bc1892d9525024d1820cfd4e9113cd56f769db85f8239ae",
+      "size": 470
+    },
+    {
+      "id": "door_temple_vertical",
+      "name": "Sunken Sandstone Gate (Vertical Facing)",
+      "type": "entity",
+      "category": "doors",
+      "style": "temple",
+      "path": "assets/entities/doors/door_temple_v.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Locked gate with vertical portcullis bars for temple theme",
+      "tags": [
+        "door",
+        "gate",
+        "vertical",
+        "temple"
+      ],
+      "hash": "5d57c4f4cfc023ec93c1e9ce54fb6fdf976287bd0bed77a5c4efc9826cba5fa9",
+      "size": 470
+    },
+    {
+      "id": "door_vault_hatch",
+      "name": "Vault Bulkhead Hatch",
+      "type": "entity",
+      "category": "doors",
+      "style": "vault_hatch",
+      "path": "assets/entities/doors/door_vault_hatch.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Vault Bulkhead Hatch",
+      "tags": [
+        "door",
+        "vault",
+        "hatch"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "exit_archway",
+      "name": "Sanctuary Exit Archway",
+      "type": "environment",
+      "category": "exit",
+      "style": "archway",
+      "path": "assets/environment/exit/exit_archway.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Victory goal destination (Sanctuary Exit Archway)",
       "tags": [
         "exit",
         "victory",
-        "edge",
-        "wall",
-        "north"
-      ]
-    },
-    {
-      "id": "spawn_edge_wall_south",
-      "name": "Edge Wall Entrance (South Edge)",
-      "type": "environment",
-      "category": "edge_passages",
-      "style": "wall_passage",
-      "path": "assets/environment/edge_passages/spawn_edge_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Seamless entrance passage cut into the South Edge perimeter wall",
-      "tags": [
-        "spawn",
-        "entrance",
-        "edge",
-        "wall",
-        "south"
-      ]
-    },
-    {
-      "id": "exit_edge_wall_south",
-      "name": "Edge Wall Exit (South Edge)",
-      "type": "environment",
-      "category": "edge_passages",
-      "style": "wall_passage",
-      "path": "assets/environment/edge_passages/exit_edge_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Escape tunnel doorway leading out through the South Edge perimeter wall",
-      "tags": [
-        "exit",
-        "victory",
-        "edge",
-        "wall",
-        "south"
-      ]
-    },
-    {
-      "id": "spawn_edge_wall_east",
-      "name": "Edge Wall Entrance (East Edge)",
-      "type": "environment",
-      "category": "edge_passages",
-      "style": "wall_passage",
-      "path": "assets/environment/edge_passages/spawn_edge_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Seamless entrance passage cut into the East Edge perimeter wall",
-      "tags": [
-        "spawn",
-        "entrance",
-        "edge",
-        "wall",
-        "east"
-      ]
+        "goal",
+        "archway"
+      ],
+      "hash": "e368cf76f8d214b6b50cb842f8d3815da642865079e0683b41c36be35b9d261f",
+      "size": 347
     },
     {
       "id": "exit_edge_wall_east",
@@ -1369,24 +435,47 @@
         "edge",
         "wall",
         "east"
-      ]
+      ],
+      "hash": "2a23864ff060a6c0f89d0b46bf66140ec157189b960f2f475aecf9ce62a92dfa",
+      "size": 557
     },
     {
-      "id": "spawn_edge_wall_west",
-      "name": "Edge Wall Entrance (West Edge)",
+      "id": "exit_edge_wall_north",
+      "name": "Edge Wall Exit (North Edge)",
       "type": "environment",
       "category": "edge_passages",
       "style": "wall_passage",
-      "path": "assets/environment/edge_passages/spawn_edge_west.svg",
+      "path": "assets/environment/edge_passages/exit_edge_north.svg",
       "viewBox": "0 0 64 64",
-      "description": "Seamless entrance passage cut into the West Edge perimeter wall",
+      "description": "Escape tunnel doorway leading out through the North Edge perimeter wall",
       "tags": [
-        "spawn",
-        "entrance",
+        "exit",
+        "victory",
         "edge",
         "wall",
-        "west"
-      ]
+        "north"
+      ],
+      "hash": "3be32b980b464ce280dc1300ee42b7d16842860ba030bbc427105a0b2c088a4f",
+      "size": 555
+    },
+    {
+      "id": "exit_edge_wall_south",
+      "name": "Edge Wall Exit (South Edge)",
+      "type": "environment",
+      "category": "edge_passages",
+      "style": "wall_passage",
+      "path": "assets/environment/edge_passages/exit_edge_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Escape tunnel doorway leading out through the South Edge perimeter wall",
+      "tags": [
+        "exit",
+        "victory",
+        "edge",
+        "wall",
+        "south"
+      ],
+      "hash": "80b823f7d87806fbd20341615cbada284ff23f5ebc1d469c662f7b870f258d5a",
+      "size": 557
     },
     {
       "id": "exit_edge_wall_west",
@@ -1403,41 +492,378 @@
         "edge",
         "wall",
         "west"
-      ]
+      ],
+      "hash": "a61872f8866a6bc8a22aae28cf778b2eafda7a709983b25dfe42c9183ea21be2",
+      "size": 555
     },
     {
-      "id": "player_adventurer_north",
-      "name": "Adventurer (North (Up/Back))",
-      "type": "player",
-      "category": "player",
-      "style": "adventurer",
-      "path": "assets/player/adventurer/player_adventurer_north.svg",
+      "id": "exit_portal",
+      "name": "Cosmic Exit Portal",
+      "type": "environment",
+      "category": "exit",
+      "style": "portal",
+      "path": "assets/environment/exit/exit_portal.svg",
       "viewBox": "0 0 64 64",
-      "description": "Classic leather-clad maze explorer facing north",
+      "description": "Victory goal destination (Cosmic Exit Portal)",
       "tags": [
-        "player",
-        "hero",
-        "adventurer",
-        "north",
-        "character"
-      ]
+        "exit",
+        "victory",
+        "goal",
+        "portal"
+      ],
+      "hash": "860b0e8b8bfa4ea8c7cef20022c04e912a0c2b40e37a886877ebea8e44ee1f54",
+      "size": 344
     },
     {
-      "id": "player_adventurer_south",
-      "name": "Adventurer (South (Down/Front))",
-      "type": "player",
-      "category": "player",
-      "style": "adventurer",
-      "path": "assets/player/adventurer/player_adventurer_south.svg",
+      "id": "exit_shrine",
+      "name": "Sacred Torii Shrine",
+      "type": "environment",
+      "category": "exit",
+      "style": "shrine",
+      "path": "assets/environment/exit/exit_shrine.svg",
       "viewBox": "0 0 64 64",
-      "description": "Classic leather-clad maze explorer facing south",
+      "description": "Victory goal destination (Sacred Torii Shrine)",
       "tags": [
-        "player",
-        "hero",
-        "adventurer",
-        "south",
-        "character"
-      ]
+        "exit",
+        "victory",
+        "goal",
+        "shrine"
+      ],
+      "hash": "836e3a2d38af3bc2d7c293114f85576f4f9cb6a7ea4a93c3e6c96ac401a4336a",
+      "size": 346
+    },
+    {
+      "id": "exit_stairs_up",
+      "name": "Daylight Ascent Stairs",
+      "type": "environment",
+      "category": "exit",
+      "style": "stairs_up",
+      "path": "assets/environment/exit/exit_stairs_up.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Victory goal destination (Daylight Ascent Stairs)",
+      "tags": [
+        "exit",
+        "victory",
+        "goal",
+        "stairs_up"
+      ],
+      "hash": "2838550009103a03aa390595328833684018eb766ec1a275a0a5716145118783",
+      "size": 343
+    },
+    {
+      "id": "exit_treasure_chest",
+      "name": "Treasure Vault Chest",
+      "type": "environment",
+      "category": "exit",
+      "style": "chest",
+      "path": "assets/environment/exit/exit_treasure_chest.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Victory goal destination (Treasure Vault Chest)",
+      "tags": [
+        "exit",
+        "victory",
+        "goal",
+        "chest"
+      ],
+      "hash": "cb4785d90541721821628a265684b1206336d7bd80316b8a410db18d96dc9bad",
+      "size": 344
+    },
+    {
+      "id": "hazard_flame_vent",
+      "name": "Timed Magma Flame Vent",
+      "type": "entity",
+      "category": "hazards",
+      "style": "magma",
+      "path": "assets/entities/hazards/hazard_flame_vent.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Timed erupting volcanic fire vent with protective basalt grill",
+      "tags": [
+        "hazard",
+        "flame",
+        "lava",
+        "fire",
+        "trap",
+        "timed"
+      ],
+      "hash": "73f8aa024a4294d0c4de3151bfdb08826c96b9a0cbf7f00bca8d672a8db5eb80",
+      "size": 1259
+    },
+    {
+      "id": "key_classic",
+      "name": "Classic Gold Key",
+      "type": "entity",
+      "category": "keys",
+      "style": "classic",
+      "path": "assets/entities/keys/key_classic.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Classic Gold Key",
+      "tags": [
+        "key",
+        "classic",
+        "gold"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "key_crystal",
+      "name": "Elemental Crystal Shard",
+      "type": "entity",
+      "category": "keys",
+      "style": "crystal",
+      "path": "assets/entities/keys/key_crystal.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Elemental Crystal Shard",
+      "tags": [
+        "key",
+        "crystal",
+        "gem"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "key_dungeon_iron",
+      "name": "Dungeon Iron Key",
+      "type": "entity",
+      "category": "keys",
+      "style": "dungeon",
+      "path": "assets/entities/keys/key_dungeon_iron.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Collectible key for dungeon biome",
+      "tags": [
+        "key",
+        "item",
+        "unlock",
+        "dungeon"
+      ],
+      "hash": "92433cec555a8f91b504fa932e8a98eec6d05dc9f61a5321a41963d9a0e186fd",
+      "size": 462
+    },
+    {
+      "id": "key_glacial_frost",
+      "name": "Glacial Sapphire Key",
+      "type": "entity",
+      "category": "keys",
+      "style": "glacial",
+      "path": "assets/entities/keys/key_glacial_frost.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Collectible key for glacial biome",
+      "tags": [
+        "key",
+        "item",
+        "unlock",
+        "glacial"
+      ],
+      "hash": "c00d57a74b0cc42b76ad1f2cfa4299a63c5048854954a182eafa5abcfe468363",
+      "size": 462
+    },
+    {
+      "id": "key_jungle_jade",
+      "name": "Jungle Jade Key",
+      "type": "entity",
+      "category": "keys",
+      "style": "jungle",
+      "path": "assets/entities/keys/key_jungle_jade.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Collectible key for jungle biome",
+      "tags": [
+        "key",
+        "item",
+        "unlock",
+        "jungle"
+      ],
+      "hash": "92623a762708a7b5181cc9fc8e034ed0b154c69faac65e39cc93e1ce17c57c73",
+      "size": 462
+    },
+    {
+      "id": "key_magma_ruby",
+      "name": "Molten Core Ruby Key",
+      "type": "entity",
+      "category": "keys",
+      "style": "magma",
+      "path": "assets/entities/keys/key_magma_ruby.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Collectible key for magma biome",
+      "tags": [
+        "key",
+        "item",
+        "unlock",
+        "magma"
+      ],
+      "hash": "35859db8c5aca71773555dea5908e6617c7f5d841a0856339444c933da5dd244",
+      "size": 462
+    },
+    {
+      "id": "key_orb",
+      "name": "Arcane Orb",
+      "type": "entity",
+      "category": "keys",
+      "style": "orb",
+      "path": "assets/entities/keys/key_orb.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Arcane Orb",
+      "tags": [
+        "key",
+        "orb",
+        "arcane"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "key_ornate",
+      "name": "Ornate Skeleton Key",
+      "type": "entity",
+      "category": "keys",
+      "style": "ornate",
+      "path": "assets/entities/keys/key_ornate.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Ornate Skeleton Key",
+      "tags": [
+        "key",
+        "ornate",
+        "skeleton"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "key_relic",
+      "name": "Royal Relic Crown",
+      "type": "entity",
+      "category": "keys",
+      "style": "relic",
+      "path": "assets/entities/keys/key_relic.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Royal Relic Crown",
+      "tags": [
+        "key",
+        "relic",
+        "crown"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "key_skull",
+      "name": "Crypt Rune Token",
+      "type": "entity",
+      "category": "keys",
+      "style": "skull",
+      "path": "assets/entities/keys/key_skull.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Crypt Rune Token",
+      "tags": [
+        "key",
+        "skull",
+        "crypt"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "key_temple_scarab",
+      "name": "Sunken Temple Gold Key",
+      "type": "entity",
+      "category": "keys",
+      "style": "temple",
+      "path": "assets/entities/keys/key_temple_scarab.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Collectible key for temple biome",
+      "tags": [
+        "key",
+        "item",
+        "unlock",
+        "temple"
+      ],
+      "hash": "dc755a404b2e4158a88d2df50366babbdb80b58417752975053b0dfc0236d082",
+      "size": 462
+    },
+    {
+      "id": "lever_switch_off",
+      "name": "Floor Lever (OFF)",
+      "type": "entity",
+      "category": "levers",
+      "style": "switch_lever",
+      "path": "assets/entities/levers/lever_switch_off.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Floor Lever (OFF)",
+      "tags": [
+        "lever",
+        "switch",
+        "off"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "lever_switch_on",
+      "name": "Floor Lever (ON)",
+      "type": "entity",
+      "category": "levers",
+      "style": "switch_lever",
+      "path": "assets/entities/levers/lever_switch_on.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Floor Lever (ON)",
+      "tags": [
+        "lever",
+        "switch",
+        "on"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "patroller_sentinel",
+      "name": "Waypoint Patroller Sentinel",
+      "type": "entity",
+      "category": "patrollers",
+      "style": "lava",
+      "path": "assets/entities/patrollers/patroller_sentinel.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Autonomous waypoint patrol drone sentinel with scanning visor",
+      "tags": [
+        "patroller",
+        "sentinel",
+        "drone",
+        "enemy",
+        "sentry"
+      ],
+      "hash": "c5de74692d0d836350a7a35f5ac4126d1379fc30de2a4d9171b7bdaf18247265",
+      "size": 1022
+    },
+    {
+      "id": "pedestal_active",
+      "name": "Stone Pedestal (Active)",
+      "type": "entity",
+      "category": "levers",
+      "style": "pressure_pedestal",
+      "path": "assets/entities/levers/pedestal_active.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Stone Pedestal (Active)",
+      "tags": [
+        "pedestal",
+        "on"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "pedestal_inactive",
+      "name": "Stone Pedestal (Inactive)",
+      "type": "entity",
+      "category": "levers",
+      "style": "pressure_pedestal",
+      "path": "assets/entities/levers/pedestal_inactive.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Stone Pedestal (Inactive)",
+      "tags": [
+        "pedestal",
+        "off"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "player_adventurer_east",
@@ -1454,7 +880,47 @@
         "adventurer",
         "east",
         "character"
-      ]
+      ],
+      "hash": "025b630f87675b32cbe0ee59f54827e6e4b3b80401c5372880b36fbefd3a14e1",
+      "size": 445
+    },
+    {
+      "id": "player_adventurer_north",
+      "name": "Adventurer (North (Up/Back))",
+      "type": "player",
+      "category": "player",
+      "style": "adventurer",
+      "path": "assets/player/adventurer/player_adventurer_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Classic leather-clad maze explorer facing north",
+      "tags": [
+        "player",
+        "hero",
+        "adventurer",
+        "north",
+        "character"
+      ],
+      "hash": "abbbfa02c540b4ba7d08e41282931545e3338e8daad3c52352970da8f3f3da32",
+      "size": 445
+    },
+    {
+      "id": "player_adventurer_south",
+      "name": "Adventurer (South (Down/Front))",
+      "type": "player",
+      "category": "player",
+      "style": "adventurer",
+      "path": "assets/player/adventurer/player_adventurer_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Classic leather-clad maze explorer facing south",
+      "tags": [
+        "player",
+        "hero",
+        "adventurer",
+        "south",
+        "character"
+      ],
+      "hash": "262ee2b2b2aafb5dc56280a469e46ddc2b9ce065428c76181b0aa1e9e7c6a893",
+      "size": 445
     },
     {
       "id": "player_adventurer_west",
@@ -1471,788 +937,27 @@
         "adventurer",
         "west",
         "character"
-      ]
+      ],
+      "hash": "cb57939ddfe694f45e191e9b8335aeb3e759693584c6124128b9cf67bf002984",
+      "size": 445
     },
     {
-      "id": "player_knight_north",
-      "name": "Knight (North (Up/Back))",
+      "id": "player_compass",
+      "name": "Player Compass Rose Overlay",
       "type": "player",
       "category": "player",
-      "style": "knight",
-      "path": "assets/player/knight/player_knight_north.svg",
+      "style": "compass",
+      "path": "assets/player/player_compass.svg",
       "viewBox": "0 0 64 64",
-      "description": "Armored vanguard with iron greathelm and shield facing north",
+      "description": "Directional orientation indicator for player positioning",
       "tags": [
         "player",
-        "hero",
-        "knight",
-        "north",
-        "character"
-      ]
-    },
-    {
-      "id": "player_knight_south",
-      "name": "Knight (South (Down/Front))",
-      "type": "player",
-      "category": "player",
-      "style": "knight",
-      "path": "assets/player/knight/player_knight_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Armored vanguard with iron greathelm and shield facing south",
-      "tags": [
-        "player",
-        "hero",
-        "knight",
-        "south",
-        "character"
-      ]
-    },
-    {
-      "id": "player_knight_east",
-      "name": "Knight (East (Right))",
-      "type": "player",
-      "category": "player",
-      "style": "knight",
-      "path": "assets/player/knight/player_knight_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Armored vanguard with iron greathelm and shield facing east",
-      "tags": [
-        "player",
-        "hero",
-        "knight",
-        "east",
-        "character"
-      ]
-    },
-    {
-      "id": "player_knight_west",
-      "name": "Knight (West (Left))",
-      "type": "player",
-      "category": "player",
-      "style": "knight",
-      "path": "assets/player/knight/player_knight_west.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Armored vanguard with iron greathelm and shield facing west",
-      "tags": [
-        "player",
-        "hero",
-        "knight",
-        "west",
-        "character"
-      ]
-    },
-    {
-      "id": "player_mage_north",
-      "name": "Mage (North (Up/Back))",
-      "type": "player",
-      "category": "player",
-      "style": "mage",
-      "path": "assets/player/mage/player_mage_north.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Arcane wizard in mystic robed cowl facing north",
-      "tags": [
-        "player",
-        "hero",
-        "mage",
-        "north",
-        "character"
-      ]
-    },
-    {
-      "id": "player_mage_south",
-      "name": "Mage (South (Down/Front))",
-      "type": "player",
-      "category": "player",
-      "style": "mage",
-      "path": "assets/player/mage/player_mage_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Arcane wizard in mystic robed cowl facing south",
-      "tags": [
-        "player",
-        "hero",
-        "mage",
-        "south",
-        "character"
-      ]
-    },
-    {
-      "id": "player_mage_east",
-      "name": "Mage (East (Right))",
-      "type": "player",
-      "category": "player",
-      "style": "mage",
-      "path": "assets/player/mage/player_mage_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Arcane wizard in mystic robed cowl facing east",
-      "tags": [
-        "player",
-        "hero",
-        "mage",
-        "east",
-        "character"
-      ]
-    },
-    {
-      "id": "player_mage_west",
-      "name": "Mage (West (Left))",
-      "type": "player",
-      "category": "player",
-      "style": "mage",
-      "path": "assets/player/mage/player_mage_west.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Arcane wizard in mystic robed cowl facing west",
-      "tags": [
-        "player",
-        "hero",
-        "mage",
-        "west",
-        "character"
-      ]
-    },
-    {
-      "id": "player_rogue_north",
-      "name": "Rogue (North (Up/Back))",
-      "type": "player",
-      "category": "player",
-      "style": "rogue",
-      "path": "assets/player/rogue/player_rogue_north.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Shadow scout in leather mantle and mask facing north",
-      "tags": [
-        "player",
-        "hero",
-        "rogue",
-        "north",
-        "character"
-      ]
-    },
-    {
-      "id": "player_rogue_south",
-      "name": "Rogue (South (Down/Front))",
-      "type": "player",
-      "category": "player",
-      "style": "rogue",
-      "path": "assets/player/rogue/player_rogue_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Shadow scout in leather mantle and mask facing south",
-      "tags": [
-        "player",
-        "hero",
-        "rogue",
-        "south",
-        "character"
-      ]
-    },
-    {
-      "id": "player_rogue_east",
-      "name": "Rogue (East (Right))",
-      "type": "player",
-      "category": "player",
-      "style": "rogue",
-      "path": "assets/player/rogue/player_rogue_east.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Shadow scout in leather mantle and mask facing east",
-      "tags": [
-        "player",
-        "hero",
-        "rogue",
-        "east",
-        "character"
-      ]
-    },
-    {
-      "id": "player_rogue_west",
-      "name": "Rogue (West (Left))",
-      "type": "player",
-      "category": "player",
-      "style": "rogue",
-      "path": "assets/player/rogue/player_rogue_west.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Shadow scout in leather mantle and mask facing west",
-      "tags": [
-        "player",
-        "hero",
-        "rogue",
-        "west",
-        "character"
-      ]
-    },
-    {
-      "id": "spawn_stairs_down",
-      "name": "Entrance Stairs Down",
-      "type": "environment",
-      "category": "spawn",
-      "style": "stairs_down",
-      "path": "assets/environment/spawn/spawn_stairs_down.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Freestanding entrance location (Entrance Stairs Down)",
-      "tags": [
-        "spawn",
-        "entrance",
-        "stairs_down"
-      ]
-    },
-    {
-      "id": "spawn_portal",
-      "name": "Summoning Rift",
-      "type": "environment",
-      "category": "spawn",
-      "style": "portal",
-      "path": "assets/environment/spawn/spawn_portal.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Freestanding entrance location (Summoning Rift)",
-      "tags": [
-        "spawn",
-        "entrance",
-        "portal"
-      ]
-    },
-    {
-      "id": "spawn_archway",
-      "name": "Entrance Archway",
-      "type": "environment",
-      "category": "spawn",
-      "style": "archway",
-      "path": "assets/environment/spawn/spawn_archway.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Freestanding entrance location (Entrance Archway)",
-      "tags": [
-        "spawn",
-        "entrance",
-        "archway"
-      ]
-    },
-    {
-      "id": "spawn_pentagram",
-      "name": "Runic Circle Spawn",
-      "type": "environment",
-      "category": "spawn",
-      "style": "pentagram",
-      "path": "assets/environment/spawn/spawn_pentagram.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Freestanding entrance location (Runic Circle Spawn)",
-      "tags": [
-        "spawn",
-        "entrance",
-        "pentagram"
-      ]
-    },
-    {
-      "id": "spawn_camp",
-      "name": "Explorer Camp",
-      "type": "environment",
-      "category": "spawn",
-      "style": "camp",
-      "path": "assets/environment/spawn/spawn_camp.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Freestanding entrance location (Explorer Camp)",
-      "tags": [
-        "spawn",
-        "entrance",
-        "camp"
-      ]
-    },
-    {
-      "id": "exit_portal",
-      "name": "Cosmic Exit Portal",
-      "type": "environment",
-      "category": "exit",
-      "style": "portal",
-      "path": "assets/environment/exit/exit_portal.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Victory goal destination (Cosmic Exit Portal)",
-      "tags": [
-        "exit",
-        "victory",
-        "goal",
-        "portal"
-      ]
-    },
-    {
-      "id": "exit_stairs_up",
-      "name": "Daylight Ascent Stairs",
-      "type": "environment",
-      "category": "exit",
-      "style": "stairs_up",
-      "path": "assets/environment/exit/exit_stairs_up.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Victory goal destination (Daylight Ascent Stairs)",
-      "tags": [
-        "exit",
-        "victory",
-        "goal",
-        "stairs_up"
-      ]
-    },
-    {
-      "id": "exit_archway",
-      "name": "Sanctuary Exit Archway",
-      "type": "environment",
-      "category": "exit",
-      "style": "archway",
-      "path": "assets/environment/exit/exit_archway.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Victory goal destination (Sanctuary Exit Archway)",
-      "tags": [
-        "exit",
-        "victory",
-        "goal",
-        "archway"
-      ]
-    },
-    {
-      "id": "exit_treasure_chest",
-      "name": "Treasure Vault Chest",
-      "type": "environment",
-      "category": "exit",
-      "style": "chest",
-      "path": "assets/environment/exit/exit_treasure_chest.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Victory goal destination (Treasure Vault Chest)",
-      "tags": [
-        "exit",
-        "victory",
-        "goal",
-        "chest"
-      ]
-    },
-    {
-      "id": "exit_shrine",
-      "name": "Sacred Torii Shrine",
-      "type": "environment",
-      "category": "exit",
-      "style": "shrine",
-      "path": "assets/environment/exit/exit_shrine.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Victory goal destination (Sacred Torii Shrine)",
-      "tags": [
-        "exit",
-        "victory",
-        "goal",
-        "shrine"
-      ]
-    },
-    {
-      "id": "key_classic",
-      "name": "Classic Gold Key",
-      "type": "entity",
-      "category": "keys",
-      "style": "classic",
-      "path": "assets/entities/keys/key_classic.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Classic Gold Key",
-      "tags": [
-        "key",
-        "classic",
-        "gold"
-      ]
-    },
-    {
-      "id": "key_ornate",
-      "name": "Ornate Skeleton Key",
-      "type": "entity",
-      "category": "keys",
-      "style": "ornate",
-      "path": "assets/entities/keys/key_ornate.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Ornate Skeleton Key",
-      "tags": [
-        "key",
-        "ornate",
-        "skeleton"
-      ]
-    },
-    {
-      "id": "key_crystal",
-      "name": "Elemental Crystal Shard",
-      "type": "entity",
-      "category": "keys",
-      "style": "crystal",
-      "path": "assets/entities/keys/key_crystal.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Elemental Crystal Shard",
-      "tags": [
-        "key",
-        "crystal",
-        "gem"
-      ]
-    },
-    {
-      "id": "key_orb",
-      "name": "Arcane Orb",
-      "type": "entity",
-      "category": "keys",
-      "style": "orb",
-      "path": "assets/entities/keys/key_orb.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Arcane Orb",
-      "tags": [
-        "key",
-        "orb",
-        "arcane"
-      ]
-    },
-    {
-      "id": "key_relic",
-      "name": "Royal Relic Crown",
-      "type": "entity",
-      "category": "keys",
-      "style": "relic",
-      "path": "assets/entities/keys/key_relic.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Royal Relic Crown",
-      "tags": [
-        "key",
-        "relic",
-        "crown"
-      ]
-    },
-    {
-      "id": "key_skull",
-      "name": "Crypt Rune Token",
-      "type": "entity",
-      "category": "keys",
-      "style": "skull",
-      "path": "assets/entities/keys/key_skull.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Crypt Rune Token",
-      "tags": [
-        "key",
-        "skull",
-        "crypt"
-      ]
-    },
-    {
-      "id": "door_laser_barrier",
-      "name": "Laser Forcefield Barrier",
-      "type": "entity",
-      "category": "doors",
-      "style": "laser_barrier",
-      "path": "assets/entities/doors/door_laser_barrier.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Laser Forcefield Barrier",
-      "tags": [
-        "door",
-        "laser",
-        "barrier"
-      ]
-    },
-    {
-      "id": "door_magic_seal",
-      "name": "Arcane Runic Seal",
-      "type": "entity",
-      "category": "doors",
-      "style": "magic_seal",
-      "path": "assets/entities/doors/door_magic_seal.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Arcane Runic Seal",
-      "tags": [
-        "door",
-        "magic",
-        "seal"
-      ]
-    },
-    {
-      "id": "door_crystal_spikes",
-      "name": "Crystal Spikes Barrier",
-      "type": "entity",
-      "category": "doors",
-      "style": "crystal_spikes",
-      "path": "assets/entities/doors/door_crystal_spikes.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Crystal Spikes Barrier",
-      "tags": [
-        "door",
-        "crystal",
-        "spikes"
-      ]
-    },
-    {
-      "id": "door_vault_hatch",
-      "name": "Vault Bulkhead Hatch",
-      "type": "entity",
-      "category": "doors",
-      "style": "vault_hatch",
-      "path": "assets/entities/doors/door_vault_hatch.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Vault Bulkhead Hatch",
-      "tags": [
-        "door",
-        "vault",
-        "hatch"
-      ]
-    },
-    {
-      "id": "lever_switch_off",
-      "name": "Floor Lever (OFF)",
-      "type": "entity",
-      "category": "levers",
-      "style": "switch_lever",
-      "path": "assets/entities/levers/lever_switch_off.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Floor Lever (OFF)",
-      "tags": [
-        "lever",
-        "switch",
-        "off"
-      ]
-    },
-    {
-      "id": "lever_switch_on",
-      "name": "Floor Lever (ON)",
-      "type": "entity",
-      "category": "levers",
-      "style": "switch_lever",
-      "path": "assets/entities/levers/lever_switch_on.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Floor Lever (ON)",
-      "tags": [
-        "lever",
-        "switch",
-        "on"
-      ]
-    },
-    {
-      "id": "pedestal_inactive",
-      "name": "Stone Pedestal (Inactive)",
-      "type": "entity",
-      "category": "levers",
-      "style": "pressure_pedestal",
-      "path": "assets/entities/levers/pedestal_inactive.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Stone Pedestal (Inactive)",
-      "tags": [
-        "pedestal",
-        "off"
-      ]
-    },
-    {
-      "id": "pedestal_active",
-      "name": "Stone Pedestal (Active)",
-      "type": "entity",
-      "category": "levers",
-      "style": "pressure_pedestal",
-      "path": "assets/entities/levers/pedestal_active.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Stone Pedestal (Active)",
-      "tags": [
-        "pedestal",
-        "on"
-      ]
-    },
-    {
-      "id": "crystal_inactive",
-      "name": "Resonance Crystal (Rest)",
-      "type": "entity",
-      "category": "levers",
-      "style": "crystal_switch",
-      "path": "assets/entities/levers/crystal_inactive.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Resonance Crystal (Rest)",
-      "tags": [
-        "crystal",
-        "off"
-      ]
-    },
-    {
-      "id": "crystal_active",
-      "name": "Resonance Crystal (Active)",
-      "type": "entity",
-      "category": "levers",
-      "style": "crystal_switch",
-      "path": "assets/entities/levers/crystal_active.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Resonance Crystal (Active)",
-      "tags": [
-        "crystal",
-        "on"
-      ]
-    },
-    {
-      "id": "runic_plate_off",
-      "name": "Runic Inscription (OFF)",
-      "type": "entity",
-      "category": "levers",
-      "style": "runic_plate",
-      "path": "assets/entities/levers/runic_plate_off.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Runic Inscription (OFF)",
-      "tags": [
-        "rune",
-        "off"
-      ]
-    },
-    {
-      "id": "runic_plate_on",
-      "name": "Runic Inscription (ON)",
-      "type": "entity",
-      "category": "levers",
-      "style": "runic_plate",
-      "path": "assets/entities/levers/runic_plate_on.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Runic Inscription (ON)",
-      "tags": [
-        "rune",
-        "on"
-      ]
-    },
-    {
-      "id": "cog_valve_off",
-      "name": "Mechanical Valve (OFF)",
-      "type": "entity",
-      "category": "levers",
-      "style": "cog_wheel",
-      "path": "assets/entities/levers/cog_valve_off.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Mechanical Valve (OFF)",
-      "tags": [
-        "valve",
-        "off"
-      ]
-    },
-    {
-      "id": "cog_valve_on",
-      "name": "Mechanical Valve (ON)",
-      "type": "entity",
-      "category": "levers",
-      "style": "cog_wheel",
-      "path": "assets/entities/levers/cog_valve_on.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Specialized game asset: Mechanical Valve (ON)",
-      "tags": [
-        "valve",
-        "on"
-      ]
-    },
-    {
-      "id": "tool_pencil",
-      "name": "Pencil Tool",
-      "type": "ui",
-      "category": "tools",
-      "style": "icon",
-      "path": "assets/ui/tool_pencil.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Editor user interface tool icon (Pencil Tool)",
-      "tags": [
-        "ui",
-        "tool",
-        "editor"
-      ]
-    },
-    {
-      "id": "tool_line",
-      "name": "Line Tool",
-      "type": "ui",
-      "category": "tools",
-      "style": "icon",
-      "path": "assets/ui/tool_line.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Editor user interface tool icon (Line Tool)",
-      "tags": [
-        "ui",
-        "tool",
-        "editor"
-      ]
-    },
-    {
-      "id": "tool_fill",
-      "name": "Fill Bucket Tool",
-      "type": "ui",
-      "category": "tools",
-      "style": "icon",
-      "path": "assets/ui/tool_fill.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Editor user interface tool icon (Fill Bucket Tool)",
-      "tags": [
-        "ui",
-        "tool",
-        "editor"
-      ]
-    },
-    {
-      "id": "tool_eraser",
-      "name": "Eraser Tool",
-      "type": "ui",
-      "category": "tools",
-      "style": "icon",
-      "path": "assets/ui/tool_eraser.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Editor user interface tool icon (Eraser Tool)",
-      "tags": [
-        "ui",
-        "tool",
-        "editor"
-      ]
-    },
-    {
-      "id": "tool_select",
-      "name": "Select Tool",
-      "type": "ui",
-      "category": "tools",
-      "style": "icon",
-      "path": "assets/ui/tool_select.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Editor user interface tool icon (Select Tool)",
-      "tags": [
-        "ui",
-        "tool",
-        "editor"
-      ]
-    },
-    {
-      "id": "tool_move",
-      "name": "Grab Tool",
-      "type": "ui",
-      "category": "tools",
-      "style": "icon",
-      "path": "assets/ui/tool_move.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Editor user interface tool icon (Grab Tool)",
-      "tags": [
-        "ui",
-        "tool",
-        "editor"
-      ]
-    },
-    {
-      "id": "player_explorer_north",
-      "name": "Casual Explorer (North (Back View))",
-      "type": "player",
-      "category": "player",
-      "style": "explorer",
-      "path": "assets/player/explorer/player_explorer_north.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Casual explorer human with blue jeans, flannel shirt, and brown backpack facing north",
-      "tags": [
-        "player",
-        "hero",
-        "explorer",
-        "human",
-        "backpack",
-        "flannel",
-        "north",
-        "character"
-      ]
-    },
-    {
-      "id": "player_explorer_south",
-      "name": "Casual Explorer (South (Front View))",
-      "type": "player",
-      "category": "player",
-      "style": "explorer",
-      "path": "assets/player/explorer/player_explorer_south.svg",
-      "viewBox": "0 0 64 64",
-      "description": "Casual explorer human with blue jeans, flannel shirt, and brown backpack facing south",
-      "tags": [
-        "player",
-        "hero",
-        "explorer",
-        "human",
-        "backpack",
-        "flannel",
-        "south",
-        "character"
-      ]
+        "compass",
+        "hud",
+        "direction"
+      ],
+      "hash": "1d2aff4e0d24b9b39d2f0fe3b78a69d958d81199144ed475f71541fc315e6f9b",
+      "size": 350
     },
     {
       "id": "player_explorer_east",
@@ -2272,7 +977,53 @@
         "flannel",
         "east",
         "character"
-      ]
+      ],
+      "hash": "3efbd286b913ac126459ae488035c54f90a983a42b83cfabda37c146d2141166",
+      "size": 2997
+    },
+    {
+      "id": "player_explorer_north",
+      "name": "Casual Explorer (North (Back View))",
+      "type": "player",
+      "category": "player",
+      "style": "explorer",
+      "path": "assets/player/explorer/player_explorer_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Casual explorer human with blue jeans, flannel shirt, and brown backpack facing north",
+      "tags": [
+        "player",
+        "hero",
+        "explorer",
+        "human",
+        "backpack",
+        "flannel",
+        "north",
+        "character"
+      ],
+      "hash": "a54950f11a0d8a4f212cd9f7f605e8bbf9194b5dc6c7987df7969f1bd2a3bb03",
+      "size": 2892
+    },
+    {
+      "id": "player_explorer_south",
+      "name": "Casual Explorer (South (Front View))",
+      "type": "player",
+      "category": "player",
+      "style": "explorer",
+      "path": "assets/player/explorer/player_explorer_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Casual explorer human with blue jeans, flannel shirt, and brown backpack facing south",
+      "tags": [
+        "player",
+        "hero",
+        "explorer",
+        "human",
+        "backpack",
+        "flannel",
+        "south",
+        "character"
+      ],
+      "hash": "58d957885ce79b31dee46e5bdd9a01b77ba2bbff2df85b8eb73f5d03b6ab9b08",
+      "size": 4311
     },
     {
       "id": "player_explorer_west",
@@ -2292,76 +1043,273 @@
         "flannel",
         "west",
         "character"
-      ]
+      ],
+      "hash": "b19a7a6aa3a0b2bfc09d577969378af1d8b2435ec1e9fabe0dc8b6a17f920fc9",
+      "size": 3009
     },
     {
-      "id": "teleporter_portal",
-      "name": "Dimensional Teleporter Portal",
-      "type": "entity",
-      "category": "teleporters",
-      "style": "cave",
-      "path": "assets/entities/teleporters/teleporter_portal.svg",
+      "id": "player_ground",
+      "name": "Player Avatar (Ground Level)",
+      "type": "player",
+      "category": "player",
+      "style": "ground",
+      "path": "assets/player/player_ground.svg",
       "viewBox": "0 0 64 64",
-      "description": "Dimensional warp portal with concentric runic rings and swirling core",
+      "description": "Ground-level explorer silhouette and elevation indicator",
       "tags": [
-        "teleporter",
-        "portal",
-        "warp",
-        "astral",
-        "dimension"
-      ]
+        "player",
+        "ground",
+        "avatar",
+        "elevation_0"
+      ],
+      "hash": "f82770fbcaf71723ca5ae78631fa4d5befa21c1237f44c875e2a43a5776814e5",
+      "size": 276
     },
     {
-      "id": "hazard_flame_vent",
-      "name": "Timed Magma Flame Vent",
-      "type": "entity",
-      "category": "hazards",
-      "style": "magma",
-      "path": "assets/entities/hazards/hazard_flame_vent.svg",
+      "id": "player_knight_east",
+      "name": "Knight (East (Right))",
+      "type": "player",
+      "category": "player",
+      "style": "knight",
+      "path": "assets/player/knight/player_knight_east.svg",
       "viewBox": "0 0 64 64",
-      "description": "Timed erupting volcanic fire vent with protective basalt grill",
+      "description": "Armored vanguard with iron greathelm and shield facing east",
       "tags": [
-        "hazard",
-        "flame",
-        "lava",
-        "fire",
-        "trap",
-        "timed"
-      ]
+        "player",
+        "hero",
+        "knight",
+        "east",
+        "character"
+      ],
+      "hash": "8f32dff6136734dd7112a3cc5a559e0204f40cacf3a597ff2f8084d6acb43492",
+      "size": 445
     },
     {
-      "id": "patroller_sentinel",
-      "name": "Waypoint Patroller Sentinel",
-      "type": "entity",
-      "category": "patrollers",
-      "style": "lava",
-      "path": "assets/entities/patrollers/patroller_sentinel.svg",
+      "id": "player_knight_north",
+      "name": "Knight (North (Up/Back))",
+      "type": "player",
+      "category": "player",
+      "style": "knight",
+      "path": "assets/player/knight/player_knight_north.svg",
       "viewBox": "0 0 64 64",
-      "description": "Autonomous waypoint patrol drone sentinel with scanning visor",
+      "description": "Armored vanguard with iron greathelm and shield facing north",
       "tags": [
-        "patroller",
-        "sentinel",
-        "drone",
-        "enemy",
-        "sentry"
-      ]
+        "player",
+        "hero",
+        "knight",
+        "north",
+        "character"
+      ],
+      "hash": "ad1c2eace3135f8cc69e00f5a393ba7955f730d1571e80f5b8030a6fb8d1fd09",
+      "size": 445
     },
     {
-      "id": "puzzle_gate_rune",
-      "name": "Rune Memory Barrier Gate",
-      "type": "entity",
-      "category": "puzzle_gates",
-      "style": "sunset",
-      "path": "assets/entities/puzzle_gates/puzzle_gate_rune.svg",
+      "id": "player_knight_south",
+      "name": "Knight (South (Down/Front))",
+      "type": "player",
+      "category": "player",
+      "style": "knight",
+      "path": "assets/player/knight/player_knight_south.svg",
       "viewBox": "0 0 64 64",
-      "description": "Arcane barrier gate unlocked by repeating sequential celestial rune patterns",
+      "description": "Armored vanguard with iron greathelm and shield facing south",
       "tags": [
-        "puzzle",
-        "gate",
-        "rune",
-        "memory",
-        "seal"
-      ]
+        "player",
+        "hero",
+        "knight",
+        "south",
+        "character"
+      ],
+      "hash": "6bee4864632519fe7900749fd968f578ac883fbc98d7de0b9f6c11513a9d4668",
+      "size": 445
+    },
+    {
+      "id": "player_knight_west",
+      "name": "Knight (West (Left))",
+      "type": "player",
+      "category": "player",
+      "style": "knight",
+      "path": "assets/player/knight/player_knight_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Armored vanguard with iron greathelm and shield facing west",
+      "tags": [
+        "player",
+        "hero",
+        "knight",
+        "west",
+        "character"
+      ],
+      "hash": "9196e9e787d709468e25912927f3d0c92340d6b5f5d8a8290b1429ba10066134",
+      "size": 445
+    },
+    {
+      "id": "player_mage_east",
+      "name": "Mage (East (Right))",
+      "type": "player",
+      "category": "player",
+      "style": "mage",
+      "path": "assets/player/mage/player_mage_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Arcane wizard in mystic robed cowl facing east",
+      "tags": [
+        "player",
+        "hero",
+        "mage",
+        "east",
+        "character"
+      ],
+      "hash": "ab894bdc642874ad816934e68acb6a788260f5a152aa1240cf5d00137f7f71b4",
+      "size": 445
+    },
+    {
+      "id": "player_mage_north",
+      "name": "Mage (North (Up/Back))",
+      "type": "player",
+      "category": "player",
+      "style": "mage",
+      "path": "assets/player/mage/player_mage_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Arcane wizard in mystic robed cowl facing north",
+      "tags": [
+        "player",
+        "hero",
+        "mage",
+        "north",
+        "character"
+      ],
+      "hash": "bd917e263d67342f8074104b5d02e6be9882aa4d41de6ea3229268a06dc00754",
+      "size": 445
+    },
+    {
+      "id": "player_mage_south",
+      "name": "Mage (South (Down/Front))",
+      "type": "player",
+      "category": "player",
+      "style": "mage",
+      "path": "assets/player/mage/player_mage_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Arcane wizard in mystic robed cowl facing south",
+      "tags": [
+        "player",
+        "hero",
+        "mage",
+        "south",
+        "character"
+      ],
+      "hash": "11ec9e0e8a7ffb1c4cbe3d434714bf675b06c06706e3ccf83b505db4dcf46f73",
+      "size": 445
+    },
+    {
+      "id": "player_mage_west",
+      "name": "Mage (West (Left))",
+      "type": "player",
+      "category": "player",
+      "style": "mage",
+      "path": "assets/player/mage/player_mage_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Arcane wizard in mystic robed cowl facing west",
+      "tags": [
+        "player",
+        "hero",
+        "mage",
+        "west",
+        "character"
+      ],
+      "hash": "afb424912f98d85caf81f49e15bf1c3874f3d9923aeb3ef31ee4cbc1dde37c83",
+      "size": 445
+    },
+    {
+      "id": "player_overhead",
+      "name": "Player Avatar (Overhead Bridge Level)",
+      "type": "player",
+      "category": "player",
+      "style": "overhead",
+      "path": "assets/player/player_overhead.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead elevation explorer silhouette and bridge traversal indicator",
+      "tags": [
+        "player",
+        "overhead",
+        "avatar",
+        "elevation_1"
+      ],
+      "hash": "4bc8e1b181c268269dffb998134a8fe4f89e0a8a27b64047c5c6820038d17596",
+      "size": 352
+    },
+    {
+      "id": "player_rogue_east",
+      "name": "Rogue (East (Right))",
+      "type": "player",
+      "category": "player",
+      "style": "rogue",
+      "path": "assets/player/rogue/player_rogue_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Shadow scout in leather mantle and mask facing east",
+      "tags": [
+        "player",
+        "hero",
+        "rogue",
+        "east",
+        "character"
+      ],
+      "hash": "c23be89ed48a9e1851b2de4d093c47ee4cf9ca525cf1e99c68663d6a04bc2061",
+      "size": 445
+    },
+    {
+      "id": "player_rogue_north",
+      "name": "Rogue (North (Up/Back))",
+      "type": "player",
+      "category": "player",
+      "style": "rogue",
+      "path": "assets/player/rogue/player_rogue_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Shadow scout in leather mantle and mask facing north",
+      "tags": [
+        "player",
+        "hero",
+        "rogue",
+        "north",
+        "character"
+      ],
+      "hash": "831f072821461ae6bf5ea6f40a95c389ae1006bc5f80f017674d5b96a99ac098",
+      "size": 445
+    },
+    {
+      "id": "player_rogue_south",
+      "name": "Rogue (South (Down/Front))",
+      "type": "player",
+      "category": "player",
+      "style": "rogue",
+      "path": "assets/player/rogue/player_rogue_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Shadow scout in leather mantle and mask facing south",
+      "tags": [
+        "player",
+        "hero",
+        "rogue",
+        "south",
+        "character"
+      ],
+      "hash": "e8d512dca279117e844ff96bc405735695e7698ba378153e8fa92ca3cf376291",
+      "size": 445
+    },
+    {
+      "id": "player_rogue_west",
+      "name": "Rogue (West (Left))",
+      "type": "player",
+      "category": "player",
+      "style": "rogue",
+      "path": "assets/player/rogue/player_rogue_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Shadow scout in leather mantle and mask facing west",
+      "tags": [
+        "player",
+        "hero",
+        "rogue",
+        "west",
+        "character"
+      ],
+      "hash": "f347c135a8aa1887cf2220ef6b206b764fc0ca80eb75d4072dcbec9f8347bce4",
+      "size": 445
     },
     {
       "id": "puzzle_gate_cipher",
@@ -2378,7 +1326,60 @@
         "cipher",
         "dial",
         "lock"
-      ]
+      ],
+      "hash": "a22e4e984aaba06cbb05bffc2afa6eb539fc906eefd1c996e4526baa9ff06461",
+      "size": 1085
+    },
+    {
+      "id": "puzzle_gate_rune",
+      "name": "Rune Memory Barrier Gate",
+      "type": "entity",
+      "category": "puzzle_gates",
+      "style": "sunset",
+      "path": "assets/entities/puzzle_gates/puzzle_gate_rune.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Arcane barrier gate unlocked by repeating sequential celestial rune patterns",
+      "tags": [
+        "puzzle",
+        "gate",
+        "rune",
+        "memory",
+        "seal"
+      ],
+      "hash": "6582ff83c03d45f2dc061ad40d5be05adc60660cd6c8ab6f8a0669f75b2c4a09",
+      "size": 1048
+    },
+    {
+      "id": "runic_plate_off",
+      "name": "Runic Inscription (OFF)",
+      "type": "entity",
+      "category": "levers",
+      "style": "runic_plate",
+      "path": "assets/entities/levers/runic_plate_off.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Runic Inscription (OFF)",
+      "tags": [
+        "rune",
+        "off"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
+    },
+    {
+      "id": "runic_plate_on",
+      "name": "Runic Inscription (ON)",
+      "type": "entity",
+      "category": "levers",
+      "style": "runic_plate",
+      "path": "assets/entities/levers/runic_plate_on.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Specialized game asset: Runic Inscription (ON)",
+      "tags": [
+        "rune",
+        "on"
+      ],
+      "hash": "1fa8e0908afbdae79f2972d70b36079a09eed730acd8670c58932bcbb4536b95",
+      "size": 281
     },
     {
       "id": "signpost_lore",
@@ -2395,24 +1396,369 @@
         "tablet",
         "journal",
         "guide"
-      ]
+      ],
+      "hash": "e9a657379d7b8d0806acd0c521b6f367266f7950d066a624f3e61d61238e5e32",
+      "size": 1125
     },
     {
-      "id": "tile_wall_angled_dungeon",
-      "name": "2.5D Angled Dungeon Wall",
-      "type": "tile",
-      "category": "angled",
-      "style": "dungeon",
-      "path": "assets/tiles/angled/wall_angled_dungeon.svg",
+      "id": "spawn_archway",
+      "name": "Entrance Archway",
+      "type": "environment",
+      "category": "spawn",
+      "style": "archway",
+      "path": "assets/environment/spawn/spawn_archway.svg",
       "viewBox": "0 0 64 64",
-      "description": "2.5D oblique perspective wall with elevated top cap and vertical front facade",
+      "description": "Freestanding entrance location (Entrance Archway)",
+      "tags": [
+        "spawn",
+        "entrance",
+        "archway"
+      ],
+      "hash": "4133dc9599be359d7edc43dea487984313dfce8487f3cb9fabb5e084cd637dbd",
+      "size": 366
+    },
+    {
+      "id": "spawn_camp",
+      "name": "Explorer Camp",
+      "type": "environment",
+      "category": "spawn",
+      "style": "camp",
+      "path": "assets/environment/spawn/spawn_camp.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Freestanding entrance location (Explorer Camp)",
+      "tags": [
+        "spawn",
+        "entrance",
+        "camp"
+      ],
+      "hash": "fed1d5931bcc3225e097d2f9c9e1360b2ec9819725f749e1c254b30ab57c7197",
+      "size": 362
+    },
+    {
+      "id": "spawn_edge_wall_east",
+      "name": "Edge Wall Entrance (East Edge)",
+      "type": "environment",
+      "category": "edge_passages",
+      "style": "wall_passage",
+      "path": "assets/environment/edge_passages/spawn_edge_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Seamless entrance passage cut into the East Edge perimeter wall",
+      "tags": [
+        "spawn",
+        "entrance",
+        "edge",
+        "wall",
+        "east"
+      ],
+      "hash": "8bb1173ae812021f5037ba4162c7e5c09424540e73180d58cd368a13c06954b0",
+      "size": 429
+    },
+    {
+      "id": "spawn_edge_wall_north",
+      "name": "Edge Wall Entrance (North Edge)",
+      "type": "environment",
+      "category": "edge_passages",
+      "style": "wall_passage",
+      "path": "assets/environment/edge_passages/spawn_edge_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Seamless entrance passage cut into the North Edge perimeter wall",
+      "tags": [
+        "spawn",
+        "entrance",
+        "edge",
+        "wall",
+        "north"
+      ],
+      "hash": "4bfac0e13cc5c51cab26fefcb3ebe7c57890fc82c950fa4ecdd188638c1644c1",
+      "size": 427
+    },
+    {
+      "id": "spawn_edge_wall_south",
+      "name": "Edge Wall Entrance (South Edge)",
+      "type": "environment",
+      "category": "edge_passages",
+      "style": "wall_passage",
+      "path": "assets/environment/edge_passages/spawn_edge_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Seamless entrance passage cut into the South Edge perimeter wall",
+      "tags": [
+        "spawn",
+        "entrance",
+        "edge",
+        "wall",
+        "south"
+      ],
+      "hash": "0213d610ab2c941f2ff7130a812d94433f2fdd9ec1a4d90db32225c4d322173e",
+      "size": 429
+    },
+    {
+      "id": "spawn_edge_wall_west",
+      "name": "Edge Wall Entrance (West Edge)",
+      "type": "environment",
+      "category": "edge_passages",
+      "style": "wall_passage",
+      "path": "assets/environment/edge_passages/spawn_edge_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Seamless entrance passage cut into the West Edge perimeter wall",
+      "tags": [
+        "spawn",
+        "entrance",
+        "edge",
+        "wall",
+        "west"
+      ],
+      "hash": "65fe3f21fc59bc9482cf2a244fa12888b8453f847bcb5d5b470c2d6cae0e4ae2",
+      "size": 427
+    },
+    {
+      "id": "spawn_pentagram",
+      "name": "Runic Circle Spawn",
+      "type": "environment",
+      "category": "spawn",
+      "style": "pentagram",
+      "path": "assets/environment/spawn/spawn_pentagram.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Freestanding entrance location (Runic Circle Spawn)",
+      "tags": [
+        "spawn",
+        "entrance",
+        "pentagram"
+      ],
+      "hash": "c42942b1127fe0914d2a834544d7e788d01a9ed1f8225b0f57c33330d3786a6a",
+      "size": 363
+    },
+    {
+      "id": "spawn_portal",
+      "name": "Summoning Rift",
+      "type": "environment",
+      "category": "spawn",
+      "style": "portal",
+      "path": "assets/environment/spawn/spawn_portal.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Freestanding entrance location (Summoning Rift)",
+      "tags": [
+        "spawn",
+        "entrance",
+        "portal"
+      ],
+      "hash": "c162b6dd74cb6148a140c8a515e7f1b127f70fe6bee74c6ebb1959a3ba15c752",
+      "size": 362
+    },
+    {
+      "id": "spawn_stairs_down",
+      "name": "Entrance Stairs Down",
+      "type": "environment",
+      "category": "spawn",
+      "style": "stairs_down",
+      "path": "assets/environment/spawn/spawn_stairs_down.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Freestanding entrance location (Entrance Stairs Down)",
+      "tags": [
+        "spawn",
+        "entrance",
+        "stairs_down"
+      ],
+      "hash": "4f7d07f4e6995b60eccd9ed09135f5f1416fa2ca2f8ecd25bfc5297376ccc8f9",
+      "size": 364
+    },
+    {
+      "id": "teleporter_portal",
+      "name": "Dimensional Teleporter Portal",
+      "type": "entity",
+      "category": "teleporters",
+      "style": "cave",
+      "path": "assets/entities/teleporters/teleporter_portal.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Dimensional warp portal with concentric runic rings and swirling core",
+      "tags": [
+        "teleporter",
+        "portal",
+        "warp",
+        "astral",
+        "dimension"
+      ],
+      "hash": "c4f491268ed0aadc24d78dcea74c7e262d4aff30ffd370bdd2b5526f2922e26a",
+      "size": 1216
+    },
+    {
+      "id": "tile_bridge_dungeon_ew",
+      "name": "Whispering Dungeon Bridge EW",
+      "type": "tile",
+      "category": "bridges",
+      "style": "dungeon",
+      "path": "assets/tiles/bridges/bridge_dungeon_ew.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing north-south over east-west tunnel for Whispering Dungeon",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "dungeon"
+      ],
+      "hash": "f28cdc409c926d17522a47a0c98377da9b9f6866ce83a9c73728d5291a9efaf7",
+      "size": 482
+    },
+    {
+      "id": "tile_bridge_dungeon_ns",
+      "name": "Whispering Dungeon Bridge NS",
+      "type": "tile",
+      "category": "bridges",
+      "style": "dungeon",
+      "path": "assets/tiles/bridges/bridge_dungeon_ns.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing east-west over north-south tunnel for Whispering Dungeon",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "dungeon"
+      ],
+      "hash": "b2d9a120bd85e1314e48f10adbac2398399966b2f4bc7059967d46d950c6fbbb",
+      "size": 482
+    },
+    {
+      "id": "tile_bridge_generic_ew",
+      "name": "Generic Overpass Bridge (East-West)",
+      "type": "tile",
+      "category": "bridges",
+      "style": "generic",
+      "path": "assets/tiles/bridges/bridge_ew.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Universal bridge overpass spanning North-South with East-West ground tunnel",
       "tags": [
         "tile",
-        "wall",
-        "angled",
-        "2.5d",
-        "dungeon"
-      ]
+        "bridge",
+        "b_ew",
+        "overpass"
+      ],
+      "hash": "0699f6c25d75dc5b1695444dac41136b47c8f17b22c0019d891ea3ec978a00f6",
+      "size": 694
+    },
+    {
+      "id": "tile_bridge_generic_ns",
+      "name": "Generic Overpass Bridge (North-South)",
+      "type": "tile",
+      "category": "bridges",
+      "style": "generic",
+      "path": "assets/tiles/bridges/bridge_ns.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Universal bridge overpass spanning East-West with North-South ground tunnel",
+      "tags": [
+        "tile",
+        "bridge",
+        "b_ns",
+        "overpass"
+      ],
+      "hash": "c308bb6507922d2d1ea9b7e00937ae4bbfcd0d8e1e80673127f5fbfc899e074b",
+      "size": 694
+    },
+    {
+      "id": "tile_bridge_glacial_ew",
+      "name": "Glacial Expanse Bridge EW",
+      "type": "tile",
+      "category": "bridges",
+      "style": "glacial",
+      "path": "assets/tiles/bridges/bridge_glacial_ew.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing north-south over east-west tunnel for Glacial Expanse",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "glacial"
+      ],
+      "hash": "ca89a2262c790c298733ff4845d76c7ffb9044f39e7703d5c1186dc1c58b0ba8",
+      "size": 482
+    },
+    {
+      "id": "tile_bridge_glacial_ns",
+      "name": "Glacial Expanse Bridge NS",
+      "type": "tile",
+      "category": "bridges",
+      "style": "glacial",
+      "path": "assets/tiles/bridges/bridge_glacial_ns.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing east-west over north-south tunnel for Glacial Expanse",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "glacial"
+      ],
+      "hash": "1fcb26ab58e6f2c531783af79aa82850700aa0ca400ee859687c3501a42d1c2f",
+      "size": 482
+    },
+    {
+      "id": "tile_bridge_jungle_ew",
+      "name": "Emerald Overgrowth Bridge EW",
+      "type": "tile",
+      "category": "bridges",
+      "style": "jungle",
+      "path": "assets/tiles/bridges/bridge_jungle_ew.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing north-south over east-west tunnel for Emerald Overgrowth",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "jungle"
+      ],
+      "hash": "8065c6b30b117c2d3e56c8ad444c1f4b220e332395e0ac57882277eff0957dc8",
+      "size": 482
+    },
+    {
+      "id": "tile_bridge_jungle_ns",
+      "name": "Emerald Overgrowth Bridge NS",
+      "type": "tile",
+      "category": "bridges",
+      "style": "jungle",
+      "path": "assets/tiles/bridges/bridge_jungle_ns.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing east-west over north-south tunnel for Emerald Overgrowth",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "jungle"
+      ],
+      "hash": "c9adee4005bfb2095fc97c7d063e886165e4cfd5b0d7bfb4b7bd16af539b84ae",
+      "size": 482
+    },
+    {
+      "id": "tile_bridge_magma_ew",
+      "name": "Molten Chasm Bridge EW",
+      "type": "tile",
+      "category": "bridges",
+      "style": "magma",
+      "path": "assets/tiles/bridges/bridge_magma_ew.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing north-south over east-west tunnel for Molten Chasm",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "magma"
+      ],
+      "hash": "f6c90c3ffd4cc34ee7f57fa3dd59565cfcfaa22a20a1ebf759813873eedeb190",
+      "size": 482
+    },
+    {
+      "id": "tile_bridge_magma_ns",
+      "name": "Molten Chasm Bridge NS",
+      "type": "tile",
+      "category": "bridges",
+      "style": "magma",
+      "path": "assets/tiles/bridges/bridge_magma_ns.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing east-west over north-south tunnel for Molten Chasm",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "magma"
+      ],
+      "hash": "9b02c2e2bb48607aeab7b8c752e2fa69e05c2d23e438ccff151bd81abc8556e3",
+      "size": 482
     },
     {
       "id": "tile_bridge_pillar_deck",
@@ -2430,7 +1776,1189 @@
         "angled",
         "2.5d",
         "deck"
-      ]
+      ],
+      "hash": "42e0170e0cfeea6db2f65617f7b2cc2cd35c94c10485a59b099c9f2ba3c10bd9",
+      "size": 1313
+    },
+    {
+      "id": "tile_bridge_temple_ew",
+      "name": "Sunken Temple Bridge EW",
+      "type": "tile",
+      "category": "bridges",
+      "style": "temple",
+      "path": "assets/tiles/bridges/bridge_temple_ew.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing north-south over east-west tunnel for Sunken Temple",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "temple"
+      ],
+      "hash": "8dc0b5ad5fc29b373725c6c069d007a6fadded1fdacf5a261a81c70941dbfe8a",
+      "size": 482
+    },
+    {
+      "id": "tile_bridge_temple_ns",
+      "name": "Sunken Temple Bridge NS",
+      "type": "tile",
+      "category": "bridges",
+      "style": "temple",
+      "path": "assets/tiles/bridges/bridge_temple_ns.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Overhead bridge span crossing east-west over north-south tunnel for Sunken Temple",
+      "tags": [
+        "bridge",
+        "elevation",
+        "overhead",
+        "temple"
+      ],
+      "hash": "0bb4c10b419f6240a4d60fd37ae8b767dc774bc625f0c59612b0278a8948f40f",
+      "size": 482
+    },
+    {
+      "id": "tile_floor_dungeon",
+      "name": "Whispering Dungeon Floor (Plain)",
+      "type": "tile",
+      "category": "ground",
+      "style": "dungeon",
+      "path": "assets/tiles/ground/floor_dungeon.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Standard stone floor paver for Whispering Dungeon tileset",
+      "tags": [
+        "floor",
+        "dungeon",
+        "ground",
+        "walkable"
+      ],
+      "hash": "3aa160b7b14774fa8ab22dbf33b6694bdd0be715382066689dcd5b56c0cc5867",
+      "size": 671
+    },
+    {
+      "id": "tile_floor_dungeon_cracked",
+      "name": "Whispering Dungeon Floor (Cracked)",
+      "type": "tile",
+      "category": "variations",
+      "style": "dungeon",
+      "path": "assets/tiles/variations/floor_dungeon_cracked.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Aged paver with deep fractures for Whispering Dungeon tileset",
+      "tags": [
+        "floor",
+        "cracked",
+        "variation",
+        "dungeon"
+      ],
+      "hash": "7db484432abe0d7e29dbd9e26a70e05ae25f51a45d7f1d8f91f0b92533f5508d",
+      "size": 701
+    },
+    {
+      "id": "tile_floor_dungeon_runic",
+      "name": "Whispering Dungeon Floor (Runic Inscribed)",
+      "type": "tile",
+      "category": "variations",
+      "style": "dungeon",
+      "path": "assets/tiles/variations/floor_dungeon_runic.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Paver carved with mystical glowing symbols for Whispering Dungeon",
+      "tags": [
+        "floor",
+        "runic",
+        "glyph",
+        "magic",
+        "dungeon"
+      ],
+      "hash": "3580a0e4a6b4bc29153ee81573748fcadcf1b29da3b4417effee961fcd765ad2",
+      "size": 611
+    },
+    {
+      "id": "tile_floor_generic",
+      "name": "Generic Walkable Floor",
+      "type": "tile",
+      "category": "ground",
+      "style": "generic",
+      "path": "assets/tiles/ground/floor.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Clean stone tile floor for generic labyrinth corridors",
+      "tags": [
+        "tile",
+        "floor",
+        "walkable",
+        "ground"
+      ],
+      "hash": "77147a939c7dabeb400049da54d2c116dddcfba61bfa8e550ec41dc61234fc96",
+      "size": 663
+    },
+    {
+      "id": "tile_floor_glacial",
+      "name": "Glacial Expanse Floor (Plain)",
+      "type": "tile",
+      "category": "ground",
+      "style": "glacial",
+      "path": "assets/tiles/ground/floor_glacial.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Standard stone floor paver for Glacial Expanse tileset",
+      "tags": [
+        "floor",
+        "glacial",
+        "ground",
+        "walkable"
+      ],
+      "hash": "f19a779f855295d1e5d6c4fd7dd2c8f7fb54ddc1b87c00d05dc2ba96b6aecbc5",
+      "size": 671
+    },
+    {
+      "id": "tile_floor_glacial_cracked",
+      "name": "Glacial Expanse Floor (Cracked)",
+      "type": "tile",
+      "category": "variations",
+      "style": "glacial",
+      "path": "assets/tiles/variations/floor_glacial_cracked.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Aged paver with deep fractures for Glacial Expanse tileset",
+      "tags": [
+        "floor",
+        "cracked",
+        "variation",
+        "glacial"
+      ],
+      "hash": "d284c3771cd2b479a85692f7644891b54cefce8bede825285fcf66461931f87b",
+      "size": 701
+    },
+    {
+      "id": "tile_floor_glacial_runic",
+      "name": "Glacial Expanse Floor (Runic Inscribed)",
+      "type": "tile",
+      "category": "variations",
+      "style": "glacial",
+      "path": "assets/tiles/variations/floor_glacial_runic.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Paver carved with mystical glowing symbols for Glacial Expanse",
+      "tags": [
+        "floor",
+        "runic",
+        "glyph",
+        "magic",
+        "glacial"
+      ],
+      "hash": "05a92a26c7fd34980a108a60ff5b4465f81d2720eb6839ee0b578c2adc771282",
+      "size": 611
+    },
+    {
+      "id": "tile_floor_jungle",
+      "name": "Emerald Overgrowth Floor (Plain)",
+      "type": "tile",
+      "category": "ground",
+      "style": "jungle",
+      "path": "assets/tiles/ground/floor_jungle.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Standard stone floor paver for Emerald Overgrowth tileset",
+      "tags": [
+        "floor",
+        "jungle",
+        "ground",
+        "walkable"
+      ],
+      "hash": "12df9f29c431a9a4ee84282845584f63437b759b7aed0c18513000f70c3e283e",
+      "size": 669
+    },
+    {
+      "id": "tile_floor_jungle_cracked",
+      "name": "Emerald Overgrowth Floor (Cracked)",
+      "type": "tile",
+      "category": "variations",
+      "style": "jungle",
+      "path": "assets/tiles/variations/floor_jungle_cracked.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Aged paver with deep fractures for Emerald Overgrowth tileset",
+      "tags": [
+        "floor",
+        "cracked",
+        "variation",
+        "jungle"
+      ],
+      "hash": "fc0de8cc934d9c9ebabfa789e7a73f39c4e47e7d6b7ab0581f4980053dcc2da7",
+      "size": 699
+    },
+    {
+      "id": "tile_floor_jungle_runic",
+      "name": "Emerald Overgrowth Floor (Runic Inscribed)",
+      "type": "tile",
+      "category": "variations",
+      "style": "jungle",
+      "path": "assets/tiles/variations/floor_jungle_runic.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Paver carved with mystical glowing symbols for Emerald Overgrowth",
+      "tags": [
+        "floor",
+        "runic",
+        "glyph",
+        "magic",
+        "jungle"
+      ],
+      "hash": "eef2c1d554c0ec82e15b4440c6df187e4ffffac9c448fc0c42eb4d1601379ae6",
+      "size": 611
+    },
+    {
+      "id": "tile_floor_magma",
+      "name": "Molten Chasm Floor (Plain)",
+      "type": "tile",
+      "category": "ground",
+      "style": "magma",
+      "path": "assets/tiles/ground/floor_magma.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Standard stone floor paver for Molten Chasm tileset",
+      "tags": [
+        "floor",
+        "magma",
+        "ground",
+        "walkable"
+      ],
+      "hash": "309ad131d338176a5d08472e9ee234051c445b0572e5e796fcce65a154c3315b",
+      "size": 667
+    },
+    {
+      "id": "tile_floor_magma_cracked",
+      "name": "Molten Chasm Floor (Cracked)",
+      "type": "tile",
+      "category": "variations",
+      "style": "magma",
+      "path": "assets/tiles/variations/floor_magma_cracked.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Aged paver with deep fractures for Molten Chasm tileset",
+      "tags": [
+        "floor",
+        "cracked",
+        "variation",
+        "magma"
+      ],
+      "hash": "65946f244b6404bec931afa6b09619b2fde44368a442723114717a6757cac0ee",
+      "size": 697
+    },
+    {
+      "id": "tile_floor_magma_runic",
+      "name": "Molten Chasm Floor (Runic Inscribed)",
+      "type": "tile",
+      "category": "variations",
+      "style": "magma",
+      "path": "assets/tiles/variations/floor_magma_runic.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Paver carved with mystical glowing symbols for Molten Chasm",
+      "tags": [
+        "floor",
+        "runic",
+        "glyph",
+        "magic",
+        "magma"
+      ],
+      "hash": "68799a40d06fad413cb94e01b828b373421634e868c25e71e25f83b550a9a81d",
+      "size": 611
+    },
+    {
+      "id": "tile_floor_temple",
+      "name": "Sunken Temple Floor (Plain)",
+      "type": "tile",
+      "category": "ground",
+      "style": "temple",
+      "path": "assets/tiles/ground/floor_temple.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Standard stone floor paver for Sunken Temple tileset",
+      "tags": [
+        "floor",
+        "temple",
+        "ground",
+        "walkable"
+      ],
+      "hash": "36434b598c501a24d7da2690c9ea3cc5f08a12e7290185499ac925693ad87e84",
+      "size": 669
+    },
+    {
+      "id": "tile_floor_temple_cracked",
+      "name": "Sunken Temple Floor (Cracked)",
+      "type": "tile",
+      "category": "variations",
+      "style": "temple",
+      "path": "assets/tiles/variations/floor_temple_cracked.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Aged paver with deep fractures for Sunken Temple tileset",
+      "tags": [
+        "floor",
+        "cracked",
+        "variation",
+        "temple"
+      ],
+      "hash": "c277f291c80c3754c42ae0eab37457d63a9668e2482f552f61851789bda07ec5",
+      "size": 699
+    },
+    {
+      "id": "tile_floor_temple_runic",
+      "name": "Sunken Temple Floor (Runic Inscribed)",
+      "type": "tile",
+      "category": "variations",
+      "style": "temple",
+      "path": "assets/tiles/variations/floor_temple_runic.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Paver carved with mystical glowing symbols for Sunken Temple",
+      "tags": [
+        "floor",
+        "runic",
+        "glyph",
+        "magic",
+        "temple"
+      ],
+      "hash": "30b45e2391314a5735eac38d5867664d4f8998a39fb21150f4072dc2e591826a",
+      "size": 611
+    },
+    {
+      "id": "tile_ramp_dungeon_east",
+      "name": "Whispering Dungeon Ramp (EAST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "dungeon",
+      "path": "assets/tiles/ramps/ramp_dungeon_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward east for Whispering Dungeon",
+      "tags": [
+        "ramp",
+        "elevation",
+        "east",
+        "dungeon"
+      ],
+      "hash": "85923d1cc0c6b466e4cb70e1b6859c64a58afcd03fdfddbda8bd96a084050332",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_dungeon_north",
+      "name": "Whispering Dungeon Ramp (NORTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "dungeon",
+      "path": "assets/tiles/ramps/ramp_dungeon_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward north for Whispering Dungeon",
+      "tags": [
+        "ramp",
+        "elevation",
+        "north",
+        "dungeon"
+      ],
+      "hash": "b9aad679e9692b0f81fbb9ac9bfdb3244867137f800b839cc0f33caa13afd3a8",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_dungeon_south",
+      "name": "Whispering Dungeon Ramp (SOUTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "dungeon",
+      "path": "assets/tiles/ramps/ramp_dungeon_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward south for Whispering Dungeon",
+      "tags": [
+        "ramp",
+        "elevation",
+        "south",
+        "dungeon"
+      ],
+      "hash": "5bd6192b204e1ee04ae65364234eee70525c85ae1e21784d78571b24575b8d40",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_dungeon_west",
+      "name": "Whispering Dungeon Ramp (WEST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "dungeon",
+      "path": "assets/tiles/ramps/ramp_dungeon_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward west for Whispering Dungeon",
+      "tags": [
+        "ramp",
+        "elevation",
+        "west",
+        "dungeon"
+      ],
+      "hash": "a6b2ce57cd84ca0e52421a522299acc6e841bbbf80613c244450da8eab64a831",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_generic_east",
+      "name": "Generic Inclined Ramp (East)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "generic",
+      "path": "assets/tiles/ramps/ramp_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Universal directional ramp ascending East from Ground to Overhead",
+      "tags": [
+        "tile",
+        "ramp",
+        "ramp_e",
+        "east"
+      ],
+      "hash": "bf96f53bcf3ce08e3417747234af96b60bfa2d9fa740d46389a3d89906960545",
+      "size": 518
+    },
+    {
+      "id": "tile_ramp_generic_north",
+      "name": "Generic Inclined Ramp (North)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "generic",
+      "path": "assets/tiles/ramps/ramp_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Universal directional ramp ascending North from Ground to Overhead",
+      "tags": [
+        "tile",
+        "ramp",
+        "ramp_n",
+        "north"
+      ],
+      "hash": "3e534309f3887adafca21d8e3224c84cc6e420d458f87c9168e00f3310551947",
+      "size": 518
+    },
+    {
+      "id": "tile_ramp_generic_south",
+      "name": "Generic Inclined Ramp (South)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "generic",
+      "path": "assets/tiles/ramps/ramp_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Universal directional ramp ascending South from Ground to Overhead",
+      "tags": [
+        "tile",
+        "ramp",
+        "ramp_s",
+        "south"
+      ],
+      "hash": "833fa6434e2d70784ba097170f3adb9ca71e5a29f83ef3e17648093e2141728c",
+      "size": 518
+    },
+    {
+      "id": "tile_ramp_generic_west",
+      "name": "Generic Inclined Ramp (West)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "generic",
+      "path": "assets/tiles/ramps/ramp_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Universal directional ramp ascending West from Ground to Overhead",
+      "tags": [
+        "tile",
+        "ramp",
+        "ramp_w",
+        "west"
+      ],
+      "hash": "fb9ee6a8ec536cdf44cf6a789bc8362b1d65483d6f9df9e5c60e3596321585b4",
+      "size": 518
+    },
+    {
+      "id": "tile_ramp_glacial_east",
+      "name": "Glacial Expanse Ramp (EAST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "glacial",
+      "path": "assets/tiles/ramps/ramp_glacial_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward east for Glacial Expanse",
+      "tags": [
+        "ramp",
+        "elevation",
+        "east",
+        "glacial"
+      ],
+      "hash": "a6a9851272c34fbab3981c1a4702f37a4e25536e0ebe654f027324310cb8d539",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_glacial_north",
+      "name": "Glacial Expanse Ramp (NORTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "glacial",
+      "path": "assets/tiles/ramps/ramp_glacial_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward north for Glacial Expanse",
+      "tags": [
+        "ramp",
+        "elevation",
+        "north",
+        "glacial"
+      ],
+      "hash": "88ab3a3ce5f7ef64f047735de2e61c4bec6cf2f0efee42c160c8e819d6d9e065",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_glacial_south",
+      "name": "Glacial Expanse Ramp (SOUTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "glacial",
+      "path": "assets/tiles/ramps/ramp_glacial_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward south for Glacial Expanse",
+      "tags": [
+        "ramp",
+        "elevation",
+        "south",
+        "glacial"
+      ],
+      "hash": "a07cd7db2eb88ca63c078703a2267a8a9176ef5299170666694899540df51fe3",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_glacial_west",
+      "name": "Glacial Expanse Ramp (WEST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "glacial",
+      "path": "assets/tiles/ramps/ramp_glacial_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward west for Glacial Expanse",
+      "tags": [
+        "ramp",
+        "elevation",
+        "west",
+        "glacial"
+      ],
+      "hash": "c37e83478b6d69cc2979896ca9679d46a4764e2838b30bdf744e1da26418c91e",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_jungle_east",
+      "name": "Emerald Overgrowth Ramp (EAST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "jungle",
+      "path": "assets/tiles/ramps/ramp_jungle_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward east for Emerald Overgrowth",
+      "tags": [
+        "ramp",
+        "elevation",
+        "east",
+        "jungle"
+      ],
+      "hash": "4e9e1674bef8ac7c8ee5699a2f752c51aec296c3f4a679a0c43af7d3408336d8",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_jungle_north",
+      "name": "Emerald Overgrowth Ramp (NORTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "jungle",
+      "path": "assets/tiles/ramps/ramp_jungle_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward north for Emerald Overgrowth",
+      "tags": [
+        "ramp",
+        "elevation",
+        "north",
+        "jungle"
+      ],
+      "hash": "4b3651398ee4ca10d60475dc14c4d5340745a9b3b0500e770a774eb469c94ec6",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_jungle_south",
+      "name": "Emerald Overgrowth Ramp (SOUTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "jungle",
+      "path": "assets/tiles/ramps/ramp_jungle_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward south for Emerald Overgrowth",
+      "tags": [
+        "ramp",
+        "elevation",
+        "south",
+        "jungle"
+      ],
+      "hash": "3e980b83e3faa9d4b34bf7d7a1520c77e26106e34b4688ce81b2214d941c9e43",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_jungle_west",
+      "name": "Emerald Overgrowth Ramp (WEST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "jungle",
+      "path": "assets/tiles/ramps/ramp_jungle_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward west for Emerald Overgrowth",
+      "tags": [
+        "ramp",
+        "elevation",
+        "west",
+        "jungle"
+      ],
+      "hash": "8a402c7357a82a0be23f1daa2f691c51c30b981b91c18aa6c31a335db3f41306",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_magma_east",
+      "name": "Molten Chasm Ramp (EAST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "magma",
+      "path": "assets/tiles/ramps/ramp_magma_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward east for Molten Chasm",
+      "tags": [
+        "ramp",
+        "elevation",
+        "east",
+        "magma"
+      ],
+      "hash": "82678eed227c3d4c9f2721745f38d10cd6d86aab9506a6eb4a581df059f27be9",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_magma_north",
+      "name": "Molten Chasm Ramp (NORTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "magma",
+      "path": "assets/tiles/ramps/ramp_magma_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward north for Molten Chasm",
+      "tags": [
+        "ramp",
+        "elevation",
+        "north",
+        "magma"
+      ],
+      "hash": "2ba6f946701dd6a2c6cf92543f124fcff18add410e373b6c0656b928028bbd3c",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_magma_south",
+      "name": "Molten Chasm Ramp (SOUTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "magma",
+      "path": "assets/tiles/ramps/ramp_magma_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward south for Molten Chasm",
+      "tags": [
+        "ramp",
+        "elevation",
+        "south",
+        "magma"
+      ],
+      "hash": "5c298cfa588bfa295abe614720189b0261899e9e7bedbfcb9eb8262cd9616994",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_magma_west",
+      "name": "Molten Chasm Ramp (WEST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "magma",
+      "path": "assets/tiles/ramps/ramp_magma_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward west for Molten Chasm",
+      "tags": [
+        "ramp",
+        "elevation",
+        "west",
+        "magma"
+      ],
+      "hash": "8fe338f7e06aab50e3a1b9eb6b112751d331e33282354b6223e4a40bc94df71e",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_temple_east",
+      "name": "Sunken Temple Ramp (EAST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "temple",
+      "path": "assets/tiles/ramps/ramp_temple_east.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward east for Sunken Temple",
+      "tags": [
+        "ramp",
+        "elevation",
+        "east",
+        "temple"
+      ],
+      "hash": "ba9fc1cf9d9b51ad4e6699031d884e66b83807cf2095579c15f5631e731ac177",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_temple_north",
+      "name": "Sunken Temple Ramp (NORTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "temple",
+      "path": "assets/tiles/ramps/ramp_temple_north.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward north for Sunken Temple",
+      "tags": [
+        "ramp",
+        "elevation",
+        "north",
+        "temple"
+      ],
+      "hash": "fecad7aea87a7e314f6c624efdc0f96008bfa83d8d939dd3a944c249d773e7ef",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_temple_south",
+      "name": "Sunken Temple Ramp (SOUTH)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "temple",
+      "path": "assets/tiles/ramps/ramp_temple_south.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward south for Sunken Temple",
+      "tags": [
+        "ramp",
+        "elevation",
+        "south",
+        "temple"
+      ],
+      "hash": "266a341d84e1f5d22ac94ac322525441bf38fd0001e0ed5d8a3131b4b387dba0",
+      "size": 271
+    },
+    {
+      "id": "tile_ramp_temple_west",
+      "name": "Sunken Temple Ramp (WEST)",
+      "type": "tile",
+      "category": "ramps",
+      "style": "temple",
+      "path": "assets/tiles/ramps/ramp_temple_west.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Elevation ramp sloping toward west for Sunken Temple",
+      "tags": [
+        "ramp",
+        "elevation",
+        "west",
+        "temple"
+      ],
+      "hash": "4fa2a81550d956f725f2555c2399343e2867f178d52562a930c9a3349bc16374",
+      "size": 271
+    },
+    {
+      "id": "tile_wall_angled_dungeon",
+      "name": "2.5D Angled Dungeon Wall",
+      "type": "tile",
+      "category": "angled",
+      "style": "dungeon",
+      "path": "assets/tiles/angled/wall_angled_dungeon.svg",
+      "viewBox": "0 0 64 64",
+      "description": "2.5D oblique perspective wall with elevated top cap and vertical front facade",
+      "tags": [
+        "tile",
+        "wall",
+        "angled",
+        "2.5d",
+        "dungeon"
+      ],
+      "hash": "bcfcc0fc081f7043acc203fe888ac9847cf561ebb1d5319920a3cbcf89a0e41b",
+      "size": 1208
+    },
+    {
+      "id": "tile_wall_dungeon",
+      "name": "Whispering Dungeon Wall (Solid)",
+      "type": "tile",
+      "category": "ground",
+      "style": "dungeon",
+      "path": "assets/tiles/ground/wall_dungeon.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Solid stone barrier block for Whispering Dungeon",
+      "tags": [
+        "wall",
+        "solid",
+        "barrier",
+        "dungeon"
+      ],
+      "hash": "62aa22be480a9c6bb5c72740d73fbbe652ff8fabe14526e1ad404eae2999c1f7",
+      "size": 704
+    },
+    {
+      "id": "tile_wall_dungeon_grate",
+      "name": "Whispering Dungeon Wall (Iron Grate Window)",
+      "type": "tile",
+      "category": "variations",
+      "style": "dungeon",
+      "path": "assets/tiles/variations/wall_dungeon_grate.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with recessed barred peek grate",
+      "tags": [
+        "wall",
+        "grate",
+        "window",
+        "bars",
+        "dungeon"
+      ],
+      "hash": "21d8d840f75f8433a8a84ea2d9c9fa949f12168b415bb73fb25acb30ac64f4f3",
+      "size": 672
+    },
+    {
+      "id": "tile_wall_dungeon_torch",
+      "name": "Whispering Dungeon Wall (Torch Sconce)",
+      "type": "tile",
+      "category": "variations",
+      "style": "dungeon",
+      "path": "assets/tiles/variations/wall_dungeon_torch.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
+      "tags": [
+        "wall",
+        "torch",
+        "sconce",
+        "light",
+        "dungeon"
+      ],
+      "hash": "76e9ac2445fba993b989a93b3f85bd73149591660136043a7f4b08dd2ee4af0b",
+      "size": 848
+    },
+    {
+      "id": "tile_wall_glacial",
+      "name": "Glacial Expanse Wall (Solid)",
+      "type": "tile",
+      "category": "ground",
+      "style": "glacial",
+      "path": "assets/tiles/ground/wall_glacial.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Solid stone barrier block for Glacial Expanse",
+      "tags": [
+        "wall",
+        "solid",
+        "barrier",
+        "glacial"
+      ],
+      "hash": "210ff4fa72f811f93b41e3100bd6246ac7222afdc31d6f85838e9afe69b9face",
+      "size": 704
+    },
+    {
+      "id": "tile_wall_glacial_grate",
+      "name": "Glacial Expanse Wall (Iron Grate Window)",
+      "type": "tile",
+      "category": "variations",
+      "style": "glacial",
+      "path": "assets/tiles/variations/wall_glacial_grate.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with recessed barred peek grate",
+      "tags": [
+        "wall",
+        "grate",
+        "window",
+        "bars",
+        "glacial"
+      ],
+      "hash": "c4636a0c335e2608cd11cc1c22723cf4e4593a4104b2289774f5fe4cad760907",
+      "size": 672
+    },
+    {
+      "id": "tile_wall_glacial_torch",
+      "name": "Glacial Expanse Wall (Torch Sconce)",
+      "type": "tile",
+      "category": "variations",
+      "style": "glacial",
+      "path": "assets/tiles/variations/wall_glacial_torch.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
+      "tags": [
+        "wall",
+        "torch",
+        "sconce",
+        "light",
+        "glacial"
+      ],
+      "hash": "29545676640ae642de77b63afb1102f46097b9ded054325f29afbea3d638cac6",
+      "size": 848
+    },
+    {
+      "id": "tile_wall_jungle",
+      "name": "Emerald Overgrowth Wall (Solid)",
+      "type": "tile",
+      "category": "ground",
+      "style": "jungle",
+      "path": "assets/tiles/ground/wall_jungle.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Solid stone barrier block for Emerald Overgrowth",
+      "tags": [
+        "wall",
+        "solid",
+        "barrier",
+        "jungle"
+      ],
+      "hash": "160db453b5d970d30dd71a458129ec9d707526e876cf417617a3bbdcd507c2c1",
+      "size": 702
+    },
+    {
+      "id": "tile_wall_jungle_grate",
+      "name": "Emerald Overgrowth Wall (Iron Grate Window)",
+      "type": "tile",
+      "category": "variations",
+      "style": "jungle",
+      "path": "assets/tiles/variations/wall_jungle_grate.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with recessed barred peek grate",
+      "tags": [
+        "wall",
+        "grate",
+        "window",
+        "bars",
+        "jungle"
+      ],
+      "hash": "edf7270019d6c6f17e66977659eb77f4c0429a0f71112bb760410889ef2ec95f",
+      "size": 672
+    },
+    {
+      "id": "tile_wall_jungle_torch",
+      "name": "Emerald Overgrowth Wall (Torch Sconce)",
+      "type": "tile",
+      "category": "variations",
+      "style": "jungle",
+      "path": "assets/tiles/variations/wall_jungle_torch.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
+      "tags": [
+        "wall",
+        "torch",
+        "sconce",
+        "light",
+        "jungle"
+      ],
+      "hash": "c49e2b0969e9da7bb7988972ad7dcf76ae0440d93bb551f44387b67dedb794ba",
+      "size": 846
+    },
+    {
+      "id": "tile_wall_magma",
+      "name": "Molten Chasm Wall (Solid)",
+      "type": "tile",
+      "category": "ground",
+      "style": "magma",
+      "path": "assets/tiles/ground/wall_magma.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Solid stone barrier block for Molten Chasm",
+      "tags": [
+        "wall",
+        "solid",
+        "barrier",
+        "magma"
+      ],
+      "hash": "a48f3e22ded78d1770bec9edc19a8e097def83f77c6e5bdf5e6f4f7919a34ca7",
+      "size": 700
+    },
+    {
+      "id": "tile_wall_magma_grate",
+      "name": "Molten Chasm Wall (Iron Grate Window)",
+      "type": "tile",
+      "category": "variations",
+      "style": "magma",
+      "path": "assets/tiles/variations/wall_magma_grate.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with recessed barred peek grate",
+      "tags": [
+        "wall",
+        "grate",
+        "window",
+        "bars",
+        "magma"
+      ],
+      "hash": "a97c966ac69fa4afdaff4c31e39f2338dc3e90bd2fcc162c5c0b4240460ebbee",
+      "size": 672
+    },
+    {
+      "id": "tile_wall_magma_torch",
+      "name": "Molten Chasm Wall (Torch Sconce)",
+      "type": "tile",
+      "category": "variations",
+      "style": "magma",
+      "path": "assets/tiles/variations/wall_magma_torch.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
+      "tags": [
+        "wall",
+        "torch",
+        "sconce",
+        "light",
+        "magma"
+      ],
+      "hash": "ddb8c7ada9ca863a032b1044501b7004345390a06b533a9f23a9149c5d0ec427",
+      "size": 844
+    },
+    {
+      "id": "tile_wall_overgrowth",
+      "name": "Overgrown Foliage Wall",
+      "type": "tile",
+      "category": "variations",
+      "style": "jungle",
+      "path": "assets/tiles/ground/wall_overgrowth.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall overrun by creeping vines, moss, and tangled roots",
+      "tags": [
+        "tile",
+        "wall",
+        "jungle",
+        "overgrowth"
+      ],
+      "hash": "80684993d6f144a6dbe0b6b9b2d06a1b4a205f418d9bb2adef363082add80ee5",
+      "size": 769
+    },
+    {
+      "id": "tile_wall_temple",
+      "name": "Sunken Temple Wall (Solid)",
+      "type": "tile",
+      "category": "ground",
+      "style": "temple",
+      "path": "assets/tiles/ground/wall_temple.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Solid stone barrier block for Sunken Temple",
+      "tags": [
+        "wall",
+        "solid",
+        "barrier",
+        "temple"
+      ],
+      "hash": "f09679b5d245bdc29380f938f9a03b8a7039a23c970c3143bc4534d9d5a69b8b",
+      "size": 702
+    },
+    {
+      "id": "tile_wall_temple_grate",
+      "name": "Sunken Temple Wall (Iron Grate Window)",
+      "type": "tile",
+      "category": "variations",
+      "style": "temple",
+      "path": "assets/tiles/variations/wall_temple_grate.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with recessed barred peek grate",
+      "tags": [
+        "wall",
+        "grate",
+        "window",
+        "bars",
+        "temple"
+      ],
+      "hash": "7629f670ad47991e26cd10a1ff681b144c3806c5e33192c3f0e554e25c3eb638",
+      "size": 672
+    },
+    {
+      "id": "tile_wall_temple_torch",
+      "name": "Sunken Temple Wall (Torch Sconce)",
+      "type": "tile",
+      "category": "variations",
+      "style": "temple",
+      "path": "assets/tiles/variations/wall_temple_torch.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Stone wall with mounted wrought-iron illuminated torch sconce",
+      "tags": [
+        "wall",
+        "torch",
+        "sconce",
+        "light",
+        "temple"
+      ],
+      "hash": "81d5b438c039018498d6498c45a641d3cb1bfa4902517ff5fb7ecdff14264c6b",
+      "size": 846
+    },
+    {
+      "id": "tool_eraser",
+      "name": "Eraser Tool",
+      "type": "ui",
+      "category": "tools",
+      "style": "icon",
+      "path": "assets/ui/tool_eraser.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Editor user interface tool icon (Eraser Tool)",
+      "tags": [
+        "ui",
+        "tool",
+        "editor"
+      ],
+      "hash": "f1e71aadb579491cfd95568fa089db2594e57edfd742aa0f5a8e35cb56e35ba2",
+      "size": 250
+    },
+    {
+      "id": "tool_fill",
+      "name": "Fill Bucket Tool",
+      "type": "ui",
+      "category": "tools",
+      "style": "icon",
+      "path": "assets/ui/tool_fill.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Editor user interface tool icon (Fill Bucket Tool)",
+      "tags": [
+        "ui",
+        "tool",
+        "editor"
+      ],
+      "hash": "cd33587e25e9fcf3370ac984fe0b6332161987f9e8712d656e4541ee19390637",
+      "size": 250
+    },
+    {
+      "id": "tool_line",
+      "name": "Line Tool",
+      "type": "ui",
+      "category": "tools",
+      "style": "icon",
+      "path": "assets/ui/tool_line.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Editor user interface tool icon (Line Tool)",
+      "tags": [
+        "ui",
+        "tool",
+        "editor"
+      ],
+      "hash": "ae4a3caf60c4920607e21dabf20f2962d65ae87471c4fcae3b38d5d725cd7390",
+      "size": 250
+    },
+    {
+      "id": "tool_move",
+      "name": "Grab Tool",
+      "type": "ui",
+      "category": "tools",
+      "style": "icon",
+      "path": "assets/ui/tool_move.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Editor user interface tool icon (Grab Tool)",
+      "tags": [
+        "ui",
+        "tool",
+        "editor"
+      ],
+      "hash": "960e551168d81a41efa34a58fbc882438ccb59cf80a40c4a427846c403d7f4cd",
+      "size": 249
+    },
+    {
+      "id": "tool_pencil",
+      "name": "Pencil Tool",
+      "type": "ui",
+      "category": "tools",
+      "style": "icon",
+      "path": "assets/ui/tool_pencil.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Editor user interface tool icon (Pencil Tool)",
+      "tags": [
+        "ui",
+        "tool",
+        "editor"
+      ],
+      "hash": "cbc7daf0667636ddf75429f352c901f4c57fde50920e09b21a06686976bb2556",
+      "size": 252
+    },
+    {
+      "id": "tool_select",
+      "name": "Select Tool",
+      "type": "ui",
+      "category": "tools",
+      "style": "icon",
+      "path": "assets/ui/tool_select.svg",
+      "viewBox": "0 0 64 64",
+      "description": "Editor user interface tool icon (Select Tool)",
+      "tags": [
+        "ui",
+        "tool",
+        "editor"
+      ],
+      "hash": "ae1f822f5cd9e768fa9b1851845318d27fc39af73ecc2f408be17228021a5719",
+      "size": 250
     }
   ]
 }
