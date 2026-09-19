@@ -407,7 +407,7 @@ export class GameLoop {
    * @returns {boolean}
    */
   tryMoveDirection(direction) {
-    if (this.player.isMoving || this.camera.mode === 'freepan') return false;
+    if (this.player.isMoving || this.camera.mode === 'freepan' || (this.camera?.isRotating?.() ?? false)) return false;
     const angle = this.camera?.getDiscreteRotation?.() ?? 0;
     const mapping = SCREEN_TO_WORLD_DELTAS[angle] || SCREEN_TO_WORLD_DELTAS[0];
     const delta = mapping[direction?.toUpperCase()];
@@ -749,7 +749,7 @@ export class GameLoop {
    * Check for input direction and initiate player movement (screen-relative)
    */
   processPlayerMovement() {
-    if (this.player.isMoving || this.camera.mode === 'freepan') return;
+    if (this.player.isMoving || this.camera.mode === 'freepan' || (this.camera?.isRotating?.() ?? false)) return;
 
     let screenDx = 0;
     let screenDy = 0;
@@ -796,7 +796,7 @@ export class GameLoop {
    * @returns {boolean} Whether movement was allowed and started
    */
   tryMove(targetX, targetY) {
-    if (this.player.isMoving || this.camera.mode === 'freepan') return false;
+    if (this.player.isMoving || this.camera.mode === 'freepan' || (this.camera?.isRotating?.() ?? false)) return false;
 
     // Check collision & elevation change
     const check = CollisionEngine.checkMove(

@@ -57,6 +57,20 @@ export class GameRenderer {
     // Viewport bounds (performance budget optimization: only iterate visible tiles)
     const bounds = camera.getViewportBounds(mazeW, mazeH, 2);
 
+    // Apply smooth unified canvas rotation during camera rotation transition
+    const isRotating = camera && typeof camera.isRotating === 'function' && camera.isRotating();
+    if (isRotating) {
+      let deltaDeg = (camera.rotation - camera.targetRotation) % 360;
+      if (deltaDeg > 180) deltaDeg -= 360;
+      if (deltaDeg < -180) deltaDeg += 360;
+      const deltaRad = (deltaDeg * Math.PI) / 180;
+
+      ctx.save();
+      ctx.translate(this.canvas.width / 2, this.canvas.height / 2);
+      ctx.rotate(-deltaRad);
+      ctx.translate(-this.canvas.width / 2, -this.canvas.height / 2);
+    }
+
     if (this.perspective === 'angled') {
       this.renderAngledPipeline(level, player, entities, camera, fog, bounds, theme, tileSize);
     } else {
@@ -65,6 +79,10 @@ export class GameRenderer {
 
     // Render Particle Effects, Shockwaves, and In-World Floating Text
     this.renderWorldEffects(ctx, camera);
+
+    if (isRotating) {
+      ctx.restore();
+    }
   }
 
   /**
@@ -83,7 +101,7 @@ export class GameRenderer {
     this.renderOverheadLayer(ctx, level, bounds, camera, theme);
     this.renderEntities(ctx, entities, ELEVATION.OVERHEAD, camera, fog);
 
-    const playerScreen = camera.worldToScreen(player.worldX, player.worldY);
+    const playerScreen = camera.worldToScreen(player.worldX, player.worldY, true);
     if (player.hasTorch && player.hasTorch()) {
       ctx.save();
       const pulse = Math.sin(this.exitPulseTimer * 1.5) * 0.1 + 0.9;
@@ -451,7 +469,7 @@ export class GameRenderer {
 
     // Compute screen coordinates and sort ascending by screen.y (back to front in screen space)
     for (const item of drawables) {
-      item.screen = camera.worldToScreen(item.worldX, item.worldY);
+      item.screen = camera.worldToScreen(item.worldX, item.worldY, true);
     }
     drawables.sort((a, b) => a.screen.y - b.screen.y);
 
@@ -494,7 +512,7 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const tile = ground[y]?.[x];
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         if (tile === TILES.WALL) {
           // Base wall block
@@ -746,8 +764,8 @@ export class GameRenderer {
 
       const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
       const screen = isContinuous
-        ? camera.worldToScreen(entity.worldX, entity.worldY)
-        : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize);
+        ? camera.worldToScreen(entity.worldX, entity.worldY, true)
+        : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize, true);
       entity.render(ctx, screen.x, screen.y, tileSize, this.perspective);
     }
   }
@@ -761,7 +779,7 @@ export class GameRenderer {
     if (fog && !fog.isExplored(x, y)) return;
 
     const tileSize = camera.tileSize;
-    const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+    const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
 
@@ -876,7 +894,7 @@ export class GameRenderer {
    */
   renderExitStairs(ctx, exitX, exitY, camera, theme) {
     const tileSize = camera.tileSize;
-    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize);
+    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
     const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
@@ -936,7 +954,7 @@ export class GameRenderer {
    */
   renderExitArchway(ctx, exitX, exitY, camera, theme) {
     const tileSize = camera.tileSize;
-    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize);
+    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
     const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
@@ -974,7 +992,7 @@ export class GameRenderer {
     if (fog && !fog.isExplored(exitX, exitY)) return;
 
     const tileSize = camera.tileSize;
-    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize);
+    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
     const radius = tileSize * 0.4;
@@ -1036,7 +1054,7 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const vis = fog.getVisibility(x, y);
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         if (vis === FOG_STATE.UNEXPLORED) {
           // Solid Black Mask
@@ -1153,7 +1171,7 @@ export class GameRenderer {
     if (this.shockwaves.length > 0) {
       ctx.save();
       for (const sw of this.shockwaves) {
-        const screen = camera.worldToScreen(sw.x, sw.y);
+        const screen = camera.worldToScreen(sw.x, sw.y, true);
         ctx.globalAlpha = Math.max(0, sw.life * 0.85);
         ctx.strokeStyle = sw.color;
         ctx.shadowColor = sw.color;
@@ -1170,7 +1188,7 @@ export class GameRenderer {
     if (this.particles.length > 0) {
       ctx.save();
       for (const p of this.particles) {
-        const screen = camera.worldToScreen(p.x, p.y);
+        const screen = camera.worldToScreen(p.x, p.y, true);
         ctx.globalAlpha = Math.max(0, p.life);
         ctx.fillStyle = p.color;
         ctx.beginPath();
@@ -1184,7 +1202,7 @@ export class GameRenderer {
     if (this.floatingTexts.length > 0) {
       ctx.save();
       for (const ft of this.floatingTexts) {
-        const screen = camera.worldToScreen(ft.x, ft.y);
+        const screen = camera.worldToScreen(ft.x, ft.y, true);
         const alpha = Math.min(1, ft.life * 1.5);
         ctx.globalAlpha = Math.max(0, alpha);
         ctx.font = 'bold 12px "JetBrains Mono", sans-serif';
@@ -1301,7 +1319,7 @@ export class GameRenderer {
         if (ground[y]?.[x] !== TILES.WALL) continue;
 
         const hasSouthCorridor = ground[y + 1]?.[x] !== TILES.WALL && ground[y + 1]?.[x] !== undefined;
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize);
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
         const sy = screen.y - heightOffset;
         const hash = this.getDecorHash(x, y, seed);
 

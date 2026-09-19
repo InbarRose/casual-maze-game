@@ -150,4 +150,52 @@ describe('Engine > Camera Rotation & Projections', () => {
     assertEqual(SCREEN_TO_WORLD_DELTAS[270].RIGHT.dx, 0);
     assertEqual(SCREEN_TO_WORLD_DELTAS[270].RIGHT.dy, -1);
   });
+
+  it('tracks isRotating() lifecycle during smooth rotation tweening', () => {
+    const camera = new Camera(800, 600, 32);
+    assertEqual(camera.isRotating(), false);
+
+    camera.rotateRight();
+    assertEqual(camera.isRotating(), true, 'isRotating is true after rotateRight()');
+
+    // Simulate partial tween frames
+    camera.update(400, 300, 0.016, 20, 20);
+    assertEqual(camera.isRotating(), true, 'Still rotating mid-tween');
+
+    // Complete rotation by stepping time forward
+    for (let i = 0; i < 30; i++) {
+      camera.update(400, 300, 0.05, 20, 20);
+    }
+    assertEqual(camera.isRotating(), false, 'isRotating becomes false when rotation finishes');
+    assertEqual(camera.rotation, 90);
+    assertEqual(camera.getDiscreteRotation(), 90);
+  });
+
+  it('maintains strict relative coordinate alignment between player and bridge tiles across rotations', () => {
+    const camera = new Camera(800, 600, 32);
+    const tileSize = 32;
+
+    // Bridge cell at (6, 5), player centered on the bridge
+    const bridgeTileX = 6;
+    const bridgeTileY = 5;
+    const playerWorldX = bridgeTileX * tileSize + tileSize / 2;
+    const playerWorldY = bridgeTileY * tileSize + tileSize / 2;
+
+    camera.snapTo(playerWorldX, playerWorldY, 20, 20);
+
+    for (const angle of ROTATION_ANGLES) {
+      camera.setRotation(angle, true);
+      const tileScreen = camera.worldToScreen(bridgeTileX * tileSize, bridgeTileY * tileSize, true);
+      const playerScreen = camera.worldToScreen(playerWorldX, playerWorldY, true);
+
+      // Player center relative to tile top-left must stay exactly (16, 16) rotated
+      const relX = playerScreen.x - tileScreen.x;
+      const relY = playerScreen.y - tileScreen.y;
+      const dist = Math.hypot(relX, relY);
+
+      // Distance from tile origin (0,0) to center (16,16) is sqrt(16^2 + 16^2) ≈ 22.627
+      const expectedDist = Math.hypot(tileSize / 2, tileSize / 2);
+      assert(Math.abs(dist - expectedDist) <= 1.0, `Tile and player distance preserved at ${angle}° (got ${dist}, expected ${expectedDist})`);
+    }
+  });
 });
