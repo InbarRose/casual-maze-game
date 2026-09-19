@@ -289,6 +289,8 @@
     import { GameLoop } from './js/engine/game-loop.js';
     import { globalEvents } from './js/core/events.js';
     import { StorageManager } from './js/core/storage.js';
+    import { getStoryline, getNextStoryChapter } from './js/stories/storylines.js';
+
 
     // Global Runtime Error Capture & Telemetry Routing
     window.addEventListener('error', (event) => {
@@ -376,12 +378,18 @@
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${tenths}`;
     }
 
-    // Check if in custom playtest mode or tutorial mode
+    // Check if in custom playtest mode, story mode, or campaign
     const urlParams = new URLSearchParams(window.location.search);
     const isCustomMode = urlParams.get('mode') === 'custom' || currentLevel.id === 'custom' || currentLevel.id.startsWith('project_');
+    const rawStoryParam = urlParams.get('story') ?? urlParams.get('story_id') ?? urlParams.get('saga');
     const isTutorial = currentLevel.id.startsWith('tutorial_') || urlParams.get('mode') === 'tutorial' || urlParams.has('tutorial');
     const tutorialMatch = currentLevel.id.match(/^tutorial_(\d+)$/i) || (urlParams.get('tutorial') ? [, urlParams.get('tutorial')] : null);
     const currTutNum = tutorialMatch ? parseInt(tutorialMatch[1], 10) : null;
+
+    const isStoryMode = !isCustomMode && (!!currentLevel.storyId || !!rawStoryParam || isTutorial || currentLevel.id.startsWith('story_'));
+    const activeStoryId = currentLevel.storyId || rawStoryParam || (isTutorial ? 'novice_initiation' : (currentLevel.id.startsWith('story_guardians_') ? 'relics_of_the_guardians' : null));
+    const activeChapterNum = currentLevel.chapterNumber || currTutNum || (parseInt(urlParams.get('chapter') || urlParams.get('ch') || urlParams.get('level') || '1', 10));
+    const currentStory = activeStoryId ? getStoryline(activeStoryId) : null;
 
     if (isCustomMode) {
       const hudBtnEditor = document.getElementById('hud-btn-editor');
@@ -395,24 +403,39 @@
         const invLabel = currentLevel.testInventory?.length ? ` + ${currentLevel.testInventory.length} Key${currentLevel.testInventory.length > 1 ? 's' : ''}` : '';
         tutorialBadgeEl.textContent = `🧪 Test Spawn${spawnLabel}${invLabel}`;
       }
-    }
-
-    if (isTutorial && tutorialBadgeEl) {
+    } else if (isStoryMode && tutorialBadgeEl && currentStory) {
+      tutorialBadgeEl.style.display = 'inline-block';
+      tutorialBadgeEl.style.background = currentStory.id === 'relics_of_the_guardians' ? 'rgba(251, 191, 36, 0.18)' : 'rgba(56, 189, 248, 0.18)';
+      tutorialBadgeEl.style.borderColor = currentStory.accentColor || 'var(--accent)';
+      tutorialBadgeEl.style.color = currentStory.accentColor || 'var(--accent)';
+      tutorialBadgeEl.textContent = `${currentStory.icon} ${currentStory.title} • Ch. ${activeChapterNum}/${currentStory.totalChapters}`;
+    } else if (isTutorial && tutorialBadgeEl) {
       tutorialBadgeEl.style.display = 'inline-block';
       if (currTutNum) {
         tutorialBadgeEl.textContent = `🎓 Tutorial ${currTutNum}/6`;
       }
     }
 
-    // Initialize Tutorial Hint Banner if help metadata exists
-    if (currentLevel.help && (currentLevel.help.title || currentLevel.help.message)) {
-      if (btnHint) btnHint.style.display = 'inline-flex';
+    // Initialize Story Prologue / Objective Banner if metadata exists
+    if (currentLevel.prologueText || (currentLevel.help && (currentLevel.help.title || currentLevel.help.message))) {
+      if (btnHint) {
+        btnHint.style.display = 'inline-flex';
+        btnHint.innerHTML = `📜 <span class="hide-mobile">${isStoryMode ? 'Prologue' : 'Hint'}</span>`;
+      }
       if (tutorialHintCard) {
         tutorialHintCard.style.display = 'block';
-        hintTitleText.textContent = currentLevel.help.title || 'Tutorial Objective';
-        hintBodyText.textContent = currentLevel.help.message || '';
+        const title = currentLevel.chapterTitle
+          ? `${currentLevel.chapterTitle} (Ch. ${activeChapterNum})`
+          : (currentLevel.help?.title || (isStoryMode ? 'Story Prologue' : 'Tutorial Objective'));
+        hintTitleText.textContent = title;
+
+        const body = currentLevel.prologueText
+          ? `${currentLevel.prologueText}\n\n${currentLevel.help?.message || ''}`.trim()
+          : (currentLevel.help?.message || '');
+        hintBodyText.textContent = body;
       }
     }
+
 
     // Toggle hint card expansion/collapse
     if (btnToggleHint && tutorialHintCard) {
@@ -607,6 +630,30 @@
             btnNextLevel.onclick = () => {
               window.location.href = 'editor.html';
             };
+          } else if (isStoryMode && activeStoryId && activeChapterNum) {
+            const nextInfo = getNextStoryChapter(activeStoryId, activeChapterNum);
+            const storyTitle = currentStory?.title || 'Story Quest';
+
+            if (nextInfo.hasNext) {
+              if (victorySubtitle) {
+                victorySubtitle.textContent = `Chapter ${activeChapterNum} conquered! Next chapter unlocked.`;
+              }
+              btnNextLevel.style.display = 'inline-flex';
+              btnNextLevel.textContent = `Chapter ${nextInfo.nextChapterNumber} →`;
+              btnNextLevel.onclick = () => {
+                window.location.href = `maze.html?story=${activeStoryId}&chapter=${nextInfo.nextChapterNumber}`;
+              };
+            } else {
+              // Completed all chapters in the story!
+              if (victorySubtitle) {
+                victorySubtitle.textContent = `🎉 Storyline Completed! You have conquered all chapters of "${storyTitle}"!`;
+              }
+              btnNextLevel.style.display = 'inline-flex';
+              btnNextLevel.textContent = '📜 Return to Stories Hub';
+              btnNextLevel.onclick = () => {
+                window.location.href = 'index.html';
+              };
+            }
           } else if (isTutorial && currTutNum) {
             if (victorySubtitle) {
               victorySubtitle.textContent = `Tutorial ${currTutNum} conquered! Great job mastering this mechanic.`;
@@ -629,9 +676,9 @@
               };
             }
           } else {
-            // Check if there is a next campaign level (Levels 1 to 10 across all zones)
+            // Check if there is a next campaign level (Levels 1 to 28 across all 7 chapters)
             const currentIdNum = parseInt(currentLevel.id, 10);
-            if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 10) {
+            if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 28) {
               btnNextLevel.style.display = 'inline-flex';
               btnNextLevel.textContent = `Level ${currentIdNum + 1} →`;
               btnNextLevel.onclick = () => {
@@ -641,6 +688,7 @@
               btnNextLevel.style.display = 'none';
             }
           }
+
         },
         onRequestRestart: () => {
           promptRestartConfirmation();
