@@ -19,57 +19,71 @@
     <!-- Top Header Toolbar -->
     <header class="editor-header">
       <div class="header-left">
-        <a href="index.html" class="btn btn-secondary btn-sm" title="Return to Game Hub">← Hub</a>
-        <button id="btn-projects" class="btn btn-secondary btn-sm" title="Manage saved projects and starter templates">📁 Projects</button>
-        <select id="quick-preset-select" class="select-field" style="max-width: 175px; font-size: 0.78rem; padding: 0.25rem 0.4rem; background: var(--bg);" title="Quick Load Official Game Level into Editor">
-          <option value="" disabled selected>🏛️ Official Level...</option>
-          <optgroup label="🎓 Tutorial Academy">
-            <option value="tutorial_1">T1: First Steps (9x9)</option>
-            <option value="tutorial_2">T2: Keys & Gates (13x13)</option>
-            <option value="tutorial_3">T3: Mechanisms (11x11)</option>
-            <option value="tutorial_4">T4: Bridges & Ramps (15x15)</option>
-            <option value="tutorial_5">T5: Shrouded Path (17x17)</option>
-            <option value="tutorial_6">T6: Master's Trial (25x25)</option>
-          </optgroup>
-          <optgroup label="🏰 Zone 1: Crypts">
-            <option value="1">L1: The Training Hall (15x15)</option>
-            <option value="2">L2: The Overpass (21x21)</option>
-            <option value="3">L3: The Lever Crypt (21x21)</option>
-            <option value="4">L4: Sky Bridges (25x25)</option>
-            <option value="5">L5: Sunken Vault (27x27)</option>
-          </optgroup>
-          <optgroup label="🌴 Zone 2: Jungle">
-            <option value="6">L6: Canopy Crossing (21x21)</option>
-            <option value="7">L7: The Vine Crypt (23x23)</option>
-            <option value="8">L8: Overgrowth Heart (25x25)</option>
-          </optgroup>
-          <optgroup label="🌋 Zone 3: Magma">
-            <option value="9">L9: Magma Chasm (21x21)</option>
-            <option value="10">L10: Obsidian Vault (25x25)</option>
-          </optgroup>
-        </select>
-        <button id="btn-save-project" class="btn btn-secondary btn-sm" title="Quick Save to Browser Storage (Ctrl+S)">💾 Save</button>
+        <div class="toolbar-group">
+          <button id="btn-projects" class="btn btn-secondary btn-sm" title="Manage saved projects and starter templates">📁 Projects</button>
+          <select id="quick-preset-select" class="select-field" style="max-width: 165px; font-size: 0.78rem; padding: 0.25rem 0.4rem; background: var(--bg);" title="Quick Load Official Game Level into Editor">
+            <option value="" disabled selected>🏛️ Official Level...</option>
+            <optgroup label="🎓 Tutorial Academy">
+              <option value="tutorial_1">T1: First Steps (9x9)</option>
+              <option value="tutorial_2">T2: Keys & Gates (13x13)</option>
+              <option value="tutorial_3">T3: Mechanisms (11x11)</option>
+              <option value="tutorial_4">T4: Bridges & Ramps (15x15)</option>
+              <option value="tutorial_5">T5: Shrouded Path (17x17)</option>
+              <option value="tutorial_6">T6: Master's Trial (25x25)</option>
+            </optgroup>
+            <optgroup label="🏰 Zone 1: Crypts">
+              <option value="1">L1: The Training Hall (15x15)</option>
+              <option value="2">L2: The Overpass (21x21)</option>
+              <option value="3">L3: The Lever Crypt (21x21)</option>
+              <option value="4">L4: Sky Bridges (25x25)</option>
+              <option value="5">L5: Sunken Vault (27x27)</option>
+            </optgroup>
+            <optgroup label="🌴 Zone 2: Jungle">
+              <option value="6">L6: Canopy Crossing (21x21)</option>
+              <option value="7">L7: The Vine Crypt (23x23)</option>
+              <option value="8">L8: Overgrowth Heart (25x25)</option>
+            </optgroup>
+            <optgroup label="🌋 Zone 3: Magma">
+              <option value="9">L9: Magma Chasm (21x21)</option>
+              <option value="10">L10: Obsidian Vault (25x25)</option>
+            </optgroup>
+          </select>
+          <button id="btn-save-project" class="btn btn-secondary btn-sm" title="Quick Save to Browser Storage (Ctrl+S)">💾 Save</button>
+        </div>
+
         <input type="text" id="level-title-input" class="editor-title-input" value="Custom Labyrinth" title="Click to rename labyrinth" />
       </div>
 
       <div class="header-right">
-        <button id="btn-undo" class="btn btn-secondary btn-sm" title="Undo (Ctrl+Z)">↺</button>
-        <button id="btn-redo" class="btn btn-secondary btn-sm" title="Redo (Ctrl+Y)">↻</button>
+        <div class="toolbar-group">
+          <button id="btn-undo" class="btn btn-secondary btn-sm" title="Undo (Ctrl+Z)">↺</button>
+          <button id="btn-redo" class="btn btn-secondary btn-sm" title="Redo (Ctrl+Y)">↻</button>
+        </div>
+
         <button id="btn-validate" class="btn btn-secondary btn-sm validation-badge" title="Check Solvability & Integrity (V)">
           <span id="val-badge-icon">✅</span> <span id="val-badge-text">Valid</span>
         </button>
-        <button id="btn-settings" class="btn btn-secondary btn-sm" title="Configure Labyrinth Dimensions & Rules">⚙ Properties</button>
-        <a href="art-catalog.html" target="_blank" class="btn btn-secondary btn-sm" title="Open Offline Art & Vector Asset Catalog">🎨 Art Catalog</a>
-        <button id="btn-guide" class="btn btn-secondary btn-sm" title="Architect Handbook, Guides & Shortcuts [H]">❓ Guide</button>
-        <button id="btn-clear" class="btn btn-secondary btn-sm" title="Reset canvas grid to empty">🗑 Clear</button>
-        <button id="btn-import-json" class="btn btn-secondary btn-sm" title="Load Level from JSON File">📂 Import</button>
-        <input type="file" id="editor-file-input" accept=".json" style="display: none;" />
-        <button id="btn-copy-json" class="btn btn-secondary btn-sm" title="Copy Level JSON to Clipboard">📋 Copy JSON</button>
-        <button id="btn-export-json" class="btn btn-secondary btn-sm" title="Download Level JSON File">💾 Export</button>
-        <button id="btn-playtest-opts" class="btn btn-secondary btn-sm" title="Configure Test Spawn Point & Starting Inventory [T]">🧪 Test Config</button>
-        <button id="btn-playtest" class="btn btn-primary btn-sm" title="Launch Playtest in Player View">▶ Play Test</button>
+
+        <div class="toolbar-group">
+          <button id="btn-settings" class="btn btn-secondary btn-sm" title="Configure Labyrinth Dimensions & Rules">⚙ Properties</button>
+          <button id="btn-guide" class="btn btn-secondary btn-sm" title="Architect Handbook, Guides & Shortcuts [H]">❓ Guide</button>
+        </div>
+
+        <div class="toolbar-group">
+          <button id="btn-import-json" class="btn btn-secondary btn-sm" title="Load Level from JSON File">📂 Import</button>
+          <input type="file" id="editor-file-input" accept=".json" style="display: none;" />
+          <button id="btn-copy-json" class="btn btn-secondary btn-sm" title="Copy Level JSON to Clipboard">📋 Copy</button>
+          <button id="btn-export-json" class="btn btn-secondary btn-sm" title="Download Level JSON File">💾 Export</button>
+          <button id="btn-clear" class="btn btn-secondary btn-sm" title="Reset canvas grid to empty">🗑 Clear</button>
+        </div>
+
+        <div class="toolbar-group">
+          <button id="btn-playtest-opts" class="btn btn-secondary btn-sm" title="Configure Test Spawn Point & Starting Inventory [T]">🧪 Test Config</button>
+          <button id="btn-playtest" class="btn btn-primary btn-sm" title="Launch Playtest in Player View">▶ Play Test</button>
+        </div>
       </div>
     </header>
+
 
     <!-- Left Sidebar Palette -->
     <aside class="editor-sidebar">
@@ -718,6 +732,10 @@
 
   <script type="module">
     import { EditorUI } from './js/editor/editor-ui.js';
+    import { initAppHeader } from './js/ui/app-header.js';
+
+    // Initialize Universal App Header
+    initAppHeader({ activeTab: 'editor' });
 
     // Global Error & Promise Rejection Handlers
     window.addEventListener('error', (event) => {

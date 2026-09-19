@@ -6,6 +6,8 @@
  * telemetry logs, audio settings, and save management.
  */
 
+import { getSettingsModal, getProfileModal } from './app-header.js';
+
 export class GameMenu {
   /**
    * @param {Object} options
@@ -137,6 +139,16 @@ export class GameMenu {
 
     bindClick('#btn-pause-walkthrough', () => {
       this.onWatchWalkthrough();
+    });
+
+    bindClick('#btn-pause-settings', () => {
+      const modal = getSettingsModal();
+      modal.open();
+    });
+
+    bindClick('#btn-pause-profile', () => {
+      const modal = getProfileModal();
+      modal.open();
     });
 
     bindClick('#btn-pause-report-issue', () => {

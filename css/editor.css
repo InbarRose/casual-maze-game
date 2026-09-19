@@ -4,13 +4,15 @@
 
 .editor-layout {
   display: grid;
-  grid-template-rows: 56px 1fr 28px;
-  grid-template-columns: 280px 1fr;
+  grid-template-rows: 52px 1fr 28px;
+  grid-template-columns: 300px 1fr;
+  flex: 1;
   width: 100vw;
-  height: 100vh;
+  height: calc(100vh - 52px);
   overflow: hidden;
   background: var(--bg);
 }
+
 
 /* Top Toolbar */
 .editor-header {
@@ -703,4 +705,64 @@ button:disabled {
   border-color: rgba(244, 63, 94, 0.3);
   background: rgba(244, 63, 94, 0.08);
 }
+
+/* =========================================================
+ * MODERN ARCHITECT STUDIO TOOLBAR & SIDEBAR POLISH
+ * ========================================================= */
+
+.toolbar-group {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 0.2rem 0.4rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+}
+
+.toolbar-divider {
+  width: 1px;
+  height: 22px;
+  background: rgba(255, 255, 255, 0.12);
+  margin: 0 0.2rem;
+}
+
+.editor-header {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.2));
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.editor-sidebar {
+  background: rgba(13, 19, 31, 0.95);
+  border-right: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.15));
+  scrollbar-width: thin;
+  scrollbar-color: rgba(56, 189, 248, 0.3) transparent;
+}
+
+.palette-btn {
+  transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.palette-btn:hover {
+  transform: translateY(-1px);
+}
+
+.palette-btn:active {
+  transform: scale(0.97);
+}
+
+.palette-btn.active {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+}
+
+.editor-status-bar {
+  background: rgba(10, 15, 26, 0.95);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
 
