@@ -120,4 +120,60 @@ describe('Engine > Perspective Renderer', () => {
     renderer.render(fakeLevel, player, [], camera, null, 0.016);
     assertEqual(renderer.perspective, 'topdown', 'Explicit topdown perspective must not be overwritten by level config');
   });
+
+  it('renders thematic ambient backdrops and perimeter decor across biomes without errors', () => {
+    const mockCanvas = {
+      width: 800,
+      height: 600,
+      getContext: () => ({
+        fillRect: () => {},
+        strokeRect: () => {},
+        save: () => {},
+        restore: () => {},
+        beginPath: () => {},
+        closePath: () => {},
+        arc: () => {},
+        fill: () => {},
+        stroke: () => {},
+        rect: () => {},
+        roundRect: () => {},
+        ellipse: () => {},
+        moveTo: () => {},
+        lineTo: () => {},
+        bezierCurveTo: () => {},
+        createRadialGradient: () => ({ addColorStop: () => {} }),
+      }),
+    };
+    const renderer = new GameRenderer(mockCanvas);
+    const camera = new Camera(800, 600, 32);
+    const player = new Player(1, 1, 0, 32);
+
+    const themes = ['dungeon', 'jungle', 'temple', 'cave', 'lava', 'sunset', 'snow'];
+    for (const th of themes) {
+      const level = {
+        id: `level_test_${th}`,
+        dimensions: { width: 5, height: 5 },
+        config: { theme: th, tileSize: 32, viewPerspective: 'angled' },
+        layers: {
+          ground: [
+            [1, 1, 1, 1, 1],
+            [1, 0, 0, 0, 1],
+            [1, 0, 1, 0, 1],
+            [1, 0, 0, 0, 1],
+            [1, 1, 1, 1, 1],
+          ],
+          overhead: Array.from({ length: 5 }, () => Array(5).fill(0)),
+        },
+        entities: [],
+      };
+
+      // Both angled and topdown pipelines should render successfully
+      renderer.setPerspective('angled');
+      renderer.render(level, player, [], camera, null, 0.016);
+
+      renderer.setPerspective('topdown');
+      renderer.render(level, player, [], camera, null, 0.016);
+    }
+    assert(true, 'Rendered all biomes with backdrop and perimeter decor successfully');
+  });
 });
