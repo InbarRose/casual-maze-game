@@ -16,6 +16,8 @@ import { Signpost } from '../entities/signpost.js';
 import { WallDecor } from '../entities/wall-decor.js';
 import { Checkpoint } from '../entities/checkpoint.js';
 import { Collectible } from '../entities/collectible.js';
+import { Pedestal } from '../entities/pedestal.js';
+import { RiddleItem } from '../entities/riddle-item.js';
 import { Player } from '../entities/player.js';
 import { Camera } from './camera.js';
 import { FogOfWar } from './fog.js';
@@ -122,6 +124,9 @@ export class GameLoop {
    * Instantiate entities from level definition
    */
   initEntities() {
+    const riddleItems = [];
+    const pedestals = [];
+
     this.entities = (this.level.entities || []).map(e => {
       if (e.type === ENTITY_TYPES.KEY) return new Key(e);
       if (e.type === ENTITY_TYPES.DOOR) return new Door(e);
@@ -134,8 +139,30 @@ export class GameLoop {
       if (e.type === ENTITY_TYPES.WALL_DECOR) return new WallDecor(e);
       if (e.type === ENTITY_TYPES.CHECKPOINT) return new Checkpoint(e);
       if (e.type === ENTITY_TYPES.COLLECTIBLE) return new Collectible(e);
+      if (e.type === ENTITY_TYPES.RIDDLE_ITEM) {
+        const item = new RiddleItem(e);
+        riddleItems.push(item);
+        return item;
+      }
+      if (e.type === ENTITY_TYPES.PEDESTAL) {
+        const ped = new Pedestal(e);
+        pedestals.push(ped);
+        return ped;
+      }
       return null;
     }).filter(Boolean);
+
+    // Link any initially slotted items
+    for (const ped of pedestals) {
+      if (ped.slottedItem && !(ped.slottedItem instanceof RiddleItem)) {
+        const matchingItem = riddleItems.find(r => r.id === ped.slottedItem.id || r.id === ped.slottedItem);
+        if (matchingItem) {
+          ped.placeItem(matchingItem);
+        } else {
+          ped.placeItem(new RiddleItem(ped.slottedItem));
+        }
+      }
+    }
   }
 
   /**
@@ -717,6 +744,7 @@ export class GameLoop {
         inventory: [...this.player.inventory],
         score: this.player.score || 0,
         carriedItems: [...(this.player.carriedItems || [])],
+        carriedRiddleItem: this.player.carriedRiddleItem || null,
       };
       const cpWx = checkpoint.x * this.camera.tileSize + this.camera.tileSize / 2;
       const cpWy = checkpoint.y * this.camera.tileSize + this.camera.tileSize / 2;
@@ -750,6 +778,28 @@ export class GameLoop {
       globalEvents.emit('collectible:collected', data);
       if (this.uiCallbacks.onCollectibleCollected) {
         this.uiCallbacks.onCollectibleCollected(data);
+      }
+    }
+
+    // 7. Check RiddleItem floor pickup
+    const riddleItemOnCell = this.entities.find(
+      e => e.type === ENTITY_TYPES.RIDDLE_ITEM && !e.isCarried && !e.isSlotted && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (riddleItemOnCell && !this.player.hasCarriedRiddleItem()) {
+      this.player.pickUpRiddleItem(riddleItemOnCell);
+      const cWx = this.player.worldX;
+      const cWy = this.player.worldY;
+      this.renderer.spawnParticles(cWx, cWy, riddleItemOnCell.color || '#38bdf8', 25);
+      this.renderer.spawnShockwave(cWx, cWy, riddleItemOnCell.color || '#38bdf8', 30);
+      this.renderer.spawnFloatingText(cWx, cWy, `🗿 Found ${riddleItemOnCell.name}`, riddleItemOnCell.color || '#38bdf8');
+      globalEvents.emit('riddle_item:collected', {
+        itemId: riddleItemOnCell.id,
+        name: riddleItemOnCell.name,
+        symbol: riddleItemOnCell.symbol,
+        itemType: riddleItemOnCell.itemType,
+      });
+      if (this.uiCallbacks.onRiddleItemCollected) {
+        this.uiCallbacks.onRiddleItemCollected(riddleItemOnCell);
       }
     }
 
@@ -851,7 +901,7 @@ export class GameLoop {
     // Check if active checkpoint exists: respawn at checkpoint with restored snapshot!
     if (this.activeCheckpoint && this.checkpointSnapshot) {
       const snap = this.checkpointSnapshot;
-      this.player.reset(snap.x, snap.y, snap.z, snap.inventory, snap.score, snap.carriedItems);
+      this.player.reset(snap.x, snap.y, snap.z, snap.inventory, snap.score, snap.carriedItems, snap.carriedRiddleItem);
       this.camera.snapTo(this.player.worldX, this.player.worldY, this.level.dimensions.width, this.level.dimensions.height);
       this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, '🛡️ Respawned at Checkpoint', '#38bdf8');
       this.updateFog();
@@ -863,7 +913,7 @@ export class GameLoop {
     const spawnX = this.level.testSpawn?.x ?? this.level.spawn?.x ?? 1;
     const spawnY = this.level.testSpawn?.y ?? this.level.spawn?.y ?? 1;
     const spawnZ = this.level.testSpawn?.elevation ?? this.level.spawn?.elevation ?? 0;
-    this.player.reset(spawnX, spawnY, spawnZ, this.player.inventory, this.player.score, this.player.carriedItems);
+    this.player.reset(spawnX, spawnY, spawnZ, this.player.inventory, this.player.score, this.player.carriedItems, null);
     this.camera.snapTo(this.player.worldX, this.player.worldY, this.level.dimensions.width, this.level.dimensions.height);
     this.updateFog();
     this.notifyUI();
@@ -902,10 +952,23 @@ export class GameLoop {
     const py = this.player.gridY;
     const pe = this.player.elevation;
 
+    const facingDx = this.player.facing === 'east' ? 1 : (this.player.facing === 'west' ? -1 : 0);
+    const facingDy = this.player.facing === 'south' ? 1 : (this.player.facing === 'north' ? -1 : 0);
+    const facingX = px + facingDx;
+    const facingY = py + facingDy;
+
+    const sortByFacing = (list) => {
+      return [...list].sort((a, b) => {
+        const aFacing = (a.x === facingX && a.y === facingY) ? 0 : ((a.x === px && a.y === py) ? 1 : 2);
+        const bFacing = (b.x === facingX && b.y === facingY) ? 0 : ((b.x === px && b.y === py) ? 1 : 2);
+        return aFacing - bFacing;
+      });
+    };
+
     // Check adjacent locked PuzzleGate
-    const adjacentPuzzleGates = this.entities.filter(
+    const adjacentPuzzleGates = sortByFacing(this.entities.filter(
       e => e.type === ENTITY_TYPES.PUZZLE_GATE && !e.isUnlocked && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    );
+    ));
     if (adjacentPuzzleGates.length > 0) {
       this.openPuzzleGateModal(adjacentPuzzleGates[0]);
       return;
@@ -993,6 +1056,202 @@ export class GameLoop {
       });
 
       this.notifyUI();
+      return;
+    }
+
+    // Check if player is on or adjacent to a Pedestal
+    const adjacentPedestals = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.PEDESTAL && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentPedestals.length > 0) {
+      const pedestal = adjacentPedestals[0];
+      const hasCarried = this.player.hasCarriedRiddleItem();
+
+      if (hasCarried && !pedestal.slottedItem) {
+        // Place carried item onto empty pedestal
+        const placedItem = this.player.carriedRiddleItem;
+        this.player.placeRiddleItem(pedestal);
+        const satisfied = pedestal.isSatisfied();
+        const pedWx = pedestal.x * this.camera.tileSize + this.camera.tileSize / 2;
+        const pedWy = pedestal.y * this.camera.tileSize + this.camera.tileSize / 2;
+
+        this.renderer.spawnParticles(pedWx, pedWy, satisfied ? '#10b981' : '#f59e0b', 25);
+        this.renderer.spawnShockwave(pedWx, pedWy, satisfied ? '#10b981' : '#f59e0b', 32);
+        this.renderer.spawnFloatingText(pedWx, pedWy, `📥 Placed ${placedItem.name}`, satisfied ? '#10b981' : '#f59e0b');
+
+        globalEvents.emit('pedestal:placed', {
+          pedestalId: pedestal.id,
+          pedestalName: pedestal.name,
+          itemId: placedItem.id,
+          itemName: placedItem.name,
+          isSatisfied: satisfied,
+          puzzleGroupId: pedestal.puzzleGroupId,
+        });
+
+        if (this.uiCallbacks.onPedestalInteract) {
+          this.uiCallbacks.onPedestalInteract({
+            action: 'placed',
+            pedestal,
+            item: placedItem,
+            isSatisfied: satisfied,
+          });
+        }
+
+        this.evaluateRiddleGroup(pedestal.puzzleGroupId);
+        this.notifyUI();
+        return;
+      } else if (hasCarried && pedestal.slottedItem) {
+        // Swap carried item with pedestal's slotted item
+        const oldItem = pedestal.removeItem();
+        const newItem = this.player.carriedRiddleItem;
+        this.player.placeRiddleItem(pedestal);
+        this.player.pickUpRiddleItem(oldItem);
+
+        const satisfied = pedestal.isSatisfied();
+        const pedWx = pedestal.x * this.camera.tileSize + this.camera.tileSize / 2;
+        const pedWy = pedestal.y * this.camera.tileSize + this.camera.tileSize / 2;
+
+        this.renderer.spawnParticles(pedWx, pedWy, satisfied ? '#10b981' : '#38bdf8', 20);
+        this.renderer.spawnFloatingText(pedWx, pedWy, `🔄 Swapped for ${oldItem.name}`, '#38bdf8');
+
+        globalEvents.emit('pedestal:placed', {
+          pedestalId: pedestal.id,
+          pedestalName: pedestal.name,
+          itemId: newItem.id,
+          itemName: newItem.name,
+          isSatisfied: satisfied,
+          puzzleGroupId: pedestal.puzzleGroupId,
+        });
+
+        this.evaluateRiddleGroup(pedestal.puzzleGroupId);
+        this.notifyUI();
+        return;
+      } else if (!hasCarried && pedestal.slottedItem) {
+        // Retrieve slotted item from pedestal into hands
+        const retrieved = pedestal.removeItem();
+        this.player.pickUpRiddleItem(retrieved);
+
+        const pedWx = pedestal.x * this.camera.tileSize + this.camera.tileSize / 2;
+        const pedWy = pedestal.y * this.camera.tileSize + this.camera.tileSize / 2;
+        this.renderer.spawnFloatingText(pedWx, pedWy, `📤 Retrieved ${retrieved.name}`, '#38bdf8');
+
+        globalEvents.emit('pedestal:removed', {
+          pedestalId: pedestal.id,
+          pedestalName: pedestal.name,
+          itemId: retrieved.id,
+          itemName: retrieved.name,
+          puzzleGroupId: pedestal.puzzleGroupId,
+        });
+
+        if (this.uiCallbacks.onPedestalInteract) {
+          this.uiCallbacks.onPedestalInteract({
+            action: 'removed',
+            pedestal,
+            item: retrieved,
+            isSatisfied: false,
+          });
+        }
+
+        this.evaluateRiddleGroup(pedestal.puzzleGroupId);
+        this.notifyUI();
+        return;
+      } else {
+        // Empty pedestal and player has no item: inspect riddle inscription!
+        const pedWx = pedestal.x * this.camera.tileSize + this.camera.tileSize / 2;
+        const pedWy = pedestal.y * this.camera.tileSize + this.camera.tileSize / 2;
+        this.renderer.spawnFloatingText(pedWx, pedWy, `🔍 Inscription: "${pedestal.riddleHint}"`, '#fbbf24');
+
+        globalEvents.emit('pedestal:inspected', {
+          pedestalId: pedestal.id,
+          pedestalName: pedestal.name,
+          riddleHint: pedestal.riddleHint,
+          puzzleGroupId: pedestal.puzzleGroupId,
+        });
+
+        if (this.uiCallbacks.onPedestalInspect) {
+          this.uiCallbacks.onPedestalInspect({
+            pedestalId: pedestal.id,
+            pedestalName: pedestal.name,
+            riddleHint: pedestal.riddleHint,
+            puzzleGroupId: pedestal.puzzleGroupId,
+          });
+        }
+        return;
+      }
+    }
+
+    // Check if player is on or adjacent to a RiddleItem on the floor
+    const adjacentRiddleItems = this.entities.filter(
+      e => e.type === ENTITY_TYPES.RIDDLE_ITEM && !e.isCarried && !e.isSlotted && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (adjacentRiddleItems.length > 0) {
+      const item = adjacentRiddleItems[0];
+      if (!this.player.hasCarriedRiddleItem()) {
+        this.player.pickUpRiddleItem(item);
+        const iWx = this.player.worldX;
+        const iWy = this.player.worldY;
+        this.renderer.spawnParticles(iWx, iWy, item.color || '#38bdf8', 25);
+        this.renderer.spawnShockwave(iWx, iWy, item.color || '#38bdf8', 30);
+        this.renderer.spawnFloatingText(iWx, iWy, `🗿 Picked up ${item.name}`, item.color || '#38bdf8');
+
+        globalEvents.emit('riddle_item:collected', {
+          itemId: item.id,
+          name: item.name,
+          symbol: item.symbol,
+          itemType: item.itemType,
+        });
+
+        if (this.uiCallbacks.onRiddleItemCollected) {
+          this.uiCallbacks.onRiddleItemCollected(item);
+        }
+
+        this.notifyUI();
+        return;
+      } else {
+        // Swap carried item with floor item
+        this.player.dropRiddleItem(item.x, item.y, item.elevation);
+        this.player.pickUpRiddleItem(item);
+        this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY, `🔄 Swapped for ${item.name}`, '#38bdf8');
+        this.notifyUI();
+        return;
+      }
+    }
+  }
+
+  /**
+   * Evaluate a riddle puzzle group to check if all pedestals are satisfied
+   * @param {string} groupId
+   */
+  evaluateRiddleGroup(groupId) {
+    if (!groupId) return;
+    const groupPedestals = this.entities.filter(
+      e => e.type === ENTITY_TYPES.PEDESTAL && e.puzzleGroupId === groupId
+    );
+    if (groupPedestals.length === 0) return;
+
+    const allSatisfied = groupPedestals.every(p => p.isSatisfied());
+
+    if (allSatisfied) {
+      const targetDoorIds = [...new Set(groupPedestals.map(p => p.targetDoorId).filter(Boolean))];
+      for (const doorId of targetDoorIds) {
+        const door = this.entities.find(e => e.type === ENTITY_TYPES.DOOR && e.id === doorId);
+        if (door && !door.isOpen) {
+          door.open();
+          const dwx = door.x * this.camera.tileSize + this.camera.tileSize / 2;
+          const dwy = door.y * this.camera.tileSize + this.camera.tileSize / 2;
+          this.renderer.spawnParticles(dwx, dwy, '#10b981', 40);
+          this.renderer.spawnShockwave(dwx, dwy, '#10b981', 50);
+          this.renderer.spawnFloatingText(dwx, dwy, '✨ Riddle Solved! Seal Broken!', '#10b981');
+        }
+      }
+
+      globalEvents.emit('puzzle:riddle_solved', {
+        groupId,
+        pedestals: groupPedestals.map(p => ({ id: p.id, name: p.name, slotted: p.slottedItem?.id })),
+      });
+      if (this.uiCallbacks.onRiddleSolved) {
+        this.uiCallbacks.onRiddleSolved({ groupId, pedestals: groupPedestals });
+      }
     }
   }
 
@@ -1087,6 +1346,13 @@ export class GameLoop {
         score: this.player.score || 0,
         activeCheckpoint: this.activeCheckpoint ? this.activeCheckpoint.name : null,
         carriedItems: [...(this.player.carriedItems || [])],
+        carriedRiddleItem: this.player.carriedRiddleItem ? {
+          id: this.player.carriedRiddleItem.id,
+          name: this.player.carriedRiddleItem.name,
+          symbol: this.player.carriedRiddleItem.symbol,
+          itemType: this.player.carriedRiddleItem.itemType,
+          color: this.player.carriedRiddleItem.color,
+        } : null,
         steps: this.player.stepsTaken,
         time: this.elapsedTime,
         cameraMode: this.camera.mode,

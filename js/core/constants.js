@@ -25,7 +25,29 @@ export const ENTITY_TYPES = Object.freeze({
   WALL_DECOR: 'wall_decor',
   CHECKPOINT: 'checkpoint',
   COLLECTIBLE: 'collectible',
+  PEDESTAL: 'pedestal',
+  RIDDLE_ITEM: 'riddle_item',
 });
+
+export const RIDDLE_ITEM_STYLES = Object.freeze([
+  { id: 'statue_falcon', type: 'statue', icon: '🦅', label: 'Falcon Statue', desc: 'Carved obsidian falcon of the eastern dawn' },
+  { id: 'statue_serpent', type: 'statue', icon: '🐍', label: 'Serpent Statue', desc: 'Emerald serpent coiled toward northern depths' },
+  { id: 'statue_lion', type: 'statue', icon: '🦁', label: 'Lion Statue', desc: 'Gilded lion standing guard at the southern sun' },
+  { id: 'statue_dragon', type: 'statue', icon: '🐉', label: 'Dragon Statue', desc: 'Ancient sapphire dragon watching western winds' },
+  { id: 'orb_fire', type: 'orb', icon: '🔥', label: 'Flame Orb', desc: 'Ever-burning cinder sphere pulsating with magma heat' },
+  { id: 'orb_water', type: 'orb', icon: '💧', label: 'Tide Orb', desc: 'Cerulean pearl resonating with oceanic currents' },
+  { id: 'orb_earth', type: 'orb', icon: '🌿', label: 'Flora Orb', desc: 'Jade sphere entwined with living verdant roots' },
+  { id: 'orb_air', type: 'orb', icon: '💨', label: 'Gale Orb', desc: 'Swirling zephyr prism crackling with static wind' },
+  { id: 'rune_sun', type: 'rune', icon: '☀️', label: 'Solar Runestone', desc: 'Radiant golden slate inscribed with daylight glyphs' },
+  { id: 'rune_moon', type: 'rune', icon: '🌙', label: 'Lunar Runestone', desc: 'Silver slate reflecting calm nocturnal phases' },
+  { id: 'rune_star', type: 'rune', icon: '✨', label: 'Astral Runestone', desc: 'Twinkling indigo slate charting celestial orbits' },
+]);
+
+export const PEDESTAL_STYLES = Object.freeze([
+  { id: 'plinth_stone', icon: '🏛️', label: 'Carved Plinth', desc: 'Ancient fluted stone pedestal with rune-etched socket' },
+  { id: 'altar_shrine', icon: '⛩️', label: 'Altar Shrine', desc: 'Ceremonial shrine adorned with divine sigils' },
+  { id: 'pillar_crystal', icon: '💎', label: 'Crystal Pillar', desc: 'Resonating geometric prism socket for elemental orbs' },
+]);
 
 export const VIEW_PERSPECTIVES = Object.freeze({
   ANGLED: 'angled',
