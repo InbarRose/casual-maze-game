@@ -60,20 +60,20 @@ const levels = [];
   const ground = createGrid(width, height, TILES.WALL);
   const overhead = createGrid(width, height, TILES.FLOOR);
 
+  // Western half (Spawn & Key)
   carveH(ground, 1, 1, 7);
-  carveV(ground, 7, 1, 7);
-  carveH(ground, 7, 7, 13);
-  carveV(ground, 13, 7, 13);
-
   carveV(ground, 1, 1, 11);
   carveH(ground, 11, 1, 3);
+  carveV(ground, 3, 5, 11);
+  carveH(ground, 5, 3, 7);
+  carveV(ground, 7, 1, 7); // connects to door at (7, 7)
 
-  carveH(ground, 3, 3, 11);
-  carveV(ground, 3, 3, 7);
-  carveH(ground, 5, 7, 11);
-  carveV(ground, 11, 5, 9);
-  carveH(ground, 9, 3, 11);
-  carveH(ground, 13, 7, 13);
+  // Door at (7, 7)
+  // Eastern half (Exit)
+  carveH(ground, 7, 7, 13);
+  carveV(ground, 13, 7, 13);
+  carveH(ground, 13, 9, 13);
+  carveV(ground, 9, 9, 13);
 
   levels.push({
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -138,18 +138,22 @@ const levels = [];
   const ground = createGrid(width, height, TILES.WALL);
   const overhead = createGrid(width, height, TILES.FLOOR);
 
-  carveV(ground, 1, 1, 13);
+  // Western half
   carveH(ground, 1, 1, 5);
   carveV(ground, 5, 1, 5);
-  carveH(ground, 5, 5, 9);
-  carveV(ground, 9, 5, 1);
-  carveH(ground, 1, 9, 13);
-  carveV(ground, 13, 1, 5);
+  carveH(ground, 5, 1, 5);
+  carveV(ground, 1, 5, 13);
+  carveH(ground, 13, 1, 5);
+  carveV(ground, 5, 9, 13);
+  carveH(ground, 9, 5, 7);
+  carveV(ground, 7, 7, 9); // leads to door at (7, 7)
 
-  carveH(ground, 13, 1, 13);
-  carveV(ground, 7, 5, 13);
-  carveH(ground, 7, 1, 13);
+  // Eastern half
+  carveH(ground, 7, 7, 13);
   carveV(ground, 13, 7, 13);
+  carveH(ground, 11, 9, 13);
+  carveV(ground, 9, 11, 13);
+  carveH(ground, 13, 9, 13);
 
   levels.push({
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -214,19 +218,26 @@ const levels = [];
   const ground = createGrid(width, height, TILES.WALL);
   const overhead = createGrid(width, height, TILES.FLOOR);
 
-  carveH(ground, 1, 1, 15);
-  carveV(ground, 1, 1, 15);
-  carveH(ground, 15, 1, 15);
-  carveV(ground, 15, 1, 15);
+  // Chamber 1 (NW): Spawn at (1, 1), Emerald Key at (1, 5)
+  carveH(ground, 1, 1, 5);
+  carveV(ground, 1, 1, 5);
+  carveH(ground, 5, 1, 8); // Door Emerald at (8, 5)
 
-  carveRoom(ground, 7, 7, 3, 3);
-  carveH(ground, 8, 1, 15);
-  carveV(ground, 8, 1, 15);
+  // Chamber 2 (NE): Ruby Key at (15, 1)
+  carveH(ground, 5, 8, 15);
+  carveV(ground, 15, 1, 5);
+  carveH(ground, 1, 9, 15);
+  carveV(ground, 9, 1, 8); // Door Ruby at (9, 8)
 
-  carveRoom(ground, 3, 3, 3, 3);
-  carveRoom(ground, 11, 3, 3, 3);
-  carveRoom(ground, 3, 11, 3, 3);
-  carveRoom(ground, 11, 11, 3, 3);
+  // Chamber 3 (SW): Sapphire Key at (1, 15)
+  carveV(ground, 9, 8, 11);
+  carveH(ground, 11, 1, 9);
+  carveV(ground, 1, 11, 15);
+  carveH(ground, 15, 1, 8); // Door Sapphire at (8, 15)
+
+  // Chamber 4 (SE): Exit at (15, 15)
+  carveH(ground, 15, 8, 15);
+  carveV(ground, 15, 11, 15);
 
   levels.push({
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -248,7 +259,7 @@ const levels = [];
     exit: { x: 15, y: 15, elevation: 0, style: 'portal' },
     parSteps: 54,
     parTime: 32,
-    architectNote: 'Three gates of three colors bar the way forward. Seek the emerald in the east, sapphire in the south, and ruby in the west.',
+    architectNote: 'Three gates of three colors bar the way forward. Seek the emerald in the west, ruby in the east, and sapphire in the south.',
     layers: { ground, overhead },
     entities: [
       {
@@ -258,14 +269,14 @@ const levels = [];
         y: 1,
         z: 0,
         title: "Architect's Note #3",
-        text: 'Three gates of three colors bar the way forward. Seek the emerald in the east, sapphire in the south, and ruby in the west.',
+        text: 'Three gates of three colors bar the way forward. Seek the emerald in the west, ruby in the east, and sapphire in the south.',
         style: 'stone_tablet',
       },
       {
         id: 'key_emerald_3',
         type: 'key',
-        x: 15,
-        y: 1,
+        x: 1,
+        y: 5,
         color: '#34d399',
         name: 'Emerald Key',
         style: 'ornate',
@@ -284,8 +295,8 @@ const levels = [];
       {
         id: 'key_ruby_3',
         type: 'key',
-        x: 1,
-        y: 15,
+        x: 15,
+        y: 1,
         color: '#f43f5e',
         name: 'Ruby Key',
         style: 'classic',
@@ -294,7 +305,7 @@ const levels = [];
       {
         id: 'door_ruby_3',
         type: 'door',
-        x: 5,
+        x: 9,
         y: 8,
         requiresKey: 'key_ruby_3',
         color: '#f43f5e',
@@ -304,8 +315,8 @@ const levels = [];
       {
         id: 'key_sapphire_3',
         type: 'key',
-        x: 8,
-        y: 8,
+        x: 1,
+        y: 15,
         color: '#38bdf8',
         name: 'Sapphire Key',
         style: 'orb',
@@ -314,12 +325,12 @@ const levels = [];
       {
         id: 'door_sapphire_3',
         type: 'door',
-        x: 11,
-        y: 8,
+        x: 8,
+        y: 15,
         requiresKey: 'key_sapphire_3',
         color: '#38bdf8',
         style: 'heavy',
-        orientation: 'vertical',
+        orientation: 'horizontal',
       },
     ],
   });
@@ -413,13 +424,8 @@ function createBridgeLevel({ id, title, width, height, midX, rampY1, rampY2, par
   const ground = createGrid(width, height, TILES.WALL);
   const overhead = createGrid(width, height, TILES.FLOOR);
 
-  // Outer pathway
-  carveH(ground, 1, 1, width - 2);
-  carveV(ground, 1, 1, height - 2);
-  carveH(ground, height - 2, 1, width - 2);
-  carveV(ground, width - 2, 1, height - 2);
-
-  // Path to ramp start
+  // Region 1 (North / Spawn): Spawn at (1, 1), leads to Ramp at (midX, rampY1)
+  carveH(ground, 1, 1, midX);
   carveV(ground, midX, 1, rampY1);
 
   // Ramp going UP (South)
@@ -430,16 +436,18 @@ function createBridgeLevel({ id, title, width, height, midX, rampY1, rampY2, par
     overhead[y][midX] = TILES.BRIDGE_EW;
   }
 
-  // Underpass tunnel on ground at midY
+  // Underpass tunnel on ground at midY (in Region 2)
   const midY = Math.floor((rampY1 + rampY2) / 2);
-  carveH(ground, midY, 1, width - 2);
+  carveH(ground, midY, midX - 2, width - 2);
   ground[midY][midX] = TILES.BRIDGE_EW;
 
-  // Ramp going DOWN (South)
+  // Ramp going DOWN (South) into Region 2
   ground[rampY2][midX] = TILES.RAMP_N;
 
-  // Path from ramp exit to bottom corridor
-  carveV(ground, midX, rampY2, height - 2);
+  // Region 2 (South / Exit): leads from rampY2 + 1 to (width-2, height-2)
+  carveV(ground, midX, rampY2 + 1, height - 2);
+  carveH(ground, height - 2, midX, width - 2);
+  carveV(ground, width - 2, midY, height - 3);
 
   return {
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -560,17 +568,18 @@ function createLeverLevel({ id, title, width = 17, height = 17, leverX, leverY, 
   const ground = createGrid(width, height, TILES.WALL);
   const overhead = createGrid(width, height, TILES.FLOOR);
 
-  carveH(ground, 1, 1, width - 2);
-  carveV(ground, 1, 1, height - 2);
-  carveH(ground, height - 2, 1, width - 2);
-  carveV(ground, width - 2, 1, height - 2);
+  // Region 1 (West / Spawn & Lever):
+  carveH(ground, 1, 1, targetX - 1);
+  carveV(ground, 1, 1, leverY);
+  carveH(ground, leverY, 1, leverX);
+  carveH(ground, targetY, 1, targetX - 1);
 
-  const midY = Math.floor(height / 2);
-  const midX = Math.floor(width / 2);
-  carveH(ground, midY, 1, width - 2);
-  carveV(ground, midX, 1, height - 2);
-
+  // Target wall obstacle at (targetX, targetY)
   ground[targetY][targetX] = TILES.WALL;
+
+  // Region 2 (East / Exit):
+  carveH(ground, targetY, targetX + 1, width - 2);
+  carveV(ground, width - 2, targetY, height - 2);
 
   return {
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -619,8 +628,8 @@ function createLeverLevel({ id, title, width = 17, height = 17, leverX, leverY, 
             layer: 'ground',
             x: targetX,
             y: targetY,
-            stateA: 1,
-            stateB: 0,
+            stateA: 0,
+            stateB: 1,
           },
         ],
       },
@@ -921,14 +930,13 @@ function createPuzzleLevel({ id, title, width = 17, height = 17, puzzleX, puzzle
   const ground = createGrid(width, height, TILES.WALL);
   const overhead = createGrid(width, height, TILES.FLOOR);
 
-  carveH(ground, 1, 1, width - 2);
-  carveV(ground, width - 2, 1, height - 2);
-  carveH(ground, height - 2, 1, width - 2);
-  carveV(ground, 1, 1, height - 2);
+  // Region 1 (West / Spawn):
+  carveH(ground, 1, 1, puzzleX);
+  carveV(ground, puzzleX, 1, puzzleY);
 
-  const midY = Math.floor(height / 2);
-  carveH(ground, midY, 1, width - 2);
-  carveV(ground, Math.floor(width / 2), 1, height - 2);
+  // Region 2 (East / Exit):
+  carveH(ground, puzzleY, puzzleX, width - 2);
+  carveV(ground, width - 2, puzzleY, height - 2);
 
   return {
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -1041,32 +1049,30 @@ function createSynthesisLevel({ id, title, width = 19, height = 19, midX, rampY1
   const ground = createGrid(width, height, TILES.WALL);
   const overhead = createGrid(width, height, TILES.FLOOR);
 
-  carveH(ground, 1, 1, width - 2);
-  carveV(ground, width - 2, 1, height - 2);
-  carveH(ground, height - 2, 1, width - 2);
-  carveV(ground, 1, 1, height - 2);
-
-  // Path to ramp
+  // Region 1: Spawn at (1, 1) -> Ramp at (midX, rampY1)
+  carveH(ground, 1, 1, midX);
   carveV(ground, midX, 1, rampY1);
 
   // Ramp going UP (South)
   ground[rampY1][midX] = TILES.RAMP_S;
 
-  // Overhead bridge deck
+  // Overhead bridge deck with key at midY
   for (let y = rampY1 + 1; y < rampY2; y++) {
     overhead[y][midX] = TILES.BRIDGE_EW;
   }
 
-  // Underpass tunnel on ground at midY
+  // Underpass tunnel at midY in Region 2
   const midY = Math.floor((rampY1 + rampY2) / 2);
-  carveH(ground, midY, 1, width - 2);
+  carveH(ground, midY, midX - 2, width - 2);
   ground[midY][midX] = TILES.BRIDGE_EW;
 
-  // Ramp going DOWN (South)
+  // Ramp going DOWN (South) into Region 2
   ground[rampY2][midX] = TILES.RAMP_N;
 
-  // Path from ramp to bottom corridor
-  carveV(ground, midX, rampY2, height - 2);
+  // Region 2: leads to exit guarded by door
+  carveV(ground, midX, rampY2 + 1, height - 2);
+  carveH(ground, height - 2, midX, width - 2);
+  carveV(ground, width - 2, midY, height - 3);
 
   return {
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',

@@ -185,6 +185,12 @@ export function setupMocks() {
     globalThis.navigator.clipboard = new MockClipboard();
   }
 
+  if (typeof globalThis.window === 'undefined') {
+    globalThis.window = globalThis;
+    globalThis.window.addEventListener = () => {};
+    globalThis.window.removeEventListener = () => {};
+  }
+
   if (typeof globalThis.document === 'undefined') {
     const createMockElement = (tagName) => {
       if (tagName.toLowerCase() === 'canvas') {
@@ -206,6 +212,10 @@ export function setupMocks() {
           },
           contains(c) { return this.classes.has(c); },
         },
+        innerHTML: '',
+        textContent: '',
+        value: '',
+        parentNode: { removeChild: () => {} },
         setAttribute: () => {},
         getAttribute: () => null,
         appendChild: () => {},
@@ -220,6 +230,7 @@ export function setupMocks() {
 
     globalThis.document = {
       createElement: createMockElement,
+      getElementById: (id) => createMockElement('div'),
       querySelector: () => createMockElement('div'),
       querySelectorAll: () => [],
       body: {
