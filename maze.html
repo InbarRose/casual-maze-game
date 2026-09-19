@@ -19,6 +19,13 @@
     <!-- Main 2D Canvas -->
     <canvas id="game-canvas"></canvas>
 
+    <!-- Floating Contextual Interact Action Pill -->
+    <button id="hud-contextual-interact" class="contextual-interact-btn hidden" aria-label="Interact" title="Interact [Space / Enter]">
+      <span class="interact-icon" id="hud-interact-icon">✨</span>
+      <span class="interact-label" id="hud-interact-label">Interact</span>
+      <span class="interact-badge hide-mobile" id="hud-interact-badge">[Space]</span>
+    </button>
+
     <!-- Top HUD Overlay — Floating Islands -->
     <header class="game-hud-top">
       <!-- Left Island: Navigation & Level Info -->
@@ -823,11 +830,43 @@
         onRequestRestart: () => {
           promptRestartConfirmation();
         },
+        onInteractionAvailable: (interaction, screenPos) => {
+          const btnContextual = document.getElementById('hud-contextual-interact');
+          const iconEl = document.getElementById('hud-interact-icon');
+          const labelEl = document.getElementById('hud-interact-label');
+          if (!btnContextual) return;
+
+          if (interaction && screenPos) {
+            btnContextual.style.left = `${screenPos.x}px`;
+            btnContextual.style.top = `${screenPos.y - 36}px`;
+            if (iconEl) iconEl.textContent = interaction.icon || '✨';
+            if (labelEl) labelEl.textContent = interaction.label || 'Interact';
+            btnContextual.classList.remove('hidden');
+          } else {
+            btnContextual.classList.add('hidden');
+          }
+        },
       }
     });
 
     window.gameLoop = gameLoop;
     gameLoop.start();
+
+    // Floating Contextual Action Button Handler (Mobile & Mouse)
+    const btnContextualInteract = document.getElementById('hud-contextual-interact');
+    if (btnContextualInteract) {
+      btnContextualInteract.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (window.gameLoop) {
+          window.gameLoop.handleManualInteract();
+          audioFX.playClick();
+        }
+      });
+      btnContextualInteract.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+      });
+    }
 
     // Activity Log & Telemetry Modal Elements
     const activityModal = document.getElementById('activity-log-modal');

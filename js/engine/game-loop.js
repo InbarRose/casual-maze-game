@@ -835,6 +835,16 @@ export class GameLoop {
         }
       }
     }
+
+    // 8. Check for available contextual interaction
+    if (typeof this.uiCallbacks.onInteractionAvailable === 'function') {
+      const interaction = this.getAvailableInteraction();
+      let screenPos = null;
+      if (interaction && this.camera) {
+        screenPos = this.camera.worldToScreen(this.player.worldX, this.player.worldY, true);
+      }
+      this.uiCallbacks.onInteractionAvailable(interaction, screenPos);
+    }
   }
 
   /**
@@ -996,6 +1006,127 @@ export class GameLoop {
     }
 
     return bestAdjacentPath;
+  }
+
+  /**
+   * Get interactable entity or tile action available at or adjacent to the player's current location
+   * @returns {{ type: string, label: string, icon: string, keyHint: string, x: number, y: number, canInteract: boolean }|null}
+   */
+  getAvailableInteraction() {
+    if (!this.player || this.isPuzzleOpen || this.isWon || this.camera?.mode === 'freepan') return null;
+
+    const px = this.player.gridX;
+    const py = this.player.gridY;
+    const pe = this.player.elevation;
+
+    const facingDx = this.player.facing === 'east' ? 1 : (this.player.facing === 'west' ? -1 : 0);
+    const facingDy = this.player.facing === 'south' ? 1 : (this.player.facing === 'north' ? -1 : 0);
+    const facingX = px + facingDx;
+    const facingY = py + facingDy;
+
+    const sortByFacing = (list) => {
+      return [...list].sort((a, b) => {
+        const aFacing = (a.x === facingX && a.y === facingY) ? 0 : ((a.x === px && a.y === py) ? 1 : 2);
+        const bFacing = (b.x === facingX && b.y === facingY) ? 0 : ((b.x === px && b.y === py) ? 1 : 2);
+        return aFacing - bFacing;
+      });
+    };
+
+    // 1. Check adjacent locked PuzzleGate
+    const adjacentGates = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.PUZZLE_GATE && !e.isUnlocked && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentGates.length > 0) {
+      const g = adjacentGates[0];
+      return { type: 'puzzle_gate', label: g.name ? `Solve ${g.name}` : 'Solve Seal', icon: '🧩', keyHint: 'Space', x: g.x, y: g.y, canInteract: true };
+    }
+
+    // 2. Check adjacent Pedestal
+    const adjacentPedestals = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.PEDESTAL && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentPedestals.length > 0) {
+      const ped = adjacentPedestals[0];
+      const hasCarried = this.player.hasCarriedRiddleItem();
+      if (hasCarried && !ped.slottedItem) {
+        return { type: 'pedestal', label: `Place ${this.player.carriedRiddleItem.name || 'Relic'}`, icon: '📥', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+      } else if (!hasCarried && ped.slottedItem) {
+        return { type: 'pedestal', label: `Take ${ped.slottedItem.name || 'Relic'}`, icon: '📤', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+      } else {
+        return { type: 'pedestal', label: `Inspect ${ped.name || 'Pedestal'}`, icon: '🦅', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+      }
+    }
+
+    // 3. Check adjacent Lever
+    const adjacentLevers = sortByFacing(this.entities.filter(
+      e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation || ELEVATION.GROUND) === pe
+    ));
+    if (adjacentLevers.length > 0) {
+      const lever = adjacentLevers[0];
+      return { type: 'lever', label: lever.state ? 'Switch Off' : 'Pull Switch', icon: '🕹️', keyHint: 'Space', x: lever.x, y: lever.y, canInteract: true };
+    }
+
+    // 4. Check adjacent Signpost
+    const adjacentSigns = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.SIGNPOST && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentSigns.length > 0) {
+      const s = adjacentSigns[0];
+      return { type: 'signpost', label: s.title ? `Read "${s.title}"` : 'Read Signpost', icon: '📜', keyHint: 'Space', x: s.x, y: s.y, canInteract: true };
+    }
+
+    // 5. Check adjacent WallDecor
+    const adjacentDecor = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.WALL_DECOR && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentDecor.length > 0) {
+      const d = adjacentDecor[0];
+      const icon = d.decorType === 'note' ? '📝' : (d.decorType === 'painting' ? '🖼️' : '🏛️');
+      return { type: 'wall_decor', label: d.title ? `Examine "${d.title}"` : 'Examine Lore', icon, keyHint: 'Space', x: d.x, y: d.y, canInteract: true };
+    }
+
+    // 6. Check floor RiddleItem
+    const floorRiddleItems = this.entities.filter(
+      e => e.type === ENTITY_TYPES.RIDDLE_ITEM && !e.isCarried && !e.isSlotted && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    );
+    if (floorRiddleItems.length > 0 && !this.player.hasCarriedRiddleItem()) {
+      const item = floorRiddleItems[0];
+      return { type: 'riddle_item', label: `Pick Up ${item.name || 'Relic'}`, icon: '🗿', keyHint: 'Space', x: item.x, y: item.y, canInteract: true };
+    }
+
+    // 7. Check adjacent Door
+    const adjacentDoors = sortByFacing(this.entities.filter(
+      e => e.type === ENTITY_TYPES.DOOR && !e.isOpen && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
+    ));
+    if (adjacentDoors.length > 0) {
+      const d = adjacentDoors[0];
+      const hasKey = this.player.hasKey(d.requiresKey);
+      return {
+        type: 'door',
+        label: hasKey ? `Unlock ${d.name || 'Door'}` : `Locked (${d.name || 'Door'})`,
+        icon: hasKey ? '🗝️' : '🔒',
+        keyHint: 'Space',
+        x: d.x,
+        y: d.y,
+        canInteract: hasKey,
+      };
+    }
+
+    // 8. Check on-cell Exit
+    const exit = this.getMatchingExit(px, py, pe);
+    if (exit) {
+      return {
+        type: 'exit',
+        label: exit.targetRoom ? 'Proceed to Room' : 'Exit Portal',
+        icon: '🌀',
+        keyHint: 'Space',
+        x: px,
+        y: py,
+        canInteract: true,
+      };
+    }
+
+    return null;
   }
 
   /**

@@ -201,4 +201,64 @@ describe('Engine > Click-to-Move & Hotkey Toggles', () => {
 
     loop.destroy();
   });
+
+  it('detects available contextual interactions for adjacent lever and on-cell exit', () => {
+    let capturedInteraction = null;
+    let capturedScreenPos = null;
+
+    const mainCanvas = createMockCanvas();
+    const minimapCanvas = createMockCanvas(120, 120);
+    const loop = new GameLoop({
+      mainCanvas,
+      minimapCanvas,
+      level: testLevel,
+      uiCallbacks: {
+        onInteractionAvailable: (interaction, screenPos) => {
+          capturedInteraction = interaction;
+          capturedScreenPos = screenPos;
+        },
+      },
+    });
+
+    // Move player adjacent to lever at (3, 1) -> stand at (3, 2) facing north
+    loop.player.gridX = 3;
+    loop.player.gridY = 2;
+    loop.player.worldX = 3 * 32 + 16;
+    loop.player.worldY = 2 * 32 + 16;
+    loop.player.facing = 'north';
+
+    const interaction = loop.getAvailableInteraction();
+    assert(interaction !== null, 'Found available interaction near lever');
+    assertEqual(interaction.type, 'lever', 'Interaction type is lever');
+    assertEqual(interaction.x, 3);
+    assertEqual(interaction.y, 1);
+    assertEqual(interaction.canInteract, true);
+
+    // Run update to verify uiCallbacks is invoked with screen position
+    loop.update(16);
+    assert(capturedInteraction !== null, 'Callback received interaction');
+    assertEqual(capturedInteraction.type, 'lever');
+    assert(capturedScreenPos !== null, 'Callback received screen position');
+    assert(typeof capturedScreenPos.x === 'number', 'Screen X is a number');
+    assert(typeof capturedScreenPos.y === 'number', 'Screen Y is a number');
+
+    // Trigger manual interaction (simulate tapping the floating interact button)
+    const leverEntity = loop.entities.find(e => e.id === 'lever_1');
+    assertEqual(leverEntity.state, false, 'Lever initially false');
+    loop.handleManualInteract();
+    assertEqual(leverEntity.state, true, 'Lever toggled true via manual interaction');
+
+    // Move player onto exit at (5, 1)
+    loop.player.gridX = 5;
+    loop.player.gridY = 1;
+    loop.player.worldX = 5 * 32 + 16;
+    loop.player.worldY = 1 * 32 + 16;
+
+    const exitInteraction = loop.getAvailableInteraction();
+    assert(exitInteraction !== null, 'Found exit interaction');
+    assertEqual(exitInteraction.type, 'exit');
+
+    loop.destroy();
+  });
 });
+
