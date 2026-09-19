@@ -209,6 +209,9 @@
             <button class="btn btn-secondary pause-action-btn" id="btn-pause-sound">
               🔊 <span>Sound FX: ON</span>
             </button>
+            <button class="btn btn-secondary pause-action-btn" id="btn-pause-hotkeys">
+              ⌨️ <span>Hotkeys: ON [Full]</span>
+            </button>
             <button class="btn btn-secondary pause-action-btn" id="btn-pause-save">
               💾 <span>Save Game Progress (.json)</span>
             </button>
@@ -1069,17 +1072,19 @@
         }
       }
 
-      if (e.code === 'KeyL' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      const hotkeysActive = !window.gameLoop || window.gameLoop.areHotkeysEnabled();
+
+      if (e.code === 'KeyL' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         toggleActivityLogModal();
-      } else if (e.code === 'KeyT' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      } else if (e.code === 'KeyT' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         promptRestartConfirmation();
-      } else if (e.code === 'KeyQ' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      } else if (e.code === 'KeyQ' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         audioFX.playClick();
         gameLoop.rotateLeft();
-      } else if (e.code === 'KeyR' && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      } else if (e.code === 'KeyR' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         audioFX.playClick();
         gameLoop.rotateRight();
@@ -1147,6 +1152,14 @@
         if (!isMuted) audioFX.playClick();
         showToast(isMuted ? 'Sound FX Muted' : 'Sound FX Enabled', 'info');
         return isMuted;
+      },
+      onToggleHotkeys: () => {
+        if (!window.gameLoop) return true;
+        const next = !window.gameLoop.areHotkeysEnabled();
+        window.gameLoop.setHotkeysEnabled(next);
+        audioFX.playClick();
+        showToast(next ? '⌨️ Hotkeys: ON [Full]' : '⌨️ Simple Keyboard Mode [Movement & Space only]', 'info');
+        return next;
       },
       onQuit: () => {
         audioFX.playClick();

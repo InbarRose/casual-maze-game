@@ -416,6 +416,31 @@ export class GameLoop {
   }
 
   /**
+   * Check whether single-letter shortcut hotkeys (Q, R, T, M, V) are enabled.
+   * If false, the game operates in Simple Keyboard Mode (WASD/Arrows + Space/Enter only).
+   * @returns {boolean}
+   */
+  areHotkeysEnabled() {
+    const hotkeysEnabled = StorageManager.getSetting('hotkeys_enabled', true);
+    const simpleMode = StorageManager.getSetting('simple_keyboard_mode', false);
+    return !!hotkeysEnabled && !simpleMode;
+  }
+
+  /**
+   * Toggle or set single-letter hotkeys on or off.
+   * @param {boolean} enabled
+   */
+  setHotkeysEnabled(enabled) {
+    const val = !!enabled;
+    StorageManager.setSetting('hotkeys_enabled', val);
+    StorageManager.setSetting('simple_keyboard_mode', !val);
+    globalEvents.emit('hotkeys:toggled', { enabled: val });
+    if (typeof this.uiCallbacks.onHotkeysChanged === 'function') {
+      this.uiCallbacks.onHotkeysChanged(val);
+    }
+  }
+
+  /**
    * Bind keyboard, mouse, and touch events
    */
   bindInputs() {
@@ -426,13 +451,14 @@ export class GameLoop {
       this.keysDown.add(e.code);
       if (e.key) this.keysDown.add(e.key);
 
-      // Handle Instant Actions
-      const isMap = KEY_CODES.MAP.includes(e.code) || (e.key && KEY_CODES.MAP.includes(e.key));
-      const isRestart = KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key));
+      // Handle Instant Actions (gated by hotkeys toggle / simple keyboard mode)
+      const hotkeysActive = this.areHotkeysEnabled();
+      const isMap = hotkeysActive && (KEY_CODES.MAP.includes(e.code) || (e.key && KEY_CODES.MAP.includes(e.key)));
+      const isRestart = hotkeysActive && (KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key)));
       const isInteract = KEY_CODES.INTERACT.includes(e.code) || (e.key && KEY_CODES.INTERACT.includes(e.key));
-      const isViewMode = KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)));
-      const isRotateLeft = KEY_CODES.ROTATE_LEFT && (KEY_CODES.ROTATE_LEFT.includes(e.code) || (e.key && KEY_CODES.ROTATE_LEFT.includes(e.key)));
-      const isRotateRight = KEY_CODES.ROTATE_RIGHT && (KEY_CODES.ROTATE_RIGHT.includes(e.code) || (e.key && KEY_CODES.ROTATE_RIGHT.includes(e.key)));
+      const isViewMode = hotkeysActive && KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)));
+      const isRotateLeft = hotkeysActive && KEY_CODES.ROTATE_LEFT && (KEY_CODES.ROTATE_LEFT.includes(e.code) || (e.key && KEY_CODES.ROTATE_LEFT.includes(e.key)));
+      const isRotateRight = hotkeysActive && KEY_CODES.ROTATE_RIGHT && (KEY_CODES.ROTATE_RIGHT.includes(e.code) || (e.key && KEY_CODES.ROTATE_RIGHT.includes(e.key)));
 
       if (isMap) {
         this.toggleFreePan();
