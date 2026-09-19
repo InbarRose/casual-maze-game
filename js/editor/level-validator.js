@@ -340,19 +340,25 @@ export class LevelValidator {
     const collectedKeys = new Set();
     const reachableKeys = new Set();
     const visitedStates = new Set();
+    const toggledLevers = new Set();
+    const currentGround = (level.layers?.ground || []).map(r => [...r]);
 
     let exitReached = false;
     const reachableTiles = new Set(); // "x,y"
 
-    // Construct entity list where lockedDoorIds are forced closed with a non-existent key
+    // Construct entity list where lockedDoorIds are forced closed with a non-existent key,
+    // and puzzle gates are marked unlockable (solvable) by default
     const testEntities = (level.entities || []).map(e => {
       if (e.type === ENTITY_TYPES.DOOR && lockedDoorIds.has(e.id)) {
         return { ...e, isOpen: false, requiresKey: '__NEVER_UNLOCKABLE__' };
       }
+      if (e.type === ENTITY_TYPES.PUZZLE_GATE) {
+        return { ...e, isUnlocked: true };
+      }
       return { ...e };
     });
 
-    // Multi-pass BFS: whenever a new key is collected, previously blocked doors might now open
+    // Multi-pass BFS: whenever a new key is collected or lever flipped, previously blocked passages might open
     let keysChanged = true;
 
     while (keysChanged) {
@@ -385,6 +391,25 @@ export class LevelValidator {
           }
         }
 
+        // Check for levers at this position and elevation
+        for (const entity of level.entities || []) {
+          if (
+            entity.type === ENTITY_TYPES.LEVER &&
+            entity.x === x &&
+            entity.y === y &&
+            (entity.z ?? entity.elevation ?? 0) === elevation &&
+            !toggledLevers.has(entity.id)
+          ) {
+            toggledLevers.add(entity.id);
+            for (const t of entity.targets || []) {
+              if (t.layer === 'ground' && t.x !== undefined && t.y !== undefined) {
+                currentGround[t.y][t.x] = t.stateA ?? 0;
+                keysChanged = true;
+              }
+            }
+          }
+        }
+
         // Check for teleporters at this position
         for (const entity of level.entities || []) {
           if (
@@ -411,20 +436,28 @@ export class LevelValidator {
           { dx: 1, dy: 0 },
         ];
 
+        const curLevel = {
+          ...level,
+          layers: {
+            ground: currentGround,
+            overhead: level.layers?.overhead || [],
+          },
+        };
+
         for (const d of dirs) {
           const nx = x + d.dx;
           const ny = y + d.dy;
 
           if (nx < 0 || nx >= width || ny < 0 || ny >= height) continue;
 
-          // Evaluate collision using CollisionEngine
+          // Evaluate collision using CollisionEngine with active ground layer
           const moveResult = CollisionEngine.checkMove(
             x,
             y,
             nx,
             ny,
             elevation,
-            level,
+            curLevel,
             testEntities,
             Array.from(collectedKeys)
           );
