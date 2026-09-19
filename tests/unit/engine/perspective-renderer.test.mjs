@@ -99,6 +99,8 @@ describe('Engine > Perspective Renderer', () => {
         arc: () => {},
         fill: () => {},
         stroke: () => {},
+        rect: () => {},
+        roundRect: () => {},
         ellipse: () => {},
         createRadialGradient: () => ({ addColorStop: () => {} }),
       }),

@@ -84,12 +84,22 @@
       justify-content: center;
       position: relative;
       border-bottom: 1px solid var(--border);
+      transition: all var(--transition-fast);
+    }
+    .asset-preview-box.angled-mode {
+      perspective: 500px;
+      background: radial-gradient(circle at center, #1e293b 0%, #090d16 100%);
     }
     .asset-preview-box img, .asset-preview-box svg {
       width: 72px;
       height: 72px;
       object-fit: contain;
       filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+      transition: transform 0.25s ease, filter 0.25s ease;
+    }
+    .asset-preview-box.angled-mode img, .asset-preview-box.angled-mode svg {
+      transform: rotateX(24deg) scale(1.08);
+      filter: drop-shadow(0 14px 20px rgba(0,0,0,0.75));
     }
     .asset-type-badge {
       position: absolute;
@@ -149,6 +159,9 @@
       <span class="badge" id="asset-count-badge">Loading...</span>
     </div>
     <div class="header-right">
+      <button id="btn-catalog-perspective" class="btn btn-secondary btn-sm" title="Toggle Perspective Preview: Angled 2.5D / Top-Down (V)">
+        📐 Perspective: <span id="catalog-perspective-label">2.5D</span>
+      </button>
       <a href="index.html" class="btn btn-secondary btn-sm">🏠 Back to Game</a>
       <a href="editor.html" class="btn btn-primary btn-sm">🛠️ Level Editor</a>
     </div>
@@ -191,17 +204,35 @@
         <div class="filter-pills" id="category-filters">
           <button class="filter-pill active" data-category="all">All</button>
           <button class="filter-pill" data-category="ground">Ground</button>
+          <button class="filter-pill" data-category="angled">📐 2.5D Angled</button>
           <button class="filter-pill" data-category="variations">Variations</button>
           <button class="filter-pill" data-category="bridges">Bridges</button>
           <button class="filter-pill" data-category="ramps">Ramps</button>
           <button class="filter-pill" data-category="keys">Keys</button>
           <button class="filter-pill" data-category="doors">Doors</button>
           <button class="filter-pill" data-category="levers">Levers</button>
+          <button class="filter-pill" data-category="teleporters">🌀 Teleporters</button>
+          <button class="filter-pill" data-category="hazards">🔥 Hazards</button>
+          <button class="filter-pill" data-category="patrollers">🤖 Patrollers</button>
+          <button class="filter-pill" data-category="puzzle_gates">🧩 Puzzle Gates</button>
+          <button class="filter-pill" data-category="signposts">📜 Signposts</button>
           <button class="filter-pill" data-category="spawn">Spawn</button>
           <button class="filter-pill" data-category="exit">Exit</button>
           <button class="filter-pill" data-category="edge_passages">Edge Passages</button>
-          <button class="filter-pill" data-category="player">Player Classes</button>
+          <button class="filter-pill" data-category="player">Player</button>
           <button class="filter-pill" data-category="tools">Tools</button>
+        </div>
+      </div>
+
+      <div>
+        <div class="filter-group-title">Character Classes</div>
+        <div class="filter-pills" id="class-filters">
+          <button class="filter-pill active" data-class="all">All</button>
+          <button class="filter-pill" data-class="explorer">🎒 Explorer (Jeans &amp; Flannel)</button>
+          <button class="filter-pill" data-class="adventurer">🗺️ Adventurer</button>
+          <button class="filter-pill" data-class="knight">🛡️ Knight</button>
+          <button class="filter-pill" data-class="mage">🔮 Mage</button>
+          <button class="filter-pill" data-class="rogue">🗡️ Rogue</button>
         </div>
       </div>
 
@@ -253,9 +284,39 @@
     let activeType = 'all';
     let activeCategory = 'all';
     let activeTheme = 'all';
+    let activeClass = 'all';
     let searchQuery = '';
+    let perspectiveMode = 'angled';
+
+    try {
+      const rawSettings = localStorage.getItem('casual_maze_user_settings');
+      if (rawSettings) {
+        const parsed = JSON.parse(rawSettings);
+        if (parsed.perspective) perspectiveMode = parsed.perspective;
+      }
+      const rawPersp = localStorage.getItem('casual_maze_perspective');
+      if (rawPersp) perspectiveMode = rawPersp;
+    } catch {
+      perspectiveMode = 'angled';
+    }
+
+    function updatePerspectiveUI() {
+      const btn = document.getElementById('btn-catalog-perspective');
+      const label = document.getElementById('catalog-perspective-label');
+      if (label) label.textContent = perspectiveMode === 'angled' ? '2.5D Angled' : 'Top-Down';
+      if (btn) {
+        if (perspectiveMode === 'angled') {
+          btn.classList.add('btn-primary');
+          btn.classList.remove('btn-secondary');
+        } else {
+          btn.classList.remove('btn-primary');
+          btn.classList.add('btn-secondary');
+        }
+      }
+    }
 
     async function initCatalog() {
+      updatePerspectiveUI();
       try {
         const res = await fetch('assets/manifest.json');
         if (!res.ok) throw new Error('Manifest not found');
@@ -274,6 +335,7 @@
         if (activeType !== 'all' && a.type !== activeType) return false;
         if (activeCategory !== 'all' && a.category !== activeCategory) return false;
         if (activeTheme !== 'all' && a.style !== activeTheme && !(a.tags || []).includes(activeTheme)) return false;
+        if (activeClass !== 'all' && a.style !== activeClass) return false;
         if (searchQuery) {
           const q = searchQuery.toLowerCase();
           const matchName = a.name.toLowerCase().includes(q);
@@ -290,9 +352,11 @@
         return;
       }
 
+      const isAngled = perspectiveMode === 'angled';
+
       grid.innerHTML = filtered.map(a => `
         <div class="asset-card" data-id="${a.id}">
-          <div class="asset-preview-box">
+          <div class="asset-preview-box ${isAngled ? 'angled-mode' : ''}">
             <span class="asset-type-badge">${a.type} / ${a.category}</span>
             <img src="${a.path}" alt="${a.name}" loading="lazy" />
           </div>
@@ -349,6 +413,20 @@
       document.getElementById('asset-modal').classList.remove('active');
     });
 
+    // Wire perspective toggle
+    document.getElementById('btn-catalog-perspective')?.addEventListener('click', () => {
+      perspectiveMode = perspectiveMode === 'angled' ? 'topdown' : 'angled';
+      try {
+        const rawSettings = localStorage.getItem('casual_maze_user_settings');
+        const settings = rawSettings ? JSON.parse(rawSettings) : {};
+        settings.perspective = perspectiveMode;
+        localStorage.setItem('casual_maze_user_settings', JSON.stringify(settings));
+        localStorage.setItem('casual_maze_perspective', perspectiveMode);
+      } catch {}
+      updatePerspectiveUI();
+      renderGrid();
+    });
+
     // Wire filters
     document.querySelectorAll('#type-filters .filter-pill').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -373,6 +451,15 @@
         document.querySelectorAll('#category-filters .filter-pill').forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
         activeCategory = btn.dataset.category;
+        renderGrid();
+      });
+    });
+
+    document.querySelectorAll('#class-filters .filter-pill').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('#class-filters .filter-pill').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        activeClass = btn.dataset.class;
         renderGrid();
       });
     });
