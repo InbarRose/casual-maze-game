@@ -306,6 +306,11 @@ class TestRunner {
 
     if (typeof process !== 'undefined' && typeof process.exit === 'function') {
       if (this.results.failed > 0) {
+        console.log(`\n${colors.bold}${colors.red}Failures Summary (${this.results.failed}):${colors.reset}`);
+        for (const failure of this.results.failures) {
+          console.log(`  ${colors.red}✗ [${failure.suite}] ${failure.test}${colors.reset}`);
+          console.log(`    ${colors.gray}${failure.error.message}${colors.reset}`);
+        }
         console.log(`\n${colors.bold}${colors.red}❌ ${this.results.failed} TEST(S) FAILED${colors.reset}\n`);
         process.exit(1);
       } else {

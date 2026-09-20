@@ -120,8 +120,13 @@ All test assertions will report `0 FAILED` with exit code `0`.
 
 ## 📚 Documentation & Technical Specifications
 
-Detailed architecture, schemas, testing plans, and operational guides are organized in the [`docs/`](docs/) directory:
+Detailed architecture, schemas, testing plans, level design methodology, and operational guides are organized in the [`docs/`](docs/) directory:
 
+* **[docs/BACKLOG.md](docs/BACKLOG.md)**: Authoritative master product backlog tracking 32 items across 7 epics, priorities (P0–P3), and delivery sprints.
+* **[docs/LEVEL_DESIGN_PHILOSOPHY.md](docs/LEVEL_DESIGN_PHILOSOPHY.md)**: 4-stage *Kishōtenketsu* methodology, anti-box spatial labyrinth rules, and zero-bypass gating guarantees.
+* **[docs/LEVEL_AUDIT_RUBRIC.md](docs/LEVEL_AUDIT_RUBRIC.md)**: 6-axis 60-point multi-perspective evaluation rubric with automated release quality thresholds.
+* **[docs/LEVEL_SCORING_REGISTER.md](docs/LEVEL_SCORING_REGISTER.md)**: Baseline scoring register, chapter audits, and workshopping iteration logs across all 38 levels.
+* **[docs/GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md](docs/GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md)**: Root-cause diagnosis and remediation roadmaps for 8 reported UX, engine, mobile, and editor gaps.
 * **[docs/TESTING_PLAN.md](docs/TESTING_PLAN.md)**: Zero-dependency test harness, subsystem coverage matrices, user journeys, future activity templates, and CI gating.
 * **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)**: Deep technical subsystems, 2D raycasting LoS, collision engine, and full file map.
 * **[docs/LEVEL_SCHEMA.md](docs/LEVEL_SCHEMA.md)**: Canonical JSON level schema, tile codes, entity definitions, and config flags.

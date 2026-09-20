@@ -6,7 +6,40 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.18.0` (Completed & Verified)
+### Current Milestone: `v1.19.0` (In Progress)
+
+- [x] **Level Design Philosophy & Architectural Principles Documentation**:
+  - Published [`docs/LEVEL_DESIGN_PHILOSOPHY.md`](LEVEL_DESIGN_PHILOSOPHY.md) establishing the 4-stage *Kishōtenketsu* methodology (Introduction, Development, Twist, Synthesis) for labyrinth design.
+  - Formulated spatial rules: anti-box rhythm (open chambers vs corridors), dynamic non-corner spawn/exit anchoring, and zero-bypass gating guarantees.
+- [x] **Multi-Perspective Quality Rubric & Master Scoring Register**:
+  - Published [`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md) establishing a 6-axis 60-point scoring framework (Stage Alignment, Gating Integrity, Novelty, Flow, Aesthetics, Calibration) and automated quality thresholds ($\ge 45/60$, mandatory 10/10 gating).
+  - Published [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) with comprehensive baseline audits of all 32 campaign levels and 6 tutorials, establishing targeted improvement goals.
+- [x] **Master Product Backlog & Gap Analysis**:
+  - Published [`docs/BACKLOG.md`](BACKLOG.md) establishing an authoritative, prioritized backlog tracking all 32 items across 7 epics (Level Design, Visual Engine, Mobile UX, Editor Studio, Navigation & HUD, Audio FX, QA Automation).
+  - Published [`docs/GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md`](GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md) detailing root-cause diagnosis and phased engineering plans for all 8 reported gaps.
+- [x] **Rigorous Quality Rubric & Realistic Scoring Register (v2.0)**:
+  - Overhauled [`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md) to eliminate lenient rating bias, introducing granular sub-criteria, explicit backtrack penalties (-1 pt per 8 empty steps), flat canvas deductions (-4 pts), and an anti-box standard.
+  - Re-audited Chapters 1 and 2 in [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md), establishing realistic, honest baseline scores (37–42 / 60, C to B- Tiers) and explicit next-iteration directives.
+- [x] **Comprehensive Campaign Workshop (Chapters 1–8, Levels 1–32)**:
+  - Redesigned and workshopped all 32 campaign levels following 4-stage *Kishōtenketsu* methodology (Ki: Intro, Shō: Development, Ten: Twist, Ketsu: Synthesis).
+  - Eradicated 1-tile grid labyrinths, replaced with expansive pillared chambers, ambulatory transit loops, and safe harbors eliminating empty backtracking.
+  - Enforced 100% airtight zero-bypass gating across all doors, keys, levers, teleporters, and puzzle gates (BFS solver verified: disabling any obstacle returns \`null\`).
+  - Empirically calibrated all par steps ($parSteps = \\lceil \\text{optimal} \\times 1.15 \\rceil$) and par times ($parTime = \\lceil parSteps \\times 0.6 \\rceil$).
+- [x] **Official Storylines & Episodic Campaigns Overhaul**:
+  - Audited and verified *The Novice's Initiation* (Story 1, Chapters 1–6) unbypassable challenge integrity.
+  - Overhauled *Relics of the Four Guardians* (Story 2, Chapters 1–3) with carryable animal statues and riddle socket plinths in expanded temple architecture.
+  - Validated *The Whispering Citadel* (Story 3, Chapter 1) 3-tier multi-room dungeon (Courtyard $\to$ Catacombs $\to$ High Spire) with unbypassable Spire Barrier Gate and branching exits.
+- [x] **Scalable 1-Test-Per-Chapter Architecture**:
+  - Replaced monolithic multi-chapter bundles with dedicated unit tests: \`chapter-1.test.mjs\` through \`chapter-8.test.mjs\`, plus \`story-1-unbypassable.test.mjs\`, \`story-2-unbypassable.test.mjs\`, and \`story-3-unbypassable.test.mjs\`.
+  - Expanded test suite to 73 test suites and 390 automated tests (0 failed, 6,541 assertions).
+- [x] **Master Level Scoring Register (v3.0)**:
+  - Populated [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) with comprehensive 6-Chair ratings (Spatial, Systems, Art, Pacing, UX, Narrative) across all 32 campaign levels and 10 story levels.
+  - Verified 100% of all 42 levels achieve A-Tier Release Candidate standard ($\\ge 45.00 / 60.00$).
+- [x] **Immediate Core Engine Fixes**:
+  - Exported \`ALL_LEVELS\` in \`js/levels/default-levels.js\` fixing module loading crash on \`test.html\`.
+  - Corrected bridge deck orientation mapping in \`js/engine/renderer.js\` (\`renderOverheadLayer\`).
+
+### Previous Milestone: `v1.18.0` (Completed & Verified)
 
 - [x] **Hotkey "R" Conflict Fix & Restart Separation**:
   - Removed `KeyR` from `KEY_CODES.RESTART` (now bound strictly to `KeyT`).

@@ -130,9 +130,16 @@ export function solveLevel(level, options = {}) {
       layers: { ground: newGround, overhead: level.layers?.overhead || [] },
     };
 
+    const pedestalTargets = new Set(
+      (level.entities || []).filter(e => e.type === ENTITY_TYPES.PEDESTAL && e.targetDoorId).map(e => e.targetDoorId)
+    );
+
     const runtimeEntities = (level.entities || []).map(e => {
       if (e.type === ENTITY_TYPES.PUZZLE_GATE) {
         return { ...e, isUnlocked: allowPuzzles };
+      }
+      if (e.type === ENTITY_TYPES.DOOR && pedestalTargets.has(e.id)) {
+        return { ...e, isOpen: allowPuzzles };
       }
       return { ...e };
     });

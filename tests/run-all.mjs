@@ -50,6 +50,16 @@ import './unit/levels/multi-room.test.mjs';
 import './unit/levels/level-drift.test.mjs';
 import './unit/stories/storylines.test.mjs';
 import './unit/levels/story-1-unbypassable.test.mjs';
+import './unit/levels/story-2-unbypassable.test.mjs';
+import './unit/levels/story-3-unbypassable.test.mjs';
+import './unit/levels/chapter-1.test.mjs';
+import './unit/levels/chapter-2.test.mjs';
+import './unit/levels/chapter-3.test.mjs';
+import './unit/levels/chapter-4.test.mjs';
+import './unit/levels/chapter-5.test.mjs';
+import './unit/levels/chapter-6.test.mjs';
+import './unit/levels/chapter-7.test.mjs';
+import './unit/levels/chapter-8.test.mjs';
 
 // 5. Editor Subsystem Unit Tests
 import './unit/editor/level-validator.test.mjs';

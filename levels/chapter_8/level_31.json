@@ -31,8 +31,8 @@
     "style": "portal",
     "label": "Sanctuary of the Four Winds"
   },
-  "parSteps": 58,
-  "parTime": 38,
+  "parSteps": 38,
+  "parTime": 23,
   "architectNote": "Four faces of the monolith tell one story. Walk the perimeter and rotate the view to read each inscription.",
   "help": {
     "title": "Level 31: The Four-Faced Pillar",

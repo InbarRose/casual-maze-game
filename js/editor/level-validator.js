@@ -367,7 +367,8 @@ export class LevelValidator {
       if (reachability.exitReached) {
         for (const door of doorEntities) {
           const dz = door.z ?? door.elevation ?? 0;
-          if (door.requiresKey && keyEntities.has(door.requiresKey)) {
+          const isGated = (door.requiresKey && keyEntities.has(door.requiresKey)) || pedestalTargets.has(door.id);
+          if (isGated) {
             const bypassCheck = this.analyzeReachability(level, keyEntities, doorEntities, new Set([door.id]));
             if (bypassCheck.exitReached) {
               warnings.push({
@@ -470,11 +471,20 @@ export class LevelValidator {
     let exitReached = false;
     const reachableTiles = new Set(); // "x,y"
 
+    const pedestalTargets = new Set(
+      (level.entities || []).filter(e => e.type === 'pedestal' && e.targetDoorId).map(e => e.targetDoorId)
+    );
+
     // Construct entity list where lockedDoorIds are forced closed with a non-existent key,
-    // and puzzle gates are marked unlockable (solvable) by default
+    // and puzzle gates / pedestal doors are marked unlockable (solvable) by default
     const testEntities = (level.entities || []).map(e => {
-      if (e.type === ENTITY_TYPES.DOOR && lockedDoorIds.has(e.id)) {
-        return { ...e, isOpen: false, requiresKey: '__NEVER_UNLOCKABLE__' };
+      if (e.type === ENTITY_TYPES.DOOR) {
+        if (lockedDoorIds.has(e.id)) {
+          return { ...e, isOpen: false, requiresKey: '__NEVER_UNLOCKABLE__' };
+        }
+        if (pedestalTargets.has(e.id)) {
+          return { ...e, isOpen: true };
+        }
       }
       if (e.type === ENTITY_TYPES.PUZZLE_GATE) {
         return { ...e, isUnlocked: true };

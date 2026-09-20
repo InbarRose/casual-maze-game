@@ -52,8 +52,8 @@
       "targetLevel": "story_citadel_1"
     }
   ],
-  "parSteps": 72,
-  "parTime": 46,
+  "parSteps": 34,
+  "parTime": 21,
   "architectNote": "At the apex of the monolith, two distinct routes await: return victorious to the Grand Hub, or branch downward into the Whispering Citadel.",
   "help": {
     "title": "Level 32: The Prismatic Spire",
