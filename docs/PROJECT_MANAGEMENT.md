@@ -16,8 +16,12 @@ This document tracks project milestones, current release status, active developm
   - Published [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) with comprehensive baseline audits of all 32 campaign levels and 6 tutorials, establishing targeted improvement goals.
 - [x] **Comprehensive Gap Analysis & Remediation Backlog**:
   - Published [`docs/GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md`](GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md) identifying root causes and actionable plans for all 8 reported gaps (test/replay crash, rotation bugs, level repetition, obstacle bypasses, settings, assets, mobile, and editor).
-- [/] **Workshopping Chapter 1 (Levels 1–4) & Chapter 2 (Levels 5–8)**:
-  - Redesigning Levels 1–4 (The Foundation) and 5–8 (The Vertical Dimension) to break corner-to-corner scaling and enforce strict Kishōtenketsu progression.
+- [x] **Workshopping Chapter 1 (Levels 1–4) & Chapter 2 (Levels 5–8)**:
+  - Redesigned Levels 1–4 (The Foundation) and 5–8 (The Vertical Dimension) to break the "same layout just larger scale" corner-to-corner template.
+  - Implemented 4-stage *Kishōtenketsu* progression across both chapters with dynamic non-corner spawn/exit anchors and anti-box spatial rhythm.
+  - Enforced 100% zero-bypass integrity on all 8 levels: every key, door, bridge deck, and underpass is strictly required.
+  - Added dedicated unit test suite `tests/unit/levels/chapter-1-and-2-redesign.test.mjs` verifying solvability, zero bypasses, dimension variance, and elevation traversal.
+  - Synchronized manifests, cryptographic hashes, and default level files (`npm run manifests:update`).
 - [x] **Immediate Core Engine Fixes**:
   - Exported `ALL_LEVELS` in `js/levels/default-levels.js` fixing module loading crash on `test.html`.
   - Corrected bridge deck orientation mapping in `js/engine/renderer.js` (`renderOverheadLayer`).

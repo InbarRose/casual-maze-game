@@ -19,14 +19,14 @@ This document maintains the master audit register, baseline evaluation scores, a
 | **T4** | Elevation & Ramps | Tutorial | Ki | 8 | 10 | 8 | 8 | 8 | 9 | **51** | A | Approved |
 | **T5** | The High Bridge | Tutorial | Shō | 8 | 10 | 8 | 8 | 8 | 9 | **51** | A | Approved |
 | **T6** | Dimensional Portal | Tutorial | Ketsu | 9 | 10 | 8 | 8 | 8 | 9 | **52** | A | Approved (Repaired) |
-| **1** | First Footsteps | Ch 1: Foundation | Ki | 6 | 10 | 5 | 7 | 7 | 8 | **43** | B | ⚠️ Queue: Workshop |
-| **2** | The Ruby Lock | Ch 1: Foundation | Shō | 6 | 10 | 5 | 6 | 7 | 8 | **42** | B | ⚠️ Queue: Workshop |
-| **3** | Prismatic Corridors | Ch 1: Foundation | Ten | 5 | 10 | 5 | 6 | 6 | 7 | **39** | C | ⚠️ Queue: Workshop |
-| **4** | The Shrouded Vault | Ch 1: Foundation | Ketsu | 6 | 10 | 5 | 6 | 6 | 7 | **40** | C | ⚠️ Queue: Workshop |
-| **5** | The Wooden Ramp | Ch 2: Vertical | Ki | 6 | 10 | 6 | 7 | 5 | 8 | **42** | B | ⚠️ Queue: Workshop |
-| **6** | Canopy Crossings | Ch 2: Vertical | Shō | 6 | 10 | 5 | 6 | 5 | 7 | **39** | C | ⚠️ Queue: Workshop |
-| **7** | Emerald Overlook | Ch 2: Vertical | Ten | 5 | 10 | 5 | 6 | 5 | 7 | **38** | C | ⚠️ Queue: Workshop |
-| **8** | Skyway Citadel | Ch 2: Vertical | Ketsu | 6 | 10 | 6 | 6 | 5 | 7 | **40** | C | ⚠️ Queue: Workshop |
+| **1** | First Footsteps | Ch 1: Foundation | Ki | 9 | 10 | 8 | 9 | 8 | 9 | **53** | A | Approved (Workshopped) |
+| **2** | The Ruby Lock | Ch 1: Foundation | Shō | 9 | 10 | 8 | 9 | 9 | 9 | **54** | A | Approved (Workshopped) |
+| **3** | Prismatic Corridors | Ch 1: Foundation | Ten | 9 | 10 | 9 | 8 | 8 | 9 | **53** | A | Approved (Workshopped) |
+| **4** | The Shrouded Vault | Ch 1: Foundation | Ketsu | 9 | 10 | 9 | 9 | 9 | 9 | **55** | A | Approved (Workshopped) |
+| **5** | The Canopy Bridge | Ch 2: Vertical | Ki | 9 | 10 | 9 | 9 | 9 | 9 | **55** | A | Approved (Workshopped) |
+| **6** | Canopy Crossings | Ch 2: Vertical | Shō | 9 | 10 | 9 | 9 | 8 | 9 | **54** | A | Approved (Workshopped) |
+| **7** | The Sunken Chasm | Ch 2: Vertical | Ten | 9 | 10 | 9 | 9 | 8 | 9 | **54** | A | Approved (Workshopped) |
+| **8** | Citadel of the Two Horizons | Ch 2: Vertical | Ketsu | 9 | 10 | 9 | 9 | 10 | 9 | **56** | S | Approved (Workshopped) |
 | **9** | The Iron Lever | Ch 3: Clockwork | Ki | 7 | 10 | 7 | 7 | 7 | 8 | **46** | B | Scheduled v1.19 |
 | **10** | Clockwork Gates | Ch 3: Clockwork | Shō | 7 | 10 | 7 | 7 | 7 | 8 | **46** | B | Scheduled v1.19 |
 | **11** | Shifting Foundations | Ch 3: Clockwork | Ten | 7 | 10 | 7 | 7 | 7 | 7 | **45** | B | Scheduled v1.19 |
