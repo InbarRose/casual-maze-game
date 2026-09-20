@@ -132,7 +132,9 @@ export class Player {
    * @returns {boolean}
    */
   hasItem(idOrType) {
-    return (this.carriedItems || []).some(item => item.id === idOrType || item.itemType === idOrType);
+    const inCarried = (this.carriedItems || []).some(item => item.id === idOrType || item.itemType === idOrType);
+    const inInventory = (this.inventory || []).includes(idOrType);
+    return inCarried || inInventory;
   }
 
   /**

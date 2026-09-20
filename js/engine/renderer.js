@@ -15,6 +15,8 @@ export class GameRenderer {
     this.ctx = canvas.getContext('2d', { alpha: false });
     this.perspective = 'angled'; // 'angled' | 'topdown'
     this.particles = [];
+    this.ambientParticles = [];
+    this.maxAmbientParticles = 35;
     this.floatingTexts = [];
     this.shockwaves = [];
     this.exitPulseTimer = 0;
@@ -59,7 +61,7 @@ export class GameRenderer {
     }
 
     this.exitPulseTimer += dt * 3;
-    this.updateEffects(dt);
+    this.updateEffects(dt, level, camera);
 
     // 1. Clear background
     ctx.fillStyle = theme.bg;
@@ -136,7 +138,7 @@ export class GameRenderer {
     player.render(ctx, playerScreen.x, playerScreen.y, tileSize, this.perspective, angle);
 
     if (level.config.fogOfWar && fog) {
-      this.renderFogOfWar(ctx, fog, bounds, camera, theme);
+      this.renderFogOfWar(ctx, fog, bounds, camera, theme, player, entities, level);
     }
   }
 
@@ -167,9 +169,9 @@ export class GameRenderer {
     // 6. Overhead Entities & Player (if player overhead) with Y-sorting
     this.renderYSortedEntities(ctx, entities, player, ELEVATION.OVERHEAD, camera, fog, tileSize, heightOffset);
 
-    // 9. Fog-of-War Mask
+    // 9. Fog-of-War Mask with dynamic lighting gradients (BL-12)
     if (level.config.fogOfWar && fog) {
-      this.renderFogOfWar(ctx, fog, bounds, camera, theme);
+      this.renderFogOfWar(ctx, fog, bounds, camera, theme, player, entities, level);
     }
   }
 
@@ -502,12 +504,45 @@ export class GameRenderer {
     ctx.save();
     const elevatedY = screenY - heightOffset;
 
-    // 1. Drop shadow onto ground below
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.52)';
+    // 1. Directional drop shadow onto ground below (BL-13)
+    // Elevated bridge deck at Z=1 casts angled shadow with umbra and penumbra
+    const shadowOffsetX = Math.round(tileSize * 0.08);
+    const shadowOffsetY = Math.round(heightOffset * 0.42);
+
     if (direction === 'NS') {
-      ctx.fillRect(screenX + tileSize * 0.12 + 6, screenY + 6, tileSize * 0.76, tileSize);
+      // Soft ambient penumbra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(
+        screenX + tileSize * 0.12 + shadowOffsetX - 2,
+        screenY + shadowOffsetY - 2,
+        tileSize * 0.76 + 4,
+        tileSize + 4
+      );
+      // Core directional umbra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.48)';
+      ctx.fillRect(
+        screenX + tileSize * 0.12 + shadowOffsetX,
+        screenY + shadowOffsetY,
+        tileSize * 0.76,
+        tileSize
+      );
     } else {
-      ctx.fillRect(screenX + 6, screenY + tileSize * 0.12 + 6, tileSize, tileSize * 0.76);
+      // Soft ambient penumbra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(
+        screenX + shadowOffsetX - 2,
+        screenY + tileSize * 0.12 + shadowOffsetY - 2,
+        tileSize + 4,
+        tileSize * 0.76 + 4
+      );
+      // Core directional umbra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.48)';
+      ctx.fillRect(
+        screenX + shadowOffsetX,
+        screenY + tileSize * 0.12 + shadowOffsetY,
+        tileSize,
+        tileSize * 0.76
+      );
     }
 
     // 2. Vertical Support Pillars
@@ -544,10 +579,38 @@ export class GameRenderer {
   }
 
   /**
-   * Render Ramp in angled mode with incline slope
+   * Render Ramp in angled mode with incline slope and elevation drop shadow (BL-13)
    */
   renderAngledRamp(ctx, rampTile, screenX, screenY, tileSize, theme, heightOffset) {
     ctx.save();
+
+    // 1. Incline elevation shadow cast by rising ramp deck (BL-13)
+    const shadowOffsetX = Math.round(tileSize * 0.08);
+    const shadowOffsetY = Math.round(heightOffset * 0.35);
+
+    if (typeof ctx.createLinearGradient === 'function') {
+      let grad;
+      if (rampTile === TILES.RAMP_N) {
+        grad = ctx.createLinearGradient(screenX, screenY + tileSize, screenX, screenY);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.42)');
+      } else if (rampTile === TILES.RAMP_S) {
+        grad = ctx.createLinearGradient(screenX, screenY, screenX, screenY + tileSize);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.42)');
+      } else if (rampTile === TILES.RAMP_E) {
+        grad = ctx.createLinearGradient(screenX, screenY, screenX + tileSize, screenY);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.42)');
+      } else {
+        grad = ctx.createLinearGradient(screenX + tileSize, screenY, screenX, screenY);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.42)');
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(screenX + shadowOffsetX, screenY + shadowOffsetY, tileSize, tileSize);
+    }
+
     this.renderRamp(ctx, rampTile, screenX, screenY, tileSize, theme);
 
     // Side railing slope
@@ -776,12 +839,19 @@ export class GameRenderer {
   renderBridgeSpan(ctx, direction, screenX, screenY, tileSize, theme) {
     ctx.save();
 
-    // 1. Drop shadow onto ground below
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    // 1. Drop shadow onto ground below (BL-13)
+    const shadowOffsetX = 4;
+    const shadowOffsetY = 4;
     if (direction === 'NS') {
-      ctx.fillRect(screenX + tileSize * 0.12 + 5, screenY + 4, tileSize * 0.76, tileSize);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(screenX + tileSize * 0.12 + shadowOffsetX - 2, screenY + shadowOffsetY - 2, tileSize * 0.76 + 4, tileSize + 4);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillRect(screenX + tileSize * 0.12 + shadowOffsetX, screenY + shadowOffsetY, tileSize * 0.76, tileSize);
     } else {
-      ctx.fillRect(screenX + 4, screenY + tileSize * 0.12 + 5, tileSize, tileSize * 0.76);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(screenX + shadowOffsetX - 2, screenY + tileSize * 0.12 + shadowOffsetY - 2, tileSize + 4, tileSize * 0.76 + 4);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillRect(screenX + shadowOffsetX, screenY + tileSize * 0.12 + shadowOffsetY, tileSize, tileSize * 0.76);
     }
 
     // Check for vector SVG bridge asset
@@ -1267,9 +1337,9 @@ export class GameRenderer {
   }
 
   /**
-   * Render Fog-of-War overlay mask
+   * Render Fog-of-War overlay mask with dynamic radial lighting gradients (BL-12)
    */
-  renderFogOfWar(ctx, fog, bounds, camera, theme) {
+  renderFogOfWar(ctx, fog, bounds, camera, theme, player = null, entities = [], level = null) {
     const tileSize = camera.tileSize;
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
@@ -1289,6 +1359,140 @@ export class GameRenderer {
         // VISIBLE (2) has no mask, revealing full brightness
       }
     }
+
+    // Dynamic Radial Lighting & Torch Glow (BL-12)
+    this.renderFogLightingGradients(ctx, fog, camera, theme, player, entities, level, tileSize);
+  }
+
+  /**
+   * Render soft radial lighting falloff and torch glow halos under Fog of War (BL-12)
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {FogOfWar} fog
+   * @param {Camera} camera
+   * @param {object} theme
+   * @param {Player|null} player
+   * @param {Array<object>} entities
+   * @param {object|null} level
+   * @param {number} tileSize
+   */
+  renderFogLightingGradients(ctx, fog, camera, theme, player, entities = [], level = null, tileSize = 32) {
+    ctx.save();
+
+    // 1. Explorer Radial Lighting Aura
+    if (player && typeof player.worldX === 'number' && typeof player.worldY === 'number') {
+      const hasTorch = typeof player.hasTorch === 'function' && player.hasTorch();
+      const baseRadius = hasTorch ? tileSize * 3.8 : tileSize * 2.6;
+      const flicker = 0.94 + Math.sin(this.exitPulseTimer * 2.5) * 0.06;
+      const radius = baseRadius * flicker;
+
+      const playerScreen = camera.worldToScreen(player.worldX, player.worldY, true);
+
+      if (typeof ctx.createRadialGradient === 'function') {
+        const lightGrad = ctx.createRadialGradient(
+          playerScreen.x,
+          playerScreen.y,
+          tileSize * 0.2,
+          playerScreen.x,
+          playerScreen.y,
+          radius
+        );
+
+        if (hasTorch) {
+          lightGrad.addColorStop(0, 'rgba(251, 146, 60, 0.45)');
+          lightGrad.addColorStop(0.4, 'rgba(249, 115, 22, 0.2)');
+          lightGrad.addColorStop(0.75, 'rgba(249, 115, 22, 0.08)');
+          lightGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+        } else {
+          lightGrad.addColorStop(0, 'rgba(254, 240, 138, 0.3)');
+          lightGrad.addColorStop(0.5, 'rgba(254, 240, 138, 0.1)');
+          lightGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+        }
+
+        ctx.fillStyle = lightGrad;
+        ctx.beginPath();
+        ctx.arc(playerScreen.x, playerScreen.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 2. Placed Wall Torches & Carriable Torches
+    if (entities && entities.length > 0) {
+      for (const ent of entities) {
+        const isTorch = (ent.type === ENTITY_TYPES.WALL_DECOR && ent.decorType === 'torch') ||
+                        (ent.type === ENTITY_TYPES.COLLECTIBLE && ent.itemId === 'torch');
+        if (!isTorch) continue;
+
+        const ex = Math.round(ent.x);
+        const ey = Math.round(ent.y);
+        // Only glow if tile is visible or explored
+        if (fog && !fog.isExplored(ex, ey) && !fog.isVisible(ex, ey)) continue;
+
+        const screen = camera.worldToScreen(ent.x * tileSize + tileSize / 2, ent.y * tileSize + tileSize / 2, true);
+        const seed = (ex * 17 + ey * 31);
+        const flicker = 0.9 + Math.sin(this.exitPulseTimer * 3.2 + seed) * 0.1;
+        const torchRadius = tileSize * 2.2 * flicker;
+
+        if (typeof ctx.createRadialGradient === 'function') {
+          const torchGrad = ctx.createRadialGradient(
+            screen.x,
+            screen.y,
+            tileSize * 0.1,
+            screen.x,
+            screen.y,
+            torchRadius
+          );
+          torchGrad.addColorStop(0, 'rgba(254, 215, 170, 0.5)');
+          torchGrad.addColorStop(0.4, 'rgba(249, 115, 22, 0.25)');
+          torchGrad.addColorStop(0.8, 'rgba(249, 115, 22, 0.08)');
+          torchGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+
+          ctx.fillStyle = torchGrad;
+          ctx.beginPath();
+          ctx.arc(screen.x, screen.y, torchRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    // 3. Wall Sconce Variations in bounds (tile_wall_*_torch)
+    if (level && level.layers && level.layers.ground) {
+      const bounds = camera.getViewportBounds(level.dimensions.width, level.dimensions.height, 1);
+      const ground = level.layers.ground;
+      for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+        for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+          if (ground[y]?.[x] !== TILES.WALL) continue;
+          const isTorchSconce = ((x * 19 + y * 29) % 23 === 0);
+          if (!isTorchSconce) continue;
+
+          if (fog && !fog.isExplored(x, y) && !fog.isVisible(x, y)) continue;
+
+          const screen = camera.worldToScreen(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2, true);
+          const flicker = 0.91 + Math.sin(this.exitPulseTimer * 2.8 + x + y) * 0.09;
+          const sconceRadius = tileSize * 1.8 * flicker;
+
+          if (typeof ctx.createRadialGradient === 'function') {
+            const sconceGrad = ctx.createRadialGradient(
+              screen.x,
+              screen.y,
+              tileSize * 0.1,
+              screen.x,
+              screen.y,
+              sconceRadius
+            );
+            sconceGrad.addColorStop(0, 'rgba(254, 215, 170, 0.42)');
+            sconceGrad.addColorStop(0.5, 'rgba(249, 115, 22, 0.18)');
+            sconceGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+
+            ctx.fillStyle = sconceGrad;
+            ctx.beginPath();
+            ctx.arc(screen.x, screen.y, sconceRadius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+    }
+
+    ctx.restore();
   }
 
   /**
@@ -1352,11 +1556,13 @@ export class GameRenderer {
   }
 
   /**
-   * Update all particle, shockwave, and floating text lifetimes
+   * Update all particle, shockwave, floating text, and ambient particle lifetimes
    * @param {number} dt
+   * @param {object|null} [level=null]
+   * @param {Camera|null} [camera=null]
    */
-  updateEffects(dt) {
-    // 1. Particles
+  updateEffects(dt, level = null, camera = null) {
+    // 1. Burst Particles
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
       p.x += p.vx * dt;
@@ -1380,10 +1586,164 @@ export class GameRenderer {
       ft.life -= dt * 0.9;
       if (ft.life <= 0) this.floatingTexts.splice(i, 1);
     }
+
+    // 4. Dynamic Atmospheric Particles (BL-11)
+    if (level && camera) {
+      this.updateAmbientParticles(dt, level, camera);
+    }
   }
 
   /**
-   * Render all world effects (particles, shockwaves, floating text)
+   * Update biome-specific ambient particle simulation (BL-11)
+   * @param {number} dt
+   * @param {object} level
+   * @param {Camera} camera
+   */
+  updateAmbientParticles(dt, level, camera) {
+    const themeKey = level?.config?.theme || 'dungeon';
+    const tileSize = camera.tileSize || 32;
+    const { width: mazeW, height: mazeH } = level.dimensions || { width: 20, height: 20 };
+    const bounds = camera.getViewportBounds
+      ? camera.getViewportBounds(mazeW, mazeH, 2)
+      : { startCol: 0, endCol: mazeW - 1, startRow: 0, endRow: mazeH - 1 };
+
+    const minX = bounds.startCol * tileSize;
+    const maxX = (bounds.endCol + 1) * tileSize;
+    const minY = bounds.startRow * tileSize;
+    const maxY = (bounds.endRow + 1) * tileSize;
+
+    // 1. Update existing ambient particles
+    for (let i = this.ambientParticles.length - 1; i >= 0; i--) {
+      const p = this.ambientParticles[i];
+      p.life -= dt;
+      const sway = Math.sin(this.exitPulseTimer * p.swayFreq + p.seed) * p.swayAmp;
+      p.x += (p.vx + sway) * dt;
+      p.y += p.vy * dt;
+
+      // Cull if lifetime expired or wandered too far outside active viewport
+      if (p.life <= 0 || p.x < minX - 60 || p.x > maxX + 60 || p.y < minY - 60 || p.y > maxY + 60) {
+        this.ambientParticles.splice(i, 1);
+      }
+    }
+
+    // 2. Replenish ambient particles up to budget (max 35)
+    while (this.ambientParticles.length < this.maxAmbientParticles) {
+      const p = this.createAmbientParticle(themeKey, minX, maxX, minY, maxY);
+      this.ambientParticles.push(p);
+    }
+  }
+
+  /**
+   * Spawn a new ambient particle tailored to the active biome (BL-11)
+   * @param {string} themeKey
+   * @param {number} minX
+   * @param {number} maxX
+   * @param {number} minY
+   * @param {number} maxY
+   * @returns {object}
+   */
+  createAmbientParticle(themeKey, minX, maxX, minY, maxY) {
+    const x = minX + Math.random() * (maxX - minX);
+    const y = minY + Math.random() * (maxY - minY);
+    const seed = Math.random() * 1000;
+
+    switch (themeKey) {
+      case 'magma': {
+        // Rising glowing embers / fiery sparks
+        const colors = ['#f97316', '#ef4444', '#fbbf24', '#f59e0b'];
+        const maxLife = 1.4 + Math.random() * 1.0;
+        return {
+          x, y,
+          vx: (Math.random() - 0.5) * 20,
+          vy: -(35 + Math.random() * 45), // Rises upward
+          swayAmp: 18,
+          swayFreq: 2.8,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.5 + Math.random() * 2.0,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.85,
+        };
+      }
+      case 'jungle': {
+        // Floating emerald spores / glowing pollen
+        const colors = ['#22c55e', '#86efac', '#4ade80', '#a7f3d0'];
+        const maxLife = 2.2 + Math.random() * 1.4;
+        return {
+          x, y,
+          vx: (Math.random() - 0.5) * 16,
+          vy: 10 + Math.random() * 18, // Gently drifting downward
+          swayAmp: 22,
+          swayFreq: 1.6,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.8 + Math.random() * 1.8,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.75,
+        };
+      }
+      case 'glacial': {
+        // Falling snowflakes / frost sparkles
+        const colors = ['#e0f2fe', '#38bdf8', '#ffffff', '#bae6fd'];
+        const maxLife = 2.0 + Math.random() * 1.2;
+        return {
+          x, y,
+          vx: (Math.random() - 0.5) * 12,
+          vy: 28 + Math.random() * 32, // Falls like snow
+          swayAmp: 14,
+          swayFreq: 2.0,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.5 + Math.random() * 1.8,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.8,
+        };
+      }
+      case 'temple': {
+        // Floating golden dust / mystic glitter
+        const colors = ['#fbbf24', '#fde047', '#d97706', '#fef08a'];
+        const maxLife = 1.8 + Math.random() * 1.4;
+        return {
+          x, y,
+          vx: 16 + Math.random() * 20, // Diagonal breeze
+          vy: 8 + Math.random() * 14,
+          swayAmp: 12,
+          swayFreq: 2.2,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.4 + Math.random() * 1.8,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.8,
+        };
+      }
+      case 'dungeon':
+      default: {
+        // Floating subterranean dust motes
+        const colors = ['rgba(226, 232, 240, 0.45)', 'rgba(203, 213, 225, 0.4)', 'rgba(255, 255, 255, 0.35)'];
+        const maxLife = 2.5 + Math.random() * 1.5;
+        return {
+          x, y,
+          vx: (Math.random() - 0.5) * 14,
+          vy: (Math.random() - 0.5) * 14, // Omnidirectional lazy drift
+          swayAmp: 8,
+          swayFreq: 1.2,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.2 + Math.random() * 1.4,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.65,
+        };
+      }
+    }
+  }
+
+  /**
+   * Render all world effects (particles, shockwaves, floating text, ambient particles)
    * @param {CanvasRenderingContext2D} ctx
    * @param {Camera} camera
    */
@@ -1405,7 +1765,7 @@ export class GameRenderer {
       ctx.restore();
     }
 
-    // 2. Particles
+    // 2. Burst Particles
     if (this.particles.length > 0) {
       ctx.save();
       for (const p of this.particles) {
@@ -1419,7 +1779,24 @@ export class GameRenderer {
       ctx.restore();
     }
 
-    // 3. Floating In-World Text
+    // 3. Dynamic Atmospheric Particles (BL-11)
+    if (this.ambientParticles && this.ambientParticles.length > 0) {
+      ctx.save();
+      for (const p of this.ambientParticles) {
+        const screen = camera.worldToScreen(p.x, p.y, true);
+        const progress = Math.max(0, Math.min(1, p.life / p.maxLife));
+        const alpha = Math.sin(progress * Math.PI) * (p.baseAlpha || 0.75);
+
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(screen.x, screen.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // 4. Floating In-World Text
     if (this.floatingTexts.length > 0) {
       ctx.save();
       for (const ft of this.floatingTexts) {
