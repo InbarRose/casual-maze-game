@@ -55,6 +55,7 @@ import './unit/levels/chapter-1.test.mjs';
 import './unit/levels/chapter-2.test.mjs';
 import './unit/levels/chapter-3.test.mjs';
 import './unit/levels/chapter-4.test.mjs';
+import './unit/levels/chapter-5.test.mjs';
 
 // 5. Editor Subsystem Unit Tests
 import './unit/editor/level-validator.test.mjs';
