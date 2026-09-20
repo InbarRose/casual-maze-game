@@ -208,14 +208,28 @@ export class EditorUI {
       });
     }
 
-    // 3. Layer Switcher Tabs
+    // 3. Layer Switcher Tabs & Floating HUD (BL-22)
     const tabGround = document.getElementById('tab-layer-ground');
     const tabOverhead = document.getElementById('tab-layer-overhead');
     const statusLayer = document.getElementById('status-layer');
+    const hudIndicator = document.getElementById('layer-hud-indicator');
+    const hudTitle = document.getElementById('layer-hud-title');
+    const btnHudGround = document.getElementById('btn-hud-ground');
+    const btnHudOverhead = document.getElementById('btn-hud-overhead');
 
     const setLayer = (layer) => {
       tabGround?.classList.toggle('active', layer === LAYERS.GROUND);
       tabOverhead?.classList.toggle('active', layer === LAYERS.OVERHEAD);
+      btnHudGround?.classList.toggle('active', layer === LAYERS.GROUND);
+      btnHudOverhead?.classList.toggle('active', layer === LAYERS.OVERHEAD);
+
+      if (hudIndicator) {
+        hudIndicator.className = `layer-hud-indicator ${layer === LAYERS.OVERHEAD ? 'overhead' : 'ground'}`;
+      }
+      if (hudTitle) {
+        hudTitle.textContent = layer === LAYERS.OVERHEAD ? 'Overhead (Z=1)' : 'Ground (Z=0)';
+      }
+
       this.editorCanvas.setActiveLayer(layer);
       const z = layer === LAYERS.OVERHEAD ? 1 : 0;
       if (statusLayer) {
@@ -226,9 +240,30 @@ export class EditorUI {
 
     tabGround?.addEventListener('click', () => setLayer(LAYERS.GROUND));
     tabOverhead?.addEventListener('click', () => setLayer(LAYERS.OVERHEAD));
+    btnHudGround?.addEventListener('click', () => setLayer(LAYERS.GROUND));
+    btnHudOverhead?.addEventListener('click', () => setLayer(LAYERS.OVERHEAD));
 
-    // 4. Palette Buttons Binding
-    const paletteButtons = document.querySelectorAll('.palette-btn[data-tool], .palette-btn[data-tile], .palette-btn[data-entity]');
+    // Floating HUD View Mode Buttons (Focus / All / Solo)
+    const btnHudFocus = document.getElementById('btn-hud-view-focus');
+    const btnHudAll = document.getElementById('btn-hud-view-all');
+    const btnHudSolo = document.getElementById('btn-hud-view-solo');
+
+    const setLayerViewMode = (mode) => {
+      btnHudFocus?.classList.toggle('active', mode === 'focus');
+      btnHudAll?.classList.toggle('active', mode === 'all');
+      btnHudSolo?.classList.toggle('active', mode === 'solo');
+      this.editorCanvas.setLayerViewMode(mode);
+      console.info(`[MazeGame:Editor] Layer view mode set to "${mode}"`);
+    };
+
+    btnHudFocus?.addEventListener('click', () => setLayerViewMode('focus'));
+    btnHudAll?.addEventListener('click', () => setLayerViewMode('all'));
+    btnHudSolo?.addEventListener('click', () => setLayerViewMode('solo'));
+
+    // 4. Palette Buttons Binding (BL-20 Architectural Prefabs included)
+    const paletteButtons = document.querySelectorAll(
+      '.palette-btn[data-tool], .palette-btn[data-tile], .palette-btn[data-entity], .palette-btn[data-prefab]'
+    );
     paletteButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         paletteButtons.forEach(b => b.classList.remove('active'));
@@ -237,6 +272,7 @@ export class EditorUI {
         const tool = btn.dataset.tool;
         const tile = btn.dataset.tile;
         const entity = btn.dataset.entity;
+        const prefab = btn.dataset.prefab;
         const color = btn.dataset.color;
         const name = btn.dataset.name;
         const symbol = btn.dataset.symbol;
@@ -246,20 +282,32 @@ export class EditorUI {
         if (tool) {
           this.editorCanvas.setTool(tool);
           this.editorCanvas.selectedEntity = null;
+          this.editorCanvas.selectedPrefab = null;
           console.info(`[MazeGame:Editor] Active draw tool: "${tool.toUpperCase()}"`);
         } else if (tile !== undefined) {
           const parsedTile = !isNaN(Number(tile)) ? Number(tile) : tile;
           this.editorCanvas.setSelectedTile(parsedTile);
+          this.editorCanvas.selectedPrefab = null;
           console.info(`[MazeGame:Editor] Selected tile for painting: "${parsedTile}"`);
         } else if (entity) {
           const entityData = { color, name, symbol, itemType, style };
           this.editorCanvas.setSelectedEntity(entity, entityData);
+          this.editorCanvas.selectedPrefab = null;
           console.info(`[MazeGame:Editor] Selected entity for placement: "${entity}" (${name || symbol || color || 'Default'})`);
+        } else if (prefab) {
+          this.editorCanvas.setPrefab(prefab);
+          console.info(`[MazeGame:Editor] Selected architectural prefab for stamping: "${prefab}"`);
+          this.showToast(`Selected "${btn.textContent.trim()}" prefab. Click canvas to stamp!`, 'info', 1500);
         }
       });
     });
 
     // 5. Header Actions
+    document.getElementById('btn-auto-fix')?.addEventListener('click', () => {
+      console.info('[MazeGame:Editor] Auto-fix action clicked');
+      this.runAutoFix();
+    });
+
     document.getElementById('btn-playtest')?.addEventListener('click', () => {
       console.info('[MazeGame:Editor] Playtest launch triggered');
       this.playTest();
@@ -647,6 +695,29 @@ export class EditorUI {
 
   renderValidationModalContent() {
     this.validationModal.renderValidationModalContent();
+  }
+
+  runAutoFix() {
+    const { fixedLevel, changes, fixedCount } = LevelValidator.autoFix(this.level);
+    if (fixedCount === 0) {
+      this.showToast('No issues detected! Labyrinth is already structurally sound.', 'info');
+      return;
+    }
+
+    this.level = fixedLevel;
+    this.editorCanvas.setLevel(this.level);
+    this.pushHistory();
+    this.autoSave();
+    this.updateValidationState();
+    this.editorCanvas.render();
+
+    console.info(`[MazeGame:Editor] One-click auto-fix applied ${fixedCount} repair(s):\n${changes.map(c => `• ${c}`).join('\n')}`);
+    this.showToast(`🪄 Auto-fixed ${fixedCount} issue${fixedCount > 1 ? 's' : ''}!`, 'success', 3500);
+
+    // Refresh validation modal if currently open
+    if (document.getElementById('validation-modal')?.classList.contains('active')) {
+      this.renderValidationModalContent();
+    }
   }
 
   /* =========================================================

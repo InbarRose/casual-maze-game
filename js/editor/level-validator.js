@@ -612,11 +612,316 @@ export class LevelValidator {
   }
 
   /**
+   * Convenience helper to evaluate solvability and reachability for a level
+   * @param {object} level
+   * @returns {{ exitReached: boolean, reachableKeys: Set<string>, reachableTilesCount: number }}
+   */
+  static checkReachability(level) {
+    const keyMap = new Map((level.entities || []).filter(e => e.type === 'key').map(e => [e.id, e]));
+    const doorList = (level.entities || []).filter(e => e.type === 'door');
+    return this.analyzeReachability(level, keyMap, doorList);
+  }
+
+  /**
    * Validate level version against engine compatibility
    * @param {object} level
    * @returns {{ valid: boolean, error?: string, version: number, schemaVersion: string }}
    */
   static validateVersion(level) {
     return validateLevelVersion(level);
+  }
+
+  /**
+   * One-Click Diagnostic Auto-Fixer (BL-21)
+   * Automatically resolves common level validation errors:
+   * - Missing / out-of-bounds / wall-encased spawn and exit points
+   * - Orphaned doors missing keys (generates matching keys on reachable ground)
+   * - Missing approach ramps for multi-elevation bridges (B_EW and B_NS)
+   * - Entities placed inside solid walls (clears wall or relocates entity)
+   * - Out-of-bounds lever targets
+   * - Exit reachability corridor carve
+   *
+   * @param {object} level The level data object
+   * @returns {{ fixedLevel: object, changes: string[], fixedCount: number }}
+   */
+  static autoFix(level) {
+    if (!level || typeof level !== 'object') {
+      return { fixedLevel: level, changes: [], fixedCount: 0 };
+    }
+
+    const fixed = JSON.parse(JSON.stringify(level));
+    const changes = [];
+
+    // Ensure valid schema version
+    if (!fixed.version || typeof fixed.version !== 'number') {
+      fixed.version = LEVEL_SCHEMA_VERSION;
+      changes.push(`Set level schema version to v${LEVEL_SCHEMA_VERSION}`);
+    }
+
+    // Ensure dimensions
+    if (!fixed.dimensions || typeof fixed.dimensions.width !== 'number' || typeof fixed.dimensions.height !== 'number') {
+      fixed.dimensions = { width: 15, height: 15 };
+      changes.push('Normalized missing dimensions to default 15x15');
+    }
+    fixed.dimensions.width = Math.max(5, fixed.dimensions.width);
+    fixed.dimensions.height = Math.max(5, fixed.dimensions.height);
+    const { width, height } = fixed.dimensions;
+
+    // Ensure layers structure
+    if (!fixed.layers) fixed.layers = {};
+    if (!Array.isArray(fixed.layers.ground)) fixed.layers.ground = [];
+    if (!Array.isArray(fixed.layers.overhead)) fixed.layers.overhead = [];
+
+    for (let y = 0; y < height; y++) {
+      if (!Array.isArray(fixed.layers.ground[y])) {
+        fixed.layers.ground[y] = new Array(width).fill(0);
+      }
+      if (!Array.isArray(fixed.layers.overhead[y])) {
+        fixed.layers.overhead[y] = new Array(width).fill(0);
+      }
+      while (fixed.layers.ground[y].length < width) fixed.layers.ground[y].push(0);
+      while (fixed.layers.overhead[y].length < width) fixed.layers.overhead[y].push(0);
+    }
+
+    if (!Array.isArray(fixed.entities)) {
+      fixed.entities = [];
+    }
+
+    const ground = fixed.layers.ground;
+    const overhead = fixed.layers.overhead;
+
+    // Helper: Find open floor tile on ground
+    const findOpenFloor = (excludeCoords = new Set()) => {
+      for (let y = 1; y < height - 1; y++) {
+        for (let x = 1; x < width - 1; x++) {
+          if (!excludeCoords.has(`${x},${y}`) && ground[y][x] === 0) {
+            return { x, y };
+          }
+        }
+      }
+      for (let y = 0; y < height; y++) {
+        for (let x = 0; x < width; x++) {
+          if (!excludeCoords.has(`${x},${y}`) && ground[y][x] === 0) {
+            return { x, y };
+          }
+        }
+      }
+      return null;
+    };
+
+    const usedCoords = new Set();
+
+    // 1. Fix Entities in solid walls
+    for (const ent of fixed.entities) {
+      if (typeof ent.x === 'number' && typeof ent.y === 'number') {
+        const ez = ent.z ?? ent.elevation ?? 0;
+        const layerTiles = ez === ELEVATION.OVERHEAD ? overhead : ground;
+        if (layerTiles[ent.y]?.[ent.x] === TILES.WALL) {
+          const isInterior = ent.x > 0 && ent.x < width - 1 && ent.y > 0 && ent.y < height - 1;
+          if (isInterior) {
+            layerTiles[ent.y][ent.x] = 0;
+            changes.push(`Cleared solid wall at (${ent.x}, ${ent.y}) around entity "${ent.name || ent.id}"`);
+          } else {
+            const open = findOpenFloor(usedCoords);
+            if (open) {
+              ent.x = open.x;
+              ent.y = open.y;
+              changes.push(`Relocated entity "${ent.name || ent.id}" from perimeter wall to open floor at (${ent.x}, ${ent.y})`);
+            }
+          }
+        }
+        usedCoords.add(`${ent.x},${ent.y}`);
+      }
+    }
+
+    // 2. Fix Spawn Point
+    if (!fixed.spawn || typeof fixed.spawn.x !== 'number' || typeof fixed.spawn.y !== 'number') {
+      const open = findOpenFloor(usedCoords) || { x: 1, y: 1 };
+      fixed.spawn = { x: open.x, y: open.y, elevation: 0 };
+      ground[open.y][open.x] = 0;
+      changes.push(`Created missing spawn point at (${open.x}, ${open.y}, 0)`);
+    } else {
+      const sx = fixed.spawn.x;
+      const sy = fixed.spawn.y;
+      if (sx < 0 || sx >= width || sy < 0 || sy >= height) {
+        const open = findOpenFloor(usedCoords) || { x: 1, y: 1 };
+        fixed.spawn = { x: open.x, y: open.y, elevation: 0 };
+        ground[open.y][open.x] = 0;
+        changes.push(`Relocated out-of-bounds spawn to (${open.x}, ${open.y}, 0)`);
+      } else if (ground[sy][sx] === TILES.WALL) {
+        const isInterior = sx > 0 && sx < width - 1 && sy > 0 && sy < height - 1;
+        if (isInterior) {
+          ground[sy][sx] = 0;
+          changes.push(`Cleared wall blocking spawn point at (${sx}, ${sy}) to open floor`);
+        } else {
+          const open = findOpenFloor(usedCoords) || { x: 1, y: 1 };
+          fixed.spawn = { x: open.x, y: open.y, elevation: 0 };
+          ground[open.y][open.x] = 0;
+          changes.push(`Relocated perimeter spawn point to (${open.x}, ${open.y}, 0)`);
+        }
+      }
+    }
+    usedCoords.add(`${fixed.spawn.x},${fixed.spawn.y}`);
+
+    // 3. Fix Exit Point
+    if (!fixed.exit || typeof fixed.exit.x !== 'number' || typeof fixed.exit.y !== 'number') {
+      let ex = width - 2;
+      let ey = height - 2;
+      if (ex === fixed.spawn.x && ey === fixed.spawn.y) {
+        ex = width - 2;
+        ey = 1;
+      }
+      ground[ey][ex] = 0;
+      fixed.exit = { x: ex, y: ey, elevation: 0 };
+      changes.push(`Created missing exit point at (${ex}, ${ey}, 0)`);
+    } else {
+      const ex = fixed.exit.x;
+      const ey = fixed.exit.y;
+      if (ex < 0 || ex >= width || ey < 0 || ey >= height) {
+        let nex = width - 2;
+        let ney = height - 2;
+        ground[ney][nex] = 0;
+        fixed.exit = { x: nex, y: ney, elevation: 0 };
+        changes.push(`Relocated out-of-bounds exit point to (${nex}, ${ney}, 0)`);
+      } else if (ground[ey][ex] === TILES.WALL) {
+        ground[ey][ex] = 0;
+        changes.push(`Cleared wall blocking exit point at (${ex}, ${ey}) to open floor`);
+      }
+    }
+    usedCoords.add(`${fixed.exit.x},${fixed.exit.y}`);
+
+    // 4. Fix Orphaned / Missing Keys for Locked Doors
+    const existingKeyIds = new Set(fixed.entities.filter(e => e.type === 'key').map(e => e.id));
+    const pedestalTargets = new Set(fixed.entities.filter(e => e.type === 'pedestal' && e.targetDoorId).map(e => e.targetDoorId));
+
+    for (const ent of fixed.entities) {
+      if (ent.type === 'door') {
+        if (ent.requiresKey && !existingKeyIds.has(ent.requiresKey)) {
+          const open = findOpenFloor(usedCoords) || { x: Math.max(1, ent.x - 1), y: ent.y };
+          ground[open.y][open.x] = 0;
+          const newKey = {
+            id: ent.requiresKey,
+            type: 'key',
+            name: `${ent.name || 'Door'} Key`,
+            color: ent.color || '#fbbf24',
+            x: open.x,
+            y: open.y,
+            elevation: 0,
+            z: 0,
+          };
+          fixed.entities.push(newKey);
+          existingKeyIds.add(newKey.id);
+          usedCoords.add(`${open.x},${open.y}`);
+          changes.push(`Generated missing key "${newKey.id}" at (${open.x}, ${open.y}) for door "${ent.id}"`);
+        } else if (!ent.requiresKey && !pedestalTargets.has(ent.id)) {
+          const keyId = `key_${ent.id}`;
+          ent.requiresKey = keyId;
+          const open = findOpenFloor(usedCoords) || { x: Math.max(1, ent.x - 1), y: ent.y };
+          ground[open.y][open.x] = 0;
+          const newKey = {
+            id: keyId,
+            type: 'key',
+            name: `${ent.name || 'Door'} Key`,
+            color: ent.color || '#fbbf24',
+            x: open.x,
+            y: open.y,
+            elevation: 0,
+            z: 0,
+          };
+          fixed.entities.push(newKey);
+          existingKeyIds.add(keyId);
+          usedCoords.add(`${open.x},${open.y}`);
+          changes.push(`Assigned required key "${keyId}" at (${open.x}, ${open.y}) to unlocked door "${ent.id}"`);
+        }
+      }
+    }
+
+    // 5. Fix Missing Approach Ramps for Bridges
+    for (let y = 0; y < height; y++) {
+      for (let x = 0; x < width; x++) {
+        const gTile = ground[y][x];
+        const oTile = overhead[y][x];
+
+        if (gTile === TILES.BRIDGE_EW || oTile === TILES.BRIDGE_EW) {
+          if (overhead[y][x] !== TILES.BRIDGE_EW) overhead[y][x] = TILES.BRIDGE_EW;
+          if (ground[y][x] !== TILES.BRIDGE_EW) ground[y][x] = TILES.BRIDGE_EW;
+
+          const hasNorthRamp = y > 0 && ground[y - 1][x] === TILES.RAMP_S;
+          const hasSouthRamp = y < height - 1 && ground[y + 1][x] === TILES.RAMP_N;
+
+          if (!hasNorthRamp && !hasSouthRamp) {
+            if (y > 0) {
+              ground[y - 1][x] = TILES.RAMP_S;
+              changes.push(`Added North approach ramp (R_S) at (${x}, ${y - 1}) for East-West bridge at (${x}, ${y})`);
+            }
+            if (y < height - 1) {
+              ground[y + 1][x] = TILES.RAMP_N;
+              changes.push(`Added South approach ramp (R_N) at (${x}, ${y + 1}) for East-West bridge at (${x}, ${y})`);
+            }
+          }
+        } else if (gTile === TILES.BRIDGE_NS || oTile === TILES.BRIDGE_NS) {
+          if (overhead[y][x] !== TILES.BRIDGE_NS) overhead[y][x] = TILES.BRIDGE_NS;
+          if (ground[y][x] !== TILES.BRIDGE_NS) ground[y][x] = TILES.BRIDGE_NS;
+
+          const hasWestRamp = x > 0 && ground[y][x - 1] === TILES.RAMP_E;
+          const hasEastRamp = x < width - 1 && ground[y][x + 1] === TILES.RAMP_W;
+
+          if (!hasWestRamp && !hasEastRamp) {
+            if (x > 0) {
+              ground[y][x - 1] = TILES.RAMP_E;
+              changes.push(`Added West approach ramp (R_E) at (${x - 1}, ${y}) for North-South bridge at (${x}, ${y})`);
+            }
+            if (x < width - 1) {
+              ground[y][x + 1] = TILES.RAMP_W;
+              changes.push(`Added East approach ramp (R_W) at (${x + 1}, ${y}) for North-South bridge at (${x}, ${y})`);
+            }
+          }
+        }
+      }
+    }
+
+    // 6. Fix Out-of-Bounds Lever Targets
+    for (const ent of fixed.entities) {
+      if (ent.type === 'lever' && Array.isArray(ent.targets)) {
+        const initialCount = ent.targets.length;
+        ent.targets = ent.targets.filter(t => t && t.x >= 0 && t.x < width && t.y >= 0 && t.y < height);
+        if (ent.targets.length < initialCount) {
+          changes.push(`Removed ${initialCount - ent.targets.length} out-of-bounds target(s) from lever "${ent.id}"`);
+        }
+      }
+    }
+
+    // 7. Fix Unreachable Exit Corridor
+    const reachCheck = LevelValidator.checkReachability(fixed);
+    if (!reachCheck.exitReached) {
+      let curX = fixed.spawn.x;
+      let curY = fixed.spawn.y;
+      const targetX = fixed.exit.x;
+      const targetY = fixed.exit.y;
+
+      const stepX = targetX >= curX ? 1 : -1;
+      while (curX !== targetX) {
+        curX += stepX;
+        if (curX > 0 && curX < width - 1 && curY > 0 && curY < height - 1) {
+          if (ground[curY][curX] === TILES.WALL) ground[curY][curX] = 0;
+        }
+      }
+
+      const stepY = targetY >= curY ? 1 : -1;
+      while (curY !== targetY) {
+        curY += stepY;
+        if (curX > 0 && curX < width - 1 && curY > 0 && curY < height - 1) {
+          if (ground[curY][curX] === TILES.WALL) ground[curY][curX] = 0;
+        }
+      }
+
+      changes.push(`Carved connecting corridor to ensure exit is reachable from spawn`);
+    }
+
+    return {
+      fixedLevel: fixed,
+      changes,
+      fixedCount: changes.length,
+    };
   }
 }

@@ -51,6 +51,7 @@ import '../unit/editor/json-exporter.test.mjs';
 import '../unit/editor/editor-canvas.test.mjs';
 import '../unit/editor/editor-buttons-and-functions.test.mjs';
 import '../unit/editor/history-stack.test.mjs';
+import '../unit/editor/prefabs-and-autofix.test.mjs';
 
 // Assets
 import '../unit/assets/asset-catalog.test.mjs';
@@ -58,6 +59,7 @@ import '../unit/assets/asset-drift.test.mjs';
 
 // UI
 import '../unit/ui/audio-fx.test.mjs';
+import '../unit/ui/audio-ambience.test.mjs';
 import '../unit/ui/game-menu.test.mjs';
 import '../unit/ui/app-header.test.mjs';
 

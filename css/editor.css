@@ -177,6 +177,89 @@
   box-shadow: var(--shadow-md);
 }
 
+/* Floating Visual Layer Switcher HUD (BL-22) */
+.layer-switcher-hud {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  padding: 0.35rem 0.6rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  z-index: 10;
+  user-select: none;
+}
+
+.layer-hud-badge {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.15rem 0.45rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.layer-hud-indicator {
+  font-size: 0.7rem;
+  line-height: 1;
+}
+
+.layer-hud-indicator.ground {
+  color: #34d399;
+  text-shadow: 0 0 6px rgba(52, 211, 153, 0.8);
+}
+
+.layer-hud-indicator.overhead {
+  color: #fbbf24;
+  text-shadow: 0 0 6px rgba(251, 191, 36, 0.8);
+}
+
+.layer-hud-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.layer-hud-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.layer-hud-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.layer-hud-btn.active {
+  background: rgba(56, 189, 248, 0.18);
+  border-color: var(--accent);
+  color: var(--accent);
+  box-shadow: 0 0 8px rgba(56, 189, 248, 0.25);
+}
+
+.layer-hud-divider {
+  width: 1px;
+  height: 14px;
+  background: var(--card-border);
+  margin: 0 0.15rem;
+}
+
 /* Bottom Status Bar */
 .editor-status-bar {
   grid-column: 1 / -1;
@@ -259,6 +342,33 @@
   border-color: rgba(248, 113, 113, 0.4);
   color: var(--rose);
   background: rgba(248, 113, 113, 0.08);
+}
+
+/* Diagnostic Auto-Fixer Button (BL-21) */
+#btn-auto-fix {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  border-color: rgba(168, 85, 247, 0.4);
+  color: #c084fc;
+  background: rgba(168, 85, 247, 0.08);
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+
+#btn-auto-fix:hover {
+  border-color: #c084fc;
+  background: rgba(168, 85, 247, 0.18);
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.3);
+}
+
+#btn-auto-fix.has-issues {
+  animation: pulse-autofix 2s infinite ease-in-out;
+}
+
+@keyframes pulse-autofix {
+  0%, 100% { box-shadow: 0 0 4px rgba(168, 85, 247, 0.2); }
+  50% { box-shadow: 0 0 12px rgba(168, 85, 247, 0.55); border-color: #c084fc; }
 }
 
 /* Disabled Undo/Redo Buttons */

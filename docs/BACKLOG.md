@@ -83,9 +83,9 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-18** | **Action History Stack (Undo / Redo)** | **P1** | `v1.20.0` | Full undo/redo stack (`Ctrl+Z` / `Ctrl+Y`) for brush strokes, tile edits, and entity placement. | **Completed** |
 | **BL-19** | **Continuous Drag-to-Paint Smoothing** | **P1** | `v1.20.0` | Smooth interpolated line stamping during rapid mouse drag across canvas (no broken tile gaps). | **Completed** |
-| **BL-20** | **Multi-Tile Stamp & Prefab Palette** | **P2** | `v1.21.0` | Pre-built architectural prefabs (bridge crossings, locked vault gates, 4-way intersections) for 1-click stamping. | Planned |
-| **BL-21** | **One-Click Diagnostic Auto-Fixer** | **P2** | `v1.22.0` | Editor action to automatically resolve common errors (e.g. adding missing ramp next to bridge or matching door key). | Planned |
-| **BL-22** | **Visual Layer Switcher HUD** | **P2** | `v1.22.0` | Real-time visual overlay highlighting active editing elevation (Ground Z=0 vs Overhead Z=1) with translucent previews. | Planned |
+| **BL-20** | **Multi-Tile Stamp & Prefab Palette** | **P2** | `v1.21.0` | Pre-built architectural prefabs (bridge crossings, locked vault gates, 4-way intersections) for 1-click stamping. | **Completed** |
+| **BL-21** | **One-Click Diagnostic Auto-Fixer** | **P2** | `v1.22.0` | Editor action to automatically resolve common errors (e.g. adding missing ramp next to bridge or matching door key). | **Completed** |
+| **BL-22** | **Visual Layer Switcher HUD** | **P2** | `v1.22.0` | Real-time visual overlay highlighting active editing elevation (Ground Z=0 vs Overhead Z=1) with translucent previews. | **Completed** |
 
 ---
 
@@ -95,8 +95,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | ID | Title | Priority | Target Milestone | Acceptance Criteria | Status |
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-23** | **Universal App Header & Footer** | **P0** | `v1.16.0` | Persistent glassmorphic header and footer with live star count, profile pill, and settings modal. | **Completed** |
-| **BL-24** | **In-Game Settings & Profile Modals** | **P1** | `v1.19.0` | Mount `#app-header` and modal triggers inside `maze.html` so players can adjust settings without leaving active game. | Ready |
-| **BL-25** | **Real-Time Audio Gain Sliders** | **P1** | `v1.19.0` | Connect Master, SFX, and BGM sliders directly to `WebAudioEngine` gain nodes with live volume changes. | Ready |
+| **BL-24** | **In-Game Settings & Profile Modals** | **P1** | `v1.19.0` | Mount `#app-header` and modal triggers inside `maze.html` so players can adjust settings without leaving active game. | **Completed** |
+| **BL-25** | **Real-Time Audio Gain Sliders** | **P1** | `v1.19.0` | Connect Master, SFX, and BGM sliders directly to `WebAudioEngine` gain nodes with live volume changes. | **Completed** |
 | **BL-26** | **High-Contrast Accessibility Mode** | **P2** | `v1.21.0` | High-contrast visual mode with sharp white/black borders, colorblind key glyphs, and high-visibility explorer. | Planned |
 
 ---
@@ -107,7 +107,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | ID | Title | Priority | Target Milestone | Acceptance Criteria | Status |
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-27** | **Procedural Sound FX Engine** | **P0** | `v1.16.0` | Web Audio synthesizer triggers for footsteps, key pickup, door unlock, lever flip, and victory chimes. | **Completed** |
-| **BL-28** | **Continuous Environmental Ambience** | **P2** | `v1.22.0` | Ambient procedural background loops: dungeon wind whispers, jungle forest chirps, subterranean cavern drips. | Planned |
+| **BL-28** | **Continuous Environmental Ambience** | **P2** | `v1.22.0` | Ambient procedural background loops: dungeon wind whispers, jungle forest chirps, subterranean cavern drips. | **Completed** |
 
 ---
 
