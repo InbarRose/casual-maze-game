@@ -71,8 +71,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-14** | **Click-to-Move BFS Pathfinding Engine** | **P0** | `v1.18.0` | One-tap navigation routing explorer around obstacles and through open doors with animated target indicator. | **Completed** |
 | **BL-15** | **Contextual Floating Action Pill** | **P0** | `v1.18.0` | Glassmorphic floating interact button positioned above character for one-tap mobile activation. | **Completed** |
-| **BL-16** | **Mobile Touch Viewport & Scroll Locking** | **P1** | `v1.20.0` | Prevent accidental page rubber-banding and scrolling during canvas drag gestures on iOS Safari & Android Chrome. | Ready |
-| **BL-17** | **Minimap Pinch-to-Zoom & Pan Gesture** | **P2** | `v1.22.0` | Touch gesture support for zooming and panning the HUD minimap overlay on mobile viewports. | Planned |
+| **BL-16** | **Mobile Touch Viewport & Scroll Locking** | **P1** | `v1.20.0` | Prevent accidental page rubber-banding and scrolling during canvas drag gestures on iOS Safari & Android Chrome. | **Completed** |
+| **BL-17** | **Minimap Pinch-to-Zoom & Pan Gesture** | **P2** | `v1.22.0` | Touch gesture support for zooming and panning the HUD minimap overlay on mobile viewports. | **Completed** |
 
 ---
 
@@ -81,8 +81,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 
 | ID | Title | Priority | Target Milestone | Acceptance Criteria | Status |
 | :---: | :--- | :---: | :---: | :--- | :---: |
-| **BL-18** | **Action History Stack (Undo / Redo)** | **P1** | `v1.20.0` | Full undo/redo stack (`Ctrl+Z` / `Ctrl+Y`) for brush strokes, tile edits, and entity placement. | Ready |
-| **BL-19** | **Continuous Drag-to-Paint Smoothing** | **P1** | `v1.20.0` | Smooth interpolated line stamping during rapid mouse drag across canvas (no broken tile gaps). | Ready |
+| **BL-18** | **Action History Stack (Undo / Redo)** | **P1** | `v1.20.0` | Full undo/redo stack (`Ctrl+Z` / `Ctrl+Y`) for brush strokes, tile edits, and entity placement. | **Completed** |
+| **BL-19** | **Continuous Drag-to-Paint Smoothing** | **P1** | `v1.20.0` | Smooth interpolated line stamping during rapid mouse drag across canvas (no broken tile gaps). | **Completed** |
 | **BL-20** | **Multi-Tile Stamp & Prefab Palette** | **P2** | `v1.21.0` | Pre-built architectural prefabs (bridge crossings, locked vault gates, 4-way intersections) for 1-click stamping. | Planned |
 | **BL-21** | **One-Click Diagnostic Auto-Fixer** | **P2** | `v1.22.0` | Editor action to automatically resolve common errors (e.g. adding missing ramp next to bridge or matching door key). | Planned |
 | **BL-22** | **Visual Layer Switcher HUD** | **P2** | `v1.22.0` | Real-time visual overlay highlighting active editing elevation (Ground Z=0 vs Overhead Z=1) with translucent previews. | Planned |

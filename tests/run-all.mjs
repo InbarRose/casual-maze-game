@@ -69,6 +69,7 @@ import './unit/editor/level-validator.test.mjs';
 import './unit/editor/json-exporter.test.mjs';
 import './unit/editor/editor-canvas.test.mjs';
 import './unit/editor/editor-buttons-and-functions.test.mjs';
+import './unit/editor/history-stack.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
@@ -103,6 +104,7 @@ import './integration/journeys/multi-room-dungeon.journey.test.mjs';
 import './unit/ui/audio-fx.test.mjs';
 import './unit/ui/game-menu.test.mjs';
 import './unit/ui/app-header.test.mjs';
+import './unit/ui/touch-controls.test.mjs';
 
 // Run registered suites
 

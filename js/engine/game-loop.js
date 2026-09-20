@@ -505,15 +505,30 @@ export class GameLoop {
       window.addEventListener('keyup', this.handleKeyUp);
     }
 
-    // Minimap Click & Drag for Free-Pan
+    // Minimap Click & Drag for Free-Pan, Pinch-to-Zoom & Double-Tap (BL-17)
+    let initialPinchDist = 0;
+    let initialMinimapZoom = 1.0;
+    let lastMinimapTapTime = 0;
+    let touchMinimapStartX = 0;
+    let touchMinimapStartY = 0;
+
     this.handleMinimapMouseDown = (e) => {
       this.isDraggingMinimap = true;
-      this.panToMinimapClick(e);
+      if (this.minimap.zoom <= 1.05) {
+        this.panToMinimapClick(e);
+      }
     };
 
     this.handleMinimapMouseMove = (e) => {
       if (this.isDraggingMinimap) {
-        this.panToMinimapClick(e);
+        if (this.minimap.zoom > 1.05) {
+          const rect = this.minimapCanvas?.getBoundingClientRect?.() || { width: 180, height: 180 };
+          const gridDeltaX = -((e.movementX || 0) / (rect.width || 1)) * (this.level.dimensions.width / this.minimap.zoom);
+          const gridDeltaY = -((e.movementY || 0) / (rect.height || 1)) * (this.level.dimensions.height / this.minimap.zoom);
+          this.minimap.panBy(gridDeltaX, gridDeltaY, this.level);
+        } else {
+          this.panToMinimapClick(e);
+        }
       }
     };
 
@@ -521,8 +536,86 @@ export class GameLoop {
       this.isDraggingMinimap = false;
     };
 
+    this.handleMinimapWheel = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.25 : -0.25;
+      this.minimap.zoomBy(delta);
+    };
+
+    this.handleMinimapTouchStart = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (e.touches?.length === 2) {
+        const t1 = e.touches[0];
+        const t2 = e.touches[1];
+        initialPinchDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        initialMinimapZoom = this.minimap.zoom;
+      } else if (e.touches?.length === 1) {
+        touchMinimapStartX = e.touches[0].clientX;
+        touchMinimapStartY = e.touches[0].clientY;
+
+        const now = performance.now();
+        if (lastMinimapTapTime > 0 && (now - lastMinimapTapTime) < 300) {
+          if (this.minimap.zoom > 1.05) {
+            this.minimap.resetView();
+          } else {
+            this.minimap.setZoom(2.2);
+          }
+          lastMinimapTapTime = 0;
+          return;
+        }
+        lastMinimapTapTime = now;
+
+        this.isDraggingMinimap = true;
+        if (this.minimap.zoom <= 1.05) {
+          this.panToMinimapClick(e.touches[0]);
+        }
+      }
+    };
+
+    this.handleMinimapTouchMove = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (e.touches?.length === 2 && initialPinchDist > 0) {
+        const t1 = e.touches[0];
+        const t2 = e.touches[1];
+        const currentDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const scale = currentDist / (initialPinchDist || 1);
+        this.minimap.setZoom(initialMinimapZoom * scale);
+      } else if (e.touches?.length === 1 && this.isDraggingMinimap) {
+        const curX = e.touches[0].clientX;
+        const curY = e.touches[0].clientY;
+        const deltaPixelX = curX - touchMinimapStartX;
+        const deltaPixelY = curY - touchMinimapStartY;
+        touchMinimapStartX = curX;
+        touchMinimapStartY = curY;
+
+        if (this.minimap.zoom > 1.05) {
+          const rect = this.minimapCanvas?.getBoundingClientRect?.() || { width: 180, height: 180 };
+          const gridDeltaX = -(deltaPixelX / (rect.width || 1)) * (this.level.dimensions.width / this.minimap.zoom);
+          const gridDeltaY = -(deltaPixelY / (rect.height || 1)) * (this.level.dimensions.height / this.minimap.zoom);
+          this.minimap.panBy(gridDeltaX, gridDeltaY, this.level);
+        } else {
+          this.panToMinimapClick(e.touches[0]);
+        }
+      }
+    };
+
+    this.handleMinimapTouchEnd = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (!e.touches || e.touches.length < 2) {
+        initialPinchDist = 0;
+      }
+      if (!e.touches || e.touches.length === 0) {
+        this.isDraggingMinimap = false;
+      }
+    };
+
     if (this.minimapCanvas && typeof this.minimapCanvas.addEventListener === 'function') {
       this.minimapCanvas.addEventListener('mousedown', this.handleMinimapMouseDown);
+      this.minimapCanvas.addEventListener('touchstart', this.handleMinimapTouchStart, { passive: false });
+      this.minimapCanvas.addEventListener('touchmove', this.handleMinimapTouchMove, { passive: false });
+      this.minimapCanvas.addEventListener('touchend', this.handleMinimapTouchEnd, { passive: false });
+      this.minimapCanvas.addEventListener('touchcancel', this.handleMinimapTouchEnd, { passive: false });
+      this.minimapCanvas.addEventListener('wheel', this.handleMinimapWheel, { passive: false });
     }
     if (typeof window !== 'undefined') {
       window.addEventListener('mousemove', this.handleMinimapMouseMove);
@@ -582,8 +675,70 @@ export class GameLoop {
       }
     };
 
+    // Canvas Touch & Swipe Controls (BL-16)
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    let touchHasMoved = false;
+
+    this.handleCanvasTouchStart = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (e.touches?.length === 1) {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = performance.now();
+        touchHasMoved = false;
+      }
+    };
+
+    this.handleCanvasTouchMove = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (e.touches?.length === 1) {
+        const dx = e.touches[0].clientX - touchStartX;
+        const dy = e.touches[0].clientY - touchStartY;
+        if (Math.hypot(dx, dy) > 10) {
+          touchHasMoved = true;
+        }
+      }
+    };
+
+    this.handleCanvasTouchEnd = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (e.changedTouches?.length === 1) {
+        const endX = e.changedTouches[0].clientX;
+        const endY = e.changedTouches[0].clientY;
+        const dx = endX - touchStartX;
+        const dy = endY - touchStartY;
+        const absX = Math.abs(dx);
+        const absY = Math.abs(dy);
+        const elapsed = performance.now() - touchStartTime;
+
+        // Swipe detected: distance >= 24px within 600ms
+        if (touchHasMoved && (absX >= 24 || absY >= 24) && elapsed < 600) {
+          const direction = absX > absY ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
+          this.autoMovePath = null;
+          this.clickTarget = null;
+          this.tryMoveDirection(direction);
+          return;
+        }
+
+        // Tap detected: pathfind / interact
+        if (!touchHasMoved || Math.hypot(dx, dy) < 15) {
+          this.handleCanvasPointerDown({
+            clientX: endX,
+            clientY: endY,
+            button: 0,
+          });
+        }
+      }
+    };
+
     if (this.canvas && typeof this.canvas.addEventListener === 'function') {
       this.canvas.addEventListener('pointerdown', this.handleCanvasPointerDown);
+      this.canvas.addEventListener('touchstart', this.handleCanvasTouchStart, { passive: false });
+      this.canvas.addEventListener('touchmove', this.handleCanvasTouchMove, { passive: false });
+      this.canvas.addEventListener('touchend', this.handleCanvasTouchEnd, { passive: false });
+      this.canvas.addEventListener('touchcancel', this.handleCanvasTouchEnd, { passive: false });
     }
   }
 
@@ -603,9 +758,18 @@ export class GameLoop {
     }
     if (this.minimapCanvas && typeof this.minimapCanvas.removeEventListener === 'function') {
       this.minimapCanvas.removeEventListener('mousedown', this.handleMinimapMouseDown);
+      this.minimapCanvas.removeEventListener('touchstart', this.handleMinimapTouchStart);
+      this.minimapCanvas.removeEventListener('touchmove', this.handleMinimapTouchMove);
+      this.minimapCanvas.removeEventListener('touchend', this.handleMinimapTouchEnd);
+      this.minimapCanvas.removeEventListener('touchcancel', this.handleMinimapTouchEnd);
+      this.minimapCanvas.removeEventListener('wheel', this.handleMinimapWheel);
     }
     if (this.canvas && typeof this.canvas.removeEventListener === 'function') {
       this.canvas.removeEventListener('pointerdown', this.handleCanvasPointerDown);
+      this.canvas.removeEventListener('touchstart', this.handleCanvasTouchStart);
+      this.canvas.removeEventListener('touchmove', this.handleCanvasTouchMove);
+      this.canvas.removeEventListener('touchend', this.handleCanvasTouchEnd);
+      this.canvas.removeEventListener('touchcancel', this.handleCanvasTouchEnd);
     }
   }
 
@@ -626,7 +790,7 @@ export class GameLoop {
    * Pan camera to minimap point
    */
   panToMinimapClick(e) {
-    const { gridX, gridY } = this.minimap.mapClickToGrid(e.clientX, e.clientY, this.level);
+    const { gridX, gridY } = this.minimap.mapClickToGrid(e.clientX, e.clientY, this.level, this.player);
     const tileSize = this.camera.tileSize;
     this.camera.setMode('freepan');
     this.camera.x = gridX * tileSize + tileSize / 2;
