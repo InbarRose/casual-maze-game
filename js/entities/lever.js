@@ -5,6 +5,7 @@
 
 import { ENTITY_TYPES } from '../core/constants.js';
 import { globalEvents } from '../core/events.js';
+import { assetLoader } from '../core/asset-loader.js';
 
 export class Lever {
   /**
@@ -18,13 +19,14 @@ export class Lever {
     this.state = !!config.state; // false = unpulled, true = pulled
     this.style = config.style || 'switch_lever'; // 'switch_lever' | 'pressure_pedestal' | 'crystal_switch' | 'runic_plate' | 'cog_wheel'
     this.oneWay = !!config.oneWay;
+    this.name = config.name || 'Switch';
+    this.color = config.color || '#38bdf8';
+    this.targets = Array.isArray(config.targets) ? config.targets : []; // [{ action, x, y, layer, stateA, stateB }]
     this.z = config.z ?? config.elevation ?? 0;
     this.elevation = this.z;
-    this.name = config.name || 'Switch';
-    this.targets = Array.isArray(config.targets) ? JSON.parse(JSON.stringify(config.targets)) : [];
 
-    // Visual animation for switch handle / cog rotation
-    this.handleAngle = this.state ? 0.6 : -0.6;
+    // Visual animation handle angle
+    this.handleAngle = this.state ? 0.65 : -0.65;
     this.cogRotation = this.state ? Math.PI : 0;
   }
 
@@ -45,8 +47,8 @@ export class Lever {
   }
 
   /**
-   * Toggle lever state and apply mutations to level
-   * @param {object} level Canonical level object
+   * Toggle switch state and apply target reactions
+   * @param {object} level
    * @returns {boolean} new state
    */
   toggle(level) {
@@ -93,7 +95,7 @@ export class Lever {
   }
 
   /**
-   * Render lever / mechanism with customized visual style
+   * Render lever / mechanism with customized visual style and vector SVG sprite integration
    * @param {CanvasRenderingContext2D} ctx
    * @param {number} screenX
    * @param {number} screenY
@@ -105,6 +107,29 @@ export class Lever {
     const baseW = tileSize * 0.76;
     const baseH = tileSize * 0.44;
     const pulse = Math.sin(this.pulseTimer || 0) * 0.15 + 0.85;
+
+    // Check for matching vector asset
+    let leverAssetId = null;
+    if (this.style === 'pressure_pedestal') {
+      leverAssetId = this.state ? 'pedestal_active' : 'pedestal_inactive';
+    } else if (this.style === 'crystal_switch') {
+      leverAssetId = this.state ? 'crystal_active' : 'crystal_inactive';
+    } else if (this.style === 'runic_plate') {
+      leverAssetId = this.state ? 'runic_plate_on' : 'runic_plate_off';
+    } else if (this.style === 'cog_wheel') {
+      leverAssetId = this.state ? 'cog_valve_on' : 'cog_valve_off';
+    } else {
+      leverAssetId = this.state ? 'lever_switch_on' : 'lever_switch_off';
+    }
+
+    const leverImg = assetLoader.getImage(leverAssetId);
+    if (leverImg) {
+      ctx.save();
+      const pad = tileSize * 0.08;
+      ctx.drawImage(leverImg, screenX + pad, screenY + pad, tileSize - pad * 2, tileSize - pad * 2);
+      ctx.restore();
+      return;
+    }
 
     ctx.save();
 

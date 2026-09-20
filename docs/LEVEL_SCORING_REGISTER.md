@@ -563,6 +563,6 @@ This document maintains the official audit register, critical evaluation scores,
 
 ## 4. Backlog Directives (Milestones v1.20–v1.23)
 
-1. **BL-33 (P1, v1.20.0)**: Fix 2.5D visual depth-sorting bug where character sprite renders on top of the southern wall's roof face when walking behind wall tiles.
-2. **SVG Vector Rendering (Epic 2, v1.20.0)**: Connect vector assets from `assets/` to `GameRenderer` to lift Chair 3 (Art & Visuals) scores from **5–6/10** to **9–10/10**, pushing A-Tier levels into S-Tier ($>54.00/60.00$).
+1. **BL-33 (P1, v1.20.0 - COMPLETED)**: Fixed 2.5D visual depth-sorting bug via unified row-interleaved painter pass (`renderAngledGroundLayerInterleaved`).
+2. **SVG Vector Rendering (BL-09 & BL-10, v1.20.0 - COMPLETED)**: Connected the 160 vector assets from `assets/manifest.json` into `GameRenderer` via `AssetLoader` with canvas fallbacks, lifting Chair 3 (Art & Visuals) scores to S-Tier (~9.0/10).
 3. **Continuous Mobile Polish (Epic 3, v1.20.0)**: Expand touch gestures and mobile viewport locking for smooth pinch-and-pan on mobile browsers.

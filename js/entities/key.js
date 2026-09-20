@@ -4,6 +4,7 @@
  */
 
 import { ENTITY_TYPES } from '../core/constants.js';
+import { assetLoader } from '../core/asset-loader.js';
 
 export class Key {
   /**
@@ -53,7 +54,7 @@ export class Key {
   }
 
   /**
-   * Render the key with customizable gemstone/relic style
+   * Render the key with customizable gemstone/relic style and vector SVG sprite integration
    * @param {CanvasRenderingContext2D} ctx
    * @param {number} screenX
    * @param {number} screenY
@@ -75,6 +76,21 @@ export class Key {
     const blurMult = this.glowEffect === 'subtle' ? 6 : (this.glowEffect === 'pulse' ? 18 * pulse : 14);
     ctx.shadowColor = this.color;
     ctx.shadowBlur = blurMult;
+
+    // Check for matching vector asset
+    let keyAssetId = 'key_classic';
+    if (this.style === 'crystal') keyAssetId = 'key_crystal';
+    else if (this.style === 'orb') keyAssetId = 'key_orb';
+    else if (this.style === 'relic') keyAssetId = 'key_relic';
+    else if (this.style === 'skull') keyAssetId = 'key_skull';
+    else if (this.style === 'ornate') keyAssetId = 'key_ornate';
+
+    const keyImg = assetLoader.getImage(keyAssetId) || assetLoader.getImage('key_classic');
+    if (keyImg) {
+      ctx.drawImage(keyImg, -size, -size, size * 2, size * 2);
+      ctx.restore();
+      return;
+    }
 
     if (this.style === 'crystal') {
       // Elemental Crystal Shard

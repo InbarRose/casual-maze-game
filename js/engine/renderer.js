@@ -4,6 +4,7 @@
  */
 
 import { TILES, THEMES, ELEVATION, FOG_STATE, ENTITY_TYPES } from '../core/constants.js';
+import { assetLoader } from '../core/asset-loader.js';
 
 export class GameRenderer {
   /**
@@ -17,6 +18,15 @@ export class GameRenderer {
     this.floatingTexts = [];
     this.shockwaves = [];
     this.exitPulseTimer = 0;
+  }
+
+  /**
+   * Helper to retrieve cached vector asset image from AssetLoader
+   * @param {string} idOrPath
+   * @returns {HTMLImageElement|null}
+   */
+  getAssetImage(idOrPath) {
+    return assetLoader.getImage(idOrPath);
   }
 
   /**
@@ -171,6 +181,7 @@ export class GameRenderer {
     const tileSize = camera.tileSize;
     const angle = camera ? camera.getDiscreteRotation() : 0;
     const isRotated90or270 = angle === 90 || angle === 270;
+    const themeKey = theme.id || level.config?.theme || 'dungeon';
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
@@ -178,9 +189,19 @@ export class GameRenderer {
         if (tile === TILES.WALL) continue; // Walls drawn in wall pass
 
         const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
-        const isAlt = (x + y) % 2 === 0;
-        ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
-        ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+
+        // Check for vector SVG floor asset (plain or cracked variation)
+        const isCracked = ((x * 13 + y * 7) % 17 === 0);
+        const variationId = isCracked ? `tile_floor_${themeKey}_cracked` : `tile_floor_${themeKey}`;
+        const floorImg = this.getAssetImage(variationId) || this.getAssetImage(`tile_floor_${themeKey}`) || this.getAssetImage('tile_floor_generic');
+
+        if (floorImg) {
+          ctx.drawImage(floorImg, screen.x, screen.y, tileSize, tileSize);
+        } else {
+          const isAlt = (x + y) % 2 === 0;
+          ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
+          ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+        }
 
         ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.02)';
         ctx.lineWidth = 1;
@@ -347,6 +368,8 @@ export class GameRenderer {
   renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground, camera) {
     const wallH = Math.round(tileSize * 0.38); // e.g. 12px for 32px tile
     const angle = camera ? camera.getDiscreteRotation() : 0;
+    const themeKey = theme?.id || 'dungeon';
+    const wallImg = this.getAssetImage(`tile_wall_${themeKey}`) || this.getAssetImage('tile_wall_dungeon');
 
     let hasFrontWall, hasLeftWall, hasRightWall;
     if (angle === 90) {
@@ -372,27 +395,35 @@ export class GameRenderer {
     }
 
     // 1. Top Cap Face (Elevated by wallH)
-    ctx.fillStyle = theme.wallTop;
-    ctx.fillRect(screenX, screenY - wallH, tileSize, tileSize);
+    if (wallImg) {
+      ctx.drawImage(wallImg, 0, 0, 64, 18, screenX, screenY - wallH, tileSize, tileSize);
+    } else {
+      ctx.fillStyle = theme.wallTop;
+      ctx.fillRect(screenX, screenY - wallH, tileSize, tileSize);
 
-    // Top highlight rim
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.fillRect(screenX, screenY - wallH, tileSize, 2);
+      // Top highlight rim
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.fillRect(screenX, screenY - wallH, tileSize, 2);
+    }
 
     // 2. Front Face (Facing downward towards camera view)
     if (!hasFrontWall) {
-      // Main vertical front face
-      ctx.fillStyle = theme.wall;
-      ctx.fillRect(screenX, screenY - wallH + tileSize, tileSize, wallH);
+      if (wallImg) {
+        ctx.drawImage(wallImg, 0, 18, 64, 42, screenX, screenY - wallH + tileSize, tileSize, wallH);
+      } else {
+        // Main vertical front face
+        ctx.fillStyle = theme.wall;
+        ctx.fillRect(screenX, screenY - wallH + tileSize, tileSize, wallH);
 
-      // Horizontal masonry mortar line
-      ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.28)';
-      ctx.fillRect(screenX, screenY - wallH + tileSize + wallH * 0.5, tileSize, 1.5);
+        // Horizontal masonry mortar line
+        ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.28)';
+        ctx.fillRect(screenX, screenY - wallH + tileSize + wallH * 0.5, tileSize, 1.5);
 
-      // Vertical brick divider
-      const brickSplit = (x % 2 === 0) ? 0.35 : 0.65;
-      ctx.fillRect(screenX + tileSize * brickSplit, screenY - wallH + tileSize, 1.5, wallH * 0.5);
-      ctx.fillRect(screenX + tileSize * (1 - brickSplit), screenY - wallH + tileSize + wallH * 0.5, 1.5, wallH * 0.5);
+        // Vertical brick divider
+        const brickSplit = (x % 2 === 0) ? 0.35 : 0.65;
+        ctx.fillRect(screenX + tileSize * brickSplit, screenY - wallH + tileSize, 1.5, wallH * 0.5);
+        ctx.fillRect(screenX + tileSize * (1 - brickSplit), screenY - wallH + tileSize + wallH * 0.5, 1.5, wallH * 0.5);
+      }
 
       // Shadow cast onto floor beneath
       ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
@@ -627,6 +658,8 @@ export class GameRenderer {
   renderGroundLayer(ctx, level, bounds, camera, theme) {
     const ground = level.layers.ground;
     const tileSize = camera.tileSize;
+    const themeKey = theme?.id || level.config?.theme || 'dungeon';
+    const wallImg = this.getAssetImage(`tile_wall_${themeKey}`) || this.getAssetImage('tile_wall_dungeon');
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
@@ -634,28 +667,41 @@ export class GameRenderer {
         const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         if (tile === TILES.WALL) {
-          // Base wall block
-          ctx.fillStyle = theme.wall;
-          ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+          if (wallImg) {
+            ctx.drawImage(wallImg, screen.x, screen.y, tileSize, tileSize);
+          } else {
+            // Base wall block
+            ctx.fillStyle = theme.wall;
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
 
-          // Top 3D cap / bevel highlight
-          ctx.fillStyle = theme.wallTop;
-          ctx.fillRect(screen.x, screen.y, tileSize, tileSize * 0.22);
+            // Top 3D cap / bevel highlight
+            ctx.fillStyle = theme.wallTop;
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize * 0.22);
 
-          // Thematic middle detail line / masonry brick pattern
-          ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
-          ctx.fillRect(screen.x + tileSize * 0.1, screen.y + tileSize * 0.58, tileSize * 0.8, 1.5);
-          ctx.fillRect(screen.x + tileSize * 0.5, screen.y + tileSize * 0.22, 1.5, tileSize * 0.36);
+            // Thematic middle detail line / masonry brick pattern
+            ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(screen.x + tileSize * 0.1, screen.y + tileSize * 0.58, tileSize * 0.8, 1.5);
+            ctx.fillRect(screen.x + tileSize * 0.5, screen.y + tileSize * 0.22, 1.5, tileSize * 0.36);
 
-          // Dark outer edge stroke
-          ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
-          ctx.lineWidth = 1;
-          ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
+            // Dark outer edge stroke
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
+          }
         } else {
-          // Floor tile (checkerboard subtle tint)
-          const isAlt = (x + y) % 2 === 0;
-          ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
-          ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+          // Check for vector SVG floor asset (plain or cracked variation)
+          const isCracked = ((x * 13 + y * 7) % 17 === 0);
+          const variationId = isCracked ? `tile_floor_${themeKey}_cracked` : `tile_floor_${themeKey}`;
+          const floorImg = this.getAssetImage(variationId) || this.getAssetImage(`tile_floor_${themeKey}`) || this.getAssetImage('tile_floor_generic');
+
+          if (floorImg) {
+            ctx.drawImage(floorImg, screen.x, screen.y, tileSize, tileSize);
+          } else {
+            // Floor tile (checkerboard subtle tint)
+            const isAlt = (x + y) % 2 === 0;
+            ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+          }
 
           // Floor grid outline
           ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.02)';
@@ -738,6 +784,16 @@ export class GameRenderer {
       ctx.fillRect(screenX + 4, screenY + tileSize * 0.12 + 5, tileSize, tileSize * 0.76);
     }
 
+    // Check for vector SVG bridge asset
+    const themeKey = theme?.id || 'dungeon';
+    const dirLower = direction.toLowerCase();
+    const bridgeImg = this.getAssetImage(`tile_bridge_${themeKey}_${dirLower}`) || this.getAssetImage(`tile_bridge_generic_${dirLower}`);
+    if (bridgeImg) {
+      ctx.drawImage(bridgeImg, screenX, screenY, tileSize, tileSize);
+      ctx.restore();
+      return;
+    }
+
     // 2. Bridge Deck
     ctx.fillStyle = theme.bridgeOverhead;
     if (direction === 'NS') {
@@ -800,6 +856,22 @@ export class GameRenderer {
    */
   renderRamp(ctx, rampTile, screenX, screenY, tileSize, theme) {
     ctx.save();
+
+    const dirMap = {
+      [TILES.RAMP_N]: 'north',
+      [TILES.RAMP_S]: 'south',
+      [TILES.RAMP_E]: 'east',
+      [TILES.RAMP_W]: 'west',
+    };
+    const dir = dirMap[rampTile] || 'north';
+    const themeKey = theme?.id || 'dungeon';
+    const rampImg = this.getAssetImage(`tile_ramp_${themeKey}_${dir}`) || this.getAssetImage(`tile_ramp_${dir}`);
+    if (rampImg) {
+      ctx.drawImage(rampImg, screenX, screenY, tileSize, tileSize);
+      ctx.restore();
+      return;
+    }
+
     ctx.fillStyle = theme.ramp;
     ctx.fillRect(screenX, screenY, tileSize, tileSize);
 
@@ -902,6 +974,18 @@ export class GameRenderer {
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
 
+    // Check for vector SVG spawn / entrance asset
+    let spawnAssetId = 'exit_stairs_up';
+    if (style === 'portal') spawnAssetId = 'exit_portal';
+    else if (style === 'archway') spawnAssetId = 'exit_archway';
+    const spawnImg = this.getAssetImage(spawnAssetId);
+    if (spawnImg) {
+      ctx.save();
+      ctx.drawImage(spawnImg, screen.x, screen.y, tileSize, tileSize);
+      ctx.restore();
+      return;
+    }
+
     ctx.save();
 
     if (style === 'portal') {
@@ -980,12 +1064,30 @@ export class GameRenderer {
       const { x, y, style = 'portal', label } = exit;
       if (fog && !fog.isExplored(x, y)) continue;
 
-      if (style === 'stairs' || style === 'stairs_up') {
-        this.renderExitStairs(ctx, x, y, camera, theme);
-      } else if (style === 'archway' || style === 'gate') {
-        this.renderExitArchway(ctx, x, y, camera, theme);
+      let exitAssetId = 'exit_portal';
+      if (style === 'stairs' || style === 'stairs_up') exitAssetId = 'exit_stairs_up';
+      else if (style === 'archway' || style === 'gate') exitAssetId = 'exit_archway';
+      else if (style === 'treasure' || style === 'chest') exitAssetId = 'exit_treasure_chest';
+      else if (style === 'shrine') exitAssetId = 'exit_shrine';
+
+      const exitImg = this.getAssetImage(exitAssetId);
+      if (exitImg) {
+        const tileSize = camera.tileSize;
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+        const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
+        ctx.save();
+        ctx.shadowColor = theme.accent || '#38bdf8';
+        ctx.shadowBlur = 12 * pulse;
+        ctx.drawImage(exitImg, screen.x, screen.y, tileSize, tileSize);
+        ctx.restore();
       } else {
-        this.renderExitPortal(ctx, x, y, camera, theme, fog);
+        if (style === 'stairs' || style === 'stairs_up') {
+          this.renderExitStairs(ctx, x, y, camera, theme);
+        } else if (style === 'archway' || style === 'gate') {
+          this.renderExitArchway(ctx, x, y, camera, theme);
+        } else {
+          this.renderExitPortal(ctx, x, y, camera, theme, fog);
+        }
       }
 
       // If exit has a destination label (e.g. "To Catacombs"), render tooltip badge

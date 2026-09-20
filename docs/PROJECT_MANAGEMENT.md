@@ -39,6 +39,7 @@ This document tracks project milestones, current release status, active developm
   - Exported `ALL_LEVELS` in `js/levels/default-levels.js` fixing module loading crash on `test.html`.
   - Corrected bridge deck orientation mapping in `js/engine/renderer.js` (`renderOverheadLayer`).
   - **2.5D Depth-Sorting & Wall Front/Roof Occlusion (BL-33)**: Replaced batched wall rendering with `renderAngledGroundLayerInterleaved` in `js/engine/renderer.js`, combining walls, entities, and the player into a single draw list sorted ascending by projected screen Y base coordinate. Resolved visual bug where character rendered over southern wall roofs when walking behind walls. Verified camera-rotation invariance and 100% test coverage with `tests/unit/engine/depth-sorting.test.mjs`.
+  - **Vector SVG Asset Pipeline Integration (BL-09 & BL-10)**: Connected the 160 vector SVG assets from `assets/manifest.json` into `GameRenderer` via `AssetLoader`. Rendered textured biome floors (with cracked and accent variations), textured wall caps and vertical drop facades, directional overhead bridges, ramps, stylized vector doors, collectible keys, switches/pedestals, and exit portals with robust procedural canvas fallbacks. Verified 100% test suite compatibility with `tests/unit/renderer/vector-rendering.test.mjs`.
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 

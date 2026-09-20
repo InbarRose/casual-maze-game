@@ -4,6 +4,7 @@
  */
 
 import { ENTITY_TYPES } from '../core/constants.js';
+import { assetLoader } from '../core/asset-loader.js';
 
 export class Door {
   /**
@@ -62,7 +63,7 @@ export class Door {
   }
 
   /**
-   * Render door gate / barrier with style awareness
+   * Render door gate / barrier with style awareness and vector SVG sprite integration
    * @param {CanvasRenderingContext2D} ctx
    * @param {number} screenX
    * @param {number} screenY
@@ -78,6 +79,31 @@ export class Door {
     const y = screenY + pad;
     const cx = x + w / 2;
     const cy = y + h / 2;
+
+    // Check for matching vector asset
+    let doorAssetId = 'door_classic';
+    if (this.style === 'laser_barrier') doorAssetId = 'door_laser_barrier';
+    else if (this.style === 'magic_seal') doorAssetId = 'door_magic_seal';
+    else if (this.style === 'crystal_spikes') doorAssetId = 'door_crystal_spikes';
+    else if (this.style === 'portcullis') doorAssetId = 'door_portcullis';
+    else if (this.style === 'vault_hatch') doorAssetId = 'door_vault_hatch';
+    else if (this.orientation === 'horizontal') doorAssetId = 'door_dungeon_horizontal';
+    else if (this.orientation === 'vertical') doorAssetId = 'door_dungeon_vertical';
+
+    const doorImg = assetLoader.getImage(doorAssetId) || assetLoader.getImage('door_classic');
+    if (doorImg) {
+      ctx.save();
+      ctx.globalAlpha = 1 - this.openProgress * 0.85;
+      ctx.shadowColor = this.color;
+      ctx.shadowBlur = 8;
+      ctx.drawImage(doorImg, x, y, w, h);
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(cx, cy, tileSize * 0.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      return;
+    }
 
     ctx.save();
     ctx.globalAlpha = 1 - this.openProgress * 0.85;
