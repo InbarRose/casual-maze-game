@@ -26,6 +26,7 @@ import './unit/engine/camera.test.mjs';
 import './unit/engine/camera-rotation.test.mjs';
 import './unit/engine/debug-logger.test.mjs';
 import './unit/engine/perspective-renderer.test.mjs';
+import './unit/engine/depth-sorting.test.mjs';
 import './unit/engine/solver.test.mjs';
 import './unit/engine/replay-player.test.mjs';
 import './unit/engine/click-to-move-and-hotkeys.test.mjs';

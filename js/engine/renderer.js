@@ -147,19 +147,14 @@ export class GameRenderer {
     if (level.spawn) this.renderSpawnEntrance(ctx, level, camera, theme, fog);
     if (level.exit) this.renderExit(ctx, level, camera, theme, fog);
 
-    // 4. Ground Walls with Front Face & Side Relief
-    this.renderAngledWalls(ctx, level, bounds, camera, theme);
+    // 4. Ground Layer Unified Interleaved Y-Sorted Pass (Walls, Entities, Player)
+    // Resolves BL-33: character and moving entities are correctly occluded by walls to their south.
+    this.renderAngledGroundLayerInterleaved(ctx, level, bounds, camera, theme, entities, player, fog, tileSize);
 
-    // 5. Thematic Perimeter & Wall Decor
-    this.renderThematicPerimeterDecor(ctx, level, bounds, camera, theme, tileSize, 0);
-
-    // 6. Ground Entities & Player (if player on ground) with Y-sorting
-    this.renderYSortedEntities(ctx, entities, player, ELEVATION.GROUND, camera, fog, tileSize, 0);
-
-    // 7. Overhead Bridges & Ramps with vertical lift and support pillars
+    // 5. Overhead Bridges & Ramps with vertical lift and support pillars
     this.renderAngledOverheadLayer(ctx, level, bounds, camera, theme, heightOffset);
 
-    // 8. Overhead Entities & Player (if player overhead) with Y-sorting
+    // 6. Overhead Entities & Player (if player overhead) with Y-sorting
     this.renderYSortedEntities(ctx, entities, player, ELEVATION.OVERHEAD, camera, fog, tileSize, heightOffset);
 
     // 9. Fog-of-War Mask
@@ -207,6 +202,124 @@ export class GameRenderer {
             ctx.fillRect(screen.x + tileSize * 0.78, screen.y, tileSize * 0.1, tileSize);
           }
         }
+      }
+    }
+  }
+
+  /**
+   * Unified Y-sorted rendering pass for ground layer walls, entities, and player
+   * Resolves BL-33: character and moving entities are correctly occluded by walls to their south.
+   */
+  renderAngledGroundLayerInterleaved(ctx, level, bounds, camera, theme, entities, player, fog, tileSize) {
+    const ground = level.layers.ground;
+    const drawables = [];
+    const themeKey = level.config.theme || 'dungeon';
+    const seed = (level.id ? String(level.id).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 42);
+
+    // 1. Collect all visible ground walls
+    const halfTile = tileSize / 2;
+    for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+      for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+        if (ground[y]?.[x] === TILES.WALL) {
+          const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+          const center = camera.worldToScreen(x * tileSize + halfTile, y * tileSize + halfTile, true);
+          drawables.push({
+            type: 'wall',
+            x,
+            y,
+            screen,
+            sortY: center.y + halfTile,
+            sortX: center.x,
+          });
+        }
+      }
+    }
+
+    // 2. Collect visible ground entities
+    for (const entity of entities) {
+      if ((entity.elevation ?? 0) !== ELEVATION.GROUND) continue;
+
+      if (fog) {
+        let isEntityVisible = fog.isVisible(Math.round(entity.x), Math.round(entity.y));
+        if (!isEntityVisible && entity.type === ENTITY_TYPES.WALL_DECOR) {
+          const fx = entity.facing === 'east' ? 1 : (entity.facing === 'west' ? -1 : 0);
+          const fy = entity.facing === 'south' ? 1 : (entity.facing === 'north' ? -1 : 0);
+          const adjX = Math.round(entity.x) + fx;
+          const adjY = Math.round(entity.y) + fy;
+          if (fog.isVisible(adjX, adjY) || fog.isExplored(adjX, adjY)) {
+            isEntityVisible = true;
+          }
+        }
+        if (!isEntityVisible) continue;
+      }
+
+      const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
+      const worldX = isContinuous ? entity.worldX : (entity.x * tileSize + tileSize / 2);
+      const worldY = isContinuous ? entity.worldY : (entity.y * tileSize + tileSize / 2);
+      const screen = camera.worldToScreen(worldX, worldY, true);
+
+      // Foot anchor in screen space:
+      const sortY = screen.y + tileSize * 0.35;
+
+      drawables.push({
+        type: 'entity',
+        ref: entity,
+        screen,
+        sortY,
+        sortX: screen.x,
+      });
+    }
+
+    // 3. Include player if on ground elevation
+    if (player.elevation === ELEVATION.GROUND) {
+      const screen = camera.worldToScreen(player.worldX, player.worldY, true);
+      // Player center is at screen.y; feet baseline is at screen.y + 11 * (tileSize / 32) ~= screen.y + tileSize * 0.344
+      const sortY = screen.y + tileSize * 0.344;
+      drawables.push({
+        type: 'player',
+        ref: player,
+        screen,
+        sortY,
+        sortX: screen.x,
+      });
+    }
+
+    // 4. Sort ascending by sortY (back to front in screen space)
+    drawables.sort((a, b) => {
+      if (Math.abs(a.sortY - b.sortY) > 0.01) {
+        return a.sortY - b.sortY;
+      }
+      return a.sortX - b.sortX;
+    });
+
+    // 5. Render sorted items
+    for (const item of drawables) {
+      if (item.type === 'wall') {
+        this.renderAngledWall(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, ground, camera);
+        this.renderThematicPerimeterDecorTile(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, themeKey, seed, ground, 0);
+      } else if (item.type === 'player') {
+        const screen = item.screen;
+        if (player.hasTorch && player.hasTorch()) {
+          ctx.save();
+          const pulse = Math.sin(this.exitPulseTimer * 1.5) * 0.1 + 0.9;
+          const torchRadius = tileSize * 1.5 * pulse;
+          const grad = ctx.createRadialGradient(screen.x, screen.y, tileSize * 0.15, screen.x, screen.y, torchRadius);
+          grad.addColorStop(0, 'rgba(251, 146, 60, 0.4)');
+          grad.addColorStop(0.6, 'rgba(249, 115, 22, 0.15)');
+          grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(screen.x, screen.y, torchRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        const angle = camera ? camera.getDiscreteRotation() : 0;
+        player.render(ctx, screen.x, screen.y, tileSize, this.perspective, angle);
+      } else {
+        const entity = item.ref;
+        const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
+        const screen = isContinuous ? item.screen : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize, true);
+        entity.render(ctx, screen.x, screen.y, tileSize, this.perspective);
       }
     }
   }
@@ -1313,6 +1426,54 @@ export class GameRenderer {
   }
 
   /**
+   * Render theme-specific decorative art on a single wall tile
+   */
+  renderThematicPerimeterDecorTile(ctx, x, y, screenX, sy, tileSize, themeKey, seed, ground, heightOffset = 0) {
+    const hasSouthCorridor = ground[y + 1]?.[x] !== TILES.WALL && ground[y + 1]?.[x] !== undefined;
+    const hash = this.getDecorHash(x, y, seed);
+
+    if (themeKey === 'dungeon') {
+      if (hasSouthCorridor && hash < 0.12) {
+        this.renderDungeonSkeleton(ctx, screenX, sy, tileSize);
+      } else if (hasSouthCorridor && hash >= 0.12 && hash < 0.26) {
+        this.renderIronChains(ctx, screenX, sy, tileSize, hash);
+      } else if (hash >= 0.26 && hash < 0.38) {
+        this.renderCobweb(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'jungle') {
+      if (hasSouthCorridor && hash < 0.30) {
+        this.renderJungleVines(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.30 && hash < 0.50) {
+        this.renderFernPatch(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'temple') {
+      if (hasSouthCorridor && hash < 0.22) {
+        this.renderTempleArch(ctx, screenX, sy, tileSize);
+      } else if (hasSouthCorridor && hash >= 0.22 && hash < 0.45) {
+        this.renderTempleGlyph(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'cave') {
+      if (hash < 0.25) {
+        this.renderCrystalGeode(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.25 && hash < 0.45) {
+        this.renderStalactite(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'lava') {
+      if (hash < 0.30) {
+        this.renderMagmaFissure(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'sunset') {
+      if (hasSouthCorridor && hash < 0.25) {
+        this.renderAstrolabeRings(ctx, screenX, sy, tileSize);
+      }
+    } else if (themeKey === 'snow') {
+      if (hasSouthCorridor && hash < 0.35) {
+        this.renderIcicles(ctx, screenX, sy, tileSize, hash);
+      }
+    }
+  }
+
+  /**
    * Render theme-specific decorative art in non-playable areas & deep wall blocks
    */
   renderThematicPerimeterDecor(ctx, level, bounds, camera, theme, tileSize, heightOffset = 0) {
@@ -1323,51 +1484,9 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         if (ground[y]?.[x] !== TILES.WALL) continue;
-
-        const hasSouthCorridor = ground[y + 1]?.[x] !== TILES.WALL && ground[y + 1]?.[x] !== undefined;
         const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
         const sy = screen.y - heightOffset;
-        const hash = this.getDecorHash(x, y, seed);
-
-        if (themeKey === 'dungeon') {
-          if (hasSouthCorridor && hash < 0.12) {
-            this.renderDungeonSkeleton(ctx, screen.x, sy, tileSize);
-          } else if (hasSouthCorridor && hash >= 0.12 && hash < 0.26) {
-            this.renderIronChains(ctx, screen.x, sy, tileSize, hash);
-          } else if (hash >= 0.26 && hash < 0.38) {
-            this.renderCobweb(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'jungle') {
-          if (hasSouthCorridor && hash < 0.30) {
-            this.renderJungleVines(ctx, screen.x, sy, tileSize, hash);
-          } else if (hasSouthCorridor && hash >= 0.30 && hash < 0.50) {
-            this.renderFernPatch(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'temple') {
-          if (hasSouthCorridor && hash < 0.22) {
-            this.renderTempleArch(ctx, screen.x, sy, tileSize);
-          } else if (hasSouthCorridor && hash >= 0.22 && hash < 0.45) {
-            this.renderTempleGlyph(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'cave') {
-          if (hash < 0.25) {
-            this.renderCrystalGeode(ctx, screen.x, sy, tileSize, hash);
-          } else if (hasSouthCorridor && hash >= 0.25 && hash < 0.45) {
-            this.renderStalactite(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'lava') {
-          if (hash < 0.30) {
-            this.renderMagmaFissure(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'sunset') {
-          if (hasSouthCorridor && hash < 0.25) {
-            this.renderAstrolabeRings(ctx, screen.x, sy, tileSize);
-          }
-        } else if (themeKey === 'snow') {
-          if (hasSouthCorridor && hash < 0.35) {
-            this.renderIcicles(ctx, screen.x, sy, tileSize, hash);
-          }
-        }
+        this.renderThematicPerimeterDecorTile(ctx, x, y, screen.x, sy, tileSize, themeKey, seed, ground, heightOffset);
       }
     }
   }

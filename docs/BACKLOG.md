@@ -60,7 +60,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-11** | **Dynamic Atmospheric Particle Systems** | **P2** | `v1.21.0` | Add subtle canvas particle effects: rising embers in Lava, drifting pollen in Jungle, floating motes in Caverns. | Ready |
 | **BL-12** | **Lighting Gradients & Torch Glow** | **P2** | `v1.21.0` | Dynamic radial gradient lighting around the explorer and placed wall torches under Fog of War. | Ready |
 | **BL-13** | **Elevation Drop Shadows & Visual Depth** | **P2** | `v1.21.0` | Render realistic directional drop shadows cast by elevated bridge spans and high platforms onto lower terrain. | Ready |
-| **BL-33** | **2.5D Depth-Sorting & Wall Front/Roof Occlusion** | **P1** | `v1.20.0` | Resolve visual anomaly where explorer renders over southern wall roofs. Implement unified Y-sorted or row-interleaved painter pass so character walking behind/north of a wall tile is properly occluded by its elevated front face and top cap. | Ready |
+| **BL-33** | **2.5D Depth-Sorting & Wall Front/Roof Occlusion** | **P1** | `v1.20.0` | Resolve visual anomaly where explorer renders over southern wall roofs. Implement unified Y-sorted or row-interleaved painter pass so character walking behind/north of a wall tile is properly occluded by its elevated front face and top cap. | **Completed** |
 
 ---
 
