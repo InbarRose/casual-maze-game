@@ -214,7 +214,7 @@ export class SettingsModal {
       masterSlider.oninput = () => {
         const val = parseInt(masterSlider.value, 10);
         masterLabel.textContent = `${val}%`;
-        StorageManager.setSetting('volume_master', val / 100);
+        this.audio.setMasterVolume(val / 100);
       };
       masterSlider.onchange = () => {
         this.audio.playMove();
@@ -228,7 +228,7 @@ export class SettingsModal {
       sfxSlider.oninput = () => {
         const val = parseInt(sfxSlider.value, 10);
         sfxLabel.textContent = `${val}%`;
-        StorageManager.setSetting('volume_sfx', val / 100);
+        this.audio.setSfxVolume(val / 100);
       };
       sfxSlider.onchange = () => {
         this.audio.playUnlock();
@@ -242,7 +242,7 @@ export class SettingsModal {
       bgmSlider.oninput = () => {
         const val = parseInt(bgmSlider.value, 10);
         bgmLabel.textContent = `${val}%`;
-        StorageManager.setSetting('volume_bgm', val / 100);
+        this.audio.setBgmVolume(val / 100);
       };
     }
 

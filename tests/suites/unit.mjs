@@ -58,6 +58,7 @@ import '../unit/assets/asset-drift.test.mjs';
 
 // UI
 import '../unit/ui/audio-fx.test.mjs';
+import '../unit/ui/audio-ambience.test.mjs';
 import '../unit/ui/game-menu.test.mjs';
 import '../unit/ui/app-header.test.mjs';
 

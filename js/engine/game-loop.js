@@ -27,6 +27,7 @@ import { StorageManager } from '../core/storage.js';
 import { DebugLogger } from './debug-logger.js';
 import { PuzzleModal } from '../ui/puzzle-modal.js';
 import { assetLoader } from '../core/asset-loader.js';
+import { audioFX } from '../ui/audio-fx.js';
 
 export class GameLoop {
   /**
@@ -330,6 +331,12 @@ export class GameLoop {
 
     this.updateFog();
     this.notifyUI();
+    if (this.isRunning) {
+      try {
+        const theme = this.level.theme || this.level.config?.theme || 'dungeon';
+        audioFX.startAmbience(theme);
+      } catch {}
+    }
     globalEvents.emit('room:entered', {
       roomId,
       title: roomDef.title || roomId,
@@ -808,6 +815,10 @@ export class GameLoop {
     if (this.isRunning) return;
     this.isRunning = true;
     this.lastTime = performance.now();
+    try {
+      const theme = this.level?.config?.theme || this.level?.theme || 'dungeon';
+      audioFX.startAmbience(theme);
+    } catch {}
     console.info(
       `[MazeGame:Engine] Game loop started for level "${this.level.title}" (ID: ${this.level.id}) | Dimensions: ${this.level.dimensions.width}x${this.level.dimensions.height} | Entities: ${this.entities.length}`
     );
@@ -819,6 +830,9 @@ export class GameLoop {
    */
   stop() {
     this.isRunning = false;
+    try {
+      audioFX.pauseAmbience();
+    } catch {}
     console.info('[MazeGame:Engine] Game loop stopped');
   }
 
@@ -826,6 +840,10 @@ export class GameLoop {
    * Reset the current level state
    */
   restartLevel() {
+    try {
+      const theme = this.level?.config?.theme || this.level?.theme || 'dungeon';
+      audioFX.startAmbience(theme);
+    } catch {}
     this.roomStates = {};
     this.autoMovePath = null;
     this.clickTarget = null;
@@ -2097,6 +2115,9 @@ export class GameLoop {
    */
   handleVictory(exit = null) {
     this.isWon = true;
+    try {
+      audioFX.stopAmbience();
+    } catch {}
     this.renderer.spawnParticles(this.player.worldX, this.player.worldY, '#38bdf8', 60);
 
     const earnedParSteps = this.level.parSteps !== undefined ? this.player.stepsTaken <= this.level.parSteps : false;

@@ -7,6 +7,7 @@
  */
 
 import { getSettingsModal, getProfileModal } from './app-header.js';
+import { globalEvents } from '../core/events.js';
 
 export class GameMenu {
   /**
@@ -67,6 +68,7 @@ export class GameMenu {
     if (typeof window !== 'undefined' && window.gameLoop && typeof window.gameLoop.areHotkeysEnabled === 'function') {
       this.updateHotkeysButtonLabel(window.gameLoop.areHotkeysEnabled());
     }
+    globalEvents.emit('game:paused');
   }
 
   /**
@@ -77,6 +79,7 @@ export class GameMenu {
     if (this.modalEl) {
       this.modalEl.classList.remove('active');
     }
+    globalEvents.emit('game:resumed');
     this.onResume();
   }
 
