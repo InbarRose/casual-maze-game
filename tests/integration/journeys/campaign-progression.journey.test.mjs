@@ -29,8 +29,8 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
 
     assertEqual(level1.id, '1');
     assertEqual(level1.chapter, 'chapter_1');
-    assertEqual(level1.parSteps, 35);
-    assertEqual(level1.parTime, 20);
+    assertEqual(level1.parSteps, 42);
+    assertEqual(level1.parTime, 22);
 
     // Verify Signpost exists in level definition
     const signpostEntity = level1.entities.find(e => e.type === 'signpost');

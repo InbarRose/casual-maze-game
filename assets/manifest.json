@@ -1,7 +1,7 @@
 {
   "$schema": "./schema.json",
   "version": "1.5.0",
-  "generatedAt": "2026-09-20T15:50:40.985Z",
+  "generatedAt": "2026-09-20T16:13:37.207Z",
   "totalAssets": 160,
   "themes": [
     "dungeon",

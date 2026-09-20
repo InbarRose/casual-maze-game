@@ -29,8 +29,8 @@
     "elevation": 0,
     "style": "portal"
   },
-  "parSteps": 35,
-  "parTime": 20,
+  "parSteps": 42,
+  "parTime": 22,
   "architectNote": "Every grand labyrinth begins with a single step. Follow the stone path, retrieve the Dungeon Master Key, and open the gilded gate to reach the portal.",
   "layers": {
     "ground": [

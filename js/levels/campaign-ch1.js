@@ -34,8 +34,8 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
       "elevation": 0,
       "style": "portal"
     },
-    "parSteps": 35,
-    "parTime": 20,
+    "parSteps": 42,
+    "parTime": 22,
     "architectNote": "Every grand labyrinth begins with a single step. Follow the stone path, retrieve the Dungeon Master Key, and open the gilded gate to reach the portal.",
     "layers": {
       "ground": [
@@ -617,8 +617,8 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
       "elevation": 0,
       "style": "portal"
     },
-    "parSteps": 42,
-    "parTime": 24,
+    "parSteps": 46,
+    "parTime": 26,
     "architectNote": "The Twin Vaults require dual resonance. Collect the Ruby Key in the eastern gallery and the Sapphire Key in the western crypt to unlock the northern sanctuary.",
     "layers": {
       "ground": [
@@ -1140,8 +1140,8 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
       "elevation": 0,
       "style": "portal"
     },
-    "parSteps": 58,
-    "parTime": 32,
+    "parSteps": 115,
+    "parTime": 45,
     "architectNote": "The central dais is sealed by royal purple quartz. Follow the southern descent to find the Emerald Key, unlock the eastern gallery, and claim the Purple Sigil.",
     "layers": {
       "ground": [

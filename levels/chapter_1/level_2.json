@@ -29,8 +29,8 @@
     "elevation": 0,
     "style": "portal"
   },
-  "parSteps": 42,
-  "parTime": 24,
+  "parSteps": 46,
+  "parTime": 26,
   "architectNote": "The Twin Vaults require dual resonance. Collect the Ruby Key in the eastern gallery and the Sapphire Key in the western crypt to unlock the northern sanctuary.",
   "layers": {
     "ground": [
