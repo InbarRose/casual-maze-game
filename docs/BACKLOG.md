@@ -21,7 +21,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ Epic Name                            │ Items    │ Priority  │ Status   │
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
 │ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Active   │
-│ 2. Visual Engine & Vector Rendering  │ BL-09–13 │ P1        │ Ready    │
+│ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17 │ P1        │ Ready    │
 │ 4. Map Editor Studio Overhaul        │ BL-18–22 │ P1 / P2   │ Ready    │
 │ 5. Universal Navigation, HUD & Save  │ BL-23–26 │ P1        │ Ready    │
@@ -60,6 +60,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-11** | **Dynamic Atmospheric Particle Systems** | **P2** | `v1.21.0` | Add subtle canvas particle effects: rising embers in Lava, drifting pollen in Jungle, floating motes in Caverns. | Ready |
 | **BL-12** | **Lighting Gradients & Torch Glow** | **P2** | `v1.21.0` | Dynamic radial gradient lighting around the explorer and placed wall torches under Fog of War. | Ready |
 | **BL-13** | **Elevation Drop Shadows & Visual Depth** | **P2** | `v1.21.0` | Render realistic directional drop shadows cast by elevated bridge spans and high platforms onto lower terrain. | Ready |
+| **BL-33** | **2.5D Depth-Sorting & Wall Front/Roof Occlusion** | **P1** | `v1.20.0` | Resolve visual anomaly where explorer renders over southern wall roofs. Implement unified Y-sorted or row-interleaved painter pass so character walking behind/north of a wall tile is properly occluded by its elevated front face and top cap. | Ready |
 
 ---
 
