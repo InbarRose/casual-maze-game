@@ -14,5 +14,8 @@ import '../unit/levels/level-drift.test.mjs';
 import '../unit/stories/storylines.test.mjs';
 import '../unit/levels/story-1-unbypassable.test.mjs';
 import '../unit/levels/story-2-unbypassable.test.mjs';
+import '../unit/levels/chapter-1.test.mjs';
+import '../unit/levels/chapter-2.test.mjs';
+import '../unit/levels/chapter-3.test.mjs';
 
 await run();
