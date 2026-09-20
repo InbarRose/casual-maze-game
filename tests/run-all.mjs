@@ -70,6 +70,7 @@ import './unit/editor/json-exporter.test.mjs';
 import './unit/editor/editor-canvas.test.mjs';
 import './unit/editor/editor-buttons-and-functions.test.mjs';
 import './unit/editor/history-stack.test.mjs';
+import './unit/editor/prefabs-and-autofix.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';

@@ -63,6 +63,9 @@
         <button id="btn-validate" class="btn btn-secondary btn-sm validation-badge" title="Check Solvability & Integrity (V)">
           <span id="val-badge-icon">✅</span> <span id="val-badge-text">Valid</span>
         </button>
+        <button id="btn-auto-fix" class="btn btn-secondary btn-sm" title="One-Click Diagnostic Auto-Fixer: Resolve reachability, missing ramps, orphaned doors/keys, and bad coordinates">
+          🪄 Auto-Fix
+        </button>
 
         <div class="toolbar-group">
           <button id="btn-settings" class="btn btn-secondary btn-sm" title="Configure Labyrinth Dimensions & Rules">⚙ Properties</button>
@@ -187,6 +190,34 @@
         </div>
       </div>
 
+      <!-- Architectural Prefab Palette (BL-20) -->
+      <div>
+        <div class="sidebar-section-title">
+          <span>Architectural Prefabs</span>
+          <span style="font-size: 0.65rem; color: var(--accent);">Stamp</span>
+        </div>
+        <div class="palette-grid">
+          <button type="button" class="palette-btn" data-prefab="bridge_crossing" title="Bridge Crossing (5x5) — Complete elevated overpass with ramps and crossway">
+            <span class="palette-icon">🌉</span> Bridge Cross
+          </button>
+          <button type="button" class="palette-btn" data-prefab="vault_gate" title="Locked Vault Gate (5x3) — Wall barrier with locked door and matching color key">
+            <span class="palette-icon">🔒</span> Vault Gate
+          </button>
+          <button type="button" class="palette-btn" data-prefab="chamber_room" title="Pillared Chamber (5x5) — Spacious room with decorative corner pillars">
+            <span class="palette-icon">🏛️</span> Chamber
+          </button>
+          <button type="button" class="palette-btn" data-prefab="cross_intersection" title="4-Way Crossroads (5x5) — Smooth 4-way corridor intersection">
+            <span class="palette-icon">➕</span> 4-Way Cross
+          </button>
+          <button type="button" class="palette-btn" data-prefab="puzzle_sanctum" title="Riddle Sanctum (5x5) — Enclosed sanctum with pedestal, relic, and locked gate">
+            <span class="palette-icon">🦅</span> Sanctum
+          </button>
+          <button type="button" class="palette-btn" data-prefab="switch_hub" title="Clockwork Switch Hub (5x4) — Lever wired to toggle passage walls">
+            <span class="palette-icon">🕹️</span> Switch Hub
+          </button>
+        </div>
+      </div>
+
       <!-- Entities & Markers -->
       <div>
         <div class="sidebar-section-title">Entities &amp; Markers</div>
@@ -293,6 +324,22 @@
 
     <!-- Center Canvas Viewport -->
     <main class="editor-viewport">
+      <!-- Floating Visual Layer Switcher HUD (BL-22) -->
+      <div class="layer-switcher-hud" id="editor-layer-hud">
+        <div class="layer-hud-badge" id="layer-hud-badge">
+          <span class="layer-hud-indicator ground" id="layer-hud-indicator">●</span>
+          <span class="layer-hud-title" id="layer-hud-title">Ground (Z=0)</span>
+        </div>
+        <div class="layer-hud-controls">
+          <button type="button" class="layer-hud-btn active" id="btn-hud-ground" title="Switch to Ground Floor Layer [1]">Z=0</button>
+          <button type="button" class="layer-hud-btn" id="btn-hud-overhead" title="Switch to Overhead Bridge Layer [2]">Z=1</button>
+          <div class="layer-hud-divider"></div>
+          <button type="button" class="layer-hud-btn active" id="btn-hud-view-focus" title="Focus Active Layer (Dim Inactive Layer)">Focus</button>
+          <button type="button" class="layer-hud-btn" id="btn-hud-view-all" title="Show Both Layers Full Opacity">All</button>
+          <button type="button" class="layer-hud-btn" id="btn-hud-view-solo" title="Solo Active Layer (Hide Inactive Layer)">Solo</button>
+        </div>
+      </div>
+
       <canvas id="editor-canvas"></canvas>
 
       <div class="viewport-overlay-controls">

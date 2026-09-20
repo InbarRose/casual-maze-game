@@ -68,6 +68,12 @@ export class ValidationModal {
       if (textEl) textEl.textContent = 'Valid';
     }
 
+    const btnAutoFix = document.getElementById('btn-auto-fix');
+    if (btnAutoFix) {
+      const hasIssues = !report.valid || report.warnings.length > 0;
+      btnAutoFix.classList.toggle('has-issues', hasIssues);
+    }
+
     return report;
   }
 
@@ -142,6 +148,23 @@ export class ValidationModal {
     }
 
     html += `</div>`;
+
+    // One-Click Auto-Fix Action in Modal (BL-21)
+    if (!report.valid || report.warnings.length > 0) {
+      html += `
+        <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--card-border);">
+          <button type="button" class="btn btn-primary" id="val-btn-autofix" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-weight: 600;">
+            🪄 One-Click Auto-Fix Issues
+          </button>
+        </div>
+      `;
+    }
+
     body.innerHTML = html;
+
+    const btnModalAutoFix = document.getElementById('val-btn-autofix');
+    btnModalAutoFix?.addEventListener('click', () => {
+      this.editor.runAutoFix();
+    });
   }
 }

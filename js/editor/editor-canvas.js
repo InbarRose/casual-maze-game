@@ -3,6 +3,7 @@
  */
 
 import { TILES, LAYERS, THEMES, ENTITY_TYPES } from '../core/constants.js';
+import { PREFABS, stampPrefab } from './prefabs.js';
 
 export class EditorCanvas {
   /**
@@ -35,10 +36,13 @@ export class EditorCanvas {
 
     // View state
     this.activeLayer = LAYERS.GROUND;
-    this.currentTool = 'pencil'; // 'pencil' | 'line' | 'fill' | 'eraser' | 'select' | 'move' | 'pick_target'
+    this.currentTool = 'pencil'; // 'pencil' | 'line' | 'fill' | 'eraser' | 'select' | 'move' | 'pick_target' | 'prefab'
     this.brushSize = 1; // 1, 2, 3, 4, 5
     this.selectedTile = TILES.WALL;
     this.selectedEntity = null; // 'key' | 'door' | 'lever' | 'spawn' | 'exit'
+    this.selectedPrefab = null; // 'bridge_crossing', 'vault_gate', etc. (BL-20)
+    this.layerViewMode = 'focus'; // 'focus' | 'all' | 'solo' (BL-22)
+    this.layerOpacity = 0.35;
     this.wiringLever = null; // When picking target
 
     this.zoom = 1.0;
@@ -191,12 +195,36 @@ export class EditorCanvas {
   }
 
   /**
+   * Set active architectural prefab for stamping (BL-20)
+   * @param {string} prefabId
+   */
+  setPrefab(prefabId) {
+    this.selectedPrefab = prefabId;
+    this.currentTool = 'prefab';
+    this.selectedEntity = null;
+    this.canvas.style.cursor = 'crosshair';
+    this.render();
+  }
+
+  /**
+   * Set layer view display mode (BL-22)
+   * @param {'focus'|'all'|'solo'} mode
+   */
+  setLayerViewMode(mode) {
+    this.layerViewMode = mode;
+    this.render();
+  }
+
+  /**
    * Set active drawing tool
    * @param {string} tool
    */
   setTool(tool) {
     this.currentTool = tool;
-    this.canvas.style.cursor = tool === 'move' ? 'grab' : (tool === 'line' ? 'crosshair' : 'default');
+    if (tool !== 'prefab') {
+      this.selectedPrefab = null;
+    }
+    this.canvas.style.cursor = tool === 'move' ? 'grab' : (tool === 'line' || tool === 'prefab' ? 'crosshair' : 'default');
   }
 
   /**
@@ -289,6 +317,7 @@ export class EditorCanvas {
     this.selectedTile = tile;
     this.selectedEntity = null;
     this.selectedEntityData = null;
+    this.selectedPrefab = null;
     this.currentTool = 'pencil';
     this.canvas.style.cursor = 'default';
   }
@@ -301,6 +330,7 @@ export class EditorCanvas {
   setSelectedEntity(entityType, entityData = null) {
     this.selectedEntity = entityType;
     this.selectedEntityData = entityData;
+    this.selectedPrefab = null;
     this.currentTool = 'pencil';
     this.canvas.style.cursor = 'default';
   }
@@ -651,6 +681,16 @@ export class EditorCanvas {
       return;
     }
 
+    // Prefab Stamping (BL-20)
+    if (this.currentTool === 'prefab' && this.selectedPrefab) {
+      const res = stampPrefab(this.level, this.selectedPrefab, gridX, gridY);
+      if (res.success && this.onTilePaint) {
+        this.onTilePaint();
+      }
+      if (shouldRender) this.render();
+      return;
+    }
+
     // Special Entity Placement
     if (this.selectedEntity) {
       if (this.selectedEntity === 'spawn') {
@@ -838,6 +878,16 @@ export class EditorCanvas {
     const ground = this.level.layers.ground;
     const overhead = this.level.layers.overhead;
 
+    const isEditingOverhead = this.activeLayer === LAYERS.OVERHEAD;
+    const groundAlpha = isEditingOverhead
+      ? (this.layerViewMode === 'solo' ? 0.0 : (this.layerViewMode === 'all' ? 1.0 : this.layerOpacity))
+      : 1.0;
+
+    const isEditingGround = this.activeLayer === LAYERS.GROUND;
+    const overheadAlpha = isEditingGround
+      ? (this.layerViewMode === 'solo' ? 0.0 : (this.layerViewMode === 'all' ? 1.0 : this.layerOpacity))
+      : 1.0;
+
     for (let y = 0; y < mazeH; y++) {
       for (let x = 0; x < mazeW; x++) {
         const px = x * effTile;
@@ -845,61 +895,69 @@ export class EditorCanvas {
         const gTile = ground[y]?.[x];
 
         // Draw ground tile
-        if (gTile === TILES.WALL) {
-          ctx.fillStyle = theme.wall;
-          ctx.fillRect(px, py, effTile, effTile);
-          ctx.fillStyle = theme.wallTop;
-          ctx.fillRect(px, py, effTile, effTile * 0.22);
-          ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
-          ctx.fillRect(px + effTile * 0.1, py + effTile * 0.58, effTile * 0.8, 1.5);
-          ctx.fillRect(px + effTile * 0.5, py + effTile * 0.22, 1.5, effTile * 0.36);
-        } else {
-          ctx.fillStyle = (x + y) % 2 === 0 ? theme.floorAlt : theme.floor;
-          ctx.fillRect(px, py, effTile, effTile);
+        if (groundAlpha > 0) {
+          ctx.save();
+          if (groundAlpha < 1.0) {
+            ctx.globalAlpha = groundAlpha;
+          }
 
-          // Underpass corridor on ground layer
-          if (gTile === TILES.BRIDGE_EW) {
-            ctx.fillStyle = theme.bridgeGround;
-            ctx.fillRect(px, py + effTile * 0.12, effTile, effTile * 0.76);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-            ctx.fillRect(px + effTile * 0.15, py + effTile * 0.48, effTile * 0.7, 2);
-          } else if (gTile === TILES.BRIDGE_NS) {
-            ctx.fillStyle = theme.bridgeGround;
-            ctx.fillRect(px + effTile * 0.12, py, effTile * 0.76, effTile);
-            ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-            ctx.fillRect(px + effTile * 0.48, py + effTile * 0.15, 2, effTile * 0.7);
-          } else if (this.isRamp(gTile)) {
-            ctx.fillStyle = theme.ramp;
+          if (gTile === TILES.WALL) {
+            ctx.fillStyle = theme.wall;
+            ctx.fillRect(px, py, effTile, effTile);
+            ctx.fillStyle = theme.wallTop;
+            ctx.fillRect(px, py, effTile, effTile * 0.22);
+            ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(px + effTile * 0.1, py + effTile * 0.58, effTile * 0.8, 1.5);
+            ctx.fillRect(px + effTile * 0.5, py + effTile * 0.22, 1.5, effTile * 0.36);
+          } else {
+            ctx.fillStyle = (x + y) % 2 === 0 ? theme.floorAlt : theme.floor;
             ctx.fillRect(px, py, effTile, effTile);
 
-            // Directional chevron arrow
-            const arrowCol = theme.rampArrow || theme.accent || '#38bdf8';
-            ctx.strokeStyle = arrowCol;
-            ctx.lineWidth = Math.max(1.5, effTile * 0.08);
-            const cx = px + effTile / 2;
-            const cy = py + effTile / 2;
-            const aSize = effTile * 0.28;
+            // Underpass corridor on ground layer
+            if (gTile === TILES.BRIDGE_EW) {
+              ctx.fillStyle = theme.bridgeGround;
+              ctx.fillRect(px, py + effTile * 0.12, effTile, effTile * 0.76);
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+              ctx.fillRect(px + effTile * 0.15, py + effTile * 0.48, effTile * 0.7, 2);
+            } else if (gTile === TILES.BRIDGE_NS) {
+              ctx.fillStyle = theme.bridgeGround;
+              ctx.fillRect(px + effTile * 0.12, py, effTile * 0.76, effTile);
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+              ctx.fillRect(px + effTile * 0.48, py + effTile * 0.15, 2, effTile * 0.7);
+            } else if (this.isRamp(gTile)) {
+              ctx.fillStyle = theme.ramp;
+              ctx.fillRect(px, py, effTile, effTile);
 
-            ctx.beginPath();
-            if (gTile === TILES.RAMP_N) {
-              ctx.moveTo(cx - aSize, cy + aSize * 0.4); ctx.lineTo(cx, cy - aSize * 0.5); ctx.lineTo(cx + aSize, cy + aSize * 0.4);
-            } else if (gTile === TILES.RAMP_S) {
-              ctx.moveTo(cx - aSize, cy - aSize * 0.4); ctx.lineTo(cx, cy + aSize * 0.5); ctx.lineTo(cx + aSize, cy - aSize * 0.4);
-            } else if (gTile === TILES.RAMP_E) {
-              ctx.moveTo(cx - aSize * 0.4, cy - aSize); ctx.lineTo(cx + aSize * 0.5, cy); ctx.lineTo(cx - aSize * 0.4, cy + aSize);
-            } else if (gTile === TILES.RAMP_W) {
-              ctx.moveTo(cx + aSize * 0.4, cy - aSize); ctx.lineTo(cx - aSize * 0.5, cy); ctx.lineTo(cx + aSize * 0.4, cy + aSize);
+              // Directional chevron arrow
+              const arrowCol = theme.rampArrow || theme.accent || '#38bdf8';
+              ctx.strokeStyle = arrowCol;
+              ctx.lineWidth = Math.max(1.5, effTile * 0.08);
+              const cx = px + effTile / 2;
+              const cy = py + effTile / 2;
+              const aSize = effTile * 0.28;
+
+              ctx.beginPath();
+              if (gTile === TILES.RAMP_N) {
+                ctx.moveTo(cx - aSize, cy + aSize * 0.4); ctx.lineTo(cx, cy - aSize * 0.5); ctx.lineTo(cx + aSize, cy + aSize * 0.4);
+              } else if (gTile === TILES.RAMP_S) {
+                ctx.moveTo(cx - aSize, cy - aSize * 0.4); ctx.lineTo(cx, cy + aSize * 0.5); ctx.lineTo(cx + aSize, cy - aSize * 0.4);
+              } else if (gTile === TILES.RAMP_E) {
+                ctx.moveTo(cx - aSize * 0.4, cy - aSize); ctx.lineTo(cx + aSize * 0.5, cy); ctx.lineTo(cx - aSize * 0.4, cy + aSize);
+              } else if (gTile === TILES.RAMP_W) {
+                ctx.moveTo(cx + aSize * 0.4, cy - aSize); ctx.lineTo(cx - aSize * 0.5, cy); ctx.lineTo(cx + aSize * 0.4, cy + aSize);
+              }
+              ctx.stroke();
             }
-            ctx.stroke();
           }
+          ctx.restore();
         }
 
         // Draw Overhead Layer
         const oTile = overhead?.[y]?.[x];
-        if (oTile || gTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_NS) {
+        if (overheadAlpha > 0 && (oTile || gTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_NS)) {
           ctx.save();
-          if (this.activeLayer === LAYERS.GROUND) {
-            ctx.globalAlpha = 0.55; // Dim overhead when editing ground
+          if (overheadAlpha < 1.0) {
+            ctx.globalAlpha = overheadAlpha;
           }
           if (oTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
             // B_EW Overhead spans North-South
@@ -928,80 +986,116 @@ export class EditorCanvas {
 
     // 3. Render Spawn (S), Test Spawn (T), and Exit (E)
     if (this.level.spawn) {
-      const spX = this.level.spawn.x * effTile;
-      const spY = this.level.spawn.y * effTile;
-      ctx.fillStyle = '#34d399';
-      ctx.beginPath();
-      ctx.arc(spX + effTile / 2, spY + effTile / 2, effTile * 0.36, 0, Math.PI * 2);
-      ctx.fill();
+      const sz = this.level.spawn.elevation ?? this.level.spawn.z ?? 0;
+      const isSpawnActive = (this.activeLayer === LAYERS.OVERHEAD && sz === 1) || (this.activeLayer === LAYERS.GROUND && sz === 0);
+      if (isSpawnActive || this.layerViewMode !== 'solo') {
+        ctx.save();
+        if (!isSpawnActive && this.layerViewMode !== 'all') {
+          ctx.globalAlpha = this.layerOpacity || 0.35;
+        }
+        const spX = this.level.spawn.x * effTile;
+        const spY = this.level.spawn.y * effTile;
+        ctx.fillStyle = '#34d399';
+        ctx.beginPath();
+        ctx.arc(spX + effTile / 2, spY + effTile / 2, effTile * 0.36, 0, Math.PI * 2);
+        ctx.fill();
 
-      const spStyle = this.level.spawn.style || 'stairs_down';
-      let spIcon = '🪜';
-      if (spStyle === 'portal') spIcon = '🌀';
-      else if (spStyle === 'archway') spIcon = '🏛️';
-      else if (spStyle === 'pentagram') spIcon = '🔯';
-      else if (spStyle === 'camp') spIcon = '⛺';
+        const spStyle = this.level.spawn.style || 'stairs_down';
+        let spIcon = '🪜';
+        if (spStyle === 'portal') spIcon = '🌀';
+        else if (spStyle === 'archway') spIcon = '🏛️';
+        else if (spStyle === 'pentagram') spIcon = '🔯';
+        else if (spStyle === 'camp') spIcon = '⛺';
 
-      ctx.fillStyle = '#022014';
-      ctx.font = `bold ${Math.max(9, effTile * 0.38)}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(spIcon, spX + effTile / 2, spY + effTile / 2);
+        ctx.fillStyle = '#022014';
+        ctx.font = `bold ${Math.max(9, effTile * 0.38)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(spIcon, spX + effTile / 2, spY + effTile / 2);
+        ctx.restore();
+      }
     }
 
     if (this.level.testSpawn) {
-      const tspX = this.level.testSpawn.x * effTile;
-      const tspY = this.level.testSpawn.y * effTile;
-      ctx.fillStyle = '#f43f5e';
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(tspX + effTile / 2, tspY + effTile / 2, effTile * 0.34, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.stroke();
-      ctx.fillStyle = '#ffffff';
-      ctx.font = `bold ${Math.max(9, effTile * 0.38)}px monospace`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('🧪', tspX + effTile / 2, tspY + effTile / 2);
+      const tsz = this.level.testSpawn.elevation ?? this.level.testSpawn.z ?? 0;
+      const isTestActive = (this.activeLayer === LAYERS.OVERHEAD && tsz === 1) || (this.activeLayer === LAYERS.GROUND && tsz === 0);
+      if (isTestActive || this.layerViewMode !== 'solo') {
+        ctx.save();
+        if (!isTestActive && this.layerViewMode !== 'all') {
+          ctx.globalAlpha = this.layerOpacity || 0.35;
+        }
+        const tspX = this.level.testSpawn.x * effTile;
+        const tspY = this.level.testSpawn.y * effTile;
+        ctx.fillStyle = '#f43f5e';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(tspX + effTile / 2, tspY + effTile / 2, effTile * 0.34, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${Math.max(9, effTile * 0.38)}px monospace`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText('🧪', tspX + effTile / 2, tspY + effTile / 2);
+        ctx.restore();
+      }
     }
 
     if (this.level.exit) {
-      const exX = this.level.exit.x * effTile;
-      const exY = this.level.exit.y * effTile;
-      const pOuter = theme.portalOuter || '#0284c7';
-      const pInner = theme.portalInner || '#38bdf8';
+      const ez = this.level.exit.elevation ?? this.level.exit.z ?? 0;
+      const isExitActive = (this.activeLayer === LAYERS.OVERHEAD && ez === 1) || (this.activeLayer === LAYERS.GROUND && ez === 0);
+      if (isExitActive || this.layerViewMode !== 'solo') {
+        ctx.save();
+        if (!isExitActive && this.layerViewMode !== 'all') {
+          ctx.globalAlpha = this.layerOpacity || 0.35;
+        }
+        const exX = this.level.exit.x * effTile;
+        const exY = this.level.exit.y * effTile;
+        const pOuter = theme.portalOuter || '#0284c7';
+        const pInner = theme.portalInner || '#38bdf8';
 
-      ctx.fillStyle = pOuter;
-      ctx.beginPath();
-      ctx.arc(exX + effTile / 2, exY + effTile / 2, effTile * 0.38, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = pOuter;
+        ctx.beginPath();
+        ctx.arc(exX + effTile / 2, exY + effTile / 2, effTile * 0.38, 0, Math.PI * 2);
+        ctx.fill();
 
-      ctx.fillStyle = pInner;
-      ctx.beginPath();
-      ctx.arc(exX + effTile / 2, exY + effTile / 2, effTile * 0.22, 0, Math.PI * 2);
-      ctx.fill();
+        ctx.fillStyle = pInner;
+        ctx.beginPath();
+        ctx.arc(exX + effTile / 2, exY + effTile / 2, effTile * 0.22, 0, Math.PI * 2);
+        ctx.fill();
 
-      const exStyle = this.level.exit.style || 'portal';
-      let exIcon = '🌀';
-      if (exStyle === 'stairs_up' || exStyle === 'stairs') exIcon = '🪜';
-      else if (exStyle === 'archway') exIcon = '🏛️';
-      else if (exStyle === 'chest') exIcon = '🎁';
-      else if (exStyle === 'shrine') exIcon = '⛩️';
+        const exStyle = this.level.exit.style || 'portal';
+        let exIcon = '🌀';
+        if (exStyle === 'stairs_up' || exStyle === 'stairs') exIcon = '🪜';
+        else if (exStyle === 'archway') exIcon = '🏛️';
+        else if (exStyle === 'chest') exIcon = '🎁';
+        else if (exStyle === 'shrine') exIcon = '⛩️';
 
-      ctx.fillStyle = '#ffffff';
-      ctx.font = `bold ${Math.max(9, effTile * 0.38)}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(exIcon, exX + effTile / 2, exY + effTile / 2);
+        ctx.fillStyle = '#ffffff';
+        ctx.font = `bold ${Math.max(9, effTile * 0.38)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(exIcon, exX + effTile / 2, exY + effTile / 2);
+        ctx.restore();
+      }
     }
 
     // 4. Render Entities (Keys, Doors, Levers)
     for (const entity of (this.level.entities || [])) {
+      const ez = entity.z ?? entity.elevation ?? 0;
+      const isEntityActive = (this.activeLayer === LAYERS.OVERHEAD && ez === 1) || (this.activeLayer === LAYERS.GROUND && ez === 0);
+      if (!isEntityActive && this.layerViewMode === 'solo') {
+        continue;
+      }
+
       const enX = entity.x * effTile;
       const enY = entity.y * effTile;
 
       ctx.save();
+      if (!isEntityActive && this.layerViewMode !== 'all') {
+        ctx.globalAlpha = this.layerOpacity || 0.35;
+      }
       if (entity.type === ENTITY_TYPES.KEY) {
         ctx.fillStyle = entity.color || '#fbbf24';
         ctx.shadowColor = entity.color || '#fbbf24';
@@ -1183,9 +1277,61 @@ export class EditorCanvas {
         }
         ctx.restore();
       } else {
-        ctx.strokeStyle = this.currentTool === 'pick_target' ? '#34d399' : (this.currentTool === 'move' ? '#f59e0b' : (this.currentTool === 'line' ? '#a855f7' : (this.currentTool === 'eraser' ? '#f43f5e' : '#38bdf8')));
+        ctx.strokeStyle = this.currentTool === 'pick_target' ? '#34d399' : (this.currentTool === 'move' ? '#f59e0b' : (this.currentTool === 'line' ? '#a855f7' : (this.currentTool === 'eraser' ? '#f43f5e' : (this.currentTool === 'prefab' ? '#c084fc' : '#38bdf8'))));
         ctx.lineWidth = 2;
         ctx.strokeRect(hx * effTile, hy * effTile, effTile, effTile);
+      }
+    }
+
+    // Prefab Hover Ghost Preview (BL-20)
+    if (this.currentTool === 'prefab' && this.selectedPrefab && hx >= 0 && hy >= 0) {
+      const prefab = PREFABS[this.selectedPrefab];
+      if (prefab) {
+        ctx.save();
+        ctx.strokeStyle = '#c084fc';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([5, 5]);
+        ctx.strokeRect(hx * effTile, hy * effTile, prefab.width * effTile, prefab.height * effTile);
+        ctx.fillStyle = 'rgba(192, 132, 252, 0.12)';
+        ctx.fillRect(hx * effTile, hy * effTile, prefab.width * effTile, prefab.height * effTile);
+
+        // Render preview tiles
+        for (let dy = 0; dy < prefab.height; dy++) {
+          for (let dx = 0; dx < prefab.width; dx++) {
+            const px = (hx + dx) * effTile;
+            const py = (hy + dy) * effTile;
+            const t = prefab.layers.ground?.[dy]?.[dx];
+            if (t === 1) {
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+              ctx.fillRect(px, py, effTile, effTile);
+            } else if (t === TILES.BRIDGE_EW || t === TILES.BRIDGE_NS) {
+              ctx.fillStyle = 'rgba(168, 85, 247, 0.45)';
+              ctx.fillRect(px, py, effTile, effTile);
+            } else if (this.isRamp(t)) {
+              ctx.fillStyle = 'rgba(251, 191, 36, 0.45)';
+              ctx.fillRect(px, py, effTile, effTile);
+            }
+          }
+        }
+
+        // Preview entity icons
+        ctx.font = `${Math.max(10, effTile * 0.45)}px sans-serif`;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        for (const ent of prefab.entities) {
+          const ex = (hx + ent.relX) * effTile + effTile / 2;
+          const ey = (hy + ent.relY) * effTile + effTile / 2;
+          let icon = '📦';
+          if (ent.type === 'door') icon = '🚪';
+          else if (ent.type === 'key') icon = '🔑';
+          else if (ent.type === 'lever') icon = '🕹️';
+          else if (ent.type === 'pedestal') icon = '🏛️';
+          else if (ent.type === 'riddle_item') icon = ent.symbol || '🦅';
+          else if (ent.type === 'wall_decor') icon = '🔥';
+          ctx.fillText(icon, ex, ey);
+        }
+
+        ctx.restore();
       }
     }
 
