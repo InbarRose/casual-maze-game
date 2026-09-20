@@ -601,10 +601,10 @@ export class GameRenderer {
 
         // Render Overhead Bridge
         if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
-          const dir = isRotated90or270 ? 'EW' : 'NS';
+          const dir = isRotated90or270 ? 'NS' : 'EW';
           this.renderBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme);
         } else if (overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
-          const dir = isRotated90or270 ? 'NS' : 'EW';
+          const dir = isRotated90or270 ? 'EW' : 'NS';
           this.renderBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme);
         }
       }

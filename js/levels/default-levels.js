@@ -26,3 +26,10 @@ export const CAMPAIGN_LEVELS = Object.freeze([
   ...CAMPAIGN_CH7_LEVELS,
   ...CAMPAIGN_CH8_LEVELS,
 ]);
+
+export const ALL_LEVELS = Object.freeze([
+  ...TUTORIAL_LEVELS,
+  ...CAMPAIGN_LEVELS,
+  ...getAllStoryLevels(),
+]);
+

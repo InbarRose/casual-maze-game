@@ -6,7 +6,23 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Version: `v1.18.0` (Completed & Verified)
+### Current Milestone: `v1.19.0` (In Progress)
+
+- [x] **Level Design Philosophy & Architectural Principles Documentation**:
+  - Published [`docs/LEVEL_DESIGN_PHILOSOPHY.md`](LEVEL_DESIGN_PHILOSOPHY.md) establishing the 4-stage *Kishōtenketsu* methodology (Introduction, Development, Twist, Synthesis) for labyrinth design.
+  - Formulated spatial rules: anti-box rhythm (open chambers vs corridors), dynamic non-corner spawn/exit anchoring, and zero-bypass gating guarantees.
+- [x] **Multi-Perspective Quality Rubric & Master Scoring Register**:
+  - Published [`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md) establishing a 6-axis 60-point scoring framework (Stage Alignment, Gating Integrity, Novelty, Flow, Aesthetics, Calibration) and automated quality thresholds ($\ge 45/60$, mandatory 10/10 gating).
+  - Published [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) with comprehensive baseline audits of all 32 campaign levels and 6 tutorials, establishing targeted improvement goals.
+- [x] **Comprehensive Gap Analysis & Remediation Backlog**:
+  - Published [`docs/GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md`](GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md) identifying root causes and actionable plans for all 8 reported gaps (test/replay crash, rotation bugs, level repetition, obstacle bypasses, settings, assets, mobile, and editor).
+- [/] **Workshopping Chapter 1 (Levels 1–4) & Chapter 2 (Levels 5–8)**:
+  - Redesigning Levels 1–4 (The Foundation) and 5–8 (The Vertical Dimension) to break corner-to-corner scaling and enforce strict Kishōtenketsu progression.
+- [x] **Immediate Core Engine Fixes**:
+  - Exported `ALL_LEVELS` in `js/levels/default-levels.js` fixing module loading crash on `test.html`.
+  - Corrected bridge deck orientation mapping in `js/engine/renderer.js` (`renderOverheadLayer`).
+
+### Previous Milestone: `v1.18.0` (Completed & Verified)
 
 - [x] **Hotkey "R" Conflict Fix & Restart Separation**:
   - Removed `KeyR` from `KEY_CODES.RESTART` (now bound strictly to `KeyT`).
