@@ -32,4 +32,3 @@ export const ALL_LEVELS = Object.freeze([
   ...CAMPAIGN_LEVELS,
   ...getAllStoryLevels(),
 ]);
-
