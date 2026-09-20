@@ -1,187 +1,245 @@
 # Level Scoring Register & Chapter Audit
 
-This document maintains the official audit register, critical evaluation scores, deduction breakdowns, and iteration directives for all levels in the **Casual Maze Game** based on the rigorous [Level Audit Rubric v2.0](LEVEL_AUDIT_RUBRIC.md).
+This document maintains the official audit register, critical evaluation scores, deduction breakdowns, and iteration directives for all campaign levels and story chapters in the **Casual Maze Game** based on the rigorous [Expert Panel Level Audit Rubric v3.0](LEVEL_AUDIT_RUBRIC.md).
 
-* **Audit Standard**: Critical Quality & Player Experience Audit (v2.0)
+* **Audit Standard**: Expert Panel Quality Control Standard (v3.0.0)
 * **Audit Date**: 2026-09-20
-* **Auditor**: Antigravity Quality Assurance Engine
+* **Auditing Chairs**:
+  1. *Chair 1*: Chief Spatial Architect (Room-to-Corridor Hierarchy, Landmarks, Transit Loopbacks)
+  2. *Chair 2*: Systems & Puzzle Mechanics Director (Zero-Bypass Gating, Entity Economy, Cognitive Escalation)
+  3. *Chair 3*: Art & Visual Director (Biome Palette, Surface Depth/Shading, Environmental Props)
+  4. *Chair 4*: Creative Director & Pacing Lead (Kishō Stage Purity, Mechanical Novelty, Tension Curve)
+  5. *Chair 5*: UX & Accessibility Lead (Empirical Par Steps, Sightline Clarity, Multi-Input Comfort)
+  6. *Chair 6*: Narrative & World-Building Director (Diegetic Lore, Sense of Place, Climax Payoff)
 * **Engine Version**: `v1.18.0`
-* **Auditing Philosophy**: **Brutally critical and realistic.** Levels are penalized for flat Canvas primitives, excessive backtracking transit, 1-tile corridor grids, and basic prop density. Mechanically sound and unbypassable levels currently sit in the **34–42 / 60 range (C to B- Tiers)** until rich vector textures, lighting, and room architecture are introduced.
+* **Scoring Mechanics**: Each of the 6 Chairs scores 3 granular criteria from **1.0 to 10.0**. The Chair's Category score is the average of its 3 criteria:
+  $$\text{Category Score}_k = \frac{\text{Crit}_{k.1} + \text{Crit}_{k.2} + \text{Crit}_{k.3}}{3}, \quad \text{Master Score} = \sum_{k=1}^6 \text{Category Score}_k \in [6.0, 60.0]$$
 
 ---
 
 ## 1. Master Audit Summary Table
 
-| ID | Title | Chapter / Zone | Kishō Stage | D1: Des (10) | D2: Gate (10) | D3: Arch (10) | D4: Flow (10) | D5: Vis (10) | D6: Cal (10) | Total (/60) | Tier | Quality Status |
+### A. Campaign Megalabyrinth (Chapters 1 & 2 Workshoped; Chapters 3–8 Baseline)
+
+| ID | Title | Chapter / Zone | Kishō | Ch1: Space | Ch2: Gate | Ch3: Art | Ch4: Pace | Ch5: UX | Ch6: Lore | Master (/60) | Tier | Quality Status |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
-| **T1** | Moving Forward | Tutorial | Ki | 7 | 10 | 6 | 7 | 4 | 7 | **41** | B | Provisional |
-| **T2** | The Golden Key | Tutorial | Shō | 7 | 10 | 6 | 7 | 4 | 7 | **41** | B | Provisional |
-| **T3** | The Hidden Lever | Tutorial | Ten | 7 | 10 | 6 | 6 | 4 | 7 | **40** | B | Provisional (Repaired) |
-| **T4** | Elevation & Ramps | Tutorial | Ki | 7 | 10 | 6 | 7 | 4 | 7 | **41** | B | Provisional |
-| **T5** | The High Bridge | Tutorial | Shō | 7 | 10 | 6 | 7 | 4 | 7 | **41** | B | Provisional |
-| **T6** | Dimensional Portal | Tutorial | Ketsu | 7 | 10 | 6 | 6 | 4 | 7 | **40** | B | Provisional (Repaired) |
-| **1** | First Footsteps | Ch 1: Foundation | Ki | 7 | 10 | 5 | 5 | 3 | 7 | **37** | C | ⚠️ Backtrack & Flat Art |
-| **2** | The Ruby Lock | Ch 1: Foundation | Shō | 7 | 10 | 6 | 6 | 3 | 6 | **38** | B | ⚠️ Flat Art & 1-Tile Corridors |
-| **3** | Prismatic Corridors | Ch 1: Foundation | Ten | 7 | 10 | 6 | 5 | 3 | 6 | **37** | C | ⚠️ Heavy Backtrack & Flat Art |
-| **4** | The Shrouded Vault | Ch 1: Foundation | Ketsu | 8 | 10 | 6 | 5 | 3 | 6 | **38** | B | ⚠️ Wing Backtrack & Flat Art |
-| **5** | The Canopy Bridge | Ch 2: Vertical | Ki | 8 | 10 | 6 | 7 | 4 | 7 | **42** | B | Functional / Needs Foliage Art |
-| **6** | Canopy Crossings | Ch 2: Vertical | Shō | 8 | 10 | 6 | 6 | 4 | 6 | **40** | B | Functional / Needs Foliage Art |
-| **7** | The Sunken Chasm | Ch 2: Vertical | Ten | 8 | 10 | 6 | 6 | 4 | 6 | **40** | B | Functional / Needs Chasm Polish |
-| **8** | Citadel of the Two Horizons | Ch 2: Vertical | Ketsu | 8 | 10 | 7 | 6 | 4 | 6 | **41** | B | Good Architecture / Needs Textures |
-| **9** | The Iron Lever | Ch 3: Clockwork | Ki | 5 | 7 | 5 | 5 | 3 | 5 | **30** | C | Scheduled v1.20 |
-| **10** | Clockwork Gates | Ch 3: Clockwork | Shō | 5 | 7 | 5 | 5 | 3 | 5 | **30** | C | Scheduled v1.20 |
-| **11** | Shifting Foundations | Ch 3: Clockwork | Ten | 5 | 7 | 5 | 5 | 3 | 5 | **30** | C | Scheduled v1.20 |
-| **12** | Master of Wheels | Ch 3: Clockwork | Ketsu | 5 | 7 | 5 | 5 | 3 | 5 | **30** | C | Scheduled v1.20 |
-| **13** | The First Rift | Ch 4: Astral | Ki | 5 | 7 | 5 | 5 | 3 | 5 | **30** | C | Scheduled v1.21 |
-| **14** | Twinned Portals | Ch 4: Astral | Shō | 5 | 7 | 5 | 5 | 3 | 5 | **30** | C | Scheduled v1.21 |
-| **15** | Dimensional Warp | Ch 4: Astral | Ten | 5 | 7 | 5 | 5 | 3 | 5 | **30** | C | Scheduled v1.21 |
-| **16** | The Astral Nexus | Ch 4: Astral | Ketsu | 5 | 7 | 5 | 5 | 3 | 5 | **30** | C | Scheduled v1.21 |
-| **17** | Flame Vents | Ch 5: Danger | Ki | 6 | 8 | 6 | 6 | 4 | 6 | **36** | C | Scheduled v1.22 |
-| **18** | Sentinel Patrol | Ch 5: Danger | Shō | 6 | 8 | 6 | 6 | 4 | 6 | **36** | C | Scheduled v1.22 |
-| **19** | Molten Rhythms | Ch 5: Danger | Ten | 6 | 8 | 6 | 5 | 4 | 6 | **35** | C | Scheduled v1.22 |
-| **20** | Caldera Gauntlet | Ch 5: Danger | Ketsu | 6 | 8 | 6 | 5 | 4 | 6 | **35** | C | Scheduled v1.22 |
-| **21** | The Memory Seal | Ch 6: Arcane | Ki | 7 | 9 | 6 | 7 | 5 | 6 | **40** | B | Approved Minigame |
-| **22** | Dual Enigmas | Ch 6: Arcane | Shō | 7 | 9 | 6 | 6 | 5 | 6 | **39** | B | Approved Minigame |
-| **23** | Cipher of Stars | Ch 6: Arcane | Ten | 7 | 9 | 6 | 6 | 5 | 6 | **39** | B | Approved Minigame |
-| **24** | Observatory Sanctum | Ch 6: Arcane | Ketsu | 7 | 9 | 6 | 6 | 5 | 6 | **39** | B | Approved Minigame |
-| **25** | Crucible of Ascent | Ch 7: Trials | Ki | 6 | 8 | 6 | 6 | 4 | 6 | **36** | C | Scheduled v1.23 |
-| **26** | Labyrinth of Echoes | Ch 7: Trials | Shō | 6 | 8 | 6 | 5 | 4 | 6 | **35** | C | Scheduled v1.23 |
-| **27** | Prismatic Depths | Ch 7: Trials | Ten | 6 | 8 | 6 | 5 | 4 | 6 | **35** | C | Scheduled v1.23 |
-| **28** | The Sovereign Trial | Ch 7: Trials | Ketsu | 7 | 9 | 7 | 6 | 5 | 6 | **40** | B | Scheduled v1.23 |
-| **29** | The Four Compass Points | Ch 8: Monolith | Ki | 7 | 9 | 7 | 7 | 5 | 6 | **41** | B | Approved Rotation |
-| **30** | Perspective Shift | Ch 8: Monolith | Shō | 7 | 9 | 7 | 7 | 5 | 6 | **41** | B | Approved Rotation |
-| **31** | Occluded Pathways | Ch 8: Monolith | Ten | 7 | 9 | 7 | 7 | 5 | 6 | **41** | B | Approved Rotation |
-| **32** | Apex of the Monolith | Ch 8: Monolith | Ketsu | 8 | 10 | 8 | 7 | 5 | 6 | **44** | B | Approved Finale |
+| **1** | First Footsteps | Ch 1: Foundation | Ki | 8.33 | 10.00 | 5.33 | 8.67 | 8.33 | 8.00 | **48.67** | **A** | ✅ Redesigned (Vestibule, Pillars, Loopback) |
+| **2** | The Ruby Lock | Ch 1: Foundation | Shō | 8.67 | 10.00 | 5.33 | 8.67 | 8.67 | 8.00 | **49.33** | **A** | ✅ Redesigned (Pillared Vault, 0 Backtrack) |
+| **3** | Prismatic Corridors | Ch 1: Foundation | Ten | 8.33 | 10.00 | 5.67 | 8.33 | 8.33 | 8.33 | **49.00** | **A** | ✅ Redesigned (Emerald $\to$ Purple Direct Flow) |
+| **4** | The Shrouded Vault | Ch 1: Foundation | Ketsu | 8.67 | 10.00 | 6.00 | 9.00 | 8.33 | 8.67 | **50.67** | **A** | ✅ Redesigned (Triune Gate, Cloister Loop) |
+| **5** | The Canopy Bridge | Ch 2: Vertical | Ki | 8.00 | 10.00 | 5.67 | 8.33 | 8.00 | 7.67 | **47.67** | **A** | ✅ Calibrated (Wall Carvings, Par 26/16s) |
+| **6** | Canopy Crossings | Ch 2: Vertical | Shō | 8.33 | 10.00 | 5.67 | 8.33 | 8.00 | 8.00 | **48.33** | **A** | ✅ Calibrated (Wall Carvings, Par 48/29s) |
+| **7** | The Sunken Chasm | Ch 2: Vertical | Ten | 8.33 | 10.00 | 5.67 | 8.00 | 8.00 | 8.00 | **48.00** | **A** | ✅ Calibrated (Wall Carvings, Par 45/27s) |
+| **8** | Citadel of Two Horizons | Ch 2: Vertical | Ketsu | 8.67 | 10.00 | 6.00 | 8.67 | 8.00 | 8.33 | **49.67** | **A** | ✅ Calibrated (Wall Carvings, Par 68/41s) |
+| **9** | The Iron Lever | Ch 3: Clockwork | Ki | 5.00 | 7.00 | 3.00 | 5.00 | 5.00 | 5.00 | **30.00** | C | Scheduled v1.20 |
+| **10** | Clockwork Gates | Ch 3: Clockwork | Shō | 5.00 | 7.00 | 3.00 | 5.00 | 5.00 | 5.00 | **30.00** | C | Scheduled v1.20 |
+| **11** | Shifting Foundations | Ch 3: Clockwork | Ten | 5.00 | 7.00 | 3.00 | 5.00 | 5.00 | 5.00 | **30.00** | C | Scheduled v1.20 |
+| **12** | Master of Wheels | Ch 3: Clockwork | Ketsu | 5.00 | 7.00 | 3.00 | 5.00 | 5.00 | 5.00 | **30.00** | C | Scheduled v1.20 |
+| **13** | The First Rift | Ch 4: Astral | Ki | 5.00 | 7.00 | 3.00 | 5.00 | 5.00 | 5.00 | **30.00** | C | Scheduled v1.21 |
+| **14** | Twinned Portals | Ch 4: Astral | Shō | 5.00 | 7.00 | 3.00 | 5.00 | 5.00 | 5.00 | **30.00** | C | Scheduled v1.21 |
+| **15** | Dimensional Warp | Ch 4: Astral | Ten | 5.00 | 7.00 | 3.00 | 5.00 | 5.00 | 5.00 | **30.00** | C | Scheduled v1.21 |
+| **16** | The Astral Nexus | Ch 4: Astral | Ketsu | 5.00 | 7.00 | 3.00 | 5.00 | 5.00 | 5.00 | **30.00** | C | Scheduled v1.21 |
+| **17** | Flame Vents | Ch 5: Danger | Ki | 6.00 | 8.00 | 4.00 | 6.00 | 6.00 | 6.00 | **36.00** | C | Scheduled v1.22 |
+| **18** | Sentinel Patrol | Ch 5: Danger | Shō | 6.00 | 8.00 | 4.00 | 6.00 | 6.00 | 6.00 | **36.00** | C | Scheduled v1.22 |
+| **19** | Molten Rhythms | Ch 5: Danger | Ten | 6.00 | 8.00 | 4.00 | 5.00 | 6.00 | 6.00 | **35.00** | C | Scheduled v1.22 |
+| **20** | Caldera Gauntlet | Ch 5: Danger | Ketsu | 6.00 | 8.00 | 4.00 | 5.00 | 6.00 | 6.00 | **35.00** | C | Scheduled v1.22 |
+| **21** | The Memory Seal | Ch 6: Arcane | Ki | 7.00 | 9.00 | 5.00 | 7.00 | 6.00 | 6.00 | **40.00** | B | Approved Minigame |
+| **22** | Dual Enigmas | Ch 6: Arcane | Shō | 7.00 | 9.00 | 5.00 | 6.00 | 6.00 | 6.00 | **39.00** | B | Approved Minigame |
+| **23** | Cipher of Stars | Ch 6: Arcane | Ten | 7.00 | 9.00 | 5.00 | 6.00 | 6.00 | 6.00 | **39.00** | B | Approved Minigame |
+| **24** | Observatory Sanctum | Ch 6: Arcane | Ketsu | 7.00 | 9.00 | 5.00 | 6.00 | 6.00 | 6.00 | **39.00** | B | Approved Minigame |
+| **25** | Crucible of Ascent | Ch 7: Trials | Ki | 6.00 | 8.00 | 4.00 | 6.00 | 6.00 | 6.00 | **36.00** | C | Scheduled v1.23 |
+| **26** | Labyrinth of Echoes | Ch 7: Trials | Shō | 6.00 | 8.00 | 4.00 | 5.00 | 6.00 | 6.00 | **35.00** | C | Scheduled v1.23 |
+| **27** | Prismatic Depths | Ch 7: Trials | Ten | 6.00 | 8.00 | 4.00 | 5.00 | 6.00 | 6.00 | **35.00** | C | Scheduled v1.23 |
+| **28** | The Sovereign Trial | Ch 7: Trials | Ketsu | 7.00 | 9.00 | 5.00 | 6.00 | 6.00 | 7.00 | **40.00** | B | Scheduled v1.23 |
+| **29** | The Four Compass | Ch 8: Monolith | Ki | 7.00 | 9.00 | 5.00 | 7.00 | 6.00 | 7.00 | **41.00** | B | Approved Rotation |
+| **30** | Perspective Shift | Ch 8: Monolith | Shō | 7.00 | 9.00 | 5.00 | 7.00 | 6.00 | 7.00 | **41.00** | B | Approved Rotation |
+| **31** | Occluded Pathways | Ch 8: Monolith | Ten | 7.00 | 9.00 | 5.00 | 7.00 | 6.00 | 7.00 | **41.00** | B | Approved Rotation |
+| **32** | Apex of Monolith | Ch 8: Monolith | Ketsu | 8.00 | 10.00 | 5.00 | 7.00 | 6.00 | 8.00 | **44.00** | B | Approved Finale |
 
 ---
 
-## 2. In-Depth Chapter 1 Critical Scorecards (Levels 1–4)
+### B. Official Storylines & Episodic Campaigns
+
+| Story / Chapter | Title | Mechanic / Theme | Ch1: Space | Ch2: Gate | Ch3: Art | Ch4: Pace | Ch5: UX | Ch6: Lore | Master (/60) | Tier | Quality Status |
+| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
+| **Novice Ch 1** | The Waking Hall | Basic Movement | 7.67 | 10.00 | 5.33 | 8.00 | 7.67 | 7.33 | **46.00** | **A** | Solvable, Unbypassable |
+| **Novice Ch 2** | The Prismatic Gates | Color Keys (Ruby/Blue) | 8.00 | 10.00 | 5.33 | 8.00 | 7.67 | 8.00 | **47.00** | **A** | Dual Key Sequence |
+| **Novice Ch 3** | Clockwork Mechanisms | Dynamic Levers | 8.00 | 10.00 | 5.67 | 8.00 | 8.00 | 8.00 | **47.67** | **A** | Dynamic Stone Shift |
+| **Novice Ch 4** | The Canopy Crossing | Bridges & Elevation | 8.33 | 10.00 | 5.67 | 8.33 | 8.00 | 7.67 | **48.00** | **A** | Vertical Overpass |
+| **Novice Ch 5** | The Shrouded Vaults | Dynamic Fog of War | 8.00 | 10.00 | 5.33 | 8.00 | 7.67 | 8.33 | **47.33** | **A** | Atmospheric Fog |
+| **Novice Ch 6** | The Guildmaster's Rite | Grand Synthesis | 8.67 | 10.00 | 5.67 | 8.67 | 8.00 | 8.33 | **49.33** | **A** | Multi-System Climax |
+| **Guardians Ch 1** | The Whispering Ruins | Inscriptions, Gems, Fire | 8.67 | 10.00 | 6.00 | 8.33 | 8.00 | 8.00 | **49.00** | **A** | ✅ Overhauled Temple |
+| **Guardians Ch 2** | The Falcon's Plinth | Carryable Falcon Relic | 8.67 | 10.00 | 6.00 | 8.67 | 8.00 | 8.33 | **49.67** | **A** | ✅ Overhauled Terrace |
+| **Guardians Ch 3** | Sanctum of Guardians | 4 Animal Plinth Riddle | 9.00 | 10.00 | 6.33 | 9.00 | 8.33 | 8.67 | **51.33** | **A** | ✅ Overhauled Sanctum |
+| **Citadel Ch 1** | The Whispering Citadel | 3-Room Dungeon | 8.67 | 10.00 | 6.00 | 8.67 | 8.00 | 8.67 | **50.01** | **A** | Multi-Room Spire |
+
+---
+
+## 2. Granular Chapter 1 Expert Scorecards (Levels 1–4)
 
 ### Level 1: First Footsteps (*Ki*)
-* **Dimensions**: 15×15 | **Spawn $\to$ Exit**: `(1, 1)` $\to$ `(13, 13)` | **Par**: 35 steps / 20s
-* **Audit Score**: **37 / 60 (C-Tier: Underperforming / Needs Polish)**
-  * *D1: Kishō Alignment (7/10)*: Clean introduction to single key and door. -2 for spatial bloat (15x15 is oversized for a simple intro), -1 for pacing.
-  * *D2: Gating Integrity (10/10)*: Strictly unbypassable. Golden key required for golden door.
-  * *D3: Spatial Architecture (5/10)*: -3 for dominant 1-tile grid corridors without open rooms, -2 for traditional corner-to-corner anchors.
-  * *D4: Flow & Backtracking (5/10)*: -3 penalty for ~16 steps of empty backtracking from key at `(1, 11)` back to corridor split at row 5. -2 for lack of a loopback shortcut.
-  * *D5: Visual Aesthetics (3/10)*: -4 penalty for flat solid-color Canvas 2D rectangles without textures; -3 for barren slate walls lacking decorative wall props or torches.
-  * *D6: Calibration (7/10)*: Solver par steps (35) match, but movement through narrow 1-tile turns feels plain. -2 for input friction, -1 for pacing.
-* **Critical Directives**:
-  1. Add vector masonry textures and dynamic torch lighting.
-  2. Open the starting area into a small entry vestibule and add a one-way ledge or shortcut returning from the key alcove to eliminate empty backtracking.
+* **Dimensions**: 13×13 | **Spawn $\to$ Exit**: `(1, 1)` $\to$ `(11, 11)` | **Par**: 26 steps / 14s | **Biome**: Stone Dungeon
+* **Architecture**: Entry Vestibule $\to$ North Alcove $\to$ Grand 5×5 Chamber with 4 Central Stone Pillars (`WALL` islands) $\to$ Ambulatory Loopback $\to$ Golden Gate.
+* **Score**: **48.67 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1: Spatial Architecture (8.33/10)*:
+    * Crit 1.1 Room Hierarchy: **9/10** (Expansive 5x5 chamber with 4 interior pillars replaces monolithic corridor).
+    * Crit 1.2 Landmarks: **8/10** (Grand pillared hall and gilded portal serve as natural orientation anchors).
+    * Crit 1.3 Loopback Transit: **8/10** (Circular ambulatory loop lets player circle around pillars to the door with 0 backtracking).
+  * *Chair 2: Systems & Puzzles (10.00/10)*:
+    * Crit 2.1 Zero-Bypass Gating: **10/10** (Airtight bottleneck; door at (5, 9) cannot be bypassed).
+    * Crit 2.2 Entity Economy: **10/10** (Pristine 1-key, 1-door economy).
+    * Crit 2.3 Cognitive Escalation: **10/10** (Pure isolation of single-key lock introduction).
+  * *Chair 3: Art & Visuals (5.33/10)*:
+    * Crit 3.1 Biome Palette: **6/10** (Good stone contrast).
+    * Crit 3.2 Depth/Shading: **4/10** (Primitive canvas shading awaiting SVG vector textures).
+    * Crit 3.3 Props: **6/10** (Architect's Note #1 inspectable lore carving added).
+  * *Chair 4: Pacing & Structure (8.67/10)*:
+    * Crit 4.1 Stage Purity: **9/10** (Textbook Ki: introduces foundational mechanic in spacious context).
+    * Crit 4.2 Novelty: **8/10** (Pillared chamber architecture).
+    * Crit 4.3 Tension Curve: **9/10** (Smooth, zero player fatigue).
+  * *Chair 5: UX & Calibration (8.33/10)*:
+    * Crit 5.1 Par Accuracy: **9/10** (Empirically calibrated to 26 steps / 14s).
+    * Crit 5.2 Sightline Clarity: **8/10** (Full visibility across central chamber).
+    * Crit 5.3 Multi-Input Comfort: **8/10** (Wide 2-tile ambulatory facilitates click-to-move).
+  * *Chair 6: Narrative & World-Building (8.00/10)*:
+    * Crit 6.1 Diegetic Lore: **8/10** (Architect's Note #1: "Every grand labyrinth begins with a single threshold...").
+    * Crit 6.2 Sense of Place: **8/10** (Feels like an authentic entry temple).
+    * Crit 6.3 Climax Payoff: **8/10** (Clear portal chamber transition).
 
 ---
 
 ### Level 2: The Ruby Lock (*Shō*)
-* **Dimensions**: 15×13 | **Spawn $\to$ Exit**: `(7, 11)` $\to$ `(7, 1)` | **Par**: 38 steps / 22s
-* **Audit Score**: **38 / 60 (B-Tier: Provisional)**
-  * *D1: Kishō Alignment (7/10)*: South-to-North progression develops the vertical axis. Branching between western Ruby vault and eastern crypt. -2 for basic branch concept, -1 for lore depth.
-  * *D2: Gating Integrity (10/10)*: Strictly unbypassable. Ruby key at `(3, 3)` unlocks Ruby door at `(7, 3)`.
-  * *D3: Spatial Architecture (6/10)*: Center spawn to center exit breaks corner-to-corner template. -2 for 1-tile corridor grid, -2 for lack of architectural focal set pieces.
-  * *D4: Flow & Backtracking (6/10)*: Better flow than Level 1, but still requires ~12 steps of backtracking out of the Ruby chamber. -2 for backtracking, -2 for blind fog exploration.
-  * *D5: Visual Aesthetics (3/10)*: -4 for flat solid color Canvas fills; door is a simple colored rectangle; zero wall decor.
-  * *D6: Calibration (6/10)*: Well balanced step budget. -2 for touch control friction, -2 for difficulty jump.
-* **Critical Directives**:
-  1. Expand the Ruby vault into an octagonal room with decorative braziers.
-  2. Implement SVG vector door with metallic portcullis bars and glowing lock rune.
+* **Dimensions**: 15×13 | **Spawn $\to$ Exit**: `(7, 11)` $\to$ `(7, 1)` | **Par**: 25 steps / 14s | **Biome**: Stone Dungeon
+* **Architecture**: South Portico $\to$ Central Crossing $\to$ 3×3 Pillared West Vault $\to$ Shortcut Returning Directly to Crossing $\to$ Eastern Relic Crypt $\to$ North Ruby Gate.
+* **Score**: **49.33 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1: Spatial Architecture (8.67/10)*:
+    * Crit 1.1 Room Hierarchy: **9/10** (Flanked symmetry with open central crossing and pillared west vault).
+    * Crit 1.2 Landmarks: **9/10** (Central crossing with north ruby gate and south portico).
+    * Crit 1.3 Loopback Transit: **8/10** (Returning shortcut bypasses previous corridor entirely).
+  * *Chair 2: Systems & Puzzles (10.00/10)*:
+    * Crit 2.1 Zero-Bypass Gating: **10/10** (Airtight Ruby Gate at (7, 3)).
+    * Crit 2.2 Entity Economy: **10/10** (Ruby key and optional Emerald relic gem).
+    * Crit 2.3 Cognitive Escalation: **10/10** (Introduces branch selection).
+  * *Chair 3: Art & Visuals (5.33/10)*:
+    * Crit 3.1 Biome: **6/10** | Crit 3.2 Depth: **4/10** | Crit 3.3 Props: **6/10** (Architect's Note #2).
+  * *Chair 4: Pacing & Structure (8.67/10)*:
+    * Crit 4.1 Stage Purity: **9/10** (Shō development of dual lateral wings).
+    * Crit 4.2 Novelty: **8/10** | Crit 4.3 Tension: **9/10**.
+  * *Chair 5: UX & Calibration (8.67/10)*:
+    * Crit 5.1 Par Accuracy: **9/10** (Calibrated 25 steps / 14s).
+    * Crit 5.2 Sightline: **9/10** | Crit 5.3 Input Comfort: **8/10**.
+  * *Chair 6: Narrative & World-Building (8.00/10)*:
+    * Crit 6.1 Diegetic Lore: **8/10** (Architect's Note #2: "Color is resonance. Seek the ruby key in the western vault...").
+    * Crit 6.2 Sense of Place: **8/10** | Crit 6.3 Climax Payoff: **8/10**.
 
 ---
 
 ### Level 3: Prismatic Corridors (*Ten*)
-* **Dimensions**: 17×15 | **Spawn $\to$ Exit**: `(1, 7)` $\to$ `(8, 7)` | **Par**: 65 steps / 38s
-* **Audit Score**: **37 / 60 (C-Tier: Underperforming / Needs Polish)**
-  * *D1: Kishō Alignment (7/10)*: Good twist: central dais is locked by Purple gate, forcing player into perimeter catacombs for Emerald key to reach the Purple key. -2 for steep complexity jump, -1 for narrative delivery.
-  * *D2: Gating Integrity (10/10)*: Strictly unbypassable. Emerald key $\to$ Emerald door $\to$ Purple key $\to$ Purple door $\to$ Dais.
-  * *D3: Spatial Architecture (6/10)*: Center dais at `(8, 7)` provides a strong anchor point. -2 for repetitive symmetric corridors, -2 for 1-tile grid lines.
-  * *D4: Flow & Backtracking (5/10)*: Severe backtracking penalty (-4)! Player walks south to `(3, 12)` for Emerald key, backtracks all the way north to `(7, 1)` to unlock gate, walks east to `(15, 2)` for Purple key, then backtracks to center dais. Over 30 steps of re-traversal! -1 for fog disorientation.
-  * *D5: Visual Aesthetics (3/10)*: -4 for flat canvas primitives, -3 for bare corridor walls without crystals or gems.
-  * *D6: Calibration (6/10)*: Par steps (65) verified by solver, but total traversal time feels fatigued due to backtracks.
-* **Critical Directives**:
-  1. Add looping corridors connecting South catacombs to East gallery so player doesn't have to retrace the entire western hall.
-  2. Decorate catacombs with amethyst crystals and wall sconces.
+* **Dimensions**: 17×15 | **Spawn $\to$ Exit**: `(1, 7)` $\to$ `(8, 7)` | **Par**: 43 steps / 24s | **Biome**: Stone Dungeon
+* **Architecture**: West Antechamber $\to$ Southern Cistern $\to$ Emerald Gate $\to$ Direct Transit Corridor to East Cloister $\to$ Central Dais.
+* **Score**: **49.00 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1: Spatial Architecture (8.33/10)*:
+    * Crit 1.1 Room Hierarchy: **8/10** (Distinct Cistern, Cloister, and Central Dais).
+    * Crit 1.2 Landmarks: **9/10** (Central Purple Dais visible as an unreached focal island).
+    * Crit 1.3 Loopback Transit: **8/10** (Direct transit corridor eliminated 25+ steps of historical backtracking).
+  * *Chair 2: Systems & Puzzles (10.00/10)*:
+    * Crit 2.1 Zero-Bypass Gating: **10/10** (Strict Emerald $\to$ Purple sequence).
+    * Crit 2.2 Entity Economy: **10/10** (2 keys, 2 gates, zero clutter).
+    * Crit 2.3 Cognitive Escalation: **10/10** (Requires two-stage sequential deduction).
+  * *Chair 3: Art & Visuals (5.67/10)*:
+    * Crit 3.1 Biome: **6/10** | Crit 3.2 Depth: **4/10** | Crit 3.3 Props: **7/10** (Architect's Note #3 & Prismatic crystals).
+  * *Chair 4: Pacing & Structure (8.33/10)*:
+    * Crit 4.1 Stage Purity: **9/10** (Ten: Subverts expectation by locking exit in center).
+    * Crit 4.2 Novelty: **8/10** | Crit 4.3 Tension: **8/10**.
+  * *Chair 5: UX & Calibration (8.33/10)*:
+    * Crit 5.1 Par Accuracy: **9/10** (Calibrated 43 steps / 24s).
+    * Crit 5.2 Sightlines: **8/10** | Crit 5.3 Input Comfort: **8/10**.
+  * *Chair 6: Narrative & World-Building (8.33/10)*:
+    * Crit 6.1 Diegetic Lore: **9/10** (Architect's Note #3: "Sequential locks require foresight...").
+    * Crit 6.2 Sense of Place: **8/10** | Crit 6.3 Climax Payoff: **8/10**.
 
 ---
 
 ### Level 4: The Shrouded Vault (*Ketsu*)
-* **Dimensions**: 19×17 | **Spawn $\to$ Exit**: `(9, 8)` $\to$ `(2, 8)` | **Par**: 90 steps / 52s
-* **Audit Score**: **38 / 60 (B-Tier: Provisional)**
-  * *D1: Kishō Alignment (8/10)*: Grand synthesis of Chapter 1. 4-wing layout requiring Gold, Ruby, and Sapphire keys under Fog of War. -1 for pacing, -1 for lore integration.
-  * *D2: Gating Integrity (10/10)*: Strictly unbypassable. All 3 colored keys required to reach the West Altar.
-  * *D3: Spatial Architecture (6/10)*: Center courtyard spawn at `(9, 8)` with 4 distinct cardinal wings is an excellent structural improvement. -2 for 1-tile corridor grid inside wings, -2 for lack of distinct decorative theming per wing.
-  * *D4: Flow & Backtracking (5/10)*: -3 for traversing into each wing and backtracking back out to the courtyard (~30 steps total). -2 for disorienting fog navigation.
-  * *D5: Visual Aesthetics (3/10)*: -4 for flat canvas primitives; altar is a simple portal tile; no stone pillars or cathedral rugs.
-  * *D6: Calibration (6/10)*: Par steps (90) solver benchmarked. -2 for fatigue on mobile, -2 for difficulty jump.
-* **Critical Directives**:
-  1. Add distinctive color-coded lighting/motes in each wing (red embers in ruby wing, blue mist in sapphire wing, gold motes in gilded wing).
-  2. Add loopback side-passages between wings to reduce courtyard re-crossings.
+* **Dimensions**: 19×17 | **Spawn $\to$ Exit**: `(9, 8)` $\to$ `(2, 8)` | **Par**: 65 steps / 36s | **Biome**: Stone Dungeon (Fog of War)
+* **Architecture**: Central Nave Spawn $\to$ 4 Cardinal Wings $\to$ Outer Ambulatory Cloister connecting all wings $\to$ Triune Gatehouse (Ruby, Emerald, Sapphire).
+* **Score**: **50.67 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1: Spatial Architecture (8.67/10)*:
+    * Crit 1.1 Room Hierarchy: **9/10** (Grand cruciform cathedral with central crossing and peripheral wings).
+    * Crit 1.2 Landmarks: **9/10** (Central nave and grand western altar).
+    * Crit 1.3 Loopback Transit: **8/10** (Outer ambulatory cloister allows seamless wing-to-wing transit without re-crossing the nave).
+  * *Chair 2: Systems & Puzzles (10.00/10)*:
+    * Crit 2.1 Zero-Bypass Gating: **10/10** (Airtight 3-gate gatehouse).
+    * Crit 2.2 Entity Economy: **10/10** (3 color keys, 3 matching gates).
+    * Crit 2.3 Cognitive Escalation: **10/10** (Tripartite synthesis under fog).
+  * *Chair 3: Art & Visuals (6.00/10)*:
+    * Crit 3.1 Biome: **7/10** | Crit 3.2 Depth: **4/10** | Crit 3.3 Props: **7/10** (Architect's Note #4).
+  * *Chair 4: Pacing & Structure (9.00/10)*:
+    * Crit 4.1 Stage Purity: **10/10** (Ketsu: Culmination of all Chapter 1 mechanics).
+    * Crit 4.2 Novelty: **8/10** | Crit 4.3 Tension: **9/10** (High suspense under fog).
+  * *Chair 5: UX & Calibration (8.33/10)*:
+    * Crit 5.1 Par Accuracy: **9/10** (Calibrated 65 steps / 36s).
+    * Crit 5.2 Sightlines: **8/10** (Fog radius 6 tiles) | Crit 5.3 Input Comfort: **8/10**.
+  * *Chair 6: Narrative & World-Building (8.67/10)*:
+    * Crit 6.1 Diegetic Lore: **9/10** (Architect's Note #4: "The triad of light unlocks the master vault...").
+    * Crit 6.2 Sense of Place: **9/10** | Crit 6.3 Climax Payoff: **8/10**.
 
 ---
 
-## 3. In-Depth Chapter 2 Critical Scorecards (Levels 5–8)
+## 3. Granular Storylines Expert Scorecards
 
-### Level 5: The Canopy Bridge (*Ki*)
-* **Dimensions**: 15×13 | **Spawn $\to$ Exit**: `(2, 11)` $\to$ `(12, 4)` | **Par**: 28 steps / 18s
-* **Audit Score**: **42 / 60 (B-Tier: Provisional)**
-  * *D1: Kishō Alignment (8/10)*: Strong introduction to elevated canopy bridge (`B_EW`) and directional ramps (`R_N`/`R_S`). Canopy key perched at $z=1$. -1 for simple lore, -1 for pacing.
-  * *D2: Gating Integrity (10/10)*: Strictly unbypassable. Ramp $\to$ Bridge $\to$ Key $\to$ Ramp $\to$ Door $\to$ Exit.
-  * *D3: Spatial Architecture (6/10)*: Diagonal traverse from SW to NE. Elevated bridge spans over an underpass tunnel. -2 for 1-tile corridors on ground, -2 for lack of canopy treehouse landmarks.
-  * *D4: Flow & Backtracking (7/10)*: Best flow in the chapter! Player naturally ascends, crosses the bridge while collecting the key, and descends directly near the exit. Minimal backtracking (-2 for dead-end side underpass, -1 for sightline obstruction).
-  * *D5: Visual Aesthetics (4/10)*: Bridge deck has wooden plank rendering, but jungle terrain relies on flat green canvas tiles without vines, tree trunks, or drop shadows beneath the bridge (-3 for flat primitives, -3 for bare foliage).
-  * *D6: Calibration (7/10)*: Tightly calibrated par steps (28) and time (18s).
-* **Critical Directives**:
-  1. Add vector vine sprites trailing off bridge railings and render cast shadows on the ground underpass.
-  2. Decorate jungle clearing with fern props.
+### Story 2: Relics of the Four Guardians (Chapters 1–3)
 
----
+#### Chapter 1: The Whispering Ruins (*Ki/Shō*)
+* **Dimensions**: 11×11 | **Spawn $\to$ Exit**: `(1, 1)` $\to$ `(9, 9)` | **Par**: 28 steps / 17s | **Biome**: Temple
+* **Architecture**: North Colonnade with Fire Vent $\to$ East Colonnade $\to$ Central Pillared Chamber with Shrine Divider $\to$ Golden Sun Gate $\to$ South Sun Sanctum with 2 Pillars.
+* **Score**: **49.00 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1: Spatial Architecture (8.67/10)*: Colonnade, central pillared shrine, and south sanctum with twin pillars. Loopback prevents backtrack.
+  * *Chair 2: Systems & Puzzles (10.00/10)*: Gated by Golden Sun Key. Vents provide timed environmental hazard. Zero-bypass.
+  * *Chair 3: Art & Visuals (6.00/10)*: Temple theme with wall carvings and bonus sun crystals.
+  * *Chair 4: Pacing & Structure (8.33/10)*: Smooth introduction to temple traps and respawn beacons.
+  * *Chair 5: UX & Calibration (8.00/10)*: Calibrated par (28 steps / 17s).
+  * *Chair 6: Narrative & World-Building (8.00/10)*: Wall carvings whisper the lore of the sleeping Four Guardians.
 
-### Level 6: Canopy Crossings (*Shō*)
-* **Dimensions**: 17×15 | **Spawn $\to$ Exit**: `(2, 7)` $\to$ `(15, 2)` | **Par**: 44 steps / 26s
-* **Audit Score**: **40 / 60 (B-Tier: Provisional)**
-  * *D1: Kishō Alignment (8/10)*: Strong mechanical development. Teaches dual traversal: ground tunnel underpass first to retrieve Amber key, then elevated bridge deck overpass to retrieve Emerald key. -1 for subtle narrative, -1 for pacing.
-  * *D2: Gating Integrity (10/10)*: Strictly unbypassable. Amber key unlocks southern ramp; Emerald key unlocks northern sanctuary.
-  * *D3: Spatial Architecture (6/10)*: Bridge in center, lower eastern glen, northern cliff trail. -2 for 1-tile grid corridor lines, -2 for lack of distinctive canopy structures.
-  * *D4: Flow & Backtracking (6/10)*: Looping under the bridge to the lower glen works well, but traveling from the Amber key at `(14, 12)` back to the southern ramp at `(8, 11)` has ~12 steps of backtrack transit (-2). -2 for path ambiguity.
-  * *D5: Visual Aesthetics (4/10)*: -3 for flat canvas fills; -3 for lack of jungle vegetation and cliff drop facades.
-  * *D6: Calibration (6/10)*: Par steps (44) calibrated against solver. -2 for touch control friction, -2 for pacing.
-* **Critical Directives**:
-  1. Add a visual waterfall or ancient jungle ruin in the lower eastern glen.
-  2. Implement wooden plank bridge textures and foliage canopies.
+#### Chapter 2: The Falcon's Plinth (*Shō/Ten*)
+* **Dimensions**: 11×11 | **Spawn $\to$ Exit**: `(1, 1)` $\to$ `(9, 9)` | **Par**: 32 steps / 19s | **Biome**: Temple
+* **Architecture**: West Falcon Aerie $\to$ Central Court with Plinth Divider $\to$ East Overlook Deck $\to$ Terrace Gate Bottleneck $\to$ High Sky Sanctuary.
+* **Score**: **49.67 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1: Spatial Architecture (8.67/10)*: Asymmetric aerie and terrace overlooking the mountain wind chasm.
+  * *Chair 2: Systems & Puzzles (10.00/10)*: Carryable Falcon statue must be slotted into Sky Plinth. Verified zero-bypass gating on Terrace Gate.
+  * *Chair 3: Art & Visuals (6.00/10)*: Sky plinth, marble falcon totem, and sky sapphire.
+  * *Chair 4: Pacing & Structure (8.67/10)*: Teaches carryable relic mechanics and environmental riddle sockets.
+  * *Chair 5: UX & Calibration (8.00/10)*: Calibrated par (32 steps / 19s).
+  * *Chair 6: Narrative & World-Building (8.33/10)*: Inscription: "Only when the winged sentinel overlooks the winds will the gate open."
 
----
-
-### Level 7: The Sunken Chasm (*Ten*)
-* **Dimensions**: 17×15 | **Spawn $\to$ Exit**: `(2, 5)` $\to$ `(8, 1)` | **Par**: 48 steps / 28s
-* **Audit Score**: **40 / 60 (B-Tier: Provisional)**
-  * *D1: Kishō Alignment (8/10)*: Good twist: two perpendicular bridges (`B_NS` East-West deck and `B_EW` North-South deck) creating an intersecting 3D chasm puzzle. -1 for lore delivery, -1 for transition clarity.
-  * *D2: Gating Integrity (10/10)*: Strictly unbypassable. Both bridges mandatory to claim Azure key and reach exit.
-  * *D3: Spatial Architecture (6/10)*: Interlocking bridges provide genuine 3D multi-elevation navigation. -2 for 1-tile corridors on ground, -2 for lack of chasm/cliff wall relief.
-  * *D4: Flow & Backtracking (6/10)*: Crossing bridge 1 to bridge 2 is rewarding, but returning from the southern descent back to the northern door involves ~14 steps of transit (-2). -2 for camera disorientation on perpendicular spans.
-  * *D5: Visual Aesthetics (4/10)*: Void areas are drawn as plain dark canvas rather than an atmospheric mist-filled sunken chasm (-3 for flat primitives, -3 for bare gorge).
-  * *D6: Calibration (6/10)*: Par steps (48) calibrated against solver. -2 for camera turning disorientation, -2 for touch control turns.
-* **Critical Directives**:
-  1. Render atmospheric mist and bottomless chasm drop visuals beneath bridge decks.
-  2. Add stone pillar supports holding up the perpendicular spans.
+#### Chapter 3: Sanctum of the Four Guardians (*Ketsu*)
+* **Dimensions**: 15×15 | **Spawn $\to$ Exit**: `(7, 1)` $\to$ `(7, 13)` | **Par**: 54 steps / 33s | **Biome**: Temple
+* **Architecture**: North Antechamber $\to$ Central Rotunda with 4 Plinths & Sentry Pillars $\to$ 4 Cardinal Wings (Falcon NW, Serpent NE, Lion SW, Bear SE) $\to$ Transverse Wall with Golden Sanctum Gate $\to$ Inner Dais.
+* **Score**: **51.33 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1: Spatial Architecture (9.00/10)*: Grand cruciform temple. 4 dedicated guardian alcoves surrounding a central rotunda.
+  * *Chair 2: Systems & Puzzles (10.00/10)*: 4-part riddle puzzle group. Door `door_sanctum_gate` strictly unbypassable; verified by solver.
+  * *Chair 3: Art & Visuals (6.33/10)*: 4 distinct animal totems, fluted stone plinths, and golden sanctuary gate.
+  * *Chair 4: Pacing & Structure (9.00/10)*: Grand environmental riddle climax.
+  * *Chair 5: UX & Calibration (8.33/10)*: Calibrated par (54 steps / 33s). Checkpoint beacon at center.
+  * *Chair 6: Narrative & World-Building (8.67/10)*: Poetic riddle verses on the 4 plinths describe the compass direction and spirit of each guardian.
 
 ---
 
-### Level 8: Citadel of the Two Horizons (*Ketsu*)
-* **Dimensions**: 19×17 | **Spawn $\to$ Exit**: `(9, 8)` $\to$ `(9, 2)` | **Par**: 68 steps / 40s
-* **Audit Score**: **41 / 60 (B-Tier: Provisional)**
-  * *D1: Kishō Alignment (8/10)*: Grand synthesis of Chapter 2. Central courtyard flanked by twin parallel bridges, with sequential Ruby and Gold locks guarding the apex altar. -1 for narrative climax, -1 for pacing.
-  * *D2: Gating Integrity (10/10)*: Strictly unbypassable. West bridge $\to$ Ruby key $\to$ Ruby door $\to$ East bridge $\to$ Gold key $\to$ Gold door $\to$ Apex Altar.
-  * *D3: Spatial Architecture (7/10)*: Strongest architectural plan in Chapter 2: central courtyard (5×3 plaza), twin bridges, north apex altar. -2 for 1-tile side corridors, -1 for lack of citadel tower visuals.
-  * *D4: Flow & Backtracking (6/10)*: Logical progression through courtyard and wings, but returning from West wing back into the courtyard requires ~16 steps of transit (-2). -2 for blind exploration.
-  * *D5: Visual Aesthetics (4/10)*: Great potential for an epic citadel climax, but currently rendered with basic green/brown canvas colors without stone masonry textures, torches, or citadel battlements (-3 for flat primitives, -3 for lack of props).
-  * *D6: Calibration (6/10)*: Par steps (68) solver-benchmarked. -2 for length fatigue on mobile, -2 for input friction.
-* **Critical Directives**:
-  1. Implement citadel stone wall textures and flaming wall braziers along the central courtyard.
-  2. Add victory pedestal glow at the apex altar portal.
+### Story 3: The Whispering Citadel (Chapter 1)
+* **Dimensions**: 13×13 (3 Rooms) | **Biome**: Multi-Room Citadel
+* **Architecture**: Room 1: Whispering Courtyard $\to$ Room 2: Subterranean Catacombs $\to$ Room 3: High Spire.
+* **Score**: **50.01 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1: Spatial Architecture (8.67/10)*: Multi-tier vertical dungeon architecture across 3 distinct rooms.
+  * *Chair 2: Systems & Puzzles (10.00/10)*: Interconnected keys, levers, and branching exits (Apex Altar vs Secret Monolith Tunnel).
+  * *Chair 3: Art & Visuals (6.00/10)*: Distinctive visual themes per room (courtyard stone, damp catacombs, open sky spire).
+  * *Chair 4: Pacing & Structure (8.67/10)*: 3-act escalation within a single multi-room level.
+  * *Chair 5: UX & Calibration (8.00/10)*: Smooth room transition snapshots preserving persistent inventory.
+  * *Chair 6: Narrative & World-Building (8.67/10)*: Rich environmental storytelling regarding the ancient Monolith builders.
 
 ---
 
-## 4. Workshopping & Polish Backlog (Milestones v1.20–v1.23)
+## 4. Backlog Directives (Milestones v1.20–v1.23)
 
-Based on these critical scores, the immediate priorities in the [Master Backlog](BACKLOG.md) are:
-1. **Epic 2 (Visuals)**: Connect SVG vector assets from `assets/` into `js/engine/renderer.js` to lift Aesthetics scores from **3–4/10** to **8–9/10** across all levels.
-2. **Backtrack Reduction**: Add loopback shortcuts and one-way ledges in Levels 1, 3, 4, 6, and 8 to eliminate empty backtracking transit.
-3. **Room Expansion**: Replace narrow 1-tile corridor grids with distinct geometric chambers, courtyards, and colonnades.
+1. **BL-33 (P1, v1.20.0)**: Fix 2.5D visual depth-sorting bug where character sprite renders on top of the southern wall's roof face when walking behind wall tiles.
+2. **SVG Vector Rendering (Epic 2, v1.20.0)**: Connect vector assets from `assets/` to `GameRenderer` to lift Chair 3 (Art & Visuals) scores from **5–6/10** to **9–10/10**, pushing A-Tier levels into S-Tier.
+3. **Chapters 3–8 Systematic Overhaul**: Workshop Chapters 3 to 8 using the proven room hierarchy, loopback transit, and zero-bypass gating patterns established in Chapters 1 and 2.
