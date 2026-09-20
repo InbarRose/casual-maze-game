@@ -9,6 +9,9 @@
   overflow: hidden;
   background-color: #0d1117;
   user-select: none;
+  touch-action: none;
+  overscroll-behavior: none;
+  -webkit-overflow-scrolling: auto;
 }
 
 #game-canvas {
@@ -19,6 +22,9 @@
   height: 100%;
   display: block;
   touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 /* Top HUD Bar — Modern Floating Glass Islands */
@@ -373,6 +379,10 @@
   border-radius: var(--radius-sm);
   cursor: crosshair;
   background: #05070a;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
 }
 
 .minimap-hint {

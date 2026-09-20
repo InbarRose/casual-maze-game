@@ -103,6 +103,7 @@ import './integration/journeys/multi-room-dungeon.journey.test.mjs';
 import './unit/ui/audio-fx.test.mjs';
 import './unit/ui/game-menu.test.mjs';
 import './unit/ui/app-header.test.mjs';
+import './unit/ui/touch-controls.test.mjs';
 
 // Run registered suites
 
