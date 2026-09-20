@@ -31,8 +31,8 @@
     "style": "portal",
     "label": "Needle Sanctum"
   },
-  "parSteps": 48,
-  "parTime": 30,
+  "parSteps": 29,
+  "parTime": 18,
   "architectNote": "Rotate the camera [Q / R] to view the cardinal corridors. Seek the golden key in the south-west wing.",
   "help": {
     "title": "Level 29: The Cardinal Needle",

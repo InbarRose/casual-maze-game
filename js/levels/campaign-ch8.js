@@ -36,8 +36,8 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
       "style": "portal",
       "label": "Needle Sanctum"
     },
-    "parSteps": 48,
-    "parTime": 30,
+    "parSteps": 29,
+    "parTime": 18,
     "architectNote": "Rotate the camera [Q / R] to view the cardinal corridors. Seek the golden key in the south-west wing.",
     "help": {
       "title": "Level 29: The Cardinal Needle",
@@ -659,8 +659,8 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
       "style": "portal",
       "label": "Overpass Gate"
     },
-    "parSteps": 54,
-    "parTime": 36,
+    "parSteps": 29,
+    "parTime": 18,
     "architectNote": "Overhead bridges occlude low ground corridors. Rotate 90 degrees to peer straight through underpass tunnels!",
     "help": {
       "title": "Level 30: The Hidden Underpass",
@@ -1260,8 +1260,8 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
       "style": "portal",
       "label": "Sanctuary of the Four Winds"
     },
-    "parSteps": 58,
-    "parTime": 38,
+    "parSteps": 38,
+    "parTime": 23,
     "architectNote": "Four faces of the monolith tell one story. Walk the perimeter and rotate the view to read each inscription.",
     "help": {
       "title": "Level 31: The Four-Faced Pillar",
@@ -1907,8 +1907,8 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "targetLevel": "story_citadel_1"
       }
     ],
-    "parSteps": 72,
-    "parTime": 46,
+    "parSteps": 34,
+    "parTime": 21,
     "architectNote": "At the apex of the monolith, two distinct routes await: return victorious to the Grand Hub, or branch downward into the Whispering Citadel.",
     "help": {
       "title": "Level 32: The Prismatic Spire",

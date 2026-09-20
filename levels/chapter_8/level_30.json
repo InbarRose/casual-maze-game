@@ -31,8 +31,8 @@
     "style": "portal",
     "label": "Overpass Gate"
   },
-  "parSteps": 54,
-  "parTime": 36,
+  "parSteps": 29,
+  "parTime": 18,
   "architectNote": "Overhead bridges occlude low ground corridors. Rotate 90 degrees to peer straight through underpass tunnels!",
   "help": {
     "title": "Level 30: The Hidden Underpass",
