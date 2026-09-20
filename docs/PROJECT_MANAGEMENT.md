@@ -14,13 +14,18 @@ This document tracks project milestones, current release status, active developm
 - [x] **Multi-Perspective Quality Rubric & Master Scoring Register**:
   - Published [`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md) establishing a 6-axis 60-point scoring framework (Stage Alignment, Gating Integrity, Novelty, Flow, Aesthetics, Calibration) and automated quality thresholds ($\ge 45/60$, mandatory 10/10 gating).
   - Published [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) with comprehensive baseline audits of all 32 campaign levels and 6 tutorials, establishing targeted improvement goals.
-- [x] **Comprehensive Gap Analysis & Remediation Backlog**:
-  - Published [`docs/GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md`](GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md) identifying root causes and actionable plans for all 8 reported gaps (test/replay crash, rotation bugs, level repetition, obstacle bypasses, settings, assets, mobile, and editor).
+- [x] **Master Product Backlog & Gap Analysis**:
+  - Published [`docs/BACKLOG.md`](BACKLOG.md) establishing an authoritative, prioritized backlog tracking all 32 items across 7 epics (Level Design, Visual Engine, Mobile UX, Editor Studio, Navigation & HUD, Audio FX, QA Automation).
+  - Published [`docs/GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md`](GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md) detailing root-cause diagnosis and phased engineering plans for all 8 reported gaps.
+- [x] **Rigorous Quality Rubric & Realistic Scoring Register (v2.0)**:
+  - Overhauled [`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md) to eliminate lenient rating bias, introducing granular sub-criteria, explicit backtrack penalties (-1 pt per 8 empty steps), flat canvas deductions (-4 pts), and an anti-box standard.
+  - Re-audited Chapters 1 and 2 in [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md), establishing realistic, honest baseline scores (37–42 / 60, C to B- Tiers) and explicit next-iteration directives.
 - [x] **Workshopping Chapter 1 (Levels 1–4) & Chapter 2 (Levels 5–8)**:
   - Redesigned Levels 1–4 (The Foundation) and 5–8 (The Vertical Dimension) to break the "same layout just larger scale" corner-to-corner template.
   - Implemented 4-stage *Kishōtenketsu* progression across both chapters with dynamic non-corner spawn/exit anchors and anti-box spatial rhythm.
   - Enforced 100% zero-bypass integrity on all 8 levels: every key, door, bridge deck, and underpass is strictly required.
-  - Added dedicated unit test suite `tests/unit/levels/chapter-1-and-2-redesign.test.mjs` verifying solvability, zero bypasses, dimension variance, and elevation traversal.
+  - Built scalable per-chapter unit test suites ([`tests/unit/levels/chapter-1.test.mjs`](../tests/unit/levels/chapter-1.test.mjs) and [`chapter-2.test.mjs`](../tests/unit/levels/chapter-2.test.mjs)) replacing monolithic bundles.
+  - Calibrated all par steps and par times against empirical BFS solver solutions.
   - Synchronized manifests, cryptographic hashes, and default level files (`npm run manifests:update`).
 - [x] **Immediate Core Engine Fixes**:
   - Exported `ALL_LEVELS` in `js/levels/default-levels.js` fixing module loading crash on `test.html`.

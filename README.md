@@ -122,6 +122,7 @@ All test assertions will report `0 FAILED` with exit code `0`.
 
 Detailed architecture, schemas, testing plans, level design methodology, and operational guides are organized in the [`docs/`](docs/) directory:
 
+* **[docs/BACKLOG.md](docs/BACKLOG.md)**: Authoritative master product backlog tracking 32 items across 7 epics, priorities (P0–P3), and delivery sprints.
 * **[docs/LEVEL_DESIGN_PHILOSOPHY.md](docs/LEVEL_DESIGN_PHILOSOPHY.md)**: 4-stage *Kishōtenketsu* methodology, anti-box spatial labyrinth rules, and zero-bypass gating guarantees.
 * **[docs/LEVEL_AUDIT_RUBRIC.md](docs/LEVEL_AUDIT_RUBRIC.md)**: 6-axis 60-point multi-perspective evaluation rubric with automated release quality thresholds.
 * **[docs/LEVEL_SCORING_REGISTER.md](docs/LEVEL_SCORING_REGISTER.md)**: Baseline scoring register, chapter audits, and workshopping iteration logs across all 38 levels.
