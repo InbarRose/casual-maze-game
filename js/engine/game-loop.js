@@ -26,6 +26,7 @@ import { Minimap } from './minimap.js';
 import { StorageManager } from '../core/storage.js';
 import { DebugLogger } from './debug-logger.js';
 import { PuzzleModal } from '../ui/puzzle-modal.js';
+import { assetLoader } from '../core/asset-loader.js';
 
 export class GameLoop {
   /**
@@ -105,6 +106,15 @@ export class GameLoop {
     this.renderer = new GameRenderer(mainCanvas);
     this.renderer.setPerspective(initialPerspective);
     this.minimap = new Minimap(minimapCanvas);
+
+    // Asynchronously preload vector assets in browser environment
+    if (typeof fetch === 'function' && typeof window !== 'undefined') {
+      const theme = this.level.config?.theme || 'dungeon';
+      assetLoader.preloadTheme(theme).catch(() => {});
+      assetLoader.loadManifest('assets/manifest.json').then(() => {
+        assetLoader.preloadTheme(theme).catch(() => {});
+      }).catch(() => {});
+    }
 
     // Determine effective spawn coordinates (custom test spawn takes precedence in playtest mode)
     const effectiveSpawnX = this.level.testSpawn?.x ?? initialRoomDef?.spawn?.x ?? this.level.spawn?.x ?? 1;

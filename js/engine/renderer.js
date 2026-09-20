@@ -4,6 +4,7 @@
  */
 
 import { TILES, THEMES, ELEVATION, FOG_STATE, ENTITY_TYPES } from '../core/constants.js';
+import { assetLoader } from '../core/asset-loader.js';
 
 export class GameRenderer {
   /**
@@ -14,9 +15,20 @@ export class GameRenderer {
     this.ctx = canvas.getContext('2d', { alpha: false });
     this.perspective = 'angled'; // 'angled' | 'topdown'
     this.particles = [];
+    this.ambientParticles = [];
+    this.maxAmbientParticles = 35;
     this.floatingTexts = [];
     this.shockwaves = [];
     this.exitPulseTimer = 0;
+  }
+
+  /**
+   * Helper to retrieve cached vector asset image from AssetLoader
+   * @param {string} idOrPath
+   * @returns {HTMLImageElement|null}
+   */
+  getAssetImage(idOrPath) {
+    return assetLoader.getImage(idOrPath);
   }
 
   /**
@@ -49,7 +61,7 @@ export class GameRenderer {
     }
 
     this.exitPulseTimer += dt * 3;
-    this.updateEffects(dt);
+    this.updateEffects(dt, level, camera);
 
     // 1. Clear background
     ctx.fillStyle = theme.bg;
@@ -126,7 +138,7 @@ export class GameRenderer {
     player.render(ctx, playerScreen.x, playerScreen.y, tileSize, this.perspective, angle);
 
     if (level.config.fogOfWar && fog) {
-      this.renderFogOfWar(ctx, fog, bounds, camera, theme);
+      this.renderFogOfWar(ctx, fog, bounds, camera, theme, player, entities, level);
     }
   }
 
@@ -147,24 +159,19 @@ export class GameRenderer {
     if (level.spawn) this.renderSpawnEntrance(ctx, level, camera, theme, fog);
     if (level.exit) this.renderExit(ctx, level, camera, theme, fog);
 
-    // 4. Ground Walls with Front Face & Side Relief
-    this.renderAngledWalls(ctx, level, bounds, camera, theme);
+    // 4. Ground Layer Unified Interleaved Y-Sorted Pass (Walls, Entities, Player)
+    // Resolves BL-33: character and moving entities are correctly occluded by walls to their south.
+    this.renderAngledGroundLayerInterleaved(ctx, level, bounds, camera, theme, entities, player, fog, tileSize);
 
-    // 5. Thematic Perimeter & Wall Decor
-    this.renderThematicPerimeterDecor(ctx, level, bounds, camera, theme, tileSize, 0);
-
-    // 6. Ground Entities & Player (if player on ground) with Y-sorting
-    this.renderYSortedEntities(ctx, entities, player, ELEVATION.GROUND, camera, fog, tileSize, 0);
-
-    // 7. Overhead Bridges & Ramps with vertical lift and support pillars
+    // 5. Overhead Bridges & Ramps with vertical lift and support pillars
     this.renderAngledOverheadLayer(ctx, level, bounds, camera, theme, heightOffset);
 
-    // 8. Overhead Entities & Player (if player overhead) with Y-sorting
+    // 6. Overhead Entities & Player (if player overhead) with Y-sorting
     this.renderYSortedEntities(ctx, entities, player, ELEVATION.OVERHEAD, camera, fog, tileSize, heightOffset);
 
-    // 9. Fog-of-War Mask
+    // 9. Fog-of-War Mask with dynamic lighting gradients (BL-12)
     if (level.config.fogOfWar && fog) {
-      this.renderFogOfWar(ctx, fog, bounds, camera, theme);
+      this.renderFogOfWar(ctx, fog, bounds, camera, theme, player, entities, level);
     }
   }
 
@@ -176,6 +183,7 @@ export class GameRenderer {
     const tileSize = camera.tileSize;
     const angle = camera ? camera.getDiscreteRotation() : 0;
     const isRotated90or270 = angle === 90 || angle === 270;
+    const themeKey = theme.id || level.config?.theme || 'dungeon';
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
@@ -183,9 +191,19 @@ export class GameRenderer {
         if (tile === TILES.WALL) continue; // Walls drawn in wall pass
 
         const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
-        const isAlt = (x + y) % 2 === 0;
-        ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
-        ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+
+        // Check for vector SVG floor asset (plain or cracked variation)
+        const isCracked = ((x * 13 + y * 7) % 17 === 0);
+        const variationId = isCracked ? `tile_floor_${themeKey}_cracked` : `tile_floor_${themeKey}`;
+        const floorImg = this.getAssetImage(variationId) || this.getAssetImage(`tile_floor_${themeKey}`) || this.getAssetImage('tile_floor_generic');
+
+        if (floorImg) {
+          ctx.drawImage(floorImg, screen.x, screen.y, tileSize, tileSize);
+        } else {
+          const isAlt = (x + y) % 2 === 0;
+          ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
+          ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+        }
 
         ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.02)';
         ctx.lineWidth = 1;
@@ -207,6 +225,124 @@ export class GameRenderer {
             ctx.fillRect(screen.x + tileSize * 0.78, screen.y, tileSize * 0.1, tileSize);
           }
         }
+      }
+    }
+  }
+
+  /**
+   * Unified Y-sorted rendering pass for ground layer walls, entities, and player
+   * Resolves BL-33: character and moving entities are correctly occluded by walls to their south.
+   */
+  renderAngledGroundLayerInterleaved(ctx, level, bounds, camera, theme, entities, player, fog, tileSize) {
+    const ground = level.layers.ground;
+    const drawables = [];
+    const themeKey = level.config.theme || 'dungeon';
+    const seed = (level.id ? String(level.id).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 42);
+
+    // 1. Collect all visible ground walls
+    const halfTile = tileSize / 2;
+    for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+      for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+        if (ground[y]?.[x] === TILES.WALL) {
+          const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+          const center = camera.worldToScreen(x * tileSize + halfTile, y * tileSize + halfTile, true);
+          drawables.push({
+            type: 'wall',
+            x,
+            y,
+            screen,
+            sortY: center.y + halfTile,
+            sortX: center.x,
+          });
+        }
+      }
+    }
+
+    // 2. Collect visible ground entities
+    for (const entity of entities) {
+      if ((entity.elevation ?? 0) !== ELEVATION.GROUND) continue;
+
+      if (fog) {
+        let isEntityVisible = fog.isVisible(Math.round(entity.x), Math.round(entity.y));
+        if (!isEntityVisible && entity.type === ENTITY_TYPES.WALL_DECOR) {
+          const fx = entity.facing === 'east' ? 1 : (entity.facing === 'west' ? -1 : 0);
+          const fy = entity.facing === 'south' ? 1 : (entity.facing === 'north' ? -1 : 0);
+          const adjX = Math.round(entity.x) + fx;
+          const adjY = Math.round(entity.y) + fy;
+          if (fog.isVisible(adjX, adjY) || fog.isExplored(adjX, adjY)) {
+            isEntityVisible = true;
+          }
+        }
+        if (!isEntityVisible) continue;
+      }
+
+      const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
+      const worldX = isContinuous ? entity.worldX : (entity.x * tileSize + tileSize / 2);
+      const worldY = isContinuous ? entity.worldY : (entity.y * tileSize + tileSize / 2);
+      const screen = camera.worldToScreen(worldX, worldY, true);
+
+      // Foot anchor in screen space:
+      const sortY = screen.y + tileSize * 0.35;
+
+      drawables.push({
+        type: 'entity',
+        ref: entity,
+        screen,
+        sortY,
+        sortX: screen.x,
+      });
+    }
+
+    // 3. Include player if on ground elevation
+    if (player.elevation === ELEVATION.GROUND) {
+      const screen = camera.worldToScreen(player.worldX, player.worldY, true);
+      // Player center is at screen.y; feet baseline is at screen.y + 11 * (tileSize / 32) ~= screen.y + tileSize * 0.344
+      const sortY = screen.y + tileSize * 0.344;
+      drawables.push({
+        type: 'player',
+        ref: player,
+        screen,
+        sortY,
+        sortX: screen.x,
+      });
+    }
+
+    // 4. Sort ascending by sortY (back to front in screen space)
+    drawables.sort((a, b) => {
+      if (Math.abs(a.sortY - b.sortY) > 0.01) {
+        return a.sortY - b.sortY;
+      }
+      return a.sortX - b.sortX;
+    });
+
+    // 5. Render sorted items
+    for (const item of drawables) {
+      if (item.type === 'wall') {
+        this.renderAngledWall(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, ground, camera);
+        this.renderThematicPerimeterDecorTile(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, themeKey, seed, ground, 0);
+      } else if (item.type === 'player') {
+        const screen = item.screen;
+        if (player.hasTorch && player.hasTorch()) {
+          ctx.save();
+          const pulse = Math.sin(this.exitPulseTimer * 1.5) * 0.1 + 0.9;
+          const torchRadius = tileSize * 1.5 * pulse;
+          const grad = ctx.createRadialGradient(screen.x, screen.y, tileSize * 0.15, screen.x, screen.y, torchRadius);
+          grad.addColorStop(0, 'rgba(251, 146, 60, 0.4)');
+          grad.addColorStop(0.6, 'rgba(249, 115, 22, 0.15)');
+          grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(screen.x, screen.y, torchRadius, 0, Math.PI * 2);
+          ctx.fill();
+          ctx.restore();
+        }
+        const angle = camera ? camera.getDiscreteRotation() : 0;
+        player.render(ctx, screen.x, screen.y, tileSize, this.perspective, angle);
+      } else {
+        const entity = item.ref;
+        const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
+        const screen = isContinuous ? item.screen : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize, true);
+        entity.render(ctx, screen.x, screen.y, tileSize, this.perspective);
       }
     }
   }
@@ -234,6 +370,8 @@ export class GameRenderer {
   renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground, camera) {
     const wallH = Math.round(tileSize * 0.38); // e.g. 12px for 32px tile
     const angle = camera ? camera.getDiscreteRotation() : 0;
+    const themeKey = theme?.id || 'dungeon';
+    const wallImg = this.getAssetImage(`tile_wall_${themeKey}`) || this.getAssetImage('tile_wall_dungeon');
 
     let hasFrontWall, hasLeftWall, hasRightWall;
     if (angle === 90) {
@@ -259,27 +397,35 @@ export class GameRenderer {
     }
 
     // 1. Top Cap Face (Elevated by wallH)
-    ctx.fillStyle = theme.wallTop;
-    ctx.fillRect(screenX, screenY - wallH, tileSize, tileSize);
+    if (wallImg) {
+      ctx.drawImage(wallImg, 0, 0, 64, 18, screenX, screenY - wallH, tileSize, tileSize);
+    } else {
+      ctx.fillStyle = theme.wallTop;
+      ctx.fillRect(screenX, screenY - wallH, tileSize, tileSize);
 
-    // Top highlight rim
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
-    ctx.fillRect(screenX, screenY - wallH, tileSize, 2);
+      // Top highlight rim
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.15)';
+      ctx.fillRect(screenX, screenY - wallH, tileSize, 2);
+    }
 
     // 2. Front Face (Facing downward towards camera view)
     if (!hasFrontWall) {
-      // Main vertical front face
-      ctx.fillStyle = theme.wall;
-      ctx.fillRect(screenX, screenY - wallH + tileSize, tileSize, wallH);
+      if (wallImg) {
+        ctx.drawImage(wallImg, 0, 18, 64, 42, screenX, screenY - wallH + tileSize, tileSize, wallH);
+      } else {
+        // Main vertical front face
+        ctx.fillStyle = theme.wall;
+        ctx.fillRect(screenX, screenY - wallH + tileSize, tileSize, wallH);
 
-      // Horizontal masonry mortar line
-      ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.28)';
-      ctx.fillRect(screenX, screenY - wallH + tileSize + wallH * 0.5, tileSize, 1.5);
+        // Horizontal masonry mortar line
+        ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.28)';
+        ctx.fillRect(screenX, screenY - wallH + tileSize + wallH * 0.5, tileSize, 1.5);
 
-      // Vertical brick divider
-      const brickSplit = (x % 2 === 0) ? 0.35 : 0.65;
-      ctx.fillRect(screenX + tileSize * brickSplit, screenY - wallH + tileSize, 1.5, wallH * 0.5);
-      ctx.fillRect(screenX + tileSize * (1 - brickSplit), screenY - wallH + tileSize + wallH * 0.5, 1.5, wallH * 0.5);
+        // Vertical brick divider
+        const brickSplit = (x % 2 === 0) ? 0.35 : 0.65;
+        ctx.fillRect(screenX + tileSize * brickSplit, screenY - wallH + tileSize, 1.5, wallH * 0.5);
+        ctx.fillRect(screenX + tileSize * (1 - brickSplit), screenY - wallH + tileSize + wallH * 0.5, 1.5, wallH * 0.5);
+      }
 
       // Shadow cast onto floor beneath
       ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
@@ -358,12 +504,45 @@ export class GameRenderer {
     ctx.save();
     const elevatedY = screenY - heightOffset;
 
-    // 1. Drop shadow onto ground below
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.52)';
+    // 1. Directional drop shadow onto ground below (BL-13)
+    // Elevated bridge deck at Z=1 casts angled shadow with umbra and penumbra
+    const shadowOffsetX = Math.round(tileSize * 0.08);
+    const shadowOffsetY = Math.round(heightOffset * 0.42);
+
     if (direction === 'NS') {
-      ctx.fillRect(screenX + tileSize * 0.12 + 6, screenY + 6, tileSize * 0.76, tileSize);
+      // Soft ambient penumbra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(
+        screenX + tileSize * 0.12 + shadowOffsetX - 2,
+        screenY + shadowOffsetY - 2,
+        tileSize * 0.76 + 4,
+        tileSize + 4
+      );
+      // Core directional umbra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.48)';
+      ctx.fillRect(
+        screenX + tileSize * 0.12 + shadowOffsetX,
+        screenY + shadowOffsetY,
+        tileSize * 0.76,
+        tileSize
+      );
     } else {
-      ctx.fillRect(screenX + 6, screenY + tileSize * 0.12 + 6, tileSize, tileSize * 0.76);
+      // Soft ambient penumbra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(
+        screenX + shadowOffsetX - 2,
+        screenY + tileSize * 0.12 + shadowOffsetY - 2,
+        tileSize + 4,
+        tileSize * 0.76 + 4
+      );
+      // Core directional umbra
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.48)';
+      ctx.fillRect(
+        screenX + shadowOffsetX,
+        screenY + tileSize * 0.12 + shadowOffsetY,
+        tileSize,
+        tileSize * 0.76
+      );
     }
 
     // 2. Vertical Support Pillars
@@ -400,10 +579,38 @@ export class GameRenderer {
   }
 
   /**
-   * Render Ramp in angled mode with incline slope
+   * Render Ramp in angled mode with incline slope and elevation drop shadow (BL-13)
    */
   renderAngledRamp(ctx, rampTile, screenX, screenY, tileSize, theme, heightOffset) {
     ctx.save();
+
+    // 1. Incline elevation shadow cast by rising ramp deck (BL-13)
+    const shadowOffsetX = Math.round(tileSize * 0.08);
+    const shadowOffsetY = Math.round(heightOffset * 0.35);
+
+    if (typeof ctx.createLinearGradient === 'function') {
+      let grad;
+      if (rampTile === TILES.RAMP_N) {
+        grad = ctx.createLinearGradient(screenX, screenY + tileSize, screenX, screenY);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.42)');
+      } else if (rampTile === TILES.RAMP_S) {
+        grad = ctx.createLinearGradient(screenX, screenY, screenX, screenY + tileSize);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.42)');
+      } else if (rampTile === TILES.RAMP_E) {
+        grad = ctx.createLinearGradient(screenX, screenY, screenX + tileSize, screenY);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.42)');
+      } else {
+        grad = ctx.createLinearGradient(screenX + tileSize, screenY, screenX, screenY);
+        grad.addColorStop(0, 'rgba(0, 0, 0, 0.05)');
+        grad.addColorStop(1, 'rgba(0, 0, 0, 0.42)');
+      }
+      ctx.fillStyle = grad;
+      ctx.fillRect(screenX + shadowOffsetX, screenY + shadowOffsetY, tileSize, tileSize);
+    }
+
     this.renderRamp(ctx, rampTile, screenX, screenY, tileSize, theme);
 
     // Side railing slope
@@ -514,6 +721,8 @@ export class GameRenderer {
   renderGroundLayer(ctx, level, bounds, camera, theme) {
     const ground = level.layers.ground;
     const tileSize = camera.tileSize;
+    const themeKey = theme?.id || level.config?.theme || 'dungeon';
+    const wallImg = this.getAssetImage(`tile_wall_${themeKey}`) || this.getAssetImage('tile_wall_dungeon');
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
@@ -521,28 +730,41 @@ export class GameRenderer {
         const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         if (tile === TILES.WALL) {
-          // Base wall block
-          ctx.fillStyle = theme.wall;
-          ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+          if (wallImg) {
+            ctx.drawImage(wallImg, screen.x, screen.y, tileSize, tileSize);
+          } else {
+            // Base wall block
+            ctx.fillStyle = theme.wall;
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
 
-          // Top 3D cap / bevel highlight
-          ctx.fillStyle = theme.wallTop;
-          ctx.fillRect(screen.x, screen.y, tileSize, tileSize * 0.22);
+            // Top 3D cap / bevel highlight
+            ctx.fillStyle = theme.wallTop;
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize * 0.22);
 
-          // Thematic middle detail line / masonry brick pattern
-          ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
-          ctx.fillRect(screen.x + tileSize * 0.1, screen.y + tileSize * 0.58, tileSize * 0.8, 1.5);
-          ctx.fillRect(screen.x + tileSize * 0.5, screen.y + tileSize * 0.22, 1.5, tileSize * 0.36);
+            // Thematic middle detail line / masonry brick pattern
+            ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
+            ctx.fillRect(screen.x + tileSize * 0.1, screen.y + tileSize * 0.58, tileSize * 0.8, 1.5);
+            ctx.fillRect(screen.x + tileSize * 0.5, screen.y + tileSize * 0.22, 1.5, tileSize * 0.36);
 
-          // Dark outer edge stroke
-          ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
-          ctx.lineWidth = 1;
-          ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
+            // Dark outer edge stroke
+            ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
+          }
         } else {
-          // Floor tile (checkerboard subtle tint)
-          const isAlt = (x + y) % 2 === 0;
-          ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
-          ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+          // Check for vector SVG floor asset (plain or cracked variation)
+          const isCracked = ((x * 13 + y * 7) % 17 === 0);
+          const variationId = isCracked ? `tile_floor_${themeKey}_cracked` : `tile_floor_${themeKey}`;
+          const floorImg = this.getAssetImage(variationId) || this.getAssetImage(`tile_floor_${themeKey}`) || this.getAssetImage('tile_floor_generic');
+
+          if (floorImg) {
+            ctx.drawImage(floorImg, screen.x, screen.y, tileSize, tileSize);
+          } else {
+            // Floor tile (checkerboard subtle tint)
+            const isAlt = (x + y) % 2 === 0;
+            ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+          }
 
           // Floor grid outline
           ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.02)';
@@ -617,12 +839,29 @@ export class GameRenderer {
   renderBridgeSpan(ctx, direction, screenX, screenY, tileSize, theme) {
     ctx.save();
 
-    // 1. Drop shadow onto ground below
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.55)';
+    // 1. Drop shadow onto ground below (BL-13)
+    const shadowOffsetX = 4;
+    const shadowOffsetY = 4;
     if (direction === 'NS') {
-      ctx.fillRect(screenX + tileSize * 0.12 + 5, screenY + 4, tileSize * 0.76, tileSize);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(screenX + tileSize * 0.12 + shadowOffsetX - 2, screenY + shadowOffsetY - 2, tileSize * 0.76 + 4, tileSize + 4);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillRect(screenX + tileSize * 0.12 + shadowOffsetX, screenY + shadowOffsetY, tileSize * 0.76, tileSize);
     } else {
-      ctx.fillRect(screenX + 4, screenY + tileSize * 0.12 + 5, tileSize, tileSize * 0.76);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.fillRect(screenX + shadowOffsetX - 2, screenY + tileSize * 0.12 + shadowOffsetY - 2, tileSize + 4, tileSize * 0.76 + 4);
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.5)';
+      ctx.fillRect(screenX + shadowOffsetX, screenY + tileSize * 0.12 + shadowOffsetY, tileSize, tileSize * 0.76);
+    }
+
+    // Check for vector SVG bridge asset
+    const themeKey = theme?.id || 'dungeon';
+    const dirLower = direction.toLowerCase();
+    const bridgeImg = this.getAssetImage(`tile_bridge_${themeKey}_${dirLower}`) || this.getAssetImage(`tile_bridge_generic_${dirLower}`);
+    if (bridgeImg) {
+      ctx.drawImage(bridgeImg, screenX, screenY, tileSize, tileSize);
+      ctx.restore();
+      return;
     }
 
     // 2. Bridge Deck
@@ -687,6 +926,22 @@ export class GameRenderer {
    */
   renderRamp(ctx, rampTile, screenX, screenY, tileSize, theme) {
     ctx.save();
+
+    const dirMap = {
+      [TILES.RAMP_N]: 'north',
+      [TILES.RAMP_S]: 'south',
+      [TILES.RAMP_E]: 'east',
+      [TILES.RAMP_W]: 'west',
+    };
+    const dir = dirMap[rampTile] || 'north';
+    const themeKey = theme?.id || 'dungeon';
+    const rampImg = this.getAssetImage(`tile_ramp_${themeKey}_${dir}`) || this.getAssetImage(`tile_ramp_${dir}`);
+    if (rampImg) {
+      ctx.drawImage(rampImg, screenX, screenY, tileSize, tileSize);
+      ctx.restore();
+      return;
+    }
+
     ctx.fillStyle = theme.ramp;
     ctx.fillRect(screenX, screenY, tileSize, tileSize);
 
@@ -789,6 +1044,18 @@ export class GameRenderer {
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
 
+    // Check for vector SVG spawn / entrance asset
+    let spawnAssetId = 'exit_stairs_up';
+    if (style === 'portal') spawnAssetId = 'exit_portal';
+    else if (style === 'archway') spawnAssetId = 'exit_archway';
+    const spawnImg = this.getAssetImage(spawnAssetId);
+    if (spawnImg) {
+      ctx.save();
+      ctx.drawImage(spawnImg, screen.x, screen.y, tileSize, tileSize);
+      ctx.restore();
+      return;
+    }
+
     ctx.save();
 
     if (style === 'portal') {
@@ -867,12 +1134,30 @@ export class GameRenderer {
       const { x, y, style = 'portal', label } = exit;
       if (fog && !fog.isExplored(x, y)) continue;
 
-      if (style === 'stairs' || style === 'stairs_up') {
-        this.renderExitStairs(ctx, x, y, camera, theme);
-      } else if (style === 'archway' || style === 'gate') {
-        this.renderExitArchway(ctx, x, y, camera, theme);
+      let exitAssetId = 'exit_portal';
+      if (style === 'stairs' || style === 'stairs_up') exitAssetId = 'exit_stairs_up';
+      else if (style === 'archway' || style === 'gate') exitAssetId = 'exit_archway';
+      else if (style === 'treasure' || style === 'chest') exitAssetId = 'exit_treasure_chest';
+      else if (style === 'shrine') exitAssetId = 'exit_shrine';
+
+      const exitImg = this.getAssetImage(exitAssetId);
+      if (exitImg) {
+        const tileSize = camera.tileSize;
+        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+        const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
+        ctx.save();
+        ctx.shadowColor = theme.accent || '#38bdf8';
+        ctx.shadowBlur = 12 * pulse;
+        ctx.drawImage(exitImg, screen.x, screen.y, tileSize, tileSize);
+        ctx.restore();
       } else {
-        this.renderExitPortal(ctx, x, y, camera, theme, fog);
+        if (style === 'stairs' || style === 'stairs_up') {
+          this.renderExitStairs(ctx, x, y, camera, theme);
+        } else if (style === 'archway' || style === 'gate') {
+          this.renderExitArchway(ctx, x, y, camera, theme);
+        } else {
+          this.renderExitPortal(ctx, x, y, camera, theme, fog);
+        }
       }
 
       // If exit has a destination label (e.g. "To Catacombs"), render tooltip badge
@@ -1052,9 +1337,9 @@ export class GameRenderer {
   }
 
   /**
-   * Render Fog-of-War overlay mask
+   * Render Fog-of-War overlay mask with dynamic radial lighting gradients (BL-12)
    */
-  renderFogOfWar(ctx, fog, bounds, camera, theme) {
+  renderFogOfWar(ctx, fog, bounds, camera, theme, player = null, entities = [], level = null) {
     const tileSize = camera.tileSize;
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
@@ -1074,6 +1359,140 @@ export class GameRenderer {
         // VISIBLE (2) has no mask, revealing full brightness
       }
     }
+
+    // Dynamic Radial Lighting & Torch Glow (BL-12)
+    this.renderFogLightingGradients(ctx, fog, camera, theme, player, entities, level, tileSize);
+  }
+
+  /**
+   * Render soft radial lighting falloff and torch glow halos under Fog of War (BL-12)
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {FogOfWar} fog
+   * @param {Camera} camera
+   * @param {object} theme
+   * @param {Player|null} player
+   * @param {Array<object>} entities
+   * @param {object|null} level
+   * @param {number} tileSize
+   */
+  renderFogLightingGradients(ctx, fog, camera, theme, player, entities = [], level = null, tileSize = 32) {
+    ctx.save();
+
+    // 1. Explorer Radial Lighting Aura
+    if (player && typeof player.worldX === 'number' && typeof player.worldY === 'number') {
+      const hasTorch = typeof player.hasTorch === 'function' && player.hasTorch();
+      const baseRadius = hasTorch ? tileSize * 3.8 : tileSize * 2.6;
+      const flicker = 0.94 + Math.sin(this.exitPulseTimer * 2.5) * 0.06;
+      const radius = baseRadius * flicker;
+
+      const playerScreen = camera.worldToScreen(player.worldX, player.worldY, true);
+
+      if (typeof ctx.createRadialGradient === 'function') {
+        const lightGrad = ctx.createRadialGradient(
+          playerScreen.x,
+          playerScreen.y,
+          tileSize * 0.2,
+          playerScreen.x,
+          playerScreen.y,
+          radius
+        );
+
+        if (hasTorch) {
+          lightGrad.addColorStop(0, 'rgba(251, 146, 60, 0.45)');
+          lightGrad.addColorStop(0.4, 'rgba(249, 115, 22, 0.2)');
+          lightGrad.addColorStop(0.75, 'rgba(249, 115, 22, 0.08)');
+          lightGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+        } else {
+          lightGrad.addColorStop(0, 'rgba(254, 240, 138, 0.3)');
+          lightGrad.addColorStop(0.5, 'rgba(254, 240, 138, 0.1)');
+          lightGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+        }
+
+        ctx.fillStyle = lightGrad;
+        ctx.beginPath();
+        ctx.arc(playerScreen.x, playerScreen.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 2. Placed Wall Torches & Carriable Torches
+    if (entities && entities.length > 0) {
+      for (const ent of entities) {
+        const isTorch = (ent.type === ENTITY_TYPES.WALL_DECOR && ent.decorType === 'torch') ||
+                        (ent.type === ENTITY_TYPES.COLLECTIBLE && ent.itemId === 'torch');
+        if (!isTorch) continue;
+
+        const ex = Math.round(ent.x);
+        const ey = Math.round(ent.y);
+        // Only glow if tile is visible or explored
+        if (fog && !fog.isExplored(ex, ey) && !fog.isVisible(ex, ey)) continue;
+
+        const screen = camera.worldToScreen(ent.x * tileSize + tileSize / 2, ent.y * tileSize + tileSize / 2, true);
+        const seed = (ex * 17 + ey * 31);
+        const flicker = 0.9 + Math.sin(this.exitPulseTimer * 3.2 + seed) * 0.1;
+        const torchRadius = tileSize * 2.2 * flicker;
+
+        if (typeof ctx.createRadialGradient === 'function') {
+          const torchGrad = ctx.createRadialGradient(
+            screen.x,
+            screen.y,
+            tileSize * 0.1,
+            screen.x,
+            screen.y,
+            torchRadius
+          );
+          torchGrad.addColorStop(0, 'rgba(254, 215, 170, 0.5)');
+          torchGrad.addColorStop(0.4, 'rgba(249, 115, 22, 0.25)');
+          torchGrad.addColorStop(0.8, 'rgba(249, 115, 22, 0.08)');
+          torchGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+
+          ctx.fillStyle = torchGrad;
+          ctx.beginPath();
+          ctx.arc(screen.x, screen.y, torchRadius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    // 3. Wall Sconce Variations in bounds (tile_wall_*_torch)
+    if (level && level.layers && level.layers.ground) {
+      const bounds = camera.getViewportBounds(level.dimensions.width, level.dimensions.height, 1);
+      const ground = level.layers.ground;
+      for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+        for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+          if (ground[y]?.[x] !== TILES.WALL) continue;
+          const isTorchSconce = ((x * 19 + y * 29) % 23 === 0);
+          if (!isTorchSconce) continue;
+
+          if (fog && !fog.isExplored(x, y) && !fog.isVisible(x, y)) continue;
+
+          const screen = camera.worldToScreen(x * tileSize + tileSize / 2, y * tileSize + tileSize / 2, true);
+          const flicker = 0.91 + Math.sin(this.exitPulseTimer * 2.8 + x + y) * 0.09;
+          const sconceRadius = tileSize * 1.8 * flicker;
+
+          if (typeof ctx.createRadialGradient === 'function') {
+            const sconceGrad = ctx.createRadialGradient(
+              screen.x,
+              screen.y,
+              tileSize * 0.1,
+              screen.x,
+              screen.y,
+              sconceRadius
+            );
+            sconceGrad.addColorStop(0, 'rgba(254, 215, 170, 0.42)');
+            sconceGrad.addColorStop(0.5, 'rgba(249, 115, 22, 0.18)');
+            sconceGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+
+            ctx.fillStyle = sconceGrad;
+            ctx.beginPath();
+            ctx.arc(screen.x, screen.y, sconceRadius, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+    }
+
+    ctx.restore();
   }
 
   /**
@@ -1137,11 +1556,13 @@ export class GameRenderer {
   }
 
   /**
-   * Update all particle, shockwave, and floating text lifetimes
+   * Update all particle, shockwave, floating text, and ambient particle lifetimes
    * @param {number} dt
+   * @param {object|null} [level=null]
+   * @param {Camera|null} [camera=null]
    */
-  updateEffects(dt) {
-    // 1. Particles
+  updateEffects(dt, level = null, camera = null) {
+    // 1. Burst Particles
     for (let i = this.particles.length - 1; i >= 0; i--) {
       const p = this.particles[i];
       p.x += p.vx * dt;
@@ -1165,10 +1586,164 @@ export class GameRenderer {
       ft.life -= dt * 0.9;
       if (ft.life <= 0) this.floatingTexts.splice(i, 1);
     }
+
+    // 4. Dynamic Atmospheric Particles (BL-11)
+    if (level && camera) {
+      this.updateAmbientParticles(dt, level, camera);
+    }
   }
 
   /**
-   * Render all world effects (particles, shockwaves, floating text)
+   * Update biome-specific ambient particle simulation (BL-11)
+   * @param {number} dt
+   * @param {object} level
+   * @param {Camera} camera
+   */
+  updateAmbientParticles(dt, level, camera) {
+    const themeKey = level?.config?.theme || 'dungeon';
+    const tileSize = camera.tileSize || 32;
+    const { width: mazeW, height: mazeH } = level.dimensions || { width: 20, height: 20 };
+    const bounds = camera.getViewportBounds
+      ? camera.getViewportBounds(mazeW, mazeH, 2)
+      : { startCol: 0, endCol: mazeW - 1, startRow: 0, endRow: mazeH - 1 };
+
+    const minX = bounds.startCol * tileSize;
+    const maxX = (bounds.endCol + 1) * tileSize;
+    const minY = bounds.startRow * tileSize;
+    const maxY = (bounds.endRow + 1) * tileSize;
+
+    // 1. Update existing ambient particles
+    for (let i = this.ambientParticles.length - 1; i >= 0; i--) {
+      const p = this.ambientParticles[i];
+      p.life -= dt;
+      const sway = Math.sin(this.exitPulseTimer * p.swayFreq + p.seed) * p.swayAmp;
+      p.x += (p.vx + sway) * dt;
+      p.y += p.vy * dt;
+
+      // Cull if lifetime expired or wandered too far outside active viewport
+      if (p.life <= 0 || p.x < minX - 60 || p.x > maxX + 60 || p.y < minY - 60 || p.y > maxY + 60) {
+        this.ambientParticles.splice(i, 1);
+      }
+    }
+
+    // 2. Replenish ambient particles up to budget (max 35)
+    while (this.ambientParticles.length < this.maxAmbientParticles) {
+      const p = this.createAmbientParticle(themeKey, minX, maxX, minY, maxY);
+      this.ambientParticles.push(p);
+    }
+  }
+
+  /**
+   * Spawn a new ambient particle tailored to the active biome (BL-11)
+   * @param {string} themeKey
+   * @param {number} minX
+   * @param {number} maxX
+   * @param {number} minY
+   * @param {number} maxY
+   * @returns {object}
+   */
+  createAmbientParticle(themeKey, minX, maxX, minY, maxY) {
+    const x = minX + Math.random() * (maxX - minX);
+    const y = minY + Math.random() * (maxY - minY);
+    const seed = Math.random() * 1000;
+
+    switch (themeKey) {
+      case 'magma': {
+        // Rising glowing embers / fiery sparks
+        const colors = ['#f97316', '#ef4444', '#fbbf24', '#f59e0b'];
+        const maxLife = 1.4 + Math.random() * 1.0;
+        return {
+          x, y,
+          vx: (Math.random() - 0.5) * 20,
+          vy: -(35 + Math.random() * 45), // Rises upward
+          swayAmp: 18,
+          swayFreq: 2.8,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.5 + Math.random() * 2.0,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.85,
+        };
+      }
+      case 'jungle': {
+        // Floating emerald spores / glowing pollen
+        const colors = ['#22c55e', '#86efac', '#4ade80', '#a7f3d0'];
+        const maxLife = 2.2 + Math.random() * 1.4;
+        return {
+          x, y,
+          vx: (Math.random() - 0.5) * 16,
+          vy: 10 + Math.random() * 18, // Gently drifting downward
+          swayAmp: 22,
+          swayFreq: 1.6,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.8 + Math.random() * 1.8,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.75,
+        };
+      }
+      case 'glacial': {
+        // Falling snowflakes / frost sparkles
+        const colors = ['#e0f2fe', '#38bdf8', '#ffffff', '#bae6fd'];
+        const maxLife = 2.0 + Math.random() * 1.2;
+        return {
+          x, y,
+          vx: (Math.random() - 0.5) * 12,
+          vy: 28 + Math.random() * 32, // Falls like snow
+          swayAmp: 14,
+          swayFreq: 2.0,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.5 + Math.random() * 1.8,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.8,
+        };
+      }
+      case 'temple': {
+        // Floating golden dust / mystic glitter
+        const colors = ['#fbbf24', '#fde047', '#d97706', '#fef08a'];
+        const maxLife = 1.8 + Math.random() * 1.4;
+        return {
+          x, y,
+          vx: 16 + Math.random() * 20, // Diagonal breeze
+          vy: 8 + Math.random() * 14,
+          swayAmp: 12,
+          swayFreq: 2.2,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.4 + Math.random() * 1.8,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.8,
+        };
+      }
+      case 'dungeon':
+      default: {
+        // Floating subterranean dust motes
+        const colors = ['rgba(226, 232, 240, 0.45)', 'rgba(203, 213, 225, 0.4)', 'rgba(255, 255, 255, 0.35)'];
+        const maxLife = 2.5 + Math.random() * 1.5;
+        return {
+          x, y,
+          vx: (Math.random() - 0.5) * 14,
+          vy: (Math.random() - 0.5) * 14, // Omnidirectional lazy drift
+          swayAmp: 8,
+          swayFreq: 1.2,
+          seed,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          size: 1.2 + Math.random() * 1.4,
+          life: maxLife,
+          maxLife,
+          baseAlpha: 0.65,
+        };
+      }
+    }
+  }
+
+  /**
+   * Render all world effects (particles, shockwaves, floating text, ambient particles)
    * @param {CanvasRenderingContext2D} ctx
    * @param {Camera} camera
    */
@@ -1190,7 +1765,7 @@ export class GameRenderer {
       ctx.restore();
     }
 
-    // 2. Particles
+    // 2. Burst Particles
     if (this.particles.length > 0) {
       ctx.save();
       for (const p of this.particles) {
@@ -1204,7 +1779,24 @@ export class GameRenderer {
       ctx.restore();
     }
 
-    // 3. Floating In-World Text
+    // 3. Dynamic Atmospheric Particles (BL-11)
+    if (this.ambientParticles && this.ambientParticles.length > 0) {
+      ctx.save();
+      for (const p of this.ambientParticles) {
+        const screen = camera.worldToScreen(p.x, p.y, true);
+        const progress = Math.max(0, Math.min(1, p.life / p.maxLife));
+        const alpha = Math.sin(progress * Math.PI) * (p.baseAlpha || 0.75);
+
+        ctx.globalAlpha = Math.max(0, Math.min(1, alpha));
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(screen.x, screen.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    // 4. Floating In-World Text
     if (this.floatingTexts.length > 0) {
       ctx.save();
       for (const ft of this.floatingTexts) {
@@ -1313,6 +1905,54 @@ export class GameRenderer {
   }
 
   /**
+   * Render theme-specific decorative art on a single wall tile
+   */
+  renderThematicPerimeterDecorTile(ctx, x, y, screenX, sy, tileSize, themeKey, seed, ground, heightOffset = 0) {
+    const hasSouthCorridor = ground[y + 1]?.[x] !== TILES.WALL && ground[y + 1]?.[x] !== undefined;
+    const hash = this.getDecorHash(x, y, seed);
+
+    if (themeKey === 'dungeon') {
+      if (hasSouthCorridor && hash < 0.12) {
+        this.renderDungeonSkeleton(ctx, screenX, sy, tileSize);
+      } else if (hasSouthCorridor && hash >= 0.12 && hash < 0.26) {
+        this.renderIronChains(ctx, screenX, sy, tileSize, hash);
+      } else if (hash >= 0.26 && hash < 0.38) {
+        this.renderCobweb(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'jungle') {
+      if (hasSouthCorridor && hash < 0.30) {
+        this.renderJungleVines(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.30 && hash < 0.50) {
+        this.renderFernPatch(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'temple') {
+      if (hasSouthCorridor && hash < 0.22) {
+        this.renderTempleArch(ctx, screenX, sy, tileSize);
+      } else if (hasSouthCorridor && hash >= 0.22 && hash < 0.45) {
+        this.renderTempleGlyph(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'cave') {
+      if (hash < 0.25) {
+        this.renderCrystalGeode(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.25 && hash < 0.45) {
+        this.renderStalactite(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'lava') {
+      if (hash < 0.30) {
+        this.renderMagmaFissure(ctx, screenX, sy, tileSize, hash);
+      }
+    } else if (themeKey === 'sunset') {
+      if (hasSouthCorridor && hash < 0.25) {
+        this.renderAstrolabeRings(ctx, screenX, sy, tileSize);
+      }
+    } else if (themeKey === 'snow') {
+      if (hasSouthCorridor && hash < 0.35) {
+        this.renderIcicles(ctx, screenX, sy, tileSize, hash);
+      }
+    }
+  }
+
+  /**
    * Render theme-specific decorative art in non-playable areas & deep wall blocks
    */
   renderThematicPerimeterDecor(ctx, level, bounds, camera, theme, tileSize, heightOffset = 0) {
@@ -1323,51 +1963,9 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         if (ground[y]?.[x] !== TILES.WALL) continue;
-
-        const hasSouthCorridor = ground[y + 1]?.[x] !== TILES.WALL && ground[y + 1]?.[x] !== undefined;
         const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
         const sy = screen.y - heightOffset;
-        const hash = this.getDecorHash(x, y, seed);
-
-        if (themeKey === 'dungeon') {
-          if (hasSouthCorridor && hash < 0.12) {
-            this.renderDungeonSkeleton(ctx, screen.x, sy, tileSize);
-          } else if (hasSouthCorridor && hash >= 0.12 && hash < 0.26) {
-            this.renderIronChains(ctx, screen.x, sy, tileSize, hash);
-          } else if (hash >= 0.26 && hash < 0.38) {
-            this.renderCobweb(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'jungle') {
-          if (hasSouthCorridor && hash < 0.30) {
-            this.renderJungleVines(ctx, screen.x, sy, tileSize, hash);
-          } else if (hasSouthCorridor && hash >= 0.30 && hash < 0.50) {
-            this.renderFernPatch(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'temple') {
-          if (hasSouthCorridor && hash < 0.22) {
-            this.renderTempleArch(ctx, screen.x, sy, tileSize);
-          } else if (hasSouthCorridor && hash >= 0.22 && hash < 0.45) {
-            this.renderTempleGlyph(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'cave') {
-          if (hash < 0.25) {
-            this.renderCrystalGeode(ctx, screen.x, sy, tileSize, hash);
-          } else if (hasSouthCorridor && hash >= 0.25 && hash < 0.45) {
-            this.renderStalactite(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'lava') {
-          if (hash < 0.30) {
-            this.renderMagmaFissure(ctx, screen.x, sy, tileSize, hash);
-          }
-        } else if (themeKey === 'sunset') {
-          if (hasSouthCorridor && hash < 0.25) {
-            this.renderAstrolabeRings(ctx, screen.x, sy, tileSize);
-          }
-        } else if (themeKey === 'snow') {
-          if (hasSouthCorridor && hash < 0.35) {
-            this.renderIcicles(ctx, screen.x, sy, tileSize, hash);
-          }
-        }
+        this.renderThematicPerimeterDecorTile(ctx, x, y, screen.x, sy, tileSize, themeKey, seed, ground, heightOffset);
       }
     }
   }

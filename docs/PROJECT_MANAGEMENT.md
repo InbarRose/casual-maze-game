@@ -35,9 +35,12 @@ This document tracks project milestones, current release status, active developm
 - [x] **Master Level Scoring Register (v3.0)**:
   - Populated [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) with comprehensive 6-Chair ratings (Spatial, Systems, Art, Pacing, UX, Narrative) across all 32 campaign levels and 10 story levels.
   - Verified 100% of all 42 levels achieve A-Tier Release Candidate standard ($\\ge 45.00 / 60.00$).
-- [x] **Immediate Core Engine Fixes**:
-  - Exported \`ALL_LEVELS\` in \`js/levels/default-levels.js\` fixing module loading crash on \`test.html\`.
-  - Corrected bridge deck orientation mapping in \`js/engine/renderer.js\` (\`renderOverheadLayer\`).
+- [x] **Immediate Core Engine Fixes & Visual Depth**:
+  - Exported `ALL_LEVELS` in `js/levels/default-levels.js` fixing module loading crash on `test.html`.
+  - Corrected bridge deck orientation mapping in `js/engine/renderer.js` (`renderOverheadLayer`).
+  - **2.5D Depth-Sorting & Wall Front/Roof Occlusion (BL-33)**: Replaced batched wall rendering with `renderAngledGroundLayerInterleaved` in `js/engine/renderer.js`, combining walls, entities, and the player into a single draw list sorted ascending by projected screen Y base coordinate. Resolved visual bug where character rendered over southern wall roofs when walking behind walls. Verified camera-rotation invariance and 100% test coverage with `tests/unit/engine/depth-sorting.test.mjs`.
+  - **Vector SVG Asset Pipeline Integration (BL-09 & BL-10)**: Connected the 160 vector SVG assets from `assets/manifest.json` into `GameRenderer` via `AssetLoader`. Rendered textured biome floors (with cracked and accent variations), textured wall caps and vertical drop facades, directional overhead bridges, ramps, stylized vector doors, collectible keys, switches/pedestals, and exit portals with robust procedural canvas fallbacks. Verified 100% test suite compatibility with `tests/unit/renderer/vector-rendering.test.mjs`.
+  - **Dynamic Atmospheric Particles, Lighting Gradients & Elevation Shadows (BL-11, BL-12, BL-13)**: Implemented biome-tailored ambient particle simulations across all 5 biomes (`magma` rising embers, `jungle` floating spores, `glacial` snowfall, `temple` golden glitter, `dungeon` motes) capped at 35 particles with sinusoidal physics; dynamic radial lighting gradients under Fog of War softening explorer vision bounds (with torch expansion) and casting warm halos for wall torches and sconces; multi-tier directional drop shadows (umbra and penumbra) for elevated bridges and incline linear gradient shadows for ramps. Verified with unit test suite `tests/unit/renderer/particles-lighting.test.mjs` (78 suites, 410 tests passing).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
