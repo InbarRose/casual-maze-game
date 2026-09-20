@@ -20,13 +20,13 @@ This document serves as the authoritative, prioritized master backlog for all fe
 ├──────────────────────────────────────┬──────────┬───────────┬──────────┤
 │ Epic Name                            │ Items    │ Priority  │ Status   │
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
-│ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Active   │
+│ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17 │ P1        │ Ready    │
 │ 4. Map Editor Studio Overhaul        │ BL-18–22 │ P1 / P2   │ Ready    │
 │ 5. Universal Navigation, HUD & Save  │ BL-23–26 │ P1        │ Ready    │
 │ 6. Audio FX & Ambience Engine        │ BL-27–28 │ P2        │ Ready    │
-│ 7. QA Automation & Test Scale        │ BL-29–32 │ P0 / P1   │ Active   │
+│ 7. QA Automation & Test Scale        │ BL-29–32 │ P0 / P1   │ Completed│
 └──────────────────────────────────────┴──────────┴───────────┴──────────┘
 ```
 
@@ -41,12 +41,12 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-01** | **Level Design Philosophy & Audit Rubric** | **P0** | `v1.19.0` | Publish `docs/LEVEL_DESIGN_PHILOSOPHY.md` and critical 6-axis 60-point `docs/LEVEL_AUDIT_RUBRIC.md`. | **Completed** |
 | **BL-02** | **Master Level Scoring Register** | **P0** | `v1.19.0` | Audit all 38 levels in `docs/LEVEL_SCORING_REGISTER.md` with realistic, critical baseline scores. | **Completed** |
-| **BL-03** | **Chapter 1 Workshop (The Foundation)** | **P0** | `v1.19.0` | Redesign Levels 1–4 with non-uniform dimensions, dynamic spawns, unbypassable locks, and zero empty backtracking. | **Workshopped** |
-| **BL-04** | **Chapter 2 Workshop (Vertical Dimension)** | **P0** | `v1.19.0` | Redesign Levels 5–8 with multi-elevation bridges (`B_EW`, `B_NS`), directional ramps (`R_*`), and elevated keys. | **Workshopped** |
-| **BL-05** | **Chapter 3 Workshop (Shifting Clockwork)** | **P1** | `v1.20.0` | Redesign Levels 9–12: Clockwork levers, dynamic wall-state gates, multi-target toggles with zero bypass. | Planned |
-| **BL-06** | **Chapter 4 Workshop (Astral Teleporters)** | **P1** | `v1.21.0` | Redesign Levels 13–16: 3D teleporter networks, non-Euclidean shortcuts, anti-softlock teleport loops. | Planned |
-| **BL-07** | **Chapter 5 Workshop (Molten Danger)** | **P1** | `v1.22.0` | Redesign Levels 17–20: Timed flame vents, rhythm gauntlets, patroller sentinels, mid-level checkpoints. | Planned |
-| **BL-08** | **Chapters 6–8 Polish & Synthesis** | **P2** | `v1.23.0` | Polish minigame seals (Ch 6), grand trial synthesis (Ch 7), and 4-way camera rotation puzzles (Ch 8). | Planned |
+| **BL-03** | **Chapter 1 Workshop (The Foundation)** | **P0** | `v1.19.0` | Redesign Levels 1–4 with non-uniform dimensions, dynamic spawns, unbypassable locks, and zero empty backtracking. | **Completed** |
+| **BL-04** | **Chapter 2 Workshop (Vertical Dimension)** | **P0** | `v1.19.0` | Redesign Levels 5–8 with multi-elevation bridges (`B_EW`, `B_NS`), directional ramps (`R_*`), and elevated keys. | **Completed** |
+| **BL-05** | **Chapter 3 Workshop (Shifting Clockwork)** | **P1** | `v1.19.0` | Redesign Levels 9–12: Clockwork levers, dynamic wall-state gates, multi-target toggles with zero bypass. | **Completed** |
+| **BL-06** | **Chapter 4 Workshop (Astral Teleporters)** | **P1** | `v1.19.0` | Redesign Levels 13–16: 3D teleporter networks, non-Euclidean shortcuts, anti-softlock teleport loops. | **Completed** |
+| **BL-07** | **Chapter 5 Workshop (Molten Danger)** | **P1** | `v1.19.0` | Redesign Levels 17–20: Timed flame vents, rhythm gauntlets, patroller sentinels, mid-level checkpoints. | **Completed** |
+| **BL-08** | **Chapters 6–8 Polish & Synthesis** | **P2** | `v1.19.0` | Polish minigame seals (Ch 6), grand trial synthesis (Ch 7), and 4-way camera rotation puzzles (Ch 8). | **Completed** |
 
 ---
 
@@ -117,7 +117,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | ID | Title | Priority | Target Milestone | Acceptance Criteria | Status |
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-29** | **Export `ALL_LEVELS` & Fix Test Runner** | **P0** | `v1.19.0` | Export `ALL_LEVELS` in `default-levels.js` resolving module syntax crash in `test.html`. | **Completed** |
-| **BL-30** | **Modular Per-Chapter Unit Tests** | **P0** | `v1.19.0` | Dedicated test files per chapter (`chapter-1.test.mjs`, `chapter-2.test.mjs`, etc.) instead of multi-chapter bundles. | **Active** |
+| **BL-30** | **Modular Per-Chapter Unit Tests** | **P0** | `v1.19.0` | Dedicated test files per chapter (`chapter-1.test.mjs` through `chapter-8.test.mjs`, plus story suites) instead of multi-chapter bundles. | **Completed** |
 | **BL-31** | **Automated Zero-Bypass Regression Tests** | **P0** | `v1.19.0` | Prove with BFS solver that `solveLevel(lvl, { allowDoors: false }) === null` for all gated levels. | **Completed** |
 | **BL-32** | **Test Harness Failure Summary Diagnostics** | **P1** | `v1.19.0` | Print concise failure summaries and stack traces at the end of `runner.mjs` executions. | **Completed** |
 
