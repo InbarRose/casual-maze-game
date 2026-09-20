@@ -789,8 +789,8 @@
     "file": "levels/stories/story_guardians_1.json",
     "theme": "temple",
     "version": 1,
-    "hash": "c4c010dc2a05e3ee8fa49a9a382b792271170da9c041792835e8d4555b38f9ad",
-    "size": 6048,
+    "hash": "f9035d1a4340cac282391f84f88143388f7dd1c2073ec38b6020c35dd917fc16",
+    "size": 6083,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -809,8 +809,8 @@
     "file": "levels/stories/story_guardians_2.json",
     "theme": "temple",
     "version": 1,
-    "hash": "c494878894dbab1b29c1ac96cc390992d86b3197f0134045eea81ca3b6df76cd",
-    "size": 5802,
+    "hash": "04235bae01eef3e823b76746881472d044b7db6d1da57c493ff3903c8f04f429",
+    "size": 5838,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -829,8 +829,8 @@
     "file": "levels/stories/story_guardians_3.json",
     "theme": "temple",
     "version": 1,
-    "hash": "9af83dd0cb2069ecc30017222a6da6a7254fb0313f81ba10b672e47a2e752f48",
-    "size": 10258,
+    "hash": "5b1266899d8486122891747f629c5e065017c8620c39ba808efd030a68a21c89",
+    "size": 10294,
     "dimensions": {
       "width": 15,
       "height": 15
