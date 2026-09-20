@@ -50,6 +50,7 @@ import '../unit/editor/level-validator.test.mjs';
 import '../unit/editor/json-exporter.test.mjs';
 import '../unit/editor/editor-canvas.test.mjs';
 import '../unit/editor/editor-buttons-and-functions.test.mjs';
+import '../unit/editor/history-stack.test.mjs';
 
 // Assets
 import '../unit/assets/asset-catalog.test.mjs';

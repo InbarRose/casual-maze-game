@@ -54,6 +54,7 @@ export class EditorCanvas {
     this.lineStartPos = null; // { x, y }
     this.lastMousePos = { x: 0, y: 0 };
     this.hoverGridPos = { x: -1, y: -1 };
+    this.lastPaintedGridPos = null;
 
     this.initEvents();
     this.centerInViewport();
@@ -330,10 +331,46 @@ export class EditorCanvas {
       this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
       this.canvas.addEventListener('wheel', (e) => this.handleWheel(e), { passive: false });
       this.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
+
+      // Mobile & Tablet touch listeners (non-passive to lock browser pull-to-refresh & gestures)
+      this.canvas.addEventListener('touchstart', (e) => this.handleTouchStart(e), { passive: false });
+      this.canvas.addEventListener('touchmove', (e) => this.handleTouchMove(e), { passive: false });
+      this.canvas.addEventListener('touchend', (e) => this.handleTouchEnd(e), { passive: false });
+      this.canvas.addEventListener('touchcancel', (e) => this.handleTouchEnd(e), { passive: false });
     }
     if (typeof window !== 'undefined') {
       window.addEventListener('mousemove', (e) => this.handleMouseMove(e));
       window.addEventListener('mouseup', () => this.handleMouseUp());
+    }
+  }
+
+  handleTouchStart(e) {
+    if (e.touches && e.touches.length === 1) {
+      if (e.cancelable) e.preventDefault();
+      const touch = e.touches[0];
+      this.handleMouseDown({
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+        button: 0,
+      });
+    }
+  }
+
+  handleTouchMove(e) {
+    if (e.touches && e.touches.length === 1) {
+      if (e.cancelable) e.preventDefault();
+      const touch = e.touches[0];
+      this.handleMouseMove({
+        clientX: touch.clientX,
+        clientY: touch.clientY,
+      });
+    }
+  }
+
+  handleTouchEnd(e) {
+    if (this.isMouseDown || this.isPanning) {
+      if (e.cancelable) e.preventDefault();
+      this.handleMouseUp();
     }
   }
 
@@ -367,6 +404,7 @@ export class EditorCanvas {
       this.isMouseDown = true;
       this.hasModifiedStroke = false;
       const { gridX, gridY } = this.clientToGrid(e.clientX, e.clientY);
+      this.lastPaintedGridPos = { x: gridX, y: gridY };
 
       // Line / Wall Drawing Tool start
       if (this.currentTool === 'line') {
@@ -397,7 +435,7 @@ export class EditorCanvas {
         }
       }
 
-      this.applyToolAt(gridX, gridY);
+      this.applyToolAt(gridX, gridY, true);
     }
   }
 
@@ -445,7 +483,23 @@ export class EditorCanvas {
     }
 
     if (this.isMouseDown && (this.currentTool === 'pencil' || this.currentTool === 'eraser')) {
-      this.applyToolAt(gridX, gridY);
+      if (this.lastPaintedGridPos && (gridX !== this.lastPaintedGridPos.x || gridY !== this.lastPaintedGridPos.y)) {
+        // Continuous Drag-to-Paint Smoothing (BL-19): Interpolate between consecutive drag positions
+        const linePoints = this.getLineCoordinates(
+          this.lastPaintedGridPos.x,
+          this.lastPaintedGridPos.y,
+          gridX,
+          gridY
+        );
+        for (const pt of linePoints) {
+          this.applyToolAt(pt.x, pt.y, false);
+        }
+        this.render();
+        this.lastPaintedGridPos = { x: gridX, y: gridY };
+      } else if (!this.lastPaintedGridPos) {
+        this.applyToolAt(gridX, gridY, true);
+        this.lastPaintedGridPos = { x: gridX, y: gridY };
+      }
     } else {
       this.render();
     }
@@ -535,6 +589,7 @@ export class EditorCanvas {
 
       this.isDraggingObject = false;
       this.draggedObject = null;
+      this.lastPaintedGridPos = null;
       this.canvas.style.cursor = this.currentTool === 'move' ? 'grab' : (this.currentTool === 'line' ? 'crosshair' : 'default');
       this.render();
       return;
@@ -548,6 +603,7 @@ export class EditorCanvas {
     this.isMouseDown = false;
     this.isPanning = false;
     this.hasModifiedStroke = false;
+    this.lastPaintedGridPos = null;
   }
 
   handleWheel(e) {
@@ -569,8 +625,11 @@ export class EditorCanvas {
 
   /**
    * Apply selected tool action to coordinate
+   * @param {number} gridX
+   * @param {number} gridY
+   * @param {boolean} [shouldRender=true] Whether to immediately re-render canvas
    */
-  applyToolAt(gridX, gridY) {
+  applyToolAt(gridX, gridY, shouldRender = true) {
     const { width, height } = this.level.dimensions;
     if (gridX < 0 || gridX >= width || gridY < 0 || gridY >= height) return;
 
@@ -670,7 +729,7 @@ export class EditorCanvas {
       }
 
       if (this.onTilePaint) this.onTilePaint();
-      this.render();
+      if (shouldRender) this.render();
       return;
     }
 
@@ -680,7 +739,7 @@ export class EditorCanvas {
       if (initialVal !== this.selectedTile) {
         this.floodFill(gridX, gridY, this.selectedTile);
         if (this.onTilePaint) this.onTilePaint();
-        this.render();
+        if (shouldRender) this.render();
       }
       return;
     }
@@ -702,7 +761,7 @@ export class EditorCanvas {
       }
       if (changed) {
         this.hasModifiedStroke = true;
-        this.render();
+        if (shouldRender) this.render();
       }
       return;
     }
@@ -724,7 +783,7 @@ export class EditorCanvas {
     }
     if (changed) {
       this.hasModifiedStroke = true;
-      this.render();
+      if (shouldRender) this.render();
     }
   }
 

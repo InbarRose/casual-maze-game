@@ -19,7 +19,7 @@ export class EditorUI {
   constructor() {
     this.history = [];
     this.historyIndex = -1;
-    this.maxHistory = 40;
+    this.maxHistory = 50;
 
     // Load initial draft or default template
     this.level = StorageManager.loadEditorDraft() || LevelLoader.normalizeLevel({
@@ -174,6 +174,9 @@ export class EditorUI {
         this.level.title = titleInput.value.trim() || 'Untitled Labyrinth';
         console.info(`[MazeGame:Editor] Labyrinth renamed to "${this.level.title}"`);
         this.autoSave();
+      });
+      titleInput.addEventListener('change', () => {
+        this.pushHistory();
       });
     }
 
@@ -726,39 +729,89 @@ export class EditorUI {
     this.updateUndoRedoButtons();
   }
 
+  canUndo() {
+    return this.historyIndex > 0;
+  }
+
+  canRedo() {
+    return this.historyIndex < this.history.length - 1;
+  }
+
+  getHistoryState() {
+    return {
+      index: this.historyIndex,
+      count: this.history.length,
+      canUndo: this.canUndo(),
+      canRedo: this.canRedo(),
+    };
+  }
+
+  clearHistory() {
+    this.history = [];
+    this.historyIndex = -1;
+    this.pushHistory();
+  }
+
   undo() {
-    if (this.historyIndex > 0) {
+    if (this.canUndo()) {
       this.historyIndex--;
-      this.level = JSON.parse(this.history[this.historyIndex]);
-      this.editorCanvas.setLevel(this.level);
-      const titleInput = document.getElementById('level-title-input');
-      if (titleInput) titleInput.value = this.level.title;
-      this.autoSave();
-      this.updateValidationState();
-      this.updateUndoRedoButtons();
+      this.applyHistorySnapshot(this.history[this.historyIndex]);
       this.showToast('Undo', 'info');
     }
   }
 
   redo() {
-    if (this.historyIndex < this.history.length - 1) {
+    if (this.canRedo()) {
       this.historyIndex++;
-      this.level = JSON.parse(this.history[this.historyIndex]);
-      this.editorCanvas.setLevel(this.level);
-      const titleInput = document.getElementById('level-title-input');
-      if (titleInput) titleInput.value = this.level.title;
-      this.autoSave();
-      this.updateValidationState();
-      this.updateUndoRedoButtons();
+      this.applyHistorySnapshot(this.history[this.historyIndex]);
       this.showToast('Redo', 'info');
     }
+  }
+
+  applyHistorySnapshot(snapshotJson) {
+    this.level = JSON.parse(snapshotJson);
+    this.editorCanvas.setLevel(this.level);
+    this.editorCanvas.centerInViewport();
+
+    // Synchronize UI inputs and selects with restored level state
+    const titleInput = document.getElementById('level-title-input');
+    if (titleInput) titleInput.value = this.level.title || 'Untitled Labyrinth';
+
+    const quickTheme = document.getElementById('quick-theme-select');
+    if (quickTheme && this.level.config?.theme) {
+      quickTheme.value = this.level.config.theme;
+    }
+    const setTheme = document.getElementById('set-theme');
+    if (setTheme && this.level.config?.theme) {
+      setTheme.value = this.level.config.theme;
+    }
+
+    const setW = document.getElementById('set-width');
+    if (setW && this.level.dimensions?.width) {
+      setW.value = this.level.dimensions.width;
+    }
+    const setH = document.getElementById('set-height');
+    if (setH && this.level.dimensions?.height) {
+      setH.value = this.level.dimensions.height;
+    }
+
+    this.autoSave();
+    this.updateValidationState();
+    this.updateUndoRedoButtons();
+    this.updateZoomBadge();
   }
 
   updateUndoRedoButtons() {
     const btnUndo = document.getElementById('btn-undo');
     const btnRedo = document.getElementById('btn-redo');
-    if (btnUndo) btnUndo.disabled = this.historyIndex <= 0;
-    if (btnRedo) btnRedo.disabled = this.historyIndex >= this.history.length - 1;
+    if (btnUndo) {
+      btnUndo.disabled = !this.canUndo();
+      btnUndo.setAttribute('aria-disabled', String(!this.canUndo()));
+    }
+    if (btnRedo) {
+      btnRedo.disabled = !this.canRedo();
+      btnRedo.setAttribute('aria-disabled', String(!this.canRedo()));
+    }
   }
 
   showToast(msg, type = 'info') {

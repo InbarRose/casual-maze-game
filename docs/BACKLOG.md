@@ -81,8 +81,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 
 | ID | Title | Priority | Target Milestone | Acceptance Criteria | Status |
 | :---: | :--- | :---: | :---: | :--- | :---: |
-| **BL-18** | **Action History Stack (Undo / Redo)** | **P1** | `v1.20.0` | Full undo/redo stack (`Ctrl+Z` / `Ctrl+Y`) for brush strokes, tile edits, and entity placement. | Ready |
-| **BL-19** | **Continuous Drag-to-Paint Smoothing** | **P1** | `v1.20.0` | Smooth interpolated line stamping during rapid mouse drag across canvas (no broken tile gaps). | Ready |
+| **BL-18** | **Action History Stack (Undo / Redo)** | **P1** | `v1.20.0` | Full undo/redo stack (`Ctrl+Z` / `Ctrl+Y`) for brush strokes, tile edits, and entity placement. | **Completed** |
+| **BL-19** | **Continuous Drag-to-Paint Smoothing** | **P1** | `v1.20.0` | Smooth interpolated line stamping during rapid mouse drag across canvas (no broken tile gaps). | **Completed** |
 | **BL-20** | **Multi-Tile Stamp & Prefab Palette** | **P2** | `v1.21.0` | Pre-built architectural prefabs (bridge crossings, locked vault gates, 4-way intersections) for 1-click stamping. | Planned |
 | **BL-21** | **One-Click Diagnostic Auto-Fixer** | **P2** | `v1.22.0` | Editor action to automatically resolve common errors (e.g. adding missing ramp next to bridge or matching door key). | Planned |
 | **BL-22** | **Visual Layer Switcher HUD** | **P2** | `v1.22.0` | Real-time visual overlay highlighting active editing elevation (Ground Z=0 vs Overhead Z=1) with translucent previews. | Planned |
