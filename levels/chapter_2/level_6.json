@@ -29,8 +29,8 @@
     "elevation": 0,
     "style": "portal"
   },
-  "parSteps": 44,
-  "parTime": 26,
+  "parSteps": 48,
+  "parTime": 29,
   "architectNote": "A single bridge can be traversed twice: once as a cool tunnel beneath, and once as a soaring walk above.",
   "layers": {
     "ground": [
@@ -659,6 +659,16 @@
       "color": "#34d399",
       "style": "portcullis",
       "orientation": "vertical"
+    },
+    {
+      "id": "inscr_tunnel_6",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "Runic tablet: Ground below, heavens above. Walk the underpass tunnel first, then ascend to cross the bridge deck.",
+      "playerDialogue": "Underpass first for the Amber Key, then overhead bridge for the Canopy Key.",
+      "x": 3,
+      "y": 8,
+      "elevation": 0
     }
   ]
 }

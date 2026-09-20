@@ -29,8 +29,8 @@
     "elevation": 0,
     "style": "portal"
   },
-  "parSteps": 28,
-  "parTime": 18,
+  "parSteps": 26,
+  "parTime": 16,
   "architectNote": "Look up! The jungle canopy offers high paths. Ascend the wooden incline to claim the Canopy Key.",
   "layers": {
     "ground": [
@@ -512,6 +512,16 @@
       "color": "#34d399",
       "style": "portcullis",
       "orientation": "horizontal"
+    },
+    {
+      "id": "inscr_canopy_5",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "Ancient glyph: The high wooden trestle leads to the canopy overlook. Above, the canopy key rests among the vines.",
+      "playerDialogue": "The high bridge deck is the only way to reach the Canopy Key.",
+      "x": 2,
+      "y": 10,
+      "elevation": 0
     }
   ]
 }

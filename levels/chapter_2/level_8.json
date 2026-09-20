@@ -30,7 +30,7 @@
     "style": "portal"
   },
   "parSteps": 68,
-  "parTime": 40,
+  "parTime": 41,
   "architectNote": "Twin bridges frame the Horizon Citadel. Master both crossings to unseal the apex altar.",
   "layers": {
     "ground": [
@@ -806,6 +806,16 @@
       "color": "#eab308",
       "style": "portcullis",
       "orientation": "vertical"
+    },
+    {
+      "id": "inscr_citadel_8",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "Citadel inscription: The twin bridges guard the eastern and western horizons. Unlock both to reveal the apex stairs.",
+      "playerDialogue": "Twin bridges flanking the central courtyard—both keys are strictly required.",
+      "x": 8,
+      "y": 7,
+      "elevation": 0
     }
   ]
 }

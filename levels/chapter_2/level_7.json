@@ -29,8 +29,8 @@
     "elevation": 0,
     "style": "portal"
   },
-  "parSteps": 48,
-  "parTime": 28,
+  "parSteps": 45,
+  "parTime": 27,
   "architectNote": "Where canopies collide, paths weave over and under. Mind your footing and explore both layers.",
   "layers": {
     "ground": [
@@ -640,6 +640,16 @@
       "color": "#06b6d4",
       "style": "portcullis",
       "orientation": "horizontal"
+    },
+    {
+      "id": "inscr_chasm_7",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "Ancient stone: Two bridges intersect across the chasm depths. Mind the directional incline.",
+      "playerDialogue": "The perpendicular bridges weave across two distinct elevations.",
+      "x": 3,
+      "y": 4,
+      "elevation": 0
     }
   ]
 }

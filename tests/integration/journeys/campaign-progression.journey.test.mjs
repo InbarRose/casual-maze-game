@@ -29,8 +29,8 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
 
     assertEqual(level1.id, '1');
     assertEqual(level1.chapter, 'chapter_1');
-    assertEqual(level1.parSteps, 42);
-    assertEqual(level1.parTime, 22);
+    assertEqual(level1.parSteps, 26);
+    assertEqual(level1.parTime, 14);
 
     // Verify Signpost exists in level definition
     const signpostEntity = level1.entities.find(e => e.type === 'signpost');
@@ -104,38 +104,37 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
     assertEqual(signReadEvent.data.title, "Architect's Note #1");
     assert(signReadEvent.data.text.includes('Every grand labyrinth begins with a single step'));
 
-    // 5. Explorer moves to Key location at (1, 11)
-    gameLoop.player.gridX = 1;
-    gameLoop.player.gridY = 11;
-    gameLoop.player.worldX = 1 * 32 + 16;
-    gameLoop.player.worldY = 11 * 32 + 16;
+    // 5. Explorer moves to Key location at (2, 10)
+    gameLoop.player.gridX = 2;
+    gameLoop.player.gridY = 10;
+    gameLoop.player.worldX = 2 * 32 + 16;
+    gameLoop.player.worldY = 10 * 32 + 16;
     gameLoop.handleCellArrival();
 
     const keyEvent = eventsRecorded.find(e => e.type === 'key:collected');
     assert(keyEvent, 'key:collected event emitted upon stepping on key');
     assert(gameLoop.player.hasKey('key_gold_1'), 'Player holds Dungeon Master Key');
 
-    // 6. Explorer unlocks door at (7, 7)
+    // 6. Explorer unlocks door at (9, 6)
     const door = level1.entities.find(e => e.id === 'door_gold_1');
     assert(door, 'Gold door exists in level');
 
     // Simulate stepping through door
-    gameLoop.player.gridX = 7;
-    gameLoop.player.gridY = 7;
-    gameLoop.player.worldX = 7 * 32 + 16;
-    gameLoop.player.worldY = 7 * 32 + 16;
+    gameLoop.player.gridX = 9;
+    gameLoop.player.gridY = 6;
+    gameLoop.player.worldX = 9 * 32 + 16;
+    gameLoop.player.worldY = 6 * 32 + 16;
     gameLoop.handleCellArrival();
 
-    // 7. Explorer steps to exit portal at (13, 13) within par thresholds
-    gameLoop.player.gridX = 13;
-    gameLoop.player.gridY = 13;
-    gameLoop.player.worldX = 13 * 32 + 16;
-    gameLoop.player.worldY = 13 * 32 + 16;
-    gameLoop.player.stepsTaken = 24; // Less than parSteps: 35
-    gameLoop.elapsedTime = 12500;    // 12.5s, less than parTime: 20s
+    // 7. Explorer steps to exit portal at (11, 6) within par thresholds
+    gameLoop.player.gridX = 11;
+    gameLoop.player.gridY = 6;
+    gameLoop.player.worldX = 11 * 32 + 16;
+    gameLoop.player.worldY = 6 * 32 + 16;
+    gameLoop.player.stepsTaken = 22; // Less than parSteps: 26
+    gameLoop.elapsedTime = 10000;    // 10.0s, less than parTime: 14s
 
     gameLoop.handleVictory();
-
     assert(victoryAchieved, 'Level victory achieved upon reaching exit');
     assert(victoryStats.earnedParSteps, 'Explorer achieved Par Steps medal');
     assert(victoryStats.earnedParTime, 'Explorer achieved Par Time speedrunner medal');

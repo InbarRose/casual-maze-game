@@ -34,8 +34,8 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "elevation": 0,
       "style": "portal"
     },
-    "parSteps": 28,
-    "parTime": 18,
+    "parSteps": 26,
+    "parTime": 16,
     "architectNote": "Look up! The jungle canopy offers high paths. Ascend the wooden incline to claim the Canopy Key.",
     "layers": {
       "ground": [
@@ -517,6 +517,16 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "color": "#34d399",
         "style": "portcullis",
         "orientation": "horizontal"
+      },
+      {
+        "id": "inscr_canopy_5",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Ancient glyph: The high wooden trestle leads to the canopy overlook. Above, the canopy key rests among the vines.",
+        "playerDialogue": "The high bridge deck is the only way to reach the Canopy Key.",
+        "x": 2,
+        "y": 10,
+        "elevation": 0
       }
     ]
   },
@@ -551,8 +561,8 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "elevation": 0,
       "style": "portal"
     },
-    "parSteps": 44,
-    "parTime": 26,
+    "parSteps": 48,
+    "parTime": 29,
     "architectNote": "A single bridge can be traversed twice: once as a cool tunnel beneath, and once as a soaring walk above.",
     "layers": {
       "ground": [
@@ -1181,6 +1191,16 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "color": "#34d399",
         "style": "portcullis",
         "orientation": "vertical"
+      },
+      {
+        "id": "inscr_tunnel_6",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Runic tablet: Ground below, heavens above. Walk the underpass tunnel first, then ascend to cross the bridge deck.",
+        "playerDialogue": "Underpass first for the Amber Key, then overhead bridge for the Canopy Key.",
+        "x": 3,
+        "y": 8,
+        "elevation": 0
       }
     ]
   },
@@ -1215,8 +1235,8 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "elevation": 0,
       "style": "portal"
     },
-    "parSteps": 48,
-    "parTime": 28,
+    "parSteps": 45,
+    "parTime": 27,
     "architectNote": "Where canopies collide, paths weave over and under. Mind your footing and explore both layers.",
     "layers": {
       "ground": [
@@ -1826,6 +1846,16 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "color": "#06b6d4",
         "style": "portcullis",
         "orientation": "horizontal"
+      },
+      {
+        "id": "inscr_chasm_7",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Ancient stone: Two bridges intersect across the chasm depths. Mind the directional incline.",
+        "playerDialogue": "The perpendicular bridges weave across two distinct elevations.",
+        "x": 3,
+        "y": 4,
+        "elevation": 0
       }
     ]
   },
@@ -1861,7 +1891,7 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "style": "portal"
     },
     "parSteps": 68,
-    "parTime": 40,
+    "parTime": 41,
     "architectNote": "Twin bridges frame the Horizon Citadel. Master both crossings to unseal the apex altar.",
     "layers": {
       "ground": [
@@ -2637,6 +2667,16 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "color": "#eab308",
         "style": "portcullis",
         "orientation": "vertical"
+      },
+      {
+        "id": "inscr_citadel_8",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Citadel inscription: The twin bridges guard the eastern and western horizons. Unlock both to reveal the apex stairs.",
+        "playerDialogue": "Twin bridges flanking the central courtyard—both keys are strictly required.",
+        "x": 8,
+        "y": 7,
+        "elevation": 0
       }
     ]
   }
