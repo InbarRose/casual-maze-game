@@ -17,5 +17,6 @@ import '../unit/levels/story-2-unbypassable.test.mjs';
 import '../unit/levels/chapter-1.test.mjs';
 import '../unit/levels/chapter-2.test.mjs';
 import '../unit/levels/chapter-3.test.mjs';
+import '../unit/levels/chapter-4.test.mjs';
 
 await run();
