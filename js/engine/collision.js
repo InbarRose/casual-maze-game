@@ -144,6 +144,7 @@ export class CollisionEngine {
       nextZ: targetElevation,
       nextElevation: targetElevation,
       doorToUnlock: null,
+      isSecretWall: groundTile === TILES.SECRET_WALL,
       reason: 'ok',
     };
   }

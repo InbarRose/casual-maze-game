@@ -3,7 +3,7 @@
  * Ties together input, physics/collision, entities, camera, fog, and rendering.
  */
 
-import { KEY_CODES, ELEVATION, ENTITY_TYPES, SCREEN_TO_WORLD_DELTAS } from '../core/constants.js';
+import { TILES, KEY_CODES, ELEVATION, ENTITY_TYPES, SCREEN_TO_WORLD_DELTAS } from '../core/constants.js';
 import { globalEvents } from '../core/events.js';
 import { CollisionEngine } from './collision.js';
 import { Key } from '../entities/key.js';
@@ -163,6 +163,12 @@ export class GameLoop {
     this.puzzleModal = new PuzzleModal();
     this.isPuzzleOpen = false;
 
+    // Secret rooms & scoring metrics (BL-51, BL-52)
+    this.revealedSecrets = new Set();
+    this.secretsFound = 0;
+    this.totalSecrets = this.calculateTotalSecrets();
+    this.hazardHits = 0;
+
     // Initial fog update
     this.updateFog();
 
@@ -225,6 +231,52 @@ export class GameLoop {
    */
   initEntities() {
     this.entities = this.createEntities(this.level.entities || []);
+  }
+
+  /**
+   * Count total secret wall tiles configured across level layers
+   * @returns {number}
+   */
+  calculateTotalSecrets() {
+    let count = 0;
+    const countInLayers = (layers) => {
+      if (Array.isArray(layers?.ground)) {
+        for (const row of layers.ground) {
+          if (Array.isArray(row)) {
+            for (const cell of row) {
+              if (cell === TILES.SECRET_WALL) count++;
+            }
+          }
+        }
+      }
+    };
+
+    countInLayers(this.level?.layers);
+    if (this.level?.rooms) {
+      for (const room of Object.values(this.level.rooms)) {
+        countInLayers(room?.layers);
+      }
+    }
+    return count;
+  }
+
+  /**
+   * Calculate overall numerical performance score (0 - 3000+)
+   * @param {object} stats
+   * @returns {number}
+   */
+  calculatePerformanceScore(stats) {
+    const baseScore = 1000;
+    const stepPenalty = Math.max(0, (stats.steps || 0) * 10);
+    const timePenalty = Math.max(0, Math.floor((stats.time || 0) / 1000) * 5);
+    const runScore = Math.max(0, baseScore - stepPenalty - timePenalty);
+
+    const secretBonus = (stats.secretsFound || 0) * 300;
+    const parStepsBonus = stats.earnedParSteps ? 250 : 0;
+    const parTimeBonus = stats.earnedParTime ? 250 : 0;
+    const flawlessBonus = stats.flawless ? 200 : 0;
+
+    return runScore + secretBonus + parStepsBonus + parTimeBonus + flawlessBonus;
   }
 
   /**
@@ -908,6 +960,9 @@ export class GameLoop {
 
     this.isWon = false;
     this.elapsedTime = 0;
+    this.revealedSecrets = new Set();
+    this.secretsFound = 0;
+    this.hazardHits = 0;
     this.camera.setMode('follow');
 
     // Reset logger for new attempt
@@ -1482,6 +1537,33 @@ export class GameLoop {
     const py = this.player.gridY;
     const pe = this.player.elevation;
 
+    // 0. Check Secret Wall Discovery (BL-51)
+    const currentGround = this.level.layers?.ground?.[py]?.[px];
+    if (currentGround === TILES.SECRET_WALL && pe === ELEVATION.GROUND) {
+      const secretKey = `${px},${py}`;
+      if (!this.revealedSecrets.has(secretKey)) {
+        this.revealedSecrets.add(secretKey);
+        this.secretsFound = (this.secretsFound || 0) + 1;
+
+        if (typeof window !== 'undefined' && window.audioFX?.playSecretFound) {
+          window.audioFX.playSecretFound();
+        }
+
+        const secWx = px * this.camera.tileSize + this.camera.tileSize / 2;
+        const secWy = py * this.camera.tileSize + this.camera.tileSize / 2;
+        this.renderer.spawnParticles(secWx, secWy, '#38bdf8', 35);
+        this.renderer.spawnShockwave(secWx, secWy, '#38bdf8', 42);
+        this.renderer.spawnFloatingText(secWx, secWy, '✨ Secret Chamber Unveiled!', '#38bdf8');
+
+        if (this.logger?.logSecretFound) {
+          this.logger.logSecretFound({ atX: px, atY: py, totalFound: this.secretsFound, elapsedMs: this.elapsedTime });
+        }
+        globalEvents.emit('secret:found', { x: px, y: py, totalFound: this.secretsFound });
+        this.updateFog();
+        this.notifyUI();
+      }
+    }
+
     // 1. Check Key pickup (must match entity elevation, default 0)
     const key = this.entities.find(e => e.type === 'key' && !e.isCollected && e.x === px && e.y === py && (e.elevation || ELEVATION.GROUND) === pe);
     if (key) {
@@ -1725,6 +1807,7 @@ export class GameLoop {
     const now = performance.now();
     if (this.lastHazardHit && now - this.lastHazardHit < 1000) return;
     this.lastHazardHit = now;
+    this.hazardHits = (this.hazardHits || 0) + 1;
 
     const wx = this.player.worldX;
     const wy = this.player.worldY;
@@ -2119,7 +2202,8 @@ export class GameLoop {
         this.player.elevation,
         this.level.layers.ground,
         this.level.layers.overhead,
-        this.getEffectiveViewRadius()
+        this.getEffectiveViewRadius(),
+        this.revealedSecrets
       );
     }
   }
@@ -2146,17 +2230,40 @@ export class GameLoop {
 
     const earnedParSteps = this.level.parSteps !== undefined ? this.player.stepsTaken <= this.level.parSteps : false;
     const earnedParTime = this.level.parTime !== undefined ? (this.elapsedTime / 1000) <= this.level.parTime : false;
+    const flawless = (this.hazardHits || 0) === 0;
+    const secretsFound = this.secretsFound || 0;
+    const totalSecrets = this.totalSecrets || 0;
+    const secretSleuth = totalSecrets > 0 && secretsFound >= totalSecrets;
 
-    const stats = {
+    let tier = 'bronze';
+    if ((earnedParSteps && earnedParTime) || (secretSleuth && (earnedParSteps || earnedParTime))) {
+      tier = 'gold';
+    } else if (earnedParSteps || earnedParTime || secretSleuth || flawless) {
+      tier = 'silver';
+    }
+
+    const rawStats = {
       time: this.elapsedTime,
       steps: this.player.stepsTaken,
       earnedParSteps,
       earnedParTime,
       parSteps: this.level.parSteps,
       parTime: this.level.parTime,
+      secretsFound,
+      totalSecrets,
+      secretSleuth,
+      flawless,
+      hazardHits: this.hazardHits || 0,
+      tier,
       targetLevel: exit?.targetLevel || null,
       branchLabel: exit?.label || null,
       exitId: exit?.id || null,
+    };
+
+    const performanceScore = this.calculatePerformanceScore(rawStats);
+    const stats = {
+      ...rawStats,
+      performanceScore,
     };
 
     console.info(`[MazeGame:Engine] Victory achieved on level "${this.level.title}" (${this.level.id})!`, {
@@ -2165,6 +2272,8 @@ export class GameLoop {
       finalInventory: [...this.player.inventory],
       earnedParSteps,
       earnedParTime,
+      tier,
+      performanceScore,
       targetLevel: stats.targetLevel,
       branchLabel: stats.branchLabel,
     });
@@ -2253,9 +2362,10 @@ export class GameLoop {
       this.camera,
       this.fog,
       dt,
-      this.clickTarget
+      this.clickTarget,
+      this.revealedSecrets
     );
 
-    this.minimap.render(this.level, this.player, this.fog, dt);
+    this.minimap.render(this.level, this.player, this.fog, dt, this.revealedSecrets);
   }
 }

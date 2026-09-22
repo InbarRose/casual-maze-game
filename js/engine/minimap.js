@@ -87,8 +87,9 @@ export class Minimap {
    * @param {Player} player
    * @param {FogOfWar} fog
    * @param {number} dt
+   * @param {Set<string>|Array<string>} [revealedSecrets=null]
    */
-  render(level, player, fog, dt = 0) {
+  render(level, player, fog, dt = 0, revealedSecrets = null) {
     const ctx = this.ctx;
     const { width: mazeW, height: mazeH } = level.dimensions;
 
@@ -114,8 +115,16 @@ export class Minimap {
           const px = x * cellW;
           const py = y * cellH;
 
-          if (tile === TILES.WALL) {
+          const isSecret = tile === TILES.SECRET_WALL;
+          const isRevealed = revealedSecrets && (
+            (typeof revealedSecrets.has === 'function' && revealedSecrets.has(`${x},${y}`)) ||
+            (Array.isArray(revealedSecrets) && revealedSecrets.includes(`${x},${y}`))
+          );
+
+          if (tile === TILES.WALL || (isSecret && !isRevealed)) {
             ctx.fillStyle = vis === FOG_STATE.VISIBLE ? '#475569' : '#1e293b';
+          } else if (isSecret && isRevealed) {
+            ctx.fillStyle = '#38bdf8';
           } else {
             ctx.fillStyle = vis === FOG_STATE.VISIBLE ? '#334155' : '#0f172a';
           }
@@ -181,8 +190,16 @@ export class Minimap {
           const px = (x - minGridX) * cellW;
           const py = (y - minGridY) * cellH;
 
-          if (tile === TILES.WALL) {
+          const isSecret = tile === TILES.SECRET_WALL;
+          const isRevealed = revealedSecrets && (
+            (typeof revealedSecrets.has === 'function' && revealedSecrets.has(`${x},${y}`)) ||
+            (Array.isArray(revealedSecrets) && revealedSecrets.includes(`${x},${y}`))
+          );
+
+          if (tile === TILES.WALL || (isSecret && !isRevealed)) {
             ctx.fillStyle = vis === FOG_STATE.VISIBLE ? '#475569' : '#1e293b';
+          } else if (isSecret && isRevealed) {
+            ctx.fillStyle = '#38bdf8';
           } else {
             ctx.fillStyle = vis === FOG_STATE.VISIBLE ? '#334155' : '#0f172a';
           }

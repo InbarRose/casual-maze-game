@@ -50,8 +50,9 @@ export class GameRenderer {
    * @param {FogOfWar} fog
    * @param {number} dt
    * @param {{ x: number, y: number, time: number }|null} [clickTarget=null]
+   * @param {Set<string>|Array<string>} [revealedSecrets=null]
    */
-  render(level, player, entities, camera, fog, dt = 0, clickTarget = null) {
+  render(level, player, entities, camera, fog, dt = 0, clickTarget = null, revealedSecrets = null) {
     const ctx = this.ctx;
     const tileSize = camera.tileSize;
     const { width: mazeW, height: mazeH } = level.dimensions;
@@ -85,9 +86,9 @@ export class GameRenderer {
     }
 
     if (this.perspective === 'angled') {
-      this.renderAngledPipeline(level, player, entities, camera, fog, bounds, theme, tileSize);
+      this.renderAngledPipeline(level, player, entities, camera, fog, bounds, theme, tileSize, revealedSecrets);
     } else {
-      this.renderClassicPipeline(level, player, entities, camera, fog, bounds, theme, tileSize);
+      this.renderClassicPipeline(level, player, entities, camera, fog, bounds, theme, tileSize, revealedSecrets);
     }
 
     // Render Destination Click Ring
@@ -104,19 +105,24 @@ export class GameRenderer {
   }
 
   /**
-   * Classic Flat Top-Down Pipeline
+   * Distinct Architectural Blueprint Pipeline (Minimal Top-Down Technical Drafting Mode — BL-44)
    */
-  renderClassicPipeline(level, player, entities, camera, fog, bounds, theme, tileSize) {
+  renderClassicPipeline(level, player, entities, camera, fog, bounds, theme, tileSize, revealedSecrets = null) {
     const ctx = this.ctx;
-    this.renderThematicBackdrop(ctx, level, bounds, camera, theme, tileSize);
-    this.renderGroundLayer(ctx, level, bounds, camera, theme);
-    this.renderThematicPerimeterDecor(ctx, level, bounds, camera, theme, tileSize, 0);
+    const blueprintTheme = THEMES.blueprint || theme;
 
-    if (level.spawn) this.renderSpawnEntrance(ctx, level, camera, theme, fog);
-    if (level.exit) this.renderExit(ctx, level, camera, theme, fog);
+    // 1. Technical blueprint background with precision drafting sub-grid and CAD markings
+    this.renderBlueprintBackdrop(ctx, level, bounds, camera, blueprintTheme, tileSize);
+
+    // 2. Blueprint ground corridors & technical wall drafting with 45° crosshatching
+    this.renderBlueprintGroundLayer(ctx, level, bounds, camera, blueprintTheme, tileSize, revealedSecrets);
+
+    // 3. Spawns, Exits, and Mechanisms
+    if (level.spawn) this.renderSpawnEntrance(ctx, level, camera, blueprintTheme, fog);
+    if (level.exit) this.renderExit(ctx, level, camera, blueprintTheme, fog);
 
     this.renderEntities(ctx, entities, ELEVATION.GROUND, camera, fog);
-    this.renderOverheadLayer(ctx, level, bounds, camera, theme);
+    this.renderBlueprintOverheadLayer(ctx, level, bounds, camera, blueprintTheme, tileSize);
     this.renderEntities(ctx, entities, ELEVATION.OVERHEAD, camera, fog);
 
     const playerScreen = camera.worldToScreen(player.worldX, player.worldY, true);
@@ -125,9 +131,9 @@ export class GameRenderer {
       const pulse = Math.sin(this.exitPulseTimer * 1.5) * 0.1 + 0.9;
       const torchRadius = tileSize * 1.5 * pulse;
       const grad = ctx.createRadialGradient(playerScreen.x, playerScreen.y, tileSize * 0.15, playerScreen.x, playerScreen.y, torchRadius);
-      grad.addColorStop(0, 'rgba(251, 146, 60, 0.4)');
-      grad.addColorStop(0.6, 'rgba(249, 115, 22, 0.15)');
-      grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+      grad.addColorStop(0, 'rgba(56, 189, 248, 0.35)');
+      grad.addColorStop(0.6, 'rgba(56, 189, 248, 0.12)');
+      grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
       ctx.fillStyle = grad;
       ctx.beginPath();
       ctx.arc(playerScreen.x, playerScreen.y, torchRadius, 0, Math.PI * 2);
@@ -138,14 +144,221 @@ export class GameRenderer {
     player.render(ctx, playerScreen.x, playerScreen.y, tileSize, this.perspective, angle);
 
     if (level.config.fogOfWar && fog) {
-      this.renderFogOfWar(ctx, fog, bounds, camera, theme, player, entities, level);
+      this.renderFogOfWar(ctx, fog, bounds, camera, blueprintTheme, player, entities, level);
+    }
+  }
+
+  /**
+   * Technical Blueprint Drafting Backdrop
+   */
+  renderBlueprintBackdrop(ctx, level, bounds, camera, theme, tileSize) {
+    ctx.save();
+    ctx.fillStyle = theme.bg || '#0a192f';
+    ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
+
+    // Precision drafting sub-grid
+    const subGrid = Math.max(8, tileSize / 4);
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.05)';
+    ctx.lineWidth = 0.5;
+    if (ctx.beginPath && ctx.moveTo && ctx.lineTo) {
+      ctx.beginPath();
+      for (let x = 0; x <= this.canvas.width; x += subGrid) {
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, this.canvas.height);
+      }
+      for (let y = 0; y <= this.canvas.height; y += subGrid) {
+        ctx.moveTo(0, y);
+        ctx.lineTo(this.canvas.width, y);
+      }
+      if (ctx.stroke) ctx.stroke();
+    }
+
+    // Blueprint schematic header
+    if (ctx.fillText) {
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.35)';
+      ctx.font = '9px "JetBrains Mono", monospace';
+      ctx.fillText('ARCHITECTURAL CAD BLUEPRINT // TOP-DOWN SCHEMATIC', 14, 20);
+    }
+    ctx.restore();
+  }
+
+  /**
+   * Technical Blueprint Ground Layer with 45° crosshatch solid walls and schematic doorways
+   */
+  renderBlueprintGroundLayer(ctx, level, bounds, camera, theme, tileSize, revealedSecrets) {
+    const ground = level.layers.ground;
+    const isSecretRevealed = (x, y) => revealedSecrets && (
+      (typeof revealedSecrets.has === 'function' && revealedSecrets.has(`${x},${y}`)) ||
+      (Array.isArray(revealedSecrets) && revealedSecrets.includes(`${x},${y}`))
+    );
+
+    for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+      for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+        const tile = ground[y]?.[x];
+        const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
+
+        if (tile === TILES.WALL || tile === TILES.SECRET_WALL) {
+          const isSecret = tile === TILES.SECRET_WALL;
+          const revealed = isSecret && isSecretRevealed(x, y);
+
+          if (isSecret && revealed) {
+            // Revealed Secret Passage: open dashed doorway
+            ctx.fillStyle = '#0f2744';
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+
+            ctx.strokeStyle = '#38bdf8';
+            ctx.lineWidth = 1.5;
+            if (ctx.setLineDash) ctx.setLineDash([3, 3]);
+            if (ctx.strokeRect) ctx.strokeRect(screen.x + 2, screen.y + 2, tileSize - 4, tileSize - 4);
+            if (ctx.setLineDash) ctx.setLineDash([]);
+
+            if (ctx.fillText) {
+              ctx.fillStyle = 'rgba(56, 189, 248, 0.85)';
+              ctx.font = `${Math.round(tileSize * 0.42)}px sans-serif`;
+              ctx.textAlign = 'center';
+              ctx.textBaseline = 'middle';
+              ctx.fillText('✨', screen.x + tileSize / 2, screen.y + tileSize / 2);
+            }
+          } else {
+            // Solid Masonry Wall with 45-degree Engineering Hatching
+            ctx.fillStyle = '#0f223a';
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+
+            ctx.save();
+            if (ctx.beginPath && ctx.rect && ctx.clip) {
+              ctx.beginPath();
+              ctx.rect(screen.x, screen.y, tileSize, tileSize);
+              ctx.clip();
+            }
+
+            ctx.strokeStyle = isSecret ? 'rgba(56, 189, 248, 0.32)' : 'rgba(56, 189, 248, 0.2)';
+            ctx.lineWidth = 1;
+            const step = Math.max(6, tileSize / 4);
+            if (ctx.beginPath && ctx.moveTo && ctx.lineTo) {
+              ctx.beginPath();
+              for (let offset = -tileSize; offset <= tileSize * 2; offset += step) {
+                ctx.moveTo(screen.x + offset, screen.y);
+                ctx.lineTo(screen.x + offset + tileSize, screen.y + tileSize);
+              }
+              if (ctx.stroke) ctx.stroke();
+
+              // Subtle telltale fracture on unrevealed secret wall
+              if (isSecret) {
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.65)';
+                ctx.lineWidth = 1.2;
+                ctx.beginPath();
+                ctx.moveTo(screen.x + tileSize * 0.42, screen.y + tileSize * 0.2);
+                ctx.lineTo(screen.x + tileSize * 0.54, screen.y + tileSize * 0.52);
+                ctx.lineTo(screen.x + tileSize * 0.45, screen.y + tileSize * 0.82);
+                if (ctx.stroke) ctx.stroke();
+              }
+            }
+
+            ctx.restore();
+
+            // Crisp drafting outer line
+            ctx.strokeStyle = isSecret ? 'rgba(56, 189, 248, 0.85)' : '#38bdf8';
+            ctx.lineWidth = 1.2;
+            if (ctx.strokeRect) ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
+          }
+        } else {
+          // Corridor floor cell
+          ctx.fillStyle = ((x + y) % 2 === 0) ? '#0a1d35' : '#08172c';
+          ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+
+          // Sub-grid outline
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
+          ctx.lineWidth = 0.5;
+          if (ctx.strokeRect) ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
+
+          // Center coordinate tick mark '+'
+          ctx.strokeStyle = 'rgba(56, 189, 248, 0.25)';
+          ctx.lineWidth = 1;
+          const cx = screen.x + tileSize / 2;
+          const cy = screen.y + tileSize / 2;
+          const tick = Math.min(3, tileSize * 0.1);
+          if (ctx.beginPath && ctx.moveTo && ctx.lineTo) {
+            ctx.beginPath();
+            ctx.moveTo(cx - tick, cy);
+            ctx.lineTo(cx + tick, cy);
+            ctx.moveTo(cx, cy - tick);
+            ctx.lineTo(cx, cy + tick);
+            if (ctx.stroke) ctx.stroke();
+          }
+
+          // Bridge underpass in blueprint mode
+          if (tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS) {
+            const angle = camera ? camera.getDiscreteRotation() : 0;
+            const isRotated90or270 = angle === 90 || angle === 270;
+            const isHoriz = (tile === TILES.BRIDGE_EW) ? !isRotated90or270 : isRotated90or270;
+
+            ctx.fillStyle = '#061324';
+            ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+
+            ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+            ctx.lineWidth = 1;
+            if (ctx.setLineDash) ctx.setLineDash([3, 2]);
+            if (ctx.beginPath && ctx.moveTo && ctx.lineTo) {
+              ctx.beginPath();
+              if (isHoriz) {
+                ctx.moveTo(screen.x, screen.y + tileSize * 0.2);
+                ctx.lineTo(screen.x + tileSize, screen.y + tileSize * 0.2);
+                ctx.moveTo(screen.x, screen.y + tileSize * 0.8);
+                ctx.lineTo(screen.x + tileSize, screen.y + tileSize * 0.8);
+              } else {
+                ctx.moveTo(screen.x + tileSize * 0.2, screen.y);
+                ctx.lineTo(screen.x + tileSize * 0.2, screen.y + tileSize);
+                ctx.moveTo(screen.x + tileSize * 0.8, screen.y);
+                ctx.lineTo(screen.x + tileSize * 0.8, screen.y + tileSize);
+              }
+              if (ctx.stroke) ctx.stroke();
+            }
+            if (ctx.setLineDash) ctx.setLineDash([]);
+          }
+        }
+      }
+    }
+  }
+
+  /**
+   * Blueprint Overhead Layer (Bridges & Ramps)
+   */
+  renderBlueprintOverheadLayer(ctx, level, bounds, camera, theme, tileSize) {
+    const overhead = level.layers.overhead;
+    const ground = level.layers.ground;
+    if (!overhead && !ground) return;
+
+    for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+      for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+        const tile = overhead?.[y]?.[x] || ground?.[y]?.[x];
+        const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
+
+        if (tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS) {
+          ctx.fillStyle = '#1e3a8a';
+          ctx.fillRect(screen.x + 2, screen.y + 2, tileSize - 4, tileSize - 4);
+
+          ctx.strokeStyle = '#7dd3fc';
+          ctx.lineWidth = 1.5;
+          if (ctx.strokeRect) ctx.strokeRect(screen.x + 2, screen.y + 2, tileSize - 4, tileSize - 4);
+
+          if (ctx.fillText) {
+            ctx.fillStyle = '#7dd3fc';
+            ctx.font = '8px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('L1', screen.x + tileSize / 2, screen.y + tileSize / 2);
+          }
+        } else if (this.isRampTile(tile)) {
+          this.renderRamp(ctx, tile, screen.x, screen.y, tileSize, theme, camera);
+        }
+      }
     }
   }
 
   /**
    * Angled 2.5D Top-Down Sprite Pipeline with depth wall faces, pillars, and height lift
    */
-  renderAngledPipeline(level, player, entities, camera, fog, bounds, theme, tileSize) {
+  renderAngledPipeline(level, player, entities, camera, fog, bounds, theme, tileSize, revealedSecrets = null) {
     const ctx = this.ctx;
     const heightOffset = Math.round(tileSize * 0.45);
 
@@ -161,7 +374,7 @@ export class GameRenderer {
 
     // 4. Ground Layer Unified Interleaved Y-Sorted Pass (Walls, Entities, Player)
     // Resolves BL-33: character and moving entities are correctly occluded by walls to their south.
-    this.renderAngledGroundLayerInterleaved(ctx, level, bounds, camera, theme, entities, player, fog, tileSize);
+    this.renderAngledGroundLayerInterleaved(ctx, level, bounds, camera, theme, entities, player, fog, tileSize, revealedSecrets);
 
     // 5. Overhead Bridges & Ramps with vertical lift and support pillars
     this.renderAngledOverheadLayer(ctx, level, bounds, camera, theme, heightOffset);
@@ -233,17 +446,18 @@ export class GameRenderer {
    * Unified Y-sorted rendering pass for ground layer walls, entities, and player
    * Resolves BL-33: character and moving entities are correctly occluded by walls to their south.
    */
-  renderAngledGroundLayerInterleaved(ctx, level, bounds, camera, theme, entities, player, fog, tileSize) {
+  renderAngledGroundLayerInterleaved(ctx, level, bounds, camera, theme, entities, player, fog, tileSize, revealedSecrets = null) {
     const ground = level.layers.ground;
     const drawables = [];
     const themeKey = level.config.theme || 'dungeon';
     const seed = (level.id ? String(level.id).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 42);
 
-    // 1. Collect all visible ground walls
+    // 1. Collect all visible ground walls (and secret walls)
     const halfTile = tileSize / 2;
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
-        if (ground[y]?.[x] === TILES.WALL) {
+        const tile = ground[y]?.[x];
+        if (tile === TILES.WALL || tile === TILES.SECRET_WALL) {
           const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
           const center = camera.worldToScreen(x * tileSize + halfTile, y * tileSize + halfTile, true);
           drawables.push({
@@ -251,6 +465,7 @@ export class GameRenderer {
             x,
             y,
             screen,
+            isSecret: tile === TILES.SECRET_WALL,
             sortY: center.y + halfTile,
             sortX: center.x,
           });
@@ -318,7 +533,7 @@ export class GameRenderer {
     // 5. Render sorted items
     for (const item of drawables) {
       if (item.type === 'wall') {
-        this.renderAngledWall(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, ground, camera);
+        this.renderAngledWall(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, ground, camera, item.isSecret, revealedSecrets);
         this.renderThematicPerimeterDecorTile(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, themeKey, seed, ground, 0);
       } else if (item.type === 'player') {
         const screen = item.screen;
@@ -367,33 +582,61 @@ export class GameRenderer {
   /**
    * Render single 2.5D wall block with front drop face and bevels relative to active camera rotation
    */
-  renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground, camera) {
+  renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground, camera, isSecret = false, revealedSecrets = null) {
     const wallH = Math.round(tileSize * 0.38); // e.g. 12px for 32px tile
     const angle = camera ? camera.getDiscreteRotation() : 0;
     const themeKey = theme?.id || 'dungeon';
     const wallImg = this.getAssetImage(`tile_wall_${themeKey}`) || this.getAssetImage('tile_wall_dungeon');
 
+    const isSecretRevealed = isSecret && revealedSecrets && (
+      (typeof revealedSecrets.has === 'function' && revealedSecrets.has(`${x},${y}`)) ||
+      (Array.isArray(revealedSecrets) && revealedSecrets.includes(`${x},${y}`))
+    );
+
+    if (isSecret && isSecretRevealed) {
+      // Ethereal translucent secret archway
+      ctx.save();
+      ctx.fillStyle = 'rgba(56, 189, 248, 0.18)';
+      ctx.fillRect(screenX, screenY - wallH, tileSize, tileSize + wallH);
+
+      ctx.strokeStyle = '#38bdf8';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([3, 2]);
+      ctx.strokeRect(screenX + 1, screenY - wallH + 1, tileSize - 2, tileSize + wallH - 2);
+      ctx.setLineDash([]);
+
+      ctx.fillStyle = '#38bdf8';
+      ctx.font = `${Math.round(tileSize * 0.45)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('✨', screenX + tileSize / 2, screenY + (tileSize - wallH) / 2);
+      ctx.restore();
+      return;
+    }
+
+    const isWallTile = (tile) => tile === TILES.WALL || tile === TILES.SECRET_WALL;
+
     let hasFrontWall, hasLeftWall, hasRightWall;
     if (angle === 90) {
       // East is UP, West is DOWN (Front)
-      hasFrontWall = ground[y]?.[x - 1] === TILES.WALL;
-      hasLeftWall = ground[y - 1]?.[x] === TILES.WALL;
-      hasRightWall = ground[y + 1]?.[x] === TILES.WALL;
+      hasFrontWall = isWallTile(ground[y]?.[x - 1]);
+      hasLeftWall = isWallTile(ground[y - 1]?.[x]);
+      hasRightWall = isWallTile(ground[y + 1]?.[x]);
     } else if (angle === 180) {
       // South is UP, North is DOWN (Front)
-      hasFrontWall = ground[y - 1]?.[x] === TILES.WALL;
-      hasLeftWall = ground[y]?.[x + 1] === TILES.WALL;
-      hasRightWall = ground[y]?.[x - 1] === TILES.WALL;
+      hasFrontWall = isWallTile(ground[y - 1]?.[x]);
+      hasLeftWall = isWallTile(ground[y]?.[x + 1]);
+      hasRightWall = isWallTile(ground[y]?.[x - 1]);
     } else if (angle === 270) {
       // West is UP, East is DOWN (Front)
-      hasFrontWall = ground[y]?.[x + 1] === TILES.WALL;
-      hasLeftWall = ground[y + 1]?.[x] === TILES.WALL;
-      hasRightWall = ground[y - 1]?.[x] === TILES.WALL;
+      hasFrontWall = isWallTile(ground[y]?.[x + 1]);
+      hasLeftWall = isWallTile(ground[y + 1]?.[x]);
+      hasRightWall = isWallTile(ground[y - 1]?.[x]);
     } else {
       // 0 deg: North is UP, South is DOWN (Front)
-      hasFrontWall = ground[y + 1]?.[x] === TILES.WALL;
-      hasLeftWall = ground[y]?.[x - 1] === TILES.WALL;
-      hasRightWall = ground[y]?.[x + 1] === TILES.WALL;
+      hasFrontWall = isWallTile(ground[y + 1]?.[x]);
+      hasLeftWall = isWallTile(ground[y]?.[x - 1]);
+      hasRightWall = isWallTile(ground[y]?.[x + 1]);
     }
 
     // 1. Top Cap Face (Elevated by wallH)
@@ -446,6 +689,25 @@ export class GameRenderer {
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
     ctx.lineWidth = 1;
     ctx.strokeRect(screenX, screenY - wallH, tileSize, tileSize);
+
+    // Subtle telltale fracture & faint shimmering particle on unrevealed secret wall
+    if (isSecret && !isSecretRevealed) {
+      ctx.save();
+      ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.moveTo(screenX + tileSize * 0.45, screenY - wallH + tileSize * 0.2);
+      ctx.lineTo(screenX + tileSize * 0.55, screenY - wallH + tileSize * 0.55);
+      ctx.lineTo(screenX + tileSize * 0.48, screenY - wallH + tileSize * 0.85);
+      ctx.stroke();
+
+      const pulse = Math.sin(this.exitPulseTimer * 2) * 0.15 + 0.25;
+      ctx.fillStyle = `rgba(56, 189, 248, ${pulse})`;
+      ctx.beginPath();
+      ctx.arc(screenX + tileSize * 0.55, screenY - wallH + tileSize * 0.55, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+    }
   }
 
   /**

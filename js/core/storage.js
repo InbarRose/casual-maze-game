@@ -53,7 +53,7 @@ export class StorageManager {
   static saveLevelCompletion(levelId, stats) {
     try {
       const idKey = String(levelId);
-      const isTutorial = idKey.startsWith('tutorial_') || idKey.startsWith('t');
+      const isTutorial = idKey.startsWith('tutorial_') || idKey.startsWith('tut_') || /^t\d+$/i.test(idKey);
       
       if (isTutorial) {
         const numMatch = idKey.match(/\d+/);
@@ -74,16 +74,38 @@ export class StorageManager {
       const bestTime = Math.min(stats.time, existing?.bestTime ?? Infinity);
       const bestSteps = Math.min(stats.steps, existing?.bestSteps ?? Infinity);
       const existingMedals = existing?.medals || {};
+      const parSteps = !!(stats.earnedParSteps || existingMedals.parSteps);
+      const parTime = !!(stats.earnedParTime || existingMedals.parTime);
+      const flawless = !!(stats.flawless || existingMedals.flawless);
+      const secretSleuth = !!(
+        stats.secretSleuth ||
+        (stats.totalSecrets > 0 && stats.secretsFound >= stats.totalSecrets) ||
+        existingMedals.secretSleuth
+      );
+
+      let tier = stats.tier || existingMedals.tier || 'bronze';
+      if ((parSteps && parTime) || (secretSleuth && (parSteps || parTime))) {
+        tier = 'gold';
+      } else if (parSteps || parTime || secretSleuth || flawless) {
+        tier = tier === 'gold' ? 'gold' : 'silver';
+      }
+
+      const bestSecrets = Math.max(stats.secretsFound || 0, existing?.bestSecrets || 0);
+      const bestScore = Math.max(stats.performanceScore || 0, existing?.bestScore || 0);
 
       progress[idKey] = {
         completed: true,
         bestTime,
         bestSteps,
+        bestSecrets,
+        bestScore,
         medals: {
           completion: true,
-          parSteps: !!(stats.earnedParSteps || existingMedals.parSteps),
-          parTime: !!(stats.earnedParTime || existingMedals.parTime),
-          flawless: !!(stats.flawless || existingMedals.flawless),
+          parSteps,
+          parTime,
+          flawless,
+          secretSleuth,
+          tier,
         },
         lastPlayed: Date.now(),
       };
@@ -614,6 +636,7 @@ export class StorageManager {
         if (lvl.medals?.parSteps) totalStars += 1;
         if (lvl.medals?.parTime) totalStars += 1;
         if (lvl.medals?.flawless) totalStars += 1;
+        if (lvl.medals?.secretSleuth) totalStars += 1;
         if (lvl.bestSteps && lvl.bestSteps !== Infinity) {
           totalSteps += lvl.bestSteps;
         }

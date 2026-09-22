@@ -160,6 +160,21 @@ export class DebugLogger {
   }
 
   /**
+   * Record secret room discovery
+   * @param {object} params
+   */
+  logSecretFound({ atX, atY, totalFound, elapsedMs }) {
+    this.log(
+      'secret:found',
+      {
+        position: { x: atX, y: atY },
+        totalFound,
+      },
+      elapsedMs
+    );
+  }
+
+  /**
    * Record riddle relic or pedestal interaction
    * @param {object} params
    */
