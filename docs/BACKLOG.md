@@ -104,6 +104,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-34** | **1-Click Diagnostic Bug Bundle Exporter** | **P1** | `v1.23.0` | In-game action packaging level ID, player coordinates, move history, and debug logs into pre-filled GitHub issue links. | Planned |
 | **BL-36** | **Save State Versioned Migration Runner** | **P1** | `v1.23.0` | Automated `StorageManager.migrateSaveData()` upgrading legacy save schemas on initial boot without data loss. | Planned |
 | **BL-38** | **Prestige Rank-Up Celebration & Victory Confetti** | **P2** | `v1.23.0` | Full-screen celebratory rank-up splash banner with star sparkles and Canvas 2D confetti bursts on victory. | Planned |
+| **BL-53** | **Comprehensive Settings Rebinding & Profile Backup** | **P2** | `v1.23.0` | In-game settings allowing full key rebinding, audio mute/volume, default art style, and 1-click JSON export/import of profile. | Planned |
 
 ---
 
@@ -127,6 +128,26 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-30** | **Modular Per-Chapter Unit Tests** | **P0** | `v1.19.0` | Dedicated test files per chapter (`chapter-1.test.mjs` through `chapter-8.test.mjs`, plus story suites) instead of multi-chapter bundles. | **Completed** |
 | **BL-31** | **Automated Zero-Bypass Regression Tests** | **P0** | `v1.19.0` | Prove with BFS solver that `solveLevel(lvl, { allowDoors: false }) === null` for all gated levels. | **Completed** |
 | **BL-32** | **Test Harness Failure Summary Diagnostics** | **P1** | `v1.19.0` | Print concise failure summaries and stack traces at the end of `runner.mjs` executions. | **Completed** |
+| **BL-45** | **In-Browser Test Runner Diagnostics & Failure Reporter** | **P1** | `v1.20.0` | Resolve failing tests in `test.html`. Provide clean, styled DOM failure summary, module stack traces, and real-time pass/fail tally matching `npm test`. | In Progress |
+| **BL-46** | **Replay Theater Graphic Simulation & Full Telemetry** | **P1** | `v1.20.0` | Record structured action telemetry (moves, turns, interactions, rotations); `ReplayPlayer` renders moves through `GameRenderer`. | In Progress |
+
+---
+
+### Epic 8: Immediate Gameplay & UX Polishing Sprint
+*Objective: Resolve critical usability friction, camera rotation discrepancies, asset regressions, and architectural connectors.*
+
+| ID | Title | Priority | Target Milestone | Acceptance Criteria | Status |
+| :---: | :--- | :---: | :---: | :--- | :---: |
+| **BL-41** | **Generic Icon Regression Fix (Keys, Levers, Doors)** | **P0** | `v1.20.0` | Detect placeholder SVGs and prioritize rich procedural Canvas 2D vector rendering with distinctive colorways, key cuts, lever pivot geometry, and lock bars. | In Progress |
+| **BL-42** | **Unobtrusive Tile Interaction HUD & 'E' Hotkey Switch** | **P1** | `v1.20.0` | Switch interaction hotkey to `E` (Space/Enter as secondary); remove obtrusive avatar pop-up; add subtle in-world tile prompt or clean side HUD drawer. | In Progress |
+| **BL-43** | **4-Quadrant Camera Rotation Matrix & Grid Alignment Fix** | **P0** | `v1.20.0` | Full 4-way rotation cycling (0° -> 90° -> 180° -> 270°); fix `worldToScreen` and `screenToWorld` coordinate transform so player remains locked to true tile center. | In Progress |
+| **BL-44** | **Distinct Dual-Tileset Pipeline (Minimal Top-Down vs Deluxe 2.5D)** | **P2** | `v1.21.0` | Top-down mode renders clean architectural blueprints with vector glyphs; 2.5D renders depth, wall caps, dynamic shadows, and atmospheric particle layers. | Planned |
+| **BL-47** | **Seamless Bridge & Ramp Architectural Overhaul** | **P2** | `v1.20.0` | Eliminate clumsy directional arrows; render authentic stone masonry treads, archway abutments, and seamless elevation transitions. | In Progress |
+| **BL-48** | **Campaign-First Hub Redirection & Onboarding Flow** | **P2** | `v1.21.0` | Route players to official campaign first; present standalone stories and community levels in organized secondary discovery carousels. | Planned |
+| **BL-49** | **Multi-Room Story Campaign Authoring in Map Editor** | **P2** | `v1.22.0` | Multi-room story authoring with interconnected scenes, shared inventory persistence, and narrative dialog scripting. | Planned |
+| **BL-50** | **Random Maze Generator & Endless Labyrinth Mode** | **P2** | `v1.22.0` | Procedural maze generator in editor and playable infinite/endless maze mode with selectable dimensions, biomes, and obstacle density. | Planned |
+| **BL-51** | **Secret Rooms, Fake Walls & Concealed Collectibles** | **P2** | `v1.21.0` | Passable illusory walls concealing secret alcoves, bonus stars, and lore notes with subtle audio/visual proximity hints. | Planned |
+| **BL-52** | **Performance Scoring & Tiered Victory Medals** | **P2** | `v1.21.0` | Move, secret, and time-based scoring awarding Gold/Silver/Bronze medals and prestige stars across all campaign chapters. | Planned |
 
 ---
 
@@ -140,16 +161,17 @@ flowchart LR
         S1C --> S1D["Per-Chapter Modular Unit Tests"]
     end
 
-    subgraph Sprint 2: Visual Engine & Polish [v1.20.0 Next]
-        S2A["SVG Asset Pipeline in Renderer"] --> S2B["Biome Floor Textures & Shadows"]
-        S2B --> S2C["Chapter 3 Clockwork Workshop"]
-        S2C --> S2D["Editor Undo/Redo Stack"]
+    subgraph Sprint 2: Immediate Fixes & Polish [v1.20.0 Next]
+        S2A["BL-41: Key/Lever Graphics Fix"] --> S2B["BL-42: 'E' Key & Unobtrusive HUD"]
+        S2B --> S2C["BL-43: 4-Way Rotation Alignment"]
+        S2C --> S2D["BL-45/46: Browser Test & Replay"]
+        S2D --> S2E["BL-47: Seamless Ramps & Bridges"]
     end
 
-    subgraph Sprint 3: Dynamics & Ambience [v1.21.0 Future]
-        S3A["Atmospheric Particle Systems"] --> S3B["Chapter 4 Astral Workshop"]
-        S3B --> S3C["Torch & Radial Fog Lighting"]
-        S3C --> S3D["Mobile Touch Gesture Polish"]
+    subgraph Sprint 3: Deep Systems & Modes [v1.21.0 Future]
+        S3A["BL-44: Dual Tileset Pipeline"] --> S3B["BL-51: Secrets & Fake Walls"]
+        S3B --> S3C["BL-52: Performance Medals"]
+        S3C --> S3D["BL-50: Endless Maze Mode"]
     end
 
     Sprint 1 --> Sprint 2 --> Sprint 3
@@ -161,3 +183,4 @@ flowchart LR
 1. **New Issues & User Feedback**: When new gaps, bugs, or user requests are identified, record them immediately in this document with an ID (`BL-XX`), priority, and clear acceptance criteria.
 2. **Atomic Commits**: As backlog items are completed, link the conventional commit or PR number in the status column.
 3. **Traceability**: All items in `docs/PROJECT_MANAGEMENT.md` and `docs/GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md` must cross-reference this master backlog.
+
