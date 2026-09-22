@@ -12,20 +12,20 @@ This document records the official baseline quality evaluations, granular expert
 
 | ID | Component / Subsystem | Category 1 (Juice) | Category 2 (Static) | Category 3 (UI/UX) | Category 4 (Mechanics) | Category 5 (Progression) | Category 6 (Accessibility) | Master Score (/60) | Tier | Status |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **CMP-01** | **Universal App Shell & Global Navigation** | 4.67 | 9.33 | 5.67 | 6.00 | 5.00 | 5.33 | **36.00** (60.0%) | **C+ Tier** | Needs Audio & Mobile Polish |
-| **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 5.67 | 9.00 | 6.33 | 6.67 | 5.00 | 5.00 | **37.67** (62.8%) | **C+ Tier** | 4-Way Rotation & Ramps Resolved (`BL-41`, `BL-43`, `BL-47`) |
-| **CMP-03** | **Core Gameplay Loop & State Machine** | 5.00 | 9.33 | 5.33 | 6.67 | 5.00 | 5.33 | **36.66** (61.1%) | **C+ Tier** | Interaction & Camera Gaps (`BL-42`, `BL-43`) |
+| **CMP-01** | **Universal App Shell & Global Navigation** | 4.67 | 9.33 | 6.33 | 6.00 | 6.00 | 5.33 | **37.66** (62.8%) | **C+ Tier** | Campaign-First Hub Onboarding Resolved (`BL-48`) |
+| **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 6.33 | 9.00 | 7.00 | 7.33 | 5.00 | 5.33 | **40.00** (66.7%) | **B- Tier** | Dual Tileset & Secret Walls Resolved (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`) |
+| **CMP-03** | **Core Gameplay Loop & State Machine** | 6.00 | 9.33 | 5.67 | 7.33 | 6.00 | 5.33 | **39.66** (66.1%) | **B- Tier** | Secret Chambers & Scoring Engine Resolved (`BL-42`, `BL-43`, `BL-51`, `BL-52`) |
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 5.00 | 9.00 | 5.67 | 6.00 | 4.67 | 4.67 | **35.01** (58.4%) | **C Tier** | 'E' Hotkey Resolved (`BL-42`) |
-| **CMP-05** | **Minimap & Tactical Navigation** | 4.33 | 9.00 | 5.33 | 5.67 | 5.00 | 4.67 | **34.00** (56.7%) | **C Tier** | Polish Needed (`BL-17`, `BL-51`) |
+| **CMP-05** | **Minimap & Tactical Navigation** | 4.67 | 9.00 | 5.67 | 6.00 | 5.00 | 4.67 | **35.01** (58.4%) | **C Tier** | Secret Passage Highlighting Resolved (`BL-17`, `BL-51`) |
 | **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 5.00 | 9.33 | 6.00 | 6.00 | 5.33 | 5.00 | **36.66** (61.1%) | **C+ Tier** | Side HUD Drawer & Tile Badge (`BL-42`) |
-| **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 4.67 | 9.33 | 5.33 | 5.67 | 5.00 | 5.00 | **35.00** (58.3%) | **C Tier** | Polish Needed (`BL-38`, `BL-52`) |
+| **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 5.67 | 9.33 | 6.33 | 6.00 | 6.33 | 5.00 | **38.66** (64.4%) | **C+ Tier** | Tiered Victory Medals, Scores & Badges (`BL-52`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 4.67 | 9.33 | 5.33 | 6.00 | 4.67 | 4.67 | **34.67** (57.8%) | **C Tier** | Active Enhancement (`BL-49`, `BL-50`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 5.00 | 9.00 | 5.67 | 6.33 | 4.67 | 5.00 | **35.67** (59.5%) | **C Tier** | Ready for Custom Prefabs (`BL-39`) |
 | **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 5.00 | 9.67 | 6.00 | 6.67 | 5.00 | 5.33 | **37.67** (62.8%) | **C+ Tier** | In Progress (`BL-50`) |
-| **CMP-11** | **Vector SVG Asset Pipeline & Thematic Styling**| 3.67 | 8.67 | 4.67 | 5.33 | 4.33 | 4.33 | **31.00** (51.7%) | **C- Tier** | Critical Blocker (`BL-41`, `BL-44`) |
-| **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 5.33 | 9.33 | 5.33 | 6.33 | 5.00 | 5.33 | **36.65** (61.1%) | **C+ Tier** | Polish Needed (`BL-35`) |
-| **CMP-13** | **Storage, Save State & Persistence Engine** | 4.67 | 9.33 | 5.00 | 6.67 | 5.33 | 5.00 | **36.00** (60.0%) | **C+ Tier** | Polish Needed (`BL-36`, `BL-53`) |
-| **CMP-14** | **Player Profile, Medals & Prestige Progression** | 4.67 | 9.33 | 5.33 | 6.00 | 5.67 | 5.33 | **36.33** (60.6%) | **C+ Tier** | In Progress (`BL-38`, `BL-51`, `BL-52`) |
+| **CMP-11** | **Vector SVG Asset Pipeline & Thematic Styling**| 4.67 | 8.67 | 5.33 | 6.00 | 4.67 | 4.67 | **34.01** (56.7%) | **C Tier** | Dual Tileset & Rich Vectors (`BL-41`, `BL-44`) |
+| **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 6.00 | 9.33 | 5.67 | 6.67 | 5.33 | 5.33 | **38.33** (63.9%) | **C+ Tier** | Celestial Secret Chime & Ambience (`BL-28`, `BL-51`) |
+| **CMP-13** | **Storage, Save State & Persistence Engine** | 5.00 | 9.33 | 5.33 | 7.00 | 6.00 | 5.00 | **37.66** (62.8%) | **C+ Tier** | Best Scores, Medals & Secrets Persistence (`BL-52`) |
+| **CMP-14** | **Player Profile, Medals & Prestige Progression** | 5.33 | 9.33 | 5.67 | 6.67 | 6.67 | 5.33 | **39.00** (65.0%) | **B- Tier** | Tiered Medals, Score Formula & Sleuth Badges (`BL-52`) |
 | **CMP-15** | **Settings & Configuration System** | 4.33 | 9.33 | 4.67 | 5.67 | 4.67 | 5.00 | **33.67** (56.1%) | **C Tier** | Major Rework Needed (`BL-26`, `BL-44`, `BL-53`) |
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 4.33 | 9.33 | 5.00 | 5.67 | 5.00 | 5.33 | **34.66** (57.8%) | **C Tier** | Polish Needed (`BL-37`, `BL-48`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 5.67 | 9.33 | 6.33 | 7.00 | 5.33 | 6.33 | **39.99** (66.7%) | **B- Tier** | Browser Runner & Full Telemetry Resolved (`BL-45`, `BL-46`) |
@@ -44,19 +44,19 @@ This document records the official baseline quality evaluations, granular expert
 * **Expert Panel Scores**:
   * $C_1$ Juice & Delight: **4.67/10** (1.1: 4, 1.2: 5, 1.3: 5)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.67/10** (3.1: 6, 3.2: 6, 3.3: 5)
+  * $C_3$ UI/UX & Ergonomics: **6.33/10** (3.1: 7, 3.2: 6, 3.3: 6)
   * $C_4$ Mechanics & Systems: **6.00/10** (4.1: 6, 4.2: 6, 4.3: 6)
-  * $C_5$ Progression & Retention: **5.00/10** (5.1: 5, 5.2: 5, 5.3: 5)
+  * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
   * $C_6$ Accessibility & DX: **5.33/10** (6.1: 5, 6.2: 6, 6.3: 5)
-  * **Master Score**: **36.00 / 60.00 (60.0% — C+ Tier Prototype)**
+  * **Master Score**: **37.66 / 60.00 (62.8% — C+ Tier Prototype)**
 * **Strengths**:
   * Unified glassmorphic header (`.app-nav-header`) and footer (`.app-nav-footer`) mounted consistently across all HTML pages.
   * Live star counter synchronization and modal trigger integration.
+  * **Campaign-First Onboarding & Resume Routing (`BL-48`)**: Directs new players straight to Chapter 1, while returning explorers get an instant 1-click `Resume Campaign (Level X)` action from the hero banner alongside live conquest counters (`X / 32 Levels Conquered`).
 * **Gaps & Critical Deductions**:
   * Header navigation transitions are completely silent; missing tactile sound cues on click.
   * Mobile viewports feel cramped; keyboard shortcut indicator in footer is clipped on small screens without an accessible drawer.
-  * Lacks campaign-first onboarding flow; index page doesn't direct players into Chapter 1 immediately (`BL-48`).
-* **Directives**: Deliver `BL-35` acoustic UI clicks, `BL-48` campaign-first onboarding, and mobile expandable shortcut cheatsheet.
+* **Directives**: Deliver `BL-35` acoustic UI clicks and mobile expandable shortcut cheatsheet.
 
 ---
 
@@ -64,22 +64,24 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/renderer.js`, `js/engine/camera.js`, `js/core/asset-loader.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **5.67/10** (1.1: 6, 1.2: 5, 1.3: 6)
+  * $C_1$ Juice & Delight: **6.33/10** (1.1: 7, 1.2: 6, 1.3: 6)
   * $C_2$ Static Purity: **9.00/10** (2.1: 9, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **6.33/10** (3.1: 6, 3.2: 7, 3.3: 6)
-  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 6, 4.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **7.00/10** (3.1: 7, 3.2: 7, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
   * $C_5$ Progression & Retention: **5.00/10** (5.1: 5, 5.2: 5, 5.3: 5)
-  * $C_6$ Accessibility & DX: **5.00/10** (6.1: 5, 6.2: 5, 6.3: 5)
-  * **Master Score**: **37.67 / 60.00 (62.8% — C+ Tier Prototype)**
+  * $C_6$ Accessibility & DX: **5.33/10** (6.1: 5, 6.2: 6, 6.3: 5)
+  * **Master Score**: **40.00 / 60.00 (66.7% — B- Tier)**
 * **Strengths**:
   * Y-sorted depth sorting (`BL-33`) ensuring player and entities occlude behind southern wall roofs.
   * Atmospheric particle systems and dynamic radial lighting under Fog of War.
   * **4-Quadrant Camera Rotation (`BL-43`)**: True 4-way rotation cycling (0°, 90°, 180°, 270°) with exact tile center locking via `tileToScreen` / `screenToTile`.
   * **Seamless Stone Architecture (`BL-47`)**: 4-stage graduated stone masonry treads with 3D drop bevels and curb rails, removing artificial neon arrows.
   * **Procedural Vector Art (`BL-41`)**: Distinctive key cuts, colorways, and lever pivots without generic placeholder squares.
+  * **Dual-Tileset Blueprint Pipeline (`BL-44`)**: Minimalist top-down view renders authentic architectural drafting grid, coordinate ticks, hatched wall sections, schematic dashed doorways, and level badges; 2.5D mode renders deluxe depth, lighting, and particles.
+  * **Secret Wall Rendering & Archways (`BL-51`)**: Undiscovered secret walls display faint fracture cracks and subtle breathing motes; discovered chambers open into ethereal glowing archways (`✨`).
 * **Gaps & Critical Deductions**:
-  * **Dual-Tileset Deficiency (`BL-44`)**: Top-down mode and 2.5D mode are not distinct pipelines; art still needs dedicated architectural blueprint styling.
-* **Directives**: Deliver `BL-44` dual-tileset pipeline with dedicated minimalist blueprint aesthetics for top-down view.
+  * Wall surfaces could feature biome-specific decorative moss, wall vines, or torch sconce flickering.
+* **Directives**: Add dynamic torch sconce wall lighting and environmental foliage decals in future art polish.
 
 ---
 
@@ -169,22 +171,22 @@ This document records the official baseline quality evaluations, granular expert
 ---
 
 ### CMP-07: In-Game Menus & Overlays (Pause, Victory)
-*Files: `js/ui/game-menu.js`, `js/engine/game-loop.js`, `css/game.css`*
+*Files: `js/ui/game-menu.js`, `js/engine/game-loop.js`, `css/game.css`, `maze.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.67/10** (1.1: 4, 1.2: 5, 1.3: 5)
+  * $C_1$ Juice & Delight: **5.67/10** (1.1: 6, 1.2: 5, 1.3: 6)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.33/10** (3.1: 6, 3.2: 5, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **5.67/10** (4.1: 6, 4.2: 6, 4.3: 5)
-  * $C_5$ Progression & Retention: **5.00/10** (5.1: 5, 5.2: 5, 5.3: 5)
+  * $C_3$ UI/UX & Ergonomics: **6.33/10** (3.1: 7, 3.2: 6, 3.3: 6)
+  * $C_4$ Mechanics & Systems: **6.00/10** (4.1: 6, 4.2: 6, 4.3: 6)
+  * $C_5$ Progression & Retention: **6.33/10** (5.1: 7, 5.2: 6, 5.3: 6)
   * $C_6$ Accessibility & DX: **5.00/10** (6.1: 5, 6.2: 5, 6.3: 5)
-  * **Master Score**: **35.00 / 60.00 (58.3% — C Tier Prototype)**
+  * **Master Score**: **38.66 / 60.00 (64.4% — C+ Tier)**
 * **Strengths**:
   * Standard pause modal freezing timer, step telemetry, and sound toggles.
+  * **Tiered Victory Shields & Performance Scores (`BL-52`)**: Conquering a labyrinth presents animated Gold Vanguard, Silver Ranger, or Bronze Scout shields, total Performance Score breakdown, secret chamber discovery counters, and prestige pills (`👟 Pathfinder`, `⏱️ Speedrunner`, `🔍 Secret Sleuth`, `🛡️ Flawless`).
 * **Gaps & Critical Deductions**:
-  * Victory celebration lacks visual juice, fanfare, confetti bursts, or star particle animations (`BL-38`).
-  * Missing tiered medal rating (Gold/Silver/Bronze) with step par targets (`BL-52`).
-* **Directives**: Implement confetti celebration (`BL-38`) and tiered medal scoring summary (`BL-52`).
+  * Victory celebration lacks canvas confetti bursts or rank-up fanfare splash screen (`BL-38`).
+* **Directives**: Implement confetti celebration (`BL-38`) and rank-up splash modals.
 
 ---
 
@@ -313,20 +315,19 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/profile-modal.js`, `js/core/storage.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.67/10** (1.1: 5, 1.2: 4, 1.3: 5)
+  * $C_1$ Juice & Delight: **5.33/10** (1.1: 6, 1.2: 5, 1.3: 5)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.33/10** (3.1: 6, 3.2: 5, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **6.00/10** (4.1: 6, 4.2: 6, 4.3: 6)
-  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 6, 5.3: 5)
+  * $C_3$ UI/UX & Ergonomics: **5.67/10** (3.1: 6, 3.2: 6, 3.3: 5)
+  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 7, 4.3: 6)
+  * $C_5$ Progression & Retention: **6.67/10** (5.1: 7, 5.2: 7, 5.3: 6)
   * $C_6$ Accessibility & DX: **5.33/10** (6.1: 5, 6.2: 6, 6.3: 5)
-  * **Master Score**: **36.33 / 60.00 (60.6% — C+ Tier Prototype)**
+  * **Master Score**: **39.00 / 60.00 (65.0% — B- Tier)**
 * **Strengths**:
-  * Tracks completed levels, total stars, and prestige tiers.
+  * Tracks completed levels, total stars, prestige ranks, and best performance metrics.
+  * **Tiered Medal & Secret Persistence (`BL-52`)**: Persists Gold/Silver/Bronze medals, Secret Sleuth prestige badges, Flawless run achievements, and high score tallies per labyrinth in `StorageManager`.
 * **Gaps & Critical Deductions**:
-  * Lacks tiered performance medals (Gold/Silver/Bronze) with step par targets (`BL-52`).
-  * Reaching prestige ranks lacks fanfare, celebrations, or visual badges (`BL-38`).
-  * No tracking for secret rooms or hidden bonus collectibles (`BL-51`).
-* **Directives**: Implement `BL-52` medal scoring, `BL-38` prestige celebration, and `BL-51` secret tracking.
+  * Reaching prestige ranks lacks fanfare, celebrations, or animated rank-up splash modals (`BL-38`).
+* **Directives**: Deliver celebratory rank-up splash modals (`BL-38`) and global leaderboard preview.
 
 ---
 
