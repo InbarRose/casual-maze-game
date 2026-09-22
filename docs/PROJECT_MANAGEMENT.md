@@ -398,6 +398,27 @@ This document tracks project milestones, current release status, active developm
   - Pressure plates (momentary activation when stepped on).
   - One-way gates / sliding doors.
 
+### Strategic Architecture Initiative: Modernization & SOLID Refactoring (`v2.0.0` Roadmap)
+*Objective: Transform monolithic "god-classes" and procedural switch blocks into simple, elegant, explainable, highly testable, readable, and robust Object-Oriented modules adhering strictly to SOLID principles and clean architectural separation.*
+
+- [ ] **Engine Decomposition & SRP Refactoring (`BL-56`)**:
+  - Split `js/engine/game-loop.js` (2,250+ lines) into single-responsibility collaborators: `MovementController` (motion and collision mediation), `InteractionDispatcher` (entity interaction routing), and `GameStateManager` (scoring, time, steps, level lifecycle).
+  - Target module size: $\le 300$ lines per file.
+- [ ] **Polymorphic Entity Domain Models (`BL-57`)**:
+  - Refactor procedural entity switch/case blocks into object-oriented classes (`KeyEntity`, `DoorEntity`, `LeverEntity`, `PedestalEntity`, `HazardEntity`) implementing an explicit `Interactable` / `Collidable` contract (`canInteract()`, `onInteract()`, `onCollide()`, `getPrompt()`).
+  - Upholds Open/Closed Principle: new entity types can be added without mutating core engine files.
+- [ ] **Editor Studio Modularization (`BL-58`)**:
+  - Split `js/editor/editor-ui.js` (1,800+ lines) into cohesive controllers: `ToolbarController`, `ProjectModalManager`, `DiagnosticsController`, and `EditorShortcutHandler`.
+- [ ] **Clean Input Handling & Command Pattern (`BL-59`)**:
+  - Extract input listeners from `GameLoop` and HTML pages into a standalone `InputManager` emitting semantic `GameCommand` objects (`MoveCommand`, `InteractCommand`, `RotateCommand`).
+  - Enables clean, headless-safe unit testing of input semantics without mock DOM event dispatch.
+- [ ] **Decoupled UI Contract & Presentation Layer (`BL-60`)**:
+  - Replace ad-hoc `uiCallbacks` object literals with an explicit `IGamePresenter` interface contract and granular event subscriptions (`onInventoryChanged`, `onStepTaken`, `onElevationChanged`), eliminating full-DOM recalculations on every step and TDZ initialization hazards.
+- [ ] **Value Objects & Clean Geometry Math (`BL-61`)**:
+  - Replace loose `{x, y}` object literals and repeated ad-hoc math with immutable Value Objects: `Vec2` / `Coord2D`, `GridRect`, and `Heading` with self-documenting methods.
+- [ ] **Defensive Guard Clauses & Code Elegance Standards (`BL-62`)**:
+  - Publish ADR-007 establishing standards for early return guard clauses, eradication of magical sentinel numbers, maximum file length guidelines ($\le 300$ lines), and consistent error handling paradigms.
+
 ---
 
 ## 3. Architecture Decision Records (ADRs)

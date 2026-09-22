@@ -27,6 +27,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54 │ P1 │ Ready │
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35 │ P2     │ Ready    │
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46 │ P0 / P1 │ Completed│
+│ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
+│ 9. Architecture Modernization & SOLID│ BL-56–62 │ P1        │ Planned  │
 └──────────────────────────────────────┴──────────┴───────────┴──────────┘
 ```
 
@@ -153,6 +155,21 @@ This document serves as the authoritative, prioritized master backlog for all fe
 
 ---
 
+### Epic 9: Architecture Modernization, SOLID Refactoring & Code Elegance
+*Objective: Transform monolithic "god-classes" and procedural switch blocks into simple, elegant, explainable, highly testable, readable, and robust Object-Oriented modules adhering strictly to SOLID principles and clean architectural separation.*
+
+| ID | Title | Priority | Target Milestone | Acceptance Criteria | Status |
+| :---: | :--- | :---: | :---: | :--- | :---: |
+| **BL-56** | **Engine Decomposition & SRP Refactoring (`GameLoop` God-Class Split)** | **P1** | `v2.0.0` | Decompose monolithic `game-loop.js` (~2,250 lines) into focused, single-responsibility collaborators: `MovementController` (motion & collision mediation), `InteractionDispatcher` (entity activation), and `GameStateManager` (scoring, par steps/time, level lifecycle). Keep all modules $\le 300$ lines. | Planned |
+| **BL-57** | **Polymorphic Entity Domain Models (Open/Closed Principle)** | **P1** | `v2.0.0` | Replace procedural switch/case logic with clean object-oriented entity classes (`KeyEntity`, `DoorEntity`, `LeverEntity`, `PedestalEntity`, `HazardEntity`) implementing an explicit `Interactable` / `Collidable` contract (`canInteract()`, `onInteract()`, `onCollide()`, `getPrompt()`). | Planned |
+| **BL-58** | **Editor Studio Modularization (`EditorUI` & `EditorCanvas` Split)** | **P1** | `v2.0.0` | Decompose monolithic `editor-ui.js` (~1,800 lines) into cohesive sub-controllers: `ToolbarController`, `ProjectModalManager`, `DiagnosticsController`, and `EditorShortcutHandler` adhering to SRP and clean event mediation. | Planned |
+| **BL-59** | **Clean Input Handling & Command Pattern (`InputManager`)** | **P1** | `v2.0.0` | Extract keyboard, mouse, gamepad, and touch listeners from `GameLoop` and HTML scripts into a standalone `InputManager` emitting discrete semantic `GameCommand` objects (`MoveCommand`, `InteractCommand`, `RotateCommand`). Facilitates clean unit testing without ad-hoc DOM event mocks. | Planned |
+| **BL-60** | **Decoupled UI Contract & Presentation Layer (Dependency Inversion)** | **P1** | `v2.0.0` | Replace ad-hoc `uiCallbacks` object literals with an explicit `IGamePresenter` interface contract and granular event subscriptions (`onInventoryChanged`, `onStepTaken`, `onElevationChanged`), eliminating full-DOM recalculations on every step and TDZ initialization hazards. | Planned |
+| **BL-61** | **Value Objects & Clean Geometry Math (`Vec2`, `GridRect`, `Heading`)** | **P2** | `v2.0.0` | Replace loose `{x, y}` object literals and repeated ad-hoc math (`Math.hypot`, distance clamps, rotational transforms) with immutable, elegant Value Objects: `Vec2` / `Coord2D`, `GridRect`, and `Heading` with self-documenting methods. | Planned |
+| **BL-62** | **Defensive Guard Clauses & Code Elegance Standards (ADR-004)** | **P2** | `v2.0.0` | Establish ADR-004 formalizing graceful coding standards: early return guard clauses over nested indentation, eradication of magical sentinel numbers (`-1`, string splitting IDs), maximum file length guidelines ($\le 300$ lines), and consistent error handling paradigms. | Planned |
+
+---
+
 ## 3. Sprint Planning & Delivery Roadmap
 
 ```mermaid
@@ -176,7 +193,14 @@ flowchart LR
         S3C --> S3D["BL-50: Endless Maze Mode"]
     end
 
-    Sprint 1 --> Sprint 2 --> Sprint 3
+    subgraph Sprint 4: Architecture Modernization & SOLID [v2.0.0 Future]
+        S4A["BL-56: GameLoop SRP Split"] --> S4B["BL-57: Polymorphic Entities"]
+        S4B --> S4C["BL-58: Editor Modularization"]
+        S4C --> S4D["BL-59/60: Input & UI Presenter"]
+        S4D --> S4E["BL-61/62: Value Objects & ADR-004"]
+    end
+
+    Sprint 1 --> Sprint 2 --> Sprint 3 --> Sprint 4
 ```
 
 ---
