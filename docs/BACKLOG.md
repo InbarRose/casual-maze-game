@@ -22,11 +22,11 @@ This document serves as the authoritative, prioritized master backlog for all fe
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
 │ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
-│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17 │ P1        │ Ready    │
-│ 4. Map Editor Studio Overhaul        │ BL-18–22 │ P1 / P2   │ Ready    │
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26 │ P1        │ Ready    │
-│ 6. Audio FX & Ambience Engine        │ BL-27–28 │ P2        │ Ready    │
-│ 7. QA Automation & Test Scale        │ BL-29–32 │ P0 / P1   │ Completed│
+│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55 │ P1  │ Ready    │
+│ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39 │ P1 / P2 │ Ready │
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54 │ P1 │ Ready │
+│ 6. Audio FX & Ambience Engine        │ BL-27–28,35 │ P2     │ Ready    │
+│ 7. QA Automation & Test Scale        │ BL-29–32,45,46 │ P0 / P1 │ Completed│
 └──────────────────────────────────────┴──────────┴───────────┴──────────┘
 ```
 
@@ -74,6 +74,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-16** | **Mobile Touch Viewport & Scroll Locking** | **P1** | `v1.20.0` | Prevent accidental page rubber-banding and scrolling during canvas drag gestures on iOS Safari & Android Chrome. | **Completed** |
 | **BL-17** | **Minimap Pinch-to-Zoom & Pan Gesture** | **P2** | `v1.22.0` | Touch gesture support for zooming and panning the HUD minimap overlay on mobile viewports. | **Completed** |
 | **BL-40** | **Gamepad API Controller Support** | **P2** | `v1.24.0` | Zero-dependency Gamepad API listener mapping standard USB/Bluetooth controller D-pad and analog sticks to movement. | Planned |
+| **BL-55** | **Keyboard Quick-Advance on Victory (Space / Enter for Next Level)** | **P1** | `v1.23.0` | Allow players to press Space or Enter when victory modal is displayed to automatically advance to the next level without requiring mouse clicks for faster gameplay flow. | Planned |
 
 ---
 
@@ -105,6 +106,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-36** | **Save State Versioned Migration Runner** | **P1** | `v1.23.0` | Automated `StorageManager.migrateSaveData()` upgrading legacy save schemas on initial boot without data loss. | Planned |
 | **BL-38** | **Prestige Rank-Up Celebration & Victory Confetti** | **P2** | `v1.23.0` | Full-screen celebratory rank-up splash banner with star sparkles and Canvas 2D confetti bursts on victory. | Planned |
 | **BL-53** | **Comprehensive Settings Rebinding & Profile Backup** | **P2** | `v1.23.0` | In-game settings allowing full key rebinding, audio mute/volume, default art style, and 1-click JSON export/import of profile. | Planned |
+| **BL-54** | **Top Navigation Breadcrumbs & Chapter/Level HUD Hierarchy** | **P1** | `v1.23.0` | Interactive breadcrumb navigation hierarchy in top navigation and in-game HUD (e.g., `Campaign > Chapter 2: The Vertical Dimension > Level 5: Sunken Vault`). Displays active chapter name, chapter number, level index, and total levels with click-to-navigate back to chapter selection. | Planned |
 
 ---
 
