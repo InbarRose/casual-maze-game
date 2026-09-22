@@ -523,7 +523,7 @@
 
 .victory-stats-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
   gap: 0.75rem;
   margin: 1.25rem 0;
 }
@@ -1003,6 +1003,42 @@
   font-weight: 700;
   animation: medalPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Tiered Victory Medals (BL-52) */
+.victory-tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 1.1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.92rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  animation: medalPop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+}
+
+.victory-tier-badge.tier-gold {
+  background: linear-gradient(135deg, rgba(251, 191, 36, 0.25), rgba(245, 158, 11, 0.4));
+  border: 2px solid #fbbf24;
+  color: #fde047;
+  box-shadow: 0 0 20px rgba(251, 191, 36, 0.4), inset 0 0 8px rgba(251, 191, 36, 0.2);
+}
+
+.victory-tier-badge.tier-silver {
+  background: linear-gradient(135deg, rgba(148, 163, 184, 0.25), rgba(203, 213, 225, 0.4));
+  border: 2px solid #cbd5e1;
+  color: #f1f5f9;
+  box-shadow: 0 0 20px rgba(203, 213, 225, 0.3), inset 0 0 8px rgba(203, 213, 225, 0.2);
+}
+
+.victory-tier-badge.tier-bronze {
+  background: linear-gradient(135deg, rgba(180, 83, 9, 0.25), rgba(217, 119, 6, 0.4));
+  border: 2px solid #f59e0b;
+  color: #fed7aa;
+  box-shadow: 0 0 16px rgba(217, 119, 6, 0.25), inset 0 0 8px rgba(217, 119, 6, 0.15);
 }
 
 @keyframes medalPop {
