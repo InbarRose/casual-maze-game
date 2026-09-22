@@ -198,4 +198,40 @@ describe('Engine > Camera Rotation & Projections', () => {
       assert(Math.abs(dist - expectedDist) <= 1.0, `Tile and player distance preserved at ${angle}° (got ${dist}, expected ${expectedDist})`);
     }
   });
+
+  it('accurately maps tileToScreen and screenToTile across all 4 rotation angles (BL-43)', () => {
+    const camera = new Camera(800, 600, 32);
+    const tileSize = 32;
+    const tileX = 10;
+    const tileY = 8;
+    const playerWorldX = (tileX + 0.5) * tileSize;
+    const playerWorldY = (tileY + 0.5) * tileSize;
+
+    camera.snapTo(playerWorldX, playerWorldY, 30, 30);
+
+    for (const angle of ROTATION_ANGLES) {
+      camera.setRotation(angle, true);
+      const tileTopLeft = camera.tileToScreen(tileX, tileY);
+      const playerScreen = camera.worldToScreen(playerWorldX, playerWorldY, true);
+
+      // Player screen position must be EXACTLY at tile center: tileTopLeft.x + tileSize / 2, tileTopLeft.y + tileSize / 2
+      const tileCenterX = tileTopLeft.x + tileSize / 2;
+      const tileCenterY = tileTopLeft.y + tileSize / 2;
+
+      assert(
+        Math.abs(tileCenterX - playerScreen.x) <= 0.001,
+        `Tile center X matches player screen X at ${angle}° (tile: ${tileCenterX}, player: ${playerScreen.x})`
+      );
+      assert(
+        Math.abs(tileCenterY - playerScreen.y) <= 0.001,
+        `Tile center Y matches player screen Y at ${angle}° (tile: ${tileCenterY}, player: ${playerScreen.y})`
+      );
+
+      // Invertibility: screenToTile should recover the exact tile coordinates
+      const recoveredTile = camera.screenToTile(tileCenterX, tileCenterY);
+      assertEqual(recoveredTile.x, tileX, `Recovered tileX matches at ${angle}°`);
+      assertEqual(recoveredTile.y, tileY, `Recovered tileY matches at ${angle}°`);
+    }
+  });
 });
+

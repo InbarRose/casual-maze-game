@@ -183,7 +183,7 @@ describe('Engine > Vector SVG Asset Pipeline (BL-09 & BL-10)', () => {
 
   it('tests Door entity vector SVG sprite rendering with fallback', () => {
     const mockCtx = createMockContext();
-    const door = new Door({ id: 'test_door', x: 2, y: 2, color: '#fbbf24', style: 'classic' });
+    const door = new Door({ id: 'test_door', x: 2, y: 2, color: '#fbbf24', style: 'classic', useVectorSprite: true });
 
     // 1. Fallback
     assetLoader.imageCache.clear();
@@ -206,7 +206,7 @@ describe('Engine > Vector SVG Asset Pipeline (BL-09 & BL-10)', () => {
 
   it('tests Key entity vector SVG sprite rendering with fallback', () => {
     const mockCtx = createMockContext();
-    const key = new Key({ id: 'test_key', x: 3, y: 3, color: '#38bdf8', style: 'classic' });
+    const key = new Key({ id: 'test_key', x: 3, y: 3, color: '#38bdf8', style: 'classic', useVectorSprite: true });
 
     // 1. Fallback
     assetLoader.imageCache.clear();
@@ -229,7 +229,7 @@ describe('Engine > Vector SVG Asset Pipeline (BL-09 & BL-10)', () => {
 
   it('tests Lever entity vector SVG sprite rendering with active and inactive states', () => {
     const mockCtx = createMockContext();
-    const lever = new Lever({ id: 'test_lever', x: 4, y: 4, style: 'switch_lever', state: false });
+    const lever = new Lever({ id: 'test_lever', x: 4, y: 4, style: 'switch_lever', state: false, useVectorSprite: true });
 
     // 1. Fallback
     assetLoader.imageCache.clear();

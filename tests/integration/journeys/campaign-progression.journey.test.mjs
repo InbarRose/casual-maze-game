@@ -10,8 +10,7 @@ import { LevelLoader } from '../../../js/levels/level-loader.js';
 import { StorageManager } from '../../../js/core/storage.js';
 import { globalEvents } from '../../../js/core/events.js';
 import { CAMPAIGN_CHAPTERS } from '../../../js/core/constants.js';
-import fs from 'fs';
-import path from 'path';
+import { CAMPAIGN_LEVELS } from '../../../js/levels/default-levels.js';
 
 describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
   it('guides an explorer through Chapter 1, discovering Architect Notes and earning medals', async () => {
@@ -23,9 +22,8 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
     assertEqual(CAMPAIGN_CHAPTERS[4].title, 'Rhythm & Danger');
     assertEqual(CAMPAIGN_CHAPTERS[7].title, 'The Shifting Monolith');
 
-    // 2. Load Level 1 JSON
-    const level1Raw = JSON.parse(fs.readFileSync(path.resolve('levels/chapter_1/level_1.json'), 'utf8'));
-    const level1 = LevelLoader.normalizeLevel(level1Raw);
+    // 2. Load Level 1
+    const level1 = LevelLoader.normalizeLevel(CAMPAIGN_LEVELS.find(l => String(l.id) === '1'));
 
     assertEqual(level1.id, '1');
     assertEqual(level1.chapter, 'chapter_1');

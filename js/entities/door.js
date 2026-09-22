@@ -25,6 +25,7 @@ export class Door {
 
     // Animation progress: 0 = fully closed, 1 = fully open
     this.openProgress = this.isOpen ? 1 : 0;
+    this.useVectorSprite = config.useVectorSprite || false;
   }
 
   get elevation() {
@@ -80,29 +81,31 @@ export class Door {
     const cx = x + w / 2;
     const cy = y + h / 2;
 
-    // Check for matching vector asset
-    let doorAssetId = 'door_classic';
-    if (this.style === 'laser_barrier') doorAssetId = 'door_laser_barrier';
-    else if (this.style === 'magic_seal') doorAssetId = 'door_magic_seal';
-    else if (this.style === 'crystal_spikes') doorAssetId = 'door_crystal_spikes';
-    else if (this.style === 'portcullis') doorAssetId = 'door_portcullis';
-    else if (this.style === 'vault_hatch') doorAssetId = 'door_vault_hatch';
-    else if (this.orientation === 'horizontal') doorAssetId = 'door_dungeon_horizontal';
-    else if (this.orientation === 'vertical') doorAssetId = 'door_dungeon_vertical';
+    // Optional vector asset override (BL-41)
+    if (this.useVectorSprite) {
+      let doorAssetId = 'door_classic';
+      if (this.style === 'laser_barrier') doorAssetId = 'door_laser_barrier';
+      else if (this.style === 'magic_seal') doorAssetId = 'door_magic_seal';
+      else if (this.style === 'crystal_spikes') doorAssetId = 'door_crystal_spikes';
+      else if (this.style === 'portcullis') doorAssetId = 'door_portcullis';
+      else if (this.style === 'vault_hatch') doorAssetId = 'door_vault_hatch';
+      else if (this.orientation === 'horizontal') doorAssetId = 'door_dungeon_horizontal';
+      else if (this.orientation === 'vertical') doorAssetId = 'door_dungeon_vertical';
 
-    const doorImg = assetLoader.getImage(doorAssetId) || assetLoader.getImage('door_classic');
-    if (doorImg) {
-      ctx.save();
-      ctx.globalAlpha = 1 - this.openProgress * 0.85;
-      ctx.shadowColor = this.color;
-      ctx.shadowBlur = 8;
-      ctx.drawImage(doorImg, x, y, w, h);
-      ctx.fillStyle = this.color;
-      ctx.beginPath();
-      ctx.arc(cx, cy, tileSize * 0.1, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.restore();
-      return;
+      const doorImg = assetLoader.getImage(doorAssetId) || assetLoader.getImage('door_classic');
+      if (doorImg) {
+        ctx.save();
+        ctx.globalAlpha = 1 - this.openProgress * 0.85;
+        ctx.shadowColor = this.color;
+        ctx.shadowBlur = 8;
+        ctx.drawImage(doorImg, x, y, w, h);
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(cx, cy, tileSize * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        return;
+      }
     }
 
     ctx.save();

@@ -370,7 +370,7 @@ export const KEY_CODES = Object.freeze({
   DOWN: ['ArrowDown', 'KeyS', 's', 'S', 'Down'],
   LEFT: ['ArrowLeft', 'KeyA', 'a', 'A', 'Left'],
   RIGHT: ['ArrowRight', 'KeyD', 'd', 'D', 'Right'],
-  INTERACT: ['Space', 'KeyE', 'Enter', 'e', 'E', ' ', 'Enter'],
+  INTERACT: ['KeyE', 'e', 'E', 'Space', 'KeySpace', 'Enter', ' '],
   ROTATE_LEFT: ['KeyQ', 'q', 'Q', 'BracketLeft', '['],
   ROTATE_RIGHT: ['KeyR', 'r', 'R', 'BracketRight', ']'],
   MAP: ['KeyM', 'm', 'M'],

@@ -242,6 +242,37 @@ export class Camera {
   }
 
   /**
+   * Convert grid tile coordinates (x, y) to top-left screen coordinates (pixels).
+   * Invariant to camera cardinal rotation (0, 90, 180, 270) ensuring tiles remain
+   * perfectly aligned to player and entity centers without sub-tile or quadrant shifts (BL-43).
+   * @param {number} tileX
+   * @param {number} tileY
+   * @returns {{x: number, y: number}}
+   */
+  tileToScreen(tileX, tileY) {
+    const center = this.worldToScreen((tileX + 0.5) * this.tileSize, (tileY + 0.5) * this.tileSize, true);
+    return {
+      x: Math.round(center.x - this.tileSize / 2),
+      y: Math.round(center.y - this.tileSize / 2),
+    };
+  }
+
+  /**
+   * Convert screen coordinates to grid tile coordinates (x, y).
+   * Invariant to camera cardinal rotation (0, 90, 180, 270).
+   * @param {number} screenX
+   * @param {number} screenY
+   * @returns {{x: number, y: number}}
+   */
+  screenToTile(screenX, screenY) {
+    const world = this.screenToWorld(screenX, screenY, true);
+    return {
+      x: Math.floor(world.x / this.tileSize),
+      y: Math.floor(world.y / this.tileSize),
+    };
+  }
+
+  /**
    * Convert screen coordinates (pixels) to world coordinates (pixels)
    * Inverse of worldToScreen.
    * @param {number} screenX

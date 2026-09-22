@@ -13,17 +13,10 @@ import { describe, it, assert, assertEqual } from '../../harness/index.mjs';
 import { LevelValidator } from '../../../js/editor/level-validator.js';
 import { solveLevel } from '../../../js/engine/solver.js';
 import { TILES } from '../../../js/core/constants.js';
-import fs from 'fs';
-import path from 'path';
-import { fileURLToPath } from 'url';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const rootDir = path.resolve(__dirname, '../../..');
+import { CAMPAIGN_LEVELS } from '../../../js/levels/default-levels.js';
 
 function loadLevel(num) {
-  const filePath = path.join(rootDir, 'levels', 'chapter_8', `level_${num}.json`);
-  return JSON.parse(fs.readFileSync(filePath, 'utf8'));
+  return CAMPAIGN_LEVELS.find(l => String(l.id) === String(num));
 }
 
 describe('Levels > Chapter 8 The Shifting Monolith & World Rotation', () => {

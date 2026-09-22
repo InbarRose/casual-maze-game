@@ -96,11 +96,18 @@ casual-maze-game/
 │   │       ├── riddle-pedestals.journey.test.mjs
 │   │       └── storylines-progression.journey.test.mjs
 │   └── run-all.mjs               # Master test runner entrypoint
-├── docs/                         # Documentation & Architecture Records
+├── docs/                         # Architectural References & Quality Frameworks
 │   ├── ARCHITECTURE.md           # Deep subsystem architecture & engine details (this file)
 │   ├── TESTING_PLAN.md           # Comprehensive testing strategy, matrices & CI gating
 │   ├── LEVEL_SCHEMA.md           # Canonical JSON level schema and entity specs
-│   ├── PROJECT_MANAGEMENT.md     # Milestone tracking, roadmap & active backlog
+│   ├── LEVEL_DESIGN_PHILOSOPHY.md# Kishōtenketsu 4-stage methodology & spatial rules
+│   ├── LEVEL_AUDIT_RUBRIC.md     # 6-Chair Expert Panel Level Quality Rubric (60-pt scale)
+│   ├── LEVEL_SCORING_REGISTER.md # Master Quality Scores for all 42 official levels
+│   ├── COMPONENT_AUDIT_RUBRIC.md # 6-Chair Expert Panel Component Audit Rubric (60-pt scale)
+│   ├── COMPONENT_SCORING_REGISTER.md # Master Quality Scores across all 19 application components
+│   ├── BACKLOG.md                # Authoritative prioritized master backlog (BL-01 to BL-40)
+│   ├── GAP_ANALYSIS_AND_IMPROVEMENT_PLAN.md # Root-cause analysis & resolution blueprints
+│   ├── PROJECT_MANAGEMENT.md     # Milestone tracking, roadmap & active delivery history
 │   └── adr/                      # Architectural Decision Records (ADRs)
 │       ├── README.md             # ADR index and template
 │       ├── 0001-static-canvas-modular-engine.md

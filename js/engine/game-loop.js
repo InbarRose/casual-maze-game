@@ -246,8 +246,16 @@ export class GameLoop {
    */
   rotateLeft() {
     if (!this.camera) return;
+    const prevAngle = this.camera.getDiscreteRotation();
     this.camera.rotateLeft();
+    const newAngle = this.camera.getDiscreteRotation();
+    if (this.logger) {
+      this.logger.logCameraRotation({ fromAngle: prevAngle, toAngle: newAngle, elapsedMs: this.elapsedTime });
+    }
     this.notifyUI();
+    if (typeof window !== 'undefined' && window.audioFX?.playClick) {
+      window.audioFX.playClick();
+    }
     globalEvents.emit('camera:rotated', {
       rotation: this.camera.rotation,
       discreteRotation: this.camera.getDiscreteRotation(),
@@ -260,8 +268,16 @@ export class GameLoop {
    */
   rotateRight() {
     if (!this.camera) return;
+    const prevAngle = this.camera.getDiscreteRotation();
     this.camera.rotateRight();
+    const newAngle = this.camera.getDiscreteRotation();
+    if (this.logger) {
+      this.logger.logCameraRotation({ fromAngle: prevAngle, toAngle: newAngle, elapsedMs: this.elapsedTime });
+    }
     this.notifyUI();
+    if (typeof window !== 'undefined' && window.audioFX?.playClick) {
+      window.audioFX.playClick();
+    }
     globalEvents.emit('camera:rotated', {
       rotation: this.camera.rotation,
       discreteRotation: this.camera.getDiscreteRotation(),
@@ -1028,14 +1044,22 @@ export class GameLoop {
       }
     }
 
-    // 8. Check for available contextual interaction
+    // 8. Check for available contextual interaction (BL-42)
     if (typeof this.uiCallbacks.onInteractionAvailable === 'function') {
       const interaction = this.getAvailableInteraction();
-      let screenPos = null;
+      let playerScreenPos = null;
+      let targetScreenPos = null;
       if (interaction && this.camera) {
-        screenPos = this.camera.worldToScreen(this.player.worldX, this.player.worldY, true);
+        playerScreenPos = this.camera.worldToScreen(this.player.worldX, this.player.worldY, true);
+        if (interaction.x !== undefined && interaction.y !== undefined) {
+          const tileTopLeft = this.camera.tileToScreen ? this.camera.tileToScreen(interaction.x, interaction.y) : this.camera.worldToScreen(interaction.x * this.camera.tileSize, interaction.y * this.camera.tileSize, true);
+          targetScreenPos = {
+            x: tileTopLeft.x + this.camera.tileSize / 2,
+            y: tileTopLeft.y + this.camera.tileSize / 2,
+          };
+        }
       }
-      this.uiCallbacks.onInteractionAvailable(interaction, screenPos);
+      this.uiCallbacks.onInteractionAvailable(interaction, targetScreenPos || playerScreenPos, targetScreenPos, playerScreenPos);
     }
   }
 
@@ -1230,7 +1254,7 @@ export class GameLoop {
     ));
     if (adjacentGates.length > 0) {
       const g = adjacentGates[0];
-      return { type: 'puzzle_gate', label: g.name ? `Solve ${g.name}` : 'Solve Seal', icon: '🧩', keyHint: 'Space', x: g.x, y: g.y, canInteract: true };
+      return { type: 'puzzle_gate', label: g.name ? `Solve ${g.name}` : 'Solve Seal', icon: '🧩', keyHint: 'E', x: g.x, y: g.y, canInteract: true };
     }
 
     // 2. Check adjacent Pedestal
@@ -1241,11 +1265,11 @@ export class GameLoop {
       const ped = adjacentPedestals[0];
       const hasCarried = this.player.hasCarriedRiddleItem();
       if (hasCarried && !ped.slottedItem) {
-        return { type: 'pedestal', label: `Place ${this.player.carriedRiddleItem.name || 'Relic'}`, icon: '📥', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+        return { type: 'pedestal', label: `Place ${this.player.carriedRiddleItem.name || 'Relic'}`, icon: '📥', keyHint: 'E', x: ped.x, y: ped.y, canInteract: true };
       } else if (!hasCarried && ped.slottedItem) {
-        return { type: 'pedestal', label: `Take ${ped.slottedItem.name || 'Relic'}`, icon: '📤', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+        return { type: 'pedestal', label: `Take ${ped.slottedItem.name || 'Relic'}`, icon: '📤', keyHint: 'E', x: ped.x, y: ped.y, canInteract: true };
       } else {
-        return { type: 'pedestal', label: `Inspect ${ped.name || 'Pedestal'}`, icon: '🦅', keyHint: 'Space', x: ped.x, y: ped.y, canInteract: true };
+        return { type: 'pedestal', label: `Inspect ${ped.name || 'Pedestal'}`, icon: '🦅', keyHint: 'E', x: ped.x, y: ped.y, canInteract: true };
       }
     }
 
@@ -1255,7 +1279,7 @@ export class GameLoop {
     ));
     if (adjacentLevers.length > 0) {
       const lever = adjacentLevers[0];
-      return { type: 'lever', label: lever.state ? 'Switch Off' : 'Pull Switch', icon: '🕹️', keyHint: 'Space', x: lever.x, y: lever.y, canInteract: true };
+      return { type: 'lever', label: lever.state ? 'Switch Off' : 'Pull Switch', icon: '🕹️', keyHint: 'E', x: lever.x, y: lever.y, canInteract: true };
     }
 
     // 4. Check adjacent Signpost
@@ -1264,7 +1288,7 @@ export class GameLoop {
     ));
     if (adjacentSigns.length > 0) {
       const s = adjacentSigns[0];
-      return { type: 'signpost', label: s.title ? `Read "${s.title}"` : 'Read Signpost', icon: '📜', keyHint: 'Space', x: s.x, y: s.y, canInteract: true };
+      return { type: 'signpost', label: s.title ? `Read "${s.title}"` : 'Read Signpost', icon: '📜', keyHint: 'E', x: s.x, y: s.y, canInteract: true };
     }
 
     // 5. Check adjacent WallDecor
@@ -1274,7 +1298,7 @@ export class GameLoop {
     if (adjacentDecor.length > 0) {
       const d = adjacentDecor[0];
       const icon = d.decorType === 'note' ? '📝' : (d.decorType === 'painting' ? '🖼️' : '🏛️');
-      return { type: 'wall_decor', label: d.title ? `Examine "${d.title}"` : 'Examine Lore', icon, keyHint: 'Space', x: d.x, y: d.y, canInteract: true };
+      return { type: 'wall_decor', label: d.title ? `Examine "${d.title}"` : 'Examine Lore', icon, keyHint: 'E', x: d.x, y: d.y, canInteract: true };
     }
 
     // 6. Check floor RiddleItem
@@ -1283,7 +1307,7 @@ export class GameLoop {
     );
     if (floorRiddleItems.length > 0 && !this.player.hasCarriedRiddleItem()) {
       const item = floorRiddleItems[0];
-      return { type: 'riddle_item', label: `Pick Up ${item.name || 'Relic'}`, icon: '🗿', keyHint: 'Space', x: item.x, y: item.y, canInteract: true };
+      return { type: 'riddle_item', label: `Pick Up ${item.name || 'Relic'}`, icon: '🗿', keyHint: 'E', x: item.x, y: item.y, canInteract: true };
     }
 
     // 7. Check adjacent Door
@@ -1297,7 +1321,7 @@ export class GameLoop {
         type: 'door',
         label: hasKey ? `Unlock ${d.name || 'Door'}` : `Locked (${d.name || 'Door'})`,
         icon: hasKey ? '🗝️' : '🔒',
-        keyHint: 'Space',
+        keyHint: 'E',
         x: d.x,
         y: d.y,
         canInteract: hasKey,
@@ -1311,7 +1335,7 @@ export class GameLoop {
         type: 'exit',
         label: exit.targetRoom ? 'Proceed to Room' : 'Exit Portal',
         icon: '🌀',
-        keyHint: 'Space',
+        keyHint: 'E',
         x: px,
         y: py,
         canInteract: true,

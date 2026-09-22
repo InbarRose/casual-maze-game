@@ -190,7 +190,7 @@ export class GameRenderer {
         const tile = ground[y]?.[x];
         if (tile === TILES.WALL) continue; // Walls drawn in wall pass
 
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+        const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         // Check for vector SVG floor asset (plain or cracked variation)
         const isCracked = ((x * 13 + y * 7) % 17 === 0);
@@ -244,7 +244,7 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         if (ground[y]?.[x] === TILES.WALL) {
-          const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+          const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
           const center = camera.worldToScreen(x * tileSize + halfTile, y * tileSize + halfTile, true);
           drawables.push({
             type: 'wall',
@@ -341,7 +341,7 @@ export class GameRenderer {
       } else {
         const entity = item.ref;
         const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
-        const screen = isContinuous ? item.screen : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize, true);
+        const screen = isContinuous ? item.screen : (camera.tileToScreen ? camera.tileToScreen(entity.x, entity.y) : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize, true));
         entity.render(ctx, screen.x, screen.y, tileSize, this.perspective);
       }
     }
@@ -357,7 +357,7 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         if (ground[y]?.[x] === TILES.WALL) {
-          const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+          const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
           this.renderAngledWall(ctx, x, y, screen.x, screen.y, tileSize, theme, ground, camera);
         }
       }
@@ -477,7 +477,7 @@ export class GameRenderer {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const overTile = overhead?.[y]?.[x];
         const gTile = ground?.[y]?.[x];
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+        const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         // Render Ramps connecting ground to elevated deck
         if (this.isRampTile(gTile)) {
@@ -727,7 +727,7 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const tile = ground[y]?.[x];
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+        const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         if (tile === TILES.WALL) {
           if (wallImg) {
@@ -813,7 +813,7 @@ export class GameRenderer {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const overTile = overhead?.[y]?.[x];
         const gTile = ground?.[y]?.[x];
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+        const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         // Render Ramps
         if (this.isRampTile(gTile)) {
@@ -942,59 +942,79 @@ export class GameRenderer {
       return;
     }
 
-    ctx.fillStyle = theme.ramp;
+    // Seamless Architectural Stone Masonry Incline (BL-47)
+    ctx.fillStyle = theme.ramp || '#334155';
     ctx.fillRect(screenX, screenY, tileSize, tileSize);
 
-    // Subtle stepped incline lines
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
-    ctx.lineWidth = 1;
-    for (let i = 1; i <= 3; i++) {
-      const offset = (tileSize / 4) * i;
-      ctx.beginPath();
-      if (rampTile === TILES.RAMP_N || rampTile === TILES.RAMP_S) {
-        ctx.moveTo(screenX, screenY + offset);
-        ctx.lineTo(screenX + tileSize, screenY + offset);
+    const isNorth = rampTile === TILES.RAMP_N;
+    const isSouth = rampTile === TILES.RAMP_S;
+    const isEast = rampTile === TILES.RAMP_E;
+    const isWest = rampTile === TILES.RAMP_W;
+    const isVertical = isNorth || isSouth;
+
+    // 1. Four graduated masonry stone tread slabs rising toward elevated bridge
+    const numSteps = 4;
+    const stepSize = tileSize / numSteps;
+
+    for (let i = 0; i < numSteps; i++) {
+      // Step index from 0 (lowest) to 3 (highest)
+      let stepLevel = i;
+      if (isNorth) stepLevel = (numSteps - 1) - i; // North is top: higher as Y decreases
+      else if (isSouth) stepLevel = i;             // South is bottom: higher as Y increases
+      else if (isEast) stepLevel = i;              // East is right: higher as X increases
+      else if (isWest) stepLevel = (numSteps - 1) - i;
+
+      // Tread color lightens progressively as elevation ascends toward bridge deck
+      const elevationAlpha = 0.08 + stepLevel * 0.09;
+      ctx.fillStyle = `rgba(255, 255, 255, ${elevationAlpha})`;
+
+      if (isVertical) {
+        const sy = screenY + i * stepSize;
+        ctx.fillRect(screenX + tileSize * 0.12, sy, tileSize * 0.76, stepSize);
+
+        // Riser shadow & highlight bevel
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(screenX + tileSize * 0.12, sy + stepSize);
+        ctx.lineTo(screenX + tileSize * 0.88, sy + stepSize);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.beginPath();
+        ctx.moveTo(screenX + tileSize * 0.12, sy);
+        ctx.lineTo(screenX + tileSize * 0.88, sy);
+        ctx.stroke();
       } else {
-        ctx.moveTo(screenX + offset, screenY);
-        ctx.lineTo(screenX + offset, screenY + tileSize);
+        const sx = screenX + i * stepSize;
+        ctx.fillRect(sx, screenY + tileSize * 0.12, stepSize, tileSize * 0.76);
+
+        // Riser shadow & highlight bevel
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(sx + stepSize, screenY + tileSize * 0.12);
+        ctx.lineTo(sx + stepSize, screenY + tileSize * 0.88);
+        ctx.stroke();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+        ctx.beginPath();
+        ctx.moveTo(sx, screenY + tileSize * 0.12);
+        ctx.lineTo(sx, screenY + tileSize * 0.88);
+        ctx.stroke();
       }
-      ctx.stroke();
     }
 
-    // Directional chevron arrow in theme color
-    const arrowColor = theme.rampArrow || theme.accent || '#38bdf8';
-    ctx.strokeStyle = arrowColor;
-    ctx.lineWidth = Math.max(2, tileSize * 0.08);
-    ctx.shadowColor = arrowColor;
-    ctx.shadowBlur = 6;
-
-    const cx = screenX + tileSize / 2;
-    const cy = screenY + tileSize / 2;
-    const arrowSize = tileSize * 0.28;
-
-    ctx.beginPath();
-    if (rampTile === TILES.RAMP_N) {
-      // Slopes UP towards North
-      ctx.moveTo(cx - arrowSize, cy + arrowSize * 0.4);
-      ctx.lineTo(cx, cy - arrowSize * 0.5);
-      ctx.lineTo(cx + arrowSize, cy + arrowSize * 0.4);
-    } else if (rampTile === TILES.RAMP_S) {
-      // Slopes UP towards South
-      ctx.moveTo(cx - arrowSize, cy - arrowSize * 0.4);
-      ctx.lineTo(cx, cy + arrowSize * 0.5);
-      ctx.lineTo(cx + arrowSize, cy - arrowSize * 0.4);
-    } else if (rampTile === TILES.RAMP_E) {
-      // Slopes UP towards East
-      ctx.moveTo(cx - arrowSize * 0.4, cy - arrowSize);
-      ctx.lineTo(cx + arrowSize * 0.5, cy);
-      ctx.lineTo(cx - arrowSize * 0.4, cy + arrowSize);
-    } else if (rampTile === TILES.RAMP_W) {
-      // Slopes UP towards West
-      ctx.moveTo(cx + arrowSize * 0.4, cy - arrowSize);
-      ctx.lineTo(cx - arrowSize * 0.5, cy);
-      ctx.lineTo(cx + arrowSize * 0.4, cy + arrowSize);
+    // 2. Dual Side Masonry Curbs (Aligns seamlessly with bridge railings)
+    const curbColor = theme.bridgeRailing || '#64748b';
+    ctx.fillStyle = curbColor;
+    if (isVertical) {
+      ctx.fillRect(screenX + tileSize * 0.08, screenY, tileSize * 0.06, tileSize);
+      ctx.fillRect(screenX + tileSize * 0.86, screenY, tileSize * 0.06, tileSize);
+    } else {
+      ctx.fillRect(screenX, screenY + tileSize * 0.08, tileSize, tileSize * 0.06);
+      ctx.fillRect(screenX, screenY + tileSize * 0.86, tileSize, tileSize * 0.06);
     }
-    ctx.stroke();
 
     ctx.restore();
   }
@@ -1026,7 +1046,7 @@ export class GameRenderer {
       const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
       const screen = isContinuous
         ? camera.worldToScreen(entity.worldX, entity.worldY, true)
-        : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize, true);
+        : (camera.tileToScreen ? camera.tileToScreen(entity.x, entity.y) : camera.worldToScreen(entity.x * tileSize, entity.y * tileSize, true));
       entity.render(ctx, screen.x, screen.y, tileSize, this.perspective);
     }
   }
@@ -1040,7 +1060,7 @@ export class GameRenderer {
     if (fog && !fog.isExplored(x, y)) return;
 
     const tileSize = camera.tileSize;
-    const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+    const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
 
@@ -1185,7 +1205,7 @@ export class GameRenderer {
    */
   renderExitStairs(ctx, exitX, exitY, camera, theme) {
     const tileSize = camera.tileSize;
-    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
+    const screen = camera.tileToScreen ? camera.tileToScreen(exitX, exitY) : camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
     const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
@@ -1245,7 +1265,7 @@ export class GameRenderer {
    */
   renderExitArchway(ctx, exitX, exitY, camera, theme) {
     const tileSize = camera.tileSize;
-    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
+    const screen = camera.tileToScreen ? camera.tileToScreen(exitX, exitY) : camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
     const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
@@ -1283,7 +1303,7 @@ export class GameRenderer {
     if (fog && !fog.isExplored(exitX, exitY)) return;
 
     const tileSize = camera.tileSize;
-    const screen = camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
+    const screen = camera.tileToScreen ? camera.tileToScreen(exitX, exitY) : camera.worldToScreen(exitX * tileSize, exitY * tileSize, true);
     const cx = screen.x + tileSize / 2;
     const cy = screen.y + tileSize / 2;
     const radius = tileSize * 0.4;
@@ -1345,7 +1365,7 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         const vis = fog.getVisibility(x, y);
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+        const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         if (vis === FOG_STATE.UNEXPLORED) {
           // Solid Black Mask
@@ -1963,7 +1983,7 @@ export class GameRenderer {
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         if (ground[y]?.[x] !== TILES.WALL) continue;
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
+        const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
         const sy = screen.y - heightOffset;
         this.renderThematicPerimeterDecorTile(ctx, x, y, screen.x, sy, tileSize, themeKey, seed, ground, heightOffset);
       }

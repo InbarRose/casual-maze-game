@@ -19,12 +19,34 @@
     <!-- Main 2D Canvas -->
     <canvas id="game-canvas"></canvas>
 
-    <!-- Floating Contextual Interact Action Pill -->
-    <button id="hud-contextual-interact" class="contextual-interact-btn hidden" aria-label="Interact" title="Interact [Space / Enter]">
-      <span class="interact-icon" id="hud-interact-icon">✨</span>
-      <span class="interact-label" id="hud-interact-label">Interact</span>
-      <span class="interact-badge hide-mobile" id="hud-interact-badge">[Space]</span>
+    <!-- Subtle In-World Tile [E] Overlay Indicator (BL-42) -->
+    <button id="hud-tile-indicator" class="hud-tile-indicator hidden" aria-label="Interact [E]" title="Interact [E]">
+      <span class="hud-tile-key">E</span>
     </button>
+
+    <!-- Discreet Side HUD Action Drawer (BL-42) -->
+    <button id="hud-contextual-interact" class="contextual-interact-btn hidden" aria-label="Examine / Interact" title="Examine [E] (Space / Enter)">
+      <span class="interact-icon" id="hud-interact-icon">✨</span>
+      <div class="interact-text-group">
+        <span class="interact-label" id="hud-interact-label">Examine</span>
+        <span class="interact-subtext" id="hud-interact-subtext">Press [E]</span>
+      </div>
+      <span class="interact-badge hide-mobile" id="hud-interact-badge">[E]</span>
+    </button>
+
+    <!-- Lore / Note Inspection Side Card (BL-42) -->
+    <div id="hud-lore-card" class="hud-lore-card hidden">
+      <div class="hud-lore-header">
+        <span class="hud-lore-icon" id="hud-lore-icon">📜</span>
+        <div class="hud-lore-title-group">
+          <h4 class="hud-lore-title" id="hud-lore-title">Architect's Journal</h4>
+          <span class="hud-lore-author" id="hud-lore-author">— The Architect</span>
+        </div>
+        <button class="hud-lore-close" id="hud-lore-close" title="Close [Escape / E]">✕</button>
+      </div>
+      <p class="hud-lore-body" id="hud-lore-body"></p>
+      <p class="hud-lore-response" id="hud-lore-response"></p>
+    </div>
 
     <!-- Top HUD Overlay — Floating Islands -->
     <header class="game-hud-top">
@@ -655,6 +677,11 @@
               roomBadgeEl.style.display = 'none';
             }
           }
+
+          // Unobtrusive side lore card auto-dismiss on player movement (BL-42)
+          if (typeof closeLoreCard === 'function' && loreCardOpenedAtSteps >= 0 && state.steps !== loreCardOpenedAtSteps) {
+            closeLoreCard();
+          }
         },
         onRoomTransition: (data) => {
           audioFX.playTeleport();
@@ -662,7 +689,11 @@
         },
         onWallDecorInspected: (data) => {
           audioFX.playModalOpen();
-          openInspectModal(data);
+          openLoreCard(data);
+        },
+        onSignpostRead: (data) => {
+          audioFX.playModalOpen();
+          openLoreCard(data);
         },
         onPedestalInspect: (data) => {
           audioFX.playModalOpen();
@@ -830,20 +861,34 @@
         onRequestRestart: () => {
           promptRestartConfirmation();
         },
-        onInteractionAvailable: (interaction, screenPos) => {
+        onInteractionAvailable: (interaction, targetOrPlayerPos, targetScreenPos, playerScreenPos) => {
           const btnContextual = document.getElementById('hud-contextual-interact');
+          const tileIndicator = document.getElementById('hud-tile-indicator');
           const iconEl = document.getElementById('hud-interact-icon');
           const labelEl = document.getElementById('hud-interact-label');
-          if (!btnContextual) return;
+          const subtextEl = document.getElementById('hud-interact-subtext');
+          const badgeEl = document.getElementById('hud-interact-badge');
 
-          if (interaction && screenPos) {
-            btnContextual.style.left = `${screenPos.x}px`;
-            btnContextual.style.top = `${screenPos.y - 36}px`;
-            if (iconEl) iconEl.textContent = interaction.icon || '✨';
-            if (labelEl) labelEl.textContent = interaction.label || 'Interact';
-            btnContextual.classList.remove('hidden');
+          if (interaction) {
+            // Subtle in-world tile badge positioned directly over interactable cell (BL-42)
+            const indicatorPos = targetScreenPos || targetOrPlayerPos;
+            if (tileIndicator && indicatorPos) {
+              tileIndicator.style.left = `${indicatorPos.x}px`;
+              tileIndicator.style.top = `${indicatorPos.y}px`;
+              tileIndicator.classList.remove('hidden');
+            }
+
+            // Discreet side action drawer
+            if (btnContextual) {
+              if (iconEl) iconEl.textContent = interaction.icon || '✨';
+              if (labelEl) labelEl.textContent = interaction.label || 'Examine';
+              if (subtextEl) subtextEl.textContent = `Press [${interaction.keyHint || 'E'}]`;
+              if (badgeEl) badgeEl.textContent = `[${interaction.keyHint || 'E'}]`;
+              btnContextual.classList.remove('hidden');
+            }
           } else {
-            btnContextual.classList.add('hidden');
+            if (tileIndicator) tileIndicator.classList.add('hidden');
+            if (btnContextual) btnContextual.classList.add('hidden');
           }
         },
       }
@@ -852,7 +897,23 @@
     window.gameLoop = gameLoop;
     gameLoop.start();
 
-    // Floating Contextual Action Button Handler (Mobile & Mouse)
+    // Subtle In-World Tile [E] Overlay Indicator Handler (BL-42)
+    const hudTileIndicator = document.getElementById('hud-tile-indicator');
+    if (hudTileIndicator) {
+      hudTileIndicator.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        if (window.gameLoop) {
+          window.gameLoop.handleManualInteract();
+          audioFX.playClick();
+        }
+      });
+      hudTileIndicator.addEventListener('pointerdown', (e) => {
+        e.stopPropagation();
+      });
+    }
+
+    // Discreet Side Contextual Action Button Handler (Mobile & Mouse)
     const btnContextualInteract = document.getElementById('hud-contextual-interact');
     if (btnContextualInteract) {
       btnContextualInteract.addEventListener('click', (e) => {
@@ -1003,6 +1064,53 @@
     const inspectResponseEl = document.getElementById('inspect-response');
     const btnCloseInspect = document.getElementById('btn-close-inspect');
 
+    // Lore / Note Inspection Side Card Logic (BL-42)
+    const hudLoreCard = document.getElementById('hud-lore-card');
+    const hudLoreIcon = document.getElementById('hud-lore-icon');
+    const hudLoreTitle = document.getElementById('hud-lore-title');
+    const hudLoreAuthor = document.getElementById('hud-lore-author');
+    const hudLoreBody = document.getElementById('hud-lore-body');
+    const hudLoreResponse = document.getElementById('hud-lore-response');
+    const btnCloseLore = document.getElementById('hud-lore-close');
+    let loreCardOpenedAtSteps = -1;
+
+    function openLoreCard(data) {
+      if (!hudLoreCard) return;
+      const iconMap = { note: '📝', painting: '🖼️', fresco: '🏛️', carving: '🗿', tapestry: '🚩', signpost: '📜' };
+      if (hudLoreIcon) hudLoreIcon.textContent = iconMap[data.decorType] || '📜';
+      if (hudLoreTitle) hudLoreTitle.textContent = data.title || 'Observation';
+      if (hudLoreAuthor) {
+        if (data.author) {
+          hudLoreAuthor.textContent = `— ${data.author}${data.facing ? ' (Facing ' + data.facing + ')' : ''}`;
+          hudLoreAuthor.style.display = 'block';
+        } else if (data.facing) {
+          hudLoreAuthor.textContent = `Facing ${data.facing}`;
+          hudLoreAuthor.style.display = 'block';
+        } else {
+          hudLoreAuthor.style.display = 'none';
+        }
+      }
+      if (hudLoreBody) hudLoreBody.textContent = data.text || data.message || '';
+      if (hudLoreResponse) {
+        if (data.response) {
+          hudLoreResponse.textContent = `"${data.response}"`;
+          hudLoreResponse.style.display = 'block';
+        } else {
+          hudLoreResponse.style.display = 'none';
+        }
+      }
+      loreCardOpenedAtSteps = window.gameLoop ? window.gameLoop.stepCount : -1;
+      hudLoreCard.classList.remove('hidden');
+    }
+
+    function closeLoreCard() {
+      if (hudLoreCard) {
+        hudLoreCard.classList.add('hidden');
+      }
+    }
+
+    if (btnCloseLore) btnCloseLore.addEventListener('click', closeLoreCard);
+
     function openInspectModal(data) {
       if (!inspectModal) return;
       const iconMap = { note: '📝', painting: '🖼️', fresco: '🏛️', carving: '🗿', tapestry: '🚩' };
@@ -1080,6 +1188,15 @@
 
     // Keyboard Shortcuts (L for Log, R for Restart, Esc for close modals, Enter for confirm restart)
     window.addEventListener('keydown', (e) => {
+      // If lore card is active (BL-42)
+      if (hudLoreCard && !hudLoreCard.classList.contains('hidden')) {
+        if (e.code === 'Escape' || e.code === 'KeyE') {
+          e.preventDefault();
+          closeLoreCard();
+          return;
+        }
+      }
+
       // If inspection modal is active
       if (inspectModal && inspectModal.classList.contains('active')) {
         if (e.code === 'Escape' || e.code === 'Space' || e.code === 'Enter' || e.code === 'KeyE') {
@@ -1119,14 +1236,6 @@
       } else if (e.code === 'KeyT' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         promptRestartConfirmation();
-      } else if (e.code === 'KeyQ' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        e.preventDefault();
-        audioFX.playClick();
-        gameLoop.rotateLeft();
-      } else if (e.code === 'KeyR' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        e.preventDefault();
-        audioFX.playClick();
-        gameLoop.rotateRight();
       } else if (e.code === 'Escape') {
         cancelRestart();
         closeActivityLogModal();

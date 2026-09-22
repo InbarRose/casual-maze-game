@@ -223,8 +223,24 @@ export class ReplayPlayer {
       this.gameLoop.player.isMoving = false;
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'rotate') {
-      if (this.gameLoop.camera && action.toAngle !== undefined) {
-        this.gameLoop.camera.setRotationAngle(action.toAngle);
+      if (this.gameLoop.camera) {
+        const targetAngle = action.toAngle !== undefined ? action.toAngle : action.angle;
+        if (targetAngle !== undefined) {
+          this.gameLoop.camera.setRotation(targetAngle, true);
+        } else if (action.direction === 'left' || action.direction === 'ccw') {
+          this.gameLoop.rotateLeft();
+        } else {
+          this.gameLoop.rotateRight();
+        }
+      }
+    } else if (action.action === 'interact') {
+      if (action.target === 'lever') {
+        const lever = this.gameLoop.entities.find(e => e.type === 'lever' && (action.leverId ? e.id === action.leverId : (e.x === action.x && e.y === action.y)));
+        if (lever) {
+          lever.toggle(this.gameLoop.level);
+        }
+      } else {
+        this.gameLoop.handleManualInteract();
       }
     }
 
