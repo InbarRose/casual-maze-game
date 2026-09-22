@@ -235,6 +235,7 @@
     <header class="hero-section">
       <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
         <span class="badge badge-gold">Modular Puzzle Engine</span>
+        <span class="badge" id="hero-campaign-badge" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); color: var(--accent); font-weight: 700;">🏰 0 / 32 Levels Conquered</span>
         <span class="badge" id="hero-stars-badge" style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.35); color: #fbbf24; font-weight: 700;">★ 0 Stars Earned</span>
       </div>
       <h1 style="font-size: 2.75rem; line-height: 1.1; margin-bottom: 0.8rem;">Casual Maze Game</h1>
@@ -242,8 +243,9 @@
         Traverse multi-elevation bridges &amp; tunnels, uncover hidden paths through dynamic fog of war, trigger puzzle switches, and design custom labyrinths.
       </p>
       <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-        <button id="btn-hero-stories" class="btn btn-primary">📜 Explore Stories</button>
-        <button id="btn-hero-campaign" class="btn btn-secondary">🏰 Enter Campaign</button>
+        <a href="maze.html?id=1" id="btn-hero-play" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.7rem 1.4rem;">▶ Play Campaign</a>
+        <button id="btn-hero-campaign" class="btn btn-secondary">🏰 Browse Chapters</button>
+        <button id="btn-hero-stories" class="btn btn-secondary">📜 Story Sagas</button>
         <button id="btn-hero-architect" class="btn btn-secondary">🛠️ Level Architect</button>
         <button id="btn-hero-save-progress" class="btn btn-secondary" title="Save Game Progress (export JSON save file)">💾 Save Progress</button>
       </div>
@@ -251,15 +253,15 @@
 
     <!-- Game Mode Switcher Navigation -->
     <nav class="mode-nav" id="mode-tabs">
-      <button class="mode-tab active" id="tab-stories" data-mode="stories">
+      <button class="mode-tab active" id="tab-campaign" data-mode="campaign">
+        <span>🏰</span>
+        <span>Campaign Trail</span>
+        <span class="badge" id="badge-campaign-count" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">8 Chapters • 0 / 32 Levels</span>
+      </button>
+      <button class="mode-tab" id="tab-stories" data-mode="stories">
         <span>📜</span>
         <span>Storylines ("Stories")</span>
         <span class="badge" id="badge-stories-count" style="background: rgba(56, 189, 248, 0.15); color: var(--accent); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">3 Sagas</span>
-      </button>
-      <button class="mode-tab" id="tab-campaign" data-mode="campaign">
-        <span>🏰</span>
-        <span>Campaign Trail</span>
-        <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">8 Chapters • 32 Levels</span>
       </button>
       <button class="mode-tab" id="tab-architect" data-mode="architect">
         <span>🛠️</span>
@@ -269,7 +271,7 @@
     </nav>
 
     <!-- STORIES MODE CONTAINER -->
-    <div id="stories-section-container" style="width: 100%;">
+    <div id="stories-section-container" style="width: 100%; display: none;">
       <!-- Story 1: The Novice's Initiation -->
       <section class="story-card" id="story-novice-card" style="border-color: rgba(56, 189, 248, 0.35); background: linear-gradient(180deg, rgba(56, 189, 248, 0.04) 0%, rgba(22, 27, 34, 0.95) 100%);">
         <div class="campaign-header">
@@ -369,7 +371,7 @@
     </div>
 
     <!-- CAMPAIGN MODE CONTAINER -->
-    <div id="campaign-section-container" style="width: 100%; display: none;">
+    <div id="campaign-section-container" style="width: 100%;">
 
 
     <!-- Chapter 1: The Foundation -->
@@ -927,6 +929,36 @@
         updateChapterCounter(`#chapter-${ch}-list`, `chapter-${ch}-stars`, 12);
       }
 
+      // Compute Campaign conquest tally and furthest unlocked level
+      let totalCompletedCampaign = 0;
+      let furthestUnlockedLevel = 1;
+      for (let i = 1; i <= 32; i++) {
+        if (campaignProgress[String(i)]?.completed) {
+          totalCompletedCampaign++;
+          furthestUnlockedLevel = Math.min(32, i + 1);
+        }
+      }
+
+      const heroCampaignBadge = document.getElementById('hero-campaign-badge');
+      if (heroCampaignBadge) {
+        heroCampaignBadge.textContent = `🏰 ${totalCompletedCampaign} / 32 Levels Conquered`;
+      }
+
+      const badgeCampaignCount = document.getElementById('badge-campaign-count');
+      if (badgeCampaignCount) {
+        badgeCampaignCount.textContent = `8 Chapters • ${totalCompletedCampaign} / 32 Levels`;
+      }
+
+      const btnHeroPlay = document.getElementById('btn-hero-play');
+      if (btnHeroPlay) {
+        if (totalCompletedCampaign > 0) {
+          btnHeroPlay.textContent = `▶ Resume Campaign (Level ${furthestUnlockedLevel})`;
+        } else {
+          btnHeroPlay.textContent = '▶ Play Campaign (Level 1)';
+        }
+        btnHeroPlay.href = `maze.html?id=${furthestUnlockedLevel}`;
+      }
+
       const heroStarsBadge = document.getElementById('hero-stars-badge');
       if (heroStarsBadge) {
         heroStarsBadge.textContent = `★ ${totalStars} Stars Earned`;
@@ -939,14 +971,14 @@
     const campaignContainer = document.getElementById('campaign-section-container');
     const architectContainer = document.getElementById('architect-section-container');
 
-    function switchMode(mode) {
+    function switchMode(mode, playSound = true) {
       modeTabs.forEach(tab => {
         tab.classList.toggle('active', tab.dataset.mode === mode);
       });
       if (storiesContainer) storiesContainer.style.display = mode === 'stories' ? 'block' : 'none';
       if (campaignContainer) campaignContainer.style.display = mode === 'campaign' ? 'block' : 'none';
       if (architectContainer) architectContainer.style.display = mode === 'architect' ? 'block' : 'none';
-      audioFX.playClick();
+      if (playSound) audioFX.playClick();
     }
 
     modeTabs.forEach(tab => {
@@ -967,6 +999,13 @@
       switchMode('architect');
       architectContainer?.scrollIntoView({ behavior: 'smooth' });
     });
+
+    // Check initial mode from URL or hash
+    const urlParams = new URLSearchParams(window.location.search);
+    const modeParam = urlParams.get('mode') || window.location.hash.replace('#', '');
+    if (modeParam === 'stories' || modeParam === 'architect' || modeParam === 'campaign') {
+      switchMode(modeParam, false);
+    }
 
     // Initial render
     renderAllProgress();
