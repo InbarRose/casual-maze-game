@@ -246,7 +246,12 @@ export class GameLoop {
    */
   rotateLeft() {
     if (!this.camera) return;
+    const prevAngle = this.camera.getDiscreteRotation();
     this.camera.rotateLeft();
+    const newAngle = this.camera.getDiscreteRotation();
+    if (this.logger) {
+      this.logger.logCameraRotation({ fromAngle: prevAngle, toAngle: newAngle, elapsedMs: this.elapsedTime });
+    }
     this.notifyUI();
     if (typeof window !== 'undefined' && window.audioFX?.playClick) {
       window.audioFX.playClick();
@@ -263,7 +268,12 @@ export class GameLoop {
    */
   rotateRight() {
     if (!this.camera) return;
+    const prevAngle = this.camera.getDiscreteRotation();
     this.camera.rotateRight();
+    const newAngle = this.camera.getDiscreteRotation();
+    if (this.logger) {
+      this.logger.logCameraRotation({ fromAngle: prevAngle, toAngle: newAngle, elapsedMs: this.elapsedTime });
+    }
     this.notifyUI();
     if (typeof window !== 'undefined' && window.audioFX?.playClick) {
       window.audioFX.playClick();

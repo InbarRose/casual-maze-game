@@ -278,30 +278,73 @@ export class DebugLogger {
    * @returns {object}
    */
   toReplayPayload() {
-    const stepEvents = this.events.filter(e => e.type === 'step:completed');
     const actions = [];
-
     let prevPos = this.levelInfo.spawn || { x: 0, y: 0, elevation: 0 };
-    for (let i = 0; i < stepEvents.length; i++) {
-      const step = stepEvents[i];
-      const currPos = step.position || { x: 0, y: 0, elevation: 0 };
-      let dir = step.facing || 'none';
-      if (currPos.x > prevPos.x) dir = 'right';
-      else if (currPos.x < prevPos.x) dir = 'left';
-      else if (currPos.y > prevPos.y) dir = 'down';
-      else if (currPos.y < prevPos.y) dir = 'up';
+    let stepIndex = 1;
 
-      actions.push({
-        stepIndex: i + 1,
-        action: 'move',
-        direction: dir,
-        from: { x: prevPos.x, y: prevPos.y, elevation: prevPos.elevation || 0 },
-        to: { x: currPos.x, y: currPos.y, elevation: currPos.elevation || 0 },
-        isWarp: false,
-        elapsedMs: step.elapsedMs || 0,
-      });
+    for (const ev of this.events) {
+      if (ev.type === 'step:completed') {
+        const currPos = ev.position || { x: 0, y: 0, elevation: 0 };
+        let dir = ev.facing || 'none';
+        if (currPos.x > prevPos.x) dir = 'right';
+        else if (currPos.x < prevPos.x) dir = 'left';
+        else if (currPos.y > prevPos.y) dir = 'down';
+        else if (currPos.y < prevPos.y) dir = 'up';
 
-      prevPos = currPos;
+        actions.push({
+          stepIndex: stepIndex++,
+          action: 'move',
+          direction: dir,
+          from: { x: prevPos.x, y: prevPos.y, elevation: prevPos.elevation || 0 },
+          to: { x: currPos.x, y: currPos.y, elevation: currPos.elevation || 0 },
+          isWarp: false,
+          elapsedMs: ev.elapsedMs || 0,
+        });
+
+        prevPos = currPos;
+      } else if (ev.type === 'camera:rotation') {
+        actions.push({
+          stepIndex: stepIndex++,
+          action: 'rotate',
+          fromAngle: ev.fromAngle,
+          toAngle: ev.toAngle,
+          elapsedMs: ev.elapsedMs || 0,
+        });
+      } else if (ev.type === 'teleport:used') {
+        const currPos = ev.to || { x: 0, y: 0, elevation: 0 };
+        actions.push({
+          stepIndex: stepIndex++,
+          action: 'teleport',
+          from: ev.from || { x: prevPos.x, y: prevPos.y, elevation: prevPos.elevation || 0 },
+          to: currPos,
+          isWarp: true,
+          elapsedMs: ev.elapsedMs || 0,
+        });
+        prevPos = currPos;
+      } else if (ev.type === 'entity:lever_toggled') {
+        actions.push({
+          stepIndex: stepIndex++,
+          action: 'interact',
+          target: 'lever',
+          leverId: ev.leverId,
+          x: ev.position?.x,
+          y: ev.position?.y,
+          newState: ev.newState,
+          elapsedMs: ev.elapsedMs || 0,
+        });
+      } else if (ev.type === 'entity:riddle_action') {
+        actions.push({
+          stepIndex: stepIndex++,
+          action: 'interact',
+          target: 'pedestal',
+          riddleAction: ev.action,
+          itemId: ev.itemId,
+          pedestalId: ev.pedestalId,
+          x: ev.position?.x,
+          y: ev.position?.y,
+          elapsedMs: ev.elapsedMs || 0,
+        });
+      }
     }
 
     return {

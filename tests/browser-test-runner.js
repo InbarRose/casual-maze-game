@@ -20,8 +20,12 @@ import './unit/engine/camera.test.mjs';
 import './unit/engine/camera-rotation.test.mjs';
 import './unit/engine/debug-logger.test.mjs';
 import './unit/engine/perspective-renderer.test.mjs';
+import './unit/engine/depth-sorting.test.mjs';
+import './unit/renderer/vector-rendering.test.mjs';
+import './unit/renderer/particles-lighting.test.mjs';
 import './unit/engine/solver.test.mjs';
 import './unit/engine/replay-player.test.mjs';
+import './unit/engine/click-to-move-and-hotkeys.test.mjs';
 
 // 3. Entity Subsystems
 import './unit/entities/player.test.mjs';
@@ -34,22 +38,38 @@ import './unit/entities/collectible.test.mjs';
 import './unit/entities/riddle-item.test.mjs';
 import './unit/entities/pedestal.test.mjs';
 
-// 4. Level Subsystems
+// 4. Level & Story Subsystems
 import './unit/levels/level-loader.test.mjs';
 import './unit/levels/campaign-levels.test.mjs';
 import './unit/levels/tutorial-levels.test.mjs';
 import './unit/levels/multi-room.test.mjs';
 import './unit/stories/storylines.test.mjs';
+import './unit/levels/story-1-unbypassable.test.mjs';
+import './unit/levels/story-2-unbypassable.test.mjs';
+import './unit/levels/story-3-unbypassable.test.mjs';
+import './unit/levels/chapter-1.test.mjs';
+import './unit/levels/chapter-2.test.mjs';
+import './unit/levels/chapter-3.test.mjs';
+import './unit/levels/chapter-4.test.mjs';
+import './unit/levels/chapter-5.test.mjs';
+import './unit/levels/chapter-6.test.mjs';
+import './unit/levels/chapter-7.test.mjs';
+import './unit/levels/chapter-8.test.mjs';
 
 // 5. Editor Subsystems
 import './unit/editor/level-validator.test.mjs';
 import './unit/editor/json-exporter.test.mjs';
 import './unit/editor/editor-canvas.test.mjs';
 import './unit/editor/editor-buttons-and-functions.test.mjs';
+import './unit/editor/history-stack.test.mjs';
+import './unit/editor/prefabs-and-autofix.test.mjs';
 
 // 6. UI & Audio Engine Subsystems
 import './unit/ui/audio-fx.test.mjs';
+import './unit/ui/audio-ambience.test.mjs';
 import './unit/ui/game-menu.test.mjs';
+import './unit/ui/app-header.test.mjs';
+import './unit/ui/touch-controls.test.mjs';
 
 // 7. Modular Campaign Chapter Playthrough Tests (Levels 1–32)
 import './integration/campaign/chapter-1.test.mjs';
@@ -68,6 +88,7 @@ import './integration/journeys/editor-authoring.journey.test.mjs';
 import './integration/journeys/fog-exploration.journey.test.mjs';
 import './integration/journeys/multi-elevation.journey.test.mjs';
 import './integration/journeys/interactive-activities.journey.test.mjs';
+import './integration/journeys/campaign-progression.journey.test.mjs';
 import './integration/journeys/obstacle-interactions.journey.test.mjs';
 import './integration/journeys/checkpoints-and-lore.journey.test.mjs';
 import './integration/journeys/riddle-pedestals.journey.test.mjs';

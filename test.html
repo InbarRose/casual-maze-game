@@ -158,6 +158,52 @@
     .test-case-row.fail {
       color: #f87171;
       background: rgba(239, 68, 68, 0.08);
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.35rem;
+    }
+
+    .test-error-box {
+      margin-top: 0.35rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(244, 63, 94, 0.12);
+      border: 1px solid rgba(244, 63, 94, 0.3);
+      border-radius: 6px;
+      font-family: var(--font-mono, monospace);
+      font-size: 0.76rem;
+      color: #fecdd3;
+      white-space: pre-wrap;
+      word-break: break-word;
+      line-height: 1.45;
+    }
+
+    .test-summary-banner {
+      padding: 1.1rem 1.4rem;
+      border-radius: var(--radius-md, 8px);
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .test-summary-banner.success {
+      background: rgba(16, 185, 129, 0.12);
+      border: 1.5px solid rgba(52, 211, 153, 0.45);
+      color: #34d399;
+      box-shadow: 0 0 20px rgba(52, 211, 153, 0.15);
+    }
+
+    .test-summary-banner.failure {
+      background: rgba(244, 63, 94, 0.14);
+      border: 1.5px solid rgba(244, 63, 94, 0.5);
+      color: #f43f5e;
+      box-shadow: 0 0 20px rgba(244, 63, 94, 0.2);
+    }
+
+    .suite-header.has-failures {
+      border-left: 3px solid #f43f5e;
+      background: rgba(244, 63, 94, 0.08);
     }
 
     /* Replay Theater UI */
@@ -808,6 +854,7 @@
 
       try {
         const { executeBrowserTests } = await import('./tests/browser-test-runner.js');
+        const failuresList = [];
 
         const results = await executeBrowserTests((event) => {
           if (event.type === 'suite:start') {
@@ -822,23 +869,46 @@
                 <div class="suite-tests"></div>
               `;
               outputStream.appendChild(suiteBlock);
-              suitesMap.set(event.suite, suiteBlock);
+              suitesMap.set(event.suite, { el: suiteBlock, hasFailure: false });
             }
           } else if (event.type === 'test:pass') {
-            const suiteBlock = suitesMap.get(event.suite);
-            if (suiteBlock) {
+            const suiteData = suitesMap.get(event.suite);
+            if (suiteData) {
               const row = document.createElement('div');
               row.className = 'test-case-row pass';
               row.innerHTML = `<span>✓ ${event.test}</span><span>${event.durationMs}ms</span>`;
-              suiteBlock.querySelector('.suite-tests')?.appendChild(row);
+              suiteData.el.querySelector('.suite-tests')?.appendChild(row);
             }
           } else if (event.type === 'test:fail') {
-            const suiteBlock = suitesMap.get(event.suite);
-            if (suiteBlock) {
+            const suiteData = suitesMap.get(event.suite);
+            failuresList.push({
+              suite: event.suite,
+              test: event.test,
+              durationMs: event.durationMs,
+              error: event.error,
+            });
+            if (suiteData) {
+              suiteData.hasFailure = true;
+              const header = suiteData.el.querySelector('.suite-header');
+              if (header) header.classList.add('has-failures');
+              const badge = suiteData.el.querySelector('.suite-count');
+              if (badge) {
+                badge.textContent = 'has failures';
+                badge.className = 'suite-count badge badge-rose';
+              }
+
               const row = document.createElement('div');
               row.className = 'test-case-row fail';
-              row.innerHTML = `<span>✗ ${event.test}</span><span>FAIL (${event.durationMs}ms)</span>`;
-              suiteBlock.querySelector('.suite-tests')?.appendChild(row);
+              const errorText = event.error ? (event.error.message || String(event.error)) : 'Assertion error';
+              const stackText = event.error?.stack ? event.error.stack : '';
+              row.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                  <span style="font-weight: 700;">✗ ${event.test}</span>
+                  <span class="badge badge-rose">FAIL (${event.durationMs}ms)</span>
+                </div>
+                <div class="test-error-box">${errorText}${stackText ? '\n' + stackText : ''}</div>
+              `;
+              suiteData.el.querySelector('.suite-tests')?.appendChild(row);
             }
           }
         });
@@ -851,17 +921,48 @@
         if (metricDuration) metricDuration.textContent = `${results.duration || 0}ms`;
         if (progressFill) progressFill.style.width = '100%';
 
-        // Mark running badges completed
-        suitesMap.forEach(block => {
-          const badge = block.querySelector('.suite-count');
-          if (badge) {
-            badge.textContent = 'passed';
-            badge.className = 'suite-count badge badge-emerald';
+        // Mark passing badges completed
+        suitesMap.forEach(suiteData => {
+          if (!suiteData.hasFailure) {
+            const badge = suiteData.el.querySelector('.suite-count');
+            if (badge) {
+              badge.textContent = 'passed';
+              badge.className = 'suite-count badge badge-emerald';
+            }
           }
         });
 
-        audioFX.playVictory();
-        showToast(`All ${results.passed} tests completed! (0 failed)`, 'success');
+        // Prepend Master Summary Banner at top of outputStream
+        const summaryBanner = document.createElement('div');
+        if (results.failed === 0) {
+          summaryBanner.className = 'test-summary-banner success';
+          summaryBanner.innerHTML = `
+            <span style="font-size: 1.6rem;">✨</span>
+            <div>
+              <div style="font-size: 1.1rem; font-weight: 800;">ALL ${results.passed} TESTS PASSED (0 FAILED)</div>
+              <div style="font-size: 0.84rem; opacity: 0.9;">
+                Zero regressions across ${results.suitesCount} suites with ${results.totalAssertions} assertions in ${results.duration || 0}ms.
+              </div>
+            </div>
+          `;
+          audioFX.playVictory();
+          showToast(`All ${results.passed} tests passed!`, 'success');
+        } else {
+          summaryBanner.className = 'test-summary-banner failure';
+          summaryBanner.innerHTML = `
+            <span style="font-size: 1.6rem;">⚠️</span>
+            <div>
+              <div style="font-size: 1.1rem; font-weight: 800;">TEST SUITE FAILED: ${results.failed} Failure(s) Detected</div>
+              <div style="font-size: 0.84rem; opacity: 0.9;">
+                ${results.passed} passed, ${results.failed} failed out of ${results.passed + results.failed} tests.
+              </div>
+            </div>
+          `;
+          if (audioFX.playDamage) audioFX.playDamage();
+          showToast(`${results.failed} test(s) failed!`, 'error');
+        }
+        outputStream.insertBefore(summaryBanner, outputStream.firstChild);
+
       } catch (err) {
         console.error(err);
         showToast('Error during test execution: ' + err.message, 'error');
