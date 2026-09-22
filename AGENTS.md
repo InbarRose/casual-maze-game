@@ -41,7 +41,11 @@ Detailed architectural specifications and schemas are maintained in `docs/`:
 * **[Testing Plan & Quality Assurance](docs/TESTING_PLAN.md)**: Zero-dependency test harness, subsystem coverage matrices, user journeys, future activity templates, and CI gating.
 * **[Subsystem Architecture & File Map](docs/ARCHITECTURE.md)**: Engine loops, camera math, 2D raycasting LoS, multi-elevation bridges (`B_EW`, `B_NS`), directional ramps (`R_*`), and complete directory tree.
 * **[Level Schema Reference](docs/LEVEL_SCHEMA.md)**: Canonical JSON level format, entity definitions (`key`, `door`, `lever`), and configuration flags.
-* **[Project Management & Backlog](docs/PROJECT_MANAGEMENT.md)**: Active roadmap, completed milestone history, and TODO backlog.
+* **[Component Audit Rubric](docs/COMPONENT_AUDIT_RUBRIC.md)**: 6-Chair simulated expert panel evaluation standard for all platform components and subsystems.
+* **[Component Scoring Register](docs/COMPONENT_SCORING_REGISTER.md)**: Master quality scores, gap analysis, and directives across all 19 application components.
+* **[Level Audit Rubric](docs/LEVEL_AUDIT_RUBRIC.md)**: 6-Chair expert panel evaluation standard for campaign levels and story chapters.
+* **[Level Scoring Register](docs/LEVEL_SCORING_REGISTER.md)**: Master quality scores across all 42 official levels.
+* **[Project Management & Backlog](docs/PROJECT_MANAGEMENT.md)**: Active roadmap, completed milestone history, and TODO backlog ([`docs/BACKLOG.md`](docs/BACKLOG.md)).
 * **[Architectural Decision Records (ADRs)](docs/adr/)**: Architectural records and rationale.
 
 ---

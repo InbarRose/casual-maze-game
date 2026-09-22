@@ -73,6 +73,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-15** | **Contextual Floating Action Pill** | **P0** | `v1.18.0` | Glassmorphic floating interact button positioned above character for one-tap mobile activation. | **Completed** |
 | **BL-16** | **Mobile Touch Viewport & Scroll Locking** | **P1** | `v1.20.0` | Prevent accidental page rubber-banding and scrolling during canvas drag gestures on iOS Safari & Android Chrome. | **Completed** |
 | **BL-17** | **Minimap Pinch-to-Zoom & Pan Gesture** | **P2** | `v1.22.0` | Touch gesture support for zooming and panning the HUD minimap overlay on mobile viewports. | **Completed** |
+| **BL-40** | **Gamepad API Controller Support** | **P2** | `v1.24.0` | Zero-dependency Gamepad API listener mapping standard USB/Bluetooth controller D-pad and analog sticks to movement. | Planned |
 
 ---
 
@@ -86,6 +87,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-20** | **Multi-Tile Stamp & Prefab Palette** | **P2** | `v1.21.0` | Pre-built architectural prefabs (bridge crossings, locked vault gates, 4-way intersections) for 1-click stamping. | **Completed** |
 | **BL-21** | **One-Click Diagnostic Auto-Fixer** | **P2** | `v1.22.0` | Editor action to automatically resolve common errors (e.g. adding missing ramp next to bridge or matching door key). | **Completed** |
 | **BL-22** | **Visual Layer Switcher HUD** | **P2** | `v1.22.0` | Real-time visual overlay highlighting active editing elevation (Ground Z=0 vs Overhead Z=1) with translucent previews. | **Completed** |
+| **BL-37** | **Visual Multi-Elevation Bridge & Ramp Guide** | **P2** | `v1.23.0` | Interactive SVG diagrams in Guide Modal demonstrating directional ramp placement for `B_EW` and `B_NS` bridges. | Planned |
+| **BL-39** | **Custom Prefab Saving in Map Editor** | **P2** | `v1.24.0` | Allow creators to select an arbitrary canvas region and save it to `localStorage` as a custom reusable stamping prefab. | Planned |
 
 ---
 
@@ -98,6 +101,9 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-24** | **In-Game Settings & Profile Modals** | **P1** | `v1.19.0` | Mount `#app-header` and modal triggers inside `maze.html` so players can adjust settings without leaving active game. | **Completed** |
 | **BL-25** | **Real-Time Audio Gain Sliders** | **P1** | `v1.19.0` | Connect Master, SFX, and BGM sliders directly to `WebAudioEngine` gain nodes with live volume changes. | **Completed** |
 | **BL-26** | **High-Contrast Accessibility Mode** | **P2** | `v1.21.0` | High-contrast visual mode with sharp white/black borders, colorblind key glyphs, and high-visibility explorer. | Planned |
+| **BL-34** | **1-Click Diagnostic Bug Bundle Exporter** | **P1** | `v1.23.0` | In-game action packaging level ID, player coordinates, move history, and debug logs into pre-filled GitHub issue links. | Planned |
+| **BL-36** | **Save State Versioned Migration Runner** | **P1** | `v1.23.0` | Automated `StorageManager.migrateSaveData()` upgrading legacy save schemas on initial boot without data loss. | Planned |
+| **BL-38** | **Prestige Rank-Up Celebration & Victory Confetti** | **P2** | `v1.23.0` | Full-screen celebratory rank-up splash banner with star sparkles and Canvas 2D confetti bursts on victory. | Planned |
 
 ---
 
@@ -108,6 +114,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-27** | **Procedural Sound FX Engine** | **P0** | `v1.16.0` | Web Audio synthesizer triggers for footsteps, key pickup, door unlock, lever flip, and victory chimes. | **Completed** |
 | **BL-28** | **Continuous Environmental Ambience** | **P2** | `v1.22.0` | Ambient procedural background loops: dungeon wind whispers, jungle forest chirps, subterranean cavern drips. | **Completed** |
+| **BL-35** | **Tactile UI Audio Cues & Footstep Pitch Jitter** | **P2** | `v1.23.0` | Procedural acoustic micro-clicks for tab changes, editor painting, and footstep frequency randomization ($\pm 3\%$). | Planned |
 
 ---
 
