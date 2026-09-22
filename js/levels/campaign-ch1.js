@@ -59,8 +59,8 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
           0,
           0,
           0,
-          1,
-          1,
+          "SW",
+          0,
           1,
           1,
           1,
@@ -468,6 +468,15 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "requiresKey": "key_gold_1",
         "x": 9,
         "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "secret_gem_1",
+        "type": "collectible",
+        "name": "Secret Sunstone",
+        "points": 250,
+        "x": 5,
+        "y": 1,
         "elevation": 0
       }
     ]

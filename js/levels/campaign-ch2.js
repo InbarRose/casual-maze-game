@@ -144,8 +144,8 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         [
           1,
           1,
-          1,
-          1,
+          0,
+          "SW",
           0,
           0,
           0,
@@ -526,6 +526,15 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "playerDialogue": "The high bridge deck is the only way to reach the Canopy Key.",
         "x": 2,
         "y": 10,
+        "elevation": 0
+      },
+      {
+        "id": "secret_gem_5",
+        "type": "collectible",
+        "name": "Secret Emerald Cache",
+        "points": 350,
+        "x": 2,
+        "y": 6,
         "elevation": 0
       }
     ]

@@ -32,6 +32,8 @@ import './unit/renderer/particles-lighting.test.mjs';
 import './unit/engine/solver.test.mjs';
 import './unit/engine/replay-player.test.mjs';
 import './unit/engine/click-to-move-and-hotkeys.test.mjs';
+import './unit/engine/secret-wall.test.mjs';
+import './unit/engine/scoring-medals.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/player.test.mjs';

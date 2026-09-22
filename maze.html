@@ -297,11 +297,16 @@
     <div class="modal-backdrop" id="victory-modal">
       <div class="modal-dialog victory-card">
         <div class="modal-body">
-          <span class="victory-icon">🏆</span>
-          <h2 style="font-size: 1.8rem; margin-bottom: 0.5rem;">Labyrinth Conquered!</h2>
+          <span class="victory-icon" id="vic-icon">🏆</span>
+          <h2 style="font-size: 1.8rem; margin-bottom: 0.35rem;" id="vic-title">Labyrinth Conquered!</h2>
+          <div id="vic-tier-badge" class="victory-tier-badge" style="display: none; margin-bottom: 0.75rem;"></div>
           <p id="victory-subtitle" style="font-size: 0.95rem;">You successfully escaped the maze.</p>
 
           <div class="victory-stats-grid">
+            <div class="stat-box" id="vic-box-score">
+              <div class="stat-val" id="vic-score">0</div>
+              <div class="stat-lbl">Performance Score</div>
+            </div>
             <div class="stat-box">
               <div class="stat-val" id="vic-time">0.0s</div>
               <div class="stat-lbl">Time Elapsed</div>
@@ -309,6 +314,10 @@
             <div class="stat-box">
               <div class="stat-val" id="vic-steps">0</div>
               <div class="stat-lbl">Steps Taken</div>
+            </div>
+            <div class="stat-box" id="vic-box-secrets" style="display: none;">
+              <div class="stat-val" id="vic-secrets">0 / 0</div>
+              <div class="stat-lbl">Secrets Unveiled</div>
             </div>
           </div>
 
@@ -740,6 +749,38 @@
           document.getElementById('vic-time').textContent = `${(stats.time / 1000).toFixed(1)}s`;
           document.getElementById('vic-steps').textContent = stats.steps;
 
+          const vicScore = document.getElementById('vic-score');
+          if (vicScore) {
+            vicScore.textContent = (stats.performanceScore || 0).toLocaleString();
+          }
+
+          const vicBoxSecrets = document.getElementById('vic-box-secrets');
+          const vicSecrets = document.getElementById('vic-secrets');
+          if (vicBoxSecrets && vicSecrets) {
+            if (stats.totalSecrets > 0) {
+              vicBoxSecrets.style.display = 'block';
+              vicSecrets.textContent = `${stats.secretsFound || 0} / ${stats.totalSecrets}`;
+            } else {
+              vicBoxSecrets.style.display = 'none';
+            }
+          }
+
+          const tierBadge = document.getElementById('vic-tier-badge');
+          if (tierBadge) {
+            tierBadge.className = 'victory-tier-badge';
+            tierBadge.style.display = 'inline-flex';
+            if (stats.tier === 'gold') {
+              tierBadge.classList.add('tier-gold');
+              tierBadge.innerHTML = '🥇 Gold Vanguard';
+            } else if (stats.tier === 'silver') {
+              tierBadge.classList.add('tier-silver');
+              tierBadge.innerHTML = '🥈 Silver Ranger';
+            } else {
+              tierBadge.classList.add('tier-bronze');
+              tierBadge.innerHTML = '🥉 Bronze Scout';
+            }
+          }
+
           const medalsContainer = document.getElementById('victory-medals-container');
           if (medalsContainer) {
             medalsContainer.innerHTML = '';
@@ -773,6 +814,29 @@
                 : 'background: rgba(100, 116, 139, 0.2); border: 1.5px solid #64748b; color: #94a3b8;';
               timePill.innerHTML = earnedTime ? `⏱️ <span>Speedrunner (${timeSec}s / ${currentLevel.parTime}s)</span>` : `⏱️ <span>Par: ${currentLevel.parTime}s</span>`;
               medalsContainer.appendChild(timePill);
+            }
+
+            if (stats.totalSecrets > 0) {
+              const secretsPill = document.createElement('div');
+              const allFound = stats.secretSleuth || (stats.secretsFound >= stats.totalSecrets);
+              secretsPill.className = 'victory-medal-pill';
+              secretsPill.style.animationDelay = '0.36s';
+              secretsPill.style.cssText = allFound
+                ? 'background: rgba(168, 85, 247, 0.2); border: 1.5px solid #a855f7; color: #c084fc;'
+                : 'background: rgba(100, 116, 139, 0.2); border: 1.5px solid #64748b; color: #94a3b8;';
+              secretsPill.innerHTML = allFound
+                ? `🔍 <span>Secret Sleuth (${stats.secretsFound}/${stats.totalSecrets})</span>`
+                : `🔍 <span>Secrets (${stats.secretsFound}/${stats.totalSecrets})</span>`;
+              medalsContainer.appendChild(secretsPill);
+            }
+
+            if (stats.flawless) {
+              const flawlessPill = document.createElement('div');
+              flawlessPill.className = 'victory-medal-pill';
+              flawlessPill.style.animationDelay = '0.48s';
+              flawlessPill.style.cssText = 'background: rgba(16, 185, 129, 0.2); border: 1.5px solid #10b981; color: #34d399;';
+              flawlessPill.innerHTML = '🛡️ <span>Flawless</span>';
+              medalsContainer.appendChild(flawlessPill);
             }
           }
 

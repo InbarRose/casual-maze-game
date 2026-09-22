@@ -421,6 +421,18 @@ class SoundFXEngine {
   }
 
   /**
+   * Secret chamber unveiled harp arpeggio
+   */
+  playSecretFound() {
+    // 5-note shimmering celestial arpeggio (F#5, A#5, C#6, F6, G#6)
+    this._playTone({ freq: 739.99, type: 'sine', duration: 0.28, gain: 0.08, delay: 0 });
+    this._playTone({ freq: 932.33, type: 'sine', duration: 0.32, gain: 0.09, delay: 0.07 });
+    this._playTone({ freq: 1108.73, type: 'sine', duration: 0.36, gain: 0.1, delay: 0.14 });
+    this._playTone({ freq: 1396.91, type: 'sine', duration: 0.42, gain: 0.11, delay: 0.21 });
+    this._playTone({ freq: 1661.22, type: 'triangle', duration: 0.65, gain: 0.12, delay: 0.28 });
+  }
+
+  /**
    * Hazard hit / warning buzz
    */
   playHazardHit() {

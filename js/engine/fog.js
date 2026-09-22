@@ -89,8 +89,9 @@ export class FogOfWar {
    * @param {Array<Array<*>>} groundLayer
    * @param {Array<Array<*>>} overheadLayer
    * @param {number} viewRadius
+   * @param {Set<string>|Array<string>} [revealedSecrets=null] Set of 'x,y' secret walls already discovered
    */
-  update(playerX, playerY, playerElevation, groundLayer, overheadLayer, viewRadius = 6) {
+  update(playerX, playerY, playerElevation, groundLayer, overheadLayer, viewRadius = 6, revealedSecrets = null) {
     // 1. Demote all previously VISIBLE (2) tiles to EXPLORED (1)
     for (let y = 0; y < this.height; y++) {
       const row = this.grid[y];
@@ -130,7 +131,13 @@ export class FogOfWar {
         this.grid[testY][testX] = FOG_STATE.VISIBLE;
 
         // Check if tile is an opaque wall that blocks line of sight
-        const isWall = groundLayer[testY] && groundLayer[testY][testX] === TILES.WALL;
+        const cellTile = groundLayer[testY]?.[testX];
+        const isSecretWall = cellTile === TILES.SECRET_WALL;
+        const isRevealed = revealedSecrets && (
+          (typeof revealedSecrets.has === 'function' && revealedSecrets.has(`${testX},${testY}`)) ||
+          (Array.isArray(revealedSecrets) && revealedSecrets.includes(`${testX},${testY}`))
+        );
+        const isWall = cellTile === TILES.WALL || (isSecretWall && !isRevealed);
         if (isWall) {
           // Ray stops after hitting wall
           break;
