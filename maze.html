@@ -588,6 +588,139 @@
       });
     }
 
+    // Inspection Dialog Elements & Logic
+    const inspectModal = document.getElementById('inspect-modal');
+    const inspectIconEl = document.getElementById('inspect-icon');
+    const inspectTitleEl = document.getElementById('inspect-title');
+    const inspectMetaEl = document.getElementById('inspect-meta');
+    const inspectTextEl = document.getElementById('inspect-text');
+    const inspectResponseEl = document.getElementById('inspect-response');
+    const btnCloseInspect = document.getElementById('btn-close-inspect');
+
+    function openInspectModal(data) {
+      if (!inspectModal) return;
+      const iconMap = { note: '📝', painting: '🖼️', fresco: '🏛️', carving: '🗿', tapestry: '🚩' };
+      if (inspectIconEl) inspectIconEl.textContent = iconMap[data.decorType] || '🖼️';
+      if (inspectTitleEl) inspectTitleEl.textContent = data.title || 'Wall Observation';
+      if (inspectMetaEl) inspectMetaEl.textContent = `Facing ${data.facing || 'wall'} • ${data.author || 'Artisan'}`;
+      if (inspectTextEl) inspectTextEl.textContent = data.text || '';
+      if (inspectResponseEl) inspectResponseEl.textContent = data.response ? `"${data.response}"` : '';
+      inspectModal.classList.add('active');
+    }
+
+    function closeInspectModal() {
+      if (inspectModal) {
+        inspectModal.classList.remove('active');
+      }
+    }
+
+    if (btnCloseInspect) btnCloseInspect.addEventListener('click', closeInspectModal);
+
+    // Lore / Note Inspection Side Card Logic (BL-42)
+    const hudLoreCard = document.getElementById('hud-lore-card');
+    const hudLoreIcon = document.getElementById('hud-lore-icon');
+    const hudLoreTitle = document.getElementById('hud-lore-title');
+    const hudLoreAuthor = document.getElementById('hud-lore-author');
+    const hudLoreBody = document.getElementById('hud-lore-body');
+    const hudLoreResponse = document.getElementById('hud-lore-response');
+    const btnCloseLore = document.getElementById('hud-lore-close');
+    let loreCardOpenedAtSteps = -1;
+
+    function openLoreCard(data) {
+      if (!hudLoreCard) return;
+      const iconMap = { note: '📝', painting: '🖼️', fresco: '🏛️', carving: '🗿', tapestry: '🚩', signpost: '📜' };
+      if (hudLoreIcon) hudLoreIcon.textContent = iconMap[data.decorType] || '📜';
+      if (hudLoreTitle) hudLoreTitle.textContent = data.title || 'Observation';
+      if (hudLoreAuthor) {
+        if (data.author) {
+          hudLoreAuthor.textContent = `— ${data.author}${data.facing ? ' (Facing ' + data.facing + ')' : ''}`;
+          hudLoreAuthor.style.display = 'block';
+        } else if (data.facing) {
+          hudLoreAuthor.textContent = `Facing ${data.facing}`;
+          hudLoreAuthor.style.display = 'block';
+        } else {
+          hudLoreAuthor.style.display = 'none';
+        }
+      }
+      if (hudLoreBody) hudLoreBody.textContent = data.text || data.message || '';
+      if (hudLoreResponse) {
+        if (data.response) {
+          hudLoreResponse.textContent = `"${data.response}"`;
+          hudLoreResponse.style.display = 'block';
+        } else {
+          hudLoreResponse.style.display = 'none';
+        }
+      }
+      loreCardOpenedAtSteps = window.gameLoop ? (window.gameLoop.steps ?? window.gameLoop.player?.stepsTaken ?? 0) : 0;
+      hudLoreCard.classList.remove('hidden');
+    }
+
+    function closeLoreCard() {
+      if (hudLoreCard) {
+        hudLoreCard.classList.add('hidden');
+      }
+    }
+
+    if (btnCloseLore) btnCloseLore.addEventListener('click', closeLoreCard);
+
+    // Pedestal Riddle Dialog Elements & Logic
+    const pedestalModal = document.getElementById('pedestal-modal');
+    const pedestalModalTitle = document.getElementById('pedestal-modal-title');
+    const pedestalModalStatus = document.getElementById('pedestal-modal-status');
+    const pedestalModalHint = document.getElementById('pedestal-modal-hint');
+    const btnClosePedestal = document.getElementById('btn-pedestal-close');
+
+    function openPedestalModal(data) {
+      if (!pedestalModal) return;
+      if (pedestalModalTitle) pedestalModalTitle.textContent = data.pedestalName || 'Ancient Pedestal';
+      if (pedestalModalHint) pedestalModalHint.textContent = `"${data.riddleHint || 'A quiet plinth awaiting a relic.'}"`;
+      if (pedestalModalStatus) {
+        if (data.socketedItem) {
+          pedestalModalStatus.textContent = `Holding: ${data.socketedItem.symbol || ''} ${data.socketedItem.name || 'Relic'}`;
+        } else {
+          pedestalModalStatus.textContent = 'Empty socket awaiting an offering';
+        }
+      }
+      pedestalModal.classList.add('active');
+    }
+
+    function closePedestalModal() {
+      if (pedestalModal) {
+        pedestalModal.classList.remove('active');
+      }
+    }
+
+    if (btnClosePedestal) btnClosePedestal.addEventListener('click', closePedestalModal);
+
+    // Restart Confirmation Dialog Elements & Logic
+    const restartConfirmModal = document.getElementById('restart-confirm-modal');
+    const btnConfirmRestart = document.getElementById('btn-confirm-restart');
+    const btnCancelRestart = document.getElementById('btn-cancel-restart');
+
+    function promptRestartConfirmation() {
+      if (restartConfirmModal) {
+        restartConfirmModal.classList.add('active');
+      }
+    }
+
+    function cancelRestart() {
+      if (restartConfirmModal) {
+        restartConfirmModal.classList.remove('active');
+      }
+    }
+
+    function confirmRestart() {
+      cancelRestart();
+      lastRenderedKeyIds = '';
+      if (window.gameLoop) {
+        window.gameLoop.restartLevel();
+      }
+      showToast('Level restarted!', 'info');
+    }
+
+    if (btnConfirmRestart) btnConfirmRestart.addEventListener('click', confirmRestart);
+    if (btnCancelRestart) btnCancelRestart.addEventListener('click', cancelRestart);
+
     // Initialize Game Loop
     const gameLoop = new GameLoop({
       mainCanvas,
@@ -1118,137 +1251,6 @@
       audioFX.playClick();
       window.open('https://github.com/InbarRose/casual-maze-game/issues/new?template=bug_report.yml', '_blank');
     });
-
-    // Inspection Dialog Elements & Logic
-    const inspectModal = document.getElementById('inspect-modal');
-    const inspectIconEl = document.getElementById('inspect-icon');
-    const inspectTitleEl = document.getElementById('inspect-title');
-    const inspectMetaEl = document.getElementById('inspect-meta');
-    const inspectTextEl = document.getElementById('inspect-text');
-    const inspectResponseEl = document.getElementById('inspect-response');
-    const btnCloseInspect = document.getElementById('btn-close-inspect');
-
-    // Lore / Note Inspection Side Card Logic (BL-42)
-    const hudLoreCard = document.getElementById('hud-lore-card');
-    const hudLoreIcon = document.getElementById('hud-lore-icon');
-    const hudLoreTitle = document.getElementById('hud-lore-title');
-    const hudLoreAuthor = document.getElementById('hud-lore-author');
-    const hudLoreBody = document.getElementById('hud-lore-body');
-    const hudLoreResponse = document.getElementById('hud-lore-response');
-    const btnCloseLore = document.getElementById('hud-lore-close');
-    let loreCardOpenedAtSteps = -1;
-
-    function openLoreCard(data) {
-      if (!hudLoreCard) return;
-      const iconMap = { note: '📝', painting: '🖼️', fresco: '🏛️', carving: '🗿', tapestry: '🚩', signpost: '📜' };
-      if (hudLoreIcon) hudLoreIcon.textContent = iconMap[data.decorType] || '📜';
-      if (hudLoreTitle) hudLoreTitle.textContent = data.title || 'Observation';
-      if (hudLoreAuthor) {
-        if (data.author) {
-          hudLoreAuthor.textContent = `— ${data.author}${data.facing ? ' (Facing ' + data.facing + ')' : ''}`;
-          hudLoreAuthor.style.display = 'block';
-        } else if (data.facing) {
-          hudLoreAuthor.textContent = `Facing ${data.facing}`;
-          hudLoreAuthor.style.display = 'block';
-        } else {
-          hudLoreAuthor.style.display = 'none';
-        }
-      }
-      if (hudLoreBody) hudLoreBody.textContent = data.text || data.message || '';
-      if (hudLoreResponse) {
-        if (data.response) {
-          hudLoreResponse.textContent = `"${data.response}"`;
-          hudLoreResponse.style.display = 'block';
-        } else {
-          hudLoreResponse.style.display = 'none';
-        }
-      }
-      loreCardOpenedAtSteps = window.gameLoop ? window.gameLoop.stepCount : -1;
-      hudLoreCard.classList.remove('hidden');
-    }
-
-    function closeLoreCard() {
-      if (hudLoreCard) {
-        hudLoreCard.classList.add('hidden');
-      }
-    }
-
-    if (btnCloseLore) btnCloseLore.addEventListener('click', closeLoreCard);
-
-    function openInspectModal(data) {
-      if (!inspectModal) return;
-      const iconMap = { note: '📝', painting: '🖼️', fresco: '🏛️', carving: '🗿', tapestry: '🚩' };
-      if (inspectIconEl) inspectIconEl.textContent = iconMap[data.decorType] || '🖼️';
-      if (inspectTitleEl) inspectTitleEl.textContent = data.title || 'Wall Observation';
-      if (inspectMetaEl) inspectMetaEl.textContent = `Facing ${data.facing || 'wall'} • ${data.author || 'Artisan'}`;
-      if (inspectTextEl) inspectTextEl.textContent = data.text || '';
-      if (inspectResponseEl) inspectResponseEl.textContent = data.response ? `"${data.response}"` : '';
-      inspectModal.classList.add('active');
-    }
-
-    function closeInspectModal() {
-      if (inspectModal) {
-        inspectModal.classList.remove('active');
-      }
-    }
-
-    if (btnCloseInspect) btnCloseInspect.addEventListener('click', closeInspectModal);
-
-    // Pedestal Riddle Dialog Elements & Logic
-    const pedestalModal = document.getElementById('pedestal-modal');
-    const pedestalModalTitle = document.getElementById('pedestal-modal-title');
-    const pedestalModalStatus = document.getElementById('pedestal-modal-status');
-    const pedestalModalHint = document.getElementById('pedestal-modal-hint');
-    const btnClosePedestal = document.getElementById('btn-pedestal-close');
-
-    function openPedestalModal(data) {
-      if (!pedestalModal) return;
-      if (pedestalModalTitle) pedestalModalTitle.textContent = data.pedestalName || 'Ancient Pedestal';
-      if (pedestalModalHint) pedestalModalHint.textContent = `"${data.riddleHint || 'A quiet plinth awaiting a relic.'}"`;
-      if (pedestalModalStatus) {
-        if (data.socketedItem) {
-          pedestalModalStatus.textContent = `Holding: ${data.socketedItem.symbol || ''} ${data.socketedItem.name || 'Relic'}`;
-        } else {
-          pedestalModalStatus.textContent = 'Empty socket awaiting an offering';
-        }
-      }
-      pedestalModal.classList.add('active');
-    }
-
-    function closePedestalModal() {
-      if (pedestalModal) {
-        pedestalModal.classList.remove('active');
-      }
-    }
-
-    if (btnClosePedestal) btnClosePedestal.addEventListener('click', closePedestalModal);
-
-    // Restart Confirmation Dialog Elements & Logic
-    const restartConfirmModal = document.getElementById('restart-confirm-modal');
-    const btnConfirmRestart = document.getElementById('btn-confirm-restart');
-    const btnCancelRestart = document.getElementById('btn-cancel-restart');
-
-    function promptRestartConfirmation() {
-      if (restartConfirmModal) {
-        restartConfirmModal.classList.add('active');
-      }
-    }
-
-    function cancelRestart() {
-      if (restartConfirmModal) {
-        restartConfirmModal.classList.remove('active');
-      }
-    }
-
-    function confirmRestart() {
-      cancelRestart();
-      lastRenderedKeyIds = '';
-      gameLoop.restartLevel();
-      showToast('Level restarted!', 'info');
-    }
-
-    if (btnConfirmRestart) btnConfirmRestart.addEventListener('click', confirmRestart);
-    if (btnCancelRestart) btnCancelRestart.addEventListener('click', cancelRestart);
 
     // Keyboard Shortcuts (L for Log, R for Restart, Esc for close modals, Enter for confirm restart)
     window.addEventListener('keydown', (e) => {

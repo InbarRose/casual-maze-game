@@ -109,6 +109,7 @@ import './unit/ui/audio-ambience.test.mjs';
 import './unit/ui/game-menu.test.mjs';
 import './unit/ui/app-header.test.mjs';
 import './unit/ui/touch-controls.test.mjs';
+import './unit/ui/maze-html-bootstrap.test.mjs';
 
 // Run registered suites
 
