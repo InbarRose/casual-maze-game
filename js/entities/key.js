@@ -25,6 +25,7 @@ export class Key {
 
     // Visual animation states
     this.bobTimer = Math.random() * Math.PI * 2;
+    this.useVectorSprite = config.useVectorSprite || false;
   }
 
   get elevation() {
@@ -44,17 +45,16 @@ export class Key {
   }
 
   /**
-   * Update animation bobbing
+   * Update key bobbing animation
    * @param {number} dt
    */
   update(dt) {
-    if (!this.isCollected) {
-      this.bobTimer += dt * 3;
-    }
+    this.bobTimer += dt * 3;
   }
 
   /**
-   * Render the key with customizable gemstone/relic style and vector SVG sprite integration
+   * Render key with glowing vector aura and custom visual style
+   * Prioritizes high-fidelity procedural Canvas 2D vector art with distinct colors and styles (BL-41)
    * @param {CanvasRenderingContext2D} ctx
    * @param {number} screenX
    * @param {number} screenY
@@ -63,10 +63,9 @@ export class Key {
   render(ctx, screenX, screenY, tileSize) {
     if (this.isCollected) return;
 
-    const bobOffset = Math.sin(this.bobTimer) * (tileSize * 0.08);
-    const pulse = Math.sin(this.bobTimer * 1.5) * 0.15 + 0.85;
     const cx = screenX + tileSize / 2;
-    const cy = screenY + tileSize / 2 + bobOffset;
+    const pulse = Math.sin(this.bobTimer) * 0.2 + 0.8;
+    const cy = screenY + tileSize / 2 + Math.sin(this.bobTimer) * (tileSize * 0.08);
     const size = tileSize * 0.4;
 
     ctx.save();
@@ -77,19 +76,21 @@ export class Key {
     ctx.shadowColor = this.color;
     ctx.shadowBlur = blurMult;
 
-    // Check for matching vector asset
-    let keyAssetId = 'key_classic';
-    if (this.style === 'crystal') keyAssetId = 'key_crystal';
-    else if (this.style === 'orb') keyAssetId = 'key_orb';
-    else if (this.style === 'relic') keyAssetId = 'key_relic';
-    else if (this.style === 'skull') keyAssetId = 'key_skull';
-    else if (this.style === 'ornate') keyAssetId = 'key_ornate';
+    // Optional vector asset override (BL-41)
+    if (this.useVectorSprite) {
+      let keyAssetId = 'key_classic';
+      if (this.style === 'crystal') keyAssetId = 'key_crystal';
+      else if (this.style === 'orb') keyAssetId = 'key_orb';
+      else if (this.style === 'relic') keyAssetId = 'key_relic';
+      else if (this.style === 'skull') keyAssetId = 'key_skull';
+      else if (this.style === 'ornate') keyAssetId = 'key_ornate';
 
-    const keyImg = assetLoader.getImage(keyAssetId) || assetLoader.getImage('key_classic');
-    if (keyImg) {
-      ctx.drawImage(keyImg, -size, -size, size * 2, size * 2);
-      ctx.restore();
-      return;
+      const keyImg = assetLoader.getImage(keyAssetId) || assetLoader.getImage('key_classic');
+      if (keyImg) {
+        ctx.drawImage(keyImg, -size, -size, size * 2, size * 2);
+        ctx.restore();
+        return;
+      }
     }
 
     if (this.style === 'crystal') {

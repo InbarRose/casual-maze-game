@@ -28,6 +28,7 @@ export class Lever {
     // Visual animation handle angle
     this.handleAngle = this.state ? 0.65 : -0.65;
     this.cogRotation = this.state ? Math.PI : 0;
+    this.useVectorSprite = config.useVectorSprite || false;
   }
 
   get elevation() {
@@ -108,27 +109,29 @@ export class Lever {
     const baseH = tileSize * 0.44;
     const pulse = Math.sin(this.pulseTimer || 0) * 0.15 + 0.85;
 
-    // Check for matching vector asset
-    let leverAssetId = null;
-    if (this.style === 'pressure_pedestal') {
-      leverAssetId = this.state ? 'pedestal_active' : 'pedestal_inactive';
-    } else if (this.style === 'crystal_switch') {
-      leverAssetId = this.state ? 'crystal_active' : 'crystal_inactive';
-    } else if (this.style === 'runic_plate') {
-      leverAssetId = this.state ? 'runic_plate_on' : 'runic_plate_off';
-    } else if (this.style === 'cog_wheel') {
-      leverAssetId = this.state ? 'cog_valve_on' : 'cog_valve_off';
-    } else {
-      leverAssetId = this.state ? 'lever_switch_on' : 'lever_switch_off';
-    }
+    // Optional vector asset override (BL-41)
+    if (this.useVectorSprite) {
+      let leverAssetId = null;
+      if (this.style === 'pressure_pedestal') {
+        leverAssetId = this.state ? 'pedestal_active' : 'pedestal_inactive';
+      } else if (this.style === 'crystal_switch') {
+        leverAssetId = this.state ? 'crystal_active' : 'crystal_inactive';
+      } else if (this.style === 'runic_plate') {
+        leverAssetId = this.state ? 'runic_plate_on' : 'runic_plate_off';
+      } else if (this.style === 'cog_wheel') {
+        leverAssetId = this.state ? 'cog_valve_on' : 'cog_valve_off';
+      } else {
+        leverAssetId = this.state ? 'lever_switch_on' : 'lever_switch_off';
+      }
 
-    const leverImg = assetLoader.getImage(leverAssetId);
-    if (leverImg) {
-      ctx.save();
-      const pad = tileSize * 0.08;
-      ctx.drawImage(leverImg, screenX + pad, screenY + pad, tileSize - pad * 2, tileSize - pad * 2);
-      ctx.restore();
-      return;
+      const leverImg = assetLoader.getImage(leverAssetId);
+      if (leverImg) {
+        ctx.save();
+        const pad = tileSize * 0.08;
+        ctx.drawImage(leverImg, screenX + pad, screenY + pad, tileSize - pad * 2, tileSize - pad * 2);
+        ctx.restore();
+        return;
+      }
     }
 
     ctx.save();
