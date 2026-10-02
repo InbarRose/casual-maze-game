@@ -14,6 +14,7 @@ import { ProjectsModal } from './modals/projects-modal.js';
 import { ValidationModal } from './modals/validation-modal.js';
 import { PlaytestModal } from './modals/playtest-modal.js';
 import { GuideModal } from './modals/guide-modal.js';
+import { MazeGenerator } from '../core/maze-generator.js';
 
 export class EditorUI {
   constructor() {
@@ -306,6 +307,39 @@ export class EditorUI {
     document.getElementById('btn-auto-fix')?.addEventListener('click', () => {
       console.info('[MazeGame:Editor] Auto-fix action clicked');
       this.runAutoFix();
+    });
+
+    // Procedural Maze Generator (BL-50)
+    document.getElementById('btn-generate-maze')?.addEventListener('click', () => {
+      this.openGeneratorModal();
+    });
+    document.getElementById('generator-btn-close')?.addEventListener('click', () => {
+      this.closeGeneratorModal();
+    });
+    document.getElementById('generator-btn-cancel')?.addEventListener('click', () => {
+      this.closeGeneratorModal();
+    });
+    document.getElementById('generator-btn-submit')?.addEventListener('click', () => {
+      this.generateProceduralMaze();
+    });
+
+    document.querySelectorAll('.gen-size-preset').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.gen-size-preset').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const w = btn.dataset.w;
+        const h = btn.dataset.h;
+        const wInput = document.getElementById('gen-width');
+        const hInput = document.getElementById('gen-height');
+        if (wInput) wInput.value = w;
+        if (hInput) hInput.value = h;
+      });
+    });
+
+    const braidSlider = document.getElementById('gen-braid');
+    const braidVal = document.getElementById('gen-braid-val');
+    braidSlider?.addEventListener('input', () => {
+      if (braidVal) braidVal.textContent = `${braidSlider.value}%`;
     });
 
     document.getElementById('btn-playtest')?.addEventListener('click', () => {
@@ -774,6 +808,58 @@ export class EditorUI {
    * ========================================================= */
   openGuideModal() {
     this.guideModal.open();
+  }
+
+  /* =========================================================
+   * PROCEDURAL MAZE GENERATOR (BL-50)
+   * ========================================================= */
+  openGeneratorModal() {
+    const modal = document.getElementById('modal-maze-generator');
+    if (modal) {
+      modal.style.display = 'flex';
+    }
+  }
+
+  closeGeneratorModal() {
+    const modal = document.getElementById('modal-maze-generator');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+
+  generateProceduralMaze() {
+    const widthInput = document.getElementById('gen-width');
+    const heightInput = document.getElementById('gen-height');
+    const themeSelect = document.getElementById('gen-theme');
+    const braidSlider = document.getElementById('gen-braid');
+    const keysSelect = document.getElementById('gen-keys');
+
+    const width = parseInt(widthInput?.value, 10) || 17;
+    const height = parseInt(heightInput?.value, 10) || 17;
+    const theme = themeSelect?.value || 'dungeon';
+    const braid = (parseInt(braidSlider?.value, 10) || 25) / 100;
+    const keyPairs = parseInt(keysSelect?.value, 10) || 1;
+
+    try {
+      const generated = MazeGenerator.generate({
+        width,
+        height,
+        theme,
+        braid,
+        keyPairs,
+      });
+
+      this.loadLevel(generated);
+      this.pushHistory();
+      this.autoSave();
+      this.closeGeneratorModal();
+
+      this.showToast(`⚡ Generated ${generated.dimensions.width}×${generated.dimensions.height} solvable ${generated.config.theme} labyrinth!`, 'success');
+      console.info(`[MazeGame:Editor] Generated procedural level "${generated.title}" (${generated.dimensions.width}x${generated.dimensions.height})`);
+    } catch (err) {
+      console.error('[MazeGame:Editor] Procedural generation error:', err);
+      this.showToast('Failed to generate maze: ' + (err.message || err), 'error');
+    }
   }
 
   autoSave() {
