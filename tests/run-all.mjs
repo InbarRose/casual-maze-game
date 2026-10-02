@@ -18,6 +18,7 @@ import './unit/core/storage.test.mjs';
 import './unit/core/constants.test.mjs';
 import './unit/core/coordinates-xyz.test.mjs';
 import './unit/core/versioning.test.mjs';
+import './unit/core/storage-migration-and-diagnostics.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
@@ -110,6 +111,9 @@ import './unit/ui/game-menu.test.mjs';
 import './unit/ui/app-header.test.mjs';
 import './unit/ui/touch-controls.test.mjs';
 import './unit/ui/maze-html-bootstrap.test.mjs';
+import './unit/ui/victory-quick-advance.test.mjs';
+import './unit/ui/breadcrumbs-navigation.test.mjs';
+import './unit/ui/high-contrast-mode.test.mjs';
 
 // Run registered suites
 

@@ -235,6 +235,11 @@ export function setupMocks() {
         textContent: '',
         value: '',
         parentNode: { removeChild: () => {} },
+        remove() {
+          if (this.parentNode && this.parentNode.removeChild) {
+            this.parentNode.removeChild(this);
+          }
+        },
         setAttribute: () => {},
         getAttribute: () => null,
         appendChild: () => {},
@@ -248,16 +253,14 @@ export function setupMocks() {
       };
     };
 
+    const mockBody = createMockElement('body');
+
     globalThis.document = {
       createElement: createMockElement,
       getElementById: (id) => createMockElement('div'),
       querySelector: () => createMockElement('div'),
       querySelectorAll: () => [],
-      body: {
-        appendChild: () => {},
-        prepend: () => {},
-        removeChild: () => {},
-      },
+      body: mockBody,
     };
   }
 }
