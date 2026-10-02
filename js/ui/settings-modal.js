@@ -157,7 +157,20 @@ export class SettingsModal {
             </div>
           </div>
 
-          <!-- Section 4: Diagnostics & Links -->
+          <!-- Section 4: Save Data Backup & Cloudless Sync (BL-53) -->
+          <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+            <div style="font-size: 0.8rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem;">
+              <span>💾 Save Data &amp; Profile Backup</span>
+            </div>
+            <div style="display: flex; gap: 0.6rem; flex-wrap: wrap;">
+              <button type="button" id="btn-settings-export-save" class="btn btn-secondary btn-sm" style="flex: 1; min-width: 140px;" title="Export all progress, stars, medals, and settings to a JSON file">📥 Backup Save (.json)</button>
+              <button type="button" id="btn-settings-import-save" class="btn btn-secondary btn-sm" style="flex: 1; min-width: 140px;" title="Restore all progress from a JSON backup file">📤 Restore Save (.json)</button>
+              <input type="file" id="settings-save-file-input" accept=".json" style="display: none;" />
+            </div>
+            <div id="settings-save-msg" style="font-size: 0.78rem; min-height: 1.1rem; margin-top: 0.4rem; color: var(--emerald); text-align: center;"></div>
+          </div>
+
+          <!-- Section 5: Diagnostics & Links -->
           <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center;">
             <div>
               <div style="font-size: 0.85rem; font-weight: 600;">Replay Theater & Diagnostics Lab</div>
@@ -296,6 +309,50 @@ export class SettingsModal {
         StorageManager.setSetting('hotkeys_enabled', !simple);
         if (hotkeysToggle) hotkeysToggle.checked = !simple;
         globalEvents.emit('hotkeys:toggled', { enabled: !simple });
+      };
+    }
+
+    // Save Data Export / Import Handlers (BL-53)
+    const exportBtn = this.modalEl.querySelector('#btn-settings-export-save');
+    const importBtn = this.modalEl.querySelector('#btn-settings-import-save');
+    const saveFileInput = this.modalEl.querySelector('#settings-save-file-input');
+    const saveMsg = this.modalEl.querySelector('#settings-save-msg');
+
+    if (exportBtn) {
+      exportBtn.onclick = () => {
+        this.audio.playTabClick?.() || this.audio.playClick();
+        const filename = StorageManager.downloadFullBackupFile();
+        if (saveMsg) {
+          saveMsg.textContent = `Backup downloaded: ${filename}!`;
+          saveMsg.style.color = 'var(--emerald)';
+          setTimeout(() => { if (saveMsg.textContent.includes('Backup downloaded')) saveMsg.textContent = ''; }, 4000);
+        }
+      };
+    }
+
+    if (importBtn && saveFileInput) {
+      importBtn.onclick = () => {
+        this.audio.playTabClick?.() || this.audio.playClick();
+        saveFileInput.click();
+      };
+
+      saveFileInput.onchange = async (e) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+        try {
+          const res = await StorageManager.importSaveFile(file);
+          if (saveMsg) {
+            saveMsg.textContent = `Restored ${res.stats.campaignLevels} levels, ${res.stats.storyChapters} story chapters!`;
+            saveMsg.style.color = 'var(--emerald)';
+          }
+          this.audio.playVictory?.();
+          this.refresh();
+        } catch (err) {
+          if (saveMsg) {
+            saveMsg.textContent = `Import failed: ${err.message}`;
+            saveMsg.style.color = 'var(--rose)';
+          }
+        }
       };
     }
 

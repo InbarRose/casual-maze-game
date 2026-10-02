@@ -372,6 +372,42 @@ class SoundFXEngine {
   }
 
   /**
+   * Crisp acoustic click for UI tabs and breadcrumbs (BL-35)
+   */
+  playTabClick() {
+    this._playTone({ freq: 620, freqEnd: 780, type: 'sine', duration: 0.03, gain: 0.05 });
+  }
+
+  /**
+   * Toggle switch tactile click (BL-35)
+   * @param {boolean} [on=true]
+   */
+  playToggle(on = true) {
+    if (on) {
+      this._playTone({ freq: 520, freqEnd: 840, type: 'sine', duration: 0.04, gain: 0.06 });
+    } else {
+      this._playTone({ freq: 840, freqEnd: 480, type: 'sine', duration: 0.04, gain: 0.05 });
+    }
+  }
+
+  /**
+   * Footstep acoustic feedback with subtle pitch jitter (±3%) to eliminate ear fatigue (BL-35)
+   */
+  playFootstep() {
+    const jitter = 1 + (Math.random() * 0.06 - 0.03); // [0.97, 1.03]
+    const baseFreq = 95 * jitter;
+    const endFreq = 45 * jitter;
+    this._playTone({ freq: baseFreq, freqEnd: endFreq, type: 'triangle', duration: 0.045, gain: 0.04 });
+  }
+
+  /**
+   * Alias for player movement footstep
+   */
+  playMove() {
+    this.playFootstep();
+  }
+
+  /**
    * Sparkling key acquisition chime
    */
   playKeyPickup() {

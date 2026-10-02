@@ -9,6 +9,7 @@ import { ENGINE_VERSION } from '../core/version.js';
 import { StorageManager } from '../core/storage.js';
 import { ProfileModal } from './profile-modal.js';
 import { SettingsModal } from './settings-modal.js';
+import { audioFX } from './audio-fx.js';
 
 let profileModalInstance = null;
 let settingsModalInstance = null;
@@ -41,7 +42,15 @@ export function initAppHeader(options = {}) {
     activeTab = 'hub',
     headerContainer = null,
     footerContainer = null,
+    breadcrumbs = [],
   } = options;
+
+  // Apply High Contrast Mode if persisted
+  try {
+    if (StorageManager.getSetting('high_contrast', false)) {
+      document.body.classList.add('high-contrast-mode');
+    }
+  } catch (_) {}
 
   const profileModal = getProfileModal();
   const settingsModal = getSettingsModal();
@@ -59,6 +68,31 @@ export function initAppHeader(options = {}) {
   }
 
   const profile = StorageManager.getPlayerProfile();
+
+  let breadcrumbsHtml = '';
+  if (breadcrumbs && breadcrumbs.length > 0) {
+    const crumbItems = breadcrumbs.map((crumb, idx) => {
+      const isLast = idx === breadcrumbs.length - 1 || crumb.active;
+      const icon = crumb.icon ? `<span class="crumb-icon">${crumb.icon}</span>` : '';
+      if (isLast) {
+        return `<span class="crumb-item active" aria-current="page">${icon}<span class="crumb-label">${crumb.label}</span></span>`;
+      }
+      const href = crumb.href || '#';
+      return `<a href="${href}" class="crumb-item crumb-link">${icon}<span class="crumb-label">${crumb.label}</span></a>`;
+    }).join('<span class="crumb-separator" aria-hidden="true">❯</span>');
+
+    breadcrumbsHtml = `
+      <nav class="app-breadcrumbs-bar" aria-label="Breadcrumb Navigation">
+        <div class="breadcrumbs-inner">
+          <a href="index.html" class="crumb-item crumb-link" title="Casual Maze Game Hub">
+            <span class="crumb-icon">🏠</span><span class="crumb-label hide-mobile">Hub</span>
+          </a>
+          <span class="crumb-separator" aria-hidden="true">❯</span>
+          ${crumbItems}
+        </div>
+      </nav>
+    `;
+  }
 
   header.innerHTML = `
     <div class="app-nav-inner">
@@ -110,7 +144,15 @@ export function initAppHeader(options = {}) {
         </a>
       </div>
     </div>
+    ${breadcrumbsHtml}
   `;
+
+  // Attach tactile audio to header navigation links
+  header.querySelectorAll('.nav-item, .crumb-link, .app-action-btn').forEach(el => {
+    el.addEventListener('click', () => {
+      try { audioFX.playTabClick(); } catch (_) {}
+    });
+  });
 
   // Bind Header Button Events
   const profileBtn = header.querySelector('#btn-app-profile');

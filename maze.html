@@ -55,10 +55,19 @@
         <a href="index.html" class="btn btn-secondary btn-sm" title="Return to Level Select Hub">← Hub</a>
         <a href="editor.html" class="btn btn-secondary btn-sm" id="hud-btn-editor" style="display: none;">🛠️ Editor</a>
         <div class="hud-card" id="hud-level-card">
-          <span class="tutorial-badge" id="hud-tutorial-badge" style="display: none;">🎓 Tutorial</span>
-          <span class="hud-title" id="hud-level-title">Loading...</span>
-          <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
-          <span class="room-badge" id="hud-room-badge" style="display: none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 600;"></span>
+          <nav class="hud-breadcrumbs" id="hud-breadcrumbs" aria-label="Labyrinth Breadcrumb">
+            <a href="index.html" class="hud-crumb-link" title="Casual Maze Game Hub">Hub</a>
+            <span class="hud-crumb-sep">❯</span>
+            <a href="index.html#campaign" class="hud-crumb-link" id="hud-crumb-chapter">Chapter 1</a>
+            <span class="hud-crumb-sep">❯</span>
+            <span class="hud-crumb-current" id="hud-crumb-level">Level 1</span>
+          </nav>
+          <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+            <span class="tutorial-badge" id="hud-tutorial-badge" style="display: none;">🎓 Tutorial</span>
+            <span class="hud-title" id="hud-level-title">Loading...</span>
+            <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
+            <span class="room-badge" id="hud-room-badge" style="display: none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 600;"></span>
+          </div>
         </div>
       </div>
 
@@ -295,6 +304,7 @@
 
     <!-- Victory Modal -->
     <div class="modal-backdrop" id="victory-modal">
+      <canvas id="victory-confetti-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
       <div class="modal-dialog victory-card">
         <div class="modal-body">
           <span class="victory-icon" id="vic-icon">🏆</span>
@@ -330,7 +340,7 @@
           <button id="btn-download-log" class="btn btn-secondary" title="Download level replay and debug telemetry">📥 Debug Logs</button>
           <button id="btn-vic-report-issue" class="btn btn-secondary" title="Report an issue or give feedback on GitHub">🐞 Feedback / Report</button>
           <button id="btn-replay" class="btn btn-secondary">Replay</button>
-          <button id="btn-next-level" class="btn btn-primary">Next Level →</button>
+          <button id="btn-next-level" class="btn btn-primary" title="Advance to next labyrinth [Space / Enter]">Next Level [Space / Enter] →</button>
         </div>
       </div>
     </div>
@@ -417,6 +427,11 @@
     import { audioFX } from './js/ui/audio-fx.js';
     import { GameMenu } from './js/ui/game-menu.js';
 
+    // Migrate storage schema on startup (BL-36)
+    StorageManager.migrateSaveData();
+    if (StorageManager.getSetting('high_contrast', false)) {
+      document.body.classList.add('high-contrast-mode');
+    }
 
     // Global Runtime Error Capture & Telemetry Routing
     window.addEventListener('error', (event) => {
@@ -540,6 +555,37 @@
       if (currTutNum) {
         tutorialBadgeEl.textContent = `🎓 Tutorial ${currTutNum}/6`;
       }
+    }
+
+    // Populate In-Game HUD Breadcrumb Hierarchy (BL-54)
+    const hudCrumbChapter = document.getElementById('hud-crumb-chapter');
+    const hudCrumbLevel = document.getElementById('hud-crumb-level');
+
+    if (isCustomMode) {
+      if (hudCrumbChapter) {
+        hudCrumbChapter.textContent = 'Architect Studio';
+        hudCrumbChapter.href = 'editor.html';
+      }
+      if (hudCrumbLevel) hudCrumbLevel.textContent = currentLevel.title || 'Custom Labyrinth';
+    } else if (isStoryMode) {
+      if (hudCrumbChapter) {
+        hudCrumbChapter.textContent = currentStory ? `${currentStory.title} (Ch. ${activeChapterNum})` : `Story Ch. ${activeChapterNum}`;
+        hudCrumbChapter.href = 'index.html#stories';
+      }
+      if (hudCrumbLevel) hudCrumbLevel.textContent = currentLevel.title;
+    } else if (isTutorial) {
+      if (hudCrumbChapter) {
+        hudCrumbChapter.textContent = `Tutorial Academy (Ch. ${currTutNum || 1})`;
+        hudCrumbChapter.href = 'index.html#stories';
+      }
+      if (hudCrumbLevel) hudCrumbLevel.textContent = currentLevel.title;
+    } else {
+      if (hudCrumbChapter) {
+        const chNum = currentLevel.chapterNumber || Math.ceil(parseInt(currentLevel.id, 10) / 4) || 1;
+        hudCrumbChapter.textContent = `Ch. ${chNum}: ${currentLevel.chapterTitle || 'Foundation'}`;
+        hudCrumbChapter.href = 'index.html#campaign';
+      }
+      if (hudCrumbLevel) hudCrumbLevel.textContent = `Lvl ${currentLevel.id}: ${currentLevel.title}`;
     }
 
     // Initialize Story Prologue / Objective Banner if metadata exists
@@ -720,6 +766,114 @@
 
     if (btnConfirmRestart) btnConfirmRestart.addEventListener('click', confirmRestart);
     if (btnCancelRestart) btnCancelRestart.addEventListener('click', cancelRestart);
+
+    // Diagnostic Bug Bundle Exporter & GitHub Routing (BL-34)
+    function reportDiagnosticIssue() {
+      audioFX.playClick();
+      const bundle = StorageManager.exportDiagnosticBugBundle({
+        levelId: currentLevel?.id,
+        levelTitle: currentLevel?.title,
+        mode: isCustomMode ? 'custom' : (isStoryMode ? 'story' : (isTutorial ? 'tutorial' : 'campaign')),
+        history: typeof gameActivityHistory !== 'undefined' ? gameActivityHistory.slice(0, 15) : [],
+      });
+      if (bundle && bundle.githubIssueUrl) {
+        window.open(bundle.githubIssueUrl, '_blank');
+        showToast('Bug diagnostics generated for GitHub report!', 'info');
+      } else {
+        window.open('https://github.com/InbarRose/casual-maze-game/issues/new?template=bug_report.yml', '_blank');
+      }
+    }
+
+    // Prestige Victory Confetti Particle Cannon (BL-38)
+    let confettiAnimId = null;
+    function launchVictoryConfetti() {
+      const canvas = document.getElementById('victory-confetti-canvas');
+      if (!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const width = canvas.clientWidth || window.innerWidth;
+      const height = canvas.clientHeight || window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const colors = ['#f59e0b', '#ec4899', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#eab308'];
+      const particles = [];
+      const particleCount = 70;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: width * 0.5 + (Math.random() - 0.5) * 120,
+          y: height * 0.42,
+          vx: (Math.random() - 0.5) * 14,
+          vy: -Math.random() * 11 - 5,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10,
+          gravity: 0.28,
+          wobble: Math.random() * 10,
+          wobbleSpeed: Math.random() * 0.1 + 0.05,
+          opacity: 1,
+        });
+      }
+
+      if (confettiAnimId) cancelAnimationFrame(confettiAnimId);
+      const startTime = performance.now();
+
+      function updateConfetti(now) {
+        const elapsed = now - startTime;
+        ctx.clearRect(0, 0, width, height);
+
+        let activeCount = 0;
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.gravity;
+          p.vx *= 0.98;
+          p.rotation += p.rotSpeed;
+          p.wobble += p.wobbleSpeed;
+
+          if (elapsed > 1800) {
+            p.opacity = Math.max(0, p.opacity - 0.02);
+          }
+
+          if (p.opacity > 0 && p.y < height + 60) {
+            activeCount++;
+            ctx.save();
+            ctx.translate(p.x + Math.sin(p.wobble) * 3, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.opacity;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+            ctx.restore();
+          }
+        }
+
+        if (activeCount > 0 && elapsed < 3500) {
+          confettiAnimId = requestAnimationFrame(updateConfetti);
+        } else {
+          ctx.clearRect(0, 0, width, height);
+          confettiAnimId = null;
+        }
+      }
+
+      confettiAnimId = requestAnimationFrame(updateConfetti);
+    }
+
+    function stopVictoryConfetti() {
+      if (confettiAnimId) {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+      }
+      const canvas = document.getElementById('victory-confetti-canvas');
+      if (canvas && canvas.getContext) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
 
     // Initialize Game Loop
     const gameLoop = new GameLoop({
@@ -974,6 +1128,7 @@
           }
 
           victoryModal.classList.add('active');
+          launchVictoryConfetti();
 
           const victorySubtitle = document.getElementById('victory-subtitle');
 
@@ -985,13 +1140,13 @@
                 : 'Branching path unlocked!';
             }
             btnNextLevel.style.display = 'inline-flex';
-            btnNextLevel.textContent = stats.branchLabel ? `${stats.branchLabel} →` : 'Proceed to Branch →';
+            btnNextLevel.textContent = stats.branchLabel ? `${stats.branchLabel} [Space / Enter] →` : 'Proceed to Branch [Space / Enter] →';
             btnNextLevel.onclick = () => {
               window.location.href = `maze.html?id=${stats.targetLevel}`;
             };
           } else if (isCustomMode) {
             btnNextLevel.style.display = 'inline-flex';
-            btnNextLevel.textContent = '🛠️ Back to Editor';
+            btnNextLevel.textContent = '🛠️ Back to Editor [Space / Enter]';
             btnNextLevel.onclick = () => {
               window.location.href = 'editor.html';
             };
@@ -1004,7 +1159,7 @@
                 victorySubtitle.textContent = `Chapter ${activeChapterNum} conquered! Next chapter unlocked.`;
               }
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = `Chapter ${nextInfo.nextChapterNumber} →`;
+              btnNextLevel.textContent = `Chapter ${nextInfo.nextChapterNumber} [Space / Enter] →`;
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?story=${activeStoryId}&chapter=${nextInfo.nextChapterNumber}`;
               };
@@ -1014,7 +1169,7 @@
                 victorySubtitle.textContent = `🎉 Storyline Completed! You have conquered all chapters of "${storyTitle}"!`;
               }
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = '📜 Return to Stories Hub';
+              btnNextLevel.textContent = '📜 Return to Stories Hub [Space / Enter]';
               btnNextLevel.onclick = () => {
                 window.location.href = 'index.html';
               };
@@ -1025,7 +1180,7 @@
             }
             if (currTutNum < 6) {
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = `Tutorial ${currTutNum + 1} →`;
+              btnNextLevel.textContent = `Tutorial ${currTutNum + 1} [Space / Enter] →`;
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?tutorial=${currTutNum + 1}`;
               };
@@ -1035,7 +1190,7 @@
                 victorySubtitle.textContent = `🎓 All Tutorials Completed! You are now a Master Maze Explorer.`;
               }
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = '🌟 Start Campaign →';
+              btnNextLevel.textContent = '🌟 Start Campaign [Space / Enter] →';
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?id=1`;
               };
@@ -1045,7 +1200,7 @@
             const currentIdNum = parseInt(currentLevel.id, 10);
             if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 32) {
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = `Level ${currentIdNum + 1} →`;
+              btnNextLevel.textContent = `Level ${currentIdNum + 1} [Space / Enter] →`;
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?id=${currentIdNum + 1}`;
               };
@@ -1247,12 +1402,9 @@
       }
     });
 
-    document.getElementById('btn-modal-report-issue')?.addEventListener('click', () => {
-      audioFX.playClick();
-      window.open('https://github.com/InbarRose/casual-maze-game/issues/new?template=bug_report.yml', '_blank');
-    });
+    document.getElementById('btn-modal-report-issue')?.addEventListener('click', reportDiagnosticIssue);
 
-    // Keyboard Shortcuts (L for Log, R for Restart, Esc for close modals, Enter for confirm restart)
+    // Keyboard Shortcuts (L for Log, R for Restart, Esc for close modals, Enter for confirm restart, Space/Enter for victory advance)
     window.addEventListener('keydown', (e) => {
       // If lore card is active (BL-42)
       if (hudLoreCard && !hudLoreCard.classList.contains('hidden')) {
@@ -1260,6 +1412,18 @@
           e.preventDefault();
           closeLoreCard();
           return;
+        }
+      }
+
+      // If victory modal is active (BL-55 Quick Advance with Space / Enter)
+      if (victoryModal && victoryModal.classList.contains('active')) {
+        if (e.code === 'Space' || e.code === 'Enter' || e.code === 'NumpadEnter') {
+          e.preventDefault();
+          if (btnNextLevel && btnNextLevel.style.display !== 'none') {
+            audioFX.playTabClick();
+            btnNextLevel.click();
+            return;
+          }
         }
       }
 
@@ -1305,7 +1469,10 @@
       } else if (e.code === 'Escape') {
         cancelRestart();
         closeActivityLogModal();
-        if (victoryModal) victoryModal.classList.remove('active');
+        if (victoryModal) {
+          stopVictoryConfetti();
+          victoryModal.classList.remove('active');
+        }
       }
     });
 
@@ -1441,6 +1608,7 @@
     });
     btnReplay.addEventListener('click', () => {
       audioFX.playClick();
+      stopVictoryConfetti();
       lastRenderedKeyIds = '';
       victoryModal.classList.remove('active');
       gameLoop.restartLevel();
@@ -1457,10 +1625,7 @@
         window.open('test.html?mode=replay&source=last_run&autoplay=1', '_blank');
       }
     });
-    document.getElementById('btn-vic-report-issue')?.addEventListener('click', () => {
-      audioFX.playClick();
-      window.open('https://github.com/InbarRose/casual-maze-game/issues', '_blank');
-    });
+    document.getElementById('btn-vic-report-issue')?.addEventListener('click', reportDiagnosticIssue);
     const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
       showToast(`Saved game progress to ${filename}!`, 'success');

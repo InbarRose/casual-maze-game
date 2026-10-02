@@ -50,6 +50,30 @@ This document tracks project milestones, current release status, active developm
   - Published [`docs/COMPONENT_AUDIT_RUBRIC.md`](COMPONENT_AUDIT_RUBRIC.md) establishing an exhaustive 6-Chair simulated expert panel evaluation framework (Juice & Delight, Static Systems, UI/UX Ergonomics, Mechanics Depth, Progression Prestige, Inclusivity & DX) evaluating every application subsystem on an absolute 60-point scale.
   - Published [`docs/COMPONENT_SCORING_REGISTER.md`](COMPONENT_SCORING_REGISTER.md) with comprehensive baseline audits and gap analyses across all 19 application components (Shell, Rendering, Loop, Input, Minimap, HUD, Menus, Editor Canvas, Editor History, Editor Diagnostics, Assets, Audio, Storage, Profile, Settings, Handbook, Diagnostic Lab, Community Bug Channels, Accessibility).
   - Identified and prioritized new backlog tickets (`BL-34` through `BL-40` in [`docs/BACKLOG.md`](BACKLOG.md)) resolving usability friction, tactile acoustic feedback, and diagnostic telemetry.
+- [x] **Quality Scores & UX Ergonomics Sprint (BL-26, BL-34, BL-35, BL-36, BL-38, BL-54, BL-55)**:
+  - **Top Navigation Breadcrumbs & HUD Hierarchy (BL-54)**: Implemented interactive breadcrumbs bar (`.app-breadcrumbs-bar`) in `initAppHeader()` across campaign, story quests, and custom levels; wired in-game HUD breadcrumb display (`#hud-breadcrumbs`) showing Chapter title and Level ID with direct return links to Hub.
+  - **Keyboard Quick-Advance on Victory (BL-55)**: Enabled `Space` or `Enter` hotkey detection when victory modal is active, immediately advancing to the next labyrinth for fast-paced continuous play without requiring mouse clicks.
+  - **Tactile UI Audio Cues & Footstep Pitch Jitter (BL-35)**: Added frequency randomization ($\pm 3\%$) to footstep synthesizer audio to eliminate repetitive ear fatigue during long exploration sessions; added procedural micro-click sound feedback on tab navigation and crumb clicks.
+  - **Save State Versioned Migration Runner (BL-36)**: Implemented automated `StorageManager.migrateSaveData()` upgrading legacy save schemas on initial boot without data loss (normalizing medals, bestSecrets, and score tallies).
+  - **1-Click Diagnostic Bug Bundle Exporter (BL-34)**: Built `StorageManager.exportDiagnosticBugBundle()` gathering session telemetry, level ID, player coordinates, move history, and logs into a pre-filled, labeled GitHub issue report.
+  - **Prestige Victory Confetti Cannon (BL-38)**: Built Canvas 2D drifting physics confetti particle bursts on victory modal activation.
+  - **High-Contrast Accessibility Mode (BL-26)**: Added persistent high-contrast grid outline and background palette toggle in settings modal and auto-applied on startup.
+  - **Automated QA Coverage**: Expanded test harness to 94 test suites and 468 tests (0 failed, 7,039 assertions, 23/23 zero-drift checks passed).
+- [x] **SOLID Geometry Foundation, Cloudless Backup & Visual Guides Sprint (BL-37, BL-53, BL-61)**:
+  - **Clean Geometry Value Objects (BL-61)**: Implemented immutable, frozen Value Objects `Vec2`, `GridRect`, and `Heading` in `js/core/geometry.js` providing pure functional 2D coordinates, rect bounds containment/overlap, and cardinal directional transformations.
+  - **1-Click Save Data & Profile Backup / Restore (BL-53)**: Implemented cloudless JSON export and import in `StorageManager` (`exportFullBackup`, `importFullBackup`, `downloadFullBackupFile`) and integrated 1-click backup/restore triggers into `SettingsModal`.
+  - **Visual Multi-Elevation Bridge & Ramp Guide (BL-37)**: Added responsive vector SVG diagrams in the Architect Handbook (`editor.html` & Guide Modal) illustrating exact `B_EW` and `B_NS` bridge deck crossing and directional approach ramp configurations (`R_S`, `R_N`, `R_E`, `R_W`).
+  - **Automated QA Coverage**: Expanded test harness to 97 test suites and 480 tests (0 failed, 7,131 assertions, 23/23 zero-drift checks passed).
+- [x] **InputManager, Gamepad Controller Support & Procedural Maze Generator Sprint (BL-40, BL-50, BL-59)**:
+  - **Clean Input Architecture & Command Pattern (BL-59)**: Implemented `InputManager` (`js/engine/input-manager.js`) adhering to Single Responsibility Principle (SRP), centralizing hardware event listeners, directional vector math, and semantic game command dispatching (`MOVE`, `INTERACT`, `ROTATE_LEFT`, `ROTATE_RIGHT`, `TOGGLE_MAP`, `TOGGLE_VIEW_MODE`, `RESTART`, `PAUSE`).
+  - **Gamepad API Controller Support (BL-40)**: Built standard HTML5 Gamepad API polling into `InputManager` supporting USB and Bluetooth controllers: Left Analog Stick with 0.28 deadzone filtering, D-Pad buttons 12–15, Button A/Cross for inspect & interact, Button B/Circle & Start for in-game pause, Bumpers (LB/RB) for 90° camera rotation, and edge-triggered button debouncing.
+  - **Procedural Maze Generator & Studio Modal (BL-50)**: Built `MazeGenerator` (`js/core/maze-generator.js`) generating 100% solvable labyrinths via randomized depth-first search with customizable dimensions (clamped odd dimensions $\ge 7$), biome themes, circuit braid factor (reducing dead ends to create interconnected loop circuits), and reachable key-door puzzle gating; added "⚡ Generate" toolbar button and `#modal-maze-generator` in `editor.html` and `EditorUI`.
+  - **Automated QA Coverage**: Expanded test harness to 100 test suites and 491 tests (0 failed, 7,225 assertions, 23/23 zero-drift checks passed).
+- [x] **Custom Prefabs, BaseEntity Domain Models & Code Elegance Standards Sprint (BL-39, BL-57, BL-62)**:
+  - **Polymorphic Entity Domain Models (BL-57)**: Created `BaseEntity` (`js/entities/base-entity.js`) domain foundation integrating frozen immutable `Vec2` positions, polymorphic `canInteract()`, `onInteract()`, `isBlocking()`, and self-documenting interaction prompts (`getPrompt()`); refactored `Key`, `Door`, and `Lever` to extend `BaseEntity`, replacing brittle switch-case logic with polymorphic object-oriented contracts.
+  - **Custom Prefab Saving in Map Editor (BL-39)**: Implemented `captureLevelRegionAsPrefab()`, `saveCustomPrefab()`, `getCustomPrefabs()`, `deleteCustomPrefab()`, and `clearCustomPrefabs()` in `js/editor/prefabs.js`; updated `stampPrefab()` and `EditorCanvas` ghost preview to dynamically resolve custom user prefabs; created `#modal-save-prefab` and sidebar custom prefab palette in `editor.html` and `EditorUI` with 1-click region capture, dynamic stamping, and deletion management.
+  - **SOLID Principles & Code Elegance Standards (BL-62 / ADR-007)**: Formulated [`docs/adr/0007-solid-principles-and-code-elegance.md`](adr/0007-solid-principles-and-code-elegance.md) establishing SRP file budgets ($\le 300$ lines), Open/Closed entity polymorphism, Liskov substitution, interface segregation, dependency inversion, early-return guard clauses, and value object immutability.
+  - **Automated QA Coverage**: Expanded test harness to 102 test suites and 500 tests (0 failed, 7,297 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
@@ -397,6 +421,27 @@ This document tracks project milestones, current release status, active developm
 - [ ] **Additional Puzzle Entities**:
   - Pressure plates (momentary activation when stepped on).
   - One-way gates / sliding doors.
+
+### Strategic Architecture Initiative: Modernization & SOLID Refactoring (`v2.0.0` Roadmap)
+*Objective: Transform monolithic "god-classes" and procedural switch blocks into simple, elegant, explainable, highly testable, readable, and robust Object-Oriented modules adhering strictly to SOLID principles and clean architectural separation.*
+
+- [ ] **Engine Decomposition & SRP Refactoring (`BL-56`)**:
+  - Split `js/engine/game-loop.js` (2,250+ lines) into single-responsibility collaborators: `MovementController` (motion and collision mediation), `InteractionDispatcher` (entity interaction routing), and `GameStateManager` (scoring, time, steps, level lifecycle).
+  - Target module size: $\le 300$ lines per file.
+- [ ] **Polymorphic Entity Domain Models (`BL-57`)**:
+  - Refactor procedural entity switch/case blocks into object-oriented classes (`KeyEntity`, `DoorEntity`, `LeverEntity`, `PedestalEntity`, `HazardEntity`) implementing an explicit `Interactable` / `Collidable` contract (`canInteract()`, `onInteract()`, `onCollide()`, `getPrompt()`).
+  - Upholds Open/Closed Principle: new entity types can be added without mutating core engine files.
+- [ ] **Editor Studio Modularization (`BL-58`)**:
+  - Split `js/editor/editor-ui.js` (1,800+ lines) into cohesive controllers: `ToolbarController`, `ProjectModalManager`, `DiagnosticsController`, and `EditorShortcutHandler`.
+- [ ] **Clean Input Handling & Command Pattern (`BL-59`)**:
+  - Extract input listeners from `GameLoop` and HTML pages into a standalone `InputManager` emitting semantic `GameCommand` objects (`MoveCommand`, `InteractCommand`, `RotateCommand`).
+  - Enables clean, headless-safe unit testing of input semantics without mock DOM event dispatch.
+- [ ] **Decoupled UI Contract & Presentation Layer (`BL-60`)**:
+  - Replace ad-hoc `uiCallbacks` object literals with an explicit `IGamePresenter` interface contract and granular event subscriptions (`onInventoryChanged`, `onStepTaken`, `onElevationChanged`), eliminating full-DOM recalculations on every step and TDZ initialization hazards.
+- [ ] **Value Objects & Clean Geometry Math (`BL-61`)**:
+  - Replace loose `{x, y}` object literals and repeated ad-hoc math with immutable Value Objects: `Vec2` / `Coord2D`, `GridRect`, and `Heading` with self-documenting methods.
+- [ ] **Defensive Guard Clauses & Code Elegance Standards (`BL-62`)**:
+  - Publish ADR-007 establishing standards for early return guard clauses, eradication of magical sentinel numbers, maximum file length guidelines ($\le 300$ lines), and consistent error handling paradigms.
 
 ---
 

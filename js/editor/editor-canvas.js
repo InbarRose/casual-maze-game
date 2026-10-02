@@ -3,7 +3,7 @@
  */
 
 import { TILES, LAYERS, THEMES, ENTITY_TYPES } from '../core/constants.js';
-import { PREFABS, stampPrefab } from './prefabs.js';
+import { PREFABS, stampPrefab, getCustomPrefab } from './prefabs.js';
 
 export class EditorCanvas {
   /**
@@ -1285,7 +1285,7 @@ export class EditorCanvas {
 
     // Prefab Hover Ghost Preview (BL-20)
     if (this.currentTool === 'prefab' && this.selectedPrefab && hx >= 0 && hy >= 0) {
-      const prefab = PREFABS[this.selectedPrefab];
+      const prefab = PREFABS[this.selectedPrefab] || getCustomPrefab(this.selectedPrefab);
       if (prefab) {
         ctx.save();
         ctx.strokeStyle = '#c084fc';
