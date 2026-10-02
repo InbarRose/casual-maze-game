@@ -50,6 +50,15 @@ This document tracks project milestones, current release status, active developm
   - Published [`docs/COMPONENT_AUDIT_RUBRIC.md`](COMPONENT_AUDIT_RUBRIC.md) establishing an exhaustive 6-Chair simulated expert panel evaluation framework (Juice & Delight, Static Systems, UI/UX Ergonomics, Mechanics Depth, Progression Prestige, Inclusivity & DX) evaluating every application subsystem on an absolute 60-point scale.
   - Published [`docs/COMPONENT_SCORING_REGISTER.md`](COMPONENT_SCORING_REGISTER.md) with comprehensive baseline audits and gap analyses across all 19 application components (Shell, Rendering, Loop, Input, Minimap, HUD, Menus, Editor Canvas, Editor History, Editor Diagnostics, Assets, Audio, Storage, Profile, Settings, Handbook, Diagnostic Lab, Community Bug Channels, Accessibility).
   - Identified and prioritized new backlog tickets (`BL-34` through `BL-40` in [`docs/BACKLOG.md`](BACKLOG.md)) resolving usability friction, tactile acoustic feedback, and diagnostic telemetry.
+- [x] **Quality Scores & UX Ergonomics Sprint (BL-26, BL-34, BL-35, BL-36, BL-38, BL-54, BL-55)**:
+  - **Top Navigation Breadcrumbs & HUD Hierarchy (BL-54)**: Implemented interactive breadcrumbs bar (`.app-breadcrumbs-bar`) in `initAppHeader()` across campaign, story quests, and custom levels; wired in-game HUD breadcrumb display (`#hud-breadcrumbs`) showing Chapter title and Level ID with direct return links to Hub.
+  - **Keyboard Quick-Advance on Victory (BL-55)**: Enabled `Space` or `Enter` hotkey detection when victory modal is active, immediately advancing to the next labyrinth for fast-paced continuous play without requiring mouse clicks.
+  - **Tactile UI Audio Cues & Footstep Pitch Jitter (BL-35)**: Added frequency randomization ($\pm 3\%$) to footstep synthesizer audio to eliminate repetitive ear fatigue during long exploration sessions; added procedural micro-click sound feedback on tab navigation and crumb clicks.
+  - **Save State Versioned Migration Runner (BL-36)**: Implemented automated `StorageManager.migrateSaveData()` upgrading legacy save schemas on initial boot without data loss (normalizing medals, bestSecrets, and score tallies).
+  - **1-Click Diagnostic Bug Bundle Exporter (BL-34)**: Built `StorageManager.exportDiagnosticBugBundle()` gathering session telemetry, level ID, player coordinates, move history, and logs into a pre-filled, labeled GitHub issue report.
+  - **Prestige Victory Confetti Cannon (BL-38)**: Built Canvas 2D drifting physics confetti particle bursts on victory modal activation.
+  - **High-Contrast Accessibility Mode (BL-26)**: Added persistent high-contrast grid outline and background palette toggle in settings modal and auto-applied on startup.
+  - **Automated QA Coverage**: Expanded test harness to 94 test suites and 468 tests (0 failed, 7,039 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 

@@ -103,12 +103,13 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-23** | **Universal App Header & Footer** | **P0** | `v1.16.0` | Persistent glassmorphic header and footer with live star count, profile pill, and settings modal. | **Completed** |
 | **BL-24** | **In-Game Settings & Profile Modals** | **P1** | `v1.19.0` | Mount `#app-header` and modal triggers inside `maze.html` so players can adjust settings without leaving active game. | **Completed** |
 | **BL-25** | **Real-Time Audio Gain Sliders** | **P1** | `v1.19.0` | Connect Master, SFX, and BGM sliders directly to `WebAudioEngine` gain nodes with live volume changes. | **Completed** |
-| **BL-26** | **High-Contrast Accessibility Mode** | **P2** | `v1.21.0` | High-contrast visual mode with sharp white/black borders, colorblind key glyphs, and high-visibility explorer. | Planned |
-| **BL-34** | **1-Click Diagnostic Bug Bundle Exporter** | **P1** | `v1.23.0` | In-game action packaging level ID, player coordinates, move history, and debug logs into pre-filled GitHub issue links. | Planned |
-| **BL-36** | **Save State Versioned Migration Runner** | **P1** | `v1.23.0` | Automated `StorageManager.migrateSaveData()` upgrading legacy save schemas on initial boot without data loss. | Planned |
-| **BL-38** | **Prestige Rank-Up Celebration & Victory Confetti** | **P2** | `v1.23.0` | Full-screen celebratory rank-up splash banner with star sparkles and Canvas 2D confetti bursts on victory. | Planned |
+| **BL-26** | **High-Contrast Accessibility Mode** | **P2** | `v1.21.0` | High-contrast visual mode with sharp white/black borders, colorblind key glyphs, and high-visibility explorer. | **Completed** |
+| **BL-34** | **1-Click Diagnostic Bug Bundle Exporter** | **P1** | `v1.23.0` | In-game action packaging level ID, player coordinates, move history, and debug logs into pre-filled GitHub issue links. | **Completed** |
+| **BL-36** | **Save State Versioned Migration Runner** | **P1** | `v1.23.0` | Automated `StorageManager.migrateSaveData()` upgrading legacy save schemas on initial boot without data loss. | **Completed** |
+| **BL-38** | **Prestige Rank-Up Celebration & Victory Confetti** | **P2** | `v1.23.0` | Full-screen celebratory rank-up splash banner with star sparkles and Canvas 2D confetti bursts on victory. | **Completed** |
 | **BL-53** | **Comprehensive Settings Rebinding & Profile Backup** | **P2** | `v1.23.0` | In-game settings allowing full key rebinding, audio mute/volume, default art style, and 1-click JSON export/import of profile. | Planned |
-| **BL-54** | **Top Navigation Breadcrumbs & Chapter/Level HUD Hierarchy** | **P1** | `v1.23.0` | Interactive breadcrumb navigation hierarchy in top navigation and in-game HUD (e.g., `Campaign > Chapter 2: The Vertical Dimension > Level 5: Sunken Vault`). Displays active chapter name, chapter number, level index, and total levels with click-to-navigate back to chapter selection. | Planned |
+| **BL-54** | **Top Navigation Breadcrumbs & Chapter/Level HUD Hierarchy** | **P1** | `v1.23.0` | Interactive breadcrumb navigation hierarchy in top navigation and in-game HUD (e.g., `Campaign > Chapter 2: The Vertical Dimension > Level 5: Sunken Vault`). Displays active chapter name, chapter number, level index, and total levels with click-to-navigate back to chapter selection. | **Completed** |
+| **BL-55** | **Keyboard Quick-Advance on Victory (Space / Enter)** | **P1** | `v1.23.0` | Allow players to immediately advance to the next level by pressing `Space` or `Enter` upon victory modal trigger for fast-paced continuous play without requiring mouse clicks. | **Completed** |
 
 ---
 
@@ -119,7 +120,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-27** | **Procedural Sound FX Engine** | **P0** | `v1.16.0` | Web Audio synthesizer triggers for footsteps, key pickup, door unlock, lever flip, and victory chimes. | **Completed** |
 | **BL-28** | **Continuous Environmental Ambience** | **P2** | `v1.22.0` | Ambient procedural background loops: dungeon wind whispers, jungle forest chirps, subterranean cavern drips. | **Completed** |
-| **BL-35** | **Tactile UI Audio Cues & Footstep Pitch Jitter** | **P2** | `v1.23.0` | Procedural acoustic micro-clicks for tab changes, editor painting, and footstep frequency randomization ($\pm 3\%$). | Planned |
+| **BL-35** | **Tactile UI Audio Cues & Footstep Pitch Jitter** | **P2** | `v1.23.0` | Procedural acoustic micro-clicks for tab changes, editor painting, and footstep frequency randomization ($\pm 3\%$). | **Completed** |
 
 ---
 
