@@ -483,6 +483,40 @@ kbd {
   }
 }
 
+/* In-Game HUD Breadcrumbs (BL-54) */
+.hud-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-bottom: 0.2rem;
+  white-space: nowrap;
+}
+
+.hud-crumb-link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.15s ease;
+}
+
+.hud-crumb-link:hover {
+  text-decoration: underline;
+  opacity: 0.85;
+}
+
+.hud-crumb-sep {
+  color: var(--text-dim);
+  font-size: 0.6rem;
+  user-select: none;
+}
+
+.hud-crumb-current {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
 /* =========================================================
  * UNIVERSAL GLOBAL APP HEADER & FOOTER (GLASSMORPHIC)
  * ========================================================= */
@@ -665,6 +699,51 @@ kbd {
   padding: 0.15rem 0.4rem;
   border-radius: 9999px;
   border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+/* Breadcrumbs Bar */
+.app-breadcrumbs-bar {
+  width: 100%;
+  background: rgba(10, 15, 26, 0.7);
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.35rem 1.25rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.breadcrumbs-inner {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.crumb-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.crumb-link:hover {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.crumb-item.active {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.crumb-separator {
+  color: var(--text-dim);
+  font-size: 0.65rem;
+  user-select: none;
 }
 
 /* Bottom App Footer */
