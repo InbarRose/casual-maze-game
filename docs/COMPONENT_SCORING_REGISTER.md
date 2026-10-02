@@ -26,8 +26,8 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 6.67 | 9.33 | 5.67 | 6.67 | 5.33 | 5.33 | **39.00** (65.0%) | **B- Tier** | Tactile Micro-Clicks & Footstep Frequency Jitter (`BL-28`, `BL-35`, `BL-51`) |
 | **CMP-13** | **Storage, Save State & Persistence Engine** | 5.00 | 9.67 | 5.33 | 7.67 | 6.00 | 5.00 | **38.67** (64.5%) | **C+ Tier** | Versioned Schema Migration Runner & Telemetry Bundler (`BL-34`, `BL-36`, `BL-52`) |
 | **CMP-14** | **Player Profile, Medals & Prestige Progression** | 5.33 | 9.33 | 5.67 | 6.67 | 6.67 | 5.33 | **39.00** (65.0%) | **B- Tier** | Tiered Medals, Score Formula & Sleuth Badges (`BL-52`) |
-| **CMP-15** | **Settings & Configuration System** | 4.33 | 9.33 | 5.33 | 5.67 | 4.67 | 5.67 | **35.00** (58.3%) | **C Tier** | High-Contrast Toggle & Audio Gain Sliders (`BL-25`, `BL-26`) |
-| **CMP-16** | **Help, Onboarding & Architect Handbook** | 4.33 | 9.33 | 5.00 | 5.67 | 5.00 | 5.33 | **34.66** (57.8%) | **C Tier** | Polish Needed (`BL-37`, `BL-48`) |
+| **CMP-15** | **Settings & Configuration System** | 4.33 | 9.33 | 6.33 | 5.67 | 6.00 | 5.67 | **37.33** (62.2%) | **C+ Tier** | 1-Click JSON Backup & Restore + Settings Rebinding (`BL-25`, `BL-26`, `BL-53`) |
+| **CMP-16** | **Help, Onboarding & Architect Handbook** | 5.00 | 9.33 | 6.67 | 5.67 | 5.00 | 6.33 | **38.00** (63.3%) | **C+ Tier** | Visual Bridge & Ramp Crossing SVG Guides (`BL-37`, `BL-48`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 5.67 | 9.33 | 6.33 | 7.00 | 5.33 | 6.33 | **39.99** (66.7%) | **B- Tier** | Browser Runner & Full Telemetry Resolved (`BL-45`, `BL-46`) |
 | **CMP-18** | **Community Feedback & Bug Reporting Channels** | 4.33 | 9.33 | 6.33 | 5.33 | 4.33 | 6.67 | **36.32** (60.5%) | **C+ Tier** | 1-Click Diagnostic Bug Bundle Exporter (`BL-34`) |
 | **CMP-19** | **Accessibility & Sensory Inclusivity** | 4.33 | 9.33 | 5.67 | 5.00 | 4.67 | 6.67 | **35.67** (59.5%) | **C Tier** | High-Contrast Mode & Keyboard-Only Victory Advance (`BL-26`, `BL-55`) |

@@ -59,6 +59,11 @@ This document tracks project milestones, current release status, active developm
   - **Prestige Victory Confetti Cannon (BL-38)**: Built Canvas 2D drifting physics confetti particle bursts on victory modal activation.
   - **High-Contrast Accessibility Mode (BL-26)**: Added persistent high-contrast grid outline and background palette toggle in settings modal and auto-applied on startup.
   - **Automated QA Coverage**: Expanded test harness to 94 test suites and 468 tests (0 failed, 7,039 assertions, 23/23 zero-drift checks passed).
+- [x] **SOLID Geometry Foundation, Cloudless Backup & Visual Guides Sprint (BL-37, BL-53, BL-61)**:
+  - **Clean Geometry Value Objects (BL-61)**: Implemented immutable, frozen Value Objects `Vec2`, `GridRect`, and `Heading` in `js/core/geometry.js` providing pure functional 2D coordinates, rect bounds containment/overlap, and cardinal directional transformations.
+  - **1-Click Save Data & Profile Backup / Restore (BL-53)**: Implemented cloudless JSON export and import in `StorageManager` (`exportFullBackup`, `importFullBackup`, `downloadFullBackupFile`) and integrated 1-click backup/restore triggers into `SettingsModal`.
+  - **Visual Multi-Elevation Bridge & Ramp Guide (BL-37)**: Added responsive vector SVG diagrams in the Architect Handbook (`editor.html` & Guide Modal) illustrating exact `B_EW` and `B_NS` bridge deck crossing and directional approach ramp configurations (`R_S`, `R_N`, `R_E`, `R_W`).
+  - **Automated QA Coverage**: Expanded test harness to 97 test suites and 480 tests (0 failed, 7,131 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
