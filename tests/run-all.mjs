@@ -81,6 +81,7 @@ import './unit/editor/history-stack.test.mjs';
 import './unit/editor/prefabs-and-autofix.test.mjs';
 import './unit/editor/bridge-ramp-guide.test.mjs';
 import './unit/editor/generator-integration.test.mjs';
+import './unit/editor/custom-prefabs.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';

@@ -15,6 +15,7 @@ import { ValidationModal } from './modals/validation-modal.js';
 import { PlaytestModal } from './modals/playtest-modal.js';
 import { GuideModal } from './modals/guide-modal.js';
 import { MazeGenerator } from '../core/maze-generator.js';
+import { getCustomPrefabs, deleteCustomPrefab, captureLevelRegionAsPrefab } from './prefabs.js';
 
 export class EditorUI {
   constructor() {
@@ -321,6 +322,21 @@ export class EditorUI {
     });
     document.getElementById('generator-btn-submit')?.addEventListener('click', () => {
       this.generateProceduralMaze();
+    });
+
+    // Custom Prefab Palette & Capture Modal (BL-39)
+    this.renderCustomPrefabs();
+    document.getElementById('btn-open-save-prefab')?.addEventListener('click', () => {
+      this.openSavePrefabModal();
+    });
+    document.getElementById('save-prefab-btn-close')?.addEventListener('click', () => {
+      this.closeSavePrefabModal();
+    });
+    document.getElementById('save-prefab-btn-cancel')?.addEventListener('click', () => {
+      this.closeSavePrefabModal();
+    });
+    document.getElementById('save-prefab-btn-submit')?.addEventListener('click', () => {
+      this.saveCustomPrefabFromModal();
     });
 
     document.querySelectorAll('.gen-size-preset').forEach((btn) => {
@@ -859,6 +875,124 @@ export class EditorUI {
     } catch (err) {
       console.error('[MazeGame:Editor] Procedural generation error:', err);
       this.showToast('Failed to generate maze: ' + (err.message || err), 'error');
+    }
+  }
+
+  renderCustomPrefabs() {
+    const container = document.getElementById('custom-prefab-palette');
+    if (!container) return;
+    container.innerHTML = '';
+
+    const customPrefabs = getCustomPrefabs();
+    if (customPrefabs.length === 0) {
+      const emptyNote = document.createElement('div');
+      emptyNote.style.cssText = 'font-size: 0.72rem; color: var(--text-muted); padding: 6px; text-align: center; border: 1px dashed var(--border-color); border-radius: var(--radius-sm);';
+      emptyNote.textContent = 'No custom prefabs yet. Click "Save Region" to create one.';
+      container.appendChild(emptyNote);
+      return;
+    }
+
+    customPrefabs.forEach((p) => {
+      const row = document.createElement('div');
+      row.style.cssText = 'display: flex; gap: 4px; align-items: center; width: 100%;';
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'palette-btn custom-prefab-btn';
+      btn.dataset.prefab = p.id;
+      btn.title = `${p.name} (${p.width}×${p.height})`;
+      btn.style.cssText = 'flex: 1; text-align: left; padding: 4px 8px; font-size: 0.75rem; display: flex; align-items: center; gap: 6px; overflow: hidden;';
+      btn.innerHTML = `<span class="palette-icon" style="font-size: 0.9rem;">📦</span> <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; flex: 1;">${this.escapeHtml(p.name)}</span> <span style="font-size: 0.65rem; color: var(--text-muted);">${p.width}×${p.height}</span>`;
+
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.editorCanvas.setPrefab(p.id);
+        console.info(`[MazeGame:Editor] Selected custom prefab for stamping: "${p.id}"`);
+        this.showToast(`Selected "${p.name}" (${p.width}×${p.height}). Click canvas to stamp!`, 'info', 1500);
+      });
+
+      const delBtn = document.createElement('button');
+      delBtn.type = 'button';
+      delBtn.className = 'btn btn-secondary btn-xs';
+      delBtn.title = `Delete ${p.name}`;
+      delBtn.style.cssText = 'padding: 2px 6px; color: var(--danger, #f43f5e); font-size: 0.7rem;';
+      delBtn.textContent = '✕';
+      delBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteCustomPrefab(p.id);
+        this.renderCustomPrefabs();
+        this.showToast(`Deleted custom prefab "${p.name}"`, 'info');
+      });
+
+      row.appendChild(btn);
+      row.appendChild(delBtn);
+      container.appendChild(row);
+    });
+  }
+
+  openSavePrefabModal() {
+    const modal = document.getElementById('modal-save-prefab');
+    if (!modal) return;
+
+    const maxW = this.level.dimensions.width;
+    const maxH = this.level.dimensions.height;
+    const defaultW = Math.min(5, maxW);
+    const defaultH = Math.min(5, maxH);
+
+    const nameInput = document.getElementById('prefab-capture-name');
+    const xInput = document.getElementById('prefab-capture-x');
+    const yInput = document.getElementById('prefab-capture-y');
+    const wInput = document.getElementById('prefab-capture-w');
+    const hInput = document.getElementById('prefab-capture-h');
+
+    if (nameInput) nameInput.value = 'Custom Module';
+    if (xInput) { xInput.value = 0; xInput.max = maxW - 1; }
+    if (yInput) { yInput.value = 0; yInput.max = maxH - 1; }
+    if (wInput) { wInput.value = defaultW; wInput.max = maxW; }
+    if (hInput) { hInput.value = defaultH; hInput.max = maxH; }
+
+    modal.style.display = 'flex';
+  }
+
+  closeSavePrefabModal() {
+    const modal = document.getElementById('modal-save-prefab');
+    if (modal) {
+      modal.style.display = 'none';
+    }
+  }
+
+  saveCustomPrefabFromModal() {
+    const nameInput = document.getElementById('prefab-capture-name');
+    const xInput = document.getElementById('prefab-capture-x');
+    const yInput = document.getElementById('prefab-capture-y');
+    const wInput = document.getElementById('prefab-capture-w');
+    const hInput = document.getElementById('prefab-capture-h');
+
+    const name = nameInput?.value?.trim() || 'Custom Module';
+    const x = Math.max(0, parseInt(xInput?.value, 10) || 0);
+    const y = Math.max(0, parseInt(yInput?.value, 10) || 0);
+    const w = Math.max(1, Math.min(this.level.dimensions.width - x, parseInt(wInput?.value, 10) || 5));
+    const h = Math.max(1, Math.min(this.level.dimensions.height - y, parseInt(hInput?.value, 10) || 5));
+
+    try {
+      const saved = captureLevelRegionAsPrefab(this.level, name, x, y, w, h);
+      this.closeSavePrefabModal();
+      this.renderCustomPrefabs();
+
+      // Automatically select newly created custom prefab for immediate stamping
+      this.editorCanvas.setPrefab(saved.id);
+      const activeBtn = document.querySelector(`.custom-prefab-btn[data-prefab="${saved.id}"]`);
+      if (activeBtn) {
+        document.querySelectorAll('.palette-btn').forEach(b => b.classList.remove('active'));
+        activeBtn.classList.add('active');
+      }
+
+      this.showToast(`💾 Saved custom prefab "${saved.name}" (${saved.width}×${saved.height})!`, 'success');
+      console.info(`[MazeGame:Editor] Saved custom prefab "${saved.name}" from (${x}, ${y}, ${w}x${h})`);
+    } catch (err) {
+      console.error('[MazeGame:Editor] Failed to save custom prefab:', err);
+      this.showToast('Failed to save prefab: ' + (err.message || err), 'error');
     }
   }
 
