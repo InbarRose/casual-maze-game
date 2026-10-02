@@ -28,6 +28,7 @@ import { DebugLogger } from './debug-logger.js';
 import { PuzzleModal } from '../ui/puzzle-modal.js';
 import { assetLoader } from '../core/asset-loader.js';
 import { audioFX } from '../ui/audio-fx.js';
+import { InputManager, GAME_COMMANDS } from './input-manager.js';
 
 export class GameLoop {
   /**
@@ -143,7 +144,10 @@ export class GameLoop {
     }
 
     // Input state
-    this.keysDown = new Set();
+    this.inputManager = new InputManager({
+      hotkeysEnabled: this.areHotkeysEnabled(),
+    });
+    this.keysDown = this.inputManager.keysDown;
     this.panVelocity = { x: 0, y: 0 };
     this.isDraggingMinimap = false;
 
@@ -523,6 +527,9 @@ export class GameLoop {
     const val = !!enabled;
     StorageManager.setSetting('hotkeys_enabled', val);
     StorageManager.setSetting('simple_keyboard_mode', !val);
+    if (this.inputManager) {
+      this.inputManager.setHotkeysEnabled(val);
+    }
     globalEvents.emit('hotkeys:toggled', { enabled: val });
     if (typeof this.uiCallbacks.onHotkeysChanged === 'function') {
       this.uiCallbacks.onHotkeysChanged(val);
@@ -530,54 +537,55 @@ export class GameLoop {
   }
 
   /**
-   * Bind keyboard, mouse, and touch events
+   * Bind keyboard, mouse, gamepad, and touch events
    */
   bindInputs() {
-    this.handleKeyDown = (e) => {
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code) || ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-        e.preventDefault();
-      }
-      this.keysDown.add(e.code);
-      if (e.key) this.keysDown.add(e.key);
-
-      // Handle Instant Actions (gated by hotkeys toggle / simple keyboard mode)
-      const hotkeysActive = this.areHotkeysEnabled();
-      const isMap = hotkeysActive && (KEY_CODES.MAP.includes(e.code) || (e.key && KEY_CODES.MAP.includes(e.key)));
-      const isRestart = hotkeysActive && (KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key)));
-      const isInteract = KEY_CODES.INTERACT.includes(e.code) || (e.key && KEY_CODES.INTERACT.includes(e.key));
-      const isViewMode = hotkeysActive && KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)));
-      const isRotateLeft = hotkeysActive && KEY_CODES.ROTATE_LEFT && (KEY_CODES.ROTATE_LEFT.includes(e.code) || (e.key && KEY_CODES.ROTATE_LEFT.includes(e.key)));
-      const isRotateRight = hotkeysActive && KEY_CODES.ROTATE_RIGHT && (KEY_CODES.ROTATE_RIGHT.includes(e.code) || (e.key && KEY_CODES.ROTATE_RIGHT.includes(e.key)));
-
-      if (isMap) {
+    if (this.inputManager) {
+      this.inputManager.on(GAME_COMMANDS.INTERACT, () => {
+        this.handleManualInteract();
+      });
+      this.inputManager.on(GAME_COMMANDS.ROTATE_LEFT, () => {
+        this.rotateLeft();
+      });
+      this.inputManager.on(GAME_COMMANDS.ROTATE_RIGHT, () => {
+        this.rotateRight();
+      });
+      this.inputManager.on(GAME_COMMANDS.TOGGLE_VIEW_MODE, () => {
+        this.togglePerspective();
+      });
+      this.inputManager.on(GAME_COMMANDS.TOGGLE_MAP, () => {
         this.toggleFreePan();
-      } else if (isRestart) {
+      });
+      this.inputManager.on(GAME_COMMANDS.RESTART, () => {
         if (typeof this.uiCallbacks.onRequestRestart === 'function') {
           this.uiCallbacks.onRequestRestart();
         } else {
           this.restartLevel();
         }
-      } else if (isInteract) {
-        this.handleManualInteract();
-      } else if (isViewMode) {
-        this.togglePerspective();
-      } else if (isRotateLeft) {
-        e.preventDefault();
-        this.rotateLeft();
-      } else if (isRotateRight) {
-        e.preventDefault();
-        this.rotateRight();
+      });
+      this.inputManager.on(GAME_COMMANDS.PAUSE, () => {
+        if (typeof this.uiCallbacks.onTogglePause === 'function') {
+          this.uiCallbacks.onTogglePause();
+        } else {
+          globalEvents.emit('game:pause_toggle');
+        }
+      });
+    }
+
+    this.handleKeyDown = (e) => {
+      if (this.inputManager) {
+        this.inputManager.handleKeyDown(e);
       }
     };
 
     this.handleKeyUp = (e) => {
-      this.keysDown.delete(e.code);
-      if (e.key) this.keysDown.delete(e.key);
+      if (this.inputManager) {
+        this.inputManager.handleKeyUp(e);
+      }
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('keydown', this.handleKeyDown);
-      window.addEventListener('keyup', this.handleKeyUp);
+    if (typeof window !== 'undefined' && this.inputManager) {
+      this.inputManager.attach(window);
     }
 
     // Minimap Click & Drag for Free-Pan, Pinch-to-Zoom & Double-Tap (BL-17)
@@ -824,6 +832,9 @@ export class GameLoop {
     this.stop();
     if (this.puzzleModal) {
       this.puzzleModal.close();
+    }
+    if (this.inputManager) {
+      this.inputManager.detach();
     }
     if (typeof window !== 'undefined') {
       window.removeEventListener('keydown', this.handleKeyDown);
@@ -1127,11 +1138,18 @@ export class GameLoop {
     let screenDx = 0;
     let screenDy = 0;
 
-    for (const code of this.keysDown) {
-      if (KEY_CODES.UP.includes(code)) screenDy -= 1;
-      else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
-      else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
-      else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
+    if (this.inputManager) {
+      const poll = this.inputManager.poll();
+      screenDx = poll.dx;
+      screenDy = poll.dy;
+    } else {
+      for (const code of this.keysDown) {
+        if (KEY_CODES.UP.includes(code)) screenDy -= 1;
+        else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
+        else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
+        else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
+      }
+      if (screenDx !== 0) screenDy = 0;
     }
 
     // Cancel auto-move path if player presses directional keys
@@ -1501,11 +1519,17 @@ export class GameLoop {
     let screenDx = 0;
     let screenDy = 0;
 
-    for (const code of this.keysDown) {
-      if (KEY_CODES.UP.includes(code)) screenDy -= 1;
-      else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
-      else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
-      else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
+    if (this.inputManager) {
+      const poll = this.inputManager.poll(dt);
+      screenDx = poll.dx;
+      screenDy = poll.dy;
+    } else {
+      for (const code of this.keysDown) {
+        if (KEY_CODES.UP.includes(code)) screenDy -= 1;
+        else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
+        else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
+        else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
+      }
     }
 
     if (screenDx !== 0 || screenDy !== 0) {
