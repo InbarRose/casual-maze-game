@@ -41,6 +41,7 @@ import './unit/engine/scoring-medals.test.mjs';
 import './unit/engine/input-manager.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
+import './unit/entities/base-entity.test.mjs';
 import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
 import './unit/entities/dynamic-activities.test.mjs';
