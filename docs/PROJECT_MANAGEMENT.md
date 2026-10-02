@@ -64,6 +64,11 @@ This document tracks project milestones, current release status, active developm
   - **1-Click Save Data & Profile Backup / Restore (BL-53)**: Implemented cloudless JSON export and import in `StorageManager` (`exportFullBackup`, `importFullBackup`, `downloadFullBackupFile`) and integrated 1-click backup/restore triggers into `SettingsModal`.
   - **Visual Multi-Elevation Bridge & Ramp Guide (BL-37)**: Added responsive vector SVG diagrams in the Architect Handbook (`editor.html` & Guide Modal) illustrating exact `B_EW` and `B_NS` bridge deck crossing and directional approach ramp configurations (`R_S`, `R_N`, `R_E`, `R_W`).
   - **Automated QA Coverage**: Expanded test harness to 97 test suites and 480 tests (0 failed, 7,131 assertions, 23/23 zero-drift checks passed).
+- [x] **InputManager, Gamepad Controller Support & Procedural Maze Generator Sprint (BL-40, BL-50, BL-59)**:
+  - **Clean Input Architecture & Command Pattern (BL-59)**: Implemented `InputManager` (`js/engine/input-manager.js`) adhering to Single Responsibility Principle (SRP), centralizing hardware event listeners, directional vector math, and semantic game command dispatching (`MOVE`, `INTERACT`, `ROTATE_LEFT`, `ROTATE_RIGHT`, `TOGGLE_MAP`, `TOGGLE_VIEW_MODE`, `RESTART`, `PAUSE`).
+  - **Gamepad API Controller Support (BL-40)**: Built standard HTML5 Gamepad API polling into `InputManager` supporting USB and Bluetooth controllers: Left Analog Stick with 0.28 deadzone filtering, D-Pad buttons 12–15, Button A/Cross for inspect & interact, Button B/Circle & Start for in-game pause, Bumpers (LB/RB) for 90° camera rotation, and edge-triggered button debouncing.
+  - **Procedural Maze Generator & Studio Modal (BL-50)**: Built `MazeGenerator` (`js/core/maze-generator.js`) generating 100% solvable labyrinths via randomized depth-first search with customizable dimensions (clamped odd dimensions $\ge 7$), biome themes, circuit braid factor (reducing dead ends to create interconnected loop circuits), and reachable key-door puzzle gating; added "⚡ Generate" toolbar button and `#modal-maze-generator` in `editor.html` and `EditorUI`.
+  - **Automated QA Coverage**: Expanded test harness to 100 test suites and 491 tests (0 failed, 7,225 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 

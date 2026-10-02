@@ -15,11 +15,11 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-01** | **Universal App Shell & Global Navigation** | 5.67 | 9.33 | 7.33 | 6.00 | 6.00 | 5.67 | **40.00** (66.7%) | **B- Tier** | Breadcrumb Navigation & Tactile Audio Resolved (`BL-35`, `BL-48`, `BL-54`) |
 | **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 6.33 | 9.00 | 7.00 | 7.33 | 5.00 | 5.33 | **40.00** (66.7%) | **B- Tier** | Dual Tileset & Secret Walls Resolved (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`) |
 | **CMP-03** | **Core Gameplay Loop & State Machine** | 6.00 | 9.33 | 5.67 | 7.33 | 6.00 | 5.33 | **39.66** (66.1%) | **B- Tier** | Secret Chambers & Scoring Engine Resolved (`BL-42`, `BL-43`, `BL-51`, `BL-52`) |
-| **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 5.00 | 9.00 | 6.67 | 6.00 | 4.67 | 5.33 | **36.67** (61.1%) | **C+ Tier** | 'E' Hotkey & Space/Enter Victory Quick-Advance (`BL-42`, `BL-55`) |
+| **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 5.67 | 9.33 | 7.33 | 6.67 | 5.33 | 6.00 | **40.33** (67.2%) | **B- Tier** | InputManager & Gamepad API Controller Support (`BL-40`, `BL-42`, `BL-55`, `BL-59`) |
 | **CMP-05** | **Minimap & Tactical Navigation** | 4.67 | 9.00 | 5.67 | 6.00 | 5.00 | 4.67 | **35.01** (58.4%) | **C Tier** | Secret Passage Highlighting Resolved (`BL-17`, `BL-51`) |
 | **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 5.00 | 9.33 | 7.00 | 6.00 | 5.33 | 5.33 | **37.99** (63.3%) | **C+ Tier** | Side HUD Drawer, Tile Badge & HUD Breadcrumbs (`BL-42`, `BL-54`) |
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.00 | 9.33 | 7.00 | 6.00 | 6.33 | 5.67 | **41.33** (68.9%) | **B- Tier** | Victory Confetti, Quick-Advance & Diagnostic Bundles (`BL-34`, `BL-38`, `BL-52`, `BL-55`) |
-| **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 4.67 | 9.33 | 5.33 | 6.00 | 4.67 | 4.67 | **34.67** (57.8%) | **C Tier** | Active Enhancement (`BL-49`, `BL-50`) |
+| **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 5.33 | 9.67 | 6.00 | 6.67 | 5.33 | 5.00 | **38.00** (63.3%) | **C+ Tier** | 1-Click Procedural Maze Generator & Studio Modal (`BL-49`, `BL-50`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 5.00 | 9.00 | 5.67 | 6.33 | 4.67 | 5.00 | **35.67** (59.5%) | **C Tier** | Ready for Custom Prefabs (`BL-39`) |
 | **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 5.00 | 9.67 | 6.00 | 6.67 | 5.00 | 5.33 | **37.67** (62.8%) | **C+ Tier** | In Progress (`BL-50`) |
 | **CMP-11** | **Vector SVG Asset Pipeline & Thematic Styling**| 4.67 | 8.67 | 5.33 | 6.00 | 4.67 | 4.67 | **34.01** (56.7%) | **C Tier** | Dual Tileset & Rich Vectors (`BL-41`, `BL-44`) |
@@ -108,23 +108,24 @@ This document records the official baseline quality evaluations, granular expert
 ---
 
 ### CMP-04: Controls, Input Handling & Multi-Input Parity
-*Files: `js/engine/game-loop.js`, `js/core/constants.js`, `js/ui/settings-modal.js`*
+*Files: `js/engine/input-manager.js`, `js/engine/game-loop.js`, `js/core/constants.js`, `js/ui/settings-modal.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **5.00/10** (1.1: 5, 1.2: 5, 1.3: 5)
-  * $C_2$ Static Purity: **9.00/10** (2.1: 9, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.67/10** (3.1: 6, 3.2: 6, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **6.00/10** (4.1: 6, 4.2: 6, 4.3: 6)
-  * $C_5$ Progression & Retention: **4.67/10** (5.1: 5, 5.2: 5, 5.3: 4)
-  * $C_6$ Accessibility & DX: **4.67/10** (6.1: 5, 6.2: 4, 6.3: 5)
-  * **Master Score**: **35.01 / 60.00 (58.4% — C Tier Prototype)**
+  * $C_1$ Juice & Delight: **5.67/10** (1.1: 6, 1.2: 6, 1.3: 5)
+  * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 8, 3.2: 7, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 7, 4.3: 6)
+  * $C_5$ Progression & Retention: **5.33/10** (5.1: 6, 5.2: 5, 5.3: 5)
+  * $C_6$ Accessibility & DX: **6.00/10** (6.1: 6, 6.2: 6, 6.3: 6)
+  * **Master Score**: **40.33 / 60.00 (67.2% — B- Tier)**
 * **Strengths**:
   * Multi-input support for keyboard (`WASD`, arrows), mouse click-to-move BFS, and mobile swipe gestures.
   * **'E' Examine / Interact Default (`BL-42`)**: Modern standard ergonomics with `E` as primary inspect/interact key (`Space` and `Enter` maintained as secondary).
+  * **InputManager Decoupling (`BL-59`)**: SRP input architecture centralizing keyboard, gamepad polling, and semantic game command dispatching.
+  * **Gamepad API Support (`BL-40`)**: Full USB and Bluetooth gamepad controller support (Left Stick with 0.28 deadzone, D-Pad buttons 12–15, Button A/Cross for interact, Button B/Start for pause, Bumpers for 90° camera rotation, edge-triggered debounce).
 * **Gaps & Critical Deductions**:
-  * **Zero Gamepad Support (`BL-40`)**: Standard USB/Bluetooth controllers are ignored.
-  * **No Rebinding (`BL-53`)**: Keys cannot be rebound in settings.
-* **Directives**: Implement Gamepad API (`BL-40`) and add key rebinding UI (`BL-53`).
+  * In-game settings could feature a visual gamepad button tester / calibration diagram.
+* **Directives**: Add visual controller diagram in help handbook or settings modal.
 
 ---
 
