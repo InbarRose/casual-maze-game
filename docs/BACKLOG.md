@@ -22,9 +22,9 @@ This document serves as the authoritative, prioritized master backlog for all fe
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
 │ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
-│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55 │ P1  │ Ready    │
+│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63 │ P1  │ Completed│
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39 │ P1 / P2 │ Ready │
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54 │ P1 │ Ready │
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64 │ P1 │ Completed│
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35 │ P2     │ Ready    │
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46 │ P0 / P1 │ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -77,6 +77,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-17** | **Minimap Pinch-to-Zoom & Pan Gesture** | **P2** | `v1.22.0` | Touch gesture support for zooming and panning the HUD minimap overlay on mobile viewports. | **Completed** |
 | **BL-40** | **Gamepad API Controller Support** | **P2** | `v1.24.0` | Zero-dependency Gamepad API listener mapping standard USB/Bluetooth controller D-pad and analog sticks to movement, A for inspect/interact, B/Start for pause, bumpers for camera rotation. | **Completed** |
 | **BL-55** | **Keyboard Quick-Advance on Victory (Space / Enter for Next Level)** | **P1** | `v1.23.0` | Allow players to press Space or Enter when victory modal is displayed to automatically advance to the next level without requiring mouse clicks for faster gameplay flow. | **Completed** |
+| **BL-63** | **Moveable Top-Docked Virtual Controls & Auto-Repeat Steps** | **P1** | `v1.24.0` | Moveable and top-docked virtual D-pad controls (`data-dock="top-left"` default) to prevent OS gesture conflicts, continuous touch/mouse auto-repeat holding for effortless mobile movement, minimize toggle (`_`/`▲`), 4-quadrant dock cycling, and integrated camera rotation buttons (`↺`/`↻`). | **Completed** |
 
 ---
 
@@ -109,7 +110,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-38** | **Prestige Rank-Up Celebration & Victory Confetti** | **P2** | `v1.23.0` | Full-screen celebratory rank-up splash banner with star sparkles and Canvas 2D confetti bursts on victory. | **Completed** |
 | **BL-53** | **Comprehensive Settings Rebinding & Profile Backup** | **P2** | `v1.23.0` | In-game settings allowing full key rebinding, audio mute/volume, default art style, and 1-click JSON export/import of profile. | **Completed** |
 | **BL-54** | **Top Navigation Breadcrumbs & Chapter/Level HUD Hierarchy** | **P1** | `v1.23.0` | Interactive breadcrumb navigation hierarchy in top navigation and in-game HUD (e.g., `Campaign > Chapter 2: The Vertical Dimension > Level 5: Sunken Vault`). Displays active chapter name, chapter number, level index, and total levels with click-to-navigate back to chapter selection. | **Completed** |
-| **BL-55** | **Keyboard Quick-Advance on Victory (Space / Enter)** | **P1** | `v1.23.0` | Allow players to immediately advance to the next level by pressing `Space` or `Enter` upon victory modal trigger for fast-paced continuous play without requiring mouse clicks. | **Completed** |
+| **BL-64** | **Minimalist UI, Menu Scrolling & Destructive Confirmation Safety** | **P1** | `v1.24.0` | Modal scrolling containment with sticky footers avoiding intrusive popups, non-blocking toast activity feeds, and explicit confirmation dialogs for destructive actions (Reset All Progress, Delete Custom Prefab, and Overwrite/Generate Canvas). | **Completed** |
 
 ---
 

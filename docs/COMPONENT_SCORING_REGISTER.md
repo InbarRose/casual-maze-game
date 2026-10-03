@@ -111,15 +111,18 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/input-manager.js`, `js/engine/game-loop.js`, `js/core/constants.js`, `js/ui/settings-modal.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **5.67/10** (1.1: 6, 1.2: 6, 1.3: 5)
+  * $C_1$ Juice & Delight: **6.33/10** (1.1: 6, 1.2: 7, 1.3: 6)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 8, 3.2: 7, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 7, 4.3: 6)
-  * $C_5$ Progression & Retention: **5.33/10** (5.1: 6, 5.2: 5, 5.3: 5)
-  * $C_6$ Accessibility & DX: **6.00/10** (6.1: 6, 6.2: 6, 6.3: 6)
-  * **Master Score**: **40.33 / 60.00 (67.2% — B- Tier)**
+  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
+  * $C_6$ Accessibility & DX: **7.33/10** (6.1: 7, 6.2: 8, 6.3: 7)
+  * **Master Score**: **44.66 / 60.00 (74.4% — B Tier)**
 * **Strengths**:
-  * Multi-input support for keyboard (`WASD`, arrows), mouse click-to-move BFS, and mobile swipe gestures.
+  * Multi-input support for keyboard (`WASD`, arrows), mouse click-to-move BFS, mobile swipe gestures, and virtual D-pad.
+  * **Moveable & Top-Docked Virtual Controls (`BL-63`)**: Virtual D-pad defaults to top-left to avoid mobile browser navigation bar/gesture conflicts; includes 4-quadrant docking cycles (`top-left`, `top-right`, `bottom-left`, `bottom-right`), dragging handle with persistence, and minimize toggle.
+  * **Continuous Touch Auto-Repeat (`BL-63`)**: Holding a directional button auto-repeats steps smoothly (115ms interval after 220ms initial hold delay).
+  * **Direct Virtual Camera Rotation (`BL-63`)**: Virtual controls include dedicated rotation buttons (`↺` / `↻`) directly on the pad.
   * **'E' Examine / Interact Default (`BL-42`)**: Modern standard ergonomics with `E` as primary inspect/interact key (`Space` and `Enter` maintained as secondary).
   * **InputManager Decoupling (`BL-59`)**: SRP input architecture centralizing keyboard, gamepad polling, and semantic game command dispatching.
   * **Gamepad API Support (`BL-40`)**: Full USB and Bluetooth gamepad controller support (Left Stick with 0.28 deadzone, D-Pad buttons 12–15, Button A/Cross for interact, Button B/Start for pause, Bumpers for 90° camera rotation, edge-triggered debounce).
@@ -336,20 +339,22 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/settings-modal.js`, `css/main.css`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.33/10** (1.1: 4, 1.2: 4, 1.3: 5)
+  * $C_1$ Juice & Delight: **5.67/10** (1.1: 5, 1.2: 6, 1.3: 6)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **4.67/10** (3.1: 4, 3.2: 5, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **5.67/10** (4.1: 6, 4.2: 6, 4.3: 5)
-  * $C_5$ Progression & Retention: **4.67/10** (5.1: 5, 5.2: 4, 5.3: 5)
-  * $C_6$ Accessibility & DX: **5.00/10** (6.1: 5, 6.2: 5, 6.3: 5)
-  * **Master Score**: **33.67 / 60.00 (56.1% — C Tier Prototype)**
+  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 7, 3.2: 8, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
+  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
+  * **Master Score**: **42.00 / 60.00 (70.0% — B- Tier)**
 * **Strengths**:
-  * Live audio slider previews and basic graphics toggles.
+  * Live audio slider previews with gain clamping and persistence.
+  * High contrast mode toggle with instant body class injection.
+  * **Destructive Safety Confirmations (`BL-64`)**: Explicit double-confirmation workflow for "Reset All Progress" with Cancel/Confirm controls preventing accidental progression wipes.
+  * **JSON Save State Backup & Restore (`BL-53`)**: Cloudless save state export to file and import with confirmation protection.
+  * **Minimalist UI & Scrollable Modal (`BL-64`)**: Modal height clamped to viewport with fluid scrollable body, momentum touch physics, and sticky modal header/footer preventing clipped action buttons.
 * **Gaps & Critical Deductions**:
-  * No keyboard key rebinding interface (`BL-53`).
   * Perspective toggle does not differentiate top-down blueprint from 2.5D isometric (`BL-44`).
-  * Missing 1-click save backup and restore buttons (`BL-53`).
-* **Directives**: Overhaul settings with key rebinding and profile backup (`BL-53`).
+* **Directives**: Deliver visual controller diagram and enhanced tileset preview.
 
 ---
 
