@@ -905,4 +905,23 @@ export class StorageManager {
     const clean = String(name || 'Explorer').trim().slice(0, 24);
     return this.setSetting('player_name', clean || 'Explorer');
   }
+
+  /**
+   * Reset all campaign, tutorial, and story progress (Destructive action)
+   * @returns {boolean}
+   */
+  static resetAllProgress() {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEYS.PROGRESS);
+        localStorage.removeItem(STORAGE_KEYS.TUTORIAL_PROGRESS);
+        localStorage.removeItem(STORAGE_KEYS.STORY_PROGRESS);
+      }
+      console.info('[MazeGame:Storage] Reset all campaign, tutorial, and story progress.');
+      return true;
+    } catch (e) {
+      console.error('[MazeGame:Storage] Failed to reset progress:', e);
+      return false;
+    }
+  }
 }

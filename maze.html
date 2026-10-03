@@ -172,13 +172,26 @@
       <span><kbd>T</kbd> Restart</span>
     </div>
 
-    <!-- Mobile Virtual Controls -->
-    <div class="virtual-controls">
-      <button class="dpad-btn dpad-up" id="vbtn-up" aria-label="Up">▲</button>
-      <button class="dpad-btn dpad-left" id="vbtn-left" aria-label="Left">◀</button>
-      <button class="dpad-btn dpad-center" id="vbtn-act" aria-label="Interact">USE</button>
-      <button class="dpad-btn dpad-right" id="vbtn-right" aria-label="Right">▶</button>
-      <button class="dpad-btn dpad-down" id="vbtn-down" aria-label="Down">▼</button>
+    <!-- Mobile Virtual Controls (Top-Docked & Movable) -->
+    <div class="virtual-controls" id="virtual-controls" data-dock="top-left">
+      <div class="dpad-header" id="dpad-drag-handle" title="Drag to reposition controls">
+        <span class="dpad-grip">⋮⋮ Controls</span>
+        <div class="dpad-header-actions">
+          <button type="button" class="dpad-tool-btn" id="btn-dock-toggle" title="Toggle Position (Top-Left / Top-Right / Bottom-Left / Bottom-Right)" aria-label="Dock Position">⇳</button>
+          <button type="button" class="dpad-tool-btn" id="btn-dpad-minimize" title="Minimize / Expand Controls" aria-label="Minimize Controls">_</button>
+        </div>
+      </div>
+      <div class="dpad-grid" id="dpad-grid">
+        <button type="button" class="dpad-btn dpad-rot-l" id="vbtn-rot-l" aria-label="Rotate CCW" title="Rotate Camera Left [Q]">↺</button>
+        <button type="button" class="dpad-btn dpad-up" id="vbtn-up" aria-label="Up">▲</button>
+        <button type="button" class="dpad-btn dpad-rot-r" id="vbtn-rot-r" aria-label="Rotate CW" title="Rotate Camera Right [R]">↻</button>
+        <button type="button" class="dpad-btn dpad-left" id="vbtn-left" aria-label="Left">◀</button>
+        <button type="button" class="dpad-btn dpad-center" id="vbtn-act" aria-label="Interact">USE</button>
+        <button type="button" class="dpad-btn dpad-right" id="vbtn-right" aria-label="Right">▶</button>
+        <div class="dpad-empty"></div>
+        <button type="button" class="dpad-btn dpad-down" id="vbtn-down" aria-label="Down">▼</button>
+        <div class="dpad-empty"></div>
+      </div>
     </div>
 
     <!-- In-Game Pause & Action Menu Modal -->
@@ -1634,24 +1647,47 @@
     document.getElementById('btn-hud-save-progress')?.addEventListener('click', handleSaveGameProgress);
     document.getElementById('btn-save-progress')?.addEventListener('click', handleSaveGameProgress);
 
-    // Mobile Virtual Controls Binding
+    // Mobile Virtual Controls Binding & Auto-Repeat
     function bindVirtualButton(btnId, keyCode) {
       const btn = document.getElementById(btnId);
       if (!btn) return;
 
-      const triggerDown = (e) => {
-        e.preventDefault();
-        window.dispatchEvent(new KeyboardEvent('keydown', { code: keyCode, bubbles: true }));
+      let repeatTimer = null;
+      let initialTimer = null;
+
+      const clearTimers = () => {
+        if (initialTimer) { clearTimeout(initialTimer); initialTimer = null; }
+        if (repeatTimer) { clearInterval(repeatTimer); repeatTimer = null; }
       };
+
+      const triggerDown = (e) => {
+        if (e && e.cancelable) e.preventDefault();
+        window.dispatchEvent(new KeyboardEvent('keydown', { code: keyCode, bubbles: true }));
+
+        clearTimers();
+
+        // Directional movement auto-repeats on continuous touch/hold
+        if (keyCode.startsWith('Arrow')) {
+          initialTimer = setTimeout(() => {
+            repeatTimer = setInterval(() => {
+              window.dispatchEvent(new KeyboardEvent('keydown', { code: keyCode, bubbles: true }));
+            }, 115);
+          }, 220);
+        }
+      };
+
       const triggerUp = (e) => {
-        e.preventDefault();
+        if (e && e.cancelable) e.preventDefault();
+        clearTimers();
         window.dispatchEvent(new KeyboardEvent('keyup', { code: keyCode, bubbles: true }));
       };
 
       btn.addEventListener('touchstart', triggerDown, { passive: false });
       btn.addEventListener('touchend', triggerUp, { passive: false });
+      btn.addEventListener('touchcancel', triggerUp, { passive: false });
       btn.addEventListener('mousedown', triggerDown);
       btn.addEventListener('mouseup', triggerUp);
+      btn.addEventListener('mouseleave', triggerUp);
     }
 
     bindVirtualButton('vbtn-up', 'ArrowUp');
@@ -1659,6 +1695,158 @@
     bindVirtualButton('vbtn-left', 'ArrowLeft');
     bindVirtualButton('vbtn-right', 'ArrowRight');
     bindVirtualButton('vbtn-act', 'KeyE');
+    bindVirtualButton('vbtn-rot-l', 'KeyQ');
+    bindVirtualButton('vbtn-rot-r', 'KeyR');
+
+    // Movable & Dockable Mobile Virtual Controls
+    function initDraggableControls() {
+      const controls = document.getElementById('virtual-controls');
+      const handle = document.getElementById('dpad-drag-handle');
+      const dockBtn = document.getElementById('btn-dock-toggle');
+      const minBtn = document.getElementById('btn-dpad-minimize');
+      if (!controls || !handle) return;
+
+      const DOCKS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
+      function applyDock(dock) {
+        if (!controls) return;
+        if (controls.style) {
+          controls.style.left = '';
+          controls.style.top = '';
+          controls.style.right = '';
+          controls.style.bottom = '';
+        }
+        if (!controls.dataset) controls.dataset = {};
+        controls.dataset.dock = dock;
+        if (typeof controls.setAttribute === 'function') {
+          controls.setAttribute('data-dock', dock);
+        }
+      }
+
+      function setFreePos(x, y) {
+        if (!controls) return;
+        if (!controls.dataset) controls.dataset = {};
+        controls.dataset.dock = 'custom';
+        if (typeof controls.setAttribute === 'function') {
+          controls.setAttribute('data-dock', 'custom');
+        }
+        if (controls.style) {
+          controls.style.left = `${x}px`;
+          controls.style.top = `${y}px`;
+          controls.style.right = 'auto';
+          controls.style.bottom = 'auto';
+        }
+      }
+
+      // Restore saved controls dock/position or default to top-left
+      try {
+        const saved = localStorage.getItem('maze_controls_position');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.dock) {
+            applyDock(parsed.dock);
+          } else if (parsed.left !== undefined && parsed.top !== undefined) {
+            setFreePos(parsed.left, parsed.top);
+          }
+        } else {
+          applyDock('top-left');
+        }
+      } catch (err) {
+        applyDock('top-left');
+      }
+
+      // Repositioning drag logic
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let initLeft = 0, initTop = 0;
+
+      const onDragStart = (clientX, clientY) => {
+        isDragging = true;
+        startX = clientX;
+        startY = clientY;
+        const rect = controls.getBoundingClientRect ? controls.getBoundingClientRect() : { left: 16, top: 68 };
+        initLeft = rect.left || 16;
+        initTop = rect.top || 68;
+        if (controls.classList?.add) controls.classList.add('is-dragging');
+      };
+
+      const onDragMove = (clientX, clientY) => {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        let newLeft = initLeft + dx;
+        let newTop = initTop + dy;
+
+        const padW = controls.offsetWidth || 160;
+        const padH = controls.offsetHeight || 180;
+        const maxW = (window.innerWidth || 800) - padW - 8;
+        const maxH = (window.innerHeight || 600) - padH - 8;
+
+        newLeft = Math.max(8, Math.min(maxW, newLeft));
+        newTop = Math.max(8, Math.min(maxH, newTop));
+
+        setFreePos(newLeft, newTop);
+      };
+
+      const onDragEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        if (controls.classList?.remove) controls.classList.remove('is-dragging');
+        const rect = controls.getBoundingClientRect ? controls.getBoundingClientRect() : { left: initLeft, top: initTop };
+        try {
+          localStorage.setItem('maze_controls_position', JSON.stringify({ left: Math.round(rect.left || initLeft), top: Math.round(rect.top || initTop) }));
+        } catch (e) {}
+      };
+
+      handle.addEventListener('mousedown', (e) => {
+        if (e.target.closest?.('.dpad-tool-btn')) return;
+        e.preventDefault();
+        onDragStart(e.clientX, e.clientY);
+        const onMouseMove = (ev) => onDragMove(ev.clientX, ev.clientY);
+        const onMouseUp = () => {
+          onDragEnd();
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('mouseup', onMouseUp);
+        };
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+      });
+
+      handle.addEventListener('touchstart', (e) => {
+        if (e.target.closest?.('.dpad-tool-btn')) return;
+        const touch = e.touches[0];
+        onDragStart(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      handle.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        if (e.cancelable) e.preventDefault();
+        const touch = e.touches[0];
+        onDragMove(touch.clientX, touch.clientY);
+      }, { passive: false });
+
+      handle.addEventListener('touchend', onDragEnd, { passive: true });
+      handle.addEventListener('touchcancel', onDragEnd, { passive: true });
+
+      dockBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const currentDock = (controls.dataset && controls.dataset.dock) || (typeof controls.getAttribute === 'function' ? controls.getAttribute('data-dock') : null) || 'top-left';
+        const nextDock = DOCKS[(DOCKS.indexOf(currentDock) + 1) % DOCKS.length];
+        applyDock(nextDock);
+        try {
+          localStorage.setItem('maze_controls_position', JSON.stringify({ dock: nextDock }));
+        } catch (e) {}
+      });
+
+      minBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        controls.classList.toggle('minimized');
+        const isMin = controls.classList.contains('minimized');
+        minBtn.textContent = isMin ? '▲' : '_';
+      });
+    }
+
+    initDraggableControls();
 
     // Real-Time In-Game Activity Log Feed & Toast Notifications
     const activityFeedEl = document.getElementById('game-activity-feed');

@@ -211,12 +211,19 @@ export function setupMocks() {
   }
 
   if (typeof globalThis.document === 'undefined') {
+    const elementsById = new Map();
     const createMockElement = (tagName) => {
       if (tagName.toLowerCase() === 'canvas') {
         return new MockCanvas();
       }
-      return {
+      let _id = '';
+      const el = {
         tagName: tagName.toUpperCase(),
+        get id() { return _id; },
+        set id(val) {
+          _id = String(val);
+          elementsById.set(_id, el);
+        },
         style: {},
         dataset: {},
         classList: {
@@ -240,26 +247,63 @@ export function setupMocks() {
             this.parentNode.removeChild(this);
           }
         },
-        setAttribute: () => {},
-        getAttribute: () => null,
+        setAttribute: (k, v) => {
+          if (k === 'id') el.id = v;
+        },
+        getAttribute: (k) => (k === 'id' ? el.id : null),
         appendChild: () => {},
         prepend: () => {},
         removeChild: () => {},
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        querySelector: () => createMockElement('div'),
+        addEventListener: (event, handler) => {
+          if (!el._listeners) el._listeners = {};
+          if (!el._listeners[event]) el._listeners[event] = [];
+          el._listeners[event].push(handler);
+        },
+        removeEventListener: (event, handler) => {
+          if (el._listeners?.[event]) {
+            el._listeners[event] = el._listeners[event].filter(h => h !== handler);
+          }
+        },
+        querySelector: (sel) => {
+          if (sel?.startsWith('#')) {
+            const targetId = sel.slice(1);
+            if (elementsById.has(targetId)) return elementsById.get(targetId);
+            const child = createMockElement('div');
+            child.id = targetId;
+            return child;
+          }
+          return createMockElement('div');
+        },
         querySelectorAll: () => [],
-        click: () => {},
+        click: function() {
+          if (typeof this.onclick === 'function') {
+            this.onclick({ type: 'click', target: this });
+          }
+          if (this._listeners?.click) {
+            for (const h of this._listeners.click) {
+              h({ type: 'click', target: this });
+            }
+          }
+        },
       };
+      return el;
     };
 
     const mockBody = createMockElement('body');
 
     globalThis.document = {
       createElement: createMockElement,
-      getElementById: (id) => createMockElement('div'),
-      querySelector: () => createMockElement('div'),
+      getElementById: (id) => elementsById.get(String(id)) || null,
+      querySelector: (sel) => {
+        if (sel?.startsWith('#')) {
+          const targetId = sel.slice(1);
+          return elementsById.get(targetId) || null;
+        }
+        return createMockElement('div');
+      },
       querySelectorAll: () => [],
+      addEventListener: () => {},
+      removeEventListener: () => {},
       body: mockBody,
     };
   }

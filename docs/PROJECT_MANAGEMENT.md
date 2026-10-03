@@ -72,8 +72,13 @@ This document tracks project milestones, current release status, active developm
 - [x] **Custom Prefabs, BaseEntity Domain Models & Code Elegance Standards Sprint (BL-39, BL-57, BL-62)**:
   - **Polymorphic Entity Domain Models (BL-57)**: Created `BaseEntity` (`js/entities/base-entity.js`) domain foundation integrating frozen immutable `Vec2` positions, polymorphic `canInteract()`, `onInteract()`, `isBlocking()`, and self-documenting interaction prompts (`getPrompt()`); refactored `Key`, `Door`, and `Lever` to extend `BaseEntity`, replacing brittle switch-case logic with polymorphic object-oriented contracts.
   - **Custom Prefab Saving in Map Editor (BL-39)**: Implemented `captureLevelRegionAsPrefab()`, `saveCustomPrefab()`, `getCustomPrefabs()`, `deleteCustomPrefab()`, and `clearCustomPrefabs()` in `js/editor/prefabs.js`; updated `stampPrefab()` and `EditorCanvas` ghost preview to dynamically resolve custom user prefabs; created `#modal-save-prefab` and sidebar custom prefab palette in `editor.html` and `EditorUI` with 1-click region capture, dynamic stamping, and deletion management.
-  - **SOLID Principles & Code Elegance Standards (BL-62 / ADR-007)**: Formulated [`docs/adr/0007-solid-principles-and-code-elegance.md`](adr/0007-solid-principles-and-code-elegance.md) establishing SRP file budgets ($\le 300$ lines), Open/Closed entity polymorphism, Liskov substitution, interface segregation, dependency inversion, early-return guard clauses, and value object immutability.
   - **Automated QA Coverage**: Expanded test harness to 102 test suites and 500 tests (0 failed, 7,297 assertions, 23/23 zero-drift checks passed).
+- [x] **Mobile Movement, Moveable Top Controls, Minimal UI & Safety Confirmations Sprint (BL-63, BL-64)**:
+  - **Moveable & Top-Docked Virtual Controls (BL-63)**: Defaulted `#virtual-controls` to top-left (`top: 4.25rem; left: 1rem;`) freeing bottom screen from mobile browser gesture bars; implemented 4-quadrant docking cycles (`top-left`, `top-right`, `bottom-left`, `bottom-right`), drag handle repositioning with viewport boundary clamping and `localStorage` persistence, and minimize toggle (`_` / `▲`).
+  - **Effortless Mobile Movement & Auto-Repeat (BL-63)**: Added continuous tap-and-hold auto-repeat to directional virtual buttons (115ms interval following 220ms initial hold delay) across both touch and mouse events; added direct camera rotation buttons (`↺` [Q] and `↻` [R]) on the virtual pad.
+  - **Destructive Action Safety Confirmations (BL-64)**: Added double-confirmation modal flows with explicit Cancel and Confirm buttons for `StorageManager.resetAllProgress()`, custom prefab deletion in Map Editor, and procedural maze generator canvas overwrites.
+  - **Minimalist UI & Modal Scroll Containment (BL-64)**: Refactored modal layouts with clamped viewport heights (`88vh`), smooth touch scrolling (`-webkit-overflow-scrolling: touch; overscroll-behavior: contain`), sticky footers preventing offscreen buttons, non-blocking toast notifications (`pointer-events: none`), and mobile tutorial hint collapsing.
+  - **Automated QA Coverage**: Expanded test harness to 103 test suites and 504 tests (0 failed, 7,325 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
@@ -457,6 +462,7 @@ All architectural decisions are documented in `docs/adr/`:
 | [0004](adr/0004-zone-grouping-and-thematic-tilesets.md) | Zone Grouping, Thematic Tilesets, and Directional Graphics | Accepted | 2026-08-30 |
 | [0005](adr/0005-angled-topdown-perspective-and-dynamic-activities.md) | Angled Top-Down (2.5D) Perspective and Dynamic Activities | Accepted | 2026-09-18 |
 | [0006](adr/0006-camera-world-rotation-branching-rooms.md) | Camera World Rotation, Branching Levels, and Multi-Room Dungeons | Accepted | 2026-09-19 |
+| [0007](adr/0007-solid-principles-and-code-elegance.md) | SOLID Principles, Entity Domain Polymorphism, and Code Elegance | Accepted | 2026-10-02 |
 
 ---
 

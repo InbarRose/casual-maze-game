@@ -856,6 +856,12 @@ export class EditorUI {
     const braid = (parseInt(braidSlider?.value, 10) || 25) / 100;
     const keyPairs = parseInt(keysSelect?.value, 10) || 1;
 
+    if (this.historyIndex > 0 && typeof confirm === 'function') {
+      if (!confirm('⚠️ Generating a new labyrinth will replace your current editor changes. Continue?')) {
+        return;
+      }
+    }
+
     try {
       const generated = MazeGenerator.generate({
         width,
@@ -920,6 +926,9 @@ export class EditorUI {
       delBtn.textContent = '✕';
       delBtn.addEventListener('click', (e) => {
         e.stopPropagation();
+        if (typeof confirm === 'function' && !confirm(`⚠️ Are you sure you want to delete custom prefab "${p.name}"?`)) {
+          return;
+        }
         deleteCustomPrefab(p.id);
         this.renderCustomPrefabs();
         this.showToast(`Deleted custom prefab "${p.name}"`, 'info');
