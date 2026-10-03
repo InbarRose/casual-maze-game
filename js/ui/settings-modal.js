@@ -168,6 +168,20 @@ export class SettingsModal {
               <input type="file" id="settings-save-file-input" accept=".json" style="display: none;" />
             </div>
             <div id="settings-save-msg" style="font-size: 0.78rem; min-height: 1.1rem; margin-top: 0.4rem; color: var(--emerald); text-align: center;"></div>
+
+            <!-- Destructive Action: Reset Progress with Confirmation -->
+            <div style="margin-top: 0.8rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 0.4rem;">
+              <button type="button" id="btn-settings-reset-save" class="btn btn-secondary btn-sm" style="color: var(--rose, #f43f5e); border-color: rgba(244, 63, 94, 0.3); font-size: 0.75rem; width: 100%;" title="Reset all progress, stars, and medals">
+                🗑️ Reset All Progress
+              </button>
+              <div id="settings-reset-confirm-box" style="display: none; background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.3); border-radius: 6px; padding: 0.6rem; font-size: 0.75rem; color: var(--text);">
+                <div style="margin-bottom: 0.5rem; font-weight: 600; color: #fecdd3;">⚠️ Are you sure? All stars, medals, and campaign completions will be permanently erased.</div>
+                <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                  <button type="button" id="btn-settings-cancel-reset" class="btn btn-secondary btn-xs" style="padding: 3px 8px;">Cancel</button>
+                  <button type="button" id="btn-settings-confirm-reset" class="btn btn-danger btn-xs" style="padding: 3px 8px; background: #e11d48; border-color: #f43f5e; color: #fff;">Confirm Reset</button>
+                </div>
+              </div>
+            </div>
           </div>
 
           <!-- Section 5: Diagnostics & Links -->
@@ -339,6 +353,15 @@ export class SettingsModal {
       saveFileInput.onchange = async (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        // Confirmation before replacing save data
+        if (typeof confirm === 'function') {
+          if (!confirm('⚠️ Restoring this backup will overwrite your current progress, stars, and medals. Continue?')) {
+            saveFileInput.value = '';
+            return;
+          }
+        }
+
         try {
           const res = await StorageManager.importSaveFile(file);
           if (saveMsg) {
@@ -353,6 +376,34 @@ export class SettingsModal {
             saveMsg.style.color = 'var(--rose)';
           }
         }
+      };
+    }
+
+    // Reset Progress Confirmation Logic
+    const resetBtn = this.modalEl.querySelector('#btn-settings-reset-save');
+    const resetBox = this.modalEl.querySelector('#settings-reset-confirm-box');
+    const cancelResetBtn = this.modalEl.querySelector('#btn-settings-cancel-reset');
+    const confirmResetBtn = this.modalEl.querySelector('#btn-settings-confirm-reset');
+
+    if (resetBtn && resetBox) {
+      resetBtn.onclick = () => {
+        resetBox.style.display = 'block';
+        resetBtn.style.display = 'none';
+      };
+      cancelResetBtn.onclick = () => {
+        resetBox.style.display = 'none';
+        resetBtn.style.display = 'block';
+      };
+      confirmResetBtn.onclick = () => {
+        StorageManager.resetAllProgress();
+        resetBox.style.display = 'none';
+        resetBtn.style.display = 'block';
+        if (saveMsg) {
+          saveMsg.textContent = 'All game progress has been reset.';
+          saveMsg.style.color = 'var(--rose)';
+        }
+        this.audio.playClick?.();
+        this.refresh();
       };
     }
 

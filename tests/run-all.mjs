@@ -122,6 +122,7 @@ import './unit/ui/maze-html-bootstrap.test.mjs';
 import './unit/ui/victory-quick-advance.test.mjs';
 import './unit/ui/breadcrumbs-navigation.test.mjs';
 import './unit/ui/high-contrast-mode.test.mjs';
+import './unit/ui/mobile-controls.test.mjs';
 
 // Run registered suites
 

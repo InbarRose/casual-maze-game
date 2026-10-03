@@ -416,45 +416,138 @@
   color: var(--text);
 }
 
-/* Mobile Virtual D-Pad */
+/* Mobile Virtual D-Pad — Moveable & Top Positioned */
 .virtual-controls {
   position: absolute;
-  bottom: 1.5rem;
-  left: 1.5rem;
   z-index: 150;
   display: none;
   touch-action: manipulation;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 14px;
+  padding: 6px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  user-select: none;
+  transition: opacity 0.2s;
+}
+
+/* Default Docks: Top Not Bottom */
+.virtual-controls[data-dock="top-left"] {
+  top: 4.25rem;
+  left: 1rem;
+  bottom: auto;
+  right: auto;
+}
+.virtual-controls[data-dock="top-right"] {
+  top: 4.25rem;
+  right: 1rem;
+  bottom: auto;
+  left: auto;
+}
+.virtual-controls[data-dock="bottom-left"] {
+  bottom: 1.5rem;
+  left: 1rem;
+  top: auto;
+  right: auto;
+}
+.virtual-controls[data-dock="bottom-right"] {
+  bottom: 1.5rem;
+  right: 1rem;
+  top: auto;
+  left: auto;
+}
+
+.virtual-controls.is-dragging {
+  cursor: grabbing;
+  opacity: 0.9;
+  transition: none !important;
 }
 
 @media (max-width: 820px), (pointer: coarse) {
   .virtual-controls {
-    display: grid;
-    grid-template-columns: repeat(3, 56px);
-    grid-template-rows: repeat(3, 56px);
-    gap: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
   }
   .controls-hint-bar {
     display: none;
   }
   .minimap-container {
     top: auto;
-    bottom: 1.5rem;
-    right: 1.5rem;
-    padding: 0.35rem;
+    bottom: 1rem;
+    right: 1rem;
+    padding: 0.3rem;
   }
   #minimap-canvas {
-    width: 120px !important;
-    height: 120px !important;
+    width: 105px !important;
+    height: 105px !important;
   }
 }
 
+.dpad-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px 5px 4px;
+  cursor: grab;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  margin-bottom: 2px;
+}
+.virtual-controls.is-dragging .dpad-header {
+  cursor: grabbing;
+}
+.dpad-grip {
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--text-muted, #94a3b8);
+  pointer-events: none;
+}
+.dpad-header-actions {
+  display: flex;
+  gap: 4px;
+}
+.dpad-tool-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text);
+  border-radius: 4px;
+  font-size: 0.72rem;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s;
+}
+.dpad-tool-btn:active {
+  background: var(--accent);
+  color: #04101e;
+}
+
+.dpad-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 48px);
+  grid-template-rows: repeat(3, 48px);
+  gap: 6px;
+}
+
+.virtual-controls.minimized .dpad-grid {
+  display: none;
+}
+
 .dpad-btn {
-  background: rgba(22, 27, 34, 0.75);
+  background: rgba(30, 41, 59, 0.85);
   backdrop-filter: blur(4px);
   border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 12px;
+  border-radius: 10px;
   color: var(--text);
-  font-size: 1.25rem;
+  font-size: 1.15rem;
   font-weight: 700;
   display: flex;
   align-items: center;
@@ -462,7 +555,8 @@
   cursor: pointer;
   user-select: none;
   box-shadow: var(--shadow-md);
-  transition: background 0.1s, transform 0.1s;
+  transition: background 0.1s, transform 0.08s;
+  touch-action: none;
 }
 
 .dpad-btn:active {
@@ -471,11 +565,20 @@
   transform: scale(0.92);
 }
 
-.dpad-up { grid-column: 2; grid-row: 1; }
-.dpad-left { grid-column: 1; grid-row: 2; }
-.dpad-center { grid-column: 2; grid-row: 2; font-size: 0.8rem; background: rgba(56, 189, 248, 0.15); border-color: rgba(56, 189, 248, 0.3); color: var(--accent); }
-.dpad-right { grid-column: 3; grid-row: 2; }
-.dpad-down { grid-column: 2; grid-row: 3; }
+.dpad-rot-l, .dpad-rot-r {
+  font-size: 0.95rem;
+  color: var(--text-muted, #94a3b8);
+  background: rgba(30, 41, 59, 0.55);
+}
+.dpad-center {
+  font-size: 0.72rem;
+  background: rgba(56, 189, 248, 0.18);
+  border-color: rgba(56, 189, 248, 0.35);
+  color: var(--accent);
+}
+.dpad-empty {
+  pointer-events: none;
+}
 
 /* Free Pan Banner */
 .freepan-banner {
