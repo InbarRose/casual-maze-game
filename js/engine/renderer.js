@@ -2568,6 +2568,20 @@ export class GameRenderer {
     ctx.lineTo(screen.x, screen.y + arm);
     ctx.stroke();
 
+    // Render path trail waypoint pips (BL-67)
+    if (clickTarget.path && Array.isArray(clickTarget.path) && clickTarget.path.length > 0 && typeof ctx.arc === 'function') {
+      ctx.fillStyle = `rgba(56, 189, 248, ${alpha * 0.45})`;
+      for (let i = 0; i < clickTarget.path.length; i++) {
+        const step = clickTarget.path[i];
+        const stepWorldX = step.x * tileSize + tileSize / 2;
+        const stepWorldY = step.y * tileSize + tileSize / 2;
+        const stepScreen = camera.worldToScreen(stepWorldX, stepWorldY, true);
+        ctx.beginPath();
+        ctx.arc(stepScreen.x, stepScreen.y, Math.max(1.5, tileSize * 0.08), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
     ctx.restore();
   }
 }

@@ -370,8 +370,62 @@
   z-index: 90;
   display: flex;
   flex-direction: column;
+  align-items: stretch;
+  gap: 0.35rem;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.minimap-header {
+  display: flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0 0.15rem;
+}
+
+.minimap-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.minimap-toggle-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--text);
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  width: 22px;
+  height: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+  transition: all 0.15s ease;
+}
+.minimap-toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.18);
+  color: #fff;
+}
+
+.minimap-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.minimap-container.is-minimized {
+  padding: 0.3rem 0.65rem;
+  cursor: pointer;
+}
+.minimap-container.is-minimized .minimap-body {
+  display: none !important;
 }
 
 #minimap-canvas {
@@ -475,10 +529,13 @@
     display: none;
   }
   .minimap-container {
-    top: auto;
-    bottom: 1rem;
-    right: 1rem;
-    padding: 0.3rem;
+    top: 4.25rem;
+    bottom: auto;
+    right: 0.75rem;
+    padding: 0.35rem;
+  }
+  .minimap-container.is-minimized {
+    padding: 0.25rem 0.5rem;
   }
   #minimap-canvas {
     width: 105px !important;
@@ -1041,6 +1098,36 @@
 
 .pause-action-btn span {
   flex: 1;
+}
+
+.pause-confirm-box {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 0.25rem 0;
+  animation: fadeIn 0.15s ease-out;
+}
+
+.pause-confirm-box.hidden {
+  display: none !important;
+}
+
+.pause-confirm-msg {
+  font-size: 0.82rem;
+  color: #fca5a5;
+  margin: 0;
+  line-height: 1.4;
+  font-weight: 500;
+}
+
+.pause-confirm-btn-row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.5rem;
 }
 
 /* ==========================================================================

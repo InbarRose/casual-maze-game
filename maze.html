@@ -149,10 +149,16 @@
       Free-Pan Mode — WASD / Drag to Explore • Press [M] to Center
     </div>
 
-    <!-- Minimap HUD -->
-    <aside class="minimap-container">
-      <canvas id="minimap-canvas" width="180" height="180"></canvas>
-      <span class="minimap-hint">Click / Drag to Pan</span>
+    <!-- Minimap HUD (Top Positioned & Collapsible) -->
+    <aside class="minimap-container" id="minimap-container">
+      <div class="minimap-header" id="minimap-header">
+        <span class="minimap-title">Tactical Radar</span>
+        <button type="button" class="minimap-toggle-btn" id="btn-minimap-minimize" title="Minimize / Expand Radar" aria-label="Toggle Radar">_</button>
+      </div>
+      <div class="minimap-body" id="minimap-body">
+        <canvas id="minimap-canvas" width="180" height="180"></canvas>
+        <span class="minimap-hint">Click / Drag to Pan</span>
+      </div>
     </aside>
 
     <!-- Bottom Controls Hint Bar -->
@@ -233,6 +239,14 @@
             <button class="btn btn-secondary pause-action-btn" id="btn-pause-restart">
               🔄 <span>Restart Level [T]</span>
             </button>
+            <!-- Destructive Confirmation Box: Restart -->
+            <div class="pause-confirm-box hidden" id="pause-restart-confirm">
+              <p class="pause-confirm-msg">⚠️ Restart this labyrinth? All collected keys and steps will be reset.</p>
+              <div class="pause-confirm-btn-row">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-restart-cancel">Cancel</button>
+                <button type="button" class="btn btn-danger btn-sm" id="btn-pause-restart-confirm">Confirm Restart</button>
+              </div>
+            </div>
             <button class="btn btn-secondary pause-action-btn" id="btn-pause-perspective">
               📐 <span>View: Angled 2.5D [V]</span>
             </button>
@@ -269,6 +283,14 @@
             <button class="btn btn-danger pause-action-btn" id="btn-pause-quit">
               🏰 <span>Return to Level Select</span>
             </button>
+            <!-- Destructive Confirmation Box: Quit to Hub -->
+            <div class="pause-confirm-box hidden" id="pause-quit-confirm">
+              <p class="pause-confirm-msg">⚠️ Exit to Level Select? Current labyrinth run will not be saved.</p>
+              <div class="pause-confirm-btn-row">
+                <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-quit-cancel">Cancel</button>
+                <button type="button" class="btn btn-danger btn-sm" id="btn-pause-quit-confirm">Exit to Hub</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -1844,6 +1866,38 @@
         const isMin = controls.classList.contains('minimized');
         minBtn.textContent = isMin ? '▲' : '_';
       });
+
+      // Collapsible Minimap Radar (BL-67)
+      const minimapContainer = document.getElementById('minimap-container');
+      const minMinimapBtn = document.getElementById('btn-minimap-minimize');
+      if (minimapContainer && minMinimapBtn) {
+        minMinimapBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          minimapContainer.classList.toggle('is-minimized');
+          const isMin = minimapContainer.classList.contains('is-minimized');
+          minMinimapBtn.textContent = isMin ? '▲' : '_';
+          try {
+            localStorage.setItem('maze_minimap_minimized', isMin ? 'true' : 'false');
+          } catch (err) {}
+        });
+
+        minimapContainer.addEventListener('click', (e) => {
+          if (minimapContainer.classList.contains('is-minimized')) {
+            minimapContainer.classList.remove('is-minimized');
+            minMinimapBtn.textContent = '_';
+            try {
+              localStorage.setItem('maze_minimap_minimized', 'false');
+            } catch (err) {}
+          }
+        });
+
+        try {
+          if (localStorage.getItem('maze_minimap_minimized') === 'true') {
+            minimapContainer.classList.add('is-minimized');
+            minMinimapBtn.textContent = '▲';
+          }
+        } catch (err) {}
+      }
     }
 
     initDraggableControls();
