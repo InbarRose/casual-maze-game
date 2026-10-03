@@ -16,7 +16,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 6.33 | 9.00 | 7.00 | 7.33 | 5.00 | 5.33 | **40.00** (66.7%) | **B- Tier** | Dual Tileset & Secret Walls Resolved (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`) |
 | **CMP-03** | **Core Gameplay Loop & State Machine** | 6.00 | 9.67 | 6.33 | 8.00 | 6.33 | 6.67 | **43.00** (71.7%) | **B Tier** | BaseEntity Polymorphism & Vec2 Domain Models (`BL-42`, `BL-51`, `BL-52`, `BL-57`) |
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 5.67 | 9.33 | 7.33 | 6.67 | 5.33 | 6.00 | **40.33** (67.2%) | **B- Tier** | InputManager & Gamepad API Controller Support (`BL-40`, `BL-42`, `BL-55`, `BL-59`) |
-| **CMP-05** | **Minimap & Tactical Navigation** | 4.67 | 9.00 | 5.67 | 6.00 | 5.00 | 4.67 | **35.01** (58.4%) | **C Tier** | Secret Passage Highlighting Resolved (`BL-17`, `BL-51`) |
+| **CMP-05** | **Minimap & Tactical Navigation** | 6.33 | 9.33 | 7.33 | 7.00 | 6.33 | 7.00 | **43.32** (72.2%) | **B Tier** | Multi-Elevation Bridges, Tactical Entities & High-Contrast Contours (`BL-17`, `BL-51`, `BL-65`, `BL-66`) |
 | **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 5.00 | 9.33 | 7.00 | 6.00 | 5.33 | 5.33 | **37.99** (63.3%) | **C+ Tier** | Side HUD Drawer, Tile Badge & HUD Breadcrumbs (`BL-42`, `BL-54`) |
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.00 | 9.33 | 7.00 | 6.00 | 6.33 | 5.67 | **41.33** (68.9%) | **B- Tier** | Victory Confetti, Quick-Advance & Diagnostic Bundles (`BL-34`, `BL-38`, `BL-52`, `BL-55`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 5.33 | 9.67 | 6.00 | 6.67 | 5.33 | 5.00 | **38.00** (63.3%) | **C+ Tier** | 1-Click Procedural Maze Generator & Studio Modal (`BL-49`, `BL-50`) |
@@ -30,7 +30,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 5.00 | 9.33 | 6.67 | 5.67 | 5.00 | 6.33 | **38.00** (63.3%) | **C+ Tier** | Visual Bridge & Ramp Crossing SVG Guides (`BL-37`, `BL-48`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 5.67 | 9.33 | 6.33 | 7.00 | 5.33 | 6.33 | **39.99** (66.7%) | **B- Tier** | Browser Runner & Full Telemetry Resolved (`BL-45`, `BL-46`) |
 | **CMP-18** | **Community Feedback & Bug Reporting Channels** | 4.33 | 9.33 | 6.33 | 5.33 | 4.33 | 6.67 | **36.32** (60.5%) | **C+ Tier** | 1-Click Diagnostic Bug Bundle Exporter (`BL-34`) |
-| **CMP-19** | **Accessibility & Sensory Inclusivity** | 4.33 | 9.33 | 5.67 | 5.00 | 4.67 | 6.67 | **35.67** (59.5%) | **C Tier** | High-Contrast Mode & Keyboard-Only Victory Advance (`BL-26`, `BL-55`) |
+| **CMP-19** | **Accessibility & Sensory Inclusivity** | 5.67 | 9.67 | 6.67 | 6.00 | 5.67 | 8.33 | **42.01** (70.0%) | **B- Tier** | Canvas High-Contrast Contours, Assist Halos & Victory Advance (`BL-26`, `BL-40`, `BL-55`, `BL-66`) |
 
 ---
 
@@ -136,20 +136,22 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/minimap.js`, `js/engine/game-loop.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.33/10** (1.1: 4, 1.2: 4, 1.3: 5)
-  * $C_2$ Static Purity: **9.00/10** (2.1: 9, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.33/10** (3.1: 6, 3.2: 5, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **5.67/10** (4.1: 6, 4.2: 6, 4.3: 5)
-  * $C_5$ Progression & Retention: **5.00/10** (5.1: 5, 5.2: 5, 5.3: 5)
-  * $C_6$ Accessibility & DX: **4.67/10** (6.1: 4, 6.2: 5, 6.3: 5)
-  * **Master Score**: **34.00 / 60.00 (56.7% — C Tier Prototype)**
+  * $C_1$ Juice & Delight: **6.33/10** (1.1: 6, 1.2: 6, 1.3: 7)
+  * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 8, 3.2: 7, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **6.33/10** (5.1: 6, 5.2: 6, 5.3: 7)
+  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
+  * **Master Score**: **43.32 / 60.00 (72.2% — B Tier Prototype)**
 * **Strengths**:
-  * Minimap provides global tactical layout with zoom scaling and click-to-move pathfinding.
+  * **Multi-Elevation & Bridge Shading (`BL-65`)**: Elevated bridges (`B_EW`, `B_NS`) render with cobalt bridge deck spans (`#0369a1`) and bright cyan center walkway planks (`#38bdf8`); directional ramps (`R_*`) render incline shading with directional notch markers.
+  * **Tactical Entity Indicators (`BL-65`)**: Uncollected keys render glowing gold pips (`#facc15`), locked doors render security barrier crossbars (`#ef4444`), levers render amber/emerald switch nodes, and teleporters render violet rings.
+  * **Radar Sweep Wave & Elevation Beacon (`BL-65`)**: Atmospheric circular sonar pulse emanates from player location, complemented by cyan elevation rings when player is traversing upper bridge decks (`player.elevation === 1`) and tactical corner brackets.
+  * **High-Contrast Canvas Contours (`BL-66`)**: Instant toggle to pitch-black backdrop (`#000000`), crisp white contour tile borders, and high-visibility neon player marker.
+  * Smooth pinch-to-zoom (1.0x to 3.5x), drag-panning, and click-to-move BFS pathfinding integration (`BL-14`, `BL-17`).
 * **Gaps & Critical Deductions**:
-  * Visual aesthetic is a flat geometric square canvas without atmospheric polish, radar sweeps, or organic fog fade.
-  * Multi-elevation bridges and upper levels are not visually distinguishable on the minimap.
-  * Secret rooms and illusory walls are revealed too plainly unless gated by proximity (`BL-51`).
-* **Directives**: Add multi-elevation minimap depth shading and hide secret rooms until uncovered (`BL-51`).
+  * Secret rooms and illusory walls could offer an optional subtle radar pulse ping on close proximity.
+* **Directives**: Continue to expand tactical markers for future patrol hazards and multi-room portals.
 
 ---
 
@@ -419,20 +421,22 @@ This document records the official baseline quality evaluations, granular expert
 ---
 
 ### CMP-19: Accessibility & Sensory Inclusivity
-*Files: `css/main.css`, `js/ui/settings-modal.js`, `js/engine/renderer.js`*
+*Files: `css/main.css`, `js/ui/settings-modal.js`, `js/engine/renderer.js`, `js/engine/minimap.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.00/10** (1.1: 4, 1.2: 4, 1.3: 4)
-  * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **4.67/10** (3.1: 5, 3.2: 4, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **5.00/10** (4.1: 5, 4.2: 5, 4.3: 5)
-  * $C_5$ Progression & Retention: **4.67/10** (5.1: 5, 5.2: 4, 5.3: 5)
-  * $C_6$ Accessibility & DX: **5.00/10** (6.1: 5, 6.2: 5, 6.3: 5)
-  * **Master Score**: **32.67 / 60.00 (54.5% — C- Tier Prototype)**
+  * $C_1$ Juice & Delight: **5.67/10** (1.1: 6, 1.2: 5, 1.3: 6)
+  * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 10, 2.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **6.67/10** (3.1: 7, 3.2: 6, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **6.00/10** (4.1: 6, 4.2: 6, 4.3: 6)
+  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
+  * $C_6$ Accessibility & DX: **8.33/10** (6.1: 8, 6.2: 9, 6.3: 8)
+  * **Master Score**: **42.01 / 60.00 (70.0% — B- Tier Prototype)**
 * **Strengths**:
-  * Simple Keyboard Mode and basic high-contrast CSS color variables.
+  * **Canvas High-Contrast Contours & Assist Halos (`BL-26`, `BL-66`)**: High-contrast rendering pass in `GameRenderer` strokes wall perimeters with 2px solid white borders (`#ffffff`) and surrounds the explorer with dual neon yellow (`#facc15`) and white (`#ffffff`) halos across classic, angled, and overhead perspectives.
+  * **Minimap High-Contrast Theme (`BL-66`)**: Pitch-black canvas clear (`#000000`), white tile outlines, and neon player indicators.
+  * **Gamepad API Support (`BL-40`)**: Full controller navigation and interaction for mobility impairments.
+  * **Keyboard Quick-Advance on Victory (`BL-55`)**: Space / Enter keys immediately advance to the next level without mouse requirements.
+  * Simple Keyboard Mode and high-contrast CSS design tokens.
 * **Gaps & Critical Deductions**:
-  * Canvas renderer does not draw high-contrast wall borders or neon player halos (`BL-26`).
-  * Missing Gamepad API controller support (`BL-40`).
-  * No assist mode options (step rewind, infinite timer).
-* **Directives**: Implement high-contrast canvas pass (`BL-26`) and Gamepad API controller support (`BL-40`).
+  * Assist mode options could expand further (e.g. optional directional path guidance arrow or step rewind).
+* **Directives**: Explore directional assist hints and screen reader audio chimes for entity interactions.
