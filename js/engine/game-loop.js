@@ -754,18 +754,32 @@ export class GameLoop {
           x: targetGridX,
           y: targetGridY,
           time: performance.now(),
+          path: path.slice(0, 24),
         };
       }
     };
 
-    // Canvas Touch & Swipe Controls (BL-16)
+    // Canvas Touch & Continuous Drag Steering Controls (BL-16, BL-67)
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
     let touchHasMoved = false;
+    let touchSteeringActive = false;
+    let touchSteerDirection = null;
+    let touchSteerInterval = null;
+
+    this.stopTouchSteer = () => {
+      if (touchSteerInterval) {
+        clearInterval(touchSteerInterval);
+        touchSteerInterval = null;
+      }
+      touchSteeringActive = false;
+      touchSteerDirection = null;
+    };
 
     this.handleCanvasTouchStart = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      this.stopTouchSteer();
       if (e.touches?.length === 1) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
@@ -779,14 +793,40 @@ export class GameLoop {
       if (e.touches?.length === 1) {
         const dx = e.touches[0].clientX - touchStartX;
         const dy = e.touches[0].clientY - touchStartY;
-        if (Math.hypot(dx, dy) > 10) {
+        const dist = Math.hypot(dx, dy);
+        if (dist > 10) {
           touchHasMoved = true;
+        }
+
+        // Continuous directional drag: deadzone threshold 24px
+        if (dist >= 24) {
+          const absX = Math.abs(dx);
+          const absY = Math.abs(dy);
+          const direction = absX > absY ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
+
+          if (direction !== touchSteerDirection) {
+            touchSteerDirection = direction;
+            touchSteeringActive = true;
+            this.autoMovePath = null;
+            this.clickTarget = null;
+            this.tryMoveDirection(direction);
+
+            if (touchSteerInterval) clearInterval(touchSteerInterval);
+            touchSteerInterval = setInterval(() => {
+              if (touchSteerDirection) {
+                this.tryMoveDirection(touchSteerDirection);
+              }
+            }, 125);
+          }
         }
       }
     };
 
     this.handleCanvasTouchEnd = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      const hadSteering = touchSteeringActive;
+      this.stopTouchSteer();
+
       if (e.changedTouches?.length === 1) {
         const endX = e.changedTouches[0].clientX;
         const endY = e.changedTouches[0].clientY;
@@ -795,6 +835,11 @@ export class GameLoop {
         const absX = Math.abs(dx);
         const absY = Math.abs(dy);
         const elapsed = performance.now() - touchStartTime;
+
+        // If continuous drag steering already executed, finish cleanly
+        if (hadSteering) {
+          return;
+        }
 
         // Swipe detected: distance >= 24px within 600ms
         if (touchHasMoved && (absX >= 24 || absY >= 24) && elapsed < 600) {
@@ -830,6 +875,9 @@ export class GameLoop {
    */
   destroy() {
     this.stop();
+    if (typeof this.stopTouchSteer === 'function') {
+      this.stopTouchSteer();
+    }
     if (this.puzzleModal) {
       this.puzzleModal.close();
     }

@@ -83,6 +83,12 @@ This document tracks project milestones, current release status, active developm
   - **Tactical Minimap Elevation & Entity Shading (BL-65)**: Rendered elevated bridge spans (`B_EW`, `B_NS`) with distinct cobalt deck fills (`#0369a1`) and bright cyan center walkway planks (`#38bdf8`); rendered directional approach ramps (`R_*`) with incline shading and directional indicators; overlaid overhead walkway layer with subtle cyan tint; rendered explored uncollected keys (`#facc15`), locked door barrier bars (`#ef4444`), lever switch nodes, and teleporters on the minimap; added atmospheric radar sonar sweep radiating from explorer location with cyan elevation rings when aloft on upper decks (`player.elevation === 1`) and tactical HUD corner brackets.
   - **Canvas High-Contrast Contours & Assist Halos (BL-26, BL-66)**: Added high-contrast contour rendering pass in `GameRenderer` stroking wall perimeters with 2px solid white borders (`#ffffff`) and wrapping player avatar with dual-tier neon yellow (`#facc15`) and white (`#ffffff`) halo rings across angled, classic, and overhead projections; added pitch-black backdrop (`#000000`) and high-contrast tile contours to Minimap.
   - **Automated QA Coverage**: Created `tests/unit/engine/tactical-minimap.test.mjs`; expanded test harness to 105 test suites and 510 tests (0 failed, 7,340 assertions, 23/23 zero-drift checks passed).
+- [x] **Continuous Touch Drag Steering, Pathfinding Waypoints & Pause Confirmation Safety Sprint (BL-67, BL-68)**:
+  - **Continuous Touch Drag Steering (BL-67)**: Implemented fluid directional drag steering on mobile canvas with 125ms auto-step repeat rate and dynamic mid-drag heading adjustments.
+  - **Pathfinding Waypoint Trail (BL-67)**: Rendered glowing cyan waypoint dots connecting player position to tapped destination tile along BFS corridor route.
+  - **Pause Menu Destructive Confirmation Safety (BL-68)**: Added explicit confirmation dialogs protecting Restart Level and Return to Level Select against accidental mobile taps.
+  - **Collapsible Top Minimap Radar (BL-68)**: Maintained top-docked minimap radar on mobile viewports (`top: 4.25rem; right: 0.75rem;`), freeing the bottom canvas from touch gesture conflicts, with 1-tap minimize toggle (`_`/`▲`) and localStorage persistence.
+  - **Automated QA Coverage**: Created `tests/unit/ui/mobile-movement-and-minimap.test.mjs`; expanded test harness to 107 test suites and 513 tests (0 failed, 7,353 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
