@@ -3,7 +3,7 @@
  * A mystic obstacle barrier that requires solving an interactive minigame (Rune Memory, Cipher Lock) to unlock.
  */
 
-import { ENTITY_TYPES, ELEVATION, formatXYZ, CELESTIAL_SYMBOLS } from '../core/constants.js';
+import { ENTITY_TYPES, ELEVATION, formatXYZ, CELESTIAL_SYMBOLS, isApproachAllowed } from '../core/constants.js';
 
 export class PuzzleGate {
   /**
@@ -21,6 +21,7 @@ export class PuzzleGate {
     this.name = config.name || (this.puzzleType === 'cipher_dial' ? 'Cipher Barrier' : 'Rune Memory Gate');
     this.color = config.color || '#a855f7';
     this.isUnlocked = !!config.isUnlocked;
+    this.interactDirections = Array.isArray(config.interactDirections) ? [...config.interactDirections] : null;
 
     // Symbol vocabulary for dial puzzles (defaulting to CELESTIAL_SYMBOLS for cipher_dial)
     this.symbols = Array.isArray(config.symbols)
@@ -44,6 +45,20 @@ export class PuzzleGate {
    */
   getCoordString() {
     return formatXYZ(this.x, this.y, this.z);
+  }
+
+  /**
+   * Check if player can interact with this puzzle gate
+   * @param {number} playerX
+   * @param {number} playerY
+   * @param {number} [playerZ=0]
+   * @returns {boolean}
+   */
+  canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
+    if (this.z !== playerZ) return false;
+    const dist = Math.abs(this.x - playerX) + Math.abs(this.y - playerY);
+    if (dist > 1) return false;
+    return isApproachAllowed(this.x, this.y, playerX, playerY, this.interactDirections);
   }
 
   /**

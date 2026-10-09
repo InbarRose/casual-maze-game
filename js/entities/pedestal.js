@@ -5,7 +5,7 @@
  * and group solving mechanisms.
  */
 
-import { ENTITY_TYPES, ELEVATION, formatXYZ, PEDESTAL_STYLES } from '../core/constants.js';
+import { ENTITY_TYPES, ELEVATION, formatXYZ, PEDESTAL_STYLES, isApproachAllowed } from '../core/constants.js';
 
 export class Pedestal {
   /**
@@ -27,6 +27,7 @@ export class Pedestal {
     this.puzzleGroupId = config.puzzleGroupId || 'default_riddle_group';
     this.targetDoorId = config.targetDoorId || null;
     this.targetMechanismId = config.targetMechanismId || null;
+    this.interactDirections = Array.isArray(config.interactDirections) ? [...config.interactDirections] : null;
 
     // Slotted item instance
     this.slottedItem = config.slottedItem || null;
@@ -48,6 +49,20 @@ export class Pedestal {
    */
   getCoordString() {
     return formatXYZ(this.x, this.y, this.z);
+  }
+
+  /**
+   * Check if player can interact with this pedestal
+   * @param {number} playerX
+   * @param {number} playerY
+   * @param {number} [playerZ=0]
+   * @returns {boolean}
+   */
+  canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
+    if (this.z !== playerZ) return false;
+    const dist = Math.abs(this.x - playerX) + Math.abs(this.y - playerY);
+    if (dist > 1) return false;
+    return isApproachAllowed(this.x, this.y, playerX, playerY, this.interactDirections);
   }
 
   /**

@@ -5,7 +5,7 @@
  */
 
 import { Vec2 } from '../core/geometry.js';
-import { ELEVATION } from '../core/constants.js';
+import { ELEVATION, isApproachAllowed } from '../core/constants.js';
 
 export class BaseEntity {
   /**
@@ -17,6 +17,7 @@ export class BaseEntity {
    * @param {number} [config.z=0] Grid elevation (0 = ground, 1 = overhead)
    * @param {number} [config.elevation] Alias for z
    * @param {string} [config.name] Human-readable display label
+   * @param {Array<string>} [config.interactDirections] Allowed player approach directions (e.g. ['north', 'south', 'east', 'west', 'self'])
    */
   constructor(config = {}) {
     if (!config.type) {
@@ -29,6 +30,7 @@ export class BaseEntity {
     this.y = typeof config.y === 'number' ? config.y : 0;
     this.z = typeof config.z === 'number' ? config.z : (typeof config.elevation === 'number' ? config.elevation : ELEVATION.GROUND);
     this.name = config.name || this.type;
+    this.interactDirections = Array.isArray(config.interactDirections) ? [...config.interactDirections] : null;
   }
 
   /**
@@ -93,7 +95,8 @@ export class BaseEntity {
    */
   canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
     if (this.z !== playerZ) return false;
-    return this.distanceTo(playerX, playerY) <= 1;
+    if (this.distanceTo(playerX, playerY) > 1) return false;
+    return isApproachAllowed(this.x, this.y, playerX, playerY, this.interactDirections);
   }
 
   /**
