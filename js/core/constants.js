@@ -337,6 +337,7 @@ export const LEVER_STYLES = Object.freeze([
   { id: 'crystal_switch', icon: '🔮', label: 'Resonance Crystal', desc: 'Harmonic crystal switch that hums when active' },
   { id: 'runic_plate', icon: '📜', label: 'Runic Inscription', desc: 'Floor glyph that glows when triggered' },
   { id: 'cog_wheel', icon: '⚙️', label: 'Mechanical Valve', desc: 'Industrial steam valve crank wheel' },
+  { id: 'floor_plate', icon: '🛑', label: 'Floor-Plate Trap', desc: 'Spring-loaded floor plate that auto-triggers once when stepped on' },
 ]);
 
 export const SPAWN_STYLE_PRESETS = Object.freeze([
