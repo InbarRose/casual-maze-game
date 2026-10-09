@@ -526,6 +526,7 @@ All architectural decisions are documented in `docs/adr/`:
 | [0005](adr/0005-angled-topdown-perspective-and-dynamic-activities.md) | Angled Top-Down (2.5D) Perspective and Dynamic Activities | Accepted | 2026-09-18 |
 | [0006](adr/0006-camera-world-rotation-branching-rooms.md) | Camera World Rotation, Branching Levels, and Multi-Room Dungeons | Accepted | 2026-09-19 |
 | [0007](adr/0007-solid-principles-and-code-elegance.md) | SOLID Principles, Entity Domain Polymorphism, and Code Elegance | Accepted | 2026-10-02 |
+| [0008](adr/0008-lever-interaction-separation-and-floor-plate-traps.md) | Lever Manual Interaction Separation and Floor-Plate Trap Mechanics | Accepted | 2026-10-09 |
 
 ---
 
