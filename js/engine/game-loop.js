@@ -1513,6 +1513,14 @@ export class GameLoop {
         this.notifyUI();
       }
 
+      if (check.nextElevation !== this.player.elevation) {
+        globalEvents.emit('player:elevation_changed', {
+          from: this.player.elevation,
+          to: check.nextElevation,
+          ascending: check.nextElevation > this.player.elevation,
+        });
+      }
+
       this.player.startMove(targetX, targetY, check.nextElevation);
       return true;
     } else if (check.reason === 'door_locked' && check.doorToUnlock) {

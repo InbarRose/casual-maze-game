@@ -455,6 +455,24 @@ export class EditorUI {
       if (clearModal) clearModal.style.display = 'none';
     });
 
+    // Playtest Unsolvable Warning Modal (BL-75)
+    const playtestConfirmModal = document.getElementById('modal-playtest-confirm');
+    const playtestProceedBtn = document.getElementById('playtest-confirm-btn-proceed');
+    const playtestIssuesBtn = document.getElementById('playtest-confirm-btn-issues');
+    const playtestCloseBtn = document.getElementById('playtest-confirm-btn-close');
+
+    playtestIssuesBtn?.addEventListener('click', () => {
+      if (playtestConfirmModal) playtestConfirmModal.style.display = 'none';
+      this.openValidationModal();
+    });
+    playtestCloseBtn?.addEventListener('click', () => {
+      if (playtestConfirmModal) playtestConfirmModal.style.display = 'none';
+    });
+    playtestProceedBtn?.addEventListener('click', () => {
+      if (playtestConfirmModal) playtestConfirmModal.style.display = 'none';
+      this.executePlayTest(this.pendingPlayTestParams);
+    });
+
     // Brush Size Buttons
     document.querySelectorAll('.brush-size-btn').forEach(btn => {
       btn.addEventListener('click', () => {
@@ -768,6 +786,43 @@ export class EditorUI {
     this.validationModal.renderValidationModalContent();
   }
 
+  /**
+   * Focus viewport on diagnostic issue coordinates with pulsing pin (BL-75)
+   * @param {number} x
+   * @param {number} y
+   * @param {number} [z=0]
+   * @param {string} [message='']
+   * @param {'error'|'warning'} [type='error']
+   */
+  jumpToCoordinate(x, y, z = 0, message = '', type = 'error') {
+    // 1. Switch active layer if necessary
+    if (z === 1 && this.currentLayer !== LAYERS.OVERHEAD) {
+      this.setLayer(LAYERS.OVERHEAD);
+    } else if (z === 0 && this.currentLayer !== LAYERS.GROUND) {
+      this.setLayer(LAYERS.GROUND);
+    }
+
+    // 2. Center viewport on tile
+    this.editorCanvas.centerOnTile(x, y);
+
+    // 3. Set diagnostic issue pin beacon
+    this.editorCanvas.setDiagnosticPin({ x, y, z, message, type });
+
+    // 4. Play acoustic jump pip sound if available (BL-77)
+    try {
+      if (typeof audioFX !== 'undefined' && audioFX.playDiagnosticJump) {
+        audioFX.playDiagnosticJump();
+      }
+    } catch (_) {}
+
+    // 5. Close validation modal
+    this.validationModal.close();
+
+    // 6. Show toast notification
+    const zLabel = z === 1 ? 'Overhead' : 'Ground';
+    this.showToast(`📍 Focused on issue at (${x}, ${y}) [${zLabel}]`, 'info', 3000);
+  }
+
   runAutoFix() {
     const { fixedLevel, changes, fixedCount } = LevelValidator.autoFix(this.level);
     if (fixedCount === 0) {
@@ -811,12 +866,18 @@ export class EditorUI {
   playTest(customTestParams = null) {
     const report = LevelValidator.validate(this.level);
     if (!report.valid) {
-      if (!confirm('⚠️ This maze has validation errors and may be unsolvable. Do you want to playtest anyway?')) {
-        this.openValidationModal();
+      const playtestModal = document.getElementById('modal-playtest-confirm');
+      if (playtestModal) {
+        this.pendingPlayTestParams = customTestParams;
+        playtestModal.style.display = 'flex';
         return;
       }
     }
 
+    this.executePlayTest(customTestParams);
+  }
+
+  executePlayTest(customTestParams = null) {
     const payload = JSON.parse(JSON.stringify(this.level));
     if (customTestParams) {
       if (customTestParams.testSpawn) {

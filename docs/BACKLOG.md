@@ -23,9 +23,9 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72 │ P1 │ Completed│
-│ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39 │ P1 / P2 │ Ready │
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74 │ P1 │ Completed│
-│ 6. Audio FX & Ambience Engine        │ BL-27–28,35 │ P2     │ Ready    │
+│ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39,75 │ P1 / P2 │ Completed│
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76 │ P1 │ Completed│
+│ 6. Audio FX & Ambience Engine        │ BL-27–28,35,77 │ P2   │ Completed│
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46 │ P0 / P1 │ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
 │ 9. Architecture Modernization & SOLID│ BL-56–62 │ P1        │ Planned  │
@@ -97,6 +97,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-22** | **Visual Layer Switcher HUD** | **P2** | `v1.22.0` | Real-time visual overlay highlighting active editing elevation (Ground Z=0 vs Overhead Z=1) with translucent previews. | **Completed** |
 | **BL-37** | **Visual Multi-Elevation Bridge & Ramp Guide** | **P2** | `v1.23.0` | Interactive SVG diagrams in Guide Modal demonstrating directional ramp placement for `B_EW` and `B_NS` bridges. | **Completed** |
 | **BL-39** | **Custom Prefab Saving in Map Editor** | **P2** | `v1.24.0` | Allow creators to select an arbitrary canvas region and save it to `localStorage` as a custom reusable stamping prefab. | **Completed** |
+| **BL-75** | **Interactive Issue Jumping Pins & Bridge/Rotation Diagnostics in Map Editor** | **P1** | `v1.24.0` | Clicking diagnostic issues centers canvas with pulsing pin marker, checks bridge connectivity, checks 4-way rotation compatibility, and eliminates native confirm in playtest. | **Completed** |
 
 ---
 
@@ -121,6 +122,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-71** | **Universal Interactive How-to-Play & Labyrinth Mechanics Guide Modal** | **P1** | `v1.24.0` | Universal multi-tabbed glassmorphic modal accessible from app header and footer providing interactive controls guides, entity mechanics, visual bridge/ramp SVG diagrams, and secret wall / scoring guides. | **Completed** (`9981a2d`) |
 | **BL-73** | **Inline Destructive Action Confirmations & Universal Popup Avoidance** | **P1** | `v1.24.0` | Eradication of native browser `confirm()` popups across ProfileModal reset, SettingsModal backup restore, and Editor clear canvas with sleek, non-blocking inline confirmation boxes and modal dialogs. | **Completed** |
 | **BL-74** | **Top Navigation Hub Exit Safety & GameMenu Confirmation Routing** | **P1** | `v1.24.0` | Shielded `← Hub` top navigation link during active play with inline pause quit confirmation routing, preventing accidental progress loss on mobile touchscreens. | **Completed** |
+| **BL-76** | **Cloudless Save Backup Metadata, Previews & Snapshot Rollback Safety** | **P1** | `v1.24.0` | Rich metadata headers in exported JSON backups (stars, levels, rank, engine version), pre-restore verification info box, and automated emergency snapshots before reset/restore with 1-click rollback recovery. | **Completed** |
 
 ---
 
@@ -132,6 +134,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-27** | **Procedural Sound FX Engine** | **P0** | `v1.16.0` | Web Audio synthesizer triggers for footsteps, key pickup, door unlock, lever flip, and victory chimes. | **Completed** |
 | **BL-28** | **Continuous Environmental Ambience** | **P2** | `v1.22.0` | Ambient procedural background loops: dungeon wind whispers, jungle forest chirps, subterranean cavern drips. | **Completed** |
 | **BL-35** | **Tactile UI Audio Cues & Footstep Pitch Jitter** | **P2** | `v1.23.0` | Procedural acoustic micro-clicks for tab changes, editor painting, and footstep frequency randomization ($\pm 3\%$). | **Completed** |
+| **BL-77** | **Elevation Transition Chimes & Diagnostic Radar Audio** | **P2** | `v1.24.0` | Harmonic procedural audio chimes for vertical ramp/bridge elevation ascents/descents, and acoustic radar pip for editor issue pin jumps. | **Completed** |
 
 ---
 

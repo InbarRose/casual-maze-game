@@ -984,6 +984,23 @@
     </div>
   </div>
 
+  <!-- Playtest Unsolvable Warning Confirmation Modal (BL-75) -->
+  <div class="modal-backdrop" id="modal-playtest-confirm" style="display: none;">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; color: #fbbf24; margin: 0;">⚠️ Playtest Unsolvable Maze?</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="playtest-confirm-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; padding: 1rem 0;">
+        This maze currently has validation errors or reachable path blockers and may be impossible to complete. Would you like to inspect issues or test anyway?
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.8rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary" id="playtest-confirm-btn-issues">📋 View Issues</button>
+        <button type="button" class="btn btn-primary" id="playtest-confirm-btn-proceed">🚀 Playtest Anyway</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 
