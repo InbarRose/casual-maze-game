@@ -21,12 +21,12 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ Epic Name                            │ Items    │ Priority  │ Status   │
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
 │ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
-│ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
+│ 2. Visual Engine & Vector Rendering  │ BL-09–13,33,78│ P1    │ Completed│
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72 │ P1 │ Completed│
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39,75 │ P1 / P2 │ Completed│
 │ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76 │ P1 │ Completed│
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35,77 │ P2   │ Completed│
-│ 7. QA Automation & Test Scale        │ BL-29–32,45,46 │ P0 / P1 │ Completed│
+│ 7. QA Automation & Test Scale        │ BL-29–32,45,46,79 │ P0/P1│ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
 │ 9. Architecture Modernization & SOLID│ BL-56–62 │ P1        │ Planned  │
 └──────────────────────────────────────┴──────────┴───────────┴──────────┘
@@ -63,6 +63,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-12** | **Lighting Gradients & Torch Glow** | **P2** | `v1.21.0` | Dynamic radial gradient lighting around the explorer and placed wall torches under Fog of War. | **Completed** |
 | **BL-13** | **Elevation Drop Shadows & Visual Depth** | **P2** | `v1.21.0` | Render realistic directional drop shadows cast by elevated bridge spans and high platforms onto lower terrain. | **Completed** |
 | **BL-33** | **2.5D Depth-Sorting & Wall Front/Roof Occlusion** | **P1** | `v1.20.0` | Resolve visual anomaly where explorer renders over southern wall roofs. Implement unified Y-sorted or row-interleaved painter pass so character walking behind/north of a wall tile is properly occluded by its elevated front face and top cap. | **Completed** |
+| **BL-78** | **Explorer Avatar Customization & Thematic Wardrobes** | **P1** | `v1.24.0` | In-profile wardrobe picker allowing players to equip 6 distinct aesthetic adventurer outfits (`Classic Pathfinder`, `Emerald Ranger`, `Frost Nomad`, `Desert Scout`, `Obsidian Rogue`, `Arcane Scholar`) with color swatch dots, active badges, and instant event bus propagation. | **Completed** |
 
 ---
 
@@ -149,6 +150,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-32** | **Test Harness Failure Summary Diagnostics** | **P1** | `v1.19.0` | Print concise failure summaries and stack traces at the end of `runner.mjs` executions. | **Completed** |
 | **BL-45** | **In-Browser Test Runner Diagnostics & Failure Reporter** | **P1** | `v1.20.0` | Resolve failing tests in `test.html`. Provide clean, styled DOM failure summary, module stack traces, and real-time pass/fail tally matching `npm test`. | **Completed** (`f199db4`) |
 | **BL-46** | **Replay Theater Graphic Simulation & Full Telemetry** | **P1** | `v1.20.0` | Record structured action telemetry (moves, turns, interactions, rotations); `ReplayPlayer` renders moves through `GameRenderer`. | **Completed** (`f199db4`) |
+| **BL-79** | **Automated Visual Entity Canvas Snapshot Regression Diffing & Perf Benchmark** | **P1** | `v1.24.0` | Automated tests validating deterministic canvas operations across all core domain entities (`Key`, `Door`, `Lever`, `Teleporter`, `Pedestal`, `Player` in 6 outfits), 4-way camera rotation matrix verification, and microsecond rendering budget validation ($< 300\text{ms}$ per 1,000 frames). | **Completed** |
 
 ---
 

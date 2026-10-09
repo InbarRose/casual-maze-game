@@ -23,6 +23,7 @@ import './unit/core/storage-backup-restore.test.mjs';
 import './unit/core/geometry.test.mjs';
 import './unit/core/maze-generator.test.mjs';
 import './unit/core/storage-metadata-snapshot.test.mjs';
+import './unit/core/explorer-outfits.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
@@ -42,6 +43,7 @@ import './unit/engine/scoring-medals.test.mjs';
 import './unit/engine/input-manager.test.mjs';
 import './unit/engine/tactical-minimap.test.mjs';
 import './unit/engine/multi-elevation-pathfinding.test.mjs';
+import './unit/engine/canvas-visual-regression.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/base-entity.test.mjs';

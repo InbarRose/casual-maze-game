@@ -982,8 +982,11 @@ export class StorageManager {
       rankIcon = '🗺️';
     }
 
+    const outfit = this.getPlayerOutfit();
+
     return {
       name,
+      outfit,
       totalStars,
       campaignLevels,
       storyChapters,
@@ -991,6 +994,25 @@ export class StorageManager {
       rankTitle,
       rankIcon,
     };
+  }
+
+  /**
+   * Get player outfit identifier (BL-78)
+   * @returns {string}
+   */
+  static getPlayerOutfit() {
+    return this.getSetting('player_outfit', 'classic');
+  }
+
+  /**
+   * Set and persist player outfit identifier (BL-78)
+   * @param {string} outfitId
+   * @returns {boolean}
+   */
+  static setPlayerOutfit(outfitId) {
+    const valid = ['classic', 'emerald', 'arctic', 'desert', 'obsidian', 'alchemist'];
+    const chosen = valid.includes(outfitId) ? outfitId : 'classic';
+    return this.setSetting('player_outfit', chosen);
   }
 
   /**
