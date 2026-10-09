@@ -419,19 +419,40 @@ export class EditorUI {
     document.getElementById('btn-undo')?.addEventListener('click', () => this.undo());
     document.getElementById('btn-redo')?.addEventListener('click', () => this.redo());
 
-    // Clear / Reset
+    // Clear / Reset (Inline Confirmation BL-64, BL-73)
+    const clearModal = document.getElementById('modal-clear-confirm');
+    const clearProceedBtn = document.getElementById('clear-confirm-btn-proceed');
+    const clearCancelBtn = document.getElementById('clear-confirm-btn-cancel');
+    const clearCloseBtn = document.getElementById('clear-confirm-btn-close');
+
+    const executeClear = () => {
+      const { width, height } = this.level.dimensions;
+      this.level.layers.ground = LevelLoader.normalizeGrid([], width, height, TILES.FLOOR);
+      this.level.layers.overhead = LevelLoader.normalizeGrid([], width, height, 0);
+      this.level.entities = [];
+      console.warn(`[MazeGame:Editor] Labyrinth canvas cleared to empty floor (${width}x${height})`);
+      this.pushHistory();
+      this.autoSave();
+      this.updateValidationState();
+      this.editorCanvas.render();
+      if (clearModal) clearModal.style.display = 'none';
+      this.showToast('Labyrinth cleared to empty floor.', 'info');
+    };
+
     document.getElementById('btn-clear')?.addEventListener('click', () => {
-      if (confirm('Are you sure you want to reset the maze to empty floor?')) {
-        const { width, height } = this.level.dimensions;
-        this.level.layers.ground = LevelLoader.normalizeGrid([], width, height, TILES.FLOOR);
-        this.level.layers.overhead = LevelLoader.normalizeGrid([], width, height, 0);
-        this.level.entities = [];
-        console.warn(`[MazeGame:Editor] Labyrinth canvas cleared to empty floor (${width}x${height})`);
-        this.pushHistory();
-        this.autoSave();
-        this.updateValidationState();
-        this.editorCanvas.render();
+      if (clearModal) {
+        clearModal.style.display = 'flex';
+      } else if (typeof confirm === 'function' && confirm('Are you sure you want to reset the maze to empty floor?')) {
+        executeClear();
       }
+    });
+
+    clearProceedBtn?.addEventListener('click', executeClear);
+    clearCancelBtn?.addEventListener('click', () => {
+      if (clearModal) clearModal.style.display = 'none';
+    });
+    clearCloseBtn?.addEventListener('click', () => {
+      if (clearModal) clearModal.style.display = 'none';
     });
 
     // Brush Size Buttons

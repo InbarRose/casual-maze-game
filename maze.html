@@ -52,7 +52,7 @@
     <header class="game-hud-top">
       <!-- Left Island: Navigation & Level Info -->
       <div class="hud-island hud-island-left">
-        <a href="index.html" class="btn btn-secondary btn-sm" title="Return to Level Select Hub">← Hub</a>
+        <a href="index.html" class="btn btn-secondary btn-sm" id="hud-btn-hub" title="Return to Level Select Hub">← Hub</a>
         <a href="editor.html" class="btn btn-secondary btn-sm" id="hud-btn-editor" style="display: none;">🛠️ Editor</a>
         <div class="hud-card" id="hud-level-card">
           <nav class="hud-breadcrumbs" id="hud-breadcrumbs" aria-label="Labyrinth Breadcrumb">
@@ -1606,6 +1606,37 @@
       if (window.gameLoop?.renderer) {
         gameMenu.updatePerspectiveButtonLabel(window.gameLoop.renderer.perspective);
       }
+    }
+
+    function promptQuitConfirmation() {
+      if (!window.gameLoop || ((window.gameLoop.player?.stepsTaken || 0) === 0 && (window.gameLoop.player?.inventory?.length || 0) === 0)) {
+        window.location.href = 'index.html';
+        return;
+      }
+      if (window.gameLoop && window.gameLoop.isRunning) {
+        window.gameLoop.stop();
+      }
+      gameMenu.promptQuit({
+        title: currentLevel.title || 'Labyrinth',
+        timeStr: formatTime(window.gameLoop ? window.gameLoop.elapsedTime : 0),
+        steps: window.gameLoop?.player?.stepsTaken || 0,
+        keysHeld: window.gameLoop?.player?.inventory?.length || 0,
+      });
+      gameMenu.updateSoundButtonLabel(audioFX.isMuted());
+      if (window.gameLoop?.renderer) {
+        gameMenu.updatePerspectiveButtonLabel(window.gameLoop.renderer.perspective);
+      }
+    }
+
+    const hudBtnHub = document.getElementById('hud-btn-hub');
+    if (hudBtnHub) {
+      hudBtnHub.addEventListener('click', (e) => {
+        if (window.gameLoop && ((window.gameLoop.player?.stepsTaken || 0) > 0 || (window.gameLoop.player?.inventory?.length || 0) > 0)) {
+          e.preventDefault();
+          audioFX.playModalOpen();
+          promptQuitConfirmation();
+        }
+      });
     }
 
     if (btnOpenMenu) {

@@ -215,6 +215,13 @@ export class SettingsModal {
               <button type="button" id="btn-settings-import-save" class="btn btn-secondary btn-sm" style="flex: 1; min-width: 140px;" title="Restore all progress from a JSON backup file">📤 Restore Save (.json)</button>
               <input type="file" id="settings-save-file-input" accept=".json" style="display: none;" />
             </div>
+            <div id="settings-restore-confirm-box" style="display: none; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 0.6rem; font-size: 0.75rem; color: var(--text); margin-top: 0.4rem;">
+              <div style="margin-bottom: 0.5rem; font-weight: 600; color: #bae6fd;">⚠️ Restoring this backup will replace current progress, stars, and medals. Continue?</div>
+              <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
+                <button type="button" id="btn-settings-cancel-restore" class="btn btn-secondary btn-xs" style="padding: 3px 8px;">Cancel</button>
+                <button type="button" id="btn-settings-confirm-restore" class="btn btn-primary btn-xs" style="padding: 3px 8px;">Confirm Restore</button>
+              </div>
+            </div>
             <div id="settings-save-msg" style="font-size: 0.78rem; min-height: 1.1rem; margin-top: 0.4rem; color: var(--emerald); text-align: center;"></div>
 
             <!-- Destructive Action: Reset Progress with Confirmation -->
@@ -406,39 +413,66 @@ export class SettingsModal {
       };
     }
 
+    const restoreBox = this.modalEl.querySelector('#settings-restore-confirm-box');
+    const cancelRestoreBtn = this.modalEl.querySelector('#btn-settings-cancel-restore');
+    const confirmRestoreBtn = this.modalEl.querySelector('#btn-settings-confirm-restore');
+    let pendingRestoreFile = null;
+
+    const executeRestore = async (file) => {
+      try {
+        const res = await StorageManager.importSaveFile(file);
+        if (saveMsg) {
+          saveMsg.textContent = `Restored ${res.stats.campaignLevels} levels, ${res.stats.storyChapters} story chapters!`;
+          saveMsg.style.color = 'var(--emerald)';
+        }
+        this.audio.playVictory?.();
+        this.refresh();
+      } catch (err) {
+        if (saveMsg) {
+          saveMsg.textContent = `Import failed: ${err.message}`;
+          saveMsg.style.color = 'var(--rose)';
+        }
+      }
+    };
+
     if (importBtn && saveFileInput) {
       importBtn.onclick = () => {
         this.audio.playTabClick?.() || this.audio.playClick();
         saveFileInput.click();
       };
 
-      saveFileInput.onchange = async (e) => {
+      saveFileInput.onchange = (e) => {
         const file = e.target.files?.[0];
         if (!file) return;
 
-        // Confirmation before replacing save data
-        if (typeof confirm === 'function') {
-          if (!confirm('⚠️ Restoring this backup will overwrite your current progress, stars, and medals. Continue?')) {
-            saveFileInput.value = '';
-            return;
-          }
-        }
-
-        try {
-          const res = await StorageManager.importSaveFile(file);
-          if (saveMsg) {
-            saveMsg.textContent = `Restored ${res.stats.campaignLevels} levels, ${res.stats.storyChapters} story chapters!`;
-            saveMsg.style.color = 'var(--emerald)';
-          }
-          this.audio.playVictory?.();
-          this.refresh();
-        } catch (err) {
-          if (saveMsg) {
-            saveMsg.textContent = `Import failed: ${err.message}`;
-            saveMsg.style.color = 'var(--rose)';
-          }
+        if (restoreBox) {
+          pendingRestoreFile = file;
+          restoreBox.style.display = 'block';
+          if (saveMsg) saveMsg.textContent = '';
+        } else {
+          // Fallback if restoreBox is not in DOM
+          executeRestore(file);
         }
       };
+
+      if (cancelRestoreBtn && restoreBox) {
+        cancelRestoreBtn.onclick = () => {
+          pendingRestoreFile = null;
+          restoreBox.style.display = 'none';
+          saveFileInput.value = '';
+        };
+      }
+
+      if (confirmRestoreBtn && restoreBox) {
+        confirmRestoreBtn.onclick = async () => {
+          if (!pendingRestoreFile) return;
+          const file = pendingRestoreFile;
+          pendingRestoreFile = null;
+          restoreBox.style.display = 'none';
+          saveFileInput.value = '';
+          await executeRestore(file);
+        };
+      }
     }
 
     // Reset Progress Confirmation Logic

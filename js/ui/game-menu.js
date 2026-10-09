@@ -25,7 +25,7 @@ export class GameMenu {
    * @param {Function} [options.isOtherModalOpen] Predicate returning true if another modal is currently active
    */
   constructor(options = {}) {
-    this.modalEl = options.modalEl || null;
+    this.modalEl = options.modalEl || options.modalElement || null;
     this.onResume = options.onResume || (() => {});
     this.onRestart = options.onRestart || (() => {});
     this.onTogglePerspective = options.onTogglePerspective || (() => {});
@@ -75,11 +75,11 @@ export class GameMenu {
    * Hide all confirmation dialog boxes
    */
   hideConfirmationBoxes() {
-    if (!this.modalEl || typeof this.modalEl.querySelectorAll !== 'function') return;
-    const boxes = this.modalEl.querySelectorAll('.pause-confirm-box');
-    boxes.forEach(box => {
-      if (box?.classList?.add) box.classList.add('hidden');
-    });
+    if (!this.modalEl) return;
+    const restartBox = this.modalEl.querySelector?.('#pause-restart-confirm');
+    const quitBox = this.modalEl.querySelector?.('#pause-quit-confirm');
+    if (restartBox?.classList?.add) restartBox.classList.add('hidden');
+    if (quitBox?.classList?.add) quitBox.classList.add('hidden');
   }
 
   /**
@@ -104,6 +104,36 @@ export class GameMenu {
       this.resume();
     } else {
       this.pause(stats);
+    }
+  }
+
+  /**
+   * Prompt user with quit confirmation box safely without leaving unexpectedly
+   * @param {Object} [stats]
+   */
+  promptQuit(stats = {}) {
+    if (!this._isPaused) {
+      this.pause(stats);
+    }
+    const quitBox = this.modalEl?.querySelector('#pause-quit-confirm');
+    if (quitBox) {
+      this.hideConfirmationBoxes();
+      quitBox.classList.remove('hidden');
+    }
+  }
+
+  /**
+   * Prompt user with restart confirmation box safely
+   * @param {Object} [stats]
+   */
+  promptRestart(stats = {}) {
+    if (!this._isPaused) {
+      this.pause(stats);
+    }
+    const restartBox = this.modalEl?.querySelector('#pause-restart-confirm');
+    if (restartBox) {
+      this.hideConfirmationBoxes();
+      restartBox.classList.remove('hidden');
     }
   }
 
