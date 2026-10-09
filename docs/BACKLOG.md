@@ -21,7 +21,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ Epic Name                            │ Items    │ Priority  │ Status   │
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
 │ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
-│ 2. Visual Engine & Vector Rendering  │ BL-09–13,33,78│ P1    │ Completed│
+│ 2. Visual Engine & Vector Rendering  │ BL-09–13,33,78,80│ P1 │ Completed│
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72 │ P1 │ Completed│
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39,75 │ P1 / P2 │ Completed│
 │ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76 │ P1 │ Completed│
@@ -64,6 +64,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-13** | **Elevation Drop Shadows & Visual Depth** | **P2** | `v1.21.0` | Render realistic directional drop shadows cast by elevated bridge spans and high platforms onto lower terrain. | **Completed** |
 | **BL-33** | **2.5D Depth-Sorting & Wall Front/Roof Occlusion** | **P1** | `v1.20.0` | Resolve visual anomaly where explorer renders over southern wall roofs. Implement unified Y-sorted or row-interleaved painter pass so character walking behind/north of a wall tile is properly occluded by its elevated front face and top cap. | **Completed** |
 | **BL-78** | **Explorer Avatar Customization & Thematic Wardrobes** | **P1** | `v1.24.0` | In-profile wardrobe picker allowing players to equip 6 distinct aesthetic adventurer outfits (`Classic Pathfinder`, `Emerald Ranger`, `Frost Nomad`, `Desert Scout`, `Obsidian Rogue`, `Arcane Scholar`) with color swatch dots, active badges, and instant event bus propagation. | **Completed** |
+| **BL-80** | **High-Polish Game Aesthetic, Dynamic Hero Canvas Backdrop & Visual Branding** | **P1** | `v1.24.0` | High-production procedural canvas hero backdrop (`HeroAmbientCanvas`), stylized crest and metallic branding title, gameplay feature spotlight strip, biome-themed campaign cards, and tactile button glows. | **Completed** |
 
 ---
 
