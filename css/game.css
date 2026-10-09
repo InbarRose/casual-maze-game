@@ -1056,19 +1056,37 @@
 }
 
 .dial-display {
-  width: 60px;
-  height: 60px;
+  width: 74px;
+  height: 74px;
   background: #1e293b;
-  border: 2px solid #a855f7;
-  border-radius: 8px;
+  border: 2px solid var(--dial-color, #a855f7);
+  border-radius: 10px;
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
   font-size: 1.75rem;
   font-weight: 800;
   font-family: var(--font-mono, monospace);
   color: #f3e8ff;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6), 0 0 12px rgba(168, 85, 247, 0.25);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  user-select: none;
+}
+
+.celestial-dial .dial-symbol-icon {
+  font-size: 1.7rem;
+  line-height: 1.1;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+.celestial-dial .dial-symbol-label {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--dial-color, #cbd5e1);
+  margin-top: 2px;
 }
 
 .dial-arrow-btn {

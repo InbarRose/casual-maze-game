@@ -109,6 +109,15 @@ export const PUZZLE_TYPES = Object.freeze({
   CIPHER_DIAL: 'cipher_dial',
 });
 
+export const CELESTIAL_SYMBOLS = Object.freeze([
+  Object.freeze({ id: 0, key: 'sun', icon: '☀️', label: 'Sun', color: '#f59e0b', desc: 'Solar Zenith' }),
+  Object.freeze({ id: 1, key: 'moon', icon: '🌙', label: 'Moon', color: '#38bdf8', desc: 'Lunar Crescent' }),
+  Object.freeze({ id: 2, key: 'horizon', icon: '🌅', label: 'Horizon', color: '#f43f5e', desc: 'Twilight Meridian' }),
+  Object.freeze({ id: 3, key: 'star', icon: '⭐', label: 'Star', color: '#fbbf24', desc: 'Stellar Polaris' }),
+  Object.freeze({ id: 4, key: 'planet', icon: '🪐', label: 'Planet', color: '#a855f7', desc: 'Arcane Orbit' }),
+  Object.freeze({ id: 5, key: 'comet', icon: '☄️', label: 'Comet', color: '#34d399', desc: 'Celestial Wanderer' }),
+]);
+
 export const TELEPORTER_STYLES = Object.freeze([
   { id: 'vortex', icon: '🌀', label: 'Dimensional Vortex', desc: 'Swirling celestial rift that warps across space' },
   { id: 'runic_circle', icon: '🔯', label: 'Runic Teleport Circle', desc: 'Ancient arcane circle glowing on the floor' },

@@ -5,6 +5,7 @@
  */
 
 import { globalEvents } from '../core/events.js';
+import { CELESTIAL_SYMBOLS } from '../core/constants.js';
 
 export class PuzzleModal {
   constructor() {
@@ -14,6 +15,7 @@ export class PuzzleModal {
     this.onCancel = null;
     this.userSequence = [];
     this.isFlashing = false;
+    this.dialValues = [0, 0, 0];
   }
 
   /**
@@ -132,13 +134,23 @@ export class PuzzleModal {
    * HTML for Cipher Dial stage
    */
   renderCipherStageHTML() {
-    const dials = [0, 1, 2].map(i => `
-      <div class="cipher-dial-column" data-dial="${i}">
-        <button type="button" class="dial-arrow-btn dial-up" data-dial="${i}" data-dir="1">▲</button>
-        <div class="dial-display" id="dial-val-${i}">0</div>
-        <button type="button" class="dial-arrow-btn dial-down" data-dial="${i}" data-dir="-1">▼</button>
-      </div>
-    `).join('');
+    const symbols = this.activeGate?.symbols || CELESTIAL_SYMBOLS;
+    const numDials = this.activeGate?.solution?.length || 3;
+    const indices = Array.from({ length: numDials }, (_, i) => i);
+
+    const dials = indices.map(i => {
+      const sym = symbols[0] || { icon: '0', label: '0', color: '#f3e8ff' };
+      return `
+        <div class="cipher-dial-column" data-dial="${i}">
+          <button type="button" class="dial-arrow-btn dial-up" data-dial="${i}" data-dir="1" aria-label="Dial ${i + 1} next">▲</button>
+          <div class="dial-display celestial-dial" id="dial-val-${i}" style="--dial-color: ${sym.color || '#a855f7'};">
+            <span class="dial-symbol-icon">${sym.icon}</span>
+            <span class="dial-symbol-label">${sym.label || ''}</span>
+          </div>
+          <button type="button" class="dial-arrow-btn dial-down" data-dial="${i}" data-dir="-1" aria-label="Dial ${i + 1} previous">▼</button>
+        </div>
+      `;
+    }).join('');
 
     return `
       <div class="cipher-puzzle-container">
@@ -182,15 +194,31 @@ export class PuzzleModal {
       }
     } else {
       // Cipher Dial arrows
+      const symbols = this.activeGate?.symbols || CELESTIAL_SYMBOLS;
+      const numDials = this.activeGate?.solution?.length || 3;
+      this.dialValues = Array.from({ length: numDials }, () => 0);
+
       const arrows = this.overlay.querySelectorAll('.dial-arrow-btn');
-      this.dialValues = [0, 0, 0];
       arrows.forEach(arrow => {
         arrow.addEventListener('click', () => {
           const dialIdx = Number(arrow.getAttribute('data-dial'));
           const dir = Number(arrow.getAttribute('data-dir'));
-          this.dialValues[dialIdx] = (this.dialValues[dialIdx] + dir + 10) % 10;
+          const totalSymbols = symbols.length;
+          this.dialValues[dialIdx] = (this.dialValues[dialIdx] + dir + totalSymbols) % totalSymbols;
+
           const disp = document.getElementById(`dial-val-${dialIdx}`);
-          if (disp) disp.textContent = this.dialValues[dialIdx];
+          if (disp) {
+            const currentSym = symbols[this.dialValues[dialIdx]];
+            if (currentSym) {
+              disp.style.setProperty('--dial-color', currentSym.color || '#a855f7');
+              disp.innerHTML = `
+                <span class="dial-symbol-icon">${currentSym.icon}</span>
+                <span class="dial-symbol-label">${currentSym.label || ''}</span>
+              `;
+            } else {
+              disp.textContent = this.dialValues[dialIdx];
+            }
+          }
         });
       });
 

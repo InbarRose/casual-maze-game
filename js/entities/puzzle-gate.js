@@ -3,7 +3,7 @@
  * A mystic obstacle barrier that requires solving an interactive minigame (Rune Memory, Cipher Lock) to unlock.
  */
 
-import { ENTITY_TYPES, ELEVATION, formatXYZ } from '../core/constants.js';
+import { ENTITY_TYPES, ELEVATION, formatXYZ, CELESTIAL_SYMBOLS } from '../core/constants.js';
 
 export class PuzzleGate {
   /**
@@ -22,10 +22,15 @@ export class PuzzleGate {
     this.color = config.color || '#a855f7';
     this.isUnlocked = !!config.isUnlocked;
 
+    // Symbol vocabulary for dial puzzles (defaulting to CELESTIAL_SYMBOLS for cipher_dial)
+    this.symbols = Array.isArray(config.symbols)
+      ? [...config.symbols]
+      : (this.puzzleType === 'cipher_dial' ? CELESTIAL_SYMBOLS : null);
+
     // Solution definition
     // For rune_memory: array of indices e.g. [0, 2, 1, 3]
-    // For cipher_dial: array of numbers e.g. [3, 7, 2]
-    this.solution = Array.isArray(config.solution) ? [...config.solution] : (this.puzzleType === 'cipher_dial' ? [3, 7, 2] : [0, 2, 1, 3]);
+    // For cipher_dial: array of symbol indices e.g. [0, 1, 2] (Sun, Moon, Horizon)
+    this.solution = Array.isArray(config.solution) ? [...config.solution] : (this.puzzleType === 'cipher_dial' ? [0, 1, 2] : [0, 2, 1, 3]);
     this.clue = config.clue || (this.puzzleType === 'cipher_dial' ? 'Align the three concentric runic dials to match the celestial sequence.' : 'Memorize and repeat the glowing rune sequence.');
 
     // Visual animation
