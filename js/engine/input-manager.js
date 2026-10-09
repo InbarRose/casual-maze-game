@@ -34,6 +34,9 @@ export const GAME_COMMANDS = Object.freeze({
   ROTATE_RIGHT: 'rotate_right',
   TOGGLE_MAP: 'toggle_map',
   TOGGLE_VIEW_MODE: 'toggle_view_mode',
+  ZOOM_IN: 'zoom_in',
+  ZOOM_OUT: 'zoom_out',
+  ZOOM_RESET: 'zoom_reset',
   RESTART: 'restart',
   PAUSE: 'pause',
 });
@@ -223,6 +226,15 @@ export class InputManager {
       this.emitCommand(GAME_COMMANDS.RESTART, { source: 'keyboard', event: e });
     } else if (hotkeysActive && KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)))) {
       this.emitCommand(GAME_COMMANDS.TOGGLE_VIEW_MODE, { source: 'keyboard', event: e });
+    } else if (hotkeysActive && KEY_CODES.ZOOM_IN && (KEY_CODES.ZOOM_IN.includes(e.code) || (e.key && KEY_CODES.ZOOM_IN.includes(e.key)))) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      this.emitCommand(GAME_COMMANDS.ZOOM_IN, { source: 'keyboard', event: e });
+    } else if (hotkeysActive && KEY_CODES.ZOOM_OUT && (KEY_CODES.ZOOM_OUT.includes(e.code) || (e.key && KEY_CODES.ZOOM_OUT.includes(e.key)))) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      this.emitCommand(GAME_COMMANDS.ZOOM_OUT, { source: 'keyboard', event: e });
+    } else if (hotkeysActive && KEY_CODES.ZOOM_RESET && (KEY_CODES.ZOOM_RESET.includes(e.code) || (e.key && KEY_CODES.ZOOM_RESET.includes(e.key)))) {
+      if (typeof e.preventDefault === 'function') e.preventDefault();
+      this.emitCommand(GAME_COMMANDS.ZOOM_RESET, { source: 'keyboard', event: e });
     }
   }
 

@@ -3,16 +3,24 @@
  * Handles smooth follow lerping, free-panning mode, coordinate projections, and viewport clipping.
  */
 
+import { VIEWPORT_ZOOM } from '../core/constants.js';
+
 export class Camera {
   /**
    * @param {number} viewportWidth
    * @param {number} viewportHeight
-   * @param {number} tileSize
+   * @param {number} [tileSize=36]
+   * @param {number} [zoom=1.0]
    */
-  constructor(viewportWidth = 800, viewportHeight = 600, tileSize = 32) {
+  constructor(viewportWidth = 800, viewportHeight = 600, tileSize = 36, zoom = 1.0) {
     this.viewportWidth = viewportWidth;
     this.viewportHeight = viewportHeight;
-    this.tileSize = tileSize;
+    this.baseTileSize = tileSize || VIEWPORT_ZOOM.BASE_TILE_SIZE;
+
+    // Viewport Zoom & Optical Scale (BL-87)
+    this.minZoom = VIEWPORT_ZOOM.MIN;
+    this.maxZoom = VIEWPORT_ZOOM.MAX;
+    this.zoom = Math.max(this.minZoom, Math.min(this.maxZoom, typeof zoom === 'number' ? zoom : 1.0));
 
     this.x = 0; // Center X in world pixels
     this.y = 0; // Center Y in world pixels
@@ -28,6 +36,62 @@ export class Camera {
     this.targetRotation = 0;
     this.baseRotation = 0; // Discrete base angle for rigid scene rendering
     this.rotationLerpSpeed = 0.22;
+  }
+
+  /**
+   * Dynamically scaled tile size in screen pixels based on current zoom
+   * @returns {number}
+   */
+  get tileSize() {
+    return Math.round(this.baseTileSize * this.zoom);
+  }
+
+  /**
+   * Compatibility setter for tileSize: updates baseTileSize
+   * @param {number} size
+   */
+  set tileSize(size) {
+    if (typeof size === 'number' && size > 0) {
+      this.baseTileSize = size;
+    }
+  }
+
+  /**
+   * Set viewport zoom level
+   * @param {number} level
+   * @returns {number} The clamped zoom level
+   */
+  setZoom(level) {
+    if (typeof level !== 'number' || isNaN(level)) return this.zoom;
+    const clamped = Math.max(this.minZoom, Math.min(this.maxZoom, level));
+    this.zoom = Math.round(clamped * 100) / 100;
+    return this.zoom;
+  }
+
+  /**
+   * Zoom in by step
+   * @param {number} [step=0.1]
+   * @returns {number}
+   */
+  zoomIn(step = VIEWPORT_ZOOM.STEP) {
+    return this.setZoom(this.zoom + step);
+  }
+
+  /**
+   * Zoom out by step
+   * @param {number} [step=0.1]
+   * @returns {number}
+   */
+  zoomOut(step = VIEWPORT_ZOOM.STEP) {
+    return this.setZoom(this.zoom - step);
+  }
+
+  /**
+   * Reset zoom to default 1.0x
+   * @returns {number}
+   */
+  resetZoom() {
+    return this.setZoom(VIEWPORT_ZOOM.DEFAULT);
   }
 
   get width() {

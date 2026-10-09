@@ -94,9 +94,10 @@ export class GameLoop {
     }
 
     // Subsystems
-    const tileSize = this.level.config?.tileSize || 32;
+    const tileSize = this.level.config?.tileSize || 36;
     this.tileSize = tileSize;
-    this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize);
+    const savedZoom = StorageManager.getSetting('viewport_zoom', 1.0);
+    this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize, savedZoom);
     this.fog = this.level.config?.fogOfWar
       ? new FogOfWar(this.level.dimensions.width, this.level.dimensions.height)
       : null;
@@ -345,6 +346,77 @@ export class GameLoop {
   }
 
   /**
+   * Set viewport zoom level
+   * @param {number} level
+   * @returns {number}
+   */
+  setZoom(level) {
+    if (!this.camera) return 1.0;
+    const newZoom = this.camera.setZoom(level);
+    this.tileSize = this.camera.tileSize;
+    StorageManager.setSetting('viewport_zoom', newZoom);
+    this.notifyUI();
+    globalEvents.emit('camera:zoom_changed', {
+      zoom: newZoom,
+      tileSize: this.camera.tileSize,
+    });
+    return newZoom;
+  }
+
+  /**
+   * Zoom in by step
+   * @param {number} [step=0.1]
+   * @returns {number}
+   */
+  zoomIn(step = 0.1) {
+    if (!this.camera) return 1.0;
+    const newZoom = this.camera.zoomIn(step);
+    this.tileSize = this.camera.tileSize;
+    StorageManager.setSetting('viewport_zoom', newZoom);
+    this.notifyUI();
+    globalEvents.emit('camera:zoom_changed', {
+      zoom: newZoom,
+      tileSize: this.camera.tileSize,
+    });
+    return newZoom;
+  }
+
+  /**
+   * Zoom out by step
+   * @param {number} [step=0.1]
+   * @returns {number}
+   */
+  zoomOut(step = 0.1) {
+    if (!this.camera) return 1.0;
+    const newZoom = this.camera.zoomOut(step);
+    this.tileSize = this.camera.tileSize;
+    StorageManager.setSetting('viewport_zoom', newZoom);
+    this.notifyUI();
+    globalEvents.emit('camera:zoom_changed', {
+      zoom: newZoom,
+      tileSize: this.camera.tileSize,
+    });
+    return newZoom;
+  }
+
+  /**
+   * Reset zoom to default 1.0x
+   * @returns {number}
+   */
+  resetZoom() {
+    if (!this.camera) return 1.0;
+    const newZoom = this.camera.resetZoom();
+    this.tileSize = this.camera.tileSize;
+    StorageManager.setSetting('viewport_zoom', newZoom);
+    this.notifyUI();
+    globalEvents.emit('camera:zoom_changed', {
+      zoom: newZoom,
+      tileSize: this.camera.tileSize,
+    });
+    return newZoom;
+  }
+
+  /**
    * Initialize and switch active room in a multi-room level
    * @param {string} roomId
    * @param {object|null} [spawnOverride=null]
@@ -559,6 +631,15 @@ export class GameLoop {
       this.inputManager.on(GAME_COMMANDS.TOGGLE_VIEW_MODE, () => {
         this.togglePerspective();
       });
+      this.inputManager.on(GAME_COMMANDS.ZOOM_IN, () => {
+        this.zoomIn();
+      });
+      this.inputManager.on(GAME_COMMANDS.ZOOM_OUT, () => {
+        this.zoomOut();
+      });
+      this.inputManager.on(GAME_COMMANDS.ZOOM_RESET, () => {
+        this.resetZoom();
+      });
       this.inputManager.on(GAME_COMMANDS.TOGGLE_MAP, () => {
         this.toggleFreePan();
       });
@@ -765,7 +846,14 @@ export class GameLoop {
       }
     };
 
-    // Canvas Touch & Continuous Drag Steering Controls (BL-16, BL-67)
+    // Main Canvas Mouse Wheel Zoom (BL-87)
+    this.handleCanvasWheel = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.1 : -0.1;
+      this.setZoom(this.camera.zoom + delta);
+    };
+
+    // Main Canvas Touch & Continuous Drag Steering Controls with 2-finger Pinch Zoom (BL-16, BL-67, BL-87)
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
@@ -773,6 +861,8 @@ export class GameLoop {
     let touchSteeringActive = false;
     let touchSteerDirection = null;
     let touchSteerInterval = null;
+    let canvasPinchDist = 0;
+    let canvasPinchStartZoom = 1.0;
 
     this.stopTouchSteer = () => {
       if (touchSteerInterval) {
@@ -786,6 +876,14 @@ export class GameLoop {
     this.handleCanvasTouchStart = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
       this.stopTouchSteer();
+      if (e.touches?.length === 2) {
+        // Two-finger pinch to zoom
+        const t1 = e.touches[0];
+        const t2 = e.touches[1];
+        canvasPinchDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        canvasPinchStartZoom = this.camera ? this.camera.zoom : 1.0;
+        return;
+      }
       if (e.touches?.length === 1) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
@@ -796,6 +894,14 @@ export class GameLoop {
 
     this.handleCanvasTouchMove = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (e.touches?.length === 2 && canvasPinchDist > 0) {
+        const t1 = e.touches[0];
+        const t2 = e.touches[1];
+        const currentDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const scale = currentDist / (canvasPinchDist || 1);
+        this.setZoom(canvasPinchStartZoom * scale);
+        return;
+      }
       if (e.touches?.length === 1) {
         const dx = e.touches[0].clientX - touchStartX;
         const dy = e.touches[0].clientY - touchStartY;
@@ -830,6 +936,10 @@ export class GameLoop {
 
     this.handleCanvasTouchEnd = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (canvasPinchDist > 0 && e.touches?.length < 2) {
+        canvasPinchDist = 0;
+        return;
+      }
       const hadSteering = touchSteeringActive;
       this.stopTouchSteer();
 
@@ -867,6 +977,7 @@ export class GameLoop {
 
     if (this.canvas && typeof this.canvas.addEventListener === 'function') {
       this.canvas.addEventListener('pointerdown', this.handleCanvasPointerDown);
+      this.canvas.addEventListener('wheel', this.handleCanvasWheel, { passive: false });
       this.canvas.addEventListener('touchstart', this.handleCanvasTouchStart, { passive: false });
       this.canvas.addEventListener('touchmove', this.handleCanvasTouchMove, { passive: false });
       this.canvas.addEventListener('touchend', this.handleCanvasTouchEnd, { passive: false });
@@ -904,6 +1015,7 @@ export class GameLoop {
     }
     if (this.canvas && typeof this.canvas.removeEventListener === 'function') {
       this.canvas.removeEventListener('pointerdown', this.handleCanvasPointerDown);
+      this.canvas.removeEventListener('wheel', this.handleCanvasWheel);
       this.canvas.removeEventListener('touchstart', this.handleCanvasTouchStart);
       this.canvas.removeEventListener('touchmove', this.handleCanvasTouchMove);
       this.canvas.removeEventListener('touchend', this.handleCanvasTouchEnd);
