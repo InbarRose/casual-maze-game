@@ -20,11 +20,11 @@ This document serves as the authoritative, prioritized master backlog for all fe
 ├──────────────────────────────────────┬──────────┬───────────┬──────────┤
 │ Epic Name                            │ Items    │ Priority  │ Status   │
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
-│ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
+│ 1. Level Design & Kishōtenketsu      │ BL-01–08,89,90│ P0/P1│ Active   │
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33,78,80│ P1 │ Completed│
-│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72 │ P1 │ Completed│
+│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72,87│ P1│ Active │
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39,75 │ P1 / P2 │ Completed│
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76 │ P1 │ Completed│
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88 │ P0/P1 │ Active │
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35,77 │ P2   │ Completed│
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46,79 │ P0/P1│ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -49,6 +49,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-06** | **Chapter 4 Workshop (Astral Teleporters)** | **P1** | `v1.19.0` | Redesign Levels 13–16: 3D teleporter networks, non-Euclidean shortcuts, anti-softlock teleport loops. | **Completed** |
 | **BL-07** | **Chapter 5 Workshop (Molten Danger)** | **P1** | `v1.19.0` | Redesign Levels 17–20: Timed flame vents, rhythm gauntlets, patroller sentinels, mid-level checkpoints. | **Completed** |
 | **BL-08** | **Chapters 6–8 Polish & Synthesis** | **P2** | `v1.19.0` | Polish minigame seals (Ch 6), grand trial synthesis (Ch 7), and 4-way camera rotation puzzles (Ch 8). | **Completed** |
+| **BL-89** | **Expanded Labyrinth Scale & Macro-Corridor Expansion** | **P1** | `v1.25.0` | Design large-scale maps ($\ge 27 \times 27$ up to $35 \times 35$) without discarding existing levels by introducing a new Chapter 9 ("The Vast Catacombs") or Master Tier trials with branching dead-ends, multi-chamber wings, and authentic labyrinth routing. | Planned |
+| **BL-90** | **Pure Maze Classical Topologies & Interlocking Circuit Integration** | **P1** | `v1.25.0` | Integrate classic labyrinthine structures (winding concentric rings, hedge-style maze branches, fork-path choices with distinctive landmarks) combined with puzzle gates, ensuring exploration requires spatial navigation alongside logical deduction. | Planned |
 
 ---
 
@@ -84,6 +86,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-67** | **Continuous Touch Drag Steering & Pathfinding Waypoint Trail** | **P1** | `v1.24.0` | Fluid directional drag steering on mobile touchscreens with automatic stepping repeat (125ms interval), dynamic in-drag turning, and animated BFS pathfinding waypoint trail rendering along corridor tiles. | **Completed** |
 | **BL-70** | **Gamepad Controller Visual Guide & Live Input Tester in Settings** | **P1** | `v1.24.0` | Visual controller mapping diagram and live input tester in settings modal polling connected gamepads via Gamepad API, highlighting pressed buttons and stick axes in real time. | **Completed** (`78399ca`) |
 | **BL-72** | **Multi-Elevation BFS Pathfinding & Deadzone-Free Touch Tap Sensitivity** | **P1** | `v1.24.0` | Multi-elevation BFS pathfinding navigating across bridge ramps (`R_S`, `R_N`) and overpasses (`B_EW`, `B_NS`) without elevation mismatch failures, responsive touch tap detection without deadzones, and 20px drag threshold for fluid mobile navigation. | **Completed** |
+| **BL-87** | **Interactive Viewport Zoom-In / Zoom-Out & Consistent World Scale Anchor** | **P1** | `v1.25.0` | Decouple canvas tile rendering from "fit-to-screen" squash; establish a default optical tile size ($32\text{px}$–$40\text{px}$ world scale) so larger maps render beyond viewport edges and scroll smoothly with camera follow; provide intuitive zoom controls (hotkeys `+`/`-`, mouse wheel zoom, pinch-to-zoom on canvas, HUD zoom buttons). | Planned |
 
 ---
 
@@ -130,6 +133,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-83** | **Celestial Cipher Dials & Thematic Wall Murals** | **P0** | `v1.24.0` | Replace arbitrary numeric dial digits with thematic celestial symbols (☀️ Sun, 🌙 Moon, 🌅 Horizon, ⭐ Star, 🪐 Planet, ☄️ Comet); upgrade PuzzleModal dial rendering and controls; inscribe in-world celestial murals and riddles across Level 22, 23, 24, and 27 for legitimate deduction without guessing. | **Completed** |
 | **BL-84** | **Hardcoded Entrance & Exit Layout, Clash Detection & Editor Assistant** | **P1** | `v1.24.0` | Eliminate dynamic runtime architecture inference; hardcode styles and wall directions across all 42 levels; add architectural clash detection and editor suggestion assistant. | **Completed** |
 | **BL-85** | **Directional Proximity Interaction & Multi-Target Disambiguation** | **P0** | `v1.24.0` | Add `interactDirections` property restricting player approaches; implement multi-target disambiguation when multiple interactables are reachable simultaneously with in-world numbered pills (`[1]`, `[2]`), action drawer HUD, and numeric hotkey selection (`1`..`9`). | **Completed** |
+| **BL-86** | **Lever Interaction Separation & Floor-Plate Trap Mechanics** | **P0** | `v1.24.0` | Prevent levers from auto-toggling when stepped on; require explicit engagement (`[E]`, click, disambiguation); add `floor_plate` style for single-fire auto-trigger traps. | **Completed** |
+| **BL-88** | **Strategic Fog of War Expansion & Exploratory Vision Dynamics** | **P1** | `v1.25.0` | Broaden Fog of War application across campaign levels (e.g. subterranean crypts, dense jungles, twilight temples, vast labyrinths) to make exploration meaningful and elevate minimap utility; support varied sight radiuses (`viewRadius: 4..8`) and atmospheric lighting gradients. | Planned |
 
 ---
 
@@ -223,7 +228,13 @@ flowchart LR
         S4D --> S4E["BL-61/62: Value Objects & ADR-004"]
     end
 
-    Sprint 1 --> Sprint 2 --> Sprint 3 --> Sprint 4
+    subgraph Sprint 5: Fog of War, Macro-Labyrinths & Viewport Zoom [v1.25.0 Planned]
+        S5A["BL-87: Viewport Zoom & Optical Scale"] --> S5B["BL-88: Strategic Fog of War Expansion"]
+        S5B --> S5C["BL-89: Macro-Labyrinths & New Chapters"]
+        S5C --> S5D["BL-90: Classical Maze Topologies"]
+    end
+
+    Sprint 1 --> Sprint 2 --> Sprint 3 --> Sprint 4 --> Sprint 5
 ```
 
 ---

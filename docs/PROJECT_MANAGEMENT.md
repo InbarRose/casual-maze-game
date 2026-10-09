@@ -480,9 +480,15 @@ This document tracks project milestones, current release status, active developm
   - [x] Timed cyclical hazards (flames, spikes) and checkpoint respawn.
   - [x] Waypoint-navigating patroller hazards.
   - [x] Minigame puzzle gates (Rune Memory, Cipher Dial).
-- [ ] **Additional Puzzle Entities**:
-  - Pressure plates (momentary activation when stepped on).
-  - One-way gates / sliding doors.
+- [ ] **Additional Puzzle & Trap Entities**:
+  - [x] Floor-plate traps (momentary or single-fire activation when stepped on).
+  - [ ] One-way directional gates / sliding doors.
+- [ ] **Strategic Fog of War & Exploratory Vision Dynamics (`BL-88`)**:
+  - Expand dynamic Fog of War into more campaign levels (e.g. dense jungle canopies, subterranean crypts, twilight temples) with varied sight radii (`viewRadius: 4..8`) and warm torch light gradients, elevating exploration feel and tactical minimap radar value.
+- [ ] **Viewport Zoom & Consistent Optical Scale (`BL-87`)**:
+  - Decouple canvas tile rendering from "fit-to-screen" squash; establish a default optical tile scale ($32\text{px}$–$40\text{px}$) so larger levels extend beyond viewport bounds and scroll cleanly with camera follow; provide intuitive zoom controls (`+`/`-`, mouse wheel, pinch-to-zoom, HUD buttons).
+- [ ] **Macro-Labyrinths & Classic Maze Topologies (`BL-89`, `BL-90`)**:
+  - Expand labyrinth scale ($\ge 27 \times 27$ up to $35 \times 35$) without discarding existing levels by introducing a new Chapter 9 ("The Vast Catacombs") or Master Tier trials featuring classical maze topologies (branching corridors, circular concentric rings, hedge-style dead ends with landmarks) harmonized with lock-and-key and puzzle mechanics.
 
 ### Strategic Architecture Initiative: Modernization & SOLID Refactoring (`v2.0.0` Roadmap)
 *Objective: Transform monolithic "god-classes" and procedural switch blocks into simple, elegant, explainable, highly testable, readable, and robust Object-Oriented modules adhering strictly to SOLID principles and clean architectural separation.*
