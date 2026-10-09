@@ -24,6 +24,15 @@
       <span class="hud-tile-key">E</span>
     </button>
 
+    <!-- Multi-Target In-World Disambiguation Container (BL-85) -->
+    <div id="hud-tile-indicators-container" class="hud-tile-indicators-container hidden"></div>
+
+    <!-- Multi-Target Disambiguation Selection Drawer (BL-85) -->
+    <div id="hud-disambig-drawer" class="hud-disambig-drawer hidden" aria-label="Multiple interactable objects nearby">
+      <div class="hud-disambig-header">Select Action:</div>
+      <div id="hud-disambig-list" class="hud-disambig-list"></div>
+    </div>
+
     <!-- Discreet Side HUD Action Drawer (BL-42) -->
     <button id="hud-contextual-interact" class="contextual-interact-btn hidden" aria-label="Examine / Interact" title="Examine [E] (Space / Enter)">
       <span class="interact-icon" id="hud-interact-icon">✨</span>
@@ -1462,16 +1471,100 @@
         onRequestRestart: () => {
           promptRestartConfirmation();
         },
-        onInteractionAvailable: (interaction, targetOrPlayerPos, targetScreenPos, playerScreenPos) => {
+        onInteractionAvailable: (interaction, targetOrPlayerPos, targetScreenPos, playerScreenPos, allCandidates = []) => {
           const btnContextual = document.getElementById('hud-contextual-interact');
           const tileIndicator = document.getElementById('hud-tile-indicator');
+          const disambigContainer = document.getElementById('hud-tile-indicators-container');
+          const disambigDrawer = document.getElementById('hud-disambig-drawer');
+          const disambigList = document.getElementById('hud-disambig-list');
           const iconEl = document.getElementById('hud-interact-icon');
           const labelEl = document.getElementById('hud-interact-label');
           const subtextEl = document.getElementById('hud-interact-subtext');
           const badgeEl = document.getElementById('hud-interact-badge');
 
-          if (interaction) {
-            // Subtle in-world tile badge positioned directly over interactable cell (BL-42)
+          const candidates = (interaction && interaction.candidates && interaction.candidates.length > 0)
+            ? interaction.candidates
+            : allCandidates;
+
+          if (interaction && candidates.length > 1) {
+            // MULTI-TARGET DISAMBIGUATION (BL-85)
+            // 1. Hide single indicator
+            if (tileIndicator) tileIndicator.classList.add('hidden');
+
+            // 2. Render in-world floating pills over each candidate
+            if (disambigContainer) {
+              disambigContainer.innerHTML = '';
+              candidates.forEach((cand) => {
+                if (cand.screenPos) {
+                  const pill = document.createElement('button');
+                  pill.className = 'hud-disambig-pill';
+                  pill.setAttribute('aria-label', `[${cand.index}] ${cand.name || cand.label}`);
+                  pill.title = `[${cand.index}] ${cand.name || cand.label}`;
+                  pill.style.left = `${cand.screenPos.x}px`;
+                  pill.style.top = `${cand.screenPos.y}px`;
+                  pill.innerHTML = `
+                    <span class="hud-disambig-pill-num">${cand.index}</span>
+                    <span class="hud-disambig-pill-icon">${cand.icon || '✨'}</span>
+                    <span class="hud-disambig-pill-label">${cand.name || cand.label}</span>
+                  `;
+                  pill.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.gameLoop) {
+                      window.gameLoop.handleManualInteract(cand.index);
+                      audioFX.playClick();
+                    }
+                  });
+                  pill.addEventListener('pointerdown', (e) => e.stopPropagation());
+                  disambigContainer.appendChild(pill);
+                }
+              });
+              disambigContainer.classList.remove('hidden');
+            }
+
+            // 3. Render side action button & drawer
+            if (btnContextual) {
+              if (iconEl) iconEl.textContent = '🔢';
+              if (labelEl) labelEl.textContent = `Choose Action (${candidates.length} nearby)`;
+              if (subtextEl) subtextEl.textContent = `Press [1..${candidates.length}] or [E] for #${candidates[0].index}`;
+              if (badgeEl) badgeEl.textContent = `[1-${candidates.length}]`;
+              btnContextual.classList.remove('hidden');
+            }
+
+            if (disambigDrawer && disambigList) {
+              disambigList.innerHTML = '';
+              candidates.forEach((cand) => {
+                const row = document.createElement('button');
+                row.className = 'hud-disambig-row';
+                row.setAttribute('aria-label', `Select [${cand.index}] ${cand.name || cand.label}`);
+                row.innerHTML = `
+                  <span class="hud-disambig-row-num">[${cand.index}]</span>
+                  <span class="hud-disambig-row-icon">${cand.icon || '✨'}</span>
+                  <span class="hud-disambig-row-text">${cand.name || cand.label}</span>
+                `;
+                row.addEventListener('click', (e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (window.gameLoop) {
+                    window.gameLoop.handleManualInteract(cand.index);
+                    audioFX.playClick();
+                  }
+                });
+                row.addEventListener('pointerdown', (e) => e.stopPropagation());
+                disambigList.appendChild(row);
+              });
+              disambigDrawer.classList.remove('hidden');
+            }
+          } else if (interaction) {
+            // SINGLE INTERACTION (BL-42)
+            if (disambigContainer) {
+              disambigContainer.classList.add('hidden');
+              disambigContainer.innerHTML = '';
+            }
+            if (disambigDrawer) {
+              disambigDrawer.classList.add('hidden');
+            }
+
             const indicatorPos = targetScreenPos || targetOrPlayerPos;
             if (tileIndicator && indicatorPos) {
               tileIndicator.style.left = `${indicatorPos.x}px`;
@@ -1479,7 +1572,6 @@
               tileIndicator.classList.remove('hidden');
             }
 
-            // Discreet side action drawer
             if (btnContextual) {
               if (iconEl) iconEl.textContent = interaction.icon || '✨';
               if (labelEl) labelEl.textContent = interaction.label || 'Examine';
@@ -1488,8 +1580,16 @@
               btnContextual.classList.remove('hidden');
             }
           } else {
+            // NO INTERACTION AVAILABLE
             if (tileIndicator) tileIndicator.classList.add('hidden');
             if (btnContextual) btnContextual.classList.add('hidden');
+            if (disambigContainer) {
+              disambigContainer.classList.add('hidden');
+              disambigContainer.innerHTML = '';
+            }
+            if (disambigDrawer) {
+              disambigDrawer.classList.add('hidden');
+            }
           }
         },
       }

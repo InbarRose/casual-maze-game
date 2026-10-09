@@ -1489,6 +1489,165 @@
   line-height: 1.2;
 }
 
+/* Multi-Target Interaction Disambiguation (BL-85) */
+.hud-tile-indicators-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 125;
+}
+
+.hud-tile-indicators-container.hidden {
+  display: none !important;
+}
+
+.hud-disambig-pill {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1.5px solid rgba(56, 189, 248, 0.9);
+  border-radius: var(--radius-full, 9999px);
+  color: #f8fafc;
+  font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  box-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+  cursor: pointer;
+  pointer-events: auto;
+  user-select: none;
+  white-space: nowrap;
+  animation: pulseTileIndicator 1.8s ease-in-out infinite;
+  transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.hud-disambig-pill:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
+  color: #ffffff;
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 0 20px rgba(56, 189, 248, 0.85);
+}
+
+.hud-disambig-pill-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  background: #38bdf8;
+  color: #0f172a;
+  border-radius: 50%;
+  font-family: var(--font-mono, monospace);
+  font-weight: 800;
+  font-size: 0.68rem;
+}
+
+.hud-disambig-pill-icon {
+  font-size: 0.8rem;
+  line-height: 1;
+}
+
+.hud-disambig-pill-label {
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.hud-disambig-drawer {
+  position: fixed;
+  right: 1.5rem;
+  bottom: 8.25rem;
+  width: 260px;
+  max-width: calc(100vw - 3rem);
+  background: rgba(15, 23, 42, 0.94);
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  border: 1.5px solid rgba(56, 189, 248, 0.6);
+  border-radius: var(--radius-lg, 12px);
+  padding: 0.6rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  z-index: 120;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(56, 189, 248, 0.25);
+  animation: slideInSideAction 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hud-disambig-drawer.hidden {
+  display: none !important;
+}
+
+.hud-disambig-header {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0 0.25rem 0.25rem 0.25rem;
+  border-bottom: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+.hud-disambig-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.hud-disambig-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(30, 41, 59, 0.75);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  border-radius: 6px;
+  color: #f1f5f9;
+  font-size: 0.78rem;
+  font-family: var(--font-sans, sans-serif);
+  cursor: pointer;
+  pointer-events: auto;
+  text-align: left;
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.1s ease;
+}
+
+.hud-disambig-row:hover {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: #38bdf8;
+  transform: translateX(-2px);
+}
+
+.hud-disambig-row:active {
+  transform: scale(0.98);
+}
+
+.hud-disambig-row-num {
+  font-family: var(--font-mono, monospace);
+  font-weight: 700;
+  color: #38bdf8;
+  font-size: 0.8rem;
+}
+
+.hud-disambig-row-icon {
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+.hud-disambig-row-text {
+  flex: 1;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* Lore / Note Inspection Side Card (BL-42) */
 .hud-lore-card {
   position: fixed;

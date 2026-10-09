@@ -385,6 +385,38 @@ export const OPPOSITE_DIRECTIONS = Object.freeze({
   east: 'west',
 });
 
+export const INTERACT_APPROACHES = Object.freeze([
+  { id: 'north', label: 'North (From Above)' },
+  { id: 'south', label: 'South (From Below)' },
+  { id: 'west', label: 'West (From Left)' },
+  { id: 'east', label: 'East (From Right)' },
+  { id: 'self', label: 'Same Tile (Standing On)' },
+]);
+
+/**
+ * Check if player position relative to entity is among allowed interaction approaches.
+ * @param {number} entityX
+ * @param {number} entityY
+ * @param {number} playerX
+ * @param {number} playerY
+ * @param {Array<string>} [allowedDirections]
+ * @returns {boolean}
+ */
+export function isApproachAllowed(entityX, entityY, playerX, playerY, allowedDirections) {
+  let approach = 'self';
+  if (playerX === entityX && playerY === entityY - 1) approach = 'north';
+  else if (playerX === entityX && playerY === entityY + 1) approach = 'south';
+  else if (playerX === entityX - 1 && playerY === entityY) approach = 'west';
+  else if (playerX === entityX + 1 && playerY === entityY) approach = 'east';
+  else if (playerX === entityX && playerY === entityY) approach = 'self';
+  else return false; // Not adjacent or on tile
+
+  if (!allowedDirections || !Array.isArray(allowedDirections) || allowedDirections.length === 0) {
+    return true; // Default: all directions allowed
+  }
+  return allowedDirections.includes(approach);
+}
+
 export const KEY_CODES = Object.freeze({
   UP: ['ArrowUp', 'KeyW', 'w', 'W', 'Up'],
   DOWN: ['ArrowDown', 'KeyS', 's', 'S', 'Down'],
@@ -397,6 +429,9 @@ export const KEY_CODES = Object.freeze({
   RESTART: ['KeyT', 't', 'T'],
   PAUSE: ['Escape', 'KeyP', 'p', 'P', 'Esc'],
   VIEW_MODE: ['KeyV', 'v', 'V'],
+  NUMERIC_SELECT: ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9',
+                   'Numpad1', 'Numpad2', 'Numpad3', 'Numpad4', 'Numpad5', 'Numpad6', 'Numpad7', 'Numpad8', 'Numpad9',
+                   '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 });
 
 export const KEY_COLORS = Object.freeze({
