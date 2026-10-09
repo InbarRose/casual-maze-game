@@ -99,6 +99,7 @@ import './integration/journeys/riddle-pedestals.journey.test.mjs';
 import './integration/journeys/storylines-progression.journey.test.mjs';
 import './integration/journeys/camera-rotation.journey.test.mjs';
 import './integration/journeys/multi-room-dungeon.journey.test.mjs';
+import './unit/ui/celestial-cipher-dials.test.mjs';
 
 /**
  * Execute the registered test suites in the browser

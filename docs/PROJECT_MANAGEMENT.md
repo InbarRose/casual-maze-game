@@ -113,6 +113,12 @@ This document tracks project milestones, current release status, active developm
   - **Wall-Integrated Exit Archways**: Dynamically detects when exit is adjacent to a wall and renders an imposing carved stone portal arch with daylight sunbeams or cosmic portal ether and stone threshold apron.
   - **Freestanding 3D Spiral Staircases**: When spawn or exit has no adjacent walls (freestanding in open space), renders a 3D spiral stairwell (descending well into darkness with circular balustrade and floor shadow for spawn, ascending spiral steps with golden daylight shaft for exit).
   - **Automated QA Coverage**: Created `tests/unit/engine/entrance-exit-visuals.test.mjs`; expanded test harness to 119 test suites and 562 tests (0 failed, 7,762 assertions, 23/23 zero-drift checks passed).
+- [x] **Celestial Cipher Dials & Thematic Wall Murals Sprint (BL-83, CMP-06, CMP-14)**:
+  - **Thematic Celestial Vocabulary**: Replaced arbitrary numeric digits with 6 celestial symbols (`CELESTIAL_SYMBOLS`): ☀️ Sun, 🌙 Moon, 🌅 Horizon, ⭐ Star, 🪐 Planet, ☄️ Comet.
+  - **PuzzleModal Dial Rendering**: Upgraded `PuzzleModal` dial columns to render rich icons, capitalized labels, glowing symbol accent borders, and cycling arrow controls.
+  - **In-World Riddle Murals**: Inscribed celestial wall carvings and murals across Level 22 (Sun, Moon, Horizon), Level 23 (Horizon, Moon, Star), Level 24 (Star, Moon, Horizon), and Level 27 (Horizon, Sun, Star), enabling players to deduce cipher solutions logically from lore clues without brute-force guessing.
+  - **Manifest Hash Integrity**: Updated embedded level files and generated SHA-256 hashes ensuring zero drift across all 42 levels.
+  - **Automated QA Coverage**: Created `tests/unit/ui/celestial-cipher-dials.test.mjs`; expanded test harness to 120 test suites and 566 tests (0 failed, 7,811 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
