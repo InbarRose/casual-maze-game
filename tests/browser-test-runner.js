@@ -18,6 +18,7 @@ import './unit/engine/collision.test.mjs';
 import './unit/engine/fog.test.mjs';
 import './unit/engine/camera.test.mjs';
 import './unit/engine/camera-rotation.test.mjs';
+import './unit/engine/camera-zoom.test.mjs';
 import './unit/engine/debug-logger.test.mjs';
 import './unit/engine/perspective-renderer.test.mjs';
 import './unit/engine/depth-sorting.test.mjs';
