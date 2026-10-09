@@ -232,24 +232,71 @@
 <body class="bg-grid">
 
   <div class="main-container">
-    <header class="hero-section">
-      <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center; margin-bottom: 1rem; flex-wrap: wrap;">
-        <span class="badge badge-gold">Modular Puzzle Engine</span>
-        <span class="badge" id="hero-campaign-badge" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); color: var(--accent); font-weight: 700;">🏰 0 / 32 Levels Conquered</span>
-        <span class="badge" id="hero-stars-badge" style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.35); color: #fbbf24; font-weight: 700;">★ 0 Stars Earned</span>
+    <div class="hero-backdrop-container">
+      <canvas id="hero-ambient-canvas"></canvas>
+      <header class="hero-content">
+        <div class="brand-crest" title="Guild of Cartographers Crest">
+          <img src="assets/player/player_compass.svg" alt="Compass Crest" class="brand-crest-icon" />
+        </div>
+        <div class="brand-subtitle">⚔️ Chronicles of the Labyrinth ⚔️</div>
+        <h1 class="brand-title">CASUAL MAZE GAME</h1>
+        <div style="display: flex; gap: 0.5rem; justify-content: center; align-items: center; margin-bottom: 1.1rem; flex-wrap: wrap;">
+          <span class="badge badge-gold">Modular 2D Engine</span>
+          <span class="badge" id="hero-campaign-badge" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.35); color: var(--accent); font-weight: 700;">🏰 0 / 32 Levels Conquered</span>
+          <span class="badge" id="hero-stars-badge" style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.35); color: #fbbf24; font-weight: 700;">★ 0 Stars Earned</span>
+        </div>
+        <p class="hero-description">
+          Traverse multi-elevation bridges &amp; tunnels, uncover hidden paths through dynamic fog of war, trigger puzzle switches, and design custom megalabyrinths.
+        </p>
+        <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
+          <a href="maze.html?id=1" id="btn-hero-play" class="btn btn-glow-primary" style="font-size: 1.1rem; padding: 0.75rem 1.75rem;">▶ Play Campaign</a>
+          <button id="btn-hero-campaign" class="btn btn-secondary">🏰 Browse Chapters</button>
+          <button id="btn-hero-stories" class="btn btn-secondary">📜 Story Sagas</button>
+          <button id="btn-hero-architect" class="btn btn-secondary">🛠️ Level Architect</button>
+          <button id="btn-hero-save-progress" class="btn btn-secondary" title="Save Game Progress (export JSON save file)">💾 Save Progress</button>
+        </div>
+      </header>
+    </div>
+
+    <!-- Gameplay Feature Spotlight Strip -->
+    <div class="spotlight-strip">
+      <div class="spotlight-card">
+        <div class="spotlight-icon-wrap">
+          <img src="assets/tiles/bridges/bridge_dungeon_ew.svg" alt="Bridges" />
+        </div>
+        <div class="spotlight-info">
+          <span class="spotlight-title">Multi-Elevation</span>
+          <span class="spotlight-desc">Overpass bridges &amp; ramps</span>
+        </div>
       </div>
-      <h1 style="font-size: 2.75rem; line-height: 1.1; margin-bottom: 0.8rem;">Casual Maze Game</h1>
-      <p style="font-size: 1.05rem; margin-bottom: 1.5rem;">
-        Traverse multi-elevation bridges &amp; tunnels, uncover hidden paths through dynamic fog of war, trigger puzzle switches, and design custom labyrinths.
-      </p>
-      <div style="display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap;">
-        <a href="maze.html?id=1" id="btn-hero-play" class="btn btn-primary" style="font-size: 1.05rem; padding: 0.7rem 1.4rem;">▶ Play Campaign</a>
-        <button id="btn-hero-campaign" class="btn btn-secondary">🏰 Browse Chapters</button>
-        <button id="btn-hero-stories" class="btn btn-secondary">📜 Story Sagas</button>
-        <button id="btn-hero-architect" class="btn btn-secondary">🛠️ Level Architect</button>
-        <button id="btn-hero-save-progress" class="btn btn-secondary" title="Save Game Progress (export JSON save file)">💾 Save Progress</button>
+      <div class="spotlight-card">
+        <div class="spotlight-icon-wrap">
+          <img src="assets/tiles/variations/floor_dungeon_runic.svg" alt="Fog of War" />
+        </div>
+        <div class="spotlight-info">
+          <span class="spotlight-title">Fog of War</span>
+          <span class="spotlight-desc">Raycasting Line of Sight</span>
+        </div>
       </div>
-    </header>
+      <div class="spotlight-card">
+        <div class="spotlight-icon-wrap">
+          <img src="assets/entities/keys/key_relic.svg" alt="Keys" />
+        </div>
+        <div class="spotlight-info">
+          <span class="spotlight-title">Keys &amp; Seals</span>
+          <span class="spotlight-desc">Elemental puzzle barriers</span>
+        </div>
+      </div>
+      <div class="spotlight-card">
+        <div class="spotlight-icon-wrap">
+          <img src="assets/entities/levers/crystal_active.svg" alt="Levers" />
+        </div>
+        <div class="spotlight-info">
+          <span class="spotlight-title">Clockwork Levers</span>
+          <span class="spotlight-desc">Dynamic route mutations</span>
+        </div>
+      </div>
+    </div>
 
     <!-- Game Mode Switcher Navigation -->
     <nav class="mode-nav" id="mode-tabs">
@@ -273,11 +320,12 @@
     <!-- STORIES MODE CONTAINER -->
     <div id="stories-section-container" style="width: 100%; display: none;">
       <!-- Story 1: The Novice's Initiation -->
-      <section class="story-card" id="story-novice-card" style="border-color: rgba(56, 189, 248, 0.35); background: linear-gradient(180deg, rgba(56, 189, 248, 0.04) 0%, rgba(22, 27, 34, 0.95) 100%);">
+      <section class="story-card" id="story-novice-card" style="border-color: rgba(56, 189, 248, 0.35); background: linear-gradient(180deg, rgba(56, 189, 248, 0.05) 0%, rgba(22, 27, 34, 0.95) 100%);">
         <div class="campaign-header">
           <div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
-              <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text);">📜 Story 1: The Novice's Initiation</h2>
+            <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+              <img src="assets/entities/keys/key_relic.svg" class="chapter-asset-preview" alt="Novice Initiation Key" />
+              <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text);">Story 1: The Novice's Initiation</h2>
               <span class="badge" style="background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: var(--accent); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Prologue • 6 Chapters</span>
               <span class="badge" id="story-novice-status" style="background: rgba(52, 211, 153, 0.12); color: var(--emerald); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 6 Chapters</span>
             </div>
@@ -316,11 +364,12 @@
       </section>
 
       <!-- Story 2: Relics of the Four Guardians -->
-      <section class="story-card" id="story-guardians-card" style="border-color: rgba(251, 191, 36, 0.35); background: linear-gradient(180deg, rgba(251, 191, 36, 0.04) 0%, rgba(22, 27, 34, 0.95) 100%);">
+      <section class="story-card" id="story-guardians-card" style="border-color: rgba(251, 191, 36, 0.35); background: linear-gradient(180deg, rgba(251, 191, 36, 0.05) 0%, rgba(22, 27, 34, 0.95) 100%);">
         <div class="campaign-header">
           <div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
-              <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--gold);">🦅 Story 2: Relics of the Four Guardians</h2>
+            <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+              <img src="assets/environment/exit/exit_shrine.svg" class="chapter-asset-preview" alt="Shrine of Guardians" />
+              <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--gold);">Story 2: Relics of the Four Guardians</h2>
               <span class="badge" style="background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.3); color: var(--gold); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Riddle Quest • 3 Chapters</span>
               <span class="badge" id="story-guardians-status" style="background: rgba(52, 211, 153, 0.12); color: var(--emerald); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 3 Chapters</span>
             </div>
@@ -347,11 +396,12 @@
       </section>
 
       <!-- Story 3: The Whispering Citadel -->
-      <section class="story-card" id="story-citadel-card" style="border-color: rgba(168, 85, 247, 0.35); background: linear-gradient(180deg, rgba(168, 85, 247, 0.04) 0%, rgba(22, 27, 34, 0.95) 100%);">
+      <section class="story-card" id="story-citadel-card" style="border-color: rgba(168, 85, 247, 0.35); background: linear-gradient(180deg, rgba(168, 85, 247, 0.05) 0%, rgba(22, 27, 34, 0.95) 100%);">
         <div class="campaign-header">
           <div>
-            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
-              <h2 style="font-size: 1.35rem; font-weight: 700; color: #c084fc;">🏛️ Story 3: The Whispering Citadel</h2>
+            <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.35rem; flex-wrap: wrap;">
+              <img src="assets/entities/doors/door_magic_seal.svg" class="chapter-asset-preview" alt="Magic Seal Door" />
+              <h2 style="font-size: 1.35rem; font-weight: 700; color: #c084fc;">Story 3: The Whispering Citadel</h2>
               <span class="badge" style="background: rgba(168, 85, 247, 0.15); border: 1px solid rgba(168, 85, 247, 0.3); color: #c084fc; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Multi-Room Epic • 3 Chambers</span>
               <span class="badge" id="story-citadel-status" style="background: rgba(52, 211, 153, 0.12); color: var(--emerald); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 1 Mastered</span>
             </div>
@@ -375,11 +425,12 @@
 
 
     <!-- Chapter 1: The Foundation -->
-    <section class="campaign-section" id="chapter-1-section">
+    <section class="campaign-section chapter-theme-dungeon" id="chapter-1-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text);">🏰 Chapter 1: The Foundation</h2>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <img src="assets/tiles/variations/floor_dungeon_runic.svg" class="chapter-asset-preview" alt="Dungeon Stone" />
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--text);">Chapter 1: The Foundation</h2>
             <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: var(--accent); font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 1 • Navigation &amp; Keys</span>
             <span class="badge" id="chapter-1-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 12</span>
           </div>
@@ -409,11 +460,12 @@
     </section>
 
     <!-- Chapter 2: The Vertical Dimension -->
-    <section class="campaign-section" id="chapter-2-section">
+    <section class="campaign-section chapter-theme-jungle" id="chapter-2-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #34d399;">🌴 Chapter 2: The Vertical Dimension</h2>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <img src="assets/entities/keys/key_jungle_jade.svg" class="chapter-asset-preview" alt="Jungle Canopy" />
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #34d399;">Chapter 2: The Vertical Dimension</h2>
             <span class="badge" style="background: rgba(52, 211, 153, 0.15); color: #34d399; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 2 • 3D Bridges &amp; Ramps</span>
             <span class="badge" id="chapter-2-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 12</span>
           </div>
@@ -443,11 +495,12 @@
     </section>
 
     <!-- Chapter 3: Shifting Architecture -->
-    <section class="campaign-section" id="chapter-3-section">
+    <section class="campaign-section chapter-theme-clockwork" id="chapter-3-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #fbbf24;">🏛️ Chapter 3: Shifting Architecture</h2>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <img src="assets/entities/levers/cog_valve_on.svg" class="chapter-asset-preview" alt="Clockwork Lever" />
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #fbbf24;">Chapter 3: Shifting Architecture</h2>
             <span class="badge" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 3 • Modulating Levers</span>
             <span class="badge" id="chapter-3-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 12</span>
           </div>
@@ -477,11 +530,12 @@
     </section>
 
     <!-- Chapter 4: Astral Anomalies -->
-    <section class="campaign-section" id="chapter-4-section">
+    <section class="campaign-section chapter-theme-void" id="chapter-4-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #c084fc;">💠 Chapter 4: Astral Anomalies</h2>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <img src="assets/entities/teleporters/teleporter_portal.svg" class="chapter-asset-preview" alt="Void Rift" />
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #c084fc;">Chapter 4: Astral Anomalies</h2>
             <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 4 • Teleportation Rifts</span>
             <span class="badge" id="chapter-4-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 12</span>
           </div>
@@ -511,11 +565,12 @@
     </section>
 
     <!-- Chapter 5: Rhythm & Danger -->
-    <section class="campaign-section" id="chapter-5-section">
+    <section class="campaign-section chapter-theme-magma" id="chapter-5-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #fb923c;">🌋 Chapter 5: Rhythm &amp; Danger</h2>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <img src="assets/entities/keys/key_magma_ruby.svg" class="chapter-asset-preview" alt="Magma Hazard" />
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #fb923c;">Chapter 5: Rhythm &amp; Danger</h2>
             <span class="badge" style="background: rgba(249, 115, 22, 0.15); color: #fb923c; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 5 • Hazards &amp; Patrollers</span>
             <span class="badge" id="chapter-5-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 12</span>
           </div>
@@ -545,11 +600,12 @@
     </section>
 
     <!-- Chapter 6: Arcane Seals -->
-    <section class="campaign-section" id="chapter-6-section">
+    <section class="campaign-section chapter-theme-celestial" id="chapter-6-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #e879f9;">🔮 Chapter 6: Arcane Seals</h2>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <img src="assets/entities/puzzle_gates/puzzle_gate_cipher.svg" class="chapter-asset-preview" alt="Arcane Cipher" />
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #e879f9;">Chapter 6: Arcane Seals</h2>
             <span class="badge" style="background: rgba(232, 121, 249, 0.15); color: #e879f9; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 6 • Puzzle Minigames</span>
             <span class="badge" id="chapter-6-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 12</span>
           </div>
@@ -579,11 +635,12 @@
     </section>
 
     <!-- Chapter 7: Grand Synthesis -->
-    <section class="campaign-section" id="chapter-7-section">
+    <section class="campaign-section chapter-theme-gilded" id="chapter-7-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #38bdf8;">⭐ Chapter 7: Grand Synthesis</h2>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <img src="assets/entities/keys/key_ornate.svg" class="chapter-asset-preview" alt="Synthesis Key" />
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #38bdf8;">Chapter 7: Grand Synthesis</h2>
             <span class="badge" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 7 • Master Megalabyrinths</span>
             <span class="badge" id="chapter-7-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 12</span>
           </div>
@@ -613,11 +670,12 @@
     </section>
 
     <!-- Chapter 8: The Shifting Monolith -->
-    <section class="campaign-section" id="chapter-8-section">
+    <section class="campaign-section chapter-theme-glacial" id="chapter-8-section">
       <div class="campaign-header">
         <div>
-          <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
-            <h2 style="font-size: 1.25rem; font-weight: 700; color: #a855f7;">🌀 Chapter 8: The Shifting Monolith</h2>
+          <div style="display: flex; align-items: center; gap: 0.65rem; margin-bottom: 0.25rem; flex-wrap: wrap;">
+            <img src="assets/environment/exit/exit_portal.svg" class="chapter-asset-preview" alt="Monolith Portal" />
+            <h2 style="font-size: 1.25rem; font-weight: 700; color: #a855f7;">Chapter 8: The Shifting Monolith</h2>
             <span class="badge" style="background: rgba(168, 85, 247, 0.15); color: #c084fc; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">Tier 8 • 90° World Rotation &amp; Underpasses</span>
             <span class="badge" id="chapter-8-stars" style="background: rgba(251, 191, 36, 0.12); color: #fbbf24; font-size: 0.72rem; padding: 0.15rem 0.5rem; border-radius: 9999px;">★ 0 / 12</span>
           </div>
@@ -751,9 +809,19 @@
     import { StorageManager } from './js/core/storage.js';
     import { audioFX } from './js/ui/audio-fx.js';
     import { initAppHeader } from './js/ui/app-header.js';
+    import { HeroAmbientCanvas } from './js/ui/hero-ambient-canvas.js';
 
     // Mount Universal Global App Header and Footer
     initAppHeader({ activeTab: 'hub' });
+
+    // Initialize & Run Ambient Hero Gameplay Simulation Backdrop
+    const heroAmbientCanvas = new HeroAmbientCanvas('hero-ambient-canvas', {
+      cellSize: 36,
+      moteCount: 30,
+      speed: 1.0,
+      enableParallax: true,
+    });
+    heroAmbientCanvas.start();
 
     // Global Error & Promise Rejection Handlers
     window.addEventListener('error', (event) => {
