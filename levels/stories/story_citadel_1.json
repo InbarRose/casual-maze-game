@@ -25,14 +25,16 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 11,
     "y": 11,
     "elevation": 0,
     "style": "portal",
-    "label": "Apex Altar of the Monolith"
+    "label": "Apex Altar of the Monolith",
+    "wallDirection": "none"
   },
   "exits": [
     {
@@ -47,7 +49,8 @@
         "x": 1,
         "y": 1,
         "elevation": 0
-      }
+      },
+      "wallDirection": "none"
     },
     {
       "id": "exit_courtyard_to_spire",
@@ -61,7 +64,8 @@
         "x": 1,
         "y": 1,
         "elevation": 0
-      }
+      },
+      "wallDirection": "none"
     }
   ],
   "initialRoom": "courtyard",
