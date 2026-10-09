@@ -72,6 +72,7 @@ import './unit/ui/audio-ambience.test.mjs';
 import './unit/ui/game-menu.test.mjs';
 import './unit/ui/app-header.test.mjs';
 import './unit/ui/touch-controls.test.mjs';
+import './unit/ui/lore-journal.test.mjs';
 
 // 7. Modular Campaign Chapter Playthrough Tests (Levels 1–32)
 import './integration/campaign/chapter-1.test.mjs';
