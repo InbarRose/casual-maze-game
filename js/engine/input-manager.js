@@ -29,6 +29,7 @@ export const GAMEPAD_BUTTONS = Object.freeze({
 export const GAME_COMMANDS = Object.freeze({
   MOVE: 'move',
   INTERACT: 'interact',
+  SELECT_OPTION: 'select_option',
   ROTATE_LEFT: 'rotate_left',
   ROTATE_RIGHT: 'rotate_right',
   TOGGLE_MAP: 'toggle_map',
@@ -202,6 +203,12 @@ export class InputManager {
     // Instant Action Commands
     if (KEY_CODES.INTERACT.includes(e.code) || (e.key && KEY_CODES.INTERACT.includes(e.key))) {
       this.emitCommand(GAME_COMMANDS.INTERACT, { source: 'keyboard', event: e });
+    } else if (KEY_CODES.NUMERIC_SELECT && (KEY_CODES.NUMERIC_SELECT.includes(e.code) || (e.key && KEY_CODES.NUMERIC_SELECT.includes(e.key)))) {
+      const match = (e.key || e.code || '').match(/[1-9]/);
+      if (match) {
+        const optionIndex = parseInt(match[0], 10);
+        this.emitCommand(GAME_COMMANDS.SELECT_OPTION, { index: optionIndex, source: 'keyboard', event: e });
+      }
     } else if (KEY_CODES.PAUSE && (KEY_CODES.PAUSE.includes(e.code) || (e.key && KEY_CODES.PAUSE.includes(e.key)))) {
       this.emitCommand(GAME_COMMANDS.PAUSE, { source: 'keyboard', event: e });
     } else if (hotkeysActive && KEY_CODES.ROTATE_LEFT && (KEY_CODES.ROTATE_LEFT.includes(e.code) || (e.key && KEY_CODES.ROTATE_LEFT.includes(e.key)))) {
