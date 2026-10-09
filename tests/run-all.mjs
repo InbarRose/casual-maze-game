@@ -136,6 +136,7 @@ import './unit/ui/guide-modal.test.mjs';
 import './unit/ui/elevation-audio.test.mjs';
 import './unit/ui/hero-ambient-canvas.test.mjs';
 import './unit/ui/lore-journal.test.mjs';
+import './unit/ui/celestial-cipher-dials.test.mjs';
 
 // Run registered suites
 
