@@ -1396,19 +1396,21 @@ export class GameRenderer {
   renderWallIntegratedPortals(ctx, wallX, wallY, screenX, screenY, tileSize, theme, level, camera) {
     if (!level) return;
 
-    // 1. Check if this wall is adjacent to spawn (especially North of spawn)
+    // 1. Check if spawn has an explicit North wall doorway
     if (level.spawn) {
-      const { x: sx, y: sy, style = 'stairs_down' } = level.spawn;
-      if (wallX === sx && wallY === sy - 1) {
+      const { x: sx, y: sy, style = 'stairs_down', wallDirection = 'none' } = level.spawn;
+      const isWallDoorway = style === 'wall_doorway' || wallDirection === 'north';
+      if (isWallDoorway && wallX === sx && wallY === sy - 1) {
         // Wall is North of spawn: render grand entrance door on front drop-face
         this.renderWallEntranceDoorway(ctx, screenX, screenY, tileSize, theme, style);
       }
     }
 
-    // 2. Check if this wall is adjacent to any exit (especially North of exit)
+    // 2. Check if any exit has an explicit North wall archway
     const exitList = Array.isArray(level.exits) && level.exits.length > 0 ? level.exits : (level.exit ? [level.exit] : []);
     for (const exit of exitList) {
-      if (wallX === exit.x && wallY === exit.y - 1) {
+      const isWallArchway = exit.style === 'wall_archway' || exit.wallDirection === 'north';
+      if (isWallArchway && wallX === exit.x && wallY === exit.y - 1) {
         // Wall is North of exit: render daylight archway on front drop-face
         this.renderWallExitDoorway(ctx, screenX, screenY, tileSize, theme, exit);
       }
@@ -1615,17 +1617,17 @@ export class GameRenderer {
    */
   renderSpawnEntrance(ctx, level, camera, theme, fog) {
     if (!level?.spawn) return;
-    const { x, y } = level.spawn;
+    const { x, y, style = 'stairs_down', wallDirection = 'none' } = level.spawn;
     if (fog && !fog.isExplored(x, y)) return;
 
     const tileSize = camera.tileSize;
     const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
-    const angle = camera ? camera.getDiscreteRotation() : 0;
-    const wallInfo = this.detectAdjacentWall(level, x, y, angle);
     const effTheme = theme || THEMES.dungeon;
+    const isWallDoorway = style === 'wall_doorway' || wallDirection !== 'none';
 
-    if (wallInfo) {
+    if (isWallDoorway) {
       // Wall-integrated entrance floor threshold & ambient light spill
+      const wallInfo = { dir: wallDirection !== 'none' ? wallDirection : 'north', wallX: x, wallY: y - 1 };
       this.renderWallAdjacentEntranceFloor(ctx, screen.x, screen.y, tileSize, effTheme, wallInfo);
     } else {
       // Freestanding 3D Spiral Staircase descent
@@ -1805,19 +1807,19 @@ export class GameRenderer {
    */
   renderExit(ctx, level, camera, theme, fog) {
     const exitList = Array.isArray(level?.exits) && level.exits.length > 0 ? level.exits : (level?.exit ? [level.exit] : []);
-    const angle = camera ? camera.getDiscreteRotation() : 0;
 
     const effTheme = theme || THEMES.dungeon;
     for (const exit of exitList) {
-      const { x, y, style = 'portal', label } = exit;
+      const { x, y, style = 'portal', wallDirection = 'none', label } = exit;
       if (fog && !fog.isExplored(x, y)) continue;
 
       const tileSize = camera.tileSize;
       const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
-      const wallInfo = this.detectAdjacentWall(level, x, y, angle);
+      const isWallArchway = style === 'wall_archway' || wallDirection !== 'none';
 
-      if (wallInfo) {
-        // Wall-integrated exit floor apron & daylight spill
+      if (isWallArchway) {
+        // Explicit wall-integrated exit floor apron & daylight spill
+        const wallInfo = { dir: wallDirection !== 'none' ? wallDirection : 'north', wallX: x, wallY: y - 1 };
         this.renderWallAdjacentExitFloor(ctx, screen.x, screen.y, tileSize, effTheme, exit, wallInfo);
       } else {
         if (style === 'portal') {
