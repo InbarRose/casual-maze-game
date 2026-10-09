@@ -20,10 +20,15 @@ export class Lever extends BaseEntity {
     });
 
     this.state = !!config.state; // false = unpulled, true = pulled
-    this.style = config.style || 'switch_lever'; // 'switch_lever' | 'pressure_pedestal' | 'crystal_switch' | 'runic_plate' | 'cog_wheel'
+    this.style = config.style || 'switch_lever'; // 'switch_lever' | 'pressure_pedestal' | 'crystal_switch' | 'runic_plate' | 'cog_wheel' | 'floor_plate'
     this.oneWay = !!config.oneWay;
     this.color = config.color || '#38bdf8';
     this.targets = Array.isArray(config.targets) ? config.targets : []; // [{ action, x, y, layer, stateA, stateB }]
+
+    // Step trigger properties (floor-plate traps auto-trigger once when stepped on)
+    this.triggerOnStep = !!config.triggerOnStep || this.style === 'floor_plate';
+    this.autoTriggerOnce = config.autoTriggerOnce !== undefined ? !!config.autoTriggerOnce : (this.style === 'floor_plate');
+    this.hasTriggered = !!config.hasTriggered;
 
     // Visual animation handle angle
     this.handleAngle = this.state ? 0.65 : -0.65;
@@ -208,6 +213,30 @@ export class Lever extends BaseEntity {
       ctx.beginPath();
       ctx.arc(0, 0, tileSize * 0.1, 0, Math.PI * 2);
       ctx.fill();
+      ctx.restore();
+    } else if (this.style === 'floor_plate') {
+      // Spring-loaded Floor Plate Trap
+      const plateSize = tileSize * 0.72;
+      const plateHalf = plateSize / 2;
+      ctx.save();
+      ctx.fillStyle = this.state ? '#3f3f46' : '#27272a';
+      ctx.strokeStyle = this.state ? '#ef4444' : '#eab308';
+      ctx.lineWidth = Math.max(1.5, tileSize * 0.05);
+
+      if (typeof ctx.roundRect === 'function') {
+        ctx.roundRect(cx - plateHalf, cy - plateHalf, plateSize, plateSize, tileSize * 0.08);
+      } else {
+        ctx.rect(cx - plateHalf, cy - plateHalf, plateSize, plateSize);
+      }
+      ctx.fill();
+      ctx.stroke();
+
+      // Inner danger chevron / pressure sensor icon
+      ctx.fillStyle = this.state ? '#ef4444' : '#facc15';
+      ctx.font = `${Math.floor(tileSize * 0.36)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(this.state ? '💥' : '⚠️', cx, cy);
       ctx.restore();
     } else {
       // Standard Floor / Wall Toggle Lever

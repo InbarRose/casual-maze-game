@@ -291,4 +291,134 @@ describe('Engine > Directional Proximity & Multi-Target Disambiguation (BL-85)',
 
     gameLoop.stop();
   });
+
+  it('normal levers do not auto-toggle when stepped on, and require manual interact [E]', () => {
+    const mockCanvas = {
+      getContext: () => ({
+        save: () => {},
+        restore: () => {},
+        translate: () => {},
+        scale: () => {},
+        clearRect: () => {},
+        fillRect: () => {},
+        drawImage: () => {},
+      }),
+      width: 800,
+      height: 600,
+      getBoundingClientRect: () => ({ width: 800, height: 600, left: 0, top: 0 }),
+    };
+
+    const level = {
+      dimensions: { width: 10, height: 10 },
+      spawn: { x: 1, y: 1 },
+      exit: { x: 8, y: 8 },
+      layers: {
+        ground: Array(10).fill(null).map(() => Array(10).fill(0)),
+      },
+      entities: [
+        {
+          type: ENTITY_TYPES.LEVER,
+          id: 'manual_lever',
+          name: 'Manual Switch',
+          x: 2,
+          y: 1,
+          style: 'switch_lever',
+          state: false,
+          targets: [{ action: 'toggle_tile', layer: 'ground', x: 5, y: 5, stateA: 1, stateB: 0 }],
+        },
+      ],
+    };
+
+    const gameLoop = new GameLoop({
+      mainCanvas: mockCanvas,
+      minimapCanvas: mockCanvas,
+      level,
+    });
+
+    const lever = gameLoop.entities.find(e => e.id === 'manual_lever');
+    assertEqual(lever.state, false, 'Lever initially unpulled');
+
+    // Step player directly onto lever tile (2, 1)
+    gameLoop.player.gridX = 2;
+    gameLoop.player.gridY = 1;
+    gameLoop.handleCellArrival();
+    gameLoop.update(0.016);
+
+    // Verify lever did NOT auto-toggle on step!
+    assertEqual(lever.state, false, 'Lever did NOT auto-toggle upon being stepped on');
+
+    // Manual interact [E] toggles lever
+    gameLoop.handleManualInteract();
+    assertEqual(lever.state, true, 'Lever toggled after explicit manual interact [E]');
+    assertEqual(gameLoop.level.layers.ground[5][5], 1, 'Target tile mutated');
+
+    gameLoop.stop();
+  });
+
+  it('floor-plate trap auto-triggers once when stepped on and does not re-trigger if autoTriggerOnce is true', () => {
+    const mockCanvas = {
+      getContext: () => ({
+        save: () => {},
+        restore: () => {},
+        translate: () => {},
+        scale: () => {},
+        clearRect: () => {},
+        fillRect: () => {},
+        drawImage: () => {},
+      }),
+      width: 800,
+      height: 600,
+      getBoundingClientRect: () => ({ width: 800, height: 600, left: 0, top: 0 }),
+    };
+
+    const level = {
+      dimensions: { width: 10, height: 10 },
+      spawn: { x: 1, y: 1 },
+      exit: { x: 8, y: 8 },
+      layers: {
+        ground: Array(10).fill(null).map(() => Array(10).fill(0)),
+      },
+      entities: [
+        {
+          type: ENTITY_TYPES.LEVER,
+          id: 'trap_plate_1',
+          name: 'Pressure Trap',
+          x: 3,
+          y: 1,
+          style: 'floor_plate',
+          state: false,
+          targets: [{ action: 'toggle_tile', layer: 'ground', x: 7, y: 7, stateA: 1, stateB: 0 }],
+        },
+      ],
+    };
+
+    const gameLoop = new GameLoop({
+      mainCanvas: mockCanvas,
+      minimapCanvas: mockCanvas,
+      level,
+    });
+
+    const trap = gameLoop.entities.find(e => e.id === 'trap_plate_1');
+    assertEqual(trap.triggerOnStep, true, 'Floor plate has triggerOnStep = true');
+    assertEqual(trap.autoTriggerOnce, true, 'Floor plate has autoTriggerOnce = true');
+    assertEqual(trap.state, false, 'Trap initially unpulled');
+
+    // Step player onto trap tile (3, 1)
+    gameLoop.player.gridX = 3;
+    gameLoop.player.gridY = 1;
+    gameLoop.handleCellArrival();
+    gameLoop.update(0.016);
+
+    // Auto-triggered on step!
+    assertEqual(trap.state, true, 'Floor plate auto-triggered upon step');
+    assertEqual(trap.hasTriggered, true, 'hasTriggered flag set to true');
+    assertEqual(gameLoop.level.layers.ground[7][7], 1, 'Target tile closed');
+
+    // Step onto trap again - does not toggle back because autoTriggerOnce is true!
+    gameLoop.handleCellArrival();
+    gameLoop.update(0.016);
+    assertEqual(trap.state, true, 'Floor plate remains in triggered state (did not re-toggle)');
+
+    gameLoop.stop();
+  });
 });

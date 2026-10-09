@@ -1776,47 +1776,61 @@ export class GameLoop {
       this.notifyUI();
     }
 
-    // 2. Check Lever step trigger (must match entity elevation, default 0)
-    const lever = this.entities.find(e => e.type === 'lever' && e.x === px && e.y === py && (e.elevation || ELEVATION.GROUND) === pe);
-    if (lever) {
-      lever.toggle(this.level);
-      const leverColor = lever.state ? '#34d399' : '#f43f5e';
-      const leverStateLabel = lever.state ? 'ON' : 'OFF';
-      const leverActionLabel = lever.state ? 'Mechanism Opened' : 'Mechanism Closed';
+    // 2. Check Step-Triggered Floor Plates / Traps (must match entity elevation, default 0)
+    // Standard levers do NOT auto-toggle on step; only floor plates / step triggers do.
+    const stepPlate = this.entities.find(e =>
+      (e.type === 'lever' || e.type === ENTITY_TYPES.LEVER) &&
+      (e.triggerOnStep || e.style === 'floor_plate') &&
+      (!e.autoTriggerOnce || !e.hasTriggered) &&
+      e.x === px && e.y === py &&
+      (e.elevation || ELEVATION.GROUND) === pe
+    );
+    if (stepPlate) {
+      stepPlate.hasTriggered = true;
+      stepPlate.toggle(this.level);
+      const isPlateTrap = stepPlate.style === 'floor_plate';
+      const plateColor = isPlateTrap ? '#ef4444' : (stepPlate.state ? '#34d399' : '#f43f5e');
+      const plateStateLabel = stepPlate.state ? 'ACTIVE' : 'INACTIVE';
+      const plateActionLabel = stepPlate.state ? 'Mechanism Triggered' : 'Mechanism Reset';
 
-      this.renderer.spawnParticles(this.player.worldX, this.player.worldY, leverColor, 20);
-      this.renderer.spawnShockwave(this.player.worldX, this.player.worldY, leverColor, 36);
-      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY, `⚡ ${lever.name || 'Switch'}: ${leverStateLabel}`, leverColor);
+      this.renderer.spawnParticles(this.player.worldX, this.player.worldY, plateColor, 20);
+      this.renderer.spawnShockwave(this.player.worldX, this.player.worldY, plateColor, 36);
+      this.renderer.spawnFloatingText(
+        this.player.worldX,
+        this.player.worldY,
+        `${isPlateTrap ? '⚠️' : '⚡'} ${stepPlate.name || 'Floor Plate'}: ${plateStateLabel}`,
+        plateColor
+      );
 
       // Trigger effects at all target coordinates
-      if (Array.isArray(lever.targets)) {
-        for (const target of lever.targets) {
+      if (Array.isArray(stepPlate.targets)) {
+        for (const target of stepPlate.targets) {
           if (target.x !== undefined && target.y !== undefined) {
             const targetWx = target.x * this.camera.tileSize + this.camera.tileSize / 2;
             const targetWy = target.y * this.camera.tileSize + this.camera.tileSize / 2;
-            this.renderer.spawnParticles(targetWx, targetWy, leverColor, 15);
-            this.renderer.spawnShockwave(targetWx, targetWy, leverColor, 28);
-            this.renderer.spawnFloatingText(targetWx, targetWy, lever.state ? '🔓 Passage Opened' : '🔒 Passage Closed', leverColor);
+            this.renderer.spawnParticles(targetWx, targetWy, plateColor, 15);
+            this.renderer.spawnShockwave(targetWx, targetWy, plateColor, 28);
+            this.renderer.spawnFloatingText(targetWx, targetWy, stepPlate.state ? '🔓 Mechanism Fired' : '🔒 Mechanism Closed', plateColor);
           }
         }
       }
 
       this.logger.logLeverToggled({
-        leverId: lever.id,
-        state: lever.state,
+        leverId: stepPlate.id,
+        state: stepPlate.state,
         atX: px,
         atY: py,
-        targets: lever.targets,
+        targets: stepPlate.targets,
         elapsedMs: this.elapsedTime,
       });
 
       globalEvents.emit('lever:toggled', {
-        leverId: lever.id,
-        name: lever.name || 'Switch',
-        state: lever.state,
-        stateLabel: leverStateLabel,
-        actionLabel: leverActionLabel,
-        targets: lever.targets,
+        leverId: stepPlate.id,
+        name: stepPlate.name || (isPlateTrap ? 'Floor Plate Trap' : 'Switch'),
+        state: stepPlate.state,
+        stateLabel: plateStateLabel,
+        actionLabel: plateActionLabel,
+        targets: stepPlate.targets,
         x: px,
         y: py,
       });
