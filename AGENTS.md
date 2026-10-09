@@ -17,7 +17,12 @@ This document outlines the standard operating procedures, architectural principl
 * **No Monolithic Refactors**: Break tasks into incremental steps (e.g. models/constants -> engine logic -> UI/integration -> tests).
 * **Documentation Integrity**: Preserve all existing non-conflicting comments and docstrings unless deliberately deprecating them.
 
-### C. Mandatory Testing & Validation
+### C. Mandatory Backlog & Architecture Decision Tracking (ADRs)
+* **Zero Untracked Work**: Every user request, planned enhancement, game design direction, and architectural choice **must** be immediately recorded in [`docs/BACKLOG.md`](docs/BACKLOG.md) and [`docs/PROJECT_MANAGEMENT.md`](docs/PROJECT_MANAGEMENT.md), even if implemented immediately.
+* **Architecture Decision Records (ADRs)**: Any design choice, schema shift, entity behavioral separation, or engine model decision must be immortalized as an Architectural Decision Record in [`docs/adr/`](docs/adr/) so the rationale, alternatives considered, and trade-offs are permanently explainable.
+* **Traceability Requirement**: Commit messages, PR descriptions, and walkthrough artifacts must cite the corresponding `BL-XX` backlog ticket and ADR number so future contributors always understand *why* things were done.
+
+### D. Mandatory Testing & Validation
 * **Automated Tests**: Every new game mechanic, entity, collision rule, PRNG feature, or schema mutation **must** include automated tests in the modular `tests/` directory architecture.
 * **Test Command**: Always run `npm test` before concluding any task and ensure all tests pass (`0 failed`).
 
@@ -58,6 +63,8 @@ Before concluding any task or reporting back to the user, ensure:
 - [ ] Zero server dependencies added (remains 100% static on GitHub Pages).
 - [ ] New logic or entity types are covered by tests in `tests/`.
 - [ ] `npm test` runs and passes with `0 failed`.
-- [ ] Relevant documentation (`docs/PROJECT_MANAGEMENT.md`, `docs/ARCHITECTURE.md`, or `docs/adr/`) is updated.
-- [ ] Work is committed with conventional, atomic git commit messages.
+- [ ] All user requests, plans, and architectural decisions are tracked as items in [`docs/BACKLOG.md`](docs/BACKLOG.md) and [`docs/PROJECT_MANAGEMENT.md`](docs/PROJECT_MANAGEMENT.md).
+- [ ] Any architectural shift, entity behavior change, or mechanics separation is documented in a dedicated ADR in [`docs/adr/`](docs/adr/).
+- [ ] Relevant documentation (`docs/PROJECT_MANAGEMENT.md`, `docs/ARCHITECTURE.md`, `docs/LEVEL_SCHEMA.md`, or `docs/adr/`) is updated.
+- [ ] Work is committed with conventional, atomic git commit messages referencing the ticket / ADR.
 - [ ] Branch is pushed and Pull Request is opened via GitHub MCP targeting `main` for review.
