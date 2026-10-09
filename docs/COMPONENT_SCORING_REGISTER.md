@@ -13,11 +13,11 @@ This document records the official baseline quality evaluations, granular expert
 | ID | Component / Subsystem | Category 1 (Juice) | Category 2 (Static) | Category 3 (UI/UX) | Category 4 (Mechanics) | Category 5 (Progression) | Category 6 (Accessibility) | Master Score (/60) | Tier | Status |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **CMP-01** | **Universal App Shell & Global Navigation** | 7.00 | 9.33 | 7.67 | 6.33 | 7.00 | 6.33 | **43.66** (72.8%) | **B Tier** | Dynamic Hero Backdrop Canvas, Brand Crest & Biome Themes (`BL-48`, `BL-54`, `BL-80`) |
-| **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 7.33 | 9.00 | 7.00 | 7.67 | 5.33 | 5.67 | **42.00** (70.0%) | **B Tier** | Ambient Simulation, Dual Tileset & Secret Walls (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`) |
-| **CMP-03** | **Core Gameplay Loop & State Machine** | 6.00 | 9.67 | 6.33 | 8.00 | 6.33 | 6.67 | **43.00** (71.7%) | **B Tier** | BaseEntity Polymorphism & Vec2 Domain Models (`BL-42`, `BL-51`, `BL-52`, `BL-57`) |
+| **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 8.33 | 9.33 | 8.00 | 8.00 | 6.33 | 6.67 | **46.66** (77.8%) | **B Tier** | Hardcoded Wall Doorways, 3D Spiral Staircases, Y-Depth Sorting & Murals (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`, `BL-82`, `BL-84`) |
+| **CMP-03** | **Core Gameplay Loop & State Machine** | 7.00 | 9.67 | 7.67 | 8.33 | 6.67 | 7.00 | **46.34** (77.2%) | **B Tier** | Lever Interaction Separation, Floor Traps, Disambiguation & BaseEntity (`BL-42`, `BL-51`, `BL-52`, `BL-57`, `BL-85`, `BL-86`) |
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.00 | 9.33 | 8.67 | 8.00 | 6.00 | 7.67 | **46.67** (77.8%) | **B Tier** | Multi-Elevation Pathfinding, Deadzone-Free Touch & Gamepad Support (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`) |
-| **CMP-05** | **Minimap & Tactical Navigation** | 6.33 | 9.33 | 7.33 | 7.00 | 6.33 | 7.00 | **43.32** (72.2%) | **B Tier** | Multi-Elevation Bridges, Tactical Entities & High-Contrast Contours (`BL-17`, `BL-51`, `BL-65`, `BL-66`) |
-| **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 6.33 | 9.33 | 7.67 | 6.67 | 6.00 | 6.67 | **42.67** (71.1%) | **B- Tier** | Waypoint Pips, Collapsible Top Radar & Unobtrusive Prompts (`BL-42`, `BL-54`, `BL-67`, `BL-68`) |
+| **CMP-05** | **Minimap & Tactical Navigation** | 6.67 | 9.33 | 7.67 | 7.33 | 6.33 | 7.00 | **44.33** (73.9%) | **B Tier** | Multi-Elevation Bridges, Tactical Entities & High-Contrast Contours (`BL-17`, `BL-51`, `BL-65`, `BL-66`) |
+| **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 7.33 | 9.33 | 8.33 | 7.00 | 7.00 | 7.00 | **46.00** (76.7%) | **B Tier** | Lore Journal, Activity Feed, Numbered Action Drawer & Directional [E] (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`) |
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.67 | 9.33 | 8.33 | 7.00 | 6.67 | 7.67 | **46.67** (77.8%) | **B Tier** | Destructive Confirmations & Top Nav Exit Routing (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 6.00 | 9.67 | 7.00 | 7.00 | 5.67 | 6.00 | **41.34** (68.9%) | **B- Tier** | 1-Click Maze Generator & Clear Canvas Modal (`BL-49`, `BL-50`, `BL-73`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 6.00 | 9.67 | 7.33 | 7.67 | 5.67 | 6.67 | **43.01** (71.7%) | **B Tier** | Custom Prefab Region Saving, Persistence & Stamping (`BL-18`, `BL-20`, `BL-39`) |
@@ -87,21 +87,22 @@ This document records the official baseline quality evaluations, granular expert
 
 ---
 
-### CMP-03: Core Gameplay Loop & State Machine
-*Files: `js/engine/game-loop.js`, `js/engine/collision.js`, `js/engine/player.js`, `js/entities/base-entity.js`*
+#### CMP-03: Core Gameplay Loop & State Machine
+*Files: `js/engine/game-loop.js`, `js/engine/collision.js`, `js/engine/player.js`, `js/entities/base-entity.js`, `js/entities/lever-entity.js`, `js/entities/floor-plate-trap.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
+  * $C_1$ Juice & Delight: **7.00/10** (1.1: 7, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 9, 2.3: 10)
-  * $C_3$ UI/UX & Ergonomics: **6.33/10** (3.1: 7, 3.2: 6, 3.3: 6)
-  * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
-  * $C_5$ Progression & Retention: **6.33/10** (5.1: 7, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **6.67/10** (6.1: 7, 6.2: 7, 6.3: 6)
-  * **Master Score**: **43.00 / 60.00 (71.7% — B Tier)**
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **8.33/10** (4.1: 9, 4.2: 8, 4.3: 8)
+  * $C_5$ Progression & Retention: **6.67/10** (5.1: 7, 5.2: 6, 5.3: 7)
+  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
+  * **Master Score**: **46.34 / 60.00 (77.2% — B Tier)**
 * **Strengths**:
   * Deterministic multi-elevation collision math supporting bridges and ramps without external physics engines.
   * Mid-level checkpoints, hazard respawn, and exit triggers function reliably.
-  * **Polymorphic Entity Domain Models (`BL-57`)**: Unified `BaseEntity` with frozen immutable `Vec2` positions, polymorphic `canInteract()`, `onInteract()`, `isBlocking()`, and clean interaction contracts replacing hardcoded procedural switch statements.
+  * **Polymorphic Entity Domain Models (`BL-57`, `BL-86`)**: Unified `BaseEntity` with frozen immutable `Vec2` positions, polymorphic `canInteract()`, `onInteract()`, `isBlocking()`, and clean interaction contracts. Levers require deliberate engagement (`[E]`) rather than walking-over toggles, while dedicated `FloorPlateTrap` entities handle single-fire step triggers.
+  * **Proximity Interaction & Disambiguation (`BL-85`)**: Configurable directional interaction (`interactDirections`) and multi-item adjacent disambiguation drawer (`1..2..3`) eliminating interface ambiguity.
   * **Tiered Medal & Scoring System (`BL-52`)**: Integrated move efficiency, secret chambers, and speed formulas awarding Gold/Silver/Bronze medals.
 * **Gaps & Critical Deductions**:
   * God-class `game-loop.js` still coordinates multiple engine subsystems; ready for SRP decomposition into `MovementController` and `GameStateManager` (`BL-56`).
@@ -110,21 +111,16 @@ This document records the official baseline quality evaluations, granular expert
 ---
 
 ### CMP-04: Controls, Input Handling & Multi-Input Parity
-*Files: `js/engine/input-manager.js`, `js/engine/game-loop.js`, `js/core/constants.js`, `js/ui/settings-modal.js`*
-
-* **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.33/10** (1.1: 6, 1.2: 7, 1.3: 6)
-### CMP-04: Controls, Input Handling & Multi-Input Parity
 *Files: `js/engine/input-manager.js`, `js/engine/game-loop.js`, `maze.html`, `css/game.css`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.67/10** (1.1: 7, 1.2: 6, 1.3: 7)
+  * $C_1$ Juice & Delight: **7.00/10** (1.1: 7, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.00/10** (3.1: 8, 3.2: 8, 3.3: 8)
-  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
   * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **6.67/10** (6.1: 7, 6.2: 7, 6.3: 6)
-  * **Master Score**: **44.00 / 60.00 (73.3% — B Tier Prototype)**
+  * $C_6$ Accessibility & DX: **7.67/10** (6.1: 8, 6.2: 8, 6.3: 7)
+  * **Master Score**: **46.67 / 60.00 (77.8% — B Tier)**
 * **Strengths**:
   * Multi-input support for keyboard (`WASD`, arrows), mouse click-to-move BFS, mobile touch gestures, and virtual D-pad.
   * **Continuous Touch Drag Steering (`BL-67`)**: Sliding a finger across the canvas automatically steers the explorer in cardinal directions with a rapid 125ms auto-step repeat rate and dynamic mid-drag heading adjustments.
@@ -144,13 +140,13 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/minimap.js`, `js/engine/game-loop.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.33/10** (1.1: 6, 1.2: 6, 1.3: 7)
+  * $C_1$ Juice & Delight: **6.67/10** (1.1: 7, 1.2: 6, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 8, 3.2: 7, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
   * $C_5$ Progression & Retention: **6.33/10** (5.1: 6, 5.2: 6, 5.3: 7)
   * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
-  * **Master Score**: **43.32 / 60.00 (72.2% — B Tier Prototype)**
+  * **Master Score**: **44.33 / 60.00 (73.9% — B Tier)**
 * **Strengths**:
   * **Multi-Elevation & Bridge Shading (`BL-65`)**: Elevated bridges (`B_EW`, `B_NS`) render with cobalt bridge deck spans (`#0369a1`) and bright cyan center walkway planks (`#38bdf8`); directional ramps (`R_*`) render incline shading with directional notch markers.
   * **Tactical Entity Indicators (`BL-65`)**: Uncollected keys render glowing gold pips (`#facc15`), locked doors render security barrier crossbars (`#ef4444`), levers render amber/emerald switch nodes, and teleporters render violet rings.

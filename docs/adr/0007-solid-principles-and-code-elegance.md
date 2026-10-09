@@ -8,7 +8,8 @@ Accepted
 ## Context
 As the Casual Maze Game has grown from a straightforward flat maze renderer into an expansive platform with multi-elevation bridges, camera rotation, procedural generation, rich entities, riddles, story sagas, and an in-browser map editor, codebase complexity has increased. Several monolithic files historically accumulated mixed concerns (e.g. game loop orchestrating input polling, entity simulation, audio effects, and DOM UI synchronization simultaneously).
 
-The project goal is not over-engineered enterprise abstractions or esoteric algorithms, but rather: **simple, elegant, testable, readable, maintainable, explainable, scalable, robust, and SOLID code**.
+The overarching design directive is established directly from user requirements:
+> *"Coding improvement. SOLID coding principles. Smaller files. Better use of libraries. Better use of object oriented coding, objects, classes, etc. Try to minimize hacky solutions and use graceful coding principles. Nothing we are doing is crazy and insane special algorithms, it's just a game, doesn't need the most optimal most beautiful code, it needs simple, elegant, testable, readable, maintainable, explainable, scalable, robust, SOLID code."*
 
 ## Decision
 
