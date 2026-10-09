@@ -2232,8 +2232,8 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         "id": "wall_note_27",
         "type": "wall_decor",
         "decorType": "carving",
-        "text": "The aerial vortex warps travelers between the clouds and the underground treasury.",
-        "playerDialogue": "The cipher opens the bridge; the bridge leads to the vortex.",
+        "text": "Prismatic alignment of the high bridge: 🌅 Horizon first, ☀️ Sun second, and ⭐ Star third.",
+        "playerDialogue": "Setting the cipher gate to Horizon, Sun, and Star will grant access to the aerial vortex.",
         "x": 2,
         "y": 1,
         "elevation": 0

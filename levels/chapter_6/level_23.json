@@ -732,8 +732,8 @@
       "id": "wall_note_23",
       "type": "wall_decor",
       "decorType": "carving",
-      "text": "Two wards, two disciplines: memory unlocks power, and alignment unlocks wisdom.",
-      "playerDialogue": "First the memory runes, then the conduit lever, then the stellar cipher.",
+      "text": "The celestial ward alignment: 🌅 Horizon first, 🌙 Moon second, and ⭐ Star third.",
+      "playerDialogue": "The inner cipher dials require Horizon, Moon, and Star.",
       "x": 2,
       "y": 6,
       "elevation": 0
