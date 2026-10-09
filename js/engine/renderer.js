@@ -570,7 +570,8 @@ export class GameRenderer {
     for (const item of drawables) {
       if (item.type === 'wall') {
         this.renderAngledWall(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, ground, camera, item.isSecret, revealedSecrets);
-        this.renderThematicPerimeterDecorTile(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, themeKey, seed, ground, 0);
+        this.renderThematicPerimeterDecorTile(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, themeKey, seed, ground, 0, level);
+        this.renderWallIntegratedPortals(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, level, camera);
       } else if (item.type === 'player') {
         const screen = item.screen;
         if (player.hasTorch && player.hasTorch()) {
@@ -1358,152 +1359,638 @@ export class GameRenderer {
   }
 
   /**
-   * Render Entrance Marker on spawn tile (Stairs down, Portal, Archway)
+   * Detect if (x, y) is adjacent to a wall tile (prioritizing North for 2.5D front wall face).
+   * @param {object} level
+   * @param {number} x
+   * @param {number} y
+   * @param {number} [angle=0]
+   * @returns {{ dir: 'north'|'south'|'west'|'east', wallX: number, wallY: number }|null}
    */
-  renderSpawnEntrance(ctx, level, camera, theme, fog) {
-    if (!level.spawn) return;
-    const { x, y, style = 'stairs_down' } = level.spawn;
-    if (fog && !fog.isExplored(x, y)) return;
+  detectAdjacentWall(level, x, y, angle = 0) {
+    const ground = level?.layers?.ground;
+    if (!ground) return null;
+    const isWall = (gx, gy) => {
+      const tile = ground[gy]?.[gx];
+      return tile === TILES.WALL || tile === TILES.SECRET_WALL;
+    };
 
-    const tileSize = camera.tileSize;
-    const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
-    const cx = screen.x + tileSize / 2;
-    const cy = screen.y + tileSize / 2;
+    // Check cardinal neighbors in world grid
+    const hasNorth = isWall(x, y - 1);
+    const hasSouth = isWall(x, y + 1);
+    const hasWest = isWall(x - 1, y);
+    const hasEast = isWall(x + 1, y);
 
-    // Check for vector SVG spawn / entrance asset
-    let spawnAssetId = 'exit_stairs_up';
-    if (style === 'portal') spawnAssetId = 'exit_portal';
-    else if (style === 'archway') spawnAssetId = 'exit_archway';
-    const spawnImg = this.getAssetImage(spawnAssetId);
-    if (spawnImg) {
-      ctx.save();
-      ctx.drawImage(spawnImg, screen.x, screen.y, tileSize, tileSize);
-      ctx.restore();
-      return;
+    // In 2.5D angled perspective (and standard view), North wall (y - 1) is prime because its drop face directly faces the camera
+    if (hasNorth) return { dir: 'north', wallX: x, wallY: y - 1 };
+    if (hasSouth) return { dir: 'south', wallX: x, wallY: y + 1 };
+    if (hasWest) return { dir: 'west', wallX: x - 1, wallY: y };
+    if (hasEast) return { dir: 'east', wallX: x + 1, wallY: y };
+
+    return null;
+  }
+
+  /**
+   * Render Wall-Integrated Entrance Doorways and Exit Archways onto adjacent wall drop-faces.
+   * Invoked during the ground layer wall pass so doorways sort naturally with the walls.
+   */
+  renderWallIntegratedPortals(ctx, wallX, wallY, screenX, screenY, tileSize, theme, level, camera) {
+    if (!level) return;
+
+    // 1. Check if this wall is adjacent to spawn (especially North of spawn)
+    if (level.spawn) {
+      const { x: sx, y: sy, style = 'stairs_down' } = level.spawn;
+      if (wallX === sx && wallY === sy - 1) {
+        // Wall is North of spawn: render grand entrance door on front drop-face
+        this.renderWallEntranceDoorway(ctx, screenX, screenY, tileSize, theme, style);
+      }
     }
+
+    // 2. Check if this wall is adjacent to any exit (especially North of exit)
+    const exitList = Array.isArray(level.exits) && level.exits.length > 0 ? level.exits : (level.exit ? [level.exit] : []);
+    for (const exit of exitList) {
+      if (wallX === exit.x && wallY === exit.y - 1) {
+        // Wall is North of exit: render daylight archway on front drop-face
+        this.renderWallExitDoorway(ctx, screenX, screenY, tileSize, theme, exit);
+      }
+    }
+  }
+
+  /**
+   * Render an imposing dungeon entrance door cut into the North wall drop face
+   */
+  renderWallEntranceDoorway(ctx, screenX, screenY, tileSize, theme, style) {
+    const wallH = Math.round(tileSize * 0.38);
+    const faceBottom = screenY + tileSize;
+    const doorW = Math.round(tileSize * 0.64);
+    const doorX = screenX + Math.round((tileSize - doorW) / 2);
+    const doorH = Math.round(wallH + tileSize * 0.34);
+    const doorY = faceBottom - doorH;
+    const cx = screenX + tileSize / 2;
 
     ctx.save();
 
-    if (style === 'portal') {
-      // Cyan/Emerald summoning rift
-      const radius = tileSize * 0.36;
-      ctx.strokeStyle = '#38bdf8';
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([4, 4]);
+    // 1. Shadowed archway recess cut into wall
+    ctx.fillStyle = '#020617';
+    ctx.beginPath();
+    ctx.moveTo(doorX, faceBottom);
+    ctx.lineTo(doorX, doorY + doorW * 0.5);
+    if (typeof ctx.quadraticCurveTo === 'function') {
+      ctx.quadraticCurveTo(cx, doorY, doorX + doorW, doorY + doorW * 0.5);
+    } else {
+      ctx.lineTo(cx, doorY);
+      ctx.lineTo(doorX + doorW, doorY + doorW * 0.5);
+    }
+    ctx.lineTo(doorX + doorW, faceBottom);
+    ctx.closePath();
+    ctx.fill();
+
+    // 2. Heavy Stone Jambs & Keystone Arch Ring
+    ctx.strokeStyle = theme.wallTop || '#64748b';
+    ctx.lineWidth = Math.max(2, Math.round(tileSize * 0.08));
+    ctx.stroke();
+
+    // Keystone at top peak
+    ctx.fillStyle = theme.wallTop || '#94a3b8';
+    ctx.fillRect(cx - Math.round(doorW * 0.12), doorY - 2, Math.round(doorW * 0.24), Math.round(tileSize * 0.12));
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(cx - Math.round(doorW * 0.12), doorY - 2, Math.round(doorW * 0.24), Math.round(tileSize * 0.12));
+
+    // 3. Warm welcoming lantern / torchlight interior glow
+    if (typeof ctx.createRadialGradient === 'function') {
+      const intGrad = ctx.createRadialGradient(cx, faceBottom - doorH * 0.4, 2, cx, faceBottom - doorH * 0.4, doorW * 0.7);
+      intGrad.addColorStop(0, 'rgba(251, 146, 60, 0.65)');
+      intGrad.addColorStop(0.5, 'rgba(249, 115, 22, 0.25)');
+      intGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = intGrad;
+    } else {
+      ctx.fillStyle = 'rgba(251, 146, 60, 0.35)';
+    }
+    ctx.beginPath();
+    ctx.arc(cx, faceBottom - doorH * 0.4, doorW * 0.65, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 4. Wooden plank door set slightly ajar (swung inward to the left)
+    const doorAjarW = Math.round(doorW * 0.48);
+    const doorAjarX = doorX + Math.round(doorW * 0.08);
+    const doorAjarH = Math.round(doorH * 0.85);
+    const doorAjarY = faceBottom - doorAjarH;
+
+    ctx.fillStyle = '#78350f'; // Dark oak wood
+    ctx.fillRect(doorAjarX, doorAjarY, doorAjarW, doorAjarH);
+
+    // Wood plank vertical grain lines
+    ctx.strokeStyle = '#451a03';
+    ctx.lineWidth = 1;
+    for (let p = 1; p <= 2; p++) {
       ctx.beginPath();
-      ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+      ctx.moveTo(doorAjarX + p * (doorAjarW / 3), doorAjarY);
+      ctx.lineTo(doorAjarX + p * (doorAjarW / 3), faceBottom);
       ctx.stroke();
+    }
 
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.15)';
+    // Heavy iron hinge straps
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(doorAjarX, doorAjarY + doorAjarH * 0.25, doorAjarW * 0.85, Math.max(2, Math.round(tileSize * 0.05)));
+    ctx.fillRect(doorAjarX, doorAjarY + doorAjarH * 0.75, doorAjarW * 0.85, Math.max(2, Math.round(tileSize * 0.05)));
+
+    // Brass door ring/knocker
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath();
+    ctx.arc(doorAjarX + doorAjarW * 0.7, doorAjarY + doorAjarH * 0.52, Math.max(2, Math.round(tileSize * 0.05)), 0, Math.PI * 2);
+    ctx.fill();
+
+    // 5. Mounted Wall Torch/Lantern beside the door
+    const torchX = doorX + doorW + Math.round(tileSize * 0.06);
+    const torchY = faceBottom - Math.round(doorH * 0.55);
+    ctx.fillStyle = '#1e293b'; // Iron sconce
+    ctx.fillRect(torchX - 1, torchY, 3, Math.round(tileSize * 0.18));
+    ctx.fillStyle = '#f97316'; // Torch flame
+    ctx.beginPath();
+    ctx.arc(torchX, torchY - 2, Math.max(2, Math.round(tileSize * 0.07)), 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+  }
+
+  /**
+   * Render a majestic exit portal or daylight doorway on the North wall drop face
+   */
+  renderWallExitDoorway(ctx, screenX, screenY, tileSize, theme, exit) {
+    const wallH = Math.round(tileSize * 0.38);
+    const faceBottom = screenY + tileSize;
+    const doorW = Math.round(tileSize * 0.68);
+    const doorX = screenX + Math.round((tileSize - doorW) / 2);
+    const doorH = Math.round(wallH + tileSize * 0.36);
+    const doorY = faceBottom - doorH;
+    const cx = screenX + tileSize / 2;
+    const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
+
+    ctx.save();
+
+    // 1. Deep arch recess
+    ctx.fillStyle = '#020617';
+    ctx.beginPath();
+    ctx.moveTo(doorX, faceBottom);
+    ctx.lineTo(doorX, doorY + doorW * 0.5);
+    if (typeof ctx.quadraticCurveTo === 'function') {
+      ctx.quadraticCurveTo(cx, doorY, doorX + doorW, doorY + doorW * 0.5);
+    } else {
+      ctx.lineTo(cx, doorY);
+      ctx.lineTo(doorX + doorW, doorY + doorW * 0.5);
+    }
+    ctx.lineTo(doorX + doorW, faceBottom);
+    ctx.closePath();
+    ctx.fill();
+
+    // 2. Grand Carved Stone Arch with Arch Keystone
+    ctx.strokeStyle = theme.accent || '#38bdf8';
+    ctx.shadowColor = theme.accent || '#38bdf8';
+    ctx.shadowBlur = 10 * pulse;
+    ctx.lineWidth = Math.max(2, Math.round(tileSize * 0.09));
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Keystone at top peak
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(cx - Math.round(doorW * 0.12), doorY - 3, Math.round(doorW * 0.24), Math.round(tileSize * 0.14));
+
+    const style = exit.style || 'portal';
+    if (style === 'stairs' || style === 'stairs_up') {
+      // Ascending stairs climbing up into the wall tunnel towards daylight
+      for (let i = 0; i < 4; i++) {
+        const sy = faceBottom - Math.round(i * (doorH * 0.2));
+        const sw = Math.round(doorW * (0.85 - i * 0.1));
+        const sx = cx - sw / 2;
+        const sh = Math.round(doorH * 0.14);
+        const bright = Math.floor(150 + i * 30);
+        ctx.fillStyle = `rgb(${bright}, ${Math.floor(bright * 0.95)}, ${Math.floor(bright * 0.8)})`;
+        ctx.fillRect(sx, sy - sh, sw, sh);
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(sx, sy - sh, sw, sh);
+      }
+      // Daylight beam radiating from tunnel peak
+      if (typeof ctx.createRadialGradient === 'function') {
+        const daylight = ctx.createRadialGradient(cx, doorY + doorH * 0.2, 2, cx, doorY + doorH * 0.2, doorW * 0.8);
+        daylight.addColorStop(0, '#ffffff');
+        daylight.addColorStop(0.4, 'rgba(254, 240, 138, 0.85)');
+        daylight.addColorStop(1, 'rgba(251, 191, 36, 0)');
+        ctx.fillStyle = daylight;
+      } else {
+        ctx.fillStyle = 'rgba(254, 240, 138, 0.6)';
+      }
       ctx.beginPath();
-      ctx.arc(cx, cy, radius * 0.8, 0, Math.PI * 2);
-      ctx.fill();
-
-      ctx.fillStyle = '#38bdf8';
-      ctx.font = `bold ${Math.floor(tileSize * 0.35)}px sans-serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('▼', cx, cy);
-    } else if (style === 'archway') {
-      // Heavy stone archway entry threshold
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
-      ctx.fillRect(screen.x + tileSize * 0.1, screen.y + tileSize * 0.1, tileSize * 0.8, tileSize * 0.8);
-
-      ctx.strokeStyle = theme.wallTop || '#484f58';
-      ctx.lineWidth = 3;
-      ctx.strokeRect(screen.x + tileSize * 0.15, screen.y + tileSize * 0.15, tileSize * 0.7, tileSize * 0.7);
-
-      ctx.fillStyle = 'rgba(56, 189, 248, 0.4)';
-      ctx.beginPath();
-      ctx.arc(cx, cy, tileSize * 0.25, 0, Math.PI * 2);
+      ctx.arc(cx, doorY + doorH * 0.25, doorW * 0.65 * pulse, 0, Math.PI * 2);
       ctx.fill();
     } else {
-      // stairs_down (default entrance) - Recessed stairwell into the dungeon
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
-      ctx.fillRect(screen.x + tileSize * 0.08, screen.y + tileSize * 0.08, tileSize * 0.84, tileSize * 0.84);
-
-      // Stone stair risers descending down
-      for (let i = 0; i < 4; i++) {
-        const py = screen.y + tileSize * (0.15 + i * 0.18);
-        const h = tileSize * 0.12;
-        const shade = Math.floor(40 + i * 20);
-        ctx.fillStyle = `rgb(${shade}, ${shade + 5}, ${shade + 10})`;
-        ctx.fillRect(screen.x + tileSize * 0.12, py, tileSize * 0.76, h);
-
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.5)';
-        ctx.lineWidth = 1;
-        ctx.strokeRect(screen.x + tileSize * 0.12, py, tileSize * 0.76, h);
+      // Swirling dimensional portal rift
+      if (typeof ctx.createRadialGradient === 'function') {
+        const portalGrad = ctx.createRadialGradient(cx, faceBottom - doorH * 0.45, 2, cx, faceBottom - doorH * 0.45, doorW * 0.65);
+        portalGrad.addColorStop(0, '#ffffff');
+        portalGrad.addColorStop(0.4, theme.accent || '#38bdf8');
+        portalGrad.addColorStop(0.8, 'rgba(168, 85, 247, 0.5)');
+        portalGrad.addColorStop(1, 'rgba(2, 6, 23, 0)');
+        ctx.fillStyle = portalGrad;
+      } else {
+        ctx.fillStyle = theme.accent || '#38bdf8';
       }
+      ctx.beginPath();
+      ctx.arc(cx, faceBottom - doorH * 0.45, doorW * 0.6 * pulse, 0, Math.PI * 2);
+      ctx.fill();
 
-      // Wooden/stone side banisters
-      ctx.fillStyle = theme.bridgeOverhead || '#78350f';
-      ctx.fillRect(screen.x + tileSize * 0.08, screen.y + tileSize * 0.08, tileSize * 0.08, tileSize * 0.84);
-      ctx.fillRect(screen.x + tileSize * 0.84, screen.y + tileSize * 0.08, tileSize * 0.08, tileSize * 0.84);
-
-      // Entrance icon indicator
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-      ctx.font = `${Math.floor(tileSize * 0.25)}px monospace`;
+      // Pulsing rune chevron
+      ctx.fillStyle = '#ffffff';
+      ctx.font = `bold ${Math.floor(tileSize * 0.32)}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
-      ctx.fillText('IN', cx, screen.y + tileSize * 0.88);
+      ctx.fillText('▲', cx, faceBottom - doorH * 0.45);
     }
 
     ctx.restore();
   }
 
   /**
-   * Render Exit (Stairs up, Portal, Archway) supporting multiple exits
+   * Render Entrance Marker on spawn tile (Wall threshold or Freestanding Spiral Staircase)
+   */
+  renderSpawnEntrance(ctx, level, camera, theme, fog) {
+    if (!level?.spawn) return;
+    const { x, y } = level.spawn;
+    if (fog && !fog.isExplored(x, y)) return;
+
+    const tileSize = camera.tileSize;
+    const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
+    const angle = camera ? camera.getDiscreteRotation() : 0;
+    const wallInfo = this.detectAdjacentWall(level, x, y, angle);
+    const effTheme = theme || THEMES.dungeon;
+
+    if (wallInfo) {
+      // Wall-integrated entrance floor threshold & ambient light spill
+      this.renderWallAdjacentEntranceFloor(ctx, screen.x, screen.y, tileSize, effTheme, wallInfo);
+    } else {
+      // Freestanding 3D Spiral Staircase descent
+      this.renderFreestandingSpiralStairs(ctx, screen.x, screen.y, tileSize, effTheme);
+    }
+  }
+
+  /**
+   * Render flagstone threshold & warm light spill on spawn floor tile in front of wall doorway
+   */
+  renderWallAdjacentEntranceFloor(ctx, screenX, screenY, tileSize, theme, wallInfo) {
+    const cx = screenX + tileSize / 2;
+    const isNorth = !wallInfo || wallInfo.dir === 'north';
+    ctx.save();
+
+    // 1. Ambient lantern / light spill spreading forward from the door
+    const lightY = isNorth ? screenY + 2 : screenY + tileSize * 0.5;
+    if (typeof ctx.createRadialGradient === 'function') {
+      const lightGrad = ctx.createRadialGradient(cx, lightY, 2, cx, lightY, tileSize * 0.7);
+      lightGrad.addColorStop(0, 'rgba(251, 146, 60, 0.42)');
+      lightGrad.addColorStop(0.6, 'rgba(249, 115, 22, 0.12)');
+      lightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = lightGrad;
+    } else {
+      ctx.fillStyle = 'rgba(251, 146, 60, 0.2)';
+    }
+    ctx.beginPath();
+    ctx.arc(cx, screenY + tileSize * 0.35, tileSize * 0.65, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Entrance Threshold Flagstone pavers
+    const stoneW = Math.round(tileSize * 0.72);
+    const stoneH = Math.round(tileSize * 0.2);
+    const stoneX = cx - stoneW / 2;
+    const stoneY = isNorth ? screenY + 1 : screenY + tileSize - stoneH - 1;
+
+    ctx.fillStyle = theme.wallTop || '#475569';
+    ctx.fillRect(stoneX, stoneY, stoneW, stoneH);
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(stoneX, stoneY, stoneW, stoneH);
+
+    // Mortar lines across pavers
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.beginPath();
+    ctx.moveTo(stoneX + stoneW * 0.33, stoneY);
+    ctx.lineTo(stoneX + stoneW * 0.33, stoneY + stoneH);
+    ctx.moveTo(stoneX + stoneW * 0.66, stoneY);
+    ctx.lineTo(stoneX + stoneW * 0.66, stoneY + stoneH);
+    ctx.stroke();
+
+    // Subtle arrival welcome marker
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
+    ctx.font = `bold ${Math.floor(tileSize * 0.2)}px monospace`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('ENTRY', cx, screenY + tileSize * 0.68);
+
+    ctx.restore();
+  }
+
+  /**
+   * Render Freestanding 3D Spiral Staircase (Descending Well into dungeon)
+   */
+  renderFreestandingSpiralStairs(ctx, screenX, screenY, tileSize, theme) {
+    const cx = screenX + tileSize / 2;
+    const cy = screenY + tileSize / 2;
+    const r = tileSize * 0.44;
+
+    ctx.save();
+
+    // 1. Cast Floor Shadow under stairwell
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+    ctx.beginPath();
+    if (typeof ctx.ellipse === 'function') {
+      ctx.ellipse(cx, cy + r * 0.12, r * 1.08, r * 0.95, 0, 0, Math.PI * 2);
+    } else {
+      ctx.arc(cx, cy + r * 0.12, r * 1.05, 0, Math.PI * 2);
+    }
+    ctx.fill();
+
+    // 2. Outer Stone Well Curb / Rim
+    ctx.fillStyle = theme.wallTop || '#475569';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+    ctx.lineWidth = Math.max(1.5, Math.round(tileSize * 0.05));
+    ctx.stroke();
+
+    // 3. Abyssal Well Cavity
+    const innerR = r * 0.88;
+    if (typeof ctx.createRadialGradient === 'function') {
+      const wellGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, innerR);
+      wellGrad.addColorStop(0, '#020617'); // Pitch darkness at bottom
+      wellGrad.addColorStop(0.7, '#0f172a');
+      wellGrad.addColorStop(1, '#1e293b');
+      ctx.fillStyle = wellGrad;
+    } else {
+      ctx.fillStyle = '#020617';
+    }
+    ctx.beginPath();
+    ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 4. Winding Spiral Stone Steps (6 concentric winding treads counter-clockwise)
+    const stepCount = 6;
+    const newelR = r * 0.22;
+    for (let i = 0; i < stepCount; i++) {
+      const startAngle = (i * Math.PI * 2) / stepCount - Math.PI / 2;
+      const endAngle = startAngle + (Math.PI * 2) / stepCount;
+      const depth = i / stepCount;
+
+      const shade = Math.floor(160 - depth * 110);
+      ctx.fillStyle = `rgb(${shade}, ${Math.floor(shade * 0.95)}, ${Math.floor(shade * 0.9)})`;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, newelR, startAngle, endAngle);
+      ctx.arc(cx, cy, innerR * (1 - depth * 0.15), endAngle, startAngle, true);
+      ctx.closePath();
+      ctx.fill();
+
+      // Highlighted leading tread edge
+      ctx.strokeStyle = i === 0 ? '#e2e8f0' : 'rgba(0, 0, 0, 0.5)';
+      ctx.lineWidth = 1;
+      ctx.beginPath();
+      ctx.moveTo(cx + Math.cos(startAngle) * newelR, cy + Math.sin(startAngle) * newelR);
+      ctx.lineTo(cx + Math.cos(startAngle) * innerR * (1 - depth * 0.15), cy + Math.sin(startAngle) * innerR * (1 - depth * 0.15));
+      ctx.stroke();
+    }
+
+    // 5. Central Stone Newel Post
+    ctx.fillStyle = theme.wallTop || '#64748b';
+    ctx.beginPath();
+    ctx.arc(cx, cy, newelR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // Newel cap highlight
+    ctx.fillStyle = '#cbd5e1';
+    ctx.beginPath();
+    ctx.arc(cx - 1, cy - 1, newelR * 0.45, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 6. Curved Wrought-Iron Balustrade along rim (open at top step)
+    ctx.strokeStyle = '#1e293b';
+    ctx.lineWidth = Math.max(1, Math.round(tileSize * 0.04));
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 0.96, -Math.PI / 4, (Math.PI * 5) / 4);
+    ctx.stroke();
+
+    // Iron Balusters (vertical posts)
+    for (let a = -Math.PI / 4; a <= (Math.PI * 5) / 4; a += Math.PI / 4) {
+      const bx = cx + Math.cos(a) * r * 0.96;
+      const by = cy + Math.sin(a) * r * 0.96;
+      ctx.fillStyle = '#fbbf24'; // Brass finial
+      ctx.beginPath();
+      ctx.arc(bx, by, Math.max(1.5, Math.round(tileSize * 0.035)), 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 7. Ambient Descent Indicator
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+    ctx.font = `bold ${Math.floor(tileSize * 0.24)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('▼', cx, cy + r * 0.52);
+
+    ctx.restore();
+  }
+
+  /**
+   * Render Exit (Stairs up, Portal, Archway) supporting multiple exits & wall integration
    */
   renderExit(ctx, level, camera, theme, fog) {
-    const exitList = Array.isArray(level.exits) && level.exits.length > 0 ? level.exits : (level.exit ? [level.exit] : []);
+    const exitList = Array.isArray(level?.exits) && level.exits.length > 0 ? level.exits : (level?.exit ? [level.exit] : []);
+    const angle = camera ? camera.getDiscreteRotation() : 0;
+
+    const effTheme = theme || THEMES.dungeon;
     for (const exit of exitList) {
       const { x, y, style = 'portal', label } = exit;
       if (fog && !fog.isExplored(x, y)) continue;
 
-      let exitAssetId = 'exit_portal';
-      if (style === 'stairs' || style === 'stairs_up') exitAssetId = 'exit_stairs_up';
-      else if (style === 'archway' || style === 'gate') exitAssetId = 'exit_archway';
-      else if (style === 'treasure' || style === 'chest') exitAssetId = 'exit_treasure_chest';
-      else if (style === 'shrine') exitAssetId = 'exit_shrine';
+      const tileSize = camera.tileSize;
+      const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
+      const wallInfo = this.detectAdjacentWall(level, x, y, angle);
 
-      const exitImg = this.getAssetImage(exitAssetId);
-      if (exitImg) {
-        const tileSize = camera.tileSize;
-        const screen = camera.worldToScreen(x * tileSize, y * tileSize, true);
-        const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
-        ctx.save();
-        ctx.shadowColor = theme.accent || '#38bdf8';
-        ctx.shadowBlur = 12 * pulse;
-        ctx.drawImage(exitImg, screen.x, screen.y, tileSize, tileSize);
-        ctx.restore();
+      if (wallInfo) {
+        // Wall-integrated exit floor apron & daylight spill
+        this.renderWallAdjacentExitFloor(ctx, screen.x, screen.y, tileSize, effTheme, exit, wallInfo);
       } else {
-        if (style === 'stairs' || style === 'stairs_up') {
-          this.renderExitStairs(ctx, x, y, camera, theme);
-        } else if (style === 'archway' || style === 'gate') {
-          this.renderExitArchway(ctx, x, y, camera, theme);
+        if (style === 'portal') {
+          this.renderExitPortal(ctx, x, y, camera, effTheme, fog);
         } else {
-          this.renderExitPortal(ctx, x, y, camera, theme, fog);
+          // Freestanding 3D Ascending Spiral Staircase
+          this.renderFreestandingExitStairs(ctx, screen.x, screen.y, tileSize, effTheme);
         }
       }
 
       // If exit has a destination label (e.g. "To Catacombs"), render tooltip badge
       if (label) {
-        const tileSize = camera.tileSize;
-        const screen = camera.worldToScreen(x * tileSize + tileSize / 2, y * tileSize - 8, true);
+        const screenLabel = camera.worldToScreen(x * tileSize + tileSize / 2, y * tileSize - 8, true);
         ctx.save();
         ctx.font = 'bold 11px sans-serif';
         ctx.textAlign = 'center';
         ctx.fillStyle = 'rgba(15, 23, 42, 0.85)';
         const textWidth = ctx.measureText(label).width;
-        ctx.fillRect(screen.x - textWidth / 2 - 5, screen.y - 13, textWidth + 10, 16);
+        ctx.fillRect(screenLabel.x - textWidth / 2 - 5, screenLabel.y - 13, textWidth + 10, 16);
         ctx.strokeStyle = '#38bdf8';
         ctx.lineWidth = 1;
-        ctx.strokeRect(screen.x - textWidth / 2 - 5, screen.y - 13, textWidth + 10, 16);
+        ctx.strokeRect(screenLabel.x - textWidth / 2 - 5, screenLabel.y - 13, textWidth + 10, 16);
         ctx.fillStyle = '#38bdf8';
-        ctx.fillText(label, screen.x, screen.y - 1);
+        ctx.fillText(label, screenLabel.x, screenLabel.y - 1);
         ctx.restore();
       }
     }
+  }
+
+  /**
+   * Render flagstone threshold apron & daylight/portal radiance in front of wall exit doorway
+   */
+  renderWallAdjacentExitFloor(ctx, screenX, screenY, tileSize, theme, exit, wallInfo) {
+    const cx = screenX + tileSize / 2;
+    const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
+    ctx.save();
+
+    const isNorth = !wallInfo || wallInfo.dir === 'north';
+
+    // 1. Radiant daylight or portal glow pool on floor
+    const isPortal = exit.style === 'portal';
+    const lightY = isNorth ? screenY + 2 : screenY + tileSize * 0.5;
+
+    if (typeof ctx.createRadialGradient === 'function') {
+      const lightGrad = ctx.createRadialGradient(cx, lightY, 2, cx, lightY, tileSize * 0.75);
+      lightGrad.addColorStop(0, isPortal ? 'rgba(56, 189, 248, 0.45)' : 'rgba(254, 240, 138, 0.5)');
+      lightGrad.addColorStop(0.5, isPortal ? 'rgba(168, 85, 247, 0.2)' : 'rgba(251, 191, 36, 0.22)');
+      lightGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = lightGrad;
+    } else {
+      ctx.fillStyle = isPortal ? 'rgba(56, 189, 248, 0.25)' : 'rgba(251, 191, 36, 0.25)';
+    }
+    ctx.beginPath();
+    ctx.arc(cx, screenY + tileSize * 0.4, tileSize * 0.7 * pulse, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 2. Ascending Stone Threshold Apron
+    const stepCount = 3;
+    const apronW = Math.round(tileSize * 0.76);
+    const stepH = Math.round(tileSize * 0.12);
+
+    for (let i = 0; i < stepCount; i++) {
+      const stepW = Math.round(apronW * (0.9 - i * 0.08));
+      const stepX = cx - stepW / 2;
+      const stepY = isNorth ? (screenY + i * stepH) : (screenY + tileSize - (i + 1) * stepH);
+      const bright = Math.floor(130 + (stepCount - 1 - i) * 28);
+      ctx.fillStyle = `rgb(${bright}, ${Math.floor(bright * 0.95)}, ${Math.floor(bright * 0.8)})`;
+      ctx.fillRect(stepX, stepY, stepW, stepH);
+      ctx.strokeStyle = isPortal ? (theme.accent || '#38bdf8') : '#fbbf24';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(stepX, stepY, stepW, stepH);
+    }
+
+    // 3. Exit Chevron / Indicator
+    ctx.fillStyle = isPortal ? (theme.accent || '#38bdf8') : '#ffffff';
+    ctx.shadowColor = '#000000';
+    ctx.shadowBlur = 3;
+    ctx.font = `bold ${Math.floor(tileSize * 0.26)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('▲', cx, screenY + tileSize * 0.65);
+
+    ctx.restore();
+  }
+
+  /**
+   * Render Freestanding 3D Ascending Spiral Staircase / Celestial Dais
+   */
+  renderFreestandingExitStairs(ctx, screenX, screenY, tileSize, theme) {
+    const cx = screenX + tileSize / 2;
+    const cy = screenY + tileSize / 2;
+    const r = tileSize * 0.44;
+    const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
+
+    ctx.save();
+
+    // 1. Ambient Golden Daylight Aura
+    ctx.shadowColor = '#fbbf24';
+    ctx.shadowBlur = 16 * pulse;
+
+    // 2. Tiered Octagonal Stone Platform / Dais
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+    ctx.beginPath();
+    if (typeof ctx.ellipse === 'function') {
+      ctx.ellipse(cx, cy + r * 0.15, r * 1.08, r * 0.95, 0, 0, Math.PI * 2);
+    } else {
+      ctx.arc(cx, cy + r * 0.15, r * 1.05, 0, Math.PI * 2);
+    }
+    ctx.fill();
+
+    ctx.fillStyle = theme.wallTop || '#475569';
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#fbbf24';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+
+    // 3. Ascending Spiral Steps (getting brighter towards top)
+    const stepCount = 6;
+    const newelR = r * 0.22;
+    for (let i = 0; i < stepCount; i++) {
+      const startAngle = (i * Math.PI * 2) / stepCount - Math.PI / 2;
+      const endAngle = startAngle + (Math.PI * 2) / stepCount;
+      const elevation = i / stepCount;
+
+      const bright = Math.floor(130 + elevation * 110);
+      ctx.fillStyle = `rgb(${bright}, ${Math.floor(bright * 0.95)}, ${Math.floor(bright * 0.75)})`;
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, newelR, startAngle, endAngle);
+      ctx.arc(cx, cy, r * (0.55 + elevation * 0.35), endAngle, startAngle, true);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+    }
+
+    // 4. Central Pillar Capital
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.arc(cx, cy, newelR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = '#b45309';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+
+    // 5. Golden Daylight Shaft beaming down from above
+    if (typeof ctx.createRadialGradient === 'function') {
+      const sunGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, r * 0.9);
+      sunGrad.addColorStop(0, '#ffffff');
+      sunGrad.addColorStop(0.4, 'rgba(254, 240, 138, 0.85)');
+      sunGrad.addColorStop(1, 'rgba(251, 191, 36, 0)');
+      ctx.fillStyle = sunGrad;
+    } else {
+      ctx.fillStyle = 'rgba(254, 240, 138, 0.6)';
+    }
+    ctx.beginPath();
+    ctx.arc(cx, cy, r * 0.85 * pulse, 0, Math.PI * 2);
+    ctx.fill();
+
+    // 6. Upward exit indicator
+    ctx.fillStyle = '#ffffff';
+    ctx.shadowColor = '#000000';
+    ctx.shadowBlur = 4;
+    ctx.font = `bold ${Math.floor(tileSize * 0.32)}px sans-serif`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('▲', cx, cy);
+
+    ctx.restore();
   }
 
   /**
@@ -1615,8 +2102,9 @@ export class GameRenderer {
     const radius = tileSize * 0.4;
     const pulse = Math.sin(this.exitPulseTimer) * 0.18 + 0.88;
 
-    const outerColor = theme.portalOuter || theme.accent || '#0284c7';
-    const innerColor = theme.portalInner || '#ffffff';
+    const effTheme = theme || THEMES.dungeon;
+    const outerColor = effTheme.portalOuter || effTheme.accent || '#0284c7';
+    const innerColor = effTheme.portalInner || '#ffffff';
 
     ctx.save();
 
@@ -1626,11 +2114,11 @@ export class GameRenderer {
 
     // Outer spinning dashed glyph ring
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(this.exitPulseTimer * 0.8);
+    if (typeof ctx.translate === 'function') ctx.translate(cx, cy);
+    if (typeof ctx.rotate === 'function') ctx.rotate(this.exitPulseTimer * 0.8);
     ctx.strokeStyle = outerColor;
     ctx.lineWidth = Math.max(2, tileSize * 0.07);
-    ctx.setLineDash([tileSize * 0.15, tileSize * 0.1]);
+    if (typeof ctx.setLineDash === 'function') ctx.setLineDash([tileSize * 0.15, tileSize * 0.1]);
     ctx.beginPath();
     ctx.arc(0, 0, radius * pulse, 0, Math.PI * 2);
     ctx.stroke();
@@ -1638,23 +2126,26 @@ export class GameRenderer {
 
     // Inner counter-rotating ring
     ctx.save();
-    ctx.translate(cx, cy);
-    ctx.rotate(-this.exitPulseTimer * 1.2);
+    if (typeof ctx.translate === 'function') ctx.translate(cx, cy);
+    if (typeof ctx.rotate === 'function') ctx.rotate(-this.exitPulseTimer * 1.2);
     ctx.strokeStyle = innerColor;
     ctx.lineWidth = Math.max(1.5, tileSize * 0.05);
-    ctx.setLineDash([tileSize * 0.1, tileSize * 0.08]);
+    if (typeof ctx.setLineDash === 'function') ctx.setLineDash([tileSize * 0.1, tileSize * 0.08]);
     ctx.beginPath();
     ctx.arc(0, 0, radius * 0.72, 0, Math.PI * 2);
     ctx.stroke();
     ctx.restore();
 
     // Dimensional Core gradient
-    const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, radius * 0.65);
-    grad.addColorStop(0, '#ffffff');
-    grad.addColorStop(0.4, innerColor);
-    grad.addColorStop(1, outerColor);
-
-    ctx.fillStyle = grad;
+    if (typeof ctx.createRadialGradient === 'function') {
+      const grad = ctx.createRadialGradient(cx, cy, 2, cx, cy, radius * 0.65);
+      grad.addColorStop(0, '#ffffff');
+      grad.addColorStop(0.4, innerColor);
+      grad.addColorStop(1, outerColor);
+      ctx.fillStyle = grad;
+    } else {
+      ctx.fillStyle = outerColor;
+    }
     ctx.beginPath();
     ctx.arc(cx, cy, radius * 0.58 * pulse, 0, Math.PI * 2);
     ctx.fill();
@@ -2233,7 +2724,12 @@ export class GameRenderer {
   /**
    * Render theme-specific decorative art on a single wall tile
    */
-  renderThematicPerimeterDecorTile(ctx, x, y, screenX, sy, tileSize, themeKey, seed, ground, heightOffset = 0) {
+  renderThematicPerimeterDecorTile(ctx, x, y, screenX, sy, tileSize, themeKey, seed, ground, heightOffset = 0, level = null) {
+    if (level) {
+      if (level.spawn && level.spawn.x === x && level.spawn.y === y + 1) return;
+      const exits = Array.isArray(level.exits) && level.exits.length > 0 ? level.exits : (level.exit ? [level.exit] : []);
+      if (exits.some(e => e.x === x && e.y === y + 1)) return;
+    }
     const hasSouthCorridor = ground[y + 1]?.[x] !== TILES.WALL && ground[y + 1]?.[x] !== undefined;
     const hash = this.getDecorHash(x, y, seed);
 
