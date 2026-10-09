@@ -116,11 +116,17 @@ export class ValidationModal {
 
     for (const err of report.errors) {
       html += `
-        <div class="diag-item error">
-          <span>❌</span>
+        <div class="diag-item error" style="display: flex; align-items: flex-start; gap: 0.6rem;">
+          <span style="font-size: 1.1rem; line-height: 1;">❌</span>
           <div style="flex: 1;">
             <div>${this.editor.escapeHtml(err.message)}</div>
-            ${err.x !== undefined ? `<div style="font-family: var(--font-mono); font-size: 0.75rem; margin-top: 0.2rem; opacity: 0.8;">Coordinate: (${err.x}, ${err.y})</div>` : ''}
+            ${err.x !== undefined && err.y !== undefined ? `
+              <div style="margin-top: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="btn btn-secondary btn-xs val-btn-jump" data-x="${err.x}" data-y="${err.y}" data-z="${err.z ?? 0}" data-msg="${this.editor.escapeHtml(err.message)}" data-type="error" style="font-family: var(--font-mono); font-size: 0.72rem; padding: 2px 8px; color: #f43f5e; border-color: rgba(244, 63, 94, 0.4);" title="Jump to tile in editor canvas">
+                  📍 Jump to (${err.x}, ${err.y}) [Z=${err.z ?? 0}]
+                </button>
+              </div>
+            ` : ''}
           </div>
         </div>
       `;
@@ -128,11 +134,17 @@ export class ValidationModal {
 
     for (const warn of report.warnings) {
       html += `
-        <div class="diag-item warning">
-          <span>⚠️</span>
+        <div class="diag-item warning" style="display: flex; align-items: flex-start; gap: 0.6rem;">
+          <span style="font-size: 1.1rem; line-height: 1;">⚠️</span>
           <div style="flex: 1;">
             <div>${this.editor.escapeHtml(warn.message)}</div>
-            ${warn.x !== undefined ? `<div style="font-family: var(--font-mono); font-size: 0.75rem; margin-top: 0.2rem; opacity: 0.8;">Coordinate: (${warn.x}, ${warn.y})</div>` : ''}
+            ${warn.x !== undefined && warn.y !== undefined ? `
+              <div style="margin-top: 0.35rem; display: flex; align-items: center; gap: 0.5rem;">
+                <button type="button" class="btn btn-secondary btn-xs val-btn-jump" data-x="${warn.x}" data-y="${warn.y}" data-z="${warn.z ?? 0}" data-msg="${this.editor.escapeHtml(warn.message)}" data-type="warning" style="font-family: var(--font-mono); font-size: 0.72rem; padding: 2px 8px; color: #f59e0b; border-color: rgba(245, 158, 11, 0.4);" title="Jump to tile in editor canvas">
+                  📍 Jump to (${warn.x}, ${warn.y}) [Z=${warn.z ?? 0}]
+                </button>
+              </div>
+            ` : ''}
           </div>
         </div>
       `;
@@ -165,6 +177,19 @@ export class ValidationModal {
     const btnModalAutoFix = document.getElementById('val-btn-autofix');
     btnModalAutoFix?.addEventListener('click', () => {
       this.editor.runAutoFix();
+    });
+
+    // Attach Interactive Issue Jumping Listeners (BL-75)
+    body.querySelectorAll('.val-btn-jump').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const x = parseInt(btn.dataset.x, 10);
+        const y = parseInt(btn.dataset.y, 10);
+        const z = parseInt(btn.dataset.z, 10) || 0;
+        const msg = btn.dataset.msg || '';
+        const type = btn.dataset.type || 'error';
+        this.editor.jumpToCoordinate(x, y, z, msg, type);
+      });
     });
   }
 }

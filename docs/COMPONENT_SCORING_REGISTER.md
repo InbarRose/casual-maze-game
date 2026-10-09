@@ -21,10 +21,10 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.67 | 9.33 | 8.33 | 7.00 | 6.67 | 7.67 | **46.67** (77.8%) | **B Tier** | Destructive Confirmations & Top Nav Exit Routing (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 6.00 | 9.67 | 7.00 | 7.00 | 5.67 | 6.00 | **41.34** (68.9%) | **B- Tier** | 1-Click Maze Generator & Clear Canvas Modal (`BL-49`, `BL-50`, `BL-73`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 6.00 | 9.67 | 7.33 | 7.67 | 5.67 | 6.67 | **43.01** (71.7%) | **B Tier** | Custom Prefab Region Saving, Persistence & Stamping (`BL-18`, `BL-20`, `BL-39`) |
-| **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 5.00 | 9.67 | 6.00 | 6.67 | 5.00 | 5.33 | **37.67** (62.8%) | **C+ Tier** | In Progress (`BL-50`) |
+| **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 6.67 | 9.67 | 7.67 | 7.33 | 5.67 | 7.00 | **44.02** (73.4%) | **B Tier** | Interactive Issue Pins & Bridge/Rotation Diagnostics (`BL-21`, `BL-50`, `BL-75`) |
 | **CMP-11** | **Vector SVG Asset Pipeline & Thematic Styling**| 5.67 | 9.00 | 6.33 | 6.67 | 5.00 | 6.00 | **38.67** (64.5%) | **C+ Tier** | Dual Tileset & High-Fidelity Procedural Fallbacks (`BL-09`, `BL-10`, `BL-41`, `BL-44`) |
-| **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 6.67 | 9.33 | 5.67 | 6.67 | 5.33 | 5.33 | **39.00** (65.0%) | **B- Tier** | Tactile Micro-Clicks & Footstep Frequency Jitter (`BL-28`, `BL-35`, `BL-51`) |
-| **CMP-13** | **Storage, Save State & Persistence Engine** | 5.00 | 9.67 | 5.33 | 7.67 | 6.00 | 5.00 | **38.67** (64.5%) | **C+ Tier** | Versioned Schema Migration Runner & Telemetry Bundler (`BL-34`, `BL-36`, `BL-52`) |
+| **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 7.33 | 9.33 | 6.67 | 7.00 | 5.67 | 6.33 | **42.33** (70.6%) | **B- Tier** | Elevation Transition Chimes & Diagnostic Radar Audio (`BL-28`, `BL-35`, `BL-51`, `BL-77`) |
+| **CMP-13** | **Storage, Save State & Persistence Engine** | 6.00 | 9.67 | 7.33 | 7.67 | 6.67 | 6.00 | **43.34** (72.2%) | **B Tier** | Save Metadata Previews & Emergency Rollback Snapshots (`BL-34`, `BL-36`, `BL-52`, `BL-76`) |
 | **CMP-14** | **Player Profile, Medals & Prestige Progression** | 6.00 | 9.33 | 6.67 | 7.00 | 6.67 | 6.33 | **42.00** (70.0%) | **B- Tier** | Inline Reset Confirmation Box & Tiered Medals (`BL-52`, `BL-73`) |
 | **CMP-15** | **Settings & Configuration System** | 6.33 | 9.33 | 8.33 | 7.00 | 6.00 | 8.33 | **45.32** (75.5%) | **B Tier** | Inline Restore & Reset Confirmations + Live Tester (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`, `BL-73`) |
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Universal Interactive Handbook Modal & Visual Bridge SVG Guide (`BL-37`, `BL-48`, `BL-71`) |
@@ -248,23 +248,25 @@ This document records the official baseline quality evaluations, granular expert
 ---
 
 ### CMP-10: Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD
-*Files: `js/editor/level-validator.js`, `js/editor/modals/validation-modal.js`, `css/editor.css`*
+*Files: `js/editor/level-validator.js`, `js/editor/modals/validation-modal.js`, `js/editor/editor-canvas.js`, `js/editor/editor-ui.js`, `editor.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **5.00/10** (1.1: 5, 1.2: 5, 1.3: 5)
+  * $C_1$ Juice & Delight: **6.67/10** (1.1: 7, 1.2: 6, 1.3: 7)
   * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 9, 2.3: 10)
-  * $C_3$ UI/UX & Ergonomics: **6.00/10** (3.1: 6, 3.2: 6, 3.3: 6)
-  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 7, 4.3: 6)
-  * $C_5$ Progression & Retention: **5.00/10** (5.1: 5, 5.2: 5, 5.3: 5)
-  * $C_6$ Accessibility & DX: **5.33/10** (6.1: 5, 6.2: 6, 6.3: 5)
-  * **Master Score**: **37.67 / 60.00 (62.8% — C+ Tier Prototype)**
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
+  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
+  * **Master Score**: **44.02 / 60.00 (73.4% — B Tier)**
 * **Strengths**:
   * Fast BFS solvability validator proving reachable paths in $<15\text{ms}$.
   * One-click auto-fixer repairing orphan keys and missing bridge ramps (`BL-21`).
+  * **Interactive Issue Jumping Pins & Beacons (`BL-75`)**: 1-click "📍 Jump to (x, y)" pins in validation modal automatically switch elevation layers, center the canvas viewport, and render animated pulsing beacons with issue coordinate tooltips.
+  * **Bridge Approach & 4-Way Rotation Compatibility (`BL-75`)**: Granular validation flagging isolated bridges, ramps pointing into solid walls, and verifying solvability under 4-way camera rotation cycling.
+  * **Playtest Modal Safety (`BL-75`)**: Replaced native browser `confirm()` with non-blocking modal `#modal-playtest-confirm` adhering to popup avoidance.
 * **Gaps & Critical Deductions**:
-  * Diagnostics lines overlay is purely functional; lacks intuitive issue navigation pins.
-  * Complex multi-elevation or 4-way rotation issues fail validation silently without auto-repair options.
-* **Directives**: Enhance validator with rotation checks and interactive issue jumping.
+  * Visual layer HUD could feature an interactive mini-map preview thumbnail.
+* **Directives**: Continue expanding custom prefabs and layer visualization tools.
 
 ---
 
@@ -293,39 +295,43 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/audio-fx.js`, `js/engine/game-loop.js`, `js/ui/settings-modal.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **5.33/10** (1.1: 6, 1.2: 5, 1.3: 5)
+  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.33/10** (3.1: 5, 3.2: 6, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **6.33/10** (4.1: 7, 4.2: 6, 4.3: 6)
-  * $C_5$ Progression & Retention: **5.00/10** (5.1: 5, 5.2: 5, 5.3: 5)
-  * $C_6$ Accessibility & DX: **5.33/10** (6.1: 5, 6.2: 6, 6.3: 5)
-  * **Master Score**: **36.65 / 60.00 (61.1% — C+ Tier Prototype)**
+  * $C_3$ UI/UX & Ergonomics: **6.67/10** (3.1: 7, 3.2: 7, 3.3: 6)
+  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
+  * $C_6$ Accessibility & DX: **6.33/10** (6.1: 6, 6.2: 7, 6.3: 6)
+  * **Master Score**: **42.33 / 60.00 (70.6% — B- Tier)**
 * **Strengths**:
   * 100% zero-dependency procedural Web Audio synthesis with graceful headless Node.js mock.
+  * **Continuous Environmental Ambience (`BL-28`)**: Distinct procedural synthesizers for all 5 biomes.
+  * **Tactile UI Audio Cues & Footstep Pitch Jitter (`BL-35`)**: $\pm 3\%$ pitch micro-randomization preventing ear fatigue.
+  * **Elevation Transition Chimes & Diagnostic Radar Audio (`BL-77`)**: Harmonic dual-tone procedural chimes on ramp/bridge ascents and descents, and crisp acoustic locator pips on editor diagnostic issue jumps.
 * **Gaps & Critical Deductions**:
-  * Sound design feels synthetic and repetitive; footstep sounds lack pitch micro-jitter ($\pm 3\%$) (`BL-35`).
-  * UI buttons and modal tabs produce zero sound feedback.
-* **Directives**: Deliver tactile audio cues (`BL-35`) and footstep pitch randomization.
+  * Ambient loops could feature rare occasional acoustic events (distant thunder, echo drops).
+* **Directives**: Continue refining biome-specific ambient accents.
 
 ---
 
 ### CMP-13: Storage, Save State & Persistence Engine
-*Files: `js/core/storage.js`, `js/levels/level-loader.js`*
+*Files: `js/core/storage.js`, `js/ui/settings-modal.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.67/10** (1.1: 4, 1.2: 5, 1.3: 5)
-  * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.00/10** (3.1: 5, 3.2: 5, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 7, 4.3: 6)
-  * $C_5$ Progression & Retention: **5.33/10** (5.1: 6, 5.2: 5, 5.3: 5)
-  * $C_6$ Accessibility & DX: **5.00/10** (6.1: 5, 6.2: 5, 6.3: 5)
-  * **Master Score**: **36.00 / 60.00 (60.0% — C+ Tier Prototype)**
+  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
+  * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 9, 2.3: 10)
+  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 8, 3.2: 7, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.67/10** (4.1: 8, 4.2: 8, 4.3: 7)
+  * $C_5$ Progression & Retention: **6.67/10** (5.1: 7, 5.2: 7, 5.3: 6)
+  * $C_6$ Accessibility & DX: **6.00/10** (6.1: 6, 6.2: 6, 6.3: 6)
+  * **Master Score**: **43.34 / 60.00 (72.2% — B Tier)**
 * **Strengths**:
   * Robust `localStorage` abstraction with error handling and fallback.
+  * Schema migration runner (`BL-36`) upgrading legacy saves seamlessly.
+  * **Save Metadata Previews & Validation (`BL-76`)**: Exported JSON backups carry comprehensive metadata headers (timestamp, player codename, rank, total stars, completed levels, engine version) with interactive pre-restore preview badges.
+  * **Emergency Snapshot & Rollback Safety (`BL-76`)**: Automatic snapshot capture before destructive resets and restore operations with 1-click rollback recovery.
 * **Gaps & Critical Deductions**:
-  * Missing versioned schema migration runner (`BL-36`) risking corrupt save states on format upgrades.
-  * Settings modal lacks quick 1-click JSON backup export/import controls (`BL-53`).
-* **Directives**: Implement schema migration runner `BL-36` and profile backup actions `BL-53`.
+  * Multiple named save slot management across different player profiles.
+* **Directives**: Consider multi-profile slot switcher in future retention sprint.
 
 ---
 

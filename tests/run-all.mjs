@@ -22,6 +22,7 @@ import './unit/core/storage-migration-and-diagnostics.test.mjs';
 import './unit/core/storage-backup-restore.test.mjs';
 import './unit/core/geometry.test.mjs';
 import './unit/core/maze-generator.test.mjs';
+import './unit/core/storage-metadata-snapshot.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
@@ -84,6 +85,7 @@ import './unit/editor/prefabs-and-autofix.test.mjs';
 import './unit/editor/bridge-ramp-guide.test.mjs';
 import './unit/editor/generator-integration.test.mjs';
 import './unit/editor/custom-prefabs.test.mjs';
+import './unit/editor/diagnostic-pins-validation.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
@@ -128,6 +130,7 @@ import './unit/ui/mobile-controls.test.mjs';
 import './unit/ui/mobile-movement-and-minimap.test.mjs';
 import './unit/ui/feedback-modal.test.mjs';
 import './unit/ui/guide-modal.test.mjs';
+import './unit/ui/elevation-audio.test.mjs';
 
 // Run registered suites
 

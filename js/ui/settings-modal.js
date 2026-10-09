@@ -216,12 +216,16 @@ export class SettingsModal {
               <input type="file" id="settings-save-file-input" accept=".json" style="display: none;" />
             </div>
             <div id="settings-restore-confirm-box" style="display: none; background: rgba(56, 189, 248, 0.1); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 6px; padding: 0.6rem; font-size: 0.75rem; color: var(--text); margin-top: 0.4rem;">
-              <div style="margin-bottom: 0.5rem; font-weight: 600; color: #bae6fd;">⚠️ Restoring this backup will replace current progress, stars, and medals. Continue?</div>
+              <div style="margin-bottom: 0.3rem; font-weight: 600; color: #bae6fd;">⚠️ Restoring this backup will replace current progress, stars, and medals. Continue?</div>
+              <div id="settings-restore-preview-info" style="display: none; font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.9; margin-bottom: 0.4rem; color: #e0f2fe; background: rgba(0,0,0,0.25); padding: 4px 6px; border-radius: 4px;"></div>
               <div style="display: flex; gap: 0.5rem; justify-content: flex-end;">
                 <button type="button" id="btn-settings-cancel-restore" class="btn btn-secondary btn-xs" style="padding: 3px 8px;">Cancel</button>
                 <button type="button" id="btn-settings-confirm-restore" class="btn btn-primary btn-xs" style="padding: 3px 8px;">Confirm Restore</button>
               </div>
             </div>
+            <button type="button" id="btn-settings-rollback-snapshot" class="btn btn-secondary btn-xs" style="display: none; width: 100%; margin-top: 0.4rem; color: #38bdf8; border-color: rgba(56, 189, 248, 0.3);" title="Undo previous restore and revert to emergency snapshot">
+              ↩️ Undo Last Restore (Revert to Snapshot)
+            </button>
             <div id="settings-save-msg" style="font-size: 0.78rem; min-height: 1.1rem; margin-top: 0.4rem; color: var(--emerald); text-align: center;"></div>
 
             <!-- Destructive Action: Reset Progress with Confirmation -->
@@ -449,6 +453,26 @@ export class SettingsModal {
           pendingRestoreFile = file;
           restoreBox.style.display = 'block';
           if (saveMsg) saveMsg.textContent = '';
+          const previewEl = this.modalEl.querySelector('#settings-restore-preview-info');
+          if (previewEl && typeof FileReader !== 'undefined') {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              try {
+                const parsed = JSON.parse(evt.target?.result);
+                const meta = parsed.metadata || {};
+                const dt = meta.exportedDateFormatted || (parsed.exportedAt ? new Date(parsed.exportedAt).toLocaleDateString() : 'Unknown date');
+                const pName = meta.playerName || parsed.profile?.name || 'Explorer';
+                const stars = meta.totalStars ?? Object.values(parsed.progress?.campaign || {}).reduce((acc, c) => acc + (c?.medals ? Object.values(c.medals).filter(Boolean).length : 0), 0);
+                const lvls = meta.completedLevels ?? Object.keys(parsed.progress?.campaign || {}).length;
+                const ver = meta.engineVersion || parsed.schemaVersion || '1.0';
+                previewEl.textContent = `📦 Backup: ${dt} • 👤 ${pName} • ⭐ ${stars} Stars • 🏆 ${lvls} Levels • v${ver}`;
+                previewEl.style.display = 'block';
+              } catch (_) {
+                previewEl.style.display = 'none';
+              }
+            };
+            reader.readAsText(file);
+          }
         } else {
           // Fallback if restoreBox is not in DOM
           executeRestore(file);
@@ -460,6 +484,8 @@ export class SettingsModal {
           pendingRestoreFile = null;
           restoreBox.style.display = 'none';
           saveFileInput.value = '';
+          const previewEl = this.modalEl.querySelector('#settings-restore-preview-info');
+          if (previewEl) previewEl.style.display = 'none';
         };
       }
 
@@ -470,9 +496,41 @@ export class SettingsModal {
           pendingRestoreFile = null;
           restoreBox.style.display = 'none';
           saveFileInput.value = '';
+          const previewEl = this.modalEl.querySelector('#settings-restore-preview-info');
+          if (previewEl) previewEl.style.display = 'none';
           await executeRestore(file);
+          updateRollbackVisibility();
         };
       }
+    }
+
+    // Rollback Emergency Snapshot Handler (BL-76)
+    const rollbackBtn = this.modalEl.querySelector('#btn-settings-rollback-snapshot');
+    const updateRollbackVisibility = () => {
+      if (!rollbackBtn) return;
+      const snapshot = StorageManager.getEmergencySnapshot();
+      rollbackBtn.style.display = snapshot ? 'block' : 'none';
+    };
+    updateRollbackVisibility();
+
+    if (rollbackBtn) {
+      rollbackBtn.onclick = () => {
+        try {
+          const res = StorageManager.rollbackEmergencySnapshot();
+          if (saveMsg) {
+            saveMsg.textContent = `↩️ Reverted to previous save state (${res.stats.campaignLevels} levels)!`;
+            saveMsg.style.color = 'var(--emerald)';
+          }
+          this.audio.playVictory?.();
+          this.refresh();
+          updateRollbackVisibility();
+        } catch (err) {
+          if (saveMsg) {
+            saveMsg.textContent = `Rollback failed: ${err.message}`;
+            saveMsg.style.color = 'var(--rose)';
+          }
+        }
+      };
     }
 
     // Reset Progress Confirmation Logic
@@ -500,6 +558,7 @@ export class SettingsModal {
         }
         this.audio.playClick?.();
         this.refresh();
+        updateRollbackVisibility();
       };
     }
 

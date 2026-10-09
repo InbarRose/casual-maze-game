@@ -59,6 +59,7 @@ export class EditorCanvas {
     this.lastMousePos = { x: 0, y: 0 };
     this.hoverGridPos = { x: -1, y: -1 };
     this.lastPaintedGridPos = null;
+    this.diagnosticPin = null; // { x, y, z, message, type, timestamp } (BL-75)
 
     this.initEvents();
     this.centerInViewport();
@@ -174,6 +175,48 @@ export class EditorCanvas {
     const totalH = this.level.dimensions.height * this.baseTileSize * this.zoom;
     this.panX = (this.canvas.width - totalW) / 2;
     this.panY = (this.canvas.height - totalH) / 2;
+  }
+
+  /**
+   * Center the viewport on a specific grid tile (BL-75)
+   * @param {number} gridX
+   * @param {number} gridY
+   */
+  centerOnTile(gridX, gridY) {
+    const effTile = this.getEffectiveTileSize();
+    this.panX = Math.round((this.canvas.width / 2) - (gridX + 0.5) * effTile);
+    this.panY = Math.round((this.canvas.height / 2) - (gridY + 0.5) * effTile);
+    this.render();
+  }
+
+  /**
+   * Set a temporary diagnostic issue pin to highlight on canvas (BL-75)
+   * @param {{ x: number, y: number, z?: number, message: string, type?: 'error'|'warning'|'info' }} pinData
+   */
+  setDiagnosticPin(pinData) {
+    if (!pinData || typeof pinData.x !== 'number' || typeof pinData.y !== 'number') {
+      this.clearDiagnosticPin();
+      return;
+    }
+    this.diagnosticPin = {
+      x: pinData.x,
+      y: pinData.y,
+      z: pinData.z ?? 0,
+      message: pinData.message || 'Issue detected',
+      type: pinData.type || 'error',
+      timestamp: Date.now(),
+    };
+    this.render();
+  }
+
+  /**
+   * Clear active diagnostic pin (BL-75)
+   */
+  clearDiagnosticPin() {
+    if (this.diagnosticPin) {
+      this.diagnosticPin = null;
+      this.render();
+    }
   }
 
   /**
@@ -421,6 +464,9 @@ export class EditorCanvas {
   }
 
   handleMouseDown(e) {
+    if (this.diagnosticPin) {
+      this.clearDiagnosticPin();
+    }
     const rect = this.canvas.getBoundingClientRect();
     this.lastMousePos = { x: e.clientX, y: e.clientY };
 
@@ -1481,6 +1527,74 @@ export class EditorCanvas {
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText(lineBadge, ex, bY + bH / 2);
+
+      ctx.restore();
+    }
+
+    // 8. Render Diagnostic Issue Pin Overlay (BL-75)
+    if (this.diagnosticPin) {
+      const { x: px, y: py, message, type } = this.diagnosticPin;
+      const sx = px * effTile + effTile / 2;
+      const sy = py * effTile + effTile / 2;
+      const isErr = type === 'error';
+      const pinColor = isErr ? '#f43f5e' : '#f59e0b';
+      const pinBg = isErr ? 'rgba(244, 63, 94, 0.28)' : 'rgba(245, 158, 11, 0.28)';
+
+      ctx.save();
+
+      // Outer pulsing beacon ring
+      ctx.strokeStyle = pinColor;
+      ctx.lineWidth = 3;
+      ctx.shadowColor = pinColor;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(sx, sy, effTile * 0.75, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Filled target tile box
+      ctx.fillStyle = pinBg;
+      ctx.fillRect(px * effTile, py * effTile, effTile, effTile);
+      ctx.strokeRect(px * effTile, py * effTile, effTile, effTile);
+
+      // Center crosshairs
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(sx - effTile * 0.4, sy); ctx.lineTo(sx + effTile * 0.4, sy);
+      ctx.moveTo(sx, sy - effTile * 0.4); ctx.lineTo(sx, sy + effTile * 0.4);
+      ctx.stroke();
+
+      // Center pin glyph
+      ctx.shadowBlur = 0;
+      ctx.font = `${Math.max(14, effTile * 0.6)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(isErr ? '📍' : '⚠️', sx, sy);
+
+      // Floating issue description tooltip badge above tile
+      const badgeText = `${isErr ? '❌ Error' : '⚠️ Warn'} (${px}, ${py}): ${message}`;
+      ctx.font = 'bold 11px monospace';
+      const textMetrics = ctx.measureText(badgeText);
+      const textW = Math.min(360, textMetrics.width + 16);
+      const textH = 22;
+      const badgeX = sx - textW / 2;
+      const badgeY = py * effTile - 28;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.96)';
+      ctx.strokeStyle = pinColor;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(badgeX, badgeY, textW, textH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      let displayText = badgeText;
+      if (textMetrics.width > 340) {
+        displayText = badgeText.slice(0, 48) + '...';
+      }
+      ctx.fillText(displayText, sx, badgeY + textH / 2);
 
       ctx.restore();
     }

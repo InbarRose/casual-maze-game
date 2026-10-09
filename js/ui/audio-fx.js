@@ -476,6 +476,30 @@ class SoundFXEngine {
   }
 
   /**
+   * Vertical elevation transition chime (ascending/descending bridge or ramp) (BL-77)
+   * @param {boolean} [ascending=true]
+   */
+  playElevationChange(ascending = true) {
+    if (this._muted) return;
+    if (ascending) {
+      this._playTone({ freq: 320, freqEnd: 540, type: 'triangle', duration: 0.08, gain: 0.07, delay: 0 });
+      this._playTone({ freq: 540, freqEnd: 720, type: 'sine', duration: 0.12, gain: 0.08, delay: 0.05 });
+    } else {
+      this._playTone({ freq: 720, freqEnd: 540, type: 'triangle', duration: 0.08, gain: 0.07, delay: 0 });
+      this._playTone({ freq: 540, freqEnd: 320, type: 'sine', duration: 0.12, gain: 0.08, delay: 0.05 });
+    }
+  }
+
+  /**
+   * Editor diagnostic issue radar jump pip (BL-77)
+   */
+  playDiagnosticJump() {
+    if (this._muted) return;
+    this._playTone({ freq: 880, freqEnd: 1320, type: 'sine', duration: 0.06, gain: 0.08, delay: 0 });
+    this._playTone({ freq: 1320, freqEnd: 1760, type: 'triangle', duration: 0.08, gain: 0.07, delay: 0.03 });
+  }
+
+  /**
    * Checkpoint / beacon activation chime
    */
   playCheckpoint() {
@@ -861,6 +885,7 @@ class SoundFXEngine {
     globalEvents.on('lever:toggled', (e) => this.playLeverToggle(e?.state));
     globalEvents.on('hazard:hit', () => this.playHazardHit());
     globalEvents.on('checkpoint:activated', () => this.playCheckpoint());
+    globalEvents.on('player:elevation_changed', (e) => this.playElevationChange(e?.ascending));
     globalEvents.on('sound:toggled', (e) => this.setMuted(e?.muted));
     globalEvents.on('game:paused', () => this.pauseAmbience());
     globalEvents.on('game:resumed', () => this.resumeAmbience());

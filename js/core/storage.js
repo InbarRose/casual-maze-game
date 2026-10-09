@@ -485,23 +485,115 @@ export class StorageManager {
    * ========================================================= */
 
   /**
-   * Export all game progress, tutorial completions, saved editor projects, and settings
-   * @returns {object} Full save profile object
+   * Export all game progress, tutorial completions, saved editor projects, and settings (BL-76)
+   * @returns {object} Full save profile object with rich metadata
    */
   static exportSaveProfile() {
+    const campaign = this.loadCampaignProgress();
+    const tutorial = this.loadTutorialProgress();
+    const stories = this.loadStoryProgress();
+    const profile = this.getPlayerProfile();
+    const projects = this.getSavedProjectsMap();
+    const settings = this.loadSettings();
+
+    // Calculate summary statistics
+    let totalStars = 0;
+    let completedLevels = 0;
+    for (const rec of Object.values(campaign)) {
+      if (rec?.completed) {
+        completedLevels++;
+        const m = rec.medals || {};
+        totalStars += (m.completion ? 1 : 0) + (m.parSteps ? 1 : 0) + (m.parTime ? 1 : 0) + (m.secretSleuth ? 1 : 0) + (m.flawless ? 1 : 0);
+      }
+    }
+
     return {
-      schemaVersion: '1.0.0',
+      schemaVersion: SAVE_PROFILE_SCHEMA_VERSION || '1.1.0',
       game: 'casual-maze-game',
       exportedAt: new Date().toISOString(),
-      profile: this.getPlayerProfile(),
-      progress: {
-        campaign: this.loadCampaignProgress(),
-        tutorial: this.loadTutorialProgress(),
-        stories: this.loadStoryProgress(),
+      metadata: {
+        engineVersion: ENGINE_VERSION,
+        timestamp: Date.now(),
+        exportedDateFormatted: new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        playerName: profile?.name || 'Explorer',
+        prestigeRank: profile?.rank || 'Initiate',
+        totalStars,
+        completedLevels,
+        totalProjects: Object.keys(projects).length,
       },
-      projects: this.getSavedProjectsMap(),
-      settings: this.loadSettings(),
+      profile,
+      progress: {
+        campaign,
+        tutorial,
+        stories,
+      },
+      projects,
+      settings,
     };
+  }
+
+  static EMERGENCY_SNAPSHOT_KEY = 'casual_maze_emergency_snapshot';
+
+  /**
+   * Create an emergency rollback snapshot of current data before destructive actions (BL-76)
+   * @param {string} [reason='pre_restore']
+   * @returns {boolean}
+   */
+  static createEmergencySnapshot(reason = 'pre_restore') {
+    try {
+      if (typeof localStorage === 'undefined') return false;
+      const snapshot = {
+        reason,
+        timestamp: Date.now(),
+        createdAt: new Date().toISOString(),
+        backup: {
+          campaign: this.loadCampaignProgress(),
+          tutorial: this.loadTutorialProgress(),
+          stories: this.loadStoryProgress(),
+          projects: this.getSavedProjectsMap(),
+          settings: this.loadSettings(),
+          profile: this.getPlayerProfile(),
+        },
+      };
+      localStorage.setItem(this.EMERGENCY_SNAPSHOT_KEY, JSON.stringify(snapshot));
+      console.info(`[MazeGame:Storage] Created emergency snapshot (${reason})`);
+      return true;
+    } catch (e) {
+      console.warn('[MazeGame:Storage] Failed to create emergency snapshot:', e);
+      return false;
+    }
+  }
+
+  /**
+   * Check if an emergency rollback snapshot exists (BL-76)
+   * @returns {object|null}
+   */
+  static getEmergencySnapshot() {
+    try {
+      if (typeof localStorage === 'undefined') return null;
+      const raw = localStorage.getItem(this.EMERGENCY_SNAPSHOT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Rollback to the emergency snapshot (BL-76)
+   * @returns {{ success: boolean, stats: object }}
+   */
+  static rollbackEmergencySnapshot() {
+    const snapshot = this.getEmergencySnapshot();
+    if (!snapshot || !snapshot.backup) {
+      throw new Error('No emergency snapshot available to rollback.');
+    }
+    const result = this.importSaveProfile(snapshot.backup);
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(this.EMERGENCY_SNAPSHOT_KEY);
+      }
+    } catch {}
+    return result;
   }
 
   /**
@@ -513,7 +605,7 @@ export class StorageManager {
   }
 
   /**
-   * Import and restore a save profile into local storage
+   * Import and restore a save profile into local storage (BL-76)
    * @param {object|string} rawSaveData
    * @returns {{ success: boolean, stats: { campaignLevels: number, tutorialLevels: number, storyChapters: number, projects: number } }}
    */
@@ -527,6 +619,9 @@ export class StorageManager {
       if (!data || typeof data !== 'object') {
         throw new Error('Invalid save file format. Expected a JSON object.');
       }
+
+      // Auto-create snapshot before modifying state
+      this.createEmergencySnapshot('pre_restore');
 
       // Restore Campaign Progress
       const campaign = data.progress?.campaign || data.campaign || {};
@@ -913,6 +1008,7 @@ export class StorageManager {
    */
   static resetAllProgress() {
     try {
+      this.createEmergencySnapshot('pre_reset');
       if (typeof localStorage !== 'undefined') {
         localStorage.removeItem(STORAGE_KEYS.PROGRESS);
         localStorage.removeItem(STORAGE_KEYS.TUTORIAL_PROGRESS);
