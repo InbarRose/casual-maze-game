@@ -64,14 +64,15 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/renderer.js`, `js/engine/camera.js`, `js/core/asset-loader.js`, `js/ui/hero-ambient-canvas.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
-  * $C_2$ Static Purity: **9.00/10** (2.1: 9, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.00/10** (3.1: 7, 3.2: 7, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **7.67/10** (4.1: 8, 4.2: 8, 4.3: 7)
-  * $C_5$ Progression & Retention: **5.33/10** (5.1: 6, 5.2: 5, 5.3: 5)
-  * $C_6$ Accessibility & DX: **5.67/10** (6.1: 6, 6.2: 6, 6.3: 5)
-  * **Master Score**: **42.00 / 60.00 (70.0% — B Tier)**
+  * $C_1$ Juice & Delight: **8.33/10** (1.1: 9, 1.2: 8, 1.3: 8)
+  * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **8.00/10** (3.1: 8, 3.2: 8, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
+  * $C_5$ Progression & Retention: **6.33/10** (5.1: 7, 5.2: 6, 5.3: 6)
+  * $C_6$ Accessibility & DX: **6.67/10** (6.1: 7, 6.2: 7, 6.3: 6)
+  * **Master Score**: **46.66 / 60.00 (77.8% — B Tier)**
 * **Strengths**:
+  * **Architectural Entrance & Exit Visuals (`BL-82`)**: Grounding the character physically in the game world with dynamic wall-adjacent vs freestanding detection. When near a wall, renders stone keystone archways, recessed tunnels, heavy wooden doors ajar with iron straps, mounted torch sconces, and ambient floor light spill; when freestanding in open space, renders 3D winding spiral stairwells with stone balustrades, central newel columns, and depth shadows.
   * Y-sorted depth sorting (`BL-33`) ensuring player and entities occlude behind southern wall roofs.
   * Atmospheric particle systems and dynamic radial lighting under Fog of War.
   * **4-Quadrant Camera Rotation (`BL-43`)**: True 4-way rotation cycling (0°, 90°, 180°, 270°) with exact tile center locking via `tileToScreen` / `screenToTile`.

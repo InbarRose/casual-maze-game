@@ -108,6 +108,11 @@ This document tracks project milestones, current release status, active developm
   - **Level Lore Journal**: Added companion HUD button (`#hud-journal-btn`) with dynamic counter and hotkey (`J`), opening the Level Lore Journal modal (`#journal-modal`) to browse and examine all discovered Architect Notes and wall murals in a parchment viewer.
   - **Configurable Note Presentation Mode**: Added setting in SettingsModal (`Note & Lore Presentation`) allowing players to toggle between `Card Modal Popup` and `Activity Feed Stream`.
   - **Automated QA Coverage**: Created `tests/unit/ui/lore-journal.test.mjs`; expanded test harness to 118 test suites and 553 tests (0 failed, 7,744 assertions, 23/23 zero-drift checks passed).
+- [x] **Architectural Entrance & Exit Visuals Sprint (BL-82, CMP-02)**:
+  - **Wall-Integrated Entrance Doorways**: Dynamically detects when spawn is adjacent to a wall (prioritizing North front wall face) and renders a stone keystone archway, dark tunnel recess, heavy ajar wooden door with iron straps, mounted torch sconces, and ambient floor light spill.
+  - **Wall-Integrated Exit Archways**: Dynamically detects when exit is adjacent to a wall and renders an imposing carved stone portal arch with daylight sunbeams or cosmic portal ether and stone threshold apron.
+  - **Freestanding 3D Spiral Staircases**: When spawn or exit has no adjacent walls (freestanding in open space), renders a 3D spiral stairwell (descending well into darkness with circular balustrade and floor shadow for spawn, ascending spiral steps with golden daylight shaft for exit).
+  - **Automated QA Coverage**: Created `tests/unit/engine/entrance-exit-visuals.test.mjs`; expanded test harness to 119 test suites and 562 tests (0 failed, 7,762 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
