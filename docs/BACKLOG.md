@@ -125,6 +125,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-73** | **Inline Destructive Action Confirmations & Universal Popup Avoidance** | **P1** | `v1.24.0` | Eradication of native browser `confirm()` popups across ProfileModal reset, SettingsModal backup restore, and Editor clear canvas with sleek, non-blocking inline confirmation boxes and modal dialogs. | **Completed** |
 | **BL-74** | **Top Navigation Hub Exit Safety & GameMenu Confirmation Routing** | **P1** | `v1.24.0` | Shielded `← Hub` top navigation link during active play with inline pause quit confirmation routing, preventing accidental progress loss on mobile touchscreens. | **Completed** |
 | **BL-76** | **Cloudless Save Backup Metadata, Previews & Snapshot Rollback Safety** | **P1** | `v1.24.0` | Rich metadata headers in exported JSON backups (stars, levels, rank, engine version), pre-restore verification info box, and automated emergency snapshots before reset/restore with 1-click rollback recovery. | **Completed** |
+| **BL-81** | **Action Activity Feed, Level Lore Journal & Unobtrusive Examination UX** | **P1** | `v1.24.0` | Eradicate 3-popup barrage on Architect Note stepping by providing a single interaction prompt [E]; add real-time docked Action Activity Feed with category filter toggles (`All`, `Lore`, `Mech`, `Items`); build in-game Level Lore Journal modal and HUD drawer with hotkey (`J`); add configurable Note Presentation mode (`Card Modal` vs `Feed Only`). | **Completed** |
 
 ---
 
