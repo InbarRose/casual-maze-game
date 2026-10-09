@@ -26,13 +26,15 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
       "x": 2,
       "y": 2,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 12,
       "y": 10,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 22,
     "parTime": 14,
@@ -567,13 +569,15 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
       "x": 2,
       "y": 2,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 15,
       "y": 12,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 35,
     "parTime": 21,
@@ -1247,13 +1251,15 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
       "x": 2,
       "y": 7,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 16,
       "y": 7,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 29,
     "parTime": 18,
@@ -1999,13 +2005,15 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
       "x": 2,
       "y": 9,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 18,
       "y": 9,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 36,
     "parTime": 22,

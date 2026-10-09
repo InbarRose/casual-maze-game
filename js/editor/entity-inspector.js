@@ -15,6 +15,7 @@ import {
   RIDDLE_ITEM_STYLES,
   SPAWN_STYLE_PRESETS,
   EXIT_STYLE_PRESETS,
+  WALL_DIRECTIONS,
   formatXYZ,
   getElevationLabel,
 } from '../core/constants.js';
@@ -271,14 +272,70 @@ export class EntityInspector {
     if (e.type === 'spawn' || e.type === 'test_spawn') {
       container.appendChild(this.createStyleSelectorRow('Entrance Visual Style', e.style || 'stairs_down', SPAWN_STYLE_PRESETS, (sel) => {
         e.style = sel.id;
+        this.updateArchitectureClashNotice(container, e);
       }));
+
+      container.appendChild(this.createSelectRow('Wall Anchor Orientation', 'entity-wall-direction', e.wallDirection || 'none', WALL_DIRECTIONS.map(d => ({
+        value: d.id,
+        label: d.label,
+      })), (val) => {
+        e.wallDirection = val;
+        this.updateArchitectureClashNotice(container, e);
+      }));
+
+      // Smart Suggestion & Clash Detection Container
+      const suggestRow = document.createElement('div');
+      suggestRow.className = 'form-row';
+      suggestRow.style.cssText = 'background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.6rem 0.8rem; display:flex; flex-direction:column; gap:0.4rem;';
+      suggestRow.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.78rem; font-weight:600; color:var(--text-muted);">Architectural Assistant</span>
+          <button type="button" class="btn btn-secondary btn-sm btn-suggest-spawn" style="padding:0.2rem 0.5rem; font-size:0.75rem;">💡 Suggest Style &amp; Wall</button>
+        </div>
+        <div class="clash-notice" style="font-size:0.75rem;"></div>
+      `;
+      container.appendChild(suggestRow);
+
+      suggestRow.querySelector('.btn-suggest-spawn').addEventListener('click', () => {
+        this.applySmartArchitectureSuggestion(e, 'spawn', container);
+      });
+
+      this.updateArchitectureClashNotice(container, e);
     }
 
     // 6. Type Specific: Exit Portal
     if (e.type === 'exit') {
       container.appendChild(this.createStyleSelectorRow('Exit Visual Style', e.style || 'portal', EXIT_STYLE_PRESETS, (sel) => {
         e.style = sel.id;
+        this.updateArchitectureClashNotice(container, e);
       }));
+
+      container.appendChild(this.createSelectRow('Wall Anchor Orientation', 'entity-wall-direction', e.wallDirection || 'none', WALL_DIRECTIONS.map(d => ({
+        value: d.id,
+        label: d.label,
+      })), (val) => {
+        e.wallDirection = val;
+        this.updateArchitectureClashNotice(container, e);
+      }));
+
+      // Smart Suggestion & Clash Detection Container
+      const suggestRow = document.createElement('div');
+      suggestRow.className = 'form-row';
+      suggestRow.style.cssText = 'background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.6rem 0.8rem; display:flex; flex-direction:column; gap:0.4rem;';
+      suggestRow.innerHTML = `
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <span style="font-size:0.78rem; font-weight:600; color:var(--text-muted);">Architectural Assistant</span>
+          <button type="button" class="btn btn-secondary btn-sm btn-suggest-exit" style="padding:0.2rem 0.5rem; font-size:0.75rem;">💡 Suggest Style &amp; Wall</button>
+        </div>
+        <div class="clash-notice" style="font-size:0.75rem;"></div>
+      `;
+      container.appendChild(suggestRow);
+
+      suggestRow.querySelector('.btn-suggest-exit').addEventListener('click', () => {
+        this.applySmartArchitectureSuggestion(e, 'exit', container);
+      });
+
+      this.updateArchitectureClashNotice(container, e);
     }
 
     // 7. Type Specific: Riddle Pedestal
@@ -748,8 +805,98 @@ export class EntityInspector {
       e.points = parseInt(pointsInput.value, 10) || 100;
     }
 
+    const wallDirSelect = this.bodyEl.querySelector('#entity-wall-direction');
+    if (wallDirSelect) {
+      e.wallDirection = wallDirSelect.value;
+    }
+
     if (this.onUpdate) {
       this.onUpdate(e);
+    }
+  }
+
+  /**
+   * Check for architectural clashes between spawn/exit doorway and adjacent entities.
+   * @param {HTMLElement} container
+   * @param {object} entity
+   */
+  updateArchitectureClashNotice(container, entity) {
+    const noticeEl = container.querySelector('.clash-notice');
+    if (!noticeEl) return;
+
+    const level = this.levelRef;
+    if (!level) {
+      noticeEl.innerHTML = '';
+      return;
+    }
+
+    const ground = level.layers?.ground || [];
+    const entities = level.entities || [];
+    const isSpawn = entity.type === 'spawn' || entity.type === 'test_spawn';
+    const isWallPortal = (isSpawn && (entity.style === 'wall_doorway' || entity.wallDirection === 'north')) ||
+                         (!isSpawn && (entity.style === 'wall_archway' || entity.wallDirection === 'north'));
+
+    if (!isWallPortal) {
+      noticeEl.innerHTML = '<span style="color:var(--text-muted);">✨ Freestanding architecture active (no wall anchor).</span>';
+      return;
+    }
+
+    // Check if North tile is actually a wall
+    const northTile = ground[entity.y - 1]?.[entity.x];
+    const isNorthWall = northTile === TILES.WALL || northTile === TILES.SECRET_WALL;
+
+    if (!isNorthWall) {
+      noticeEl.innerHTML = '<span style="color:var(--amber); font-weight:600;">⚠️ No wall exists at (' + entity.x + ', ' + (entity.y - 1) + ') to mount this doorway onto!</span>';
+      return;
+    }
+
+    // Check if another entity clashes on the doorway wall or threshold
+    const clash = entities.find(e => (e.x === entity.x && e.y === entity.y - 1) || (e.x === entity.x && e.y === entity.y && e.id !== entity.id));
+    if (clash) {
+      noticeEl.innerHTML = `<span style="color:var(--rose); font-weight:600;">❌ Clash: Doorway overlaps "${clash.id}" (${clash.type}) at (${clash.x}, ${clash.y})!</span>`;
+      return;
+    }
+
+    noticeEl.innerHTML = '<span style="color:var(--emerald); font-weight:600;">✓ Doorway cleanly anchored to North wall drop face with 0 clashes.</span>';
+  }
+
+  /**
+   * Automatically suggest best entrance/exit architecture based on surrounding geometry & clash safety.
+   * @param {object} entity
+   * @param {'spawn'|'exit'} kind
+   * @param {HTMLElement} container
+   */
+  applySmartArchitectureSuggestion(entity, kind, container) {
+    const level = this.levelRef;
+    if (!level) return;
+
+    const ground = level.layers?.ground || [];
+    const entities = level.entities || [];
+    const isWall = (x, y) => ground[y]?.[x] === TILES.WALL || ground[y]?.[x] === TILES.SECRET_WALL;
+
+    const hasNorthWall = isWall(entity.x, entity.y - 1);
+    const hasClashOnNorth = entities.some(e => (e.x === entity.x && e.y === entity.y - 1) || (e.x === entity.x && e.y === entity.y && e.id !== entity.id));
+
+    if (hasNorthWall && !hasClashOnNorth) {
+      // Clean North wall available -> Wall Doorway / Archway
+      entity.wallDirection = 'north';
+      entity.style = kind === 'spawn' ? 'wall_doorway' : 'wall_archway';
+    } else {
+      // Surrounded by open air or wall face occupied -> Freestanding
+      entity.wallDirection = 'none';
+      entity.style = kind === 'spawn' ? 'stairs_down' : 'portal';
+    }
+
+    // Refresh UI controls
+    const wallDirSelect = container.querySelector('#entity-wall-direction');
+    if (wallDirSelect) {
+      wallDirSelect.value = entity.wallDirection;
+    }
+
+    if (this.bodyEl) {
+      this.renderForm();
+    } else {
+      this.updateArchitectureClashNotice(container, entity);
     }
   }
 }

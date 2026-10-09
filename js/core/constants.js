@@ -340,6 +340,7 @@ export const LEVER_STYLES = Object.freeze([
 ]);
 
 export const SPAWN_STYLE_PRESETS = Object.freeze([
+  { id: 'wall_doorway', icon: '🚪', label: 'Wall Doorway', desc: 'Arched timber entrance doorway set into an adjacent wall' },
   { id: 'stairs_down', icon: '🪜', label: 'Stairs Down', desc: 'Recessed stone steps descending into the labyrinth' },
   { id: 'portal', icon: '🌀', label: 'Summoning Rift', desc: 'Swirling dimensional portal' },
   { id: 'archway', icon: '🏛️', label: 'Stone Archway', desc: 'Ancient gateway threshold' },
@@ -348,11 +349,20 @@ export const SPAWN_STYLE_PRESETS = Object.freeze([
 ]);
 
 export const EXIT_STYLE_PRESETS = Object.freeze([
+  { id: 'wall_archway', icon: '🏛️', label: 'Wall Archway', desc: 'Grand daylight archway carved into an adjacent wall' },
   { id: 'portal', icon: '🌀', label: 'Cosmic Portal', desc: 'Swirling celestial gateway' },
   { id: 'stairs_up', icon: '🪜', label: 'Daylight Ascent', desc: 'Ascending staircase with golden sunbeams' },
   { id: 'archway', icon: '🏛️', label: 'Exit Archway', desc: 'Luminous sanctuary threshold' },
   { id: 'chest', icon: '🎁', label: 'Treasure Vault', desc: 'Golden reward chest exit' },
   { id: 'shrine', icon: '⛩️', label: 'Sacred Shrine', desc: 'Ancient victory shrine' },
+]);
+
+export const WALL_DIRECTIONS = Object.freeze([
+  { id: 'none', label: 'None (Freestanding)' },
+  { id: 'north', label: 'North Wall (Drop Face)' },
+  { id: 'south', label: 'South Wall' },
+  { id: 'west', label: 'West Wall' },
+  { id: 'east', label: 'East Wall' },
 ]);
 
 export const FOG_STATE = Object.freeze({

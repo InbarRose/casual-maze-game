@@ -21,13 +21,15 @@
     "x": 2,
     "y": 2,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "stairs_down",
+    "wallDirection": "none"
   },
   "exit": {
     "x": 11,
     "y": 6,
     "elevation": 0,
-    "style": "portal"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
   "parSteps": 26,
   "parTime": 14,

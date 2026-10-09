@@ -7,8 +7,8 @@
     "file": "levels/tutorial/tutorial_1.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "875b3e40cd62aea27822f4be8ce0ada2fa526bd7a19fdbe7b7f2376b2f7d36f5",
-    "size": 2882,
+    "hash": "538b406728dbeb25d904c121a1a9a8b2257b477de4d8a81bb430613bf49448d9",
+    "size": 2949,
     "dimensions": {
       "width": 9,
       "height": 9
@@ -25,8 +25,8 @@
     "file": "levels/tutorial/tutorial_2.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "1d39de069212ce2cddcf26445c8981f7d33f01b996cc9ad16b9e325f87b1161e",
-    "size": 4694,
+    "hash": "b381ff26145a9c3c286fd70d9ceed5de02790cad0519716d192ac924c3182721",
+    "size": 4755,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -43,8 +43,8 @@
     "file": "levels/tutorial/tutorial_3.json",
     "theme": "temple",
     "version": 1,
-    "hash": "5813cd9e88d0856c30127c5a105f228a30b4621142d0ebb9b98f669e9d701653",
-    "size": 4211,
+    "hash": "7d7cc2db671d222d3cc8a2f60abac6d8fc6d82d1697986b47ee10e999c8976ad",
+    "size": 4276,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -61,8 +61,8 @@
     "file": "levels/tutorial/tutorial_4.json",
     "theme": "jungle",
     "version": 1,
-    "hash": "50b8cba2844578da9964ae5c32b1fd97b638c76049110f2579f14f3aec644c30",
-    "size": 5462,
+    "hash": "22b8c36a59d51d4bafafbd8bc553ec29e6083b0de44350d34de310121538daa8",
+    "size": 5537,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -79,8 +79,8 @@
     "file": "levels/tutorial/tutorial_5.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "e7274c0b929a99aa7a5ad31e2709694c19895ef3f36ea2c6fadc3b7c9a0b2703",
-    "size": 5402,
+    "hash": "decc6d8504b048c0b135226b0296b3460f4b0d3b90889822275e099841fc2fec",
+    "size": 5463,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -97,8 +97,8 @@
     "file": "levels/tutorial/tutorial_6.json",
     "theme": "temple",
     "version": 1,
-    "hash": "975d1c620b5def3f2483194613707cc9b441df773654d4d46f63d9a376e18ba5",
-    "size": 9419,
+    "hash": "5401260f762bbd6fb068238de8488701be541d656ec1d27c0ae2eaed57bea86f",
+    "size": 9492,
     "dimensions": {
       "width": 17,
       "height": 17
@@ -118,8 +118,8 @@
     "parSteps": 35,
     "parTime": 20,
     "version": 1,
-    "hash": "d3233abc2440358d289c665c89285422582a781fc40ad6259c6340ecd42ff88b",
-    "size": 6252,
+    "hash": "96b3db1c2778f35009a76e85a60bbd4909c7cba2663cafb997f22858d3b761f3",
+    "size": 6317,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -139,8 +139,8 @@
     "parSteps": 38,
     "parTime": 22,
     "version": 1,
-    "hash": "3b27814b725a58d8e77ccbf340dbddb6919e12a385d4915c6eb850e2be341543",
-    "size": 6787,
+    "hash": "f519108bf2d9c86296efdaa47aa26f6291cd52d42e5d47af6414f63b0f368487",
+    "size": 6852,
     "dimensions": {
       "width": 15,
       "height": 13
@@ -160,8 +160,8 @@
     "parSteps": 54,
     "parTime": 32,
     "version": 1,
-    "hash": "550a4481213d44c0d6d20a807ea3c0b5af1eb0f89f1890d5d80ea31dabc67707",
-    "size": 8288,
+    "hash": "36701761c89b710720f5f55668cc665f7913553458f9cd66e94fec32d3fc4097",
+    "size": 8346,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -181,8 +181,8 @@
     "parSteps": 68,
     "parTime": 40,
     "version": 1,
-    "hash": "c6fbbdef2d94ab5f622093f9e19c43fe250f9e450be092c4d2f77169f4dc8ab7",
-    "size": 10172,
+    "hash": "080d2ca1875967355372f15220641a186eafe6426b75026ee0da60891e09de00",
+    "size": 10230,
     "dimensions": {
       "width": 19,
       "height": 17
@@ -202,8 +202,8 @@
     "parSteps": 36,
     "parTime": 22,
     "version": 1,
-    "hash": "bd14c1d2f2eaa0ef46872edf85a9c1869de237acb6b815e1ba87111b1ef408e7",
-    "size": 6852,
+    "hash": "6ddf94d154247aa53b33a1cd2b7ec202d0081029c6f15c33cc4e6b2cd92e04d4",
+    "size": 6910,
     "dimensions": {
       "width": 15,
       "height": 13
@@ -223,8 +223,8 @@
     "parSteps": 48,
     "parTime": 28,
     "version": 1,
-    "hash": "667f29c3f3469bfdde66bfc68651174bb7cc4d680eb01983665c356c85dde3d5",
-    "size": 8475,
+    "hash": "3e8aead75349acbc2e5490965a4e30acdc0257fde4c7ab8f5a54021d633b2126",
+    "size": 8542,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -244,8 +244,8 @@
     "parSteps": 56,
     "parTime": 34,
     "version": 1,
-    "hash": "3249ba602c8a5802ecdcb4c56f33fd1f0c2b2a79363b1ac3526621396855de0f",
-    "size": 8066,
+    "hash": "bfcd9c94f60b92e4d399304fb76f6fe054003ca8fc3e1389a9fd86c755628e9a",
+    "size": 8133,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -265,8 +265,8 @@
     "parSteps": 75,
     "parTime": 45,
     "version": 1,
-    "hash": "d17cddd0c5a129c6e9f7c4602893f917b0544281d97f3b8fcb3902d7209e66ed",
-    "size": 10125,
+    "hash": "892a0a7c4bda22d72c3192bff12ba5b49410d277c984f9f3dca65e00dfcbe773",
+    "size": 10190,
     "dimensions": {
       "width": 19,
       "height": 17
@@ -286,8 +286,8 @@
     "parSteps": 40,
     "parTime": 24,
     "version": 1,
-    "hash": "1b089159a33bcfdb5ccb16cd67a7f28ae958d267d5640e3f487768e8d243ecf0",
-    "size": 6760,
+    "hash": "bfb42c16b09ee388f0b13bd0c1df219f95c3ab9be41a8ec054566b6e50d523cf",
+    "size": 6818,
     "dimensions": {
       "width": 15,
       "height": 13
@@ -307,8 +307,8 @@
     "parSteps": 50,
     "parTime": 30,
     "version": 1,
-    "hash": "5b9a201c456c98fd02609c1ca00861033616473de553e10db80b5641e00e2208",
-    "size": 8575,
+    "hash": "22dfe55a38ec8c34cf9e5b470b143d453dfb5711c090afacc671f8360eabfb34",
+    "size": 8633,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -328,8 +328,8 @@
     "parSteps": 58,
     "parTime": 35,
     "version": 1,
-    "hash": "dc9df79cc08bbf54f8de0c76a90e47626c137947c09ef69322719b57cafa9dd2",
-    "size": 8512,
+    "hash": "f952db69c79c9bd0d4c373cd7b11dec9337210bcd91079753cf20875b6a854c4",
+    "size": 8570,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -349,8 +349,8 @@
     "parSteps": 78,
     "parTime": 48,
     "version": 1,
-    "hash": "664bf745f5b27bcc7a707444871754db6e79b09dac8c07c6321f4706fe17f3b5",
-    "size": 10188,
+    "hash": "4e81d19dd33de6b4954cfee7c058e22914aabbb516f797b011cd5b5ab540537b",
+    "size": 10246,
     "dimensions": {
       "width": 19,
       "height": 17
@@ -370,8 +370,8 @@
     "parSteps": 38,
     "parTime": 22,
     "version": 1,
-    "hash": "3c35c9b56bca4be15f9b60289dbb2487a81a1614e34efc5022387172a6f60ac1",
-    "size": 6548,
+    "hash": "8b17d0e3e545d887299507a44812df752951bf06fad2430252c976eccaffdaa1",
+    "size": 6606,
     "dimensions": {
       "width": 15,
       "height": 13
@@ -391,8 +391,8 @@
     "parSteps": 46,
     "parTime": 26,
     "version": 1,
-    "hash": "4e7d518763030f4cf5611c865b1e0aabc8cc21fe4676e4001715107c3d335b44",
-    "size": 8428,
+    "hash": "083761ae4cc523f665e6598c5799e99c9392b67966a140b29e07e11b742f1330",
+    "size": 8486,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -412,8 +412,8 @@
     "parSteps": 54,
     "parTime": 32,
     "version": 1,
-    "hash": "adebb76dd1e1831e972e24faa4f7b6d450912488f57aa5a388fdf013aff2f3a9",
-    "size": 8910,
+    "hash": "77a915888f44e5e12dd40b48ff5c2c4430c40e93294ce97d46a4f08f90452c20",
+    "size": 8975,
     "dimensions": {
       "width": 19,
       "height": 15
@@ -433,8 +433,8 @@
     "parSteps": 72,
     "parTime": 44,
     "version": 1,
-    "hash": "a67dff3a4ad38af0e2332497f6cd2d69d8a07398e203c08f7457e200da35e633",
-    "size": 11524,
+    "hash": "5be60985bd3db436eae09ea4f1ba5aa334825c3cf6268f21e3fadef8ee43228e",
+    "size": 11582,
     "dimensions": {
       "width": 19,
       "height": 19
@@ -454,8 +454,8 @@
     "parSteps": 40,
     "parTime": 24,
     "version": 1,
-    "hash": "6f04e725a71766ddb455c062dd8dcc0ad61e09dc8e9da767f775f87d30fbf358",
-    "size": 6918,
+    "hash": "2372d51fe81756af05012f819e3b307706a6e9d163ca1c29c315b4f977c67402",
+    "size": 6976,
     "dimensions": {
       "width": 15,
       "height": 13
@@ -475,8 +475,8 @@
     "parSteps": 48,
     "parTime": 28,
     "version": 1,
-    "hash": "d7367f679d8bf7d5cc4c16480f702ce071fe7408b81f944581fdf52011d0099a",
-    "size": 8410,
+    "hash": "d81aaca287560788206d3abebc363e23fe4a26506dffa4999e027990f5870f38",
+    "size": 8468,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -496,8 +496,8 @@
     "parSteps": 60,
     "parTime": 36,
     "version": 1,
-    "hash": "0c0c070de676498b748f5369089a159461ab2923658bfd67ac5a1df4ef298eb7",
-    "size": 9367,
+    "hash": "70bba20fe5e342853997aea9305b8f4e91704665ad654bd3c1c235619f9b08d5",
+    "size": 9425,
     "dimensions": {
       "width": 19,
       "height": 15
@@ -517,8 +517,8 @@
     "parSteps": 80,
     "parTime": 50,
     "version": 1,
-    "hash": "be2f38bc730a4a1ae99d9815ee0a2e0c83a53821e2d0985aa7e8058911d29f17",
-    "size": 12655,
+    "hash": "d53b50a868a00d2874200da55fdce59be281039efe68e4591242c17aed3152e3",
+    "size": 12713,
     "dimensions": {
       "width": 21,
       "height": 19
@@ -538,8 +538,8 @@
     "parSteps": 38,
     "parTime": 24,
     "version": 1,
-    "hash": "834bb119fca3717182b1cbb351921443921528793f45607a1289d71d50d87289",
-    "size": 6603,
+    "hash": "3139dd4b96b45fb07bfd08d9e2c4d278de769fa16b081537a91aaec0d6e26a7a",
+    "size": 6661,
     "dimensions": {
       "width": 15,
       "height": 13
@@ -559,8 +559,8 @@
     "parSteps": 48,
     "parTime": 28,
     "version": 1,
-    "hash": "93328610754e1ed81549757ce1aaa3af2b2986e6f0aad885b21ff80cdf9caeaf",
-    "size": 8725,
+    "hash": "6d58c476c18512377b0d2d328d102bdb719d9556a7156f1ccb6850ed40015be4",
+    "size": 8783,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -580,8 +580,8 @@
     "parSteps": 62,
     "parTime": 38,
     "version": 1,
-    "hash": "cbbca3803805144650d5350b4a9654fb3ba8f66ce99f6e58bde3c136ca2cede1",
-    "size": 9147,
+    "hash": "3bc1f5e781af864ecbbc53054a9b3d1d5f3d80564c0e0031248ccac36b724288",
+    "size": 9205,
     "dimensions": {
       "width": 19,
       "height": 15
@@ -601,8 +601,8 @@
     "parSteps": 82,
     "parTime": 52,
     "version": 1,
-    "hash": "1ed021d67baf735efc3821ce9eff1386a8c3e7ff878ee1f9b85db1115f3c45d8",
-    "size": 12285,
+    "hash": "cb80e6b2643d9a4bbfe0f800fba247bb6e29fe841a10859052f875ff5f688323",
+    "size": 12343,
     "dimensions": {
       "width": 21,
       "height": 19
@@ -622,8 +622,8 @@
     "parSteps": 68,
     "parTime": 42,
     "version": 1,
-    "hash": "9836552592951d646547c66cc3c54bdeb577e5757f597266255140dd057846d5",
-    "size": 8292,
+    "hash": "5f39e68d6db00ed9e4124b2f7ccce28247b3e899c32cbb2bb4326d9d8722c5e8",
+    "size": 8350,
     "dimensions": {
       "width": 17,
       "height": 15
@@ -643,8 +643,8 @@
     "parSteps": 78,
     "parTime": 48,
     "version": 1,
-    "hash": "126f6a5ed0bb7ea571f7fee8fac7febeef9570ac4ebba8a91b85d5765bec106b",
-    "size": 9442,
+    "hash": "06c2dbf70c9b4e23c7a9e55638fdb9e14836845b51b98f13a42adc7a10c19442",
+    "size": 9500,
     "dimensions": {
       "width": 19,
       "height": 15
@@ -664,8 +664,8 @@
     "parSteps": 90,
     "parTime": 56,
     "version": 1,
-    "hash": "cd54fd059f7006bd189414056b96d48a7222dfbe0d5a376613e8c3c2ea6f9bcc",
-    "size": 10115,
+    "hash": "50fd9c4b0a36ad77f28bb00b68828b6283fd47dce296538ec56a613c4c28c9fa",
+    "size": 10180,
     "dimensions": {
       "width": 19,
       "height": 17
@@ -685,8 +685,8 @@
     "parSteps": 110,
     "parTime": 70,
     "version": 1,
-    "hash": "cb53659fe172fa9d028aabd61c599175724f017da41a2e550476b4d1d4f1d967",
-    "size": 12434,
+    "hash": "162c75f7385e49c75bef3e34eefc4c30952b44914a041833688ae1ce06be99eb",
+    "size": 12492,
     "dimensions": {
       "width": 21,
       "height": 19
@@ -706,8 +706,8 @@
     "parSteps": 48,
     "parTime": 30,
     "version": 1,
-    "hash": "3af3d14b60c833877697bcddf290e7ae762cab645f3a0c3f77e58529d0d99062",
-    "size": 8033,
+    "hash": "74f5c61a77ac51863742774086302d6ed70330e396352c25cdac398050b6d25e",
+    "size": 8100,
     "dimensions": {
       "width": 15,
       "height": 15
@@ -727,8 +727,8 @@
     "parSteps": 54,
     "parTime": 36,
     "version": 1,
-    "hash": "39678bf7c2646bb4c361f8afd63994a4ceb445659fb1054f1f12644096c23703",
-    "size": 7536,
+    "hash": "dd01f8d39b65f3c2ee8ff33bd313d1b6f70fa19790d8eb7ee655ae4130e0667d",
+    "size": 7603,
     "dimensions": {
       "width": 15,
       "height": 15
@@ -748,8 +748,8 @@
     "parSteps": 58,
     "parTime": 38,
     "version": 1,
-    "hash": "ce4544dc6c98330283e69c38a68fcde5b7cbf99fec2acfe8485f2f95793b5f25",
-    "size": 8242,
+    "hash": "b5e8773cbaa0a047a6a716c528f2a40c96e545b95533e9deef6bd8e798592045",
+    "size": 8309,
     "dimensions": {
       "width": 15,
       "height": 15
@@ -769,8 +769,8 @@
     "parSteps": 72,
     "parTime": 46,
     "version": 1,
-    "hash": "62f91f6cf15b0ba4c5be608e9370156392d214feba8fc6b056f316be8ecac120",
-    "size": 9348,
+    "hash": "67c68768a566df12e156aa6ffef76fe4b9aced0f9dd3026f95d6778c0e2a045e",
+    "size": 9470,
     "dimensions": {
       "width": 17,
       "height": 17
@@ -789,8 +789,8 @@
     "file": "levels/stories/story_guardians_1.json",
     "theme": "temple",
     "version": 1,
-    "hash": "f9035d1a4340cac282391f84f88143388f7dd1c2073ec38b6020c35dd917fc16",
-    "size": 6083,
+    "hash": "0bb4e71de29c920576df53381e5a02923695af2eab232abd11ddcec9b2f01183",
+    "size": 6143,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -809,8 +809,8 @@
     "file": "levels/stories/story_guardians_2.json",
     "theme": "temple",
     "version": 1,
-    "hash": "04235bae01eef3e823b76746881472d044b7db6d1da57c493ff3903c8f04f429",
-    "size": 5838,
+    "hash": "585c83ce6b95928c413c5fd87b8353842ecc79836a5ae193ba462278991ddb6a",
+    "size": 5898,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -829,8 +829,8 @@
     "file": "levels/stories/story_guardians_3.json",
     "theme": "temple",
     "version": 1,
-    "hash": "5b1266899d8486122891747f629c5e065017c8620c39ba808efd030a68a21c89",
-    "size": 10294,
+    "hash": "c719440cc8dc41758851888074ee2ca73e5cf26a77912fe7850f76e9286b5370",
+    "size": 10354,
     "dimensions": {
       "width": 15,
       "height": 15
@@ -849,8 +849,8 @@
     "file": "levels/stories/story_citadel_1.json",
     "theme": "temple",
     "version": 1,
-    "hash": "932fd484f77131bbe2b4c384d4358513e97ebd8b7820bb50047b1fca753d776a",
-    "size": 31093,
+    "hash": "69b410b1b0b755b7ac8fc7352378e108e1bad1bf02b05c9444a971576aac60d0",
+    "size": 31215,
     "dimensions": {
       "width": 13,
       "height": 13

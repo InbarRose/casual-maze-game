@@ -26,13 +26,15 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "x": 2,
       "y": 11,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 12,
       "y": 4,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 26,
     "parTime": 16,
@@ -562,13 +564,15 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "x": 2,
       "y": 7,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 15,
       "y": 2,
       "elevation": 0,
-      "style": "portal"
+      "style": "wall_archway",
+      "wallDirection": "north"
     },
     "parSteps": 48,
     "parTime": 29,
@@ -1236,13 +1240,15 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "x": 2,
       "y": 5,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 8,
       "y": 1,
       "elevation": 0,
-      "style": "portal"
+      "style": "wall_archway",
+      "wallDirection": "north"
     },
     "parSteps": 45,
     "parTime": 27,
@@ -1891,13 +1897,15 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "x": 9,
       "y": 8,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 9,
       "y": 2,
       "elevation": 0,
-      "style": "portal"
+      "style": "wall_archway",
+      "wallDirection": "north"
     },
     "parSteps": 68,
     "parTime": 41,

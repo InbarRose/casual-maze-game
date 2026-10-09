@@ -24,12 +24,14 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "archway"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 9,
     "y": 9,
-    "style": "stairs_up"
+    "style": "stairs_up",
+    "wallDirection": "none"
   },
   "layers": {
     "ground": [

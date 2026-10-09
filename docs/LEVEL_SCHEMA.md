@@ -103,8 +103,8 @@ Levels are defined as static JSON files conforming to the following structure:
 | `title` | `string` | Display name shown in HUD and level select. |
 | `author` | `string` | Creator attribution. |
 | `dimensions` | `object` | `{ width: number, height: number }` of the grid. |
-| `spawn` | `object` | `{ x: number, y: number, z?: number, elevation?: number }` starting point (`z = 0` Ground, `z = 1` Overhead, `z = -1` Basement). |
-| `exit` | `object` | Single exit portal `{ x, y, z?, elevation?, targetLevel?, targetRoom?, targetSpawn?, label? }` (automatically normalized to `exits`). |
+| `spawn` | `object` | `{ x: number, y: number, z?: number, elevation?: number, style?: 'wall_doorway'|'stairs_down'|'portal'|'archway'|'camp', wallDirection?: 'north'|'south'|'west'|'east'|'none' }` starting point (`z = 0` Ground, `z = 1` Overhead, `z = -1` Basement). |
+| `exit` | `object` | Single exit portal `{ x, y, z?, elevation?, style?: 'wall_archway'|'portal'|'stairs_up'|'archway'|'chest'|'shrine', wallDirection?: 'north'|'south'|'west'|'east'|'none', targetLevel?, targetRoom?, targetSpawn?, label? }` (automatically normalized to `exits`). |
 | `exits` | `array` | Array of exit portal objects for branching or multi-exit labyrinths. |
 | `initialRoom` | `string` | Optional starting room ID for multi-room levels (defaults to first room key or `'main'`). |
 | `rooms` | `object` | Optional dictionary of interconnected chambers `{ [roomId]: RoomDefinition }`. |
