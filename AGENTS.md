@@ -17,16 +17,24 @@ This document outlines the standard operating procedures, architectural principl
 * **No Monolithic Refactors**: Break tasks into incremental steps (e.g. models/constants -> engine logic -> UI/integration -> tests).
 * **Documentation Integrity**: Preserve all existing non-conflicting comments and docstrings unless deliberately deprecating them.
 
-### C. Mandatory Backlog & Architecture Decision Tracking (ADRs)
+### C. Code Elegance, SOLID Principles & Object-Oriented Design (ADR-007)
+* **Design Philosophy**:
+  > *"Coding improvement. SOLID coding principles. Smaller files. Better use of libraries. Better use of object oriented coding, objects, classes, etc. Try to minimize hacky solutions and use graceful coding principles. Nothing we are doing is crazy and insane special algorithms, it's just a game, doesn't need the most optimal most beautiful code, it needs simple, elegant, testable, readable, maintainable, explainable, scalable, robust, SOLID code."*
+* **Core Practices**:
+  * **Single Responsibility (SRP)**: Keep files cohesive, modular, and concise (recommended $\le 300$ lines).
+  * **Polymorphic Domain Entities (OCP/LSP)**: Extend `BaseEntity` for all interactive elements rather than monolithic `switch/case` branches.
+  * **Graceful Code**: Use guard clauses and early returns over nested `if/else` hierarchies; avoid magic strings/numbers; use immutable value objects (`Vec2`, `GridRect`).
+
+### D. Mandatory Backlog & Architecture Decision Tracking (ADRs)
 * **Zero Untracked Work**: Every user request, planned enhancement, game design direction, and architectural choice **must** be immediately recorded in [`docs/BACKLOG.md`](docs/BACKLOG.md) and [`docs/PROJECT_MANAGEMENT.md`](docs/PROJECT_MANAGEMENT.md), even if implemented immediately.
 * **Architecture Decision Records (ADRs)**: Any design choice, schema shift, entity behavioral separation, or engine model decision must be immortalized as an Architectural Decision Record in [`docs/adr/`](docs/adr/) so the rationale, alternatives considered, and trade-offs are permanently explainable.
 * **Traceability Requirement**: Commit messages, PR descriptions, and walkthrough artifacts must cite the corresponding `BL-XX` backlog ticket and ADR number so future contributors always understand *why* things were done.
 
-### D. Mandatory Testing & Validation
+### E. Mandatory Testing & Validation
 * **Automated Tests**: Every new game mechanic, entity, collision rule, PRNG feature, or schema mutation **must** include automated tests in the modular `tests/` directory architecture.
 * **Test Command**: Always run `npm test` before concluding any task and ensure all tests pass (`0 failed`).
 
-### D. Protected Branch Workflow & GitHub MCP Lifecycle
+### F. Protected Branch Workflow & GitHub MCP Lifecycle
 * **Branch-First Development**: Agents must work on dedicated task/feature branches (`feat/<name>`, `fix/<name>`, `docs/<name>`) to protect `main`.
 * **Ruleset Protection on `main`**: Direct pushes and force-pushes to `main` are blocked by GitHub repository rulesets. All changes must go through a validated Pull Request.
 * **GitHub MCP Server (`ServerName: 'github'`)**:
