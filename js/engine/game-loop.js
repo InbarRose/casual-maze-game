@@ -173,6 +173,9 @@ export class GameLoop {
     this.totalSecrets = this.calculateTotalSecrets();
     this.hazardHits = 0;
 
+    // Level Lore Journal state (BL-81)
+    this.levelJournal = [];
+
     // Initial fog update
     this.updateFog();
 
@@ -1020,6 +1023,7 @@ export class GameLoop {
     this.revealedSecrets = new Set();
     this.secretsFound = 0;
     this.hazardHits = 0;
+    this.levelJournal = [];
     this.camera.setMode('follow');
 
     // Reset logger for new attempt
@@ -1715,17 +1719,14 @@ export class GameLoop {
       this.handleTeleport(teleporter, dest);
     }
 
-    // 4. Check Signpost step trigger
+    // 4. Check Signpost step trigger (BL-81)
+    // Note stepping does not blast modals or toasts; it registers as an active
+    // interaction candidate so only a single prompt [E] appears.
     const signpost = this.entities.find(
       e => e.type === ENTITY_TYPES.SIGNPOST && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
     );
     if (signpost) {
-      const data = signpost.readSign();
-      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
-      globalEvents.emit('signpost:read', data);
-      if (this.uiCallbacks.onSignpostRead) {
-        this.uiCallbacks.onSignpostRead(data);
-      }
+      globalEvents.emit('signpost:stepped', { signpost, x: px, y: py });
     }
 
     // 5. Check Checkpoint step trigger
@@ -1980,6 +1981,7 @@ export class GameLoop {
     if (adjacentSignposts.length > 0) {
       const signpost = adjacentSignposts[0];
       const data = signpost.readSign();
+      this.recordJournalEntry(data);
       this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
       globalEvents.emit('signpost:read', data);
       if (this.uiCallbacks.onSignpostRead) {
@@ -1995,6 +1997,7 @@ export class GameLoop {
     if (adjacentDecor.length > 0) {
       const decor = adjacentDecor[0];
       const data = decor.inspect();
+      this.recordJournalEntry(data);
       const decorIcon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : '🏛️'));
       this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `${decorIcon} ${data.title}`, '#fbbf24');
       globalEvents.emit('wall_decor:inspected', data);
@@ -2255,6 +2258,43 @@ export class GameLoop {
         this.uiCallbacks.onRiddleSolved({ groupId, pedestals: groupPedestals });
       }
     }
+  }
+
+  /**
+   * Record a discovered architect note or lore inscription into the level journal (BL-81)
+   * @param {object} entry
+   * @returns {Array<object>} Current level journal entries
+   */
+  recordJournalEntry(entry) {
+    if (!this.levelJournal) {
+      this.levelJournal = [];
+    }
+    const id = entry.id || `${entry.title || 'Note'}_${entry.text || ''}`;
+    const exists = this.levelJournal.some(e => (e.id && e.id === id) || (e.title === entry.title && e.text === entry.text));
+    if (!exists) {
+      const journalItem = {
+        id,
+        title: entry.title || "Architect's Note",
+        author: entry.author || 'The Architect',
+        text: entry.text || entry.message || '',
+        decorType: entry.decorType || 'note',
+        response: entry.response || '',
+        facing: entry.facing || '',
+        discoveredAtSteps: this.player ? this.player.stepsTaken : 0,
+        discoveredAtTime: this.elapsedTime || 0,
+      };
+      this.levelJournal.push(journalItem);
+      globalEvents.emit('journal:entry_added', journalItem);
+    }
+    return this.levelJournal;
+  }
+
+  /**
+   * Get all journal entries discovered in the current level (BL-81)
+   * @returns {Array<object>}
+   */
+  getJournalEntries() {
+    return this.levelJournal || [];
   }
 
   /**
