@@ -74,8 +74,8 @@ describe('Engine > Architectural Entrance & Exit Visuals', () => {
         [1, 1, 1, 1, 1],
       ],
     },
-    spawn: { x: 2, y: 1, style: 'stairs_down' }, // North wall is at (2, 0)
-    exit: { x: 2, y: 3, style: 'stairs_up' },   // South wall is at (2, 4)
+    spawn: { x: 2, y: 1, style: 'wall_doorway', wallDirection: 'north' }, // North wall is at (2, 0)
+    exit: { x: 2, y: 3, style: 'wall_archway', wallDirection: 'north' },
   };
 
   it('detectAdjacentWall detects North wall correctly when wall is at y - 1', () => {
@@ -114,19 +114,19 @@ describe('Engine > Architectural Entrance & Exit Visuals', () => {
     assertEqual(freestanding, null, 'Center point has no adjacent walls (freestanding)');
   });
 
-  it('renderSpawnEntrance renders wall threshold when adjacent to wall without throwing', () => {
+  it('renderSpawnEntrance renders wall threshold when configured as wall doorway without throwing', () => {
     const levelNearWall = {
       ...mockLevel,
-      spawn: { x: 2, y: 1, style: 'stairs_down' },
+      spawn: { x: 2, y: 1, style: 'wall_doorway', wallDirection: 'north' },
     };
     renderer.renderSpawnEntrance(ctx, levelNearWall, camera, THEMES.dungeon, null);
     assert(true, 'Rendered wall-adjacent spawn entrance safely');
   });
 
-  it('renderSpawnEntrance renders freestanding spiral staircase when open without throwing', () => {
+  it('renderSpawnEntrance renders freestanding spiral staircase when configured freestanding without throwing', () => {
     const levelFreestanding = {
       ...mockLevel,
-      spawn: { x: 2, y: 2, style: 'stairs_down' }, // Freestanding
+      spawn: { x: 2, y: 2, style: 'stairs_down', wallDirection: 'none' }, // Freestanding
     };
     renderer.renderSpawnEntrance(ctx, levelFreestanding, camera, THEMES.dungeon, null);
     assert(true, 'Rendered freestanding spiral staircase safely');
@@ -139,7 +139,7 @@ describe('Engine > Architectural Entrance & Exit Visuals', () => {
     // Freestanding exit
     const levelFreestandingExit = {
       ...mockLevel,
-      exit: { x: 2, y: 2, style: 'portal' },
+      exit: { x: 2, y: 2, style: 'portal', wallDirection: 'none' },
     };
     renderer.renderExit(ctx, levelFreestandingExit, camera, THEMES.cave || THEMES.dungeon, null);
     assert(true, 'Rendered exits safely');
