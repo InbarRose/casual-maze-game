@@ -142,6 +142,7 @@ Levels are defined as static JSON files conforming to the following structure:
 ### Entity Types
 
 All entities accept 3D coordinates `x`, `y`, `z` (where `z = 0` is Ground, `z = 1` is Overhead, and `z = -1` is Basement).
+All interactable entities support an optional `interactDirections` array (`['north', 'south', 'east', 'west', 'self']`). When specified, the player may only interact with the entity when approaching from one of the listed relative directions (e.g. only from `'south'` when viewing a north wall mural or pedestal from the front). If omitted or `null`, all adjacent directions and the entity's tile are allowed by default.
 
 #### 1. Key (`key`)
 ```json
