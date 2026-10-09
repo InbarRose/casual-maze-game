@@ -72,10 +72,22 @@ export class GameMenu {
   }
 
   /**
+   * Hide all confirmation dialog boxes
+   */
+  hideConfirmationBoxes() {
+    if (!this.modalEl || typeof this.modalEl.querySelectorAll !== 'function') return;
+    const boxes = this.modalEl.querySelectorAll('.pause-confirm-box');
+    boxes.forEach(box => {
+      if (box?.classList?.add) box.classList.add('hidden');
+    });
+  }
+
+  /**
    * Close the pause menu and resume gameplay
    */
   resume() {
     this._isPaused = false;
+    this.hideConfirmationBoxes();
     if (this.modalEl) {
       this.modalEl.classList.remove('active');
     }
@@ -116,6 +128,22 @@ export class GameMenu {
     bindClick('#btn-pause-resume', () => this.resume());
 
     bindClick('#btn-pause-restart', () => {
+      const restartBox = this.modalEl?.querySelector('#pause-restart-confirm');
+      if (restartBox) {
+        this.hideConfirmationBoxes();
+        restartBox.classList.remove('hidden');
+      } else {
+        this.resume();
+        this.onRestart();
+      }
+    });
+
+    bindClick('#btn-pause-restart-cancel', () => {
+      this.hideConfirmationBoxes();
+    });
+
+    bindClick('#btn-pause-restart-confirm', () => {
+      this.hideConfirmationBoxes();
       this.resume();
       this.onRestart();
     });
@@ -173,6 +201,21 @@ export class GameMenu {
     });
 
     bindClick('#btn-pause-quit', () => {
+      const quitBox = this.modalEl?.querySelector('#pause-quit-confirm');
+      if (quitBox) {
+        this.hideConfirmationBoxes();
+        quitBox.classList.remove('hidden');
+      } else {
+        this.onQuit();
+      }
+    });
+
+    bindClick('#btn-pause-quit-cancel', () => {
+      this.hideConfirmationBoxes();
+    });
+
+    bindClick('#btn-pause-quit-confirm', () => {
+      this.hideConfirmationBoxes();
       this.onQuit();
     });
   }

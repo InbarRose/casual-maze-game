@@ -197,6 +197,15 @@ export class StorageManager {
   }
 
   /**
+   * Alias for saveTutorialProgress
+   * @param {string|number} levelId
+   * @param {{ time: number, steps: number }} stats
+   */
+  static saveTutorialCompletion(levelId, stats) {
+    return this.saveTutorialProgress(levelId, stats);
+  }
+
+  /**
    * Load tutorial progress
    * @returns {Record<string, { completed: boolean, bestTime: number, bestSteps: number }>}
    */
@@ -484,6 +493,7 @@ export class StorageManager {
       schemaVersion: '1.0.0',
       game: 'casual-maze-game',
       exportedAt: new Date().toISOString(),
+      profile: this.getPlayerProfile(),
       progress: {
         campaign: this.loadCampaignProgress(),
         tutorial: this.loadTutorialProgress(),
@@ -492,6 +502,14 @@ export class StorageManager {
       projects: this.getSavedProjectsMap(),
       settings: this.loadSettings(),
     };
+  }
+
+  /**
+   * Alias for exportSaveProfile adhering to backup domain terminology
+   * @returns {object}
+   */
+  static exportFullBackup() {
+    return this.exportSaveProfile();
   }
 
   /**
@@ -540,6 +558,12 @@ export class StorageManager {
         localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
       }
 
+      // Restore Player Identity (Codename)
+      const playerProfile = data.profile || data.playerProfile;
+      if (playerProfile && typeof playerProfile === 'object' && playerProfile.name) {
+        this.setPlayerName(playerProfile.name);
+      }
+
       const campaignCount = Object.keys(campaign).length;
       const tutorialCount = Object.keys(tutorial).length;
       let storyCount = 0;
@@ -563,6 +587,24 @@ export class StorageManager {
       console.error('[StorageManager] Failed to import save profile:', e);
       throw new Error(`Failed to import save data: ${e.message}`);
     }
+  }
+
+  /**
+   * Alias for importSaveProfile adhering to backup domain terminology
+   * @param {object|string} rawSaveData
+   * @returns {{ success: boolean, stats: object }}
+   */
+  static importFullBackup(rawSaveData) {
+    return this.importSaveProfile(rawSaveData);
+  }
+
+  /**
+   * Alias for downloadSaveFile adhering to backup domain terminology
+   * @param {string} [customFilename]
+   * @returns {string}
+   */
+  static downloadFullBackupFile(customFilename) {
+    return this.downloadSaveFile(customFilename);
   }
 
   /**
@@ -735,8 +777,8 @@ export class StorageManager {
         hotkeysEnabled: settings.hotkeysEnabled ?? true,
       },
       activeLevel: {
-        id: String(context.levelId || context.level?.id || 'unknown'),
-        title: context.levelTitle || context.level?.title || 'Unknown Labyrinth',
+        id: String(context.activeLevel?.id || context.levelId || context.level?.id || 'unknown'),
+        title: context.activeLevel?.title || context.levelTitle || context.level?.title || 'Unknown Labyrinth',
         chapter: context.chapterNumber || context.level?.chapterNumber || null,
         dimensions: context.level?.dimensions ? `${context.level.dimensions.width}x${context.level.dimensions.height}` : null,
       },
@@ -778,6 +820,7 @@ export class StorageManager {
       json: bundle,
       markdown,
       githubUrl,
+      githubIssueUrl: githubUrl,
     };
   }
 
@@ -862,5 +905,24 @@ export class StorageManager {
   static setPlayerName(name) {
     const clean = String(name || 'Explorer').trim().slice(0, 24);
     return this.setSetting('player_name', clean || 'Explorer');
+  }
+
+  /**
+   * Reset all campaign, tutorial, and story progress (Destructive action)
+   * @returns {boolean}
+   */
+  static resetAllProgress() {
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEYS.PROGRESS);
+        localStorage.removeItem(STORAGE_KEYS.TUTORIAL_PROGRESS);
+        localStorage.removeItem(STORAGE_KEYS.STORY_PROGRESS);
+      }
+      console.info('[MazeGame:Storage] Reset all campaign, tutorial, and story progress.');
+      return true;
+    } catch (e) {
+      console.error('[MazeGame:Storage] Failed to reset progress:', e);
+      return false;
+    }
   }
 }

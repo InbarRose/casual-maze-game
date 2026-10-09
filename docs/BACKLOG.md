@@ -22,9 +22,9 @@ This document serves as the authoritative, prioritized master backlog for all fe
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
 │ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
-│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55 │ P1  │ Ready    │
+│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70 │ P1 │ Completed│
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39 │ P1 / P2 │ Ready │
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54 │ P1 │ Ready │
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71 │ P1 │ Completed│
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35 │ P2     │ Ready    │
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46 │ P0 / P1 │ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -75,8 +75,12 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-15** | **Contextual Floating Action Pill** | **P0** | `v1.18.0` | Glassmorphic floating interact button positioned above character for one-tap mobile activation. | **Completed** |
 | **BL-16** | **Mobile Touch Viewport & Scroll Locking** | **P1** | `v1.20.0` | Prevent accidental page rubber-banding and scrolling during canvas drag gestures on iOS Safari & Android Chrome. | **Completed** |
 | **BL-17** | **Minimap Pinch-to-Zoom & Pan Gesture** | **P2** | `v1.22.0` | Touch gesture support for zooming and panning the HUD minimap overlay on mobile viewports. | **Completed** |
-| **BL-40** | **Gamepad API Controller Support** | **P2** | `v1.24.0` | Zero-dependency Gamepad API listener mapping standard USB/Bluetooth controller D-pad and analog sticks to movement. | Planned |
-| **BL-55** | **Keyboard Quick-Advance on Victory (Space / Enter for Next Level)** | **P1** | `v1.23.0` | Allow players to press Space or Enter when victory modal is displayed to automatically advance to the next level without requiring mouse clicks for faster gameplay flow. | Planned |
+| **BL-40** | **Gamepad API Controller Support** | **P2** | `v1.24.0` | Zero-dependency Gamepad API listener mapping standard USB/Bluetooth controller D-pad and analog sticks to movement, A for inspect/interact, B/Start for pause, bumpers for camera rotation. | **Completed** |
+| **BL-55** | **Keyboard Quick-Advance on Victory (Space / Enter for Next Level)** | **P1** | `v1.23.0` | Allow players to press Space or Enter when victory modal is displayed to automatically advance to the next level without requiring mouse clicks for faster gameplay flow. | **Completed** |
+| **BL-63** | **Moveable Top-Docked Virtual Controls & Auto-Repeat Steps** | **P1** | `v1.24.0` | Moveable and top-docked virtual D-pad controls (`data-dock="top-left"` default) to prevent OS gesture conflicts, continuous touch/mouse auto-repeat holding for effortless mobile movement, minimize toggle (`_`/`▲`), 4-quadrant dock cycling, and integrated camera rotation buttons (`↺`/`↻`). | **Completed** |
+| **BL-65** | **Tactical Minimap Elevation & Entity Shading** | **P1** | `v1.24.0` | Multi-elevation bridge deck (`#0369a1`) & walkway stripe (`#38bdf8`) shading, directional ramp markers, tactical entity indicators (uncollected keys, locked doors, levers, teleporters), player elevation beacon, sonar sweep wave, and HUD corner brackets. | **Completed** |
+| **BL-67** | **Continuous Touch Drag Steering & Pathfinding Waypoint Trail** | **P1** | `v1.24.0` | Fluid directional drag steering on mobile touchscreens with automatic stepping repeat (125ms interval), dynamic in-drag turning, and animated BFS pathfinding waypoint trail rendering along corridor tiles. | **Completed** |
+| **BL-70** | **Gamepad Controller Visual Guide & Live Input Tester in Settings** | **P1** | `v1.24.0` | Visual controller mapping diagram and live input tester in settings modal polling connected gamepads via Gamepad API, highlighting pressed buttons and stick axes in real time. | **Completed** (`78399ca`) |
 
 ---
 
@@ -90,8 +94,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-20** | **Multi-Tile Stamp & Prefab Palette** | **P2** | `v1.21.0` | Pre-built architectural prefabs (bridge crossings, locked vault gates, 4-way intersections) for 1-click stamping. | **Completed** |
 | **BL-21** | **One-Click Diagnostic Auto-Fixer** | **P2** | `v1.22.0` | Editor action to automatically resolve common errors (e.g. adding missing ramp next to bridge or matching door key). | **Completed** |
 | **BL-22** | **Visual Layer Switcher HUD** | **P2** | `v1.22.0` | Real-time visual overlay highlighting active editing elevation (Ground Z=0 vs Overhead Z=1) with translucent previews. | **Completed** |
-| **BL-37** | **Visual Multi-Elevation Bridge & Ramp Guide** | **P2** | `v1.23.0` | Interactive SVG diagrams in Guide Modal demonstrating directional ramp placement for `B_EW` and `B_NS` bridges. | Planned |
-| **BL-39** | **Custom Prefab Saving in Map Editor** | **P2** | `v1.24.0` | Allow creators to select an arbitrary canvas region and save it to `localStorage` as a custom reusable stamping prefab. | Planned |
+| **BL-37** | **Visual Multi-Elevation Bridge & Ramp Guide** | **P2** | `v1.23.0` | Interactive SVG diagrams in Guide Modal demonstrating directional ramp placement for `B_EW` and `B_NS` bridges. | **Completed** |
+| **BL-39** | **Custom Prefab Saving in Map Editor** | **P2** | `v1.24.0` | Allow creators to select an arbitrary canvas region and save it to `localStorage` as a custom reusable stamping prefab. | **Completed** |
 
 ---
 
@@ -107,9 +111,13 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-34** | **1-Click Diagnostic Bug Bundle Exporter** | **P1** | `v1.23.0` | In-game action packaging level ID, player coordinates, move history, and debug logs into pre-filled GitHub issue links. | **Completed** |
 | **BL-36** | **Save State Versioned Migration Runner** | **P1** | `v1.23.0` | Automated `StorageManager.migrateSaveData()` upgrading legacy save schemas on initial boot without data loss. | **Completed** |
 | **BL-38** | **Prestige Rank-Up Celebration & Victory Confetti** | **P2** | `v1.23.0` | Full-screen celebratory rank-up splash banner with star sparkles and Canvas 2D confetti bursts on victory. | **Completed** |
-| **BL-53** | **Comprehensive Settings Rebinding & Profile Backup** | **P2** | `v1.23.0` | In-game settings allowing full key rebinding, audio mute/volume, default art style, and 1-click JSON export/import of profile. | Planned |
+| **BL-53** | **Comprehensive Settings Rebinding & Profile Backup** | **P2** | `v1.23.0` | In-game settings allowing full key rebinding, audio mute/volume, default art style, and 1-click JSON export/import of profile. | **Completed** |
 | **BL-54** | **Top Navigation Breadcrumbs & Chapter/Level HUD Hierarchy** | **P1** | `v1.23.0` | Interactive breadcrumb navigation hierarchy in top navigation and in-game HUD (e.g., `Campaign > Chapter 2: The Vertical Dimension > Level 5: Sunken Vault`). Displays active chapter name, chapter number, level index, and total levels with click-to-navigate back to chapter selection. | **Completed** |
-| **BL-55** | **Keyboard Quick-Advance on Victory (Space / Enter)** | **P1** | `v1.23.0` | Allow players to immediately advance to the next level by pressing `Space` or `Enter` upon victory modal trigger for fast-paced continuous play without requiring mouse clicks. | **Completed** |
+| **BL-64** | **Minimalist UI, Menu Scrolling & Destructive Confirmation Safety** | **P1** | `v1.24.0` | Modal scrolling containment with sticky footers avoiding intrusive popups, non-blocking toast activity feeds, and explicit confirmation dialogs for destructive actions (Reset All Progress, Delete Custom Prefab, and Overwrite/Generate Canvas). | **Completed** |
+| **BL-66** | **Canvas High-Contrast Contours & Assist Halos** | **P1** | `v1.24.0` | High-contrast visual pass across canvas renderer and minimap: pitch-black background, 2px solid white wall borders, 2-tier neon yellow (`#facc15`) and white halo contours around explorer for high accessibility. | **Completed** |
+| **BL-68** | **Pause Menu Destructive Confirmation Safety & Collapsible Top Minimap** | **P1** | `v1.24.0` | Explicit confirmation dialogs protecting Restart Level and Return to Level Select in pause menu; top-docked minimap radar on mobile viewports with 1-tap minimize toggle (`_`/`▲`) and state persistence. | **Completed** |
+| **BL-69** | **Universal Feedback & Bug Reporting Modal with Live Telemetry** | **P1** | `v1.24.0` | Universal glassmorphic modal accessible from app header, footer, and settings generating 1-click diagnostic bundles with client viewport, DPR, player coordinates, engine version, markdown clipboard copy, and pre-filled GitHub issue creation. | **Completed** (`78399ca`) |
+| **BL-71** | **Universal Interactive How-to-Play & Labyrinth Mechanics Guide Modal** | **P1** | `v1.24.0` | Universal multi-tabbed glassmorphic modal accessible from app header and footer providing interactive controls guides, entity mechanics, visual bridge/ramp SVG diagrams, and secret wall / scoring guides. | **Completed** (`9981a2d`) |
 
 ---
 
@@ -150,7 +158,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-47** | **Seamless Bridge & Ramp Architectural Overhaul** | **P2** | `v1.20.0` | Eliminate clumsy directional arrows; render authentic stone masonry treads, archway abutments, and seamless elevation transitions. | **Completed** (`b9ea9dc`) |
 | **BL-48** | **Campaign-First Hub Redirection & Onboarding Flow** | **P2** | `v1.21.0` | Route players to official campaign first; present standalone stories and community levels in organized secondary discovery carousels. | **Completed** (`2943fc4`) |
 | **BL-49** | **Multi-Room Story Campaign Authoring in Map Editor** | **P2** | `v1.22.0` | Multi-room story authoring with interconnected scenes, shared inventory persistence, and narrative dialog scripting. | Planned |
-| **BL-50** | **Random Maze Generator & Endless Labyrinth Mode** | **P2** | `v1.22.0` | Procedural maze generator in editor and playable infinite/endless maze mode with selectable dimensions, biomes, and obstacle density. | Planned |
+| **BL-50** | **Random Maze Generator & Endless Labyrinth Mode** | **P2** | `v1.22.0` | Procedural maze generator in editor and playable infinite/endless maze mode with selectable dimensions, biomes, and obstacle density. | **Completed** |
 | **BL-51** | **Secret Rooms, Fake Walls & Concealed Collectibles** | **P2** | `v1.21.0` | Passable illusory walls concealing secret alcoves, bonus stars, and lore notes with subtle audio/visual proximity hints. | **Completed** (`f48f0c1`, `6e13db2`) |
 | **BL-52** | **Performance Scoring & Tiered Victory Medals** | **P2** | `v1.21.0` | Move, secret, and time-based scoring awarding Gold/Silver/Bronze medals and prestige stars across all campaign chapters. | **Completed** (`f48f0c1`, `12a48e1`) |
 
@@ -162,12 +170,12 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | ID | Title | Priority | Target Milestone | Acceptance Criteria | Status |
 | :---: | :--- | :---: | :---: | :--- | :---: |
 | **BL-56** | **Engine Decomposition & SRP Refactoring (`GameLoop` God-Class Split)** | **P1** | `v2.0.0` | Decompose monolithic `game-loop.js` (~2,250 lines) into focused, single-responsibility collaborators: `MovementController` (motion & collision mediation), `InteractionDispatcher` (entity activation), and `GameStateManager` (scoring, par steps/time, level lifecycle). Keep all modules $\le 300$ lines. | Planned |
-| **BL-57** | **Polymorphic Entity Domain Models (Open/Closed Principle)** | **P1** | `v2.0.0` | Replace procedural switch/case logic with clean object-oriented entity classes (`KeyEntity`, `DoorEntity`, `LeverEntity`, `PedestalEntity`, `HazardEntity`) implementing an explicit `Interactable` / `Collidable` contract (`canInteract()`, `onInteract()`, `onCollide()`, `getPrompt()`). | Planned |
+| **BL-57** | **Polymorphic Entity Domain Models (Open/Closed Principle)** | **P1** | `v2.0.0` | Replace procedural switch/case logic with clean object-oriented entity classes (`KeyEntity`, `DoorEntity`, `LeverEntity`, `PedestalEntity`, `HazardEntity`) implementing an explicit `Interactable` / `Collidable` contract (`canInteract()`, `onInteract()`, `onCollide()`, `getPrompt()`). | **Completed** |
 | **BL-58** | **Editor Studio Modularization (`EditorUI` & `EditorCanvas` Split)** | **P1** | `v2.0.0` | Decompose monolithic `editor-ui.js` (~1,800 lines) into cohesive sub-controllers: `ToolbarController`, `ProjectModalManager`, `DiagnosticsController`, and `EditorShortcutHandler` adhering to SRP and clean event mediation. | Planned |
-| **BL-59** | **Clean Input Handling & Command Pattern (`InputManager`)** | **P1** | `v2.0.0` | Extract keyboard, mouse, gamepad, and touch listeners from `GameLoop` and HTML scripts into a standalone `InputManager` emitting discrete semantic `GameCommand` objects (`MoveCommand`, `InteractCommand`, `RotateCommand`). Facilitates clean unit testing without ad-hoc DOM event mocks. | Planned |
+| **BL-59** | **Clean Input Handling & Command Pattern (`InputManager`)** | **P1** | `v2.0.0` | Extract keyboard, mouse, gamepad, and touch listeners from `GameLoop` and HTML scripts into a standalone `InputManager` emitting discrete semantic `GameCommand` objects (`MoveCommand`, `InteractCommand`, `RotateCommand`). Facilitates clean unit testing without ad-hoc DOM event mocks. | **Completed** |
 | **BL-60** | **Decoupled UI Contract & Presentation Layer (Dependency Inversion)** | **P1** | `v2.0.0` | Replace ad-hoc `uiCallbacks` object literals with an explicit `IGamePresenter` interface contract and granular event subscriptions (`onInventoryChanged`, `onStepTaken`, `onElevationChanged`), eliminating full-DOM recalculations on every step and TDZ initialization hazards. | Planned |
-| **BL-61** | **Value Objects & Clean Geometry Math (`Vec2`, `GridRect`, `Heading`)** | **P2** | `v2.0.0` | Replace loose `{x, y}` object literals and repeated ad-hoc math (`Math.hypot`, distance clamps, rotational transforms) with immutable, elegant Value Objects: `Vec2` / `Coord2D`, `GridRect`, and `Heading` with self-documenting methods. | Planned |
-| **BL-62** | **Defensive Guard Clauses & Code Elegance Standards (ADR-004)** | **P2** | `v2.0.0` | Establish ADR-004 formalizing graceful coding standards: early return guard clauses over nested indentation, eradication of magical sentinel numbers (`-1`, string splitting IDs), maximum file length guidelines ($\le 300$ lines), and consistent error handling paradigms. | Planned |
+| **BL-61** | **Value Objects & Clean Geometry Math (`Vec2`, `GridRect`, `Heading`)** | **P2** | `v2.0.0` | Replace loose `{x, y}` object literals and repeated ad-hoc math (`Math.hypot`, distance clamps, rotational transforms) with immutable, elegant Value Objects: `Vec2` / `Coord2D`, `GridRect`, and `Heading` with self-documenting methods. | **Completed** |
+| **BL-62** | **Defensive Guard Clauses & Code Elegance Standards (ADR-007)** | **P2** | `v2.0.0` | Establish ADR-007 formalizing graceful coding standards: early return guard clauses over nested indentation, eradication of magical sentinel numbers (`-1`, string splitting IDs), maximum file length guidelines ($\le 300$ lines), and consistent error handling paradigms. | **Completed** |
 
 ---
 

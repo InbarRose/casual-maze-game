@@ -5,6 +5,7 @@
 
 import { TILES, THEMES, ELEVATION, FOG_STATE, ENTITY_TYPES } from '../core/constants.js';
 import { assetLoader } from '../core/asset-loader.js';
+import { StorageManager } from '../core/storage.js';
 
 export class GameRenderer {
   /**
@@ -20,6 +21,40 @@ export class GameRenderer {
     this.floatingTexts = [];
     this.shockwaves = [];
     this.exitPulseTimer = 0;
+  }
+
+  /**
+   * Helper to check if high contrast accessibility mode is enabled (BL-26, BL-66)
+   * @returns {boolean}
+   */
+  isHighContrast() {
+    try {
+      if (typeof document !== 'undefined' && document.body?.classList?.contains('high-contrast-mode')) {
+        return true;
+      }
+      return StorageManager.getSetting('high_contrast', false) === true;
+    } catch (_) {
+      return false;
+    }
+  }
+
+  /**
+   * Render high-visibility neon outline around player in high contrast mode (BL-66)
+   */
+  renderPlayerHighContrastHalo(ctx, screenX, screenY, tileSize) {
+    if (!this.isHighContrast() || typeof ctx?.beginPath !== 'function') return;
+    ctx.save();
+    ctx.strokeStyle = '#facc15';
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    if (typeof ctx.arc === 'function') ctx.arc(screenX, screenY, tileSize * 0.46, 0, Math.PI * 2);
+    if (typeof ctx.stroke === 'function') ctx.stroke();
+    ctx.strokeStyle = '#ffffff';
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    if (typeof ctx.arc === 'function') ctx.arc(screenX, screenY, tileSize * 0.52, 0, Math.PI * 2);
+    if (typeof ctx.stroke === 'function') ctx.stroke();
+    ctx.restore();
   }
 
   /**
@@ -142,6 +177,7 @@ export class GameRenderer {
     }
     const angle = camera ? camera.getDiscreteRotation() : 0;
     player.render(ctx, playerScreen.x, playerScreen.y, tileSize, this.perspective, angle);
+    this.renderPlayerHighContrastHalo(ctx, playerScreen.x, playerScreen.y, tileSize);
 
     if (level.config.fogOfWar && fog) {
       this.renderFogOfWar(ctx, fog, bounds, camera, blueprintTheme, player, entities, level);
@@ -553,6 +589,7 @@ export class GameRenderer {
         }
         const angle = camera ? camera.getDiscreteRotation() : 0;
         player.render(ctx, screen.x, screen.y, tileSize, this.perspective, angle);
+        this.renderPlayerHighContrastHalo(ctx, screen.x, screen.y, tileSize);
       } else {
         const entity = item.ref;
         const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
@@ -685,10 +722,16 @@ export class GameRenderer {
       ctx.fillRect(screenX, screenY - wallH, 2, tileSize + (hasFrontWall ? 0 : wallH));
     }
 
-    // Top border stroke
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
-    ctx.lineWidth = 1;
-    ctx.strokeRect(screenX, screenY - wallH, tileSize, tileSize);
+    // Top border stroke / High-Contrast wall contour (BL-26, BL-66)
+    if (this.isHighContrast()) {
+      ctx.strokeStyle = '#ffffff';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(screenX, screenY - wallH, tileSize, tileSize + (hasFrontWall ? wallH : 0));
+    } else {
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(screenX, screenY - wallH, tileSize, tileSize);
+    }
 
     // Subtle telltale fracture & faint shimmering particle on unrevealed secret wall
     if (isSecret && !isSecretRevealed) {
@@ -968,6 +1011,7 @@ export class GameRenderer {
         }
         const angle = camera ? camera.getDiscreteRotation() : 0;
         player.render(ctx, screen.x, screen.y - heightOffset, tileSize, this.perspective, angle);
+        this.renderPlayerHighContrastHalo(ctx, screen.x, screen.y - heightOffset, tileSize);
       } else {
         const entity = item.ref;
         const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
@@ -2523,6 +2567,20 @@ export class GameRenderer {
     ctx.moveTo(screen.x, screen.y - arm);
     ctx.lineTo(screen.x, screen.y + arm);
     ctx.stroke();
+
+    // Render path trail waypoint pips (BL-67)
+    if (clickTarget.path && Array.isArray(clickTarget.path) && clickTarget.path.length > 0 && typeof ctx.arc === 'function') {
+      ctx.fillStyle = `rgba(56, 189, 248, ${alpha * 0.45})`;
+      for (let i = 0; i < clickTarget.path.length; i++) {
+        const step = clickTarget.path[i];
+        const stepWorldX = step.x * tileSize + tileSize / 2;
+        const stepWorldY = step.y * tileSize + tileSize / 2;
+        const stepScreen = camera.worldToScreen(stepWorldX, stepWorldY, true);
+        ctx.beginPath();
+        ctx.arc(stepScreen.x, stepScreen.y, Math.max(1.5, tileSize * 0.08), 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
 
     ctx.restore();
   }
