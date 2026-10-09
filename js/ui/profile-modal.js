@@ -7,6 +7,8 @@
 
 import { StorageManager } from '../core/storage.js';
 import { ENGINE_VERSION } from '../core/version.js';
+import { EXPLORER_OUTFITS } from '../core/constants.js';
+import { audioFX } from './audio-fx.js';
 
 export class ProfileModal {
   constructor() {
@@ -49,6 +51,17 @@ export class ProfileModal {
             <div style="display: flex; gap: 0.5rem;">
               <input type="text" id="profile-name-input" class="text-input" style="flex: 1; padding: 0.45rem 0.75rem; font-size: 0.95rem; font-weight: 700; background: var(--bg); border: 1px solid var(--card-border); border-radius: var(--radius-sm); color: var(--text);" maxlength="24" placeholder="Explorer" />
               <button type="button" id="btn-save-profile-name" class="btn btn-secondary btn-sm" style="padding: 0.45rem 0.8rem;">Save</button>
+            </div>
+          </div>
+
+          <!-- Explorer Wardrobe & Attire (BL-78, CMP-11, CMP-14) -->
+          <div class="profile-field-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.8rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">Explorer Wardrobe</label>
+              <span id="profile-outfit-badge" style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">Classic Pathfinder</span>
+            </div>
+            <div id="profile-outfit-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem;">
+              <!-- Populated dynamically via refresh() -->
             </div>
           </div>
 
@@ -233,6 +246,55 @@ export class ProfileModal {
     if (campVal) campVal.textContent = `${profile.campaignLevels} / 32`;
     if (storiesVal) storiesVal.textContent = String(profile.storyChapters);
     if (stepsVal) stepsVal.textContent = profile.totalSteps.toLocaleString();
+
+    // Render Explorer Wardrobe Grid (BL-78)
+    const outfitGrid = this.modalEl.querySelector('#profile-outfit-grid');
+    const outfitBadge = this.modalEl.querySelector('#profile-outfit-badge');
+    const currentOutfitId = profile.outfit || 'classic';
+    const currentOutfit = EXPLORER_OUTFITS[currentOutfitId] || EXPLORER_OUTFITS.classic;
+    if (outfitBadge) outfitBadge.textContent = currentOutfit.name;
+
+    if (outfitGrid) {
+      outfitGrid.innerHTML = '';
+      Object.values(EXPLORER_OUTFITS).forEach((outfit) => {
+        const isSelected = outfit.id === currentOutfitId;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `btn btn-sm outfit-select-btn ${isSelected ? 'active' : ''}`;
+        btn.dataset.outfitId = outfit.id;
+        btn.style.cssText = `
+          display: flex; flex-direction: column; align-items: flex-start; gap: 0.25rem;
+          padding: 0.45rem 0.55rem; border-radius: var(--radius-sm);
+          border: 1px solid ${isSelected ? 'var(--gold, #fbbf24)' : 'var(--card-border, rgba(255,255,255,0.1))'};
+          background: ${isSelected ? 'rgba(251, 191, 36, 0.15)' : 'rgba(0, 0, 0, 0.25)'};
+          color: var(--text); cursor: pointer; text-align: left; width: 100%; box-sizing: border-box;
+          transition: border-color 0.15s ease, background 0.15s ease;
+        `;
+        btn.title = `${outfit.name}: ${outfit.desc}`;
+        btn.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            <span style="font-size: 1.15rem;">${outfit.icon}</span>
+            <div style="display: flex; gap: 3px; align-items: center;">
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: ${outfit.shirt}; display: inline-block;"></span>
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: ${outfit.pants}; display: inline-block;"></span>
+              <span style="width: 7px; height: 7px; border-radius: 50%; background: ${outfit.pack}; display: inline-block;"></span>
+              ${isSelected ? '<span style="font-size: 0.75rem; color: var(--gold); font-weight: 800; margin-left: 2px;">✓</span>' : ''}
+            </div>
+          </div>
+          <div style="font-size: 0.75rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%; color: ${isSelected ? 'var(--gold)' : 'var(--text)'};">${outfit.name.split(' ')[0]}</div>
+        `;
+        btn.onclick = () => {
+          StorageManager.setPlayerOutfit(outfit.id);
+          try { audioFX.playClick(); } catch (_) {}
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('player:outfit_changed', { detail: { outfitId: outfit.id } }));
+          }
+          this.showMessage(`Equipped: ${outfit.name}`, 'var(--emerald)');
+          this.refresh();
+        };
+        outfitGrid.appendChild(btn);
+      });
+    }
 
     // Trigger profile update event for app header badge
     if (typeof window !== 'undefined') {

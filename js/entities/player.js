@@ -3,7 +3,8 @@
  * Handles position, elevation state, inventory, movement smoothing, and rendering.
  */
 
-import { ELEVATION, DEFAULTS } from '../core/constants.js';
+import { ELEVATION, DEFAULTS, EXPLORER_OUTFITS } from '../core/constants.js';
+import { StorageManager } from '../core/storage.js';
 
 function drawRoundRect(ctx, x, y, w, h, r = 0) {
   if (typeof ctx.roundRect === 'function') {
@@ -19,8 +20,10 @@ export class Player {
    * @param {number} startY Grid Y
    * @param {number} [startElevation=0]
    * @param {number} [tileSize=32]
+   * @param {string[]} [initialInventory=[]]
+   * @param {string} [outfitId=null]
    */
-  constructor(startX = 1, startY = 1, startElevation = 0, tileSize = 32, initialInventory = []) {
+  constructor(startX = 1, startY = 1, startElevation = 0, tileSize = 32, initialInventory = [], outfitId = null) {
     this.gridX = startX;
     this.gridY = startY;
     this.gridZ = startElevation;
@@ -49,6 +52,46 @@ export class Player {
 
     // Visual bobbing and glow pulse
     this.pulseTimer = 0;
+
+    // Explorer Outfit & Wardrobe Palette (BL-78)
+    let savedOutfit = 'classic';
+    try {
+      if (typeof StorageManager !== 'undefined' && typeof StorageManager.getPlayerOutfit === 'function') {
+        savedOutfit = StorageManager.getPlayerOutfit();
+      }
+    } catch (_) {}
+
+    this.outfitId = outfitId || savedOutfit;
+    this.palette = EXPLORER_OUTFITS[this.outfitId] || EXPLORER_OUTFITS.classic;
+
+    this._outfitListener = (e) => {
+      if (e?.detail?.outfitId) {
+        this.setOutfit(e.detail.outfitId);
+      }
+    };
+    if (typeof window !== 'undefined' && window.addEventListener) {
+      window.addEventListener('player:outfit_changed', this._outfitListener);
+    }
+  }
+
+  /**
+   * Update active explorer outfit and colorway palette (BL-78)
+   * @param {string} outfitId
+   */
+  setOutfit(outfitId) {
+    if (EXPLORER_OUTFITS[outfitId]) {
+      this.outfitId = outfitId;
+      this.palette = EXPLORER_OUTFITS[outfitId];
+    }
+  }
+
+  /**
+   * Cleanup event listeners
+   */
+  destroy() {
+    if (typeof window !== 'undefined' && window.removeEventListener && this._outfitListener) {
+      window.removeEventListener('player:outfit_changed', this._outfitListener);
+    }
   }
 
   get x() {
@@ -427,12 +470,14 @@ export class Player {
     const isEast = screenFacing === 'east';
     const isWest = screenFacing === 'west';
 
-    // 3. Brown Backpack (Drawn behind body when facing south, or on back when facing north/east/west)
+    const p = this.palette || EXPLORER_OUTFITS.classic;
+
+    // 3. Explorer Backpack (Drawn behind body when facing south, or on back when facing north/east/west)
     const drawBackpack = (x, y, scale = 1, isBackView = false) => {
       ctx.save();
       // Main pack body
-      ctx.fillStyle = '#78350f';
-      ctx.strokeStyle = '#451a03';
+      ctx.fillStyle = p.pack;
+      ctx.strokeStyle = p.packDark;
       ctx.lineWidth = 1 * s;
       ctx.beginPath();
       drawRoundRect(ctx, x - 6 * s * scale, y - 6 * s * scale, 12 * s * scale, 12 * s * scale, 3 * s);
@@ -440,7 +485,7 @@ export class Player {
       ctx.stroke();
 
       // Flap
-      ctx.fillStyle = '#92400e';
+      ctx.fillStyle = p.packFlap;
       ctx.beginPath();
       drawRoundRect(ctx, x - 5.5 * s * scale, y - 6 * s * scale, 11 * s * scale, 5 * s * scale, 2 * s);
       ctx.fill();
@@ -450,15 +495,15 @@ export class Player {
       ctx.fillRect(x - 1.5 * s * scale, y - 1.5 * s * scale, 3 * s * scale, 2 * s * scale);
 
       // Bedroll / blanket strapped to top
-      ctx.fillStyle = '#d97706';
+      ctx.fillStyle = p.bedroll;
       ctx.beginPath();
       drawRoundRect(ctx, x - 7 * s * scale, y - 9.5 * s * scale, 14 * s * scale, 4 * s * scale, 2 * s);
       ctx.fill();
-      ctx.strokeStyle = '#451a03';
+      ctx.strokeStyle = p.packDark;
       ctx.stroke();
 
       // Bedroll tie straps
-      ctx.fillStyle = '#451a03';
+      ctx.fillStyle = p.packDark;
       ctx.fillRect(x - 4 * s * scale, y - 9.5 * s * scale, 1.5 * s * scale, 4 * s * scale);
       ctx.fillRect(x + 2.5 * s * scale, y - 9.5 * s * scale, 1.5 * s * scale, 4 * s * scale);
 
@@ -470,21 +515,21 @@ export class Player {
       drawBackpack(screenX, py - 4 * s, 0.95);
     }
 
-    // 4. Blue Jeans & Hiking Boots (Legs)
+    // 4. Pants & Boots (Legs)
     const drawLeg = (lx, ly, offset, footOffset) => {
-      // Blue denim pants leg
-      ctx.fillStyle = '#2563eb';
+      // Pants leg
+      ctx.fillStyle = p.pants;
       ctx.fillRect(lx - 2.5 * s, ly, 5 * s, 6 * s);
 
-      // Denim seam & cuff
-      ctx.fillStyle = '#1d4ed8';
+      // Seam & cuff
+      ctx.fillStyle = p.pantsDark;
       ctx.fillRect(lx - 2.5 * s, ly + 5 * s, 5 * s, 1.2 * s);
 
       // Hiking Boot
-      ctx.fillStyle = '#5c2e0b';
+      ctx.fillStyle = p.boots;
       ctx.fillRect(lx - 3 * s + footOffset, ly + 6 * s, 6 * s, 3.2 * s);
       // Sole
-      ctx.fillStyle = '#271304';
+      ctx.fillStyle = '#1e1b18';
       ctx.fillRect(lx - 3.2 * s + footOffset, ly + 8.2 * s, 6.4 * s, 1.4 * s);
       // Laces / highlight
       ctx.fillStyle = '#fbbf24';
@@ -511,18 +556,18 @@ export class Player {
     ctx.fillStyle = '#fbbf24';
     ctx.fillRect(screenX - 1.5 * s, py + 1.2 * s, 3 * s, 1.8 * s);
 
-    // 5. Flannel Shirt Torso
+    // 5. Shirt Torso
     const torsoW = (isEast || isWest) ? 10 * s : 13 * s;
     const torsoH = 9 * s;
     const torsoX = screenX - torsoW / 2;
     const torsoY = py - 7 * s;
 
-    // Base Red Flannel
-    ctx.fillStyle = '#dc2626';
+    // Base Shirt
+    ctx.fillStyle = p.shirt;
     ctx.fillRect(torsoX, torsoY, torsoW, torsoH);
 
     // Plaid horizontal/vertical check stripes
-    ctx.fillStyle = '#991b1b';
+    ctx.fillStyle = p.shirtDark;
     // Horizontal bars
     ctx.fillRect(torsoX, torsoY + 2 * s, torsoW, 2 * s);
     ctx.fillRect(torsoX, torsoY + 6 * s, torsoW, 2 * s);
@@ -535,8 +580,8 @@ export class Player {
       ctx.fillRect(torsoX + 8.5 * s, torsoY, 2 * s, torsoH);
     }
 
-    // Intersecting dark navy/black check nodes
-    ctx.fillStyle = '#1e293b';
+    // Intersecting check nodes
+    ctx.fillStyle = p.shirtCheck;
     if (isEast || isWest) {
       ctx.fillRect(torsoX + 3 * s, torsoY + 2 * s, 2 * s, 2 * s);
       ctx.fillRect(torsoX + 3 * s, torsoY + 6 * s, 2 * s, 2 * s);
@@ -549,10 +594,10 @@ export class Player {
       ctx.fillRect(torsoX + 8.5 * s, torsoY + 6 * s, 2 * s, 2 * s);
     }
 
-    // Flannel Details for South Facing (Front Placket, Buttons & Leather Straps)
+    // Details for South Facing (Front Placket, Buttons & Leather Straps)
     if (isSouth) {
       // Placket
-      ctx.fillStyle = '#b91c1c';
+      ctx.fillStyle = p.shirtDark;
       ctx.fillRect(screenX - 1.2 * s, torsoY, 2.4 * s, torsoH);
       // Small brass buttons
       ctx.fillStyle = '#fef08a';
@@ -561,7 +606,7 @@ export class Player {
       ctx.fillRect(screenX - 0.7 * s, torsoY + 6.5 * s, 1.4 * s, 1.4 * s);
 
       // Backpack shoulder straps over chest
-      ctx.fillStyle = '#5c2e0b';
+      ctx.fillStyle = p.packDark;
       ctx.fillRect(screenX - 5 * s, torsoY, 2 * s, torsoH);
       ctx.fillRect(screenX + 3 * s, torsoY, 2 * s, torsoH);
       // Buckles on straps
@@ -570,7 +615,7 @@ export class Player {
       ctx.fillRect(screenX + 2.8 * s, torsoY + 4 * s, 2.4 * s, 1.5 * s);
     }
 
-    // If facing North: Draw backpack ON TOP of the flannel shirt back!
+    // If facing North: Draw backpack ON TOP of the shirt back!
     if (isNorth) {
       drawBackpack(screenX, py - 4 * s, 1.05, true);
     }
@@ -585,15 +630,15 @@ export class Player {
       drawBackpack(screenX + 6 * s, py - 4 * s, 0.9);
     }
 
-    // 6. Arms & Flannel Sleeves
+    // 6. Arms & Sleeves
     const drawArm = (ax, ay, swing) => {
-      ctx.fillStyle = '#dc2626';
+      ctx.fillStyle = p.shirt;
       ctx.fillRect(ax - 2 * s, ay, 4 * s, 7 * s);
       // Cuff
-      ctx.fillStyle = '#991b1b';
+      ctx.fillStyle = p.shirtDark;
       ctx.fillRect(ax - 2 * s, ay + 5.5 * s, 4 * s, 1.5 * s);
       // Hand (Skin tone)
-      ctx.fillStyle = '#fed7aa';
+      ctx.fillStyle = p.skin;
       ctx.beginPath();
       ctx.arc(ax, ay + 8 * s + swing * 0.3, 2 * s, 0, Math.PI * 2);
       ctx.fill();
@@ -608,18 +653,18 @@ export class Player {
       drawArm(screenX - 1 * s, torsoY + 1 * s, -armStride);
     }
 
-    // 7. Head & Messy Brown Adventure Hair
+    // 7. Head & Adventure Hair
     const headY = py - 12.5 * s;
     const headR = 5.5 * s;
 
     // Face Skin Base
-    ctx.fillStyle = '#fed7aa';
+    ctx.fillStyle = p.skin;
     ctx.beginPath();
     ctx.arc(screenX + (isEast ? 1 * s : isWest ? -1 * s : 0), headY + 1 * s, headR, 0, Math.PI * 2);
     ctx.fill();
 
     // Hair Base & Texture
-    ctx.fillStyle = '#451a03';
+    ctx.fillStyle = p.hair;
     ctx.beginPath();
     // Hair cap
     ctx.arc(screenX, headY - 1 * s, headR + 0.8 * s, Math.PI, Math.PI * 2);
@@ -724,8 +769,9 @@ export class Player {
 
     const py = screenY - stepBob;
     const screenFacing = this.getScreenFacing(this.facing, rotationAngle);
+    const p = this.palette || EXPLORER_OUTFITS.classic;
 
-    // 2. Brown Backpack (offset opposite facing)
+    // 2. Backpack (offset opposite facing)
     let packX = screenX;
     let packY = py;
     if (screenFacing === 'south') packY -= 5 * s;
@@ -733,8 +779,8 @@ export class Player {
     else if (screenFacing === 'east') packX -= 5 * s;
     else if (screenFacing === 'west') packX += 5 * s;
 
-    ctx.fillStyle = '#78350f';
-    ctx.strokeStyle = '#451a03';
+    ctx.fillStyle = p.pack;
+    ctx.strokeStyle = p.packDark;
     ctx.lineWidth = 1 * s;
     ctx.beginPath();
     drawRoundRect(ctx, packX - 6 * s, packY - 5 * s, 12 * s, 10 * s, 3 * s);
@@ -742,28 +788,28 @@ export class Player {
     ctx.stroke();
 
     // Bedroll on backpack
-    ctx.fillStyle = '#d97706';
+    ctx.fillStyle = p.bedroll;
     ctx.beginPath();
     drawRoundRect(ctx, packX - 5 * s, packY - 6.5 * s, 10 * s, 3 * s, 1.5 * s);
     ctx.fill();
 
-    // 3. Shoulders with Red Flannel Shirt Pattern
-    ctx.fillStyle = '#dc2626';
+    // 3. Shoulders with Shirt Pattern
+    ctx.fillStyle = p.shirt;
     ctx.beginPath();
     ctx.ellipse(screenX, py, 11 * s, 6.5 * s, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Flannel Plaid Cross-Hatch
-    ctx.fillStyle = '#991b1b';
+    // Plaid Cross-Hatch
+    ctx.fillStyle = p.shirtDark;
     ctx.fillRect(screenX - 8 * s, py - 1 * s, 16 * s, 2 * s);
-    ctx.fillStyle = '#1e293b';
+    ctx.fillStyle = p.shirtCheck;
     ctx.fillRect(screenX - 5 * s, py - 2 * s, 2 * s, 4 * s);
     ctx.fillRect(screenX + 3 * s, py - 2 * s, 2 * s, 4 * s);
 
-    // 4. Blue Jeans Cuffs Peeking (when moving)
+    // 4. Pants Cuffs Peeking (when moving)
     if (this.isMoving) {
       const legOffset = Math.sin(this.moveProgress * Math.PI * 2) * 3 * s;
-      ctx.fillStyle = '#2563eb';
+      ctx.fillStyle = p.pants;
       if (screenFacing === 'south' || screenFacing === 'north') {
         ctx.fillRect(screenX - 5 * s, py + 5 * s + legOffset, 3 * s, 2 * s);
         ctx.fillRect(screenX + 2 * s, py + 5 * s - legOffset, 3 * s, 2 * s);
@@ -772,14 +818,14 @@ export class Player {
       }
     }
 
-    // 5. Head with Messy Brown Hair
-    ctx.fillStyle = '#451a03';
+    // 5. Head with Hair
+    ctx.fillStyle = p.hair;
     ctx.beginPath();
     ctx.arc(screenX, py - 1 * s, 6 * s, 0, Math.PI * 2);
     ctx.fill();
 
     // Hair texture & tufts
-    ctx.fillStyle = '#5c2406';
+    ctx.fillStyle = p.packDark;
     ctx.beginPath();
     ctx.arc(screenX - 2 * s, py - 2 * s, 3 * s, 0, Math.PI * 2);
     ctx.arc(screenX + 2 * s, py - 2 * s, 3 * s, 0, Math.PI * 2);
