@@ -16,6 +16,7 @@ import {
   SPAWN_STYLE_PRESETS,
   EXIT_STYLE_PRESETS,
   WALL_DIRECTIONS,
+  INTERACT_APPROACHES,
   formatXYZ,
   getElevationLabel,
 } from '../core/constants.js';
@@ -407,6 +408,14 @@ export class EntityInspector {
       container.appendChild(this.createInputRow('Score Points', 'entity-points', String(e.points || 100), 'number'));
     }
 
+    // 12. Allowed Approach Directions for Interactables (BL-85)
+    const interactableTypes = [ENTITY_TYPES.LEVER, 'lever', ENTITY_TYPES.SIGNPOST, ENTITY_TYPES.WALL_DECOR, ENTITY_TYPES.PUZZLE_GATE, ENTITY_TYPES.PEDESTAL, ENTITY_TYPES.RIDDLE_ITEM, ENTITY_TYPES.DOOR];
+    if (interactableTypes.includes(e.type)) {
+      container.appendChild(this.createApproachSelectorRow('Allowed Interaction Approaches', e.interactDirections, (dirs) => {
+        e.interactDirections = dirs;
+      }));
+    }
+
     this.bodyEl.appendChild(container);
   }
 
@@ -702,6 +711,45 @@ export class EntityInspector {
     return row;
   }
 
+  createApproachSelectorRow(label, currentDirections, onChange) {
+    const row = document.createElement('div');
+    row.className = 'form-row';
+    const active = Array.isArray(currentDirections) && currentDirections.length > 0 ? currentDirections : ['north', 'south', 'east', 'west', 'self'];
+
+    let checkboxesHtml = '';
+    (INTERACT_APPROACHES || []).forEach(app => {
+      const isChecked = active.includes(app.id);
+      checkboxesHtml += `
+        <label style="display:inline-flex; align-items:center; gap:0.35rem; font-size:0.75rem; margin-right:0.6rem; cursor:pointer;">
+          <input type="checkbox" class="chk-approach-dir" value="${app.id}" ${isChecked ? 'checked' : ''} />
+          <span>${app.label}</span>
+        </label>
+      `;
+    });
+
+    row.innerHTML = `
+      <label>${label}</label>
+      <div style="display:flex; flex-wrap:wrap; gap:0.4rem; padding:0.3rem 0;">
+        ${checkboxesHtml}
+      </div>
+      <div style="font-size:0.7rem; color:var(--text-muted); margin-top:0.2rem;">
+        Uncheck directions to restrict which sides the player can interact from (e.g. only from the South wall or front).
+      </div>
+    `;
+
+    const checkboxes = row.querySelectorAll('.chk-approach-dir');
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', () => {
+        const checkedValues = Array.from(checkboxes).filter(c => c.checked).map(c => c.value);
+        if (onChange) {
+          onChange(checkedValues.length === (INTERACT_APPROACHES?.length || 5) ? null : checkedValues);
+        }
+      });
+    });
+
+    return row;
+  }
+
   /**
    * Save form values back to currentEntity
    */
@@ -808,6 +856,12 @@ export class EntityInspector {
     const wallDirSelect = this.bodyEl.querySelector('#entity-wall-direction');
     if (wallDirSelect) {
       e.wallDirection = wallDirSelect.value;
+    }
+
+    const approachCheckboxes = this.bodyEl.querySelectorAll('.chk-approach-dir');
+    if (approachCheckboxes.length > 0) {
+      const checkedVals = Array.from(approachCheckboxes).filter(c => c.checked).map(c => c.value);
+      e.interactDirections = (checkedVals.length === (INTERACT_APPROACHES?.length || 5) || checkedVals.length === 0) ? null : checkedVals;
     }
 
     if (this.onUpdate) {
