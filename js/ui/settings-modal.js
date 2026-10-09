@@ -123,6 +123,18 @@ export class SettingsModal {
                 <span class="slider" style="position: absolute; cursor: pointer; inset: 0; background-color: #334155; border-radius: 24px; transition: 0.2s;"></span>
               </label>
             </div>
+
+            <!-- Note & Lore Presentation Mode (BL-81) -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 0.8rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06);">
+              <div>
+                <div style="font-size: 0.85rem; font-weight: 600;">Note &amp; Lore Presentation</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Card popup modal or clean activity feed stream</div>
+              </div>
+              <select id="setting-note-mode-select" class="select-field" style="padding: 0.35rem 0.6rem; font-size: 0.85rem; font-weight: 600;">
+                <option value="modal">📜 Card Modal Popup</option>
+                <option value="feed_only">💬 Activity Feed Stream</option>
+              </select>
+            </div>
           </div>
 
           <!-- Section 3: Keyboard & Navigation Controls -->
@@ -375,6 +387,16 @@ export class SettingsModal {
       };
     }
 
+    // Note & Lore Presentation Mode (BL-81)
+    const noteModeSelect = this.modalEl.querySelector('#setting-note-mode-select');
+    if (noteModeSelect) {
+      noteModeSelect.onchange = () => {
+        const mode = noteModeSelect.value;
+        StorageManager.setSetting('note_display_mode', mode);
+        globalEvents.emit('settings:note_mode_changed', { mode });
+      };
+    }
+
     // Hotkeys & Simple Keyboard Mode Toggles
     const hotkeysToggle = this.modalEl.querySelector('#setting-hotkeys-toggle');
     const simpleModeCb = this.modalEl.querySelector('#setting-simple-mode');
@@ -588,6 +610,7 @@ export class SettingsModal {
     const perspective = StorageManager.getSetting('perspective', 'angled');
     const smoothRot = StorageManager.getSetting('smooth_rotation', true);
     const highContrast = StorageManager.getSetting('high_contrast', false);
+    const noteMode = StorageManager.getSetting('note_display_mode', 'modal');
     const hotkeysEnabled = StorageManager.getSetting('hotkeys_enabled', true);
     const simpleMode = StorageManager.getSetting('simple_keyboard_mode', false);
     const effectiveHotkeys = hotkeysEnabled && !simpleMode;
@@ -602,6 +625,7 @@ export class SettingsModal {
     const perspSelect = this.modalEl.querySelector('#setting-perspective-select');
     const smoothRotToggle = this.modalEl.querySelector('#setting-smooth-rotation');
     const contrastToggle = this.modalEl.querySelector('#setting-high-contrast');
+    const noteModeSelect = this.modalEl.querySelector('#setting-note-mode-select');
     const hotkeysToggleEl = this.modalEl.querySelector('#setting-hotkeys-toggle');
     const simpleModeCbEl = this.modalEl.querySelector('#setting-simple-mode');
 
@@ -615,6 +639,7 @@ export class SettingsModal {
     if (perspSelect) perspSelect.value = perspective;
     if (smoothRotToggle) smoothRotToggle.checked = smoothRot;
     if (contrastToggle) contrastToggle.checked = highContrast;
+    if (noteModeSelect) noteModeSelect.value = noteMode;
     if (hotkeysToggleEl) hotkeysToggleEl.checked = effectiveHotkeys;
     if (simpleModeCbEl) simpleModeCbEl.checked = !effectiveHotkeys;
   }

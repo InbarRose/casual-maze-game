@@ -102,6 +102,12 @@ This document tracks project milestones, current release status, active developm
   - **Universal Popup Avoidance & Inline Destructive Confirmations (BL-73)**: Eradicated intrusive native browser `confirm()` popups across the entire codebase; added sleek, non-blocking inline confirmation boxes in `ProfileModal` for "Reset Save", in `SettingsModal` for "Restore Save Backup", and created `#modal-clear-confirm` in `editor.html` & `EditorUI` protecting canvas clears with <kbd>Ctrl+Z</kbd> undo recovery instructions.
   - **Top Navigation Exit Safety Routing (BL-74)**: Protected `← Hub` in `maze.html` top navigation during active labyrinths (steps > 0 or keys held), routing to `gameMenu.promptQuit()` confirmation dialog, preventing accidental mobile taps from discarding game progress.
   - **Automated QA Coverage**: Created `tests/unit/engine/multi-elevation-pathfinding.test.mjs`; expanded test harness to 111 test suites and 526 tests (0 failed, 7,457 assertions, 23/23 zero-drift checks passed).
+- [x] **Action Activity Feed, Level Lore Journal & Unobtrusive Examination UX Sprint (BL-81, CMP-06)**:
+  - **Single-Prompt Note Examination**: Eradicated the 3-popup barrage on Architect Note stepping; stepping onto a note tile now renders ONLY a single in-world indicator (`📜 [E] Read Architect Note`) without auto-opening modals or firing full-screen toasts.
+  - **Action Activity Feed & Category Filter Toggles**: Upgraded real-time Activity Feed into a sleek docked game widget at bottom-left with category filter pills (`All`, `📜 Lore`, `⚙️ Mech`, `🗝️ Items`) and minimize toggle (`_`/`▲`), recording discrete mechanisms, gates, keys, and lore while filtering out step noise.
+  - **Level Lore Journal**: Added companion HUD button (`#hud-journal-btn`) with dynamic counter and hotkey (`J`), opening the Level Lore Journal modal (`#journal-modal`) to browse and examine all discovered Architect Notes and wall murals in a parchment viewer.
+  - **Configurable Note Presentation Mode**: Added setting in SettingsModal (`Note & Lore Presentation`) allowing players to toggle between `Card Modal Popup` and `Activity Feed Stream`.
+  - **Automated QA Coverage**: Created `tests/unit/ui/lore-journal.test.mjs`; expanded test harness to 118 test suites and 553 tests (0 failed, 7,744 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 

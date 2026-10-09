@@ -166,14 +166,17 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/game-loop.js`, `css/game.css`, `maze.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.33/10** (1.1: 6, 1.2: 6, 1.3: 7)
+  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 7, 4.3: 6)
-  * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **6.67/10** (6.1: 7, 6.2: 7, 6.3: 6)
-  * **Master Score**: **42.67 / 60.00 (71.1% — B- Tier Prototype)**
+  * $C_3$ UI/UX & Ergonomics: **8.33/10** (3.1: 9, 3.2: 8, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **7.00/10** (5.1: 7, 5.2: 7, 5.3: 7)
+  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
+  * **Master Score**: **46.00 / 60.00 (76.7% — B Tier Prototype)**
 * **Strengths**:
+  * **Action Activity Feed with Category Filter Toggles (`BL-81`)**: Dedicated docked action streamer at bottom-left with category filter pills (`All`, `📜 Lore`, `⚙️ Mech`, `🗝️ Items`) and collapse/expand toggle (`_`/`▲`), logging only discrete mechanisms, keys, gates, and lore without high-frequency step noise.
+  * **Level Lore Journal (`BL-81`)**: Companion to inventory in HUD (`#hud-journal-btn`) with dynamic counter and hotkey (`J`), allowing players to re-read and browse all collected Architect Notes and wall murals in a parchment viewer.
+  * **Unobtrusive Single-Prompt Note Examination (`BL-81`)**: Eradication of the 3-popup barrage when stepping on Architect Notes. Stepping onto a note tile now renders ONLY a single in-world indicator (`[E] Read Architect Note`), with user configuration (`Note & Lore Presentation`) to choose between modal cards and feed streaming.
   * **Collapsible Top Minimap Radar (`BL-68`)**: Minimap is top-docked across desktop and mobile (`top: 4.25rem; right: 0.75rem;`), keeping the bottom canvas completely free from touch interference, with a 1-tap minimize toggle (`_`/`▲`) and localStorage persistence.
   * **Pathfinding Waypoint Trail (`BL-67`)**: Tapping the canvas dynamically renders glowing cyan waypoint dots along the computed BFS corridor path.
   * **Unobtrusive Interaction HUD (`BL-42`)**: Subtle in-world tile prompt (`#hud-tile-indicator`) centered directly over the target tile, and discreet side HUD action drawer docked at bottom-right.

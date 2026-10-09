@@ -63,6 +63,7 @@ import '../unit/ui/audio-ambience.test.mjs';
 import '../unit/ui/game-menu.test.mjs';
 import '../unit/ui/app-header.test.mjs';
 import '../unit/ui/hero-ambient-canvas.test.mjs';
+import '../unit/ui/lore-journal.test.mjs';
 
 const results = await run();
 process.exit(results.failed > 0 ? 1 : 0);
