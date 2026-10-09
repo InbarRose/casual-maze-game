@@ -122,6 +122,19 @@
           <div class="hud-stat">⭐ <strong id="hud-score">0</strong></div>
         </div>
 
+        <!-- Viewport Zoom Control Widget (BL-87) -->
+        <div class="zoom-control-group" id="zoom-control-group">
+          <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out [-]" aria-label="Zoom Out">
+            −
+          </button>
+          <span id="hud-zoom-badge" class="zoom-badge" title="Reset Zoom to 100% [0]">
+            100%
+          </span>
+          <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In [+]" aria-label="Zoom In">
+            +
+          </button>
+        </div>
+
         <!-- World Rotation Compass Widget -->
         <div class="rotation-control-group" id="rotation-control-group">
           <button id="btn-rotate-left" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CCW [Q]" aria-label="Rotate Left">
@@ -195,6 +208,8 @@
       <span><kbd>Q</kbd> / <kbd>R</kbd> Rotate</span>
       <span>•</span>
       <span><kbd>E</kbd> / <kbd>Space</kbd> Interact</span>
+      <span>•</span>
+      <span><kbd>+</kbd> / <kbd>-</kbd> Zoom</span>
       <span>•</span>
       <span><kbd>V</kbd> View</span>
       <span>•</span>
@@ -2412,6 +2427,46 @@
         btnPerspective.classList.add('btn-secondary');
       }
     }
+
+    // Viewport Zoom UI Wiring (BL-87)
+    const btnZoomIn = document.getElementById('btn-zoom-in');
+    const btnZoomOut = document.getElementById('btn-zoom-out');
+    const hudZoomBadge = document.getElementById('hud-zoom-badge');
+
+    function updateZoomBadge(zoom) {
+      if (hudZoomBadge) {
+        hudZoomBadge.textContent = `${Math.round((zoom || 1.0) * 100)}%`;
+      }
+    }
+
+    if (window.gameLoop?.camera) {
+      updateZoomBadge(window.gameLoop.camera.zoom);
+    }
+
+    btnZoomIn?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        window.gameLoop.zoomIn();
+      }
+    });
+
+    btnZoomOut?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        window.gameLoop.zoomOut();
+      }
+    });
+
+    hudZoomBadge?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        window.gameLoop.resetZoom();
+      }
+    });
+
+    globalEvents.on('camera:zoom_changed', ({ zoom }) => {
+      updateZoomBadge(zoom);
+    });
 
     if (window.gameLoop?.renderer) {
       updatePerspectiveButton(window.gameLoop.renderer.perspective);

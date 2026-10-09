@@ -136,6 +136,11 @@ This document tracks project milestones, current release status, active developm
   - **Floor-Plate Trap Support (`floor_plate`)**: Added `floor_plate` to `LEVER_STYLES` in `constants.js` and introduced `triggerOnStep`, `autoTriggerOnce`, and `hasTriggered` properties on `Lever`. Floor-plate traps auto-trigger once when stepped on with warning visual effects (`⚠️` / `💥`), while ignoring repeat stepping when `autoTriggerOnce` is set.
   - **Level 23 Celestial Gate Airtight Sealing**: Sealed the bypassable corridor around `puzzle_gate_23_cipher` in Level 23 (*The Entangled Wards*) by placing divider walls at column 14 (rows 5, 6, 8, 9). Players can no longer reach the exit portal without solving both the Outer Rune Ward and the Inner Celestial Cipher Ward. Synchronized `levels/chapter_6/level_23.json`, `js/levels/campaign-ch6.js`, and `levels/manifest.json`.
   - **Automated QA Coverage**: Expanded `tests/unit/engine/interact-directions-disambiguation.test.mjs` and `tests/unit/levels/chapter-6.test.mjs`; verified 122 test suites and 579 tests (0 failed, 7,894 assertions, 23/23 zero-drift checks passed).
+- [x] **Interactive Viewport Zoom & Consistent Optical Scale (BL-87, CMP-04, CMP-06)**:
+  - **Decoupled Optical World Scale**: Anchored default world scale to 36px base tile size (`VIEWPORT_ZOOM.BASE_TILE_SIZE = 36`), ensuring larger labyrinths naturally extend beyond viewport bounds and scroll smoothly with camera follow rather than being squished into the screen.
+  - **Zoom Engine & Projections**: Integrated zoom level (`0.5x` to `2.0x`) with dynamic `camera.tileSize`, preserving pixel-perfect tile projections, camera rotations, and collision bounds.
+  - **Multi-Input Zoom Control Parity**: Supported keyboard shortcuts (`+`/`-`, `0` to reset), mouse wheel zoom on main canvas, two-finger mobile pinch-to-zoom, and glassmorphic HUD buttons (`−`, `100%`, `+`) in the top navigation island with `StorageManager` persistence (`viewport_zoom`).
+  - **Automated QA Coverage**: Created dedicated unit test suite `tests/unit/engine/camera-zoom.test.mjs`; verified 123 test suites and 585 tests (0 failed, 7,932 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
@@ -485,7 +490,7 @@ This document tracks project milestones, current release status, active developm
   - [ ] One-way directional gates / sliding doors.
 - [ ] **Strategic Fog of War & Exploratory Vision Dynamics (`BL-88`)**:
   - Expand dynamic Fog of War into more campaign levels (e.g. dense jungle canopies, subterranean crypts, twilight temples) with varied sight radii (`viewRadius: 4..8`) and warm torch light gradients, elevating exploration feel and tactical minimap radar value.
-- [ ] **Viewport Zoom & Consistent Optical Scale (`BL-87`)**:
+- [x] **Viewport Zoom & Consistent Optical Scale (`BL-87`)**:
   - Decouple canvas tile rendering from "fit-to-screen" squash; establish a default optical tile scale ($32\text{px}$–$40\text{px}$) so larger levels extend beyond viewport bounds and scroll cleanly with camera follow; provide intuitive zoom controls (`+`/`-`, mouse wheel, pinch-to-zoom, HUD buttons).
 - [ ] **Macro-Labyrinths & Classic Maze Topologies (`BL-89`, `BL-90`)**:
   - Expand labyrinth scale ($\ge 27 \times 27$ up to $35 \times 35$) without discarding existing levels by introducing a new Chapter 9 ("The Vast Catacombs") or Master Tier trials featuring classical maze topologies (branching corridors, circular concentric rings, hedge-style dead ends with landmarks) harmonized with lock-and-key and puzzle mechanics.

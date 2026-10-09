@@ -430,9 +430,20 @@ export const KEY_CODES = Object.freeze({
   RESTART: ['KeyT', 't', 'T'],
   PAUSE: ['Escape', 'KeyP', 'p', 'P', 'Esc'],
   VIEW_MODE: ['KeyV', 'v', 'V'],
+  ZOOM_IN: ['Equal', 'NumpadAdd', '+', '='],
+  ZOOM_OUT: ['Minus', 'NumpadSubtract', '-', '_'],
+  ZOOM_RESET: ['Digit0', 'Numpad0', '0'],
   NUMERIC_SELECT: ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9',
                    'Numpad1', 'Numpad2', 'Numpad3', 'Numpad4', 'Numpad5', 'Numpad6', 'Numpad7', 'Numpad8', 'Numpad9',
                    '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+});
+
+export const VIEWPORT_ZOOM = Object.freeze({
+  MIN: 0.5,
+  MAX: 2.0,
+  STEP: 0.1,
+  DEFAULT: 1.0,
+  BASE_TILE_SIZE: 36,
 });
 
 export const KEY_COLORS = Object.freeze({
