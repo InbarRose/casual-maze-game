@@ -10,12 +10,13 @@ import { StorageManager } from '../core/storage.js';
 import { ProfileModal } from './profile-modal.js';
 import { SettingsModal } from './settings-modal.js';
 import { FeedbackModal, getFeedbackModal } from './feedback-modal.js';
+import { GuideModal, getGuideModal } from './guide-modal.js';
 import { audioFX } from './audio-fx.js';
 
 let profileModalInstance = null;
 let settingsModalInstance = null;
 
-export { getFeedbackModal };
+export { getFeedbackModal, getGuideModal };
 
 export function getProfileModal() {
   if (!profileModalInstance && typeof document !== 'undefined') {
@@ -58,6 +59,7 @@ export function initAppHeader(options = {}) {
   const profileModal = getProfileModal();
   const settingsModal = getSettingsModal();
   const feedbackModal = getFeedbackModal();
+  const guideModal = getGuideModal();
 
   // 1. Mount or Update Header
   let header = document.querySelector('.app-nav-header');
@@ -137,6 +139,11 @@ export function initAppHeader(options = {}) {
           <span id="app-profile-stars" class="profile-stars-badge">★ ${profile.totalStars}</span>
         </button>
 
+        <!-- Handbook & Guide Button (BL-71) -->
+        <button type="button" id="btn-app-guide" class="app-action-btn icon-btn" title="Open Explorer &amp; Architect Handbook [Controls, Bridges, Secrets]">
+          <span>📖</span>
+        </button>
+
         <!-- Settings Button -->
         <button type="button" id="btn-app-settings" class="app-action-btn icon-btn" title="Open Game Settings [Audio, Video, Controls]">
           <span>⚙️</span>
@@ -162,6 +169,11 @@ export function initAppHeader(options = {}) {
   const profileBtn = header.querySelector('#btn-app-profile');
   if (profileBtn) {
     profileBtn.onclick = () => profileModal.open();
+  }
+
+  const guideBtn = header.querySelector('#btn-app-guide');
+  if (guideBtn) {
+    guideBtn.onclick = () => guideModal.open();
   }
 
   const settingsBtn = header.querySelector('#btn-app-settings');
@@ -216,6 +228,8 @@ export function initAppHeader(options = {}) {
       </div>
 
       <div class="footer-right">
+        <button type="button" id="btn-footer-guide" class="footer-link" style="background:none;border:none;padding:0;cursor:pointer;color:inherit;font:inherit;">📖 Handbook</button>
+        <span class="footer-dot">•</span>
         <button type="button" id="btn-footer-feedback" class="footer-link" style="background:none;border:none;padding:0;cursor:pointer;color:inherit;font:inherit;">🐞 Feedback &amp; Bug Report</button>
         <span class="footer-dot">•</span>
         <a href="test.html?mode=diagnostics" class="footer-link">🧪 Diagnostics Lab</a>
@@ -229,10 +243,15 @@ export function initAppHeader(options = {}) {
     </div>
   `;
 
+  const footerGuideBtn = footer.querySelector('#btn-footer-guide');
+  if (footerGuideBtn) {
+    footerGuideBtn.onclick = () => guideModal.open();
+  }
+
   const footerFeedbackBtn = footer.querySelector('#btn-footer-feedback');
   if (footerFeedbackBtn) {
     footerFeedbackBtn.onclick = () => feedbackModal.open({ pageTitle: typeof document !== 'undefined' ? document.title : 'Casual Maze Game' });
   }
 
-  return { header, footer, profileModal, settingsModal, feedbackModal };
+  return { header, footer, profileModal, settingsModal, feedbackModal, guideModal };
 }
