@@ -30,12 +30,14 @@ function createMockElement(id = '', tagName = 'div') {
     id,
     tagName: tagName.toUpperCase(),
     classList,
+    dataset: {},
     style: {},
     textContent: '',
     innerHTML: '',
     width: 1024,
     height: 768,
     children,
+    getBoundingClientRect() { return { left: 16, top: 68, width: 160, height: 180 }; },
     getAttribute(attr) { return this[attr] || null; },
     setAttribute(attr, val) { this[attr] = val; },
     removeAttribute(attr) { delete this[attr]; },
@@ -135,7 +137,8 @@ describe('UI > maze.html Bootstrap & UI Callbacks Lifecycle', () => {
     globalThis.requestAnimationFrame = mockRaf;
     globalThis.cancelAnimationFrame = mockCaf;
 
-    globalThis.window = {
+    try {
+      globalThis.window = {
       innerWidth: 1024,
       innerHeight: 768,
       location: {
@@ -284,16 +287,18 @@ describe('UI > maze.html Bootstrap & UI Callbacks Lifecycle', () => {
     const medalsContainer = getOrCreateElement('victory-medals-container');
     assert(medalsContainer.children.length >= 4, 'Prestige badges rendered for clear, par, secrets, and flawless');
 
-    // Clean up globals
-    if (globalThis.window.gameLoop?.stop) {
-      globalThis.window.gameLoop.stop();
+    } finally {
+      // Clean up globals
+      if (globalThis.window?.gameLoop?.stop) {
+        globalThis.window.gameLoop.stop();
+      }
+      globalThis.requestAnimationFrame = prevRaf;
+      globalThis.cancelAnimationFrame = prevCaf;
+      globalThis.window = prevWindow;
+      globalThis.document = prevDocument;
+      globalThis.fetch = prevFetch;
+      globalThis.sessionStorage = prevSessionStorage;
+      globalThis.localStorage = prevLocalStorage;
     }
-    globalThis.requestAnimationFrame = prevRaf;
-    globalThis.cancelAnimationFrame = prevCaf;
-    globalThis.window = prevWindow;
-    globalThis.document = prevDocument;
-    globalThis.fetch = prevFetch;
-    globalThis.sessionStorage = prevSessionStorage;
-    globalThis.localStorage = prevLocalStorage;
   });
 });

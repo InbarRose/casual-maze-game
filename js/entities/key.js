@@ -5,43 +5,31 @@
 
 import { ENTITY_TYPES } from '../core/constants.js';
 import { assetLoader } from '../core/asset-loader.js';
+import { BaseEntity } from './base-entity.js';
 
-export class Key {
+export class Key extends BaseEntity {
   /**
    * @param {object} config
    */
-  constructor(config) {
-    this.id = config.id || `key_${Math.random().toString(36).substr(2, 9)}`;
-    this.type = ENTITY_TYPES.KEY;
-    this.x = config.x ?? 0;
-    this.y = config.y ?? 0;
+  constructor(config = {}) {
+    super({
+      ...config,
+      type: ENTITY_TYPES.KEY,
+      name: config.name || 'Key',
+    });
+
     this.color = config.color || '#fbbf24';
-    this.name = config.name || 'Key';
     this.style = config.style || 'classic'; // 'classic' | 'ornate' | 'crystal' | 'orb' | 'relic' | 'skull'
     this.glowEffect = config.glowEffect || 'vibrant';
     this.isCollected = !!config.isCollected;
-    this.z = config.z ?? config.elevation ?? 0;
-    this.elevation = this.z;
 
     // Visual animation states
     this.bobTimer = Math.random() * Math.PI * 2;
     this.useVectorSprite = config.useVectorSprite || false;
   }
 
-  get elevation() {
-    return this.z;
-  }
-
-  set elevation(value) {
-    this.z = value;
-  }
-
-  /**
-   * Returns canonical (X, Y, Z) coordinate string
-   * @returns {string}
-   */
-  getCoordString() {
-    return `(${this.x}, ${this.y}, ${this.z ?? 0})`;
+  getPrompt() {
+    return `Collect ${this.name}`;
   }
 
   /**
