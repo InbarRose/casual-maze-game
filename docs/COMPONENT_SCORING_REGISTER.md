@@ -27,7 +27,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-13** | **Storage, Save State & Persistence Engine** | 5.00 | 9.67 | 5.33 | 7.67 | 6.00 | 5.00 | **38.67** (64.5%) | **C+ Tier** | Versioned Schema Migration Runner & Telemetry Bundler (`BL-34`, `BL-36`, `BL-52`) |
 | **CMP-14** | **Player Profile, Medals & Prestige Progression** | 5.33 | 9.33 | 5.67 | 6.67 | 6.67 | 5.33 | **39.00** (65.0%) | **B- Tier** | Tiered Medals, Score Formula & Sleuth Badges (`BL-52`) |
 | **CMP-15** | **Settings & Configuration System** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Gamepad Guide & Live Tester + Diagnostics Feedback Link Resolved (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`) |
-| **CMP-16** | **Help, Onboarding & Architect Handbook** | 5.00 | 9.33 | 6.67 | 5.67 | 5.00 | 6.33 | **38.00** (63.3%) | **C+ Tier** | Visual Bridge & Ramp Crossing SVG Guides (`BL-37`, `BL-48`) |
+| **CMP-16** | **Help, Onboarding & Architect Handbook** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Universal Interactive Handbook Modal & Visual Bridge SVG Guide (`BL-37`, `BL-48`, `BL-71`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 5.67 | 9.33 | 6.33 | 7.00 | 5.33 | 6.33 | **39.99** (66.7%) | **B- Tier** | Browser Runner & Full Telemetry Resolved (`BL-45`, `BL-46`) |
 | **CMP-18** | **Community Feedback & Bug Reporting Channels** | 5.67 | 9.33 | 7.67 | 7.33 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | 1-Click Universal Feedback Modal with Live Telemetry & GitHub Issue Creation (`BL-34`, `BL-69`) |
 | **CMP-19** | **Accessibility & Sensory Inclusivity** | 5.67 | 9.67 | 6.67 | 6.00 | 5.67 | 8.33 | **42.01** (70.0%) | **B- Tier** | Canvas High-Contrast Contours, Assist Halos & Victory Advance (`BL-26`, `BL-40`, `BL-55`, `BL-66`) |
@@ -375,22 +375,25 @@ This document records the official baseline quality evaluations, granular expert
 ---
 
 ### CMP-16: Help, Onboarding & Architect Handbook
-*Files: `js/editor/modals/guide-modal.js`, `docs/LEVEL_DESIGN_PHILOSOPHY.md`*
+*Files: `js/ui/guide-modal.js`, `js/ui/app-header.js`, `js/editor/modals/guide-modal.js`, `docs/LEVEL_DESIGN_PHILOSOPHY.md`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.33/10** (1.1: 4, 1.2: 4, 1.3: 5)
+  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.00/10** (3.1: 5, 3.2: 5, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **5.67/10** (4.1: 6, 4.2: 6, 4.3: 5)
-  * $C_5$ Progression & Retention: **5.00/10** (5.1: 5, 5.2: 5, 5.3: 5)
-  * $C_6$ Accessibility & DX: **5.33/10** (6.1: 5, 6.2: 6, 6.3: 5)
-  * **Master Score**: **34.66 / 60.00 (57.8% — C Tier Prototype)**
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
+  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
+  * **Master Score**: **44.00 / 60.00 (73.3% — B Tier)**
 * **Strengths**:
-  * Text-based handbook describing puzzle mechanics and editor hotkeys.
+  * **Universal Interactive Guide & Handbook Modal (`BL-71`)**: Glassmorphic multi-tab modal accessible from universal app header (`#btn-app-guide`) and footer (`#btn-footer-guide`) across all pages (`index.html`, `maze.html`, `editor.html`).
+  * **Multi-Input Controls Reference**: Comprehensive layout cards detailing desktop keyboard shortcuts, touch drag steering and pathfinding, virtual D-pad docking, and Gamepad controller support.
+  * **Architectural SVG Crossing Diagrams (`BL-37`, `BL-71`)**: High-contrast vector SVG diagrams demonstrating `B_EW` (East-West ground tunnel, North-South overpass with `R_S` & `R_N` ramps) and `B_NS` (North-South ground tunnel, East-West overpass with `R_E` & `R_W` ramps).
+  * **Secrets & Progression Guide**: Clear explanations of illusory wall detection, par step and time calibration formulas, medal tiers, and prestige ranks.
+  * **Campaign Onboarding (`BL-48`)**: Direct resume routing into Chapter 1 for new and returning players.
 * **Gaps & Critical Deductions**:
-  * Text-heavy modal without interactive micro-tutorials or visual bridge/ramp diagrams (`BL-37`).
-  * Index hub does not gently guide first-time players into Chapter 1 (`BL-48`).
-* **Directives**: Add visual bridge/ramp placement diagrams (`BL-37`) and campaign onboarding (`BL-48`).
+  * Interactive in-engine playtest micro-tutorial challenges not yet available.
+* **Directives**: Add interactive in-engine playable micro-tutorials in future sprint.
 
 ---
 

@@ -126,6 +126,7 @@ import './unit/ui/high-contrast-mode.test.mjs';
 import './unit/ui/mobile-controls.test.mjs';
 import './unit/ui/mobile-movement-and-minimap.test.mjs';
 import './unit/ui/feedback-modal.test.mjs';
+import './unit/ui/guide-modal.test.mjs';
 
 // Run registered suites
 
