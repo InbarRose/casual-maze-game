@@ -40,6 +40,7 @@ import './unit/engine/secret-wall.test.mjs';
 import './unit/engine/scoring-medals.test.mjs';
 import './unit/engine/input-manager.test.mjs';
 import './unit/engine/tactical-minimap.test.mjs';
+import './unit/engine/multi-elevation-pathfinding.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/base-entity.test.mjs';

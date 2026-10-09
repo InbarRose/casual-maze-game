@@ -967,6 +967,23 @@
     </div>
   </div>
 
+  <!-- Clear Canvas Confirmation Modal (Popup Avoidance BL-64, BL-73) -->
+  <div class="modal-backdrop" id="modal-clear-confirm" style="display: none;">
+    <div class="modal-dialog" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; color: var(--rose, #f43f5e); margin: 0;">⚠️ Clear Entire Labyrinth?</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="clear-confirm-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; padding: 1rem 0;">
+        Are you sure you want to reset the maze canvas to an empty floor? All placed walls, bridge spans, ramps, and entities will be removed. You can undo this action with <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">Ctrl+Z</kbd>.
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.8rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary" id="clear-confirm-btn-cancel">Cancel</button>
+        <button type="button" class="btn btn-danger" id="clear-confirm-btn-proceed" style="background: #e11d48; border-color: #f43f5e; color: #fff;">Confirm Clear</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Toast Notification Container -->
   <div class="toast-container" id="toast-container"></div>
 

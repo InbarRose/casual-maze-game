@@ -85,8 +85,15 @@ export class ProfileModal {
           </div>
         </div>
 
-        <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-glass); padding-top: 0.8rem; margin-top: 0.4rem;">
-          <button type="button" id="btn-profile-reset" class="btn btn-danger btn-sm" style="opacity: 0.8; font-size: 0.78rem;" title="Reset progress to zero">⚠️ Reset Save</button>
+        <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-glass); padding-top: 0.8rem; margin-top: 0.4rem; flex-wrap: wrap; gap: 0.5rem;">
+          <div style="display: flex; align-items: center; gap: 0.5rem;">
+            <button type="button" id="btn-profile-reset" class="btn btn-danger btn-sm" style="opacity: 0.8; font-size: 0.78rem;" title="Reset progress to zero">⚠️ Reset Save</button>
+            <div id="profile-reset-confirm-box" style="display: none; background: rgba(244, 63, 94, 0.12); border: 1px solid rgba(244, 63, 94, 0.35); border-radius: 6px; padding: 0.35rem 0.65rem; font-size: 0.75rem; color: var(--text);">
+              <span style="font-weight: 600; color: #fecdd3; margin-right: 0.5rem;">⚠️ Reset all progress?</span>
+              <button type="button" id="btn-profile-cancel-reset" class="btn btn-secondary btn-xs" style="padding: 2px 7px;">Cancel</button>
+              <button type="button" id="btn-profile-confirm-reset" class="btn btn-danger btn-xs" style="padding: 2px 7px; background: #e11d48; margin-left: 0.35rem;">Confirm</button>
+            </div>
+          </div>
           <button type="button" class="btn btn-primary btn-sm" id="btn-done-profile">Done</button>
         </div>
       </div>
@@ -162,14 +169,30 @@ export class ProfileModal {
     }
 
     const resetBtn = this.modalEl.querySelector('#btn-profile-reset');
-    if (resetBtn) {
+    const resetBox = this.modalEl.querySelector('#profile-reset-confirm-box');
+    const cancelResetBtn = this.modalEl.querySelector('#btn-profile-cancel-reset');
+    const confirmResetBtn = this.modalEl.querySelector('#btn-profile-confirm-reset');
+
+    if (resetBtn && resetBox) {
       resetBtn.onclick = () => {
-        if (confirm('Are you sure you want to reset all progress, stars, and records? This cannot be undone.')) {
+        resetBox.style.display = 'inline-flex';
+        resetBtn.style.display = 'none';
+      };
+      if (cancelResetBtn) {
+        cancelResetBtn.onclick = () => {
+          resetBox.style.display = 'none';
+          resetBtn.style.display = 'inline-block';
+        };
+      }
+      if (confirmResetBtn) {
+        confirmResetBtn.onclick = () => {
           StorageManager.clearAllProgress();
+          resetBox.style.display = 'none';
+          resetBtn.style.display = 'inline-block';
           this.showMessage('All progress has been reset', 'var(--gold)');
           this.refresh();
-        }
-      };
+        };
+      }
     }
 
     document.addEventListener('keydown', (e) => {

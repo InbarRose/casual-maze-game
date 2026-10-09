@@ -22,9 +22,9 @@ This document serves as the authoritative, prioritized master backlog for all fe
 ├──────────────────────────────────────┼──────────┼───────────┼──────────┤
 │ 1. Level Design & Kishōtenketsu      │ BL-01–08 │ P0 / P1   │ Completed│
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
-│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70 │ P1 │ Completed│
+│ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72 │ P1 │ Completed│
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39 │ P1 / P2 │ Ready │
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71 │ P1 │ Completed│
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74 │ P1 │ Completed│
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35 │ P2     │ Ready    │
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46 │ P0 / P1 │ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -81,6 +81,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-65** | **Tactical Minimap Elevation & Entity Shading** | **P1** | `v1.24.0` | Multi-elevation bridge deck (`#0369a1`) & walkway stripe (`#38bdf8`) shading, directional ramp markers, tactical entity indicators (uncollected keys, locked doors, levers, teleporters), player elevation beacon, sonar sweep wave, and HUD corner brackets. | **Completed** |
 | **BL-67** | **Continuous Touch Drag Steering & Pathfinding Waypoint Trail** | **P1** | `v1.24.0` | Fluid directional drag steering on mobile touchscreens with automatic stepping repeat (125ms interval), dynamic in-drag turning, and animated BFS pathfinding waypoint trail rendering along corridor tiles. | **Completed** |
 | **BL-70** | **Gamepad Controller Visual Guide & Live Input Tester in Settings** | **P1** | `v1.24.0` | Visual controller mapping diagram and live input tester in settings modal polling connected gamepads via Gamepad API, highlighting pressed buttons and stick axes in real time. | **Completed** (`78399ca`) |
+| **BL-72** | **Multi-Elevation BFS Pathfinding & Deadzone-Free Touch Tap Sensitivity** | **P1** | `v1.24.0` | Multi-elevation BFS pathfinding navigating across bridge ramps (`R_S`, `R_N`) and overpasses (`B_EW`, `B_NS`) without elevation mismatch failures, responsive touch tap detection without deadzones, and 20px drag threshold for fluid mobile navigation. | **Completed** |
 
 ---
 
@@ -118,6 +119,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-68** | **Pause Menu Destructive Confirmation Safety & Collapsible Top Minimap** | **P1** | `v1.24.0` | Explicit confirmation dialogs protecting Restart Level and Return to Level Select in pause menu; top-docked minimap radar on mobile viewports with 1-tap minimize toggle (`_`/`▲`) and state persistence. | **Completed** |
 | **BL-69** | **Universal Feedback & Bug Reporting Modal with Live Telemetry** | **P1** | `v1.24.0` | Universal glassmorphic modal accessible from app header, footer, and settings generating 1-click diagnostic bundles with client viewport, DPR, player coordinates, engine version, markdown clipboard copy, and pre-filled GitHub issue creation. | **Completed** (`78399ca`) |
 | **BL-71** | **Universal Interactive How-to-Play & Labyrinth Mechanics Guide Modal** | **P1** | `v1.24.0` | Universal multi-tabbed glassmorphic modal accessible from app header and footer providing interactive controls guides, entity mechanics, visual bridge/ramp SVG diagrams, and secret wall / scoring guides. | **Completed** (`9981a2d`) |
+| **BL-73** | **Inline Destructive Action Confirmations & Universal Popup Avoidance** | **P1** | `v1.24.0` | Eradication of native browser `confirm()` popups across ProfileModal reset, SettingsModal backup restore, and Editor clear canvas with sleek, non-blocking inline confirmation boxes and modal dialogs. | **Completed** |
+| **BL-74** | **Top Navigation Hub Exit Safety & GameMenu Confirmation Routing** | **P1** | `v1.24.0` | Shielded `← Hub` top navigation link during active play with inline pause quit confirmation routing, preventing accidental progress loss on mobile touchscreens. | **Completed** |
 
 ---
 
