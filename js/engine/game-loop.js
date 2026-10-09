@@ -798,8 +798,8 @@ export class GameLoop {
           touchHasMoved = true;
         }
 
-        // Continuous directional drag: deadzone threshold 24px
-        if (dist >= 24) {
+        // Continuous directional drag: deadzone threshold 20px (easier on mobile touch)
+        if (dist >= 20) {
           const absX = Math.abs(dx);
           const absY = Math.abs(dy);
           const direction = absX > absY ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
@@ -816,7 +816,7 @@ export class GameLoop {
               if (touchSteerDirection) {
                 this.tryMoveDirection(touchSteerDirection);
               }
-            }, 125);
+            }, 120);
           }
         }
       }
@@ -841,8 +841,8 @@ export class GameLoop {
           return;
         }
 
-        // Swipe detected: distance >= 24px within 600ms
-        if (touchHasMoved && (absX >= 24 || absY >= 24) && elapsed < 600) {
+        // Swipe detected: distance >= 20px within 600ms
+        if ((absX >= 20 || absY >= 20) && elapsed < 600) {
           const direction = absX > absY ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
           this.autoMovePath = null;
           this.clickTarget = null;
@@ -850,14 +850,12 @@ export class GameLoop {
           return;
         }
 
-        // Tap detected: pathfind / interact
-        if (!touchHasMoved || Math.hypot(dx, dy) < 15) {
-          this.handleCanvasPointerDown({
-            clientX: endX,
-            clientY: endY,
-            button: 0,
-          });
-        }
+        // Tap detected: pathfind / interact (no deadzone!)
+        this.handleCanvasPointerDown({
+          clientX: endX,
+          clientY: endY,
+          button: 0,
+        });
       }
     };
 
@@ -1268,36 +1266,24 @@ export class GameLoop {
       return [];
     }
 
-    // Check if target tile can ever be entered from any adjacent direction
-    const isTargetWalkable = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }].some(d => {
-      const ax = targetX + d.dx;
-      const ay = targetY + d.dy;
-      if (ax < 0 || ax >= this.level.dimensions.width || ay < 0 || ay >= this.level.dimensions.height) return false;
-      const chk = CollisionEngine.checkMove(ax, ay, targetX, targetY, startElev, this.level, this.entities, this.player.inventory);
-      return chk.allowed;
-    });
-
     const queue = [{ x: startX, y: startY, elevation: startElev, path: [] }];
     const visited = new Set([`${startX},${startY},${startElev}`]);
     let bestAdjacentPath = null;
 
     let iterations = 0;
-    const maxIterations = 2500;
+    const maxIterations = 3500;
 
     while (queue.length > 0 && iterations++ < maxIterations) {
       const curr = queue.shift();
 
-      // If target is directly walkable and we reached it:
-      if (isTargetWalkable && curr.x === targetX && curr.y === targetY) {
+      // If we directly reached target:
+      if (curr.x === targetX && curr.y === targetY) {
         return curr.path;
       }
 
-      // If target is solid and we reached an adjacent cell:
-      if (!isTargetWalkable && Math.abs(curr.x - targetX) + Math.abs(curr.y - targetY) === 1) {
-        if (!bestAdjacentPath || curr.path.length < bestAdjacentPath.length) {
-          bestAdjacentPath = curr.path;
-          return bestAdjacentPath; // First adjacent encountered in BFS is guaranteed shortest
-        }
+      // If target tile itself is adjacent and non-walkable directly (e.g. wall, closed door, lever), record shortest adjacent path
+      if (!bestAdjacentPath && Math.abs(curr.x - targetX) + Math.abs(curr.y - targetY) === 1) {
+        bestAdjacentPath = curr.path;
       }
 
       const neighbors = [
