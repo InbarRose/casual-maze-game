@@ -492,6 +492,8 @@ This document tracks project milestones, current release status, active developm
   - Expand dynamic Fog of War into more campaign levels (e.g. dense jungle canopies, subterranean crypts, twilight temples) with varied sight radii (`viewRadius: 4..8`) and warm torch light gradients, elevating exploration feel and tactical minimap radar value.
 - [x] **Viewport Zoom & Consistent Optical Scale (`BL-87`)**:
   - Decouple canvas tile rendering from "fit-to-screen" squash; establish a default optical tile scale ($32\text{px}$–$40\text{px}$) so larger levels extend beyond viewport bounds and scroll cleanly with camera follow; provide intuitive zoom controls (`+`/`-`, mouse wheel, pinch-to-zoom, HUD buttons).
+- [ ] **Translucent Disambiguation & Two-Stage Interaction Reveal (`BL-91`)**:
+  - Refine multi-target proximity HUD to eliminate player character visual occlusion: (1) Make in-world popups and drawers semi-translucent (`backdrop-filter`, `opacity: 0.82`, non-blocking footprint); (2) When multiple items are nearby, render only a single primary `[E]` interact indicator with a small quantity badge (e.g. `[E] • 3`); (3) Only reveal in-world numbered targets (`[1]`, `[2]`, `[3]`) and expanded action options *after* the initial <kbd>E</kbd> / tap is engaged, keeping the viewport pristine during movement.
 - [ ] **Macro-Labyrinths & Classic Maze Topologies (`BL-89`, `BL-90`)**:
   - Expand labyrinth scale ($\ge 27 \times 27$ up to $35 \times 35$) without discarding existing levels by introducing a new Chapter 9 ("The Vast Catacombs") or Master Tier trials featuring classical maze topologies (branching corridors, circular concentric rings, hedge-style dead ends with landmarks) harmonized with lock-and-key and puzzle mechanics.
 
@@ -532,6 +534,7 @@ All architectural decisions are documented in `docs/adr/`:
 | [0006](adr/0006-camera-world-rotation-branching-rooms.md) | Camera World Rotation, Branching Levels, and Multi-Room Dungeons | Accepted | 2026-09-19 |
 | [0007](adr/0007-solid-principles-and-code-elegance.md) | SOLID Principles, Entity Domain Polymorphism, and Code Elegance | Accepted | 2026-10-02 |
 | [0008](adr/0008-lever-interaction-separation-and-floor-plate-traps.md) | Lever Manual Interaction Separation and Floor-Plate Trap Mechanics | Accepted | 2026-10-09 |
+| [0009](adr/0009-translucent-disambiguation-and-two-stage-reveal.md) | Translucent Disambiguation and Two-Stage Interaction Reveal | Accepted | 2026-10-09 |
 
 ---
 

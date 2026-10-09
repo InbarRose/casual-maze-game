@@ -24,7 +24,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33,78,80│ P1 │ Completed│
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72,87│ P1│ Active │
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39,75 │ P1 / P2 │ Completed│
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88 │ P0/P1 │ Active │
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88,91 │ P0/P1 │ Active │
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35,77 │ P2   │ Completed│
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46,79 │ P0/P1│ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -135,6 +135,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-85** | **Directional Proximity Interaction & Multi-Target Disambiguation** | **P0** | `v1.24.0` | Add `interactDirections` property restricting player approaches; implement multi-target disambiguation when multiple interactables are reachable simultaneously with in-world numbered pills (`[1]`, `[2]`), action drawer HUD, and numeric hotkey selection (`1`..`9`). | **Completed** |
 | **BL-86** | **Lever Interaction Separation & Floor-Plate Trap Mechanics** | **P0** | `v1.24.0` | Prevent levers from auto-toggling when stepped on; require explicit engagement (`[E]`, click, disambiguation); add `floor_plate` style for single-fire auto-trigger traps. | **Completed** |
 | **BL-88** | **Strategic Fog of War Expansion & Exploratory Vision Dynamics** | **P1** | `v1.25.0` | Broaden Fog of War application across campaign levels (e.g. subterranean crypts, dense jungles, twilight temples, vast labyrinths) to make exploration meaningful and elevate minimap utility; support varied sight radiuses (`viewRadius: 4..8`) and atmospheric lighting gradients. | Planned |
+| **BL-91** | **Translucent Disambiguation & Two-Stage Interaction Reveal** | **P1** | `v1.25.0` | Refine multi-target proximity HUD to eliminate player character visual occlusion: (1) Make in-world popups and drawers semi-translucent (`backdrop-filter`, `opacity: 0.82`, non-blocking footprint); (2) When multiple items are nearby, render only a single primary `[E]` interact indicator with a small quantity badge (e.g. `[E] • 3`); (3) Only reveal in-world numbered targets (`[1]`, `[2]`, `[3]`) and expanded action options *after* the initial <kbd>E</kbd> / tap is engaged, keeping the viewport pristine during movement. | Planned |
 
 ---
 
