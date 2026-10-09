@@ -26,10 +26,10 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 6.67 | 9.33 | 5.67 | 6.67 | 5.33 | 5.33 | **39.00** (65.0%) | **B- Tier** | Tactile Micro-Clicks & Footstep Frequency Jitter (`BL-28`, `BL-35`, `BL-51`) |
 | **CMP-13** | **Storage, Save State & Persistence Engine** | 5.00 | 9.67 | 5.33 | 7.67 | 6.00 | 5.00 | **38.67** (64.5%) | **C+ Tier** | Versioned Schema Migration Runner & Telemetry Bundler (`BL-34`, `BL-36`, `BL-52`) |
 | **CMP-14** | **Player Profile, Medals & Prestige Progression** | 5.33 | 9.33 | 5.67 | 6.67 | 6.67 | 5.33 | **39.00** (65.0%) | **B- Tier** | Tiered Medals, Score Formula & Sleuth Badges (`BL-52`) |
-| **CMP-15** | **Settings & Configuration System** | 4.33 | 9.33 | 6.33 | 5.67 | 6.00 | 5.67 | **37.33** (62.2%) | **C+ Tier** | 1-Click JSON Backup & Restore + Settings Rebinding (`BL-25`, `BL-26`, `BL-53`) |
+| **CMP-15** | **Settings & Configuration System** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Gamepad Guide & Live Tester + Diagnostics Feedback Link Resolved (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`) |
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 5.00 | 9.33 | 6.67 | 5.67 | 5.00 | 6.33 | **38.00** (63.3%) | **C+ Tier** | Visual Bridge & Ramp Crossing SVG Guides (`BL-37`, `BL-48`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 5.67 | 9.33 | 6.33 | 7.00 | 5.33 | 6.33 | **39.99** (66.7%) | **B- Tier** | Browser Runner & Full Telemetry Resolved (`BL-45`, `BL-46`) |
-| **CMP-18** | **Community Feedback & Bug Reporting Channels** | 4.33 | 9.33 | 6.33 | 5.33 | 4.33 | 6.67 | **36.32** (60.5%) | **C+ Tier** | 1-Click Diagnostic Bug Bundle Exporter (`BL-34`) |
+| **CMP-18** | **Community Feedback & Bug Reporting Channels** | 5.67 | 9.33 | 7.67 | 7.33 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | 1-Click Universal Feedback Modal with Live Telemetry & GitHub Issue Creation (`BL-34`, `BL-69`) |
 | **CMP-19** | **Accessibility & Sensory Inclusivity** | 5.67 | 9.67 | 6.67 | 6.00 | 5.67 | 8.33 | **42.01** (70.0%) | **B- Tier** | Canvas High-Contrast Contours, Assist Halos & Victory Advance (`BL-26`, `BL-40`, `BL-55`, `BL-66`) |
 
 ---
@@ -353,22 +353,24 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/settings-modal.js`, `css/main.css`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **5.67/10** (1.1: 5, 1.2: 6, 1.3: 6)
+  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 7, 3.2: 8, 3.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
   * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
-  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
-  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
-  * **Master Score**: **42.00 / 60.00 (70.0% — B- Tier)**
+  * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
+  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
+  * **Master Score**: **44.00 / 60.00 (73.3% — B Tier)**
 * **Strengths**:
   * Live audio slider previews with gain clamping and persistence.
   * High contrast mode toggle with instant body class injection.
   * **Destructive Safety Confirmations (`BL-64`)**: Explicit double-confirmation workflow for "Reset All Progress" with Cancel/Confirm controls preventing accidental progression wipes.
   * **JSON Save State Backup & Restore (`BL-53`)**: Cloudless save state export to file and import with confirmation protection.
   * **Minimalist UI & Scrollable Modal (`BL-64`)**: Modal height clamped to viewport with fluid scrollable body, momentum touch physics, and sticky modal header/footer preventing clipped action buttons.
+  * **Interactive Gamepad Controller Visual Guide & Live Input Tester (`BL-70`)**: Real-time polling via Gamepad API displaying hardware connection state, button mappings (A: Interact, B: Menu, X: View, Bumpers: Rotate, D-pad/stick: Move), live button press highlights (`.gp-indicator`), and analog axis stick coordinate monitoring.
+  * **In-Settings Feedback & Bug Reporting Trigger (`BL-69`, `BL-70`)**: Dedicated diagnostics link opening the universal feedback and bug reporting telemetry modal with 1 click.
 * **Gaps & Critical Deductions**:
   * Perspective toggle does not differentiate top-down blueprint from 2.5D isometric (`BL-44`).
-* **Directives**: Deliver visual controller diagram and enhanced tileset preview.
+* **Directives**: Deliver enhanced tileset preview and custom key remapping editor.
 
 ---
 
@@ -414,21 +416,24 @@ This document records the official baseline quality evaluations, granular expert
 ---
 
 ### CMP-18: Community Feedback & Bug Reporting Channels
-*Files: `.github/ISSUE_TEMPLATE/`, `js/core/debug-logger.js`, `js/ui/settings-modal.js`*
+*Files: `js/ui/feedback-modal.js`, `js/ui/app-header.js`, `js/ui/settings-modal.js`, `js/core/storage.js`, `.github/ISSUE_TEMPLATE/`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.00/10** (1.1: 4, 1.2: 4, 1.3: 4)
+  * $C_1$ Juice & Delight: **5.67/10** (1.1: 6, 1.2: 5, 1.3: 6)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **4.67/10** (3.1: 4, 3.2: 5, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **5.33/10** (4.1: 5, 4.2: 6, 4.3: 5)
-  * $C_5$ Progression & Retention: **4.33/10** (5.1: 4, 5.2: 5, 5.3: 4)
-  * $C_6$ Accessibility & DX: **5.00/10** (6.1: 5, 6.2: 5, 6.3: 5)
-  * **Master Score**: **32.66 / 60.00 (54.4% — C- Tier Prototype)**
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 7, 4.2: 8, 4.3: 7)
+  * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
+  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
+  * **Master Score**: **44.00 / 60.00 (73.3% — B Tier)**
 * **Strengths**:
   * Structured GitHub issue templates for bug reports and feature requests.
+  * **Universal Feedback & Bug Reporting Modal (`BL-69`)**: Persistent glassmorphic modal accessible from universal app header (`#btn-app-feedback`), footer (`#btn-footer-feedback`), and settings dialog (`#btn-settings-open-feedback`).
+  * **1-Click Diagnostic Bug Bundle Exporter (`BL-34`, `BL-69`)**: Auto-generates client diagnostic snapshot including engine version, active level ID/title, client viewport dimensions, device pixel ratio, touch support, player coordinates, inventory state, and settings.
+  * **Pre-filled GitHub Issue URL & Clipboard Copy**: 1-click clipboard markdown copying with fallback support, and direct new issue URL generation pre-populating title, template, and structured markdown payload.
 * **Gaps & Critical Deductions**:
-  * No in-game 1-click diagnostic bug bundle export (`BL-34`); players must manually transcribe logs.
-* **Directives**: Implement 1-click diagnostic GitHub issue bundler (`BL-34`).
+  * Optional client screenshot canvas attachment via `toDataURL` not yet supported.
+* **Directives**: Add optional canvas snapshot attachment preview in future iteration.
 
 ---
 

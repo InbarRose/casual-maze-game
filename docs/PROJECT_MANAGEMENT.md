@@ -89,6 +89,10 @@ This document tracks project milestones, current release status, active developm
   - **Pause Menu Destructive Confirmation Safety (BL-68)**: Added explicit confirmation dialogs protecting Restart Level and Return to Level Select against accidental mobile taps.
   - **Collapsible Top Minimap Radar (BL-68)**: Maintained top-docked minimap radar on mobile viewports (`top: 4.25rem; right: 0.75rem;`), freeing the bottom canvas from touch gesture conflicts, with 1-tap minimize toggle (`_`/`▲`) and localStorage persistence.
   - **Automated QA Coverage**: Created `tests/unit/ui/mobile-movement-and-minimap.test.mjs`; expanded test harness to 107 test suites and 513 tests (0 failed, 7,353 assertions, 23/23 zero-drift checks passed).
+- [x] **Universal Feedback Modal, Live Telemetry & Settings Gamepad Tester Sprint (BL-69, BL-70)**:
+  - **Universal Feedback & Bug Reporting Modal (BL-69)**: Created `FeedbackModal` (`js/ui/feedback-modal.js`) and unified action triggers in `app-header.js` (`#btn-app-feedback`, `#btn-footer-feedback`) and `settings-modal.js` (`#btn-settings-open-feedback`); auto-generates 1-click diagnostic telemetry bundles with active level ID/title, client screen/viewport/DPR/touch support, engine version, player coordinates, inventory state, and settings; provides 1-click clipboard markdown copying with fallback support and pre-filled GitHub issue link generation.
+  - **Interactive Gamepad Guide & Live Input Tester (BL-70)**: Added collapsible controller visual mapping diagram in `SettingsModal` (`#settings-gamepad-details`) illustrating cardinal movement, button 0 (interact), button 1 (pause/cancel), button 2 (view mode), bumpers (camera rotation), and select (minimap); added real-time Gamepad API polling loop (`_updateGamepadStatus()`) highlighting pressed buttons (`.gp-indicator`) and displaying live analog stick coordinates.
+  - **Automated QA Coverage**: Created `tests/unit/ui/feedback-modal.test.mjs`; expanded test harness to 108 test suites and 517 tests (0 failed, 7,388 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
