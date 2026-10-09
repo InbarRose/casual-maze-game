@@ -21,6 +21,7 @@ import './unit/core/versioning.test.mjs';
 import './unit/core/storage-migration-and-diagnostics.test.mjs';
 import './unit/core/storage-backup-restore.test.mjs';
 import './unit/core/geometry.test.mjs';
+import './unit/core/maze-generator.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
@@ -37,8 +38,11 @@ import './unit/engine/replay-player.test.mjs';
 import './unit/engine/click-to-move-and-hotkeys.test.mjs';
 import './unit/engine/secret-wall.test.mjs';
 import './unit/engine/scoring-medals.test.mjs';
+import './unit/engine/input-manager.test.mjs';
+import './unit/engine/tactical-minimap.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
+import './unit/entities/base-entity.test.mjs';
 import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
 import './unit/entities/dynamic-activities.test.mjs';
@@ -77,6 +81,8 @@ import './unit/editor/editor-buttons-and-functions.test.mjs';
 import './unit/editor/history-stack.test.mjs';
 import './unit/editor/prefabs-and-autofix.test.mjs';
 import './unit/editor/bridge-ramp-guide.test.mjs';
+import './unit/editor/generator-integration.test.mjs';
+import './unit/editor/custom-prefabs.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
@@ -117,6 +123,10 @@ import './unit/ui/maze-html-bootstrap.test.mjs';
 import './unit/ui/victory-quick-advance.test.mjs';
 import './unit/ui/breadcrumbs-navigation.test.mjs';
 import './unit/ui/high-contrast-mode.test.mjs';
+import './unit/ui/mobile-controls.test.mjs';
+import './unit/ui/mobile-movement-and-minimap.test.mjs';
+import './unit/ui/feedback-modal.test.mjs';
+import './unit/ui/guide-modal.test.mjs';
 
 // Run registered suites
 

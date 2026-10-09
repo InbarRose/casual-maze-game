@@ -6,24 +6,24 @@
 import { ENTITY_TYPES } from '../core/constants.js';
 import { globalEvents } from '../core/events.js';
 import { assetLoader } from '../core/asset-loader.js';
+import { BaseEntity } from './base-entity.js';
 
-export class Lever {
+export class Lever extends BaseEntity {
   /**
    * @param {object} config
    */
-  constructor(config) {
-    this.id = config.id || `lever_${Math.random().toString(36).substr(2, 9)}`;
-    this.type = ENTITY_TYPES.LEVER;
-    this.x = config.x ?? 0;
-    this.y = config.y ?? 0;
+  constructor(config = {}) {
+    super({
+      ...config,
+      type: ENTITY_TYPES.LEVER,
+      name: config.name || 'Switch',
+    });
+
     this.state = !!config.state; // false = unpulled, true = pulled
     this.style = config.style || 'switch_lever'; // 'switch_lever' | 'pressure_pedestal' | 'crystal_switch' | 'runic_plate' | 'cog_wheel'
     this.oneWay = !!config.oneWay;
-    this.name = config.name || 'Switch';
     this.color = config.color || '#38bdf8';
     this.targets = Array.isArray(config.targets) ? config.targets : []; // [{ action, x, y, layer, stateA, stateB }]
-    this.z = config.z ?? config.elevation ?? 0;
-    this.elevation = this.z;
 
     // Visual animation handle angle
     this.handleAngle = this.state ? 0.65 : -0.65;
@@ -31,20 +31,18 @@ export class Lever {
     this.useVectorSprite = config.useVectorSprite || false;
   }
 
-  get elevation() {
-    return this.z;
+  getPrompt() {
+    if (this.oneWay && this.state) return `${this.name} (Locked)`;
+    return this.state ? `Reset ${this.name}` : `Activate ${this.name}`;
   }
 
-  set elevation(value) {
-    this.z = value;
-  }
-
-  /**
-   * Returns canonical (X, Y, Z) coordinate string
-   * @returns {string}
-   */
-  getCoordString() {
-    return `(${this.x}, ${this.y}, ${this.z ?? 0})`;
+  onInteract(context = {}) {
+    const level = context.level;
+    if (level) {
+      const newState = this.toggle(level);
+      return { handled: true, state: newState, entity: this };
+    }
+    return { handled: false, entity: this };
   }
 
   /**

@@ -66,6 +66,9 @@
         <button id="btn-auto-fix" class="btn btn-secondary btn-sm" title="One-Click Diagnostic Auto-Fixer: Resolve reachability, missing ramps, orphaned doors/keys, and bad coordinates">
           🪄 Auto-Fix
         </button>
+        <button id="btn-generate-maze" class="btn btn-secondary btn-sm" title="Procedural Maze Generator: 1-Click Solvable Labyrinth (BL-50)">
+          ⚡ Generate
+        </button>
 
         <div class="toolbar-group">
           <button id="btn-settings" class="btn btn-secondary btn-sm" title="Configure Labyrinth Dimensions & Rules">⚙ Properties</button>
@@ -215,6 +218,19 @@
           <button type="button" class="palette-btn" data-prefab="switch_hub" title="Clockwork Switch Hub (5x4) — Lever wired to toggle passage walls">
             <span class="palette-icon">🕹️</span> Switch Hub
           </button>
+        </div>
+      </div>
+
+      <!-- Custom Prefab Palette (BL-39) -->
+      <div>
+        <div class="sidebar-section-title" style="display: flex; justify-content: space-between; align-items: center;">
+          <span>Custom Prefabs</span>
+          <button type="button" id="btn-open-save-prefab" class="btn btn-secondary btn-xs" style="padding: 2px 6px; font-size: 0.65rem;" title="Capture level region as reusable custom prefab (BL-39)">
+            💾 Save Region
+          </button>
+        </div>
+        <div id="custom-prefab-palette" class="palette-grid" style="grid-template-columns: 1fr; gap: 4px;">
+          <!-- Dynamically populated by EditorUI -->
         </div>
       </div>
 
@@ -830,6 +846,123 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="guide-btn-dismiss">Got It!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Procedural Maze Generator Modal (BL-50) -->
+  <div class="modal-backdrop" id="modal-maze-generator" style="display: none;">
+    <div class="modal-dialog" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">⚡ Procedural Maze Generator</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="generator-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem;">
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+          Generate a 100% solvable labyrinth using randomized depth-first search with custom dimensions, biomes, and optional key-door puzzle gating.
+        </p>
+
+        <!-- Dimension Preset / Custom -->
+        <div class="form-group">
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Dimensions</label>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.5rem;">
+            <button type="button" class="btn btn-secondary btn-sm gen-size-preset" data-w="11" data-h="11">Small (11×11)</button>
+            <button type="button" class="btn btn-secondary btn-sm gen-size-preset active" data-w="17" data-h="17">Medium (17×17)</button>
+            <button type="button" class="btn btn-secondary btn-sm gen-size-preset" data-w="25" data-h="25">Large (25×25)</button>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Custom (Odd ≥ 7):</span>
+            <input type="number" id="gen-width" class="input-field" value="17" min="7" max="49" step="2" style="width: 70px; text-align: center;" />
+            <span style="color: var(--text-muted);">×</span>
+            <input type="number" id="gen-height" class="input-field" value="17" min="7" max="49" step="2" style="width: 70px; text-align: center;" />
+          </div>
+        </div>
+
+        <!-- Biome Theme -->
+        <div class="form-group">
+          <label for="gen-theme" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Biome Environment</label>
+          <select id="gen-theme" class="input-field" style="width: 100%;">
+            <option value="dungeon">🏰 Subterranean Dungeon</option>
+            <option value="glacial">❄️ Glacial Expanse</option>
+            <option value="jungle">🌴 Overgrowth Jungle</option>
+            <option value="magma">🌋 Magma Chasm</option>
+            <option value="temple">🏛️ Sunken Temple</option>
+            <option value="random">🎲 Random Biome</option>
+          </select>
+        </div>
+
+        <!-- Braid Factor -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+            <span style="font-weight: 600; color: var(--text-secondary);">Circuit Loopiness (Braid)</span>
+            <span id="gen-braid-val" style="font-family: var(--font-mono); color: var(--accent);">25%</span>
+          </div>
+          <input type="range" id="gen-braid" min="0" max="60" value="25" step="5" style="width: 100%;" />
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted);">
+            <span>Strict Dead-Ends (0%)</span>
+            <span>Interconnected Loops (60%)</span>
+          </div>
+        </div>
+
+        <!-- Key-Door Pairs -->
+        <div class="form-group">
+          <label for="gen-keys" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Puzzle Gating (Key &amp; Door Pairs)</label>
+          <select id="gen-keys" class="input-field" style="width: 100%;">
+            <option value="0">None (Pure Maze Navigation)</option>
+            <option value="1" selected>1 Key &amp; Locked Door Pair</option>
+            <option value="2">2 Key &amp; Door Pairs</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary" id="generator-btn-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="generator-btn-submit">⚡ Generate Labyrinth</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Capture Custom Prefab Modal (BL-39) -->
+  <div class="modal-backdrop" id="modal-save-prefab" style="display: none;">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">💾 Save Custom Prefab Module</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="save-prefab-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+          Capture an architectural region of your maze into a reusable prefab saved in local storage.
+        </p>
+
+        <div class="form-group">
+          <label for="prefab-capture-name" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Prefab Name</label>
+          <input type="text" id="prefab-capture-name" class="input-field" placeholder="e.g., Hidden Treasury Room" value="Custom Module" style="width: 100%;" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label for="prefab-capture-x" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Origin X</label>
+            <input type="number" id="prefab-capture-x" class="input-field" value="0" min="0" style="width: 100%;" />
+          </div>
+          <div class="form-group">
+            <label for="prefab-capture-y" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Origin Y</label>
+            <input type="number" id="prefab-capture-y" class="input-field" value="0" min="0" style="width: 100%;" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label for="prefab-capture-w" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Width (Tiles)</label>
+            <input type="number" id="prefab-capture-w" class="input-field" value="5" min="1" max="50" style="width: 100%;" />
+          </div>
+          <div class="form-group">
+            <label for="prefab-capture-h" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Height (Tiles)</label>
+            <input type="number" id="prefab-capture-h" class="input-field" value="5" min="1" max="50" style="width: 100%;" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary" id="save-prefab-btn-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="save-prefab-btn-submit">💾 Save Prefab</button>
       </div>
     </div>
   </div>
