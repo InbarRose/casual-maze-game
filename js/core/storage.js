@@ -777,8 +777,8 @@ export class StorageManager {
         hotkeysEnabled: settings.hotkeysEnabled ?? true,
       },
       activeLevel: {
-        id: String(context.levelId || context.level?.id || 'unknown'),
-        title: context.levelTitle || context.level?.title || 'Unknown Labyrinth',
+        id: String(context.activeLevel?.id || context.levelId || context.level?.id || 'unknown'),
+        title: context.activeLevel?.title || context.levelTitle || context.level?.title || 'Unknown Labyrinth',
         chapter: context.chapterNumber || context.level?.chapterNumber || null,
         dimensions: context.level?.dimensions ? `${context.level.dimensions.width}x${context.level.dimensions.height}` : null,
       },
@@ -820,6 +820,7 @@ export class StorageManager {
       json: bundle,
       markdown,
       githubUrl,
+      githubIssueUrl: githubUrl,
     };
   }
 

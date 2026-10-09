@@ -8,12 +8,14 @@
 import { StorageManager } from '../core/storage.js';
 import { AudioFx } from './audio-fx.js';
 import { globalEvents } from '../core/events.js';
+import { getFeedbackModal } from './feedback-modal.js';
 
 export class SettingsModal {
   constructor() {
     this.modalEl = null;
     this.isOpen = false;
     this.audio = new AudioFx();
+    this._gamepadRafId = null;
     this.ensureDom();
   }
 
@@ -155,6 +157,52 @@ export class SettingsModal {
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">T</kbd> : Restart Level (Confirm)</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">P</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Esc</kbd> : Pause / In-Game Menu</div>
             </div>
+
+            <!-- Gamepad Controller Layout & Live Input Tester (BL-70) -->
+            <details id="settings-gamepad-details" style="margin-top: 0.85rem; padding-top: 0.75rem; border-top: 1px solid rgba(255,255,255,0.06);">
+              <summary style="font-size: 0.82rem; font-weight: 600; color: var(--accent); cursor: pointer; user-select: none; display: flex; align-items: center; justify-content: space-between;">
+                <span>🎮 Controller Guide &amp; Live Input Tester</span>
+                <span id="gamepad-connection-badge" style="font-size: 0.72rem; padding: 2px 7px; border-radius: 12px; background: rgba(148, 163, 184, 0.15); color: var(--text-muted); font-weight: 500;">No Gamepad</span>
+              </summary>
+
+              <div style="margin-top: 0.75rem; display: flex; flex-direction: column; gap: 0.6rem;">
+                <div id="gamepad-info-banner" style="font-size: 0.75rem; font-family: var(--font-mono); background: #070b12; padding: 0.5rem 0.7rem; border-radius: 4px; border: 1px solid var(--border-glass); color: var(--text-muted);">
+                  Connect any standard controller (Xbox, PlayStation, Generic USB/Bluetooth) and press any button.
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.4rem; font-size: 0.78rem;">
+                  <div id="gp-btn-stick" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">L-Stick / D-Pad</kbd> : Move Explorer
+                  </div>
+                  <div id="gp-btn-a" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">A / ✕ (Btn 0)</kbd> : Interact / Inspect [E]
+                  </div>
+                  <div id="gp-btn-b" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">B / ◯ (Btn 1)</kbd> : Pause / Back [Esc]
+                  </div>
+                  <div id="gp-btn-x" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">X / ▢ (Btn 2)</kbd> : View Mode [V]
+                  </div>
+                  <div id="gp-btn-lb" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">LB (Btn 4)</kbd> : Rotate Left [Q]
+                  </div>
+                  <div id="gp-btn-rb" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">RB (Btn 5)</kbd> : Rotate Right [R]
+                  </div>
+                  <div id="gp-btn-select" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">Select (Btn 8)</kbd> : Map / Pan [M]
+                  </div>
+                  <div id="gp-btn-start" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">Start (Btn 9)</kbd> : Pause Menu
+                  </div>
+                </div>
+
+                <div id="gamepad-live-monitor" style="display: none; font-size: 0.72rem; font-family: var(--font-mono); background: rgba(0,0,0,0.4); border-radius: 4px; padding: 0.4rem 0.6rem; color: #38bdf8; justify-content: space-between; align-items: center;">
+                  <span id="gamepad-active-btns">Active: None</span>
+                  <span id="gamepad-active-axes">Stick: (0.00, 0.00)</span>
+                </div>
+              </div>
+            </details>
           </div>
 
           <!-- Section 4: Save Data Backup & Cloudless Sync (BL-53) -->
@@ -184,13 +232,27 @@ export class SettingsModal {
             </div>
           </div>
 
-          <!-- Section 5: Diagnostics & Links -->
-          <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <div style="font-size: 0.85rem; font-weight: 600;">Replay Theater & Diagnostics Lab</div>
-              <div style="font-size: 0.75rem; color: var(--text-muted);">Watch level walkthroughs, test runners, and issue reporting</div>
+          <!-- Section 5: Diagnostics & Feedback (BL-69, BL-70) -->
+          <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); display: flex; flex-direction: column; gap: 0.75rem;">
+            <div style="font-size: 0.8rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
+              🔬 Diagnostics &amp; Support
             </div>
-            <a href="test.html" class="btn btn-secondary btn-sm" style="text-decoration: none;">🧪 Open Lab</a>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+              <div>
+                <div style="font-size: 0.85rem; font-weight: 600;">Replay Theater &amp; Test Lab</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Watch level walkthroughs, test runners, and engine diagnostics</div>
+              </div>
+              <a href="test.html" class="btn btn-secondary btn-sm" style="text-decoration: none;">🧪 Open Lab</a>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; flex-wrap: wrap; padding-top: 0.6rem; border-top: 1px solid rgba(255, 255, 255, 0.06);">
+              <div>
+                <div style="font-size: 0.85rem; font-weight: 600;">Feedback &amp; Bug Reporting</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Export diagnostic telemetry bundle and open GitHub issue</div>
+              </div>
+              <button type="button" id="btn-settings-open-feedback" class="btn btn-primary btn-sm" style="display: flex; align-items: center; gap: 0.35rem;">
+                <span>🐞</span> Send Feedback
+              </button>
+            </div>
           </div>
 
         </div>
@@ -407,6 +469,15 @@ export class SettingsModal {
       };
     }
 
+    // Feedback & Bug Reporting Modal Trigger (BL-69, BL-70)
+    const feedbackBtn = this.modalEl.querySelector('#btn-settings-open-feedback');
+    if (feedbackBtn) {
+      feedbackBtn.onclick = () => {
+        this.close();
+        getFeedbackModal().open({ pageTitle: 'Game Settings' });
+      };
+    }
+
     document.addEventListener('keydown', (e) => {
       if (this.isOpen && e.key === 'Escape') {
         this.close();
@@ -461,13 +532,164 @@ export class SettingsModal {
     if (this.modalEl) {
       this.modalEl.style.display = 'flex';
       this.isOpen = true;
+      this._startGamepadPolling();
     }
   }
 
   close() {
+    this._stopGamepadPolling();
     if (this.modalEl) {
       this.modalEl.style.display = 'none';
       this.isOpen = false;
+    }
+  }
+
+  _startGamepadPolling() {
+    if (typeof window === 'undefined' || typeof requestAnimationFrame === 'undefined') return;
+    this._stopGamepadPolling();
+    const poll = () => {
+      if (!this.isOpen) return;
+      this._updateGamepadStatus();
+      this._gamepadRafId = requestAnimationFrame(poll);
+    };
+    this._gamepadRafId = requestAnimationFrame(poll);
+  }
+
+  _stopGamepadPolling() {
+    if (this._gamepadRafId && typeof cancelAnimationFrame !== 'undefined') {
+      cancelAnimationFrame(this._gamepadRafId);
+      this._gamepadRafId = null;
+    }
+  }
+
+  _updateGamepadStatus() {
+    if (!this.modalEl) return;
+
+    const gamepads = (typeof navigator !== 'undefined' && typeof navigator.getGamepads === 'function')
+      ? navigator.getGamepads()
+      : [];
+    let activePad = null;
+    for (let i = 0; i < gamepads.length; i++) {
+      if (gamepads[i] && gamepads[i].connected) {
+        activePad = gamepads[i];
+        break;
+      }
+    }
+
+    const badge = this.modalEl.querySelector('#gamepad-connection-badge');
+    const banner = this.modalEl.querySelector('#gamepad-info-banner');
+    const monitor = this.modalEl.querySelector('#gamepad-live-monitor');
+    const activeBtnsEl = this.modalEl.querySelector('#gamepad-active-btns');
+    const activeAxesEl = this.modalEl.querySelector('#gamepad-active-axes');
+
+    if (!activePad) {
+      if (badge) {
+        badge.textContent = 'No Gamepad';
+        badge.style.background = 'rgba(148, 163, 184, 0.15)';
+        badge.style.color = 'var(--text-muted)';
+      }
+      if (banner) {
+        banner.textContent = 'Connect any standard controller (Xbox, PlayStation, Generic USB/Bluetooth) and press any button.';
+      }
+      if (monitor) {
+        monitor.style.display = 'none';
+      }
+      this._clearGamepadHighlights();
+      return;
+    }
+
+    // Active gamepad connected
+    if (badge) {
+      badge.textContent = `Connected (#${activePad.index})`;
+      badge.style.background = 'rgba(16, 185, 129, 0.2)';
+      badge.style.color = 'var(--emerald, #10b981)';
+    }
+    if (banner) {
+      banner.textContent = `🎮 ${activePad.id || 'Standard Gamepad'} (${activePad.buttons?.length || 0} buttons, ${activePad.axes?.length || 0} axes)`;
+    }
+    if (monitor) {
+      monitor.style.display = 'flex';
+    }
+
+    const pressedButtonIndices = [];
+    const btnMap = {
+      0: 'gp-btn-a',
+      1: 'gp-btn-b',
+      2: 'gp-btn-x',
+      4: 'gp-btn-lb',
+      5: 'gp-btn-rb',
+      8: 'gp-btn-select',
+      9: 'gp-btn-start',
+    };
+
+    // D-Pad buttons
+    const isDpad = activePad.buttons && (
+      activePad.buttons[12]?.pressed ||
+      activePad.buttons[13]?.pressed ||
+      activePad.buttons[14]?.pressed ||
+      activePad.buttons[15]?.pressed
+    );
+
+    // Sticks
+    const ax0 = activePad.axes?.[0] || 0;
+    const ax1 = activePad.axes?.[1] || 0;
+    const isStickMoved = Math.abs(ax0) > 0.25 || Math.abs(ax1) > 0.25;
+
+    // Highlight stick/dpad
+    const stickEl = this.modalEl.querySelector('#gp-btn-stick');
+    if (stickEl) {
+      this._setHighlight(stickEl, isStickMoved || isDpad);
+    }
+
+    // Highlight action buttons
+    for (const [btnIndex, elId] of Object.entries(btnMap)) {
+      const idx = Number(btnIndex);
+      const isPressed = !!activePad.buttons?.[idx]?.pressed;
+      const el = this.modalEl.querySelector(`#${elId}`);
+      if (el) {
+        this._setHighlight(el, isPressed);
+      }
+      if (isPressed) {
+        pressedButtonIndices.push(`B${idx}`);
+      }
+    }
+
+    if (activeBtnsEl) {
+      activeBtnsEl.textContent = pressedButtonIndices.length > 0
+        ? `Pressed: ${pressedButtonIndices.join(', ')}`
+        : 'Pressed: None';
+    }
+    if (activeAxesEl) {
+      activeAxesEl.textContent = `Stick: (${ax0.toFixed(2)}, ${ax1.toFixed(2)})`;
+    }
+  }
+
+  _setHighlight(el, active) {
+    if (!el) return;
+    if (active) {
+      el.style.background = 'rgba(56, 189, 248, 0.25)';
+      el.style.borderColor = 'var(--accent, #38bdf8)';
+      el.style.color = '#ffffff';
+      el.style.fontWeight = '700';
+    } else {
+      el.style.background = 'rgba(255, 255, 255, 0.03)';
+      el.style.borderColor = 'rgba(255, 255, 255, 0.08)';
+      el.style.color = '';
+      el.style.fontWeight = '';
+    }
+  }
+
+  _clearGamepadHighlights() {
+    if (!this.modalEl) return;
+    const indicators = this.modalEl.querySelectorAll ? this.modalEl.querySelectorAll('.gp-indicator') : [];
+    if (indicators && indicators.length > 0) {
+      indicators.forEach(el => this._setHighlight(el, false));
+    } else {
+      const ids = ['gp-btn-stick', 'gp-btn-a', 'gp-btn-b', 'gp-btn-x', 'gp-btn-lb', 'gp-btn-rb', 'gp-btn-select', 'gp-btn-start'];
+      for (const id of ids) {
+        const el = this.modalEl.querySelector(`#${id}`);
+        if (el) this._setHighlight(el, false);
+      }
     }
   }
 }

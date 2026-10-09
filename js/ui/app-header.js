@@ -9,10 +9,13 @@ import { ENGINE_VERSION } from '../core/version.js';
 import { StorageManager } from '../core/storage.js';
 import { ProfileModal } from './profile-modal.js';
 import { SettingsModal } from './settings-modal.js';
+import { FeedbackModal, getFeedbackModal } from './feedback-modal.js';
 import { audioFX } from './audio-fx.js';
 
 let profileModalInstance = null;
 let settingsModalInstance = null;
+
+export { getFeedbackModal };
 
 export function getProfileModal() {
   if (!profileModalInstance && typeof document !== 'undefined') {
@@ -54,6 +57,7 @@ export function initAppHeader(options = {}) {
 
   const profileModal = getProfileModal();
   const settingsModal = getSettingsModal();
+  const feedbackModal = getFeedbackModal();
 
   // 1. Mount or Update Header
   let header = document.querySelector('.app-nav-header');
@@ -138,10 +142,10 @@ export function initAppHeader(options = {}) {
           <span>⚙️</span>
         </button>
 
-        <!-- GitHub / Issue Report -->
-        <a href="https://github.com/InbarRose/casual-maze-game/issues" target="_blank" rel="noopener" class="app-action-btn icon-btn" title="Report Bug / Feedback on GitHub Issues">
+        <!-- Feedback & Issue Report Button -->
+        <button type="button" id="btn-app-feedback" class="app-action-btn icon-btn" title="Send Feedback / Report Bug [Diagnostic Bundle]">
           <span>🐞</span>
-        </a>
+        </button>
       </div>
     </div>
     ${breadcrumbsHtml}
@@ -163,6 +167,11 @@ export function initAppHeader(options = {}) {
   const settingsBtn = header.querySelector('#btn-app-settings');
   if (settingsBtn) {
     settingsBtn.onclick = () => settingsModal.open();
+  }
+
+  const feedbackBtn = header.querySelector('#btn-app-feedback');
+  if (feedbackBtn) {
+    feedbackBtn.onclick = () => feedbackModal.open({ pageTitle: typeof document !== 'undefined' ? document.title : 'Casual Maze Game' });
   }
 
   // Update profile badges live
@@ -200,14 +209,16 @@ export function initAppHeader(options = {}) {
 
       <div class="footer-center shortcuts-hint">
         <span><kbd>WASD</kbd> Move</span>
-        <span><kbd>Q/E</kbd> Rotate 90°</span>
+        <span><kbd>Q/R</kbd> Rotate 90°</span>
         <span><kbd>V</kbd> 2.5D Mode</span>
         <span><kbd>M</kbd> Minimap</span>
         <span><kbd>Esc</kbd> Menu</span>
       </div>
 
       <div class="footer-right">
-        <a href="test.html?mode=diagnostics" class="footer-link">🐞 Report Issue</a>
+        <button type="button" id="btn-footer-feedback" class="footer-link" style="background:none;border:none;padding:0;cursor:pointer;color:inherit;font:inherit;">🐞 Feedback &amp; Bug Report</button>
+        <span class="footer-dot">•</span>
+        <a href="test.html?mode=diagnostics" class="footer-link">🧪 Diagnostics Lab</a>
         <span class="footer-dot">•</span>
         <a href="test.html?mode=replay" class="footer-link">🎬 Replay Theater</a>
         <span class="footer-dot">•</span>
@@ -218,5 +229,10 @@ export function initAppHeader(options = {}) {
     </div>
   `;
 
-  return { header, footer, profileModal, settingsModal };
+  const footerFeedbackBtn = footer.querySelector('#btn-footer-feedback');
+  if (footerFeedbackBtn) {
+    footerFeedbackBtn.onclick = () => feedbackModal.open({ pageTitle: typeof document !== 'undefined' ? document.title : 'Casual Maze Game' });
+  }
+
+  return { header, footer, profileModal, settingsModal, feedbackModal };
 }
