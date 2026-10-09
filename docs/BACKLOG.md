@@ -24,7 +24,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33│ P1      │ Ready    │
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70 │ P1 │ Completed│
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39 │ P1 / P2 │ Ready │
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69 │ P1 │ Completed│
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71 │ P1 │ Completed│
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35 │ P2     │ Ready    │
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46 │ P0 / P1 │ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -117,6 +117,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-66** | **Canvas High-Contrast Contours & Assist Halos** | **P1** | `v1.24.0` | High-contrast visual pass across canvas renderer and minimap: pitch-black background, 2px solid white wall borders, 2-tier neon yellow (`#facc15`) and white halo contours around explorer for high accessibility. | **Completed** |
 | **BL-68** | **Pause Menu Destructive Confirmation Safety & Collapsible Top Minimap** | **P1** | `v1.24.0` | Explicit confirmation dialogs protecting Restart Level and Return to Level Select in pause menu; top-docked minimap radar on mobile viewports with 1-tap minimize toggle (`_`/`▲`) and state persistence. | **Completed** |
 | **BL-69** | **Universal Feedback & Bug Reporting Modal with Live Telemetry** | **P1** | `v1.24.0` | Universal glassmorphic modal accessible from app header, footer, and settings generating 1-click diagnostic bundles with client viewport, DPR, player coordinates, engine version, markdown clipboard copy, and pre-filled GitHub issue creation. | **Completed** (`78399ca`) |
+| **BL-71** | **Universal Interactive How-to-Play & Labyrinth Mechanics Guide Modal** | **P1** | `v1.24.0` | Universal multi-tabbed glassmorphic modal accessible from app header and footer providing interactive controls guides, entity mechanics, visual bridge/ramp SVG diagrams, and secret wall / scoring guides. | **Completed** (`9981a2d`) |
 
 ---
 
