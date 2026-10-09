@@ -133,6 +133,7 @@ import './unit/ui/mobile-movement-and-minimap.test.mjs';
 import './unit/ui/feedback-modal.test.mjs';
 import './unit/ui/guide-modal.test.mjs';
 import './unit/ui/elevation-audio.test.mjs';
+import './unit/ui/hero-ambient-canvas.test.mjs';
 
 // Run registered suites
 
