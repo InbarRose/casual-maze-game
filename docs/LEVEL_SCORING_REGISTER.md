@@ -71,7 +71,7 @@ This document maintains the official audit register, critical evaluation scores,
 | **Guardians Ch 1** | The Whispering Ruins | Inscriptions, Gems, Fire | 8.67 | 10.00 | 6.00 | 8.33 | 8.00 | 8.00 | **49.00** | **A** | ✅ Overhauled Temple |
 | **Guardians Ch 2** | The Falcon's Plinth | Carryable Falcon Relic | 8.67 | 10.00 | 6.00 | 8.67 | 8.00 | 8.33 | **49.67** | **A** | ✅ Overhauled Terrace |
 | **Guardians Ch 3** | Sanctum of Guardians | 4 Animal Plinth Riddle | 9.00 | 10.00 | 6.33 | 9.00 | 8.33 | 8.67 | **51.33** | **A** | ✅ Overhauled Sanctum |
-| **Citadel Ch 1** | The Whispering Citadel | 3-Room Dungeon (Courtyard/Crypt/Spire) | 8.67 | 10.00 | 6.00 | 8.67 | 8.00 | 8.67 | **50.01** | **A** | Multi-Room Spire |
+| **Citadel Ch 1** | The Whispering Citadel | 3-Room Megalabyrinth (Courtyard/27x27 Catacombs/Spire) | 9.33 | 10.00 | 6.67 | 9.33 | 8.33 | 9.00 | **52.66** | **A+** | ✅ 27x27 Macro-Catacombs Megalabyrinth |
 
 ---
 

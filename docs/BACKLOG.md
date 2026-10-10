@@ -49,8 +49,8 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-06** | **Chapter 4 Workshop (Astral Teleporters)** | **P1** | `v1.19.0` | Redesign Levels 13–16: 3D teleporter networks, non-Euclidean shortcuts, anti-softlock teleport loops. | **Completed** |
 | **BL-07** | **Chapter 5 Workshop (Molten Danger)** | **P1** | `v1.19.0` | Redesign Levels 17–20: Timed flame vents, rhythm gauntlets, patroller sentinels, mid-level checkpoints. | **Completed** |
 | **BL-08** | **Chapters 6–8 Polish & Synthesis** | **P2** | `v1.19.0` | Polish minigame seals (Ch 6), grand trial synthesis (Ch 7), and 4-way camera rotation puzzles (Ch 8). | **Completed** |
-| **BL-89** | **Expanded Labyrinth Scale & Macro-Corridor Expansion** | **P1** | `v1.25.0` | Design large-scale maps ($\ge 27 \times 27$ up to $35 \times 35$) without discarding existing levels by introducing a new Chapter 9 ("The Vast Catacombs") or Master Tier trials with branching dead-ends, multi-chamber wings, and authentic labyrinth routing. | Planned |
-| **BL-90** | **Pure Maze Classical Topologies & Interlocking Circuit Integration** | **P1** | `v1.25.0` | Integrate classic labyrinthine structures (winding concentric rings, hedge-style maze branches, fork-path choices with distinctive landmarks) combined with puzzle gates, ensuring exploration requires spatial navigation alongside logical deduction. | Planned |
+| **BL-89** | **Expanded Labyrinth Scale & Macro-Corridor Expansion** | **P1** | `v1.25.0` | Design large-scale maps ($\ge 27 \times 27$ up to $35 \times 35$) without discarding existing levels by introducing a new Chapter 9 ("The Vast Catacombs") or Master Tier trials with branching dead-ends, multi-chamber wings, and authentic labyrinth routing. | **Completed** |
+| **BL-90** | **Pure Maze Classical Topologies & Interlocking Circuit Integration** | **P1** | `v1.25.0` | Integrate classic labyrinthine structures (winding concentric rings, hedge-style maze branches, fork-path choices with distinctive landmarks) combined with puzzle gates, ensuring exploration requires spatial navigation alongside logical deduction. | **Completed** |
 
 ---
 
