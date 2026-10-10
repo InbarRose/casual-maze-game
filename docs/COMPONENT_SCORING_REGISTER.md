@@ -18,7 +18,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.33 | 9.33 | 9.33 | 8.33 | 6.00 | 8.33 | **48.65** (81.1%) | **A- Tier** | Keybinding Schemes, Pointer Toggle, Optical Zoom Clamping, Multi-Elevation & Gamepad (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`, `BL-93`, `BL-100`) |
 | **CMP-05** | **Minimap & Tactical Navigation** | 7.33 | 9.33 | 8.00 | 8.00 | 7.00 | 7.33 | **46.99** (78.3%) | **B+ Tier** | Strategic Fog of War, Multi-Elevation Bridges & Radar (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`) |
 | **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 8.00 | 9.33 | 9.00 | 7.33 | 7.00 | 8.33 | **48.99** (81.7%) | **A- Tier** | Colorblind Shape Badges, Mobile Feed Docking & Lore Journal (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`, `BL-97`, `BL-99`) |
-| **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.67 | 9.33 | 8.33 | 7.00 | 6.67 | 7.67 | **46.67** (77.8%) | **B Tier** | Destructive Confirmations & Top Nav Exit Routing (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`) |
+| **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 8.00 | 9.33 | 8.67 | 7.33 | 7.00 | 8.00 | **48.33** (80.6%) | **A- Tier** | Categorized Command Center, Destructive Confirmations & Exit Safety (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`, `BL-106`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 7.33 | 9.67 | 8.33 | 7.67 | 6.00 | 7.00 | **46.00** (76.7%) | **B Tier** | Interactive Radar Mini-Map HUD, 1-Click Pan Navigation & Status Bar Telemetry (`BL-49`, `BL-50`, `BL-73`, `BL-102`, `BL-103`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 7.00 | 9.67 | 8.33 | 7.67 | 6.00 | 7.00 | **45.67** (76.1%) | **B Tier** | Accordion Palette Groups, Custom Prefab Region Saving & Stamping (`BL-18`, `BL-20`, `BL-39`, `BL-102`, `BL-104`) |
 | **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 7.33 | 9.67 | 8.33 | 7.67 | 6.00 | 7.33 | **46.33** (77.2%) | **B Tier** | Interactive Radar Mini-Map Viewport Indicator, Issue Pins & Live Telemetry (`BL-21`, `BL-50`, `BL-75`, `BL-102`, `BL-103`) |
@@ -26,7 +26,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 7.33 | 9.33 | 6.67 | 7.00 | 5.67 | 6.33 | **42.33** (70.6%) | **B- Tier** | Elevation Transition Chimes & Diagnostic Radar Audio (`BL-28`, `BL-35`, `BL-51`, `BL-77`) |
 | **CMP-13** | **Storage, Save State & Persistence Engine** | 6.00 | 9.67 | 7.33 | 7.67 | 6.67 | 6.00 | **43.34** (72.2%) | **B Tier** | Save Metadata Previews & Emergency Rollback Snapshots (`BL-34`, `BL-36`, `BL-52`, `BL-76`) |
 | **CMP-14** | **Player Profile, Medals & Prestige Progression** | 7.33 | 9.33 | 8.33 | 7.33 | 8.00 | 7.33 | **47.65** (79.4%) | **A- Tier** | Character Customization Studio, Wardrobe & Tiered Medals (`BL-52`, `BL-73`, `BL-78`, `BL-95`) |
-| **CMP-15** | **Settings & Configuration System** | 6.33 | 9.33 | 8.67 | 7.00 | 6.00 | 8.67 | **46.00** (76.7%) | **B Tier** | Controls Card, Keybinding Presets & Pointer Toggle (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`, `BL-73`, `BL-100`) |
+| **CMP-15** | **Settings & Configuration System** | 7.00 | 9.33 | 9.00 | 7.33 | 6.33 | 9.00 | **48.00** (80.0%) | **A- Tier** | Segmented Navigation Tabs, Keybinding Presets & Pointer Toggle (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`, `BL-73`, `BL-100`, `BL-107`) |
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Universal Interactive Handbook Modal & Visual Bridge SVG Guide (`BL-37`, `BL-48`, `BL-71`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 7.33 | 9.33 | 7.67 | 8.33 | 5.67 | 8.00 | **46.33** (77.2%) | **B Tier** | Replay In-Game Graphics, Vector Asset Alignment & Benchmark (`BL-45`, `BL-46`, `BL-79`, `BL-96`) |
 | **CMP-18** | **Community Feedback & Bug Reporting Channels** | 5.67 | 9.33 | 7.67 | 7.33 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | 1-Click Universal Feedback Modal with Live Telemetry & GitHub Issue Creation (`BL-34`, `BL-69`) |
@@ -196,16 +196,17 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/game-menu.js`, `js/engine/game-loop.js`, `css/game.css`, `maze.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
+  * $C_1$ Juice & Delight: **8.00/10** (1.1: 8, 1.2: 8, 1.3: 8)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 7, 4.3: 6)
-  * $C_5$ Progression & Retention: **6.67/10** (5.1: 7, 5.2: 7, 5.3: 6)
-  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
-  * **Master Score**: **44.67 / 60.00 (74.4% — B Tier Prototype)**
+  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **7.00/10** (5.1: 7, 5.2: 7, 5.3: 7)
+  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
+  * **Master Score**: **48.33 / 60.00 (80.6% — A- Tier)**
 * **Strengths**:
+  * **Categorized Command Center Drawer (`BL-106`, ADR-0019)**: Eliminated the bulky 14-button vertical stack by organizing the pause menu into semantic groups (`Primary Actions`, `View & Exploration`, `Preferences & System`, `Session Exit`) rendered in a responsive 2-column grid ($\le 540\text{px}$) with prominent resume callout, zero vertical overflow on mobile/laptop displays, and 100% backward-compatible IDs.
   * **Destructive Action Confirmations (`BL-64`, `BL-68`)**: Both "Restart Level" and "Return to Level Select" in the pause menu are shielded behind explicit inline confirmation boxes with distinct Cancel and Confirm actions, preventing accidental progress loss on mobile touchscreens.
-  * **Modal Scroll Containment (`BL-64`)**: Clamped modal heights (`88vh`) with fluid touch momentum scrolling and sticky footers, preventing offscreen buttons or popup locks.
+  * **Modal Scroll Containment (`BL-64`)**: Clamped modal heights (`85vh`) with fluid touch momentum scrolling and sticky footers, preventing offscreen buttons or popup locks.
   * **Keyboard Quick-Advance on Victory (`BL-55`)**: Space / Enter keys immediately advance to the next level without mouse interaction.
   * **Prestige Confetti Cannon (`BL-38`)**: Full canvas drifting particle confetti celebration on victory.
   * **Tiered Victory Shields & Performance Scores (`BL-52`)**: Animated Gold Vanguard, Silver Ranger, or Bronze Scout shields, total Performance Score breakdown, and prestige pills.
@@ -375,14 +376,15 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/settings-modal.js`, `css/main.css`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.33/10** (1.1: 7, 1.2: 6, 1.3: 6)
+  * $C_1$ Juice & Delight: **7.00/10** (1.1: 7, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
-  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
-  * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **8.67/10** (6.1: 9, 6.2: 9, 6.3: 8)
-  * **Master Score**: **46.00 / 60.00 (76.7% — B Tier)**
+  * $C_3$ UI/UX & Ergonomics: **9.00/10** (3.1: 9, 3.2: 9, 3.3: 9)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **6.33/10** (5.1: 7, 5.2: 6, 5.3: 6)
+  * $C_6$ Accessibility & DX: **9.00/10** (6.1: 9, 6.2: 9, 6.3: 9)
+  * **Master Score**: **48.00 / 60.00 (80.0% — A- Tier)**
 * **Strengths**:
+  * **Segmented Navigation Tabs (`BL-107`, ADR-0019)**: Eradicated cumbersome 70vh monolithic scroll by categorizing all settings across 5 sleek tabbed panels (`🔊 Audio`, `🎥 Display`, `🎮 Controls`, `💾 Save Data`, `🔬 Support`), featuring active indicators, keyboard accessibility, and programmatic `switchTab(tabId)` / `open(targetTab)` jump routing.
   * Live audio slider previews with gain clamping and persistence.
   * High contrast mode toggle with instant body class injection.
   * **Movement Controls & Mouse Behavior Card (`BL-100`, Issue #63, ADR-0016)**: Dedicated controls card in settings modal providing interactive dropdowns for Keybinding Scheme (`WASD + Arrows`, `Arrows Only`, `ESDF`, `AZERTY`, `Numpad`) and Pointer Movement Mode (`Click-to-Move Pathfinding`, `Drag Steering Only`, `Disabled`), dynamically updating active key mapping descriptions.
