@@ -111,4 +111,22 @@ describe('Engine > ReplayPlayer', () => {
 
     player.destroy();
   });
+
+  it('aligns player world coordinates with level tile size (BL-96)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    player.stepForward();
+    const firstAction = replay1.actions[0];
+    const ts = player.gameLoop.tileSize;
+    assert(ts > 0, 'Tile size must be positive');
+    assertEqual(player.gameLoop.player.worldX, firstAction.to.x * ts + ts / 2);
+    assertEqual(player.gameLoop.player.worldY, firstAction.to.y * ts + ts / 2);
+
+    player.destroy();
+  });
 });

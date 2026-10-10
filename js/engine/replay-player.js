@@ -197,12 +197,13 @@ export class ReplayPlayer {
   _executeAction(action) {
     if (!this.gameLoop || !action) return;
 
+    const ts = this.gameLoop.tileSize || 36;
     if (action.action === 'teleport' || action.isWarp) {
       this.gameLoop.player.gridX = action.to.x;
       this.gameLoop.player.gridY = action.to.y;
       this.gameLoop.player.elevation = action.to.elevation || 0;
-      this.gameLoop.player.worldX = action.to.x * 32 + 16;
-      this.gameLoop.player.worldY = action.to.y * 32 + 16;
+      this.gameLoop.player.worldX = action.to.x * ts + ts / 2;
+      this.gameLoop.player.worldY = action.to.y * ts + ts / 2;
       this.gameLoop.player.isMoving = false;
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'move') {
@@ -218,8 +219,8 @@ export class ReplayPlayer {
       this.gameLoop.player.gridX = action.to.x;
       this.gameLoop.player.gridY = action.to.y;
       this.gameLoop.player.elevation = action.to.elevation || 0;
-      this.gameLoop.player.worldX = action.to.x * 32 + 16;
-      this.gameLoop.player.worldY = action.to.y * 32 + 16;
+      this.gameLoop.player.worldX = action.to.x * ts + ts / 2;
+      this.gameLoop.player.worldY = action.to.y * ts + ts / 2;
       this.gameLoop.player.isMoving = false;
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'rotate') {
