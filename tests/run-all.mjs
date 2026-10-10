@@ -93,6 +93,7 @@ import './unit/editor/generator-integration.test.mjs';
 import './unit/editor/custom-prefabs.test.mjs';
 import './unit/editor/diagnostic-pins-validation.test.mjs';
 import './unit/editor/entrance-exit-clash.test.mjs';
+import './unit/editor/editor-perspective-and-ui.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
