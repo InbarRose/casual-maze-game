@@ -85,4 +85,22 @@ describe('UI > Universal App Navigation & Modals', () => {
     settingsModal.close();
     assertEqual(settingsModal.isOpen, false);
   });
+
+  it('toggles mobile footer shortcuts drawer on button click (BL-98)', () => {
+    const { footer } = initAppHeader({ activeTab: 'hub' });
+    const toggleBtn = footer.querySelector('#btn-footer-shortcuts-toggle');
+    const drawer = footer.querySelector('#footer-shortcuts-drawer');
+
+    assert(toggleBtn !== null, 'Shortcuts toggle button exists in footer');
+    assert(drawer !== null, 'Shortcuts drawer exists in footer');
+    assert(drawer.classList.contains('hidden'), 'Shortcuts drawer is initially hidden');
+
+    toggleBtn.click();
+    assert(!drawer.classList.contains('hidden'), 'Drawer is visible after toggle click');
+    assert(toggleBtn.classList.contains('active'), 'Toggle button is active');
+
+    toggleBtn.click();
+    assert(drawer.classList.contains('hidden'), 'Drawer is hidden after second click');
+    assert(!toggleBtn.classList.contains('active'), 'Toggle button is inactive');
+  });
 });

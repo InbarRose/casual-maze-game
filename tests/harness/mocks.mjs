@@ -269,6 +269,30 @@ export function setupMocks() {
           this._html = String(val);
           if (val === '') {
             children.length = 0;
+          } else {
+            // Basic regex parsing for elements with id and class attributes
+            const tagRegex = /<([a-zA-Z0-9\-]+)([^>]*)>/g;
+            let match;
+            while ((match = tagRegex.exec(this._html)) !== null) {
+              const tag = match[1];
+              const attrs = match[2];
+              const idMatch = attrs.match(/id=["']([^"']+)["']/);
+              const classMatch = attrs.match(/class=["']([^"']+)["']/);
+              if (idMatch) {
+                const childId = idMatch[1];
+                let child = elementsById.get(childId);
+                if (!child) {
+                  child = createMockElement(tag);
+                  child.id = childId;
+                }
+                if (classMatch) {
+                  child.className = classMatch[1];
+                }
+                if (!children.includes(child)) {
+                  el.appendChild(child);
+                }
+              }
+            }
           }
         },
         textContent: '',

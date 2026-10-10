@@ -65,4 +65,19 @@ describe('Mobile Feed & Download Feedback (BL-97)', () => {
     assert(!feed.classList.contains('minimized'), 'Feed should be restored after second click');
     assert(pill.classList.contains('active'), 'Pill should be active when feed is expanded');
   });
+
+  it('getKeyColorblindShape returns expected geometric shape badges (BL-99)', async () => {
+    const { getKeyColorblindShape } = await import('../../../js/core/constants.js');
+    assertEqual(getKeyColorblindShape('gold').symbol, '●');
+    assertEqual(getKeyColorblindShape('ruby').symbol, '▲');
+    assertEqual(getKeyColorblindShape('sapphire').symbol, '◆');
+    assertEqual(getKeyColorblindShape('emerald').symbol, '■');
+    assertEqual(getKeyColorblindShape('amethyst').symbol, '★');
+    assertEqual(getKeyColorblindShape('obsidian').symbol, '●');
+    assertEqual(getKeyColorblindShape('key_red').symbol, '▲');
+    assertEqual(getKeyColorblindShape('key_blue').symbol, '◆');
+    assertEqual(getKeyColorblindShape('key_green').symbol, '■');
+    assertEqual(getKeyColorblindShape('unknown_color').symbol, '●');
+  });
 });
+

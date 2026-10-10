@@ -455,12 +455,43 @@ export const KEY_COLORS = Object.freeze({
 });
 
 export const KEY_COLOR_PRESETS = Object.freeze([
-  { id: 'gold', name: 'Golden Key', color: '#fbbf24', label: 'Gold' },
-  { id: 'red', name: 'Ruby Key', color: '#f43f5e', label: 'Ruby (Red)' },
-  { id: 'blue', name: 'Sapphire Key', color: '#38bdf8', label: 'Sapphire (Blue)' },
-  { id: 'green', name: 'Emerald Key', color: '#34d399', label: 'Emerald (Green)' },
-  { id: 'purple', name: 'Amethyst Key', color: '#a855f7', label: 'Amethyst (Purple)' },
+  { id: 'gold', name: 'Golden Key', color: '#fbbf24', label: 'Gold', shape: '●', shapeName: 'Circle' },
+  { id: 'red', name: 'Ruby Key', color: '#f43f5e', label: 'Ruby (Red)', shape: '▲', shapeName: 'Triangle' },
+  { id: 'blue', name: 'Sapphire Key', color: '#38bdf8', label: 'Sapphire (Blue)', shape: '◆', shapeName: 'Diamond' },
+  { id: 'green', name: 'Emerald Key', color: '#34d399', label: 'Emerald (Green)', shape: '■', shapeName: 'Square' },
+  { id: 'purple', name: 'Amethyst Key', color: '#a855f7', label: 'Amethyst (Purple)', shape: '★', shapeName: 'Star' },
 ]);
+
+export const COLORBLIND_SHAPES = Object.freeze({
+  CIRCLE: '●',
+  TRIANGLE: '▲',
+  DIAMOND: '◆',
+  SQUARE: '■',
+  STAR: '★',
+});
+
+/**
+ * Returns canonical colorblind geometric shape for a key color or key ID
+ * @param {string} colorOrKeyId
+ * @returns {{ symbol: string, label: string }}
+ */
+export function getKeyColorblindShape(colorOrKeyId) {
+  if (!colorOrKeyId) return { symbol: '●', label: 'Circle' };
+  const str = String(colorOrKeyId).toLowerCase();
+  if (str.includes('red') || str.includes('ruby') || str === '#f43f5e' || str === '#ef4444') {
+    return { symbol: '▲', label: 'Triangle' };
+  }
+  if (str.includes('blue') || str.includes('sapphire') || str === '#38bdf8' || str === '#3b82f6') {
+    return { symbol: '◆', label: 'Diamond' };
+  }
+  if (str.includes('green') || str.includes('emerald') || str === '#34d399' || str === '#10b981') {
+    return { symbol: '■', label: 'Square' };
+  }
+  if (str.includes('purple') || str.includes('amethyst') || str === '#a855f7' || str === '#8b5cf6') {
+    return { symbol: '★', label: 'Star' };
+  }
+  return { symbol: '●', label: 'Circle' };
+}
 
 export const LEVER_TILE_OPTIONS = Object.freeze([
   { value: 0, label: 'Floor (Open / Walkable)' },
