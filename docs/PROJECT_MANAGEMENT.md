@@ -155,7 +155,10 @@ This document tracks project milestones, current release status, active developm
   - **Interactive Mini-Map Overview HUD (BL-103, CMP-08, CMP-10)**: Floating glassmorphic mini-map canvas (`#editor-minimap-hud`) tracking visible viewport bounds and enabling instant 1-click drag navigation across large labyrinths.
   - **Categorized Accordion Tool Palette (BL-104, CMP-08, CMP-09)**: Grouped sidebar tools into collapsible accordion cards (`Draw Tools`, `Tiles & Bridges`, `Elevation Ramps`, `Architectural Prefabs`, `Custom Prefabs`, `Entities & Markers`) with item count badges, rotating chevrons, and minimized workspace states.
   - **Procedural Surface Shaders & Animated Fluid Polish (BL-105, CMP-02, CMP-11)**: Animated water puddles with concentric ripples in Caves, Jungles, and Dungeons; molten lava bubbling hotspots in Magma; and diamond ice crystal sparkles in Snow biomes.
-
+- [x] **Settings & In-Game Menu Overlay Consolidation Sprint (BL-106, BL-107, ADR-0019)**:
+  - **In-Game Pause Command Center (BL-106, CMP-07)**: Redesigned the bulky monolithic 14-button pause menu drawer into a sleek, categorized 2-column command center (`Primary Actions`, `View & Exploration`, `Preferences & System`, `Session Exit`), eliminating vertical overflow and visual fatigue on laptops and mobile devices while preserving all button IDs, shortcuts, and tests.
+  - **Segmented Settings Navigation Tabs (BL-107, CMP-15)**: Replaced the unwieldy 70vh monolithic settings scroll with a streamlined 5-category tab bar (`🔊 Audio`, `🎥 Display`, `🎮 Controls`, `💾 Save Data`, `🔬 Support`), supporting live keyboard navigation, instant tab switching via `switchTab(tabId)`, and direct category jumps without visual bloat.
+  - **Automated QA Coverage**: Added tab switching assertions to `tests/unit/ui/app-header.test.mjs`; verified 126 test suites and 607 tests passing (0 failed, 8,123 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 

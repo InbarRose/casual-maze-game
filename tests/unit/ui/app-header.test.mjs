@@ -95,6 +95,19 @@ describe('UI > Universal App Navigation & Modals', () => {
     if (keySelect) assertEqual(keySelect.value, 'esdf');
     if (mouseSelect) assertEqual(mouseSelect.value, 'drag_only');
 
+    // Test Tab switching (BL-107)
+    settingsModal.switchTab('display');
+    assertEqual(settingsModal._activeTab, 'display');
+    const displayPanel = settingsModal.modalEl.querySelector('#settings-panel-display');
+    const audioPanel = settingsModal.modalEl.querySelector('#settings-panel-audio');
+    assert(displayPanel.classList.contains('active'), 'Display panel is active');
+    assert(!audioPanel.classList.contains('active'), 'Audio panel is inactive');
+
+    settingsModal.switchTab('controls');
+    assertEqual(settingsModal._activeTab, 'controls');
+    const controlsPanel = settingsModal.modalEl.querySelector('#settings-panel-controls');
+    assert(controlsPanel.classList.contains('active'), 'Controls panel is active');
+
     settingsModal.close();
     assertEqual(settingsModal.isOpen, false);
   });

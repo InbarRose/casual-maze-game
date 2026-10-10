@@ -287,64 +287,86 @@
             </div>
           </div>
 
-          <!-- Action Menu List -->
+          <!-- Categorized Command Center Grid (BL-106) -->
           <div class="pause-menu-actions">
-            <button class="btn btn-primary pause-action-btn" id="btn-pause-resume">
-              ▶ <span>Resume Labyrinth [Esc / P]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-restart">
-              🔄 <span>Restart Level [T]</span>
-            </button>
-            <!-- Destructive Confirmation Box: Restart -->
-            <div class="pause-confirm-box hidden" id="pause-restart-confirm">
-              <p class="pause-confirm-msg">⚠️ Restart this labyrinth? All collected keys and steps will be reset.</p>
-              <div class="pause-confirm-btn-row">
-                <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-restart-cancel">Cancel</button>
-                <button type="button" class="btn btn-danger btn-sm" id="btn-pause-restart-confirm">Confirm Restart</button>
+            <!-- Primary Actions Group -->
+            <div class="pause-section-group">
+              <div class="pause-section-header">Primary Actions</div>
+              <button class="btn btn-primary pause-action-btn pause-action-prominent" id="btn-pause-resume">
+                ▶ <span>Resume Labyrinth [Esc / P]</span>
+              </button>
+              <button class="btn btn-secondary pause-action-btn" id="btn-pause-restart">
+                🔄 <span>Restart Level [T]</span>
+              </button>
+              <!-- Destructive Confirmation Box: Restart -->
+              <div class="pause-confirm-box hidden" id="pause-restart-confirm">
+                <p class="pause-confirm-msg">⚠️ Restart this labyrinth? All collected keys and steps will be reset.</p>
+                <div class="pause-confirm-btn-row">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-restart-cancel">Cancel</button>
+                  <button type="button" class="btn btn-danger btn-sm" id="btn-pause-restart-confirm">Confirm Restart</button>
+                </div>
               </div>
             </div>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-perspective">
-              📐 <span>View: Angled 2.5D [V]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-freepan">
-              🗺️ <span>Free-Pan Mode [M]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-hint" style="display: none;">
-              📜 <span>Objective &amp; Lore</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-log">
-              📜 <span>Activity Log &amp; Telemetry [L]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-walkthrough">
-              🎬 <span>Watch Solver Walkthrough</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-settings">
-              ⚙️ <span>Game Settings [Audio &amp; View]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-profile">
-              👤 <span>Player Profile &amp; Stats</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-report-issue">
-              🐞 <span>Report Issue on GitHub</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-sound">
-              🔊 <span>Sound FX: ON</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-hotkeys">
-              ⌨️ <span>Hotkeys: ON [Full]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-save">
-              💾 <span>Save Game Progress (.json)</span>
-            </button>
-            <button class="btn btn-danger pause-action-btn" id="btn-pause-quit">
-              🏰 <span>Return to Level Select</span>
-            </button>
-            <!-- Destructive Confirmation Box: Quit to Hub -->
-            <div class="pause-confirm-box hidden" id="pause-quit-confirm">
-              <p class="pause-confirm-msg">⚠️ Exit to Level Select? Current labyrinth run will not be saved.</p>
-              <div class="pause-confirm-btn-row">
-                <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-quit-cancel">Cancel</button>
-                <button type="button" class="btn btn-danger btn-sm" id="btn-pause-quit-confirm">Exit to Hub</button>
+
+            <!-- View & Exploration Controls Group -->
+            <div class="pause-section-group">
+              <div class="pause-section-header">View &amp; Exploration</div>
+              <div class="pause-action-grid">
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-perspective">
+                  📐 <span>View: Angled 2.5D [V]</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-freepan">
+                  🗺️ <span>Free-Pan Mode [M]</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-hint" style="display: none;">
+                  📜 <span>Objective &amp; Lore</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-walkthrough">
+                  🎬 <span>Watch Solver Walkthrough</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-log">
+                  📜 <span>Activity Log &amp; Telemetry [L]</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Game Systems & Preferences Group -->
+            <div class="pause-section-group">
+              <div class="pause-section-header">Preferences &amp; System</div>
+              <div class="pause-action-grid">
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-sound">
+                  🔊 <span>Sound FX: ON</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-hotkeys">
+                  ⌨️ <span>Hotkeys: ON [Full]</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-settings">
+                  ⚙️ <span>Game Settings</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-profile">
+                  👤 <span>Player Profile</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-save">
+                  💾 <span>Save Game (.json)</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-report-issue">
+                  🐞 <span>Report Issue</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Session Exit Group -->
+            <div class="pause-section-group pause-section-danger">
+              <button class="btn btn-danger pause-action-btn" id="btn-pause-quit">
+                🏰 <span>Return to Level Select</span>
+              </button>
+              <!-- Destructive Confirmation Box: Quit to Hub -->
+              <div class="pause-confirm-box hidden" id="pause-quit-confirm">
+                <p class="pause-confirm-msg">⚠️ Exit to Level Select? Current labyrinth run will not be saved.</p>
+                <div class="pause-confirm-btn-row">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-quit-cancel">Cancel</button>
+                  <button type="button" class="btn btn-danger btn-sm" id="btn-pause-quit-confirm">Exit to Hub</button>
+                </div>
               </div>
             </div>
           </div>

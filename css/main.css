@@ -895,6 +895,63 @@ kbd {
   box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6), 0 0 24px rgba(56, 189, 248, 0.15);
 }
 
+/* Settings Modal Categorized Tab Bar (BL-107) */
+.settings-tab-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.6rem 1.25rem 0.2rem 1.25rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.settings-tab-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.settings-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.settings-tab-btn:hover {
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.settings-tab-btn.active {
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.12);
+  border-color: rgba(56, 189, 248, 0.35);
+  box-shadow: 0 2px 8px rgba(56, 189, 248, 0.15);
+}
+
+.settings-tab-panel {
+  display: none !important;
+  animation: fadeIn 0.18s ease-out;
+}
+
+.settings-tab-panel.active {
+  display: block !important;
+}
+
+#settings-panel-diagnostics.settings-tab-panel.active {
+  display: flex !important;
+}
+
 /* High Contrast Accessibility Mode */
 body.high-contrast-mode {
   --bg: #000000;
