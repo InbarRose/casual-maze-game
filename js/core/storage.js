@@ -871,6 +871,8 @@ export class StorageManager {
         perspective: settings.perspective || '2.5d',
         highContrast: !!settings.highContrast,
         hotkeysEnabled: settings.hotkeysEnabled ?? true,
+        keybindingPreset: settings.keybinding_preset || 'wasd_arrows',
+        mouseMoveMode: settings.mouse_move_mode || 'click_path',
       },
       activeLevel: {
         id: String(context.activeLevel?.id || context.levelId || context.level?.id || 'unknown'),

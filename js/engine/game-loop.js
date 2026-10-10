@@ -3,7 +3,7 @@
  * Ties together input, physics/collision, entities, camera, fog, and rendering.
  */
 
-import { TILES, KEY_CODES, ELEVATION, ENTITY_TYPES, SCREEN_TO_WORLD_DELTAS, isApproachAllowed } from '../core/constants.js';
+import { TILES, KEY_CODES, ELEVATION, ENTITY_TYPES, SCREEN_TO_WORLD_DELTAS, isApproachAllowed, MOUSE_MOVE_MODES, getKeyCodesForPreset } from '../core/constants.js';
 import { globalEvents } from '../core/events.js';
 import { CollisionEngine } from './collision.js';
 import { Key } from '../entities/key.js';
@@ -149,12 +149,25 @@ export class GameLoop {
     }
 
     // Input state
+    const savedKeybindingPreset = StorageManager.getSetting('keybinding_preset', 'wasd_arrows');
+    this.mouseMoveMode = StorageManager.getSetting('mouse_move_mode', MOUSE_MOVE_MODES.CLICK_PATH);
     this.inputManager = new InputManager({
       hotkeysEnabled: this.areHotkeysEnabled(),
+      keybindingPreset: savedKeybindingPreset,
     });
     this.keysDown = this.inputManager.keysDown;
     this.panVelocity = { x: 0, y: 0 };
     this.isDraggingMinimap = false;
+
+    // React to live control settings changes (BL-100)
+    globalEvents.on('settings:controls_changed', ({ keybindingPreset, mouseMoveMode }) => {
+      if (keybindingPreset && this.inputManager) {
+        this.inputManager.setKeybindingPreset(keybindingPreset);
+      }
+      if (mouseMoveMode) {
+        this.mouseMoveMode = mouseMoveMode;
+      }
+    });
 
     // Checkpoint & snapshot state
     this.activeCheckpoint = null;
@@ -855,6 +868,14 @@ export class GameLoop {
           this.handleManualInteract();
           return;
         }
+      }
+
+      // Pointer navigation check (BL-100)
+      if (this.mouseMoveMode === MOUSE_MOVE_MODES.DISABLED) {
+        return; // Movement via pointer is disabled
+      }
+      if (this.mouseMoveMode === MOUSE_MOVE_MODES.DRAG_ONLY) {
+        return; // Click-to-move pathfinding disabled; only drag/steering permitted
       }
 
       const path = this.findPathTo(targetGridX, targetGridY);

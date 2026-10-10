@@ -438,6 +438,81 @@ export const KEY_CODES = Object.freeze({
                    '1', '2', '3', '4', '5', '6', '7', '8', '9'],
 });
 
+export const KEYBINDING_PRESETS = Object.freeze({
+  WASD_ARROWS: {
+    id: 'wasd_arrows',
+    label: 'WASD & Arrow Keys',
+    up: ['ArrowUp', 'KeyW', 'w', 'W', 'Up'],
+    down: ['ArrowDown', 'KeyS', 's', 'S', 'Down'],
+    left: ['ArrowLeft', 'KeyA', 'a', 'A', 'Left'],
+    right: ['ArrowRight', 'KeyD', 'd', 'D', 'Right'],
+  },
+  ARROWS_ONLY: {
+    id: 'arrows_only',
+    label: 'Arrow Keys Only',
+    up: ['ArrowUp', 'Up'],
+    down: ['ArrowDown', 'Down'],
+    left: ['ArrowLeft', 'Left'],
+    right: ['ArrowRight', 'Right'],
+  },
+  ESDF: {
+    id: 'esdf',
+    label: 'ESDF (Touch Typist)',
+    up: ['KeyE', 'e', 'E'],
+    down: ['KeyD', 'd', 'D'],
+    left: ['KeyS', 's', 'S'],
+    right: ['KeyF', 'f', 'F'],
+  },
+  AZERTY: {
+    id: 'azerty',
+    label: 'AZERTY (ZQSD)',
+    up: ['KeyZ', 'z', 'Z', 'ArrowUp', 'Up'],
+    down: ['KeyS', 's', 'S', 'ArrowDown', 'Down'],
+    left: ['KeyQ', 'q', 'Q', 'ArrowLeft', 'Left'],
+    right: ['KeyD', 'd', 'D', 'ArrowRight', 'Right'],
+  },
+  NUMPAD: {
+    id: 'numpad',
+    label: 'Numpad (8462 / Arrows)',
+    up: ['Numpad8', '8', 'ArrowUp', 'Up'],
+    down: ['Numpad2', '2', 'ArrowDown', 'Down'],
+    left: ['Numpad4', '4', 'ArrowLeft', 'Left'],
+    right: ['Numpad6', '6', 'ArrowRight', 'Right'],
+  },
+});
+
+export const MOUSE_MOVE_MODES = Object.freeze({
+  CLICK_PATH: 'click_path',   // Click/tap corridor floor to pathfind via BFS
+  DRAG_ONLY: 'drag_only',     // Drag/swipe steering only; tapping does not auto-pathfind
+  DISABLED: 'disabled',       // Pointer clicks do not move explorer (keyboard/gamepad only)
+});
+
+/**
+ * Returns directional key codes for the given preset ID
+ * @param {string} [presetId='wasd_arrows']
+ * @returns {{ UP: string[], DOWN: string[], LEFT: string[], RIGHT: string[] }}
+ */
+export function getKeyCodesForPreset(presetId = 'wasd_arrows') {
+  const normalized = (presetId || 'wasd_arrows').toLowerCase();
+  for (const key of Object.keys(KEYBINDING_PRESETS)) {
+    const preset = KEYBINDING_PRESETS[key];
+    if (preset.id === normalized) {
+      return {
+        UP: preset.up,
+        DOWN: preset.down,
+        LEFT: preset.left,
+        RIGHT: preset.right,
+      };
+    }
+  }
+  return {
+    UP: KEYBINDING_PRESETS.WASD_ARROWS.up,
+    DOWN: KEYBINDING_PRESETS.WASD_ARROWS.down,
+    LEFT: KEYBINDING_PRESETS.WASD_ARROWS.left,
+    RIGHT: KEYBINDING_PRESETS.WASD_ARROWS.right,
+  };
+}
+
 export const VIEWPORT_ZOOM = Object.freeze({
   MIN: 0.5,
   MAX: 2.0,

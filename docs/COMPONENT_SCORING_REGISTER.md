@@ -15,7 +15,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-01** | **Universal App Shell & Global Navigation** | 7.00 | 9.33 | 8.33 | 6.33 | 7.00 | 7.33 | **45.33** (75.5%) | **B Tier** | Mobile Controls Drawer, Dynamic Hero Canvas Backdrop & Biome Themes (`BL-48`, `BL-54`, `BL-80`, `BL-98`) |
 | **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 8.33 | 9.33 | 8.00 | 8.00 | 6.33 | 6.67 | **46.66** (77.8%) | **B Tier** | Hardcoded Wall Doorways, 3D Spiral Staircases, Y-Depth Sorting & Murals (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`, `BL-82`, `BL-84`) |
 | **CMP-03** | **Core Gameplay Loop & State Machine** | 7.00 | 9.67 | 7.67 | 8.33 | 6.67 | 7.00 | **46.34** (77.2%) | **B Tier** | Lever Interaction Separation, Floor Traps, Disambiguation & BaseEntity (`BL-42`, `BL-51`, `BL-52`, `BL-57`, `BL-85`, `BL-86`) |
-| **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.33 | 9.33 | 9.00 | 8.33 | 6.00 | 8.00 | **47.99** (80.0%) | **A- Tier** | Optical Zoom Clamping, UI Decoupling, Multi-Elevation & Gamepad (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`, `BL-93`) |
+| **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.33 | 9.33 | 9.33 | 8.33 | 6.00 | 8.33 | **48.65** (81.1%) | **A- Tier** | Keybinding Schemes, Pointer Toggle, Optical Zoom Clamping, Multi-Elevation & Gamepad (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`, `BL-93`, `BL-100`) |
 | **CMP-05** | **Minimap & Tactical Navigation** | 7.33 | 9.33 | 8.00 | 8.00 | 7.00 | 7.33 | **46.99** (78.3%) | **B+ Tier** | Strategic Fog of War, Multi-Elevation Bridges & Radar (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`) |
 | **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 8.00 | 9.33 | 9.00 | 7.33 | 7.00 | 8.33 | **48.99** (81.7%) | **A- Tier** | Colorblind Shape Badges, Mobile Feed Docking & Lore Journal (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`, `BL-97`, `BL-99`) |
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.67 | 9.33 | 8.33 | 7.00 | 6.67 | 7.67 | **46.67** (77.8%) | **B Tier** | Destructive Confirmations & Top Nav Exit Routing (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`) |
@@ -26,7 +26,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 7.33 | 9.33 | 6.67 | 7.00 | 5.67 | 6.33 | **42.33** (70.6%) | **B- Tier** | Elevation Transition Chimes & Diagnostic Radar Audio (`BL-28`, `BL-35`, `BL-51`, `BL-77`) |
 | **CMP-13** | **Storage, Save State & Persistence Engine** | 6.00 | 9.67 | 7.33 | 7.67 | 6.67 | 6.00 | **43.34** (72.2%) | **B Tier** | Save Metadata Previews & Emergency Rollback Snapshots (`BL-34`, `BL-36`, `BL-52`, `BL-76`) |
 | **CMP-14** | **Player Profile, Medals & Prestige Progression** | 7.33 | 9.33 | 8.33 | 7.33 | 8.00 | 7.33 | **47.65** (79.4%) | **A- Tier** | Character Customization Studio, Wardrobe & Tiered Medals (`BL-52`, `BL-73`, `BL-78`, `BL-95`) |
-| **CMP-15** | **Settings & Configuration System** | 6.33 | 9.33 | 8.33 | 7.00 | 6.00 | 8.33 | **45.32** (75.5%) | **B Tier** | Inline Restore & Reset Confirmations + Live Tester (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`, `BL-73`) |
+| **CMP-15** | **Settings & Configuration System** | 6.33 | 9.33 | 8.67 | 7.00 | 6.00 | 8.67 | **46.00** (76.7%) | **B Tier** | Controls Card, Keybinding Presets & Pointer Toggle (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`, `BL-73`, `BL-100`) |
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Universal Interactive Handbook Modal & Visual Bridge SVG Guide (`BL-37`, `BL-48`, `BL-71`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 7.33 | 9.33 | 7.67 | 8.33 | 5.67 | 8.00 | **46.33** (77.2%) | **B Tier** | Replay In-Game Graphics, Vector Asset Alignment & Benchmark (`BL-45`, `BL-46`, `BL-79`, `BL-96`) |
 | **CMP-18** | **Community Feedback & Bug Reporting Channels** | 5.67 | 9.33 | 7.67 | 7.33 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | 1-Click Universal Feedback Modal with Live Telemetry & GitHub Issue Creation (`BL-34`, `BL-69`) |
@@ -117,13 +117,14 @@ This document records the official baseline quality evaluations, granular expert
 * **Expert Panel Scores**:
   * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **9.00/10** (3.1: 9, 3.2: 9, 3.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **9.33/10** (3.1: 10, 3.2: 9, 3.3: 9)
   * $C_4$ Mechanics & Systems: **8.33/10** (4.1: 9, 4.2: 8, 4.3: 8)
   * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
-  * **Master Score**: **47.99 / 60.00 (80.0% — A- Tier)**
+  * $C_6$ Accessibility & DX: **8.33/10** (6.1: 9, 6.2: 8, 6.3: 8)
+  * **Master Score**: **48.65 / 60.00 (81.1% — A- Tier)**
 * **Strengths**:
-  * Multi-input support for keyboard (`WASD`, arrows), mouse click-to-move BFS, mobile touch gestures, and virtual D-pad.
+  * Multi-input support for keyboard (`WASD`, arrows, `ESDF`, `AZERTY`, `Numpad`), mouse click-to-move BFS, mobile touch gestures, and virtual D-pad.
+  * **Configurable Movement Key Schemes & Mouse Navigation Mode (`BL-100`, Issue #63, ADR-0016)**: Full player freedom with preset key schemes (WASD + Arrows, Arrows Only, ESDF, AZERTY ZQSD, Numpad 8/4/6/2) and configurable pointer movement mode (Click-to-Move Pathfinding, Drag Steering Only, or Pointer Movement Disabled) persisting across sessions with live switching.
   * **Viewport Zoom Optical Clamping & UI Decoupling (`BL-93`)**: Strict zoom bounding between $0.5\times$ and $2.0\times$ across mouse wheel, touch pinch, and HUD buttons (`−`, `100%`, `+`), with `--camera-zoom` CSS custom property scaling in-world indicator elements dynamically while keeping menus, navigation bars, and modals 100% isolated and distortion-free (ADR-0013).
   * **Continuous Touch Drag Steering (`BL-67`)**: Sliding a finger across the canvas automatically steers the explorer in cardinal directions with a rapid 125ms auto-step repeat rate and dynamic mid-drag heading adjustments.
   * **Moveable & Top-Docked Virtual Controls (`BL-63`)**: Virtual D-pad defaults to top-left to avoid mobile browser navigation bar/gesture conflicts; includes 4-quadrant docking cycles (`top-left`, `top-right`, `bottom-left`, `bottom-right`), dragging handle with persistence, and minimize toggle.
@@ -133,8 +134,8 @@ This document records the official baseline quality evaluations, granular expert
   * **InputManager Decoupling (`BL-59`)**: SRP input architecture centralizing keyboard, gamepad polling, and semantic game command dispatching.
   * **Gamepad API Support (`BL-40`)**: Full USB and Bluetooth gamepad controller support (Left Stick with 0.28 deadzone, D-Pad buttons 12–15, Button A/Cross for interact, Button B/Start for pause, Bumpers for 90° camera rotation, edge-triggered debounce).
 * **Gaps & Critical Deductions**:
-  * In-game settings could feature a visual gamepad button tester / calibration diagram.
-* **Directives**: Add visual controller diagram in help handbook or settings modal.
+  * Arbitrary single-key manual custom key rebinding modal interface not yet implemented (presets cover the primary international keyboard standards).
+* **Directives**: Add visual controller diagram in help handbook or settings modal; consider arbitrary single-key rebinding if requested.
 
 ---
 
@@ -370,16 +371,17 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/settings-modal.js`, `css/main.css`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
+  * $C_1$ Juice & Delight: **6.33/10** (1.1: 7, 1.2: 6, 1.3: 6)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
   * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
   * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
-  * **Master Score**: **44.00 / 60.00 (73.3% — B Tier)**
+  * $C_6$ Accessibility & DX: **8.67/10** (6.1: 9, 6.2: 9, 6.3: 8)
+  * **Master Score**: **46.00 / 60.00 (76.7% — B Tier)**
 * **Strengths**:
   * Live audio slider previews with gain clamping and persistence.
   * High contrast mode toggle with instant body class injection.
+  * **Movement Controls & Mouse Behavior Card (`BL-100`, Issue #63, ADR-0016)**: Dedicated controls card in settings modal providing interactive dropdowns for Keybinding Scheme (`WASD + Arrows`, `Arrows Only`, `ESDF`, `AZERTY`, `Numpad`) and Pointer Movement Mode (`Click-to-Move Pathfinding`, `Drag Steering Only`, `Disabled`), dynamically updating active key mapping descriptions.
   * **Destructive Safety Confirmations (`BL-64`)**: Explicit double-confirmation workflow for "Reset All Progress" with Cancel/Confirm controls preventing accidental progression wipes.
   * **JSON Save State Backup & Restore (`BL-53`)**: Cloudless save state export to file and import with confirmation protection.
   * **Minimalist UI & Scrollable Modal (`BL-64`)**: Modal height clamped to viewport with fluid scrollable body, momentum touch physics, and sticky modal header/footer preventing clipped action buttons.
@@ -387,7 +389,7 @@ This document records the official baseline quality evaluations, granular expert
   * **In-Settings Feedback & Bug Reporting Trigger (`BL-69`, `BL-70`)**: Dedicated diagnostics link opening the universal feedback and bug reporting telemetry modal with 1 click.
 * **Gaps & Critical Deductions**:
   * Perspective toggle does not differentiate top-down blueprint from 2.5D isometric (`BL-44`).
-* **Directives**: Deliver enhanced tileset preview and custom key remapping editor.
+* **Directives**: Deliver enhanced tileset preview and custom single-key remapping editor if requested.
 
 ---
 

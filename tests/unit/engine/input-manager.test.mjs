@@ -198,4 +198,37 @@ describe('Engine > InputManager & Gamepad API (BL-40, BL-59)', () => {
     assertEqual(mockElement.listeners.keyup, undefined);
     assertEqual(input.isDown('KeyA'), false);
   });
+
+  it('supports configurable movement keybinding presets (Issue #63, BL-100)', () => {
+    const input = new InputManager({ keybindingPreset: 'arrows_only' });
+
+    // With arrows_only preset, KeyW should NOT trigger movement
+    input.handleKeyDown({ code: 'KeyW', key: 'w' });
+    let poll = input.poll();
+    assertEqual(poll.hasInput, false, 'KeyW should not move explorer under arrows_only preset');
+
+    // ArrowUp should trigger movement
+    input.handleKeyDown({ code: 'ArrowUp', key: 'ArrowUp' });
+    poll = input.poll();
+    assertEqual(poll.hasInput, true, 'ArrowUp should move explorer under arrows_only preset');
+    assertEqual(poll.dy, -1);
+    input.clearKeys();
+
+    // Switch to ESDF preset
+    input.setKeybindingPreset('esdf');
+    input.handleKeyDown({ code: 'KeyE', key: 'e' });
+    poll = input.poll();
+    assertEqual(poll.hasInput, true, 'KeyE should move explorer up under ESDF preset');
+    assertEqual(poll.dy, -1);
+    input.clearKeys();
+
+    // Switch to AZERTY preset
+    input.setKeybindingPreset('azerty');
+    input.handleKeyDown({ code: 'KeyZ', key: 'z' });
+    poll = input.poll();
+    assertEqual(poll.hasInput, true, 'KeyZ should move explorer up under AZERTY preset');
+    assertEqual(poll.dy, -1);
+    input.clearKeys();
+  });
 });
+

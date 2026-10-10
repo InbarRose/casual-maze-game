@@ -5,7 +5,7 @@
  * dispatching discrete semantic game commands.
  */
 
-import { KEY_CODES } from '../core/constants.js';
+import { KEY_CODES, getKeyCodesForPreset } from '../core/constants.js';
 
 export const GAMEPAD_BUTTONS = Object.freeze({
   A: 0,           // Xbox A / PlayStation Cross: Interact / Inspect
@@ -46,11 +46,14 @@ export class InputManager {
    * @param {Object} [options]
    * @param {number} [options.deadzone=0.28] Gamepad analog stick deadzone
    * @param {boolean} [options.hotkeysEnabled=true] Whether secondary hotkeys are enabled
+   * @param {string} [options.keybindingPreset='wasd_arrows'] Movement keybinding preset ID
    * @param {Function} [options.onCommand] Callback invoked on semantic command
    */
   constructor(options = {}) {
     this.deadzone = typeof options.deadzone === 'number' ? options.deadzone : 0.28;
     this.hotkeysEnabled = options.hotkeysEnabled !== false;
+    this.keybindingPreset = options.keybindingPreset || 'wasd_arrows';
+    this.directionalKeys = getKeyCodesForPreset(this.keybindingPreset);
     this.onCommandCallback = typeof options.onCommand === 'function' ? options.onCommand : null;
 
     /** @type {Set<string>} Active pressed keys (both e.code and e.key) */
@@ -168,6 +171,15 @@ export class InputManager {
    */
   setHotkeysEnabled(enabled) {
     this.hotkeysEnabled = !!enabled;
+  }
+
+  /**
+   * Set keybinding preset ID (BL-100)
+   * @param {string} presetId
+   */
+  setKeybindingPreset(presetId) {
+    this.keybindingPreset = presetId || 'wasd_arrows';
+    this.directionalKeys = getKeyCodesForPreset(this.keybindingPreset);
   }
 
   /**
@@ -331,14 +343,15 @@ export class InputManager {
       if (pad.buttons?.[GAMEPAD_BUTTONS.DPAD_RIGHT]?.pressed) gamepadDx = 1;
     }
 
-    // Keyboard Directional Input
+    // Keyboard Directional Input (Using active directional keybinding preset)
     let keyDx = 0;
     let keyDy = 0;
+    const dirs = this.directionalKeys || getKeyCodesForPreset(this.keybindingPreset);
     for (const code of this.keysDown) {
-      if (KEY_CODES.UP.includes(code)) keyDy -= 1;
-      else if (KEY_CODES.DOWN.includes(code)) keyDy += 1;
-      else if (KEY_CODES.LEFT.includes(code)) keyDx -= 1;
-      else if (KEY_CODES.RIGHT.includes(code)) keyDx += 1;
+      if (dirs.UP.includes(code)) keyDy -= 1;
+      else if (dirs.DOWN.includes(code)) keyDy += 1;
+      else if (dirs.LEFT.includes(code)) keyDx -= 1;
+      else if (dirs.RIGHT.includes(code)) keyDx += 1;
     }
 
     // Combine Keyboard & Gamepad (Gamepad takes priority if keyboard is idle)
