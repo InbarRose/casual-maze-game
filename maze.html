@@ -475,39 +475,74 @@
       <div class="modal-dialog victory-card">
         <div class="modal-body">
           <span class="victory-icon" id="vic-icon">🏆</span>
-          <h2 style="font-size: 1.8rem; margin-bottom: 0.35rem;" id="vic-title">Labyrinth Conquered!</h2>
-          <div id="vic-tier-badge" class="victory-tier-badge" style="display: none; margin-bottom: 0.75rem;"></div>
-          <p id="victory-subtitle" style="font-size: 0.95rem;">You successfully escaped the maze.</p>
+          <h2 style="font-size: 1.55rem; margin-bottom: 0.25rem;" id="vic-title">Labyrinth Conquered!</h2>
+          <div id="vic-tier-badge" class="victory-tier-badge" style="display: none; margin-bottom: 0.55rem;"></div>
+          <p id="victory-subtitle" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">You successfully escaped the maze.</p>
 
           <div class="victory-stats-grid">
             <div class="stat-box" id="vic-box-score">
               <div class="stat-val" id="vic-score">0</div>
-              <div class="stat-lbl">Performance Score</div>
+              <div class="stat-lbl">Score</div>
             </div>
-            <div class="stat-box">
+            <div class="stat-box" id="vic-box-time">
               <div class="stat-val" id="vic-time">0.0s</div>
-              <div class="stat-lbl">Time Elapsed</div>
+              <div class="stat-lbl">Time</div>
             </div>
-            <div class="stat-box">
+            <div class="stat-box" id="vic-box-steps">
               <div class="stat-val" id="vic-steps">0</div>
-              <div class="stat-lbl">Steps Taken</div>
+              <div class="stat-lbl">Steps</div>
             </div>
             <div class="stat-box" id="vic-box-secrets" style="display: none;">
               <div class="stat-val" id="vic-secrets">0 / 0</div>
-              <div class="stat-lbl">Secrets Unveiled</div>
+              <div class="stat-lbl">Secrets</div>
             </div>
           </div>
 
-          <div id="victory-medals-container" style="display: flex; justify-content: center; gap: 0.6rem; margin-top: 1.1rem; flex-wrap: wrap;"></div>
+          <div id="victory-medals-container" style="display: flex; justify-content: center; gap: 0.45rem; margin-top: 0.65rem; flex-wrap: wrap;"></div>
         </div>
-        <div class="modal-footer" style="justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
-          <a href="index.html" class="btn btn-secondary">Level Select</a>
-          <button id="btn-vic-watch-replay" class="btn btn-primary" title="Watch an interactive visual replay of this run">🎬 Watch Run Replay</button>
-          <button id="btn-save-progress" class="btn btn-secondary" title="Export game save progress backup to a JSON file">💾 Save Game Progress</button>
-          <button id="btn-download-log" class="btn btn-secondary" title="Download level replay and debug telemetry">📥 Debug Logs</button>
-          <button id="btn-vic-report-issue" class="btn btn-secondary" title="Report an issue or give feedback on GitHub">🐞 Feedback / Report</button>
-          <button id="btn-replay" class="btn btn-secondary">Replay</button>
-          <button id="btn-next-level" class="btn btn-primary" title="Advance to next labyrinth [Space / Enter]">Next Level [Space / Enter] →</button>
+        <div class="modal-footer victory-footer-streamlined">
+          <!-- Primary Actions: Next Level, Quick Action Icons, More Toggle -->
+          <div class="victory-primary-actions">
+            <button id="btn-next-level" class="btn btn-primary victory-btn-next" title="Advance to next labyrinth [Space / Enter]">Next Level [Space / Enter] →</button>
+            <div class="victory-quick-icons">
+              <button id="btn-vic-quick-retry" class="btn btn-secondary victory-icon-btn" title="Retry Level">
+                <span>🔄</span>
+              </button>
+              <button id="btn-vic-quick-watch" class="btn btn-secondary victory-icon-btn" title="Watch Run Replay">
+                <span>🎬</span>
+              </button>
+              <button id="btn-vic-quick-report" class="btn btn-secondary victory-icon-btn" title="Report Bug / Feedback">
+                <span>🐞</span>
+              </button>
+            </div>
+            <button id="btn-vic-more" class="btn btn-secondary victory-btn-more" title="More Options">
+              <span>More</span> <span id="vic-more-chevron">▾</span>
+            </button>
+          </div>
+
+          <!-- Collapsible "More" Drawer -->
+          <div id="victory-more-drawer" class="victory-more-drawer" style="display: none;">
+            <div class="victory-more-grid">
+              <button id="btn-vic-watch-replay" class="btn btn-secondary victory-drawer-btn" title="Watch an interactive visual replay of this run">
+                <span>🎬</span> <span>Watch Run Replay</span>
+              </button>
+              <button id="btn-replay" class="btn btn-secondary victory-drawer-btn" title="Play this level again">
+                <span>🔄</span> <span>Retry Labyrinth</span>
+              </button>
+              <a href="index.html" id="btn-vic-level-select" class="btn btn-secondary victory-drawer-btn" title="Return to Level Selection">
+                <span>🗺️</span> <span>Level Select Hub</span>
+              </a>
+              <button id="btn-save-progress" class="btn btn-secondary victory-drawer-btn" title="Export game save progress backup">
+                <span>💾</span> <span>Save Progress</span>
+              </button>
+              <button id="btn-download-log" class="btn btn-secondary victory-drawer-btn" title="Download level replay and debug telemetry">
+                <span>📥</span> <span>Debug Telemetry</span>
+              </button>
+              <button id="btn-vic-report-issue" class="btn btn-secondary victory-drawer-btn" title="Report an issue or give feedback on GitHub">
+                <span>🐞</span> <span>Report Bug / Feedback</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1362,7 +1397,7 @@
         onVictory: (stats) => {
           audioFX.playVictory();
           document.getElementById('vic-time').textContent = `${(stats.time / 1000).toFixed(1)}s`;
-          document.getElementById('vic-steps').textContent = stats.steps;
+          document.getElementById('vic-steps').textContent = (stats.steps || 0).toLocaleString();
 
           const vicScore = document.getElementById('vic-score');
           if (vicScore) {
@@ -1403,7 +1438,7 @@
             const starPill = document.createElement('div');
             starPill.className = 'victory-medal-pill';
             starPill.style.cssText = 'background: rgba(251, 191, 36, 0.2); border: 1.5px solid #fbbf24; color: #fbbf24;';
-            starPill.innerHTML = '★ <span>Level Cleared</span>';
+            starPill.innerHTML = '★ <span>Cleared</span>';
             medalsContainer.appendChild(starPill);
 
             if (currentLevel.parSteps) {
@@ -1427,7 +1462,7 @@
               timePill.style.cssText = earnedTime
                 ? 'background: rgba(56, 189, 248, 0.2); border: 1.5px solid #38bdf8; color: #38bdf8;'
                 : 'background: rgba(100, 116, 139, 0.2); border: 1.5px solid #64748b; color: #94a3b8;';
-              timePill.innerHTML = earnedTime ? `⏱️ <span>Speedrunner (${timeSec}s / ${currentLevel.parTime}s)</span>` : `⏱️ <span>Par: ${currentLevel.parTime}s</span>`;
+              timePill.innerHTML = earnedTime ? `⏱️ <span>Speed (${timeSec}s / ${currentLevel.parTime}s)</span>` : `⏱️ <span>Par: ${currentLevel.parTime}s</span>`;
               medalsContainer.appendChild(timePill);
             }
 
@@ -1440,7 +1475,7 @@
                 ? 'background: rgba(168, 85, 247, 0.2); border: 1.5px solid #a855f7; color: #c084fc;'
                 : 'background: rgba(100, 116, 139, 0.2); border: 1.5px solid #64748b; color: #94a3b8;';
               secretsPill.innerHTML = allFound
-                ? `🔍 <span>Secret Sleuth (${stats.secretsFound}/${stats.totalSecrets})</span>`
+                ? `🔍 <span>Sleuth (${stats.secretsFound}/${stats.totalSecrets})</span>`
                 : `🔍 <span>Secrets (${stats.secretsFound}/${stats.totalSecrets})</span>`;
               medalsContainer.appendChild(secretsPill);
             }
@@ -1453,6 +1488,16 @@
               flawlessPill.innerHTML = '🛡️ <span>Flawless</span>';
               medalsContainer.appendChild(flawlessPill);
             }
+          }
+
+          const victoryMoreDrawer = document.getElementById('victory-more-drawer');
+          const btnVicMore = document.getElementById('btn-vic-more');
+          if (victoryMoreDrawer) {
+            victoryMoreDrawer.style.display = 'none';
+          }
+          if (btnVicMore) {
+            btnVicMore.classList.remove('active');
+            btnVicMore.innerHTML = '<span>More</span> <span id="vic-more-chevron">▾</span>';
           }
 
           victoryModal.classList.add('active');
@@ -2130,6 +2175,13 @@
       audioFX.playClick();
       stopVictoryConfetti();
       lastRenderedKeyIds = '';
+      const vDrawer = document.getElementById('victory-more-drawer');
+      const vMore = document.getElementById('btn-vic-more');
+      if (vDrawer) vDrawer.style.display = 'none';
+      if (vMore) {
+        vMore.classList.remove('active');
+        vMore.innerHTML = '<span>More</span> <span id="vic-more-chevron">▾</span>';
+      }
       victoryModal.classList.remove('active');
       setViewObscured(false, 'victory_modal');
       gameLoop.restartLevel();
@@ -2147,6 +2199,34 @@
       }
     });
     document.getElementById('btn-vic-report-issue')?.addEventListener('click', reportDiagnosticIssue);
+
+    // Streamlined Victory Screen "More" Drawer & Quick Action Icons (BL-109, ADR-0021)
+    const btnVicMore = document.getElementById('btn-vic-more');
+    const victoryMoreDrawer = document.getElementById('victory-more-drawer');
+
+    btnVicMore?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (!victoryMoreDrawer) return;
+      const isHidden = victoryMoreDrawer.style.display === 'none';
+      victoryMoreDrawer.style.display = isHidden ? 'block' : 'none';
+      btnVicMore.classList.toggle('active', isHidden);
+      btnVicMore.innerHTML = isHidden
+        ? '<span>Less</span> <span id="vic-more-chevron">▴</span>'
+        : '<span>More</span> <span id="vic-more-chevron">▾</span>';
+    });
+
+    document.getElementById('btn-vic-quick-retry')?.addEventListener('click', () => {
+      btnReplay?.click();
+    });
+
+    document.getElementById('btn-vic-quick-watch')?.addEventListener('click', () => {
+      document.getElementById('btn-vic-watch-replay')?.click();
+    });
+
+    document.getElementById('btn-vic-quick-report')?.addEventListener('click', () => {
+      document.getElementById('btn-vic-report-issue')?.click();
+    });
+
     const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
       showToast(`📥 Saved backup ${filename} to Downloads folder!`, 'success');
