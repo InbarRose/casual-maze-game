@@ -217,19 +217,20 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/editor/editor-canvas.js`, `js/editor/editor-ui.js`, `editor.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **4.67/10** (1.1: 5, 1.2: 4, 1.3: 5)
-  * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **5.33/10** (3.1: 5, 3.2: 6, 3.3: 5)
-  * $C_4$ Mechanics & Systems: **6.00/10** (4.1: 6, 4.2: 6, 4.3: 6)
-  * $C_5$ Progression & Retention: **4.67/10** (5.1: 5, 5.2: 4, 5.3: 5)
-  * $C_6$ Accessibility & DX: **4.67/10** (6.1: 4, 6.2: 5, 6.3: 5)
-  * **Master Score**: **34.67 / 60.00 (57.8% — C Tier Prototype)**
+  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
+  * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 10, 2.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **7.00/10** (3.1: 7, 3.2: 7, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
+  * $C_6$ Accessibility & DX: **6.00/10** (6.1: 6, 6.2: 6, 6.3: 6)
+  * **Master Score**: **41.34 / 60.00 (68.9% — B- Tier)**
 * **Strengths**:
   * Bresenham continuous drag-to-paint smoothing (`BL-19`), multi-elevation Z-layer editing, and flood fill.
+  * **1-Click Procedural Maze Generator (`BL-50`)**: Built-in `MazeGenerator` integration in editor toolbar allowing architects to generate solvable mazes of arbitrary dimensions with customizable themes, braiding, and key pairs.
+  * **Destructive Clear Confirmation Modal (`BL-73`)**: Modal protection safeguarding accidental canvas wipes.
 * **Gaps & Critical Deductions**:
   * Lacks multi-room story authoring; creators are restricted to single-room files (`BL-49`).
-  * No procedural maze generator tool for instant layout inspiration (`BL-50`).
-* **Directives**: Add multi-room campaign authoring (`BL-49`) and random maze generator brush (`BL-50`).
+* **Directives**: Add multi-room campaign authoring (`BL-49`) and expandable stamp tooltips.
 
 ---
 
@@ -346,15 +347,16 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/profile-modal.js`, `js/core/storage.js`, `js/core/constants.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
+  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
-  * $C_5$ Progression & Retention: **7.33/10** (5.1: 8, 5.2: 7, 5.3: 7)
-  * $C_6$ Accessibility & DX: **6.33/10** (6.1: 6, 6.2: 7, 6.3: 6)
-  * **Master Score**: **43.66 / 60.00 (72.8% — B Tier)**
+  * $C_3$ UI/UX & Ergonomics: **8.33/10** (3.1: 9, 3.2: 8, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **8.00/10** (5.1: 8, 5.2: 8, 5.3: 8)
+  * $C_6$ Accessibility & DX: **7.33/10** (6.1: 7, 6.2: 8, 6.3: 7)
+  * **Master Score**: **47.65 / 60.00 (79.4% — A- Tier)**
 * **Strengths**:
   * Tracks completed levels, total stars, prestige ranks, and best performance metrics.
+  * **Character Visual Customization Studio (`BL-95`)**: Full appearance customization with interactive live explorer preview, body silhouette (male, female, neutral), diverse hair styles (short, ponytail with sway physics, curls, bob, bald), hair colorways, and skin tones persisted via `StorageManager` and broadcast via event bus.
   * **Tiered Medal & Secret Persistence (`BL-52`)**: Persists Gold/Silver/Bronze medals, Secret Sleuth prestige badges, Flawless run achievements, and high score tallies per labyrinth in `StorageManager`.
   * **Explorer Wardrobe & Palette Customizer (`BL-78`)**: In-profile wardrobe picker allowing players to equip 6 distinct aesthetic adventurer outfits (`Classic Pathfinder`, `Emerald Ranger`, `Frost Nomad`, `Desert Scout`, `Obsidian Rogue`, `Arcane Scholar`) with color swatch dots, active badges, and instant event bus propagation.
   * **Inline Reset Confirmation Safety (`BL-73`)**: Replaced browser confirm popups with inline modal confirmation box.
@@ -416,17 +418,17 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `test.html`, `js/engine/replay-player.js`, `tests/harness/runner.mjs`, `tests/browser-test-runner.js`, `tests/unit/engine/canvas-visual-regression.test.mjs`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.33/10** (1.1: 7, 1.2: 6, 1.3: 6)
+  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **6.33/10** (3.1: 6, 3.2: 7, 3.3: 6)
-  * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
-  * $C_5$ Progression & Retention: **5.33/10** (5.1: 5, 5.2: 5, 5.3: 6)
-  * $C_6$ Accessibility & DX: **7.34/10** (6.1: 7, 6.2: 8, 6.3: 7)
-  * **Master Score**: **42.66 / 60.00 (71.1% — B Tier)**
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **8.33/10** (4.1: 9, 4.2: 8, 4.3: 8)
+  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
+  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
+  * **Master Score**: **46.33 / 60.00 (77.2% — B Tier)**
 * **Strengths**:
-  * Zero-dependency test harness executing 544 modular tests across 116 suites in $<650\text{ms}$ with zero failures and zero cryptographic drift.
+  * Zero-dependency test harness executing over 600 modular tests across 126 suites in $<750\text{ms}$ with zero failures and zero cryptographic drift.
   * **In-Browser Test Runner Diagnostics (`BL-45`)**: 100% static ES module execution directly inside `test.html` with real-time pass/fail progress, formatted failure boxes with error stacks, and celebratory victory banner.
-  * **Replay Theater Graphic Simulation & Full Telemetry (`BL-46`)**: Full action telemetry sequencing (moves, camera rotations, teleports, lever toggles, pedestal interactions) executing directly through `GameRenderer`.
+  * **Replay Theater In-Game Graphics & Vector Asset Preloading (`BL-46`, `BL-96`)**: Full action telemetry sequencing (moves, camera rotations, teleports, lever toggles, pedestal interactions) executing directly through `GameRenderer` with dynamic tile size scaling (`this.gameLoop.tileSize`) and preloaded SVG vector assets, eliminating coordinate offsets and placeholder fallbacks.
   * **Automated Visual Regression Diffing & 1,000-Frame Performance Benchmark (`BL-79`)**: Automated tests validating deterministic canvas operations across all core domain entities (`Key`, `Door`, `Lever`, `Teleporter`, `Pedestal`, `Player` in 6 outfits), 4-way camera rotation matrix verification, and microsecond rendering budget validation ($< 300\text{ms}$ per 1,000 frames).
 * **Gaps & Critical Deductions**:
   * Visual regression output could generate pixel diff heatmaps in browser runner.
