@@ -1082,7 +1082,7 @@
     // Save Game Progress
     const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
-      showToast(`Saved game progress to ${filename}!`, 'success');
+      showToast(`📥 Saved backup ${filename} to Downloads folder!`, 'success');
     };
 
     document.getElementById('btn-hero-save-progress')?.addEventListener('click', handleSaveGameProgress);

@@ -510,6 +510,7 @@
     import { ALL_LEVELS } from './js/levels/default-levels.js';
     import { solveLevel, generateWalkthroughReplay } from './js/engine/solver.js';
     import { ReplayPlayer, REPLAY_STATES } from './js/engine/replay-player.js';
+    import { assetLoader } from './js/core/asset-loader.js';
     import { audioFX } from './js/ui/audio-fx.js';
     import { StorageManager } from './js/core/storage.js';
     import { ENGINE_VERSION } from './js/core/version.js';
@@ -517,6 +518,11 @@
 
     // Mount Universal App Header & Footer
     initAppHeader({ activeTab: 'test' });
+
+    // Preload Vector Asset Manifest for full in-game graphics (BL-96)
+    if (typeof fetch === 'function' && typeof window !== 'undefined') {
+      assetLoader.loadManifest('assets/manifest.json').catch(() => {});
+    }
 
 
     // Set badge version
@@ -586,6 +592,12 @@
     function loadReplayPayload(level, replay) {
       currentReplayData = replay;
       if (selectLevel) selectLevel.value = String(level.id);
+
+      // Preload level theme vector SVG assets (BL-96)
+      if (level?.config?.theme && typeof fetch === 'function') {
+        assetLoader.preloadTheme(level.config.theme).catch(() => {});
+      }
+
       if (!replayPlayer) {
         replayPlayer = new ReplayPlayer({
           canvas: replayCanvas,
@@ -724,10 +736,11 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `walkthrough_level_${currentReplayData.levelId}.json`;
+      const fn = `walkthrough_level_${currentReplayData.levelId}.json`;
+      a.download = fn;
       a.click();
       URL.revokeObjectURL(url);
-      showToast('Walkthrough JSON exported!', 'success');
+      showToast(`📥 Saved ${fn} to Downloads folder!`, 'success');
     });
 
     // Custom Replay File Upload

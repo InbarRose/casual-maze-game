@@ -259,13 +259,24 @@ export function setupMocks() {
             else if (classes.has(c)) classes.delete(c);
             else classes.add(c);
             _className = Array.from(classes).join(' ');
+            return classes.has(c);
           },
           contains(c) { return classes.has(c); },
         },
-        innerHTML: '',
+        _html: '',
+        get innerHTML() { return this._html; },
+        set innerHTML(val) {
+          this._html = String(val);
+          if (val === '') {
+            children.length = 0;
+          }
+        },
         textContent: '',
         value: '',
         remove() {
+          if (_id) {
+            elementsById.delete(_id);
+          }
           if (this.parentNode && this.parentNode.removeChild) {
             this.parentNode.removeChild(this);
           }

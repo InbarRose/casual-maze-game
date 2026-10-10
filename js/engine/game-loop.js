@@ -2776,7 +2776,7 @@ export class GameLoop {
    * @param {string} [customFilename]
    */
   downloadDebugLog(customFilename) {
-    this.logger.download(customFilename);
+    return this.logger.download(customFilename);
   }
 
   /**
@@ -2790,9 +2790,10 @@ export class GameLoop {
   /**
    * Download session replay JSON file to client
    * @param {string} [customFilename]
+   * @returns {string|undefined}
    */
   downloadReplay(customFilename) {
-    this.logger.downloadReplay(customFilename);
+    return this.logger.downloadReplay(customFilename);
   }
 
   /**

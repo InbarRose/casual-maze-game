@@ -833,3 +833,54 @@ export const EXPLORER_OUTFITS = Object.freeze({
   },
 });
 
+/**
+ * Explorer Character Visual Customization Options (BL-95, ADR-0014)
+ */
+export const CHARACTER_CUSTOMIZATION = Object.freeze({
+  GENDER: Object.freeze({
+    MALE: 'male',
+    FEMALE: 'female',
+    NEUTRAL: 'neutral',
+  }),
+  GENDER_META: Object.freeze({
+    male: { id: 'male', label: 'Male / Explorer', icon: '🏃‍♂️' },
+    female: { id: 'female', label: 'Female / Explorer', icon: '🏃‍♀️' },
+    neutral: { id: 'neutral', label: 'Androgynous / Scout', icon: '🧑' },
+  }),
+  HAIR_STYLES: Object.freeze({
+    SHORT: 'short',
+    PONYTAIL: 'ponytail',
+    BOB: 'bob',
+    CURLS: 'curls',
+    BALD: 'bald',
+  }),
+  HAIR_STYLE_META: Object.freeze({
+    short: { id: 'short', label: 'Short Adventure Crop', icon: '✂️' },
+    ponytail: { id: 'ponytail', label: 'High Ponytail', icon: '🎀' },
+    bob: { id: 'bob', label: 'Explorer Bob', icon: '💇' },
+    curls: { id: 'curls', label: 'Bouncy Curls', icon: '🌀' },
+    bald: { id: 'bald', label: 'Close Shaved / Cap', icon: '🧢' },
+  }),
+  HAIR_COLORS: Object.freeze({
+    brunette: { id: 'brunette', label: 'Brunette', color: '#78350f' },
+    raven: { id: 'raven', label: 'Raven Black', color: '#1c1917' },
+    blonde: { id: 'blonde', label: 'Golden Blonde', color: '#d97706' },
+    auburn: { id: 'auburn', label: 'Auburn Red', color: '#b91c1c' },
+    silver: { id: 'silver', label: 'Silver Gray', color: '#e2e8f0' },
+    amethyst: { id: 'amethyst', label: 'Amethyst Violet', color: '#a855f7' },
+  }),
+  SKIN_TONES: Object.freeze({
+    fair: { id: 'fair', label: 'Fair Peach', color: '#fed7aa' },
+    warm: { id: 'warm', label: 'Warm Glow', color: '#fcd34d' },
+    olive: { id: 'olive', label: 'Olive Sun', color: '#d97706' },
+    bronze: { id: 'bronze', label: 'Bronze Tanned', color: '#854d0e' },
+    deep: { id: 'deep', label: 'Deep Cocoa', color: '#451a03' },
+  }),
+  DEFAULTS: Object.freeze({
+    gender: 'male',
+    hairStyle: 'short',
+    hairColor: 'brunette',
+    skinTone: 'fair',
+  }),
+});
+

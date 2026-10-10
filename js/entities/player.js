@@ -3,7 +3,7 @@
  * Handles position, elevation state, inventory, movement smoothing, and rendering.
  */
 
-import { ELEVATION, DEFAULTS, EXPLORER_OUTFITS } from '../core/constants.js';
+import { ELEVATION, DEFAULTS, EXPLORER_OUTFITS, CHARACTER_CUSTOMIZATION } from '../core/constants.js';
 import { StorageManager } from '../core/storage.js';
 
 function drawRoundRect(ctx, x, y, w, h, r = 0) {
@@ -22,8 +22,9 @@ export class Player {
    * @param {number} [tileSize=32]
    * @param {string[]} [initialInventory=[]]
    * @param {string} [outfitId=null]
+   * @param {object} [customization=null]
    */
-  constructor(startX = 1, startY = 1, startElevation = 0, tileSize = 32, initialInventory = [], outfitId = null) {
+  constructor(startX = 1, startY = 1, startElevation = 0, tileSize = 32, initialInventory = [], outfitId = null, customization = null) {
     this.gridX = startX;
     this.gridY = startY;
     this.gridZ = startElevation;
@@ -55,22 +56,40 @@ export class Player {
 
     // Explorer Outfit & Wardrobe Palette (BL-78)
     let savedOutfit = 'classic';
+    let savedCustomization = null;
     try {
-      if (typeof StorageManager !== 'undefined' && typeof StorageManager.getPlayerOutfit === 'function') {
-        savedOutfit = StorageManager.getPlayerOutfit();
+      if (typeof StorageManager !== 'undefined') {
+        if (typeof StorageManager.getPlayerOutfit === 'function') {
+          savedOutfit = StorageManager.getPlayerOutfit();
+        }
+        if (typeof StorageManager.getPlayerCustomization === 'function') {
+          savedCustomization = StorageManager.getPlayerCustomization();
+        }
       }
     } catch (_) {}
 
     this.outfitId = outfitId || savedOutfit;
     this.palette = EXPLORER_OUTFITS[this.outfitId] || EXPLORER_OUTFITS.classic;
+    this.customization = customization || savedCustomization || {
+      gender: 'male',
+      hairStyle: 'short',
+      hairColor: 'brunette',
+      skinTone: 'fair',
+    };
 
     this._outfitListener = (e) => {
       if (e?.detail?.outfitId) {
         this.setOutfit(e.detail.outfitId);
       }
     };
+    this._customizationListener = (e) => {
+      if (e?.detail) {
+        this.setCustomization(e.detail);
+      }
+    };
     if (typeof window !== 'undefined' && window.addEventListener) {
       window.addEventListener('player:outfit_changed', this._outfitListener);
+      window.addEventListener('player:customization_changed', this._customizationListener);
     }
   }
 
@@ -86,11 +105,29 @@ export class Player {
   }
 
   /**
+   * Update active explorer character visual customization (BL-95, ADR-0014)
+   * @param {object} customization
+   */
+  setCustomization(customization) {
+    if (customization && typeof customization === 'object') {
+      this.customization = {
+        ...this.customization,
+        ...customization,
+      };
+    }
+  }
+
+  /**
    * Cleanup event listeners
    */
   destroy() {
-    if (typeof window !== 'undefined' && window.removeEventListener && this._outfitListener) {
-      window.removeEventListener('player:outfit_changed', this._outfitListener);
+    if (typeof window !== 'undefined' && window.removeEventListener) {
+      if (this._outfitListener) {
+        window.removeEventListener('player:outfit_changed', this._outfitListener);
+      }
+      if (this._customizationListener) {
+        window.removeEventListener('player:customization_changed', this._customizationListener);
+      }
     }
   }
 
@@ -653,51 +690,119 @@ export class Player {
       drawArm(screenX - 1 * s, torsoY + 1 * s, -armStride);
     }
 
-    // 7. Head & Adventure Hair
+    // 7. Head & Adventure Hair (BL-95 Customization)
+    const custom = this.customization || {};
+    const skinColor = CHARACTER_CUSTOMIZATION?.SKIN_TONES?.[custom.skinTone]?.color || p.skin;
+    const hairColor = CHARACTER_CUSTOMIZATION?.HAIR_COLORS?.[custom.hairColor]?.color || p.hair;
+    const hairStyle = custom.hairStyle || 'short';
+    const isFemale = custom.gender === 'female';
+
     const headY = py - 12.5 * s;
-    const headR = 5.5 * s;
+    const headR = isFemale ? 5.2 * s : 5.5 * s;
 
     // Face Skin Base
-    ctx.fillStyle = p.skin;
+    ctx.fillStyle = skinColor;
     ctx.beginPath();
     ctx.arc(screenX + (isEast ? 1 * s : isWest ? -1 * s : 0), headY + 1 * s, headR, 0, Math.PI * 2);
     ctx.fill();
 
-    // Hair Base & Texture
-    ctx.fillStyle = p.hair;
-    ctx.beginPath();
-    // Hair cap
-    ctx.arc(screenX, headY - 1 * s, headR + 0.8 * s, Math.PI, Math.PI * 2);
-    ctx.fill();
+    // Hair Base & Texture (respecting hair style)
+    if (hairStyle !== 'bald') {
+      ctx.fillStyle = hairColor;
+      ctx.beginPath();
+      // Hair cap
+      ctx.arc(screenX, headY - 1 * s, headR + 0.8 * s, Math.PI, Math.PI * 2);
+      ctx.fill();
 
-    // Side tufts of hair
-    ctx.beginPath();
-    ctx.arc(screenX - 4.5 * s, headY - 1 * s, 2.5 * s, 0, Math.PI * 2);
-    ctx.arc(screenX + 4.5 * s, headY - 1 * s, 2.5 * s, 0, Math.PI * 2);
-    ctx.fill();
+      // Side tufts / curls / bob
+      if (hairStyle === 'bob') {
+        ctx.fillRect(screenX - 5.5 * s, headY - 1 * s, 2.5 * s, 6 * s);
+        ctx.fillRect(screenX + 3.0 * s, headY - 1 * s, 2.5 * s, 6 * s);
+      } else if (hairStyle === 'curls') {
+        ctx.beginPath();
+        ctx.arc(screenX - 5 * s, headY - 1 * s, 3 * s, 0, Math.PI * 2);
+        ctx.arc(screenX + 5 * s, headY - 1 * s, 3 * s, 0, Math.PI * 2);
+        ctx.arc(screenX - 4.5 * s, headY + 2 * s, 2.5 * s, 0, Math.PI * 2);
+        ctx.arc(screenX + 4.5 * s, headY + 2 * s, 2.5 * s, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        // short or ponytail tufts
+        ctx.beginPath();
+        ctx.arc(screenX - 4.5 * s, headY - 1 * s, 2.5 * s, 0, Math.PI * 2);
+        ctx.arc(screenX + 4.5 * s, headY - 1 * s, 2.5 * s, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Ponytail specific extension
+      if (hairStyle === 'ponytail') {
+        const ponySwing = this.isMoving ? Math.sin(stepCycle) * 3 * s : 0;
+        ctx.fillStyle = hairColor;
+        ctx.beginPath();
+        if (isNorth) {
+          ctx.arc(screenX + ponySwing, headY - 5 * s, 3.5 * s, 0, Math.PI * 2);
+          ctx.fillRect(screenX - 2.5 * s + ponySwing, headY - 5 * s, 5 * s, 7 * s);
+        } else if (isSouth) {
+          // Peek behind head
+          ctx.arc(screenX + 3.5 * s + ponySwing, headY - 4 * s, 3 * s, 0, Math.PI * 2);
+        } else if (isEast) {
+          ctx.arc(screenX - 5 * s + ponySwing, headY - 3 * s, 3.5 * s, 0, Math.PI * 2);
+          ctx.fillRect(screenX - 7 * s + ponySwing, headY - 3 * s, 4 * s, 6 * s);
+        } else if (isWest) {
+          ctx.arc(screenX + 5 * s + ponySwing, headY - 3 * s, 3.5 * s, 0, Math.PI * 2);
+          ctx.fillRect(screenX + 3 * s + ponySwing, headY - 3 * s, 4 * s, 6 * s);
+        }
+        ctx.fill();
+      }
+    } else {
+      // Bald / Cap: draw explorer cap
+      ctx.fillStyle = p.cap || '#991b1b';
+      ctx.beginPath();
+      ctx.arc(screenX, headY - 0.5 * s, headR + 0.6 * s, Math.PI, Math.PI * 2);
+      ctx.fill();
+      // Cap visor
+      ctx.fillRect(screenX - (isWest ? 6.5 * s : 5 * s), headY - 1 * s, (isEast || isWest ? 11 * s : 10 * s), 2 * s);
+    }
 
     if (isNorth) {
-      // Full back of messy hair
-      ctx.beginPath();
-      ctx.arc(screenX, headY, headR + 0.5 * s, 0, Math.PI * 2);
-      ctx.fill();
+      if (hairStyle !== 'bald') {
+        ctx.fillStyle = hairColor;
+        ctx.beginPath();
+        ctx.arc(screenX, headY, headR + 0.5 * s, 0, Math.PI * 2);
+        ctx.fill();
+      }
     } else if (isSouth) {
-      // Bangs / fringe
-      ctx.beginPath();
-      ctx.moveTo(screenX - 5 * s, headY - 2 * s);
-      ctx.lineTo(screenX - 2 * s, headY + 0.5 * s);
-      ctx.lineTo(screenX, headY - 1 * s);
-      ctx.lineTo(screenX + 3 * s, headY + 0.8 * s);
-      ctx.lineTo(screenX + 5 * s, headY - 2 * s);
-      ctx.closePath();
-      ctx.fill();
+      if (hairStyle !== 'bald') {
+        // Bangs / fringe
+        ctx.fillStyle = hairColor;
+        ctx.beginPath();
+        ctx.moveTo(screenX - 5 * s, headY - 2 * s);
+        ctx.lineTo(screenX - 2 * s, headY + 0.5 * s);
+        ctx.lineTo(screenX, headY - 1 * s);
+        ctx.lineTo(screenX + 3 * s, headY + 0.8 * s);
+        ctx.lineTo(screenX + 5 * s, headY - 2 * s);
+        ctx.closePath();
+        ctx.fill();
+      }
 
-      // Expressive Eyes
+      // Expressive Eyes (with lashes for female presentation)
       ctx.fillStyle = '#0f172a';
       ctx.beginPath();
       ctx.arc(screenX - 2.2 * s, headY + 2 * s, 1.2 * s, 0, Math.PI * 2);
       ctx.arc(screenX + 2.2 * s, headY + 2 * s, 1.2 * s, 0, Math.PI * 2);
       ctx.fill();
+
+      if (isFemale) {
+        // Eyelashes
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 0.9 * s;
+        ctx.beginPath();
+        ctx.moveTo(screenX - 3.4 * s, headY + 1.2 * s);
+        ctx.lineTo(screenX - 2.2 * s, headY + 0.9 * s);
+        ctx.moveTo(screenX + 3.4 * s, headY + 1.2 * s);
+        ctx.lineTo(screenX + 2.2 * s, headY + 0.9 * s);
+        ctx.stroke();
+      }
+
       // Eye catchlights
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
@@ -706,7 +811,7 @@ export class Player {
       ctx.fill();
 
       // Smile
-      ctx.strokeStyle = '#7c2d12';
+      ctx.strokeStyle = isFemale ? '#9f1239' : '#7c2d12';
       ctx.lineWidth = 1 * s;
       ctx.beginPath();
       ctx.arc(screenX, headY + 3.6 * s, 2 * s, 0.1 * Math.PI, 0.9 * Math.PI);
@@ -717,6 +822,14 @@ export class Player {
       ctx.beginPath();
       ctx.arc(screenX + 3.5 * s, headY + 2 * s, 1.2 * s, 0, Math.PI * 2);
       ctx.fill();
+      if (isFemale) {
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 0.9 * s;
+        ctx.beginPath();
+        ctx.moveTo(screenX + 4.5 * s, headY + 1.2 * s);
+        ctx.lineTo(screenX + 3.5 * s, headY + 0.9 * s);
+        ctx.stroke();
+      }
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.arc(screenX + 3.8 * s, headY + 1.6 * s, 0.5 * s, 0, Math.PI * 2);
@@ -727,6 +840,14 @@ export class Player {
       ctx.beginPath();
       ctx.arc(screenX - 3.5 * s, headY + 2 * s, 1.2 * s, 0, Math.PI * 2);
       ctx.fill();
+      if (isFemale) {
+        ctx.strokeStyle = '#0f172a';
+        ctx.lineWidth = 0.9 * s;
+        ctx.beginPath();
+        ctx.moveTo(screenX - 4.5 * s, headY + 1.2 * s);
+        ctx.lineTo(screenX - 3.5 * s, headY + 0.9 * s);
+        ctx.stroke();
+      }
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.arc(screenX - 3.8 * s, headY + 1.6 * s, 0.5 * s, 0, Math.PI * 2);
@@ -818,18 +939,47 @@ export class Player {
       }
     }
 
-    // 5. Head with Hair
-    ctx.fillStyle = p.hair;
-    ctx.beginPath();
-    ctx.arc(screenX, py - 1 * s, 6 * s, 0, Math.PI * 2);
-    ctx.fill();
+    // 5. Head with Hair (BL-95 Customization)
+    const custom = this.customization || {};
+    const hairColor = CHARACTER_CUSTOMIZATION?.HAIR_COLORS?.[custom.hairColor]?.color || p.hair;
+    const hairStyle = custom.hairStyle || 'short';
 
-    // Hair texture & tufts
-    ctx.fillStyle = p.packDark;
-    ctx.beginPath();
-    ctx.arc(screenX - 2 * s, py - 2 * s, 3 * s, 0, Math.PI * 2);
-    ctx.arc(screenX + 2 * s, py - 2 * s, 3 * s, 0, Math.PI * 2);
-    ctx.fill();
+    if (hairStyle === 'bald') {
+      ctx.fillStyle = p.cap || '#991b1b';
+      ctx.beginPath();
+      ctx.arc(screenX, py - 1 * s, 6 * s, 0, Math.PI * 2);
+      ctx.fill();
+    } else {
+      ctx.fillStyle = hairColor;
+      ctx.beginPath();
+      ctx.arc(screenX, py - 1 * s, 6 * s, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Hair texture & tufts
+      ctx.fillStyle = hairColor;
+      ctx.beginPath();
+      if (hairStyle === 'curls') {
+        ctx.arc(screenX - 4 * s, py - 2 * s, 3.5 * s, 0, Math.PI * 2);
+        ctx.arc(screenX + 4 * s, py - 2 * s, 3.5 * s, 0, Math.PI * 2);
+        ctx.arc(screenX, py - 5 * s, 3.5 * s, 0, Math.PI * 2);
+      } else if (hairStyle === 'ponytail') {
+        // Ponytail tuft sticking out back
+        let pX = screenX;
+        let pY = py - 1 * s;
+        if (screenFacing === 'north') pY += 6 * s;
+        else if (screenFacing === 'south') pY -= 6 * s;
+        else if (screenFacing === 'east') pX -= 6 * s;
+        else if (screenFacing === 'west') pX += 6 * s;
+        ctx.arc(pX, pY, 3.8 * s, 0, Math.PI * 2);
+      } else if (hairStyle === 'bob') {
+        ctx.arc(screenX - 4 * s, py - 1 * s, 3.5 * s, 0, Math.PI * 2);
+        ctx.arc(screenX + 4 * s, py - 1 * s, 3.5 * s, 0, Math.PI * 2);
+      } else {
+        ctx.arc(screenX - 2 * s, py - 2 * s, 3 * s, 0, Math.PI * 2);
+        ctx.arc(screenX + 2 * s, py - 2 * s, 3 * s, 0, Math.PI * 2);
+      }
+      ctx.fill();
+    }
 
     // 6. Directional Facing Compass / Visor
     let dirX = 0;

@@ -154,6 +154,11 @@
           ⏸️ <span class="hide-mobile">Menu [P]</span>
         </button>
 
+        <!-- Responsive Quick Feed Pill (BL-97) -->
+        <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
+          ⚡ <span class="hide-mobile">Feed</span>
+        </button>
+
         <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
         <button id="btn-hud-collapse" class="btn btn-secondary btn-sm btn-icon hud-collapse-toggle" title="Collapse / Expand HUD Bar [H]" aria-label="Toggle HUD Visibility">
           📐
@@ -1808,15 +1813,15 @@
 
     if (btnQuickDownloadLog) {
       btnQuickDownloadLog.addEventListener('click', () => {
-        gameLoop.downloadDebugLog();
-        showToast('Live debug log downloaded!', 'success');
+        const fn = gameLoop.downloadDebugLog();
+        showToast(`📥 Saved debug log ${fn || ''} to Downloads!`, 'success');
       });
     }
 
     if (btnModalDownloadLog) {
       btnModalDownloadLog.addEventListener('click', () => {
-        gameLoop.downloadDebugLog();
-        showToast('Debug telemetry log downloaded!', 'success');
+        const fn = gameLoop.downloadDebugLog();
+        showToast(`📥 Saved debug log ${fn || ''} to Downloads!`, 'success');
       });
     }
 
@@ -2105,8 +2110,8 @@
       gameLoop.restartLevel();
     });
     btnDownloadLog.addEventListener('click', () => {
-      gameLoop.downloadDebugLog();
-      showToast('Debug log downloaded!', 'success');
+      const fn = gameLoop.downloadDebugLog();
+      showToast(`📥 Saved debug log ${fn || ''} to Downloads!`, 'success');
     });
     document.getElementById('btn-vic-watch-replay')?.addEventListener('click', () => {
       audioFX.playClick();
@@ -2119,7 +2124,7 @@
     document.getElementById('btn-vic-report-issue')?.addEventListener('click', reportDiagnosticIssue);
     const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
-      showToast(`Saved game progress to ${filename}!`, 'success');
+      showToast(`📥 Saved backup ${filename} to Downloads folder!`, 'success');
     };
 
     document.getElementById('btn-hud-save-progress')?.addEventListener('click', handleSaveGameProgress);
@@ -2417,11 +2422,23 @@
       });
     });
 
+    const btnHudFeedPill = document.getElementById('btn-hud-feed-pill');
+    if (btnHudFeedPill && activityFeedEl) {
+      btnHudFeedPill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isMin = activityFeedEl.classList.toggle('minimized');
+        if (btnFeedToggle) btnFeedToggle.textContent = isMin ? '▲' : '_';
+        btnHudFeedPill.classList.toggle('active', !isMin);
+        audioFX.playClick();
+      });
+    }
+
     if (btnFeedToggle && activityFeedEl) {
       btnFeedToggle.addEventListener('click', (e) => {
         e.stopPropagation();
         const isMin = activityFeedEl.classList.toggle('minimized');
         btnFeedToggle.textContent = isMin ? '▲' : '_';
+        if (btnHudFeedPill) btnHudFeedPill.classList.toggle('active', !isMin);
         audioFX.playClick();
       });
     }
@@ -2644,6 +2661,23 @@
     globalEvents.on('wall_decor:inspected', (data) => {
       const icon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : '🏛️'));
       addActivityLog(`Examined <strong>${data.title}</strong>: "${data.text || data.message || ''}"`, 'info', icon, 'lore');
+    });
+
+    // Global Hotkeys for HUD and Activity Feed (BL-92, BL-97)
+    window.addEventListener('keydown', (e) => {
+      // Don't intercept when focusing input fields
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName)) return;
+      if (e.key === 'h' || e.key === 'H') {
+        if (btnHudCollapse) {
+          e.preventDefault();
+          btnHudCollapse.click();
+        }
+      } else if (e.key === 'f' || e.key === 'F') {
+        if (btnHudFeedPill) {
+          e.preventDefault();
+          btnHudFeedPill.click();
+        }
+      }
     });
 
     // Attach audio FX listeners to all interactive buttons and links
