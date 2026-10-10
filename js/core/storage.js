@@ -1,4 +1,5 @@
 import { ENGINE_VERSION, SAVE_PROFILE_SCHEMA_VERSION } from './version.js';
+import { CHARACTER_CUSTOMIZATION } from './constants.js';
 
 const STORAGE_KEYS = {
   CUSTOM_MAZE: 'casual_maze_custom_data',
@@ -983,10 +984,12 @@ export class StorageManager {
     }
 
     const outfit = this.getPlayerOutfit();
+    const customization = this.getPlayerCustomization();
 
     return {
       name,
       outfit,
+      customization,
       totalStars,
       campaignLevels,
       storyChapters,
@@ -1013,6 +1016,43 @@ export class StorageManager {
     const valid = ['classic', 'emerald', 'arctic', 'desert', 'obsidian', 'alchemist'];
     const chosen = valid.includes(outfitId) ? outfitId : 'classic';
     return this.setSetting('player_outfit', chosen);
+  }
+
+  /**
+   * Get player visual customization options (BL-95, ADR-0014)
+   * @returns {{ gender: string, hairStyle: string, hairColor: string, skinTone: string }}
+   */
+  static getPlayerCustomization() {
+    const defaults = CHARACTER_CUSTOMIZATION?.DEFAULTS || {
+      gender: 'male',
+      hairStyle: 'short',
+      hairColor: 'brunette',
+      skinTone: 'fair',
+    };
+    const saved = this.getSetting('player_customization', null);
+    if (!saved || typeof saved !== 'object') {
+      return { ...defaults };
+    }
+    return {
+      gender: saved.gender || defaults.gender,
+      hairStyle: saved.hairStyle || defaults.hairStyle,
+      hairColor: saved.hairColor || defaults.hairColor,
+      skinTone: saved.skinTone || defaults.skinTone,
+    };
+  }
+
+  /**
+   * Set and persist player visual customization options (BL-95, ADR-0014)
+   * @param {object} customization
+   * @returns {boolean}
+   */
+  static setPlayerCustomization(customization) {
+    const current = this.getPlayerCustomization();
+    const updated = {
+      ...current,
+      ...(customization || {}),
+    };
+    return this.setSetting('player_customization', updated);
   }
 
   /**

@@ -7,7 +7,8 @@
 
 import { StorageManager } from '../core/storage.js';
 import { ENGINE_VERSION } from '../core/version.js';
-import { EXPLORER_OUTFITS } from '../core/constants.js';
+import { EXPLORER_OUTFITS, CHARACTER_CUSTOMIZATION } from '../core/constants.js';
+import { Player } from '../entities/player.js';
 import { audioFX } from './audio-fx.js';
 
 export class ProfileModal {
@@ -51,6 +52,54 @@ export class ProfileModal {
             <div style="display: flex; gap: 0.5rem;">
               <input type="text" id="profile-name-input" class="text-input" style="flex: 1; padding: 0.45rem 0.75rem; font-size: 0.95rem; font-weight: 700; background: var(--bg); border: 1px solid var(--card-border); border-radius: var(--radius-sm); color: var(--text);" maxlength="24" placeholder="Explorer" />
               <button type="button" id="btn-save-profile-name" class="btn btn-secondary btn-sm" style="padding: 0.45rem 0.8rem;">Save</button>
+            </div>
+          </div>
+
+          <!-- Character Visual Customization & Avatar Preview (BL-95, ADR-0014) -->
+          <div class="profile-field-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.8rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
+              <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">Character Appearance</label>
+              <span id="profile-customization-badge" style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">Male Explorer</span>
+            </div>
+            
+            <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
+              <!-- Live Avatar Preview Canvas -->
+              <div style="width: 80px; height: 80px; background: rgba(15, 23, 42, 0.8); border: 1px solid var(--border-glass-bright); border-radius: 12px; display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 12px rgba(0,0,0,0.4);">
+                <canvas id="profile-avatar-canvas" width="80" height="80" style="width: 80px; height: 80px; display: block;"></canvas>
+                <span style="position: absolute; bottom: 2px; right: 4px; font-size: 0.65rem; color: var(--text-muted); font-weight: 600;">2.5D</span>
+              </div>
+
+              <!-- Gender / Presentation Selector -->
+              <div style="flex: 1; min-width: 180px;">
+                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Identity / Silhouette</label>
+                <div id="profile-gender-group" style="display: flex; gap: 0.35rem;">
+                  <!-- Populated dynamically via refresh() -->
+                </div>
+              </div>
+            </div>
+
+            <!-- Hair Style Selector -->
+            <div style="margin-bottom: 0.6rem;">
+              <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Hair Style</label>
+              <div id="profile-hairstyle-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                <!-- Populated dynamically via refresh() -->
+              </div>
+            </div>
+
+            <!-- Hair Color & Skin Tone Pickers -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
+              <div>
+                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Hair Color</label>
+                <div id="profile-haircolor-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
+                  <!-- Populated dynamically via refresh() -->
+                </div>
+              </div>
+              <div>
+                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Skin Tone</label>
+                <div id="profile-skintone-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
+                  <!-- Populated dynamically via refresh() -->
+                </div>
+              </div>
             </div>
           </div>
 
@@ -247,11 +296,140 @@ export class ProfileModal {
     if (storiesVal) storiesVal.textContent = String(profile.storyChapters);
     if (stepsVal) stepsVal.textContent = profile.totalSteps.toLocaleString();
 
+    // -------------------------------------------------------------
+    // Character Visual Customization Controls (BL-95, ADR-0014)
+    // -------------------------------------------------------------
+    const custom = StorageManager.getPlayerCustomization();
+    const currentOutfitId = profile.outfit || 'classic';
+    const currentOutfit = EXPLORER_OUTFITS[currentOutfitId] || EXPLORER_OUTFITS.classic;
+
+    const customBadge = this.modalEl.querySelector('#profile-customization-badge');
+    if (customBadge) {
+      const gLabel = CHARACTER_CUSTOMIZATION?.GENDER_META?.[custom.gender]?.label || 'Explorer';
+      customBadge.textContent = gLabel.split(' / ')[0] + ' Explorer';
+    }
+
+    // 1. Gender / Silhouette Buttons
+    const genderGroup = this.modalEl.querySelector('#profile-gender-group');
+    if (genderGroup) {
+      genderGroup.innerHTML = '';
+      Object.values(CHARACTER_CUSTOMIZATION.GENDER_META).forEach((meta) => {
+        const isSelected = custom.gender === meta.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `btn btn-sm gender-select-btn ${isSelected ? 'btn-primary' : 'btn-secondary'}`;
+        btn.dataset.gender = meta.id;
+        btn.style.cssText = 'flex: 1; padding: 0.35rem 0.5rem; font-size: 0.78rem; display: flex; align-items: center; justify-content: center; gap: 0.25rem;';
+        btn.innerHTML = `<span>${meta.icon}</span> <span>${meta.id.charAt(0).toUpperCase() + meta.id.slice(1)}</span>`;
+        btn.onclick = () => {
+          StorageManager.setPlayerCustomization({ gender: meta.id });
+          try { audioFX.playClick(); } catch (_) {}
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('player:customization_changed', { detail: { gender: meta.id } }));
+          }
+          this.refresh();
+        };
+        genderGroup.appendChild(btn);
+      });
+    }
+
+    // 2. Hair Style Buttons
+    const hairStyleGroup = this.modalEl.querySelector('#profile-hairstyle-group');
+    if (hairStyleGroup) {
+      hairStyleGroup.innerHTML = '';
+      Object.values(CHARACTER_CUSTOMIZATION.HAIR_STYLE_META).forEach((meta) => {
+        const isSelected = custom.hairStyle === meta.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `btn btn-xs hairstyle-select-btn ${isSelected ? 'btn-primary' : 'btn-secondary'}`;
+        btn.dataset.hairStyle = meta.id;
+        btn.style.cssText = `padding: 0.25rem 0.5rem; font-size: 0.75rem; border-radius: 6px; ${isSelected ? 'border-color: var(--accent);' : ''}`;
+        btn.innerHTML = `${meta.icon} ${meta.id.charAt(0).toUpperCase() + meta.id.slice(1)}`;
+        btn.onclick = () => {
+          StorageManager.setPlayerCustomization({ hairStyle: meta.id });
+          try { audioFX.playClick(); } catch (_) {}
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('player:customization_changed', { detail: { hairStyle: meta.id } }));
+          }
+          this.refresh();
+        };
+        hairStyleGroup.appendChild(btn);
+      });
+    }
+
+    // 3. Hair Color Swatches
+    const hairColorGroup = this.modalEl.querySelector('#profile-haircolor-group');
+    if (hairColorGroup) {
+      hairColorGroup.innerHTML = '';
+      Object.values(CHARACTER_CUSTOMIZATION.HAIR_COLORS).forEach((hc) => {
+        const isSelected = custom.hairColor === hc.id;
+        const swatch = document.createElement('button');
+        swatch.type = 'button';
+        swatch.className = 'hair-swatch-btn';
+        swatch.title = hc.label;
+        swatch.style.cssText = `
+          width: 20px; height: 20px; border-radius: 50%; background: ${hc.color};
+          border: 2px solid ${isSelected ? 'var(--gold, #fbbf24)' : 'rgba(255,255,255,0.3)'};
+          cursor: pointer; padding: 0; outline: none; transition: transform 0.15s ease;
+          ${isSelected ? 'transform: scale(1.2); box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);' : ''}
+        `;
+        swatch.onclick = () => {
+          StorageManager.setPlayerCustomization({ hairColor: hc.id });
+          try { audioFX.playClick(); } catch (_) {}
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('player:customization_changed', { detail: { hairColor: hc.id } }));
+          }
+          this.refresh();
+        };
+        hairColorGroup.appendChild(swatch);
+      });
+    }
+
+    // 4. Skin Tone Swatches
+    const skinToneGroup = this.modalEl.querySelector('#profile-skintone-group');
+    if (skinToneGroup) {
+      skinToneGroup.innerHTML = '';
+      Object.values(CHARACTER_CUSTOMIZATION.SKIN_TONES).forEach((st) => {
+        const isSelected = custom.skinTone === st.id;
+        const swatch = document.createElement('button');
+        swatch.type = 'button';
+        swatch.className = 'skin-swatch-btn';
+        swatch.title = st.label;
+        swatch.style.cssText = `
+          width: 20px; height: 20px; border-radius: 50%; background: ${st.color};
+          border: 2px solid ${isSelected ? 'var(--gold, #fbbf24)' : 'rgba(255,255,255,0.3)'};
+          cursor: pointer; padding: 0; outline: none; transition: transform 0.15s ease;
+          ${isSelected ? 'transform: scale(1.2); box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);' : ''}
+        `;
+        swatch.onclick = () => {
+          StorageManager.setPlayerCustomization({ skinTone: st.id });
+          try { audioFX.playClick(); } catch (_) {}
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('player:customization_changed', { detail: { skinTone: st.id } }));
+          }
+          this.refresh();
+        };
+        skinToneGroup.appendChild(swatch);
+      });
+    }
+
+    // 5. Draw Avatar Preview Canvas
+    const avatarCanvas = this.modalEl.querySelector('#profile-avatar-canvas');
+    if (avatarCanvas && typeof avatarCanvas.getContext === 'function') {
+      const actx = avatarCanvas.getContext('2d');
+      if (actx) {
+        actx.clearRect(0, 0, 80, 80);
+        // Create preview player instance
+        const previewPlayer = new Player(0, 0, 0, 48, [], currentOutfitId, custom);
+        previewPlayer.facing = 'south';
+        // Draw 2.5D explorer centered
+        previewPlayer.drawExplorerSprite(actx, 40, 44, 48, 0);
+      }
+    }
+
     // Render Explorer Wardrobe Grid (BL-78)
     const outfitGrid = this.modalEl.querySelector('#profile-outfit-grid');
     const outfitBadge = this.modalEl.querySelector('#profile-outfit-badge');
-    const currentOutfitId = profile.outfit || 'classic';
-    const currentOutfit = EXPLORER_OUTFITS[currentOutfitId] || EXPLORER_OUTFITS.classic;
     if (outfitBadge) outfitBadge.textContent = currentOutfit.name;
 
     if (outfitGrid) {

@@ -262,10 +262,20 @@ export function setupMocks() {
           },
           contains(c) { return classes.has(c); },
         },
-        innerHTML: '',
+        _html: '',
+        get innerHTML() { return this._html; },
+        set innerHTML(val) {
+          this._html = String(val);
+          if (val === '') {
+            children.length = 0;
+          }
+        },
         textContent: '',
         value: '',
         remove() {
+          if (_id) {
+            elementsById.delete(_id);
+          }
           if (this.parentNode && this.parentNode.removeChild) {
             this.parentNode.removeChild(this);
           }
