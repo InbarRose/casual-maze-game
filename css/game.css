@@ -240,6 +240,34 @@
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: var(--accent, #38bdf8);
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.activity-feed-title:hover {
+  color: #ffffff;
+}
+
+.activity-feed-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.feed-history-btn {
+  background: transparent;
+  border: none;
+  font-size: 0.82rem;
+  padding: 0 4px;
+  cursor: pointer;
+  line-height: 1;
+  opacity: 0.8;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.feed-history-btn:hover {
+  opacity: 1;
+  transform: scale(1.15);
 }
 
 .activity-filter-pills {
@@ -312,7 +340,15 @@
   color: var(--text, #f8fafc);
   line-height: 1.35;
   animation: activitySlideIn 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, background 0.15s ease, border-color 0.15s ease;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.activity-log-item:hover {
+  background: rgba(30, 41, 59, 0.96);
+  border-color: rgba(56, 189, 248, 0.5);
+  transform: translateX(3px);
 }
 
 .activity-log-icon {
@@ -1509,10 +1545,10 @@
   }
 }
 
-/* Subtle In-World Tile [E] Overlay Indicator (BL-42) */
+/* Subtle In-World Tile [E] Overlay Indicator (BL-42, BL-93) */
 .hud-tile-indicator {
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(clamp(0.75, var(--camera-zoom, 1), 1.35));
   width: 26px;
   height: 26px;
   display: flex;
@@ -1565,7 +1601,7 @@
   background: rgba(56, 189, 248, 0.25);
   border-color: #38bdf8;
   color: #ffffff;
-  transform: translate(-50%, -50%) scale(1.18);
+  transform: translate(-50%, -50%) scale(calc(clamp(0.75, var(--camera-zoom, 1), 1.35) * 1.18));
   box-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
 }
 
@@ -1575,11 +1611,11 @@
 
 @keyframes pulseTileIndicator {
   0%, 100% {
-    transform: translate(-50%, -50%) scale(1);
+    transform: translate(-50%, -50%) scale(clamp(0.75, var(--camera-zoom, 1), 1.35));
     box-shadow: 0 0 10px rgba(56, 189, 248, 0.45);
   }
   50% {
-    transform: translate(-50%, -50%) scale(1.12);
+    transform: translate(-50%, -50%) scale(calc(clamp(0.75, var(--camera-zoom, 1), 1.35) * 1.12));
     box-shadow: 0 0 18px rgba(56, 189, 248, 0.75);
   }
 }
@@ -1681,7 +1717,7 @@
 
 .hud-disambig-pill {
   position: absolute;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%) scale(clamp(0.75, var(--camera-zoom, 1), 1.35));
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -1708,7 +1744,7 @@
   background: rgba(56, 189, 248, 0.3);
   border-color: #38bdf8;
   color: #ffffff;
-  transform: translate(-50%, -50%) scale(1.1);
+  transform: translate(-50%, -50%) scale(calc(clamp(0.75, var(--camera-zoom, 1), 1.35) * 1.1));
   box-shadow: 0 0 18px rgba(56, 189, 248, 0.75);
 }
 

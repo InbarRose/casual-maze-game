@@ -57,6 +57,12 @@ function createMockElement(id = '', tagName = 'div') {
         listeners[evt] = listeners[evt].filter(f => f !== fn);
       }
     },
+    click() {
+      if (listeners['click']) {
+        const evt = { stopPropagation() {}, preventDefault() {} };
+        listeners['click'].forEach(fn => fn(evt));
+      }
+    },
     getContext() {
       return {
         fillRect: () => {},
@@ -286,6 +292,22 @@ describe('UI > maze.html Bootstrap & UI Callbacks Lifecycle', () => {
 
     const medalsContainer = getOrCreateElement('victory-medals-container');
     assert(medalsContainer.children.length >= 4, 'Prestige badges rendered for clear, par, secrets, and flawless');
+
+    // Verify Feed History button and Activity Log modal elements (BL-94)
+    const btnFeedHistory = getOrCreateElement('btn-feed-history');
+    assert(btnFeedHistory !== null, 'btn-feed-history element exists in DOM');
+
+    const activityModal = getOrCreateElement('activity-log-modal');
+    assert(activityModal !== null, 'activity-log-modal element exists');
+
+    // Trigger history modal via feed history button
+    btnFeedHistory.click();
+    assert(activityModal.classList.contains('active'), 'Clicking btn-feed-history activates activity-log-modal');
+
+    // Verify filter buttons include lore and item categories (BL-94)
+    const filterLore = getOrCreateElement('filter-lore');
+    assert(filterLore !== null, 'filter-lore button exists in activity modal');
+    assert(filterLore.id === 'filter-lore', 'filter-lore button has expected ID');
 
     } finally {
       // Clean up globals

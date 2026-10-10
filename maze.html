@@ -175,17 +175,20 @@
       </div>
     </aside>
 
-    <!-- Real-Time In-Game Action Activity Feed (BL-81) -->
+    <!-- Real-Time In-Game Action Activity Feed (BL-81, BL-94) -->
     <div class="game-activity-feed" id="game-activity-feed" aria-live="polite">
       <div class="activity-feed-header" id="activity-feed-header">
-        <span class="activity-feed-title">⚡ Feed</span>
+        <span class="activity-feed-title" id="activity-feed-title" title="Open Activity History Log">⚡ Feed</span>
         <div class="activity-filter-pills" role="toolbar" aria-label="Feed category filters">
           <button type="button" class="feed-pill active" data-filter="all" title="Show All Events">All</button>
           <button type="button" class="feed-pill" data-filter="lore" title="Notes & Inscriptions">📜 Lore</button>
           <button type="button" class="feed-pill" data-filter="mech" title="Switches & Gates">⚙️ Mech</button>
           <button type="button" class="feed-pill" data-filter="item" title="Keys & Relics">🗝️ Items</button>
         </div>
-        <button type="button" class="feed-toggle-btn" id="btn-feed-toggle" title="Minimize / Expand Feed" aria-label="Toggle Activity Feed">_</button>
+        <div class="activity-feed-actions">
+          <button type="button" class="feed-history-btn" id="btn-feed-history" title="View Full Action History [📜]" aria-label="View Full Action History">📜</button>
+          <button type="button" class="feed-toggle-btn" id="btn-feed-toggle" title="Minimize / Expand Feed" aria-label="Toggle Activity Feed">_</button>
+        </div>
       </div>
       <div class="activity-feed-items" id="activity-feed-items"></div>
     </div>
@@ -417,6 +420,7 @@
 
           <div class="activity-filter-bar">
             <button class="btn btn-sm btn-secondary filter-btn active" data-filter="all" id="filter-all">All Events (<span id="log-count-all">0</span>)</button>
+            <button class="btn btn-sm btn-secondary filter-btn" data-filter="lore" id="filter-lore">📜 Lore</button>
             <button class="btn btn-sm btn-secondary filter-btn" data-filter="key-door" id="filter-key-door">🗝️ Keys &amp; Gates</button>
             <button class="btn btn-sm btn-secondary filter-btn" data-filter="lever" id="filter-lever">⚡ Levers</button>
             <button class="btn btn-sm btn-secondary filter-btn" data-filter="warning" id="filter-warning">⚠️ Warnings</button>
@@ -1736,8 +1740,9 @@
 
       const filtered = gameActivityHistory.filter(item => {
         if (currentLogFilter === 'all') return true;
-        if (currentLogFilter === 'key-door') return item.category === 'key' || item.category === 'door';
-        if (currentLogFilter === 'lever') return item.category === 'lever';
+        if (currentLogFilter === 'lore') return item.category === 'lore';
+        if (currentLogFilter === 'key-door') return item.category === 'key' || item.category === 'door' || item.category === 'item';
+        if (currentLogFilter === 'lever') return item.category === 'lever' || item.category === 'mech';
         if (currentLogFilter === 'warning') return item.category === 'warning';
         return true;
       });
@@ -2378,10 +2383,12 @@
       } catch (err) {}
     }
 
-    // Real-Time In-Game Action Activity Feed & Category Filter Controls (BL-81)
+    // Real-Time In-Game Action Activity Feed & Category Filter Controls (BL-81, BL-94)
     const activityFeedEl = document.getElementById('game-activity-feed');
     const activityFeedItemsEl = document.getElementById('activity-feed-items');
     const btnFeedToggle = document.getElementById('btn-feed-toggle');
+    const btnFeedHistory = document.getElementById('btn-feed-history');
+    const activityFeedTitle = document.getElementById('activity-feed-title');
     const feedPills = document.querySelectorAll('.activity-filter-pills .feed-pill');
     let currentFeedCategory = 'all';
 
@@ -2419,6 +2426,22 @@
       });
     }
 
+    if (btnFeedHistory) {
+      btnFeedHistory.addEventListener('click', (e) => {
+        e.stopPropagation();
+        audioFX.playClick();
+        openActivityLogModal();
+      });
+    }
+
+    if (activityFeedTitle) {
+      activityFeedTitle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        audioFX.playClick();
+        openActivityLogModal();
+      });
+    }
+
     function addActivityLog(message, type = 'info', icon = 'ℹ️', category = 'info') {
       const timeMs = window.gameLoop ? window.gameLoop.elapsedTime : 0;
       const timeStr = formatTime(timeMs);
@@ -2444,7 +2467,14 @@
         const item = document.createElement('div');
         item.className = `activity-log-item ${type}`;
         item.dataset.category = category;
+        item.title = 'Click to open full Activity Log History';
+        item.style.cursor = 'pointer';
         item.innerHTML = `<span class="activity-log-icon">${icon}</span> <span class="activity-log-text">${message}</span>`;
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          audioFX.playClick();
+          openActivityLogModal();
+        });
 
         const matches = currentFeedCategory === 'all' ||
           (currentFeedCategory === 'lore' && category === 'lore') ||
