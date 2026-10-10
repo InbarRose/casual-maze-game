@@ -33,6 +33,8 @@ export class SettingsModal {
     modal.className = 'modal-backdrop';
     modal.style.display = 'none';
 
+    this._activeTab = 'audio';
+
     modal.innerHTML = `
       <div class="modal-card settings-card" role="dialog" aria-modal="true" aria-labelledby="settings-modal-title">
         <div class="modal-header">
@@ -43,10 +45,29 @@ export class SettingsModal {
           <button type="button" class="btn-close" id="btn-close-settings" title="Close Settings (Esc)">&times;</button>
         </div>
 
-        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1.2rem; max-height: 70vh; overflow-y: auto; padding-right: 0.3rem;">
+        <!-- Categorized Navigation Tab Bar (BL-107) -->
+        <nav class="settings-tab-bar" id="settings-tab-bar" role="tablist" aria-label="Settings Categories">
+          <button type="button" class="settings-tab-btn active" role="tab" aria-selected="true" data-tab="audio" id="tab-btn-audio">
+            🔊 <span>Audio</span>
+          </button>
+          <button type="button" class="settings-tab-btn" role="tab" aria-selected="false" data-tab="display" id="tab-btn-display">
+            🎥 <span>Display</span>
+          </button>
+          <button type="button" class="settings-tab-btn" role="tab" aria-selected="false" data-tab="controls" id="tab-btn-controls">
+            🎮 <span>Controls</span>
+          </button>
+          <button type="button" class="settings-tab-btn" role="tab" aria-selected="false" data-tab="save" id="tab-btn-save">
+            💾 <span>Save Data</span>
+          </button>
+          <button type="button" class="settings-tab-btn" role="tab" aria-selected="false" data-tab="diagnostics" id="tab-btn-diagnostics">
+            🔬 <span>Support</span>
+          </button>
+        </nav>
+
+        <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem; max-height: 60vh; overflow-y: auto; padding-right: 0.3rem;">
           
           <!-- Section 1: Audio & Sound -->
-          <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+          <div class="settings-group settings-tab-panel active" id="settings-panel-audio" role="tabpanel" aria-labelledby="tab-btn-audio" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
             <div style="font-size: 0.8rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
               <span>🔊 Audio & Procedural Sound FX</span>
               <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; text-transform: none; color: var(--text-muted); cursor: pointer;">
@@ -83,7 +104,7 @@ export class SettingsModal {
           </div>
 
           <!-- Section 2: Display & Perspective -->
-          <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+          <div class="settings-group settings-tab-panel" id="settings-panel-display" role="tabpanel" aria-labelledby="tab-btn-display" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
             <div style="font-size: 0.8rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem;">
               🎥 Camera & View Perspective
             </div>
@@ -138,7 +159,7 @@ export class SettingsModal {
           </div>
 
           <!-- Section 3: Keyboard & Navigation Controls -->
-          <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+          <div class="settings-group settings-tab-panel" id="settings-panel-controls" role="tabpanel" aria-labelledby="tab-btn-controls" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
             <div style="font-size: 0.8rem; color: var(--emerald); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.8rem; display: flex; justify-content: space-between; align-items: center;">
               <span>🎮 Controls & Navigation</span>
               <label style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; text-transform: none; color: var(--text-muted); cursor: pointer;">
@@ -246,7 +267,7 @@ export class SettingsModal {
           </div>
 
           <!-- Section 4: Save Data Backup & Cloudless Sync (BL-53) -->
-          <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
+          <div class="settings-group settings-tab-panel" id="settings-panel-save" role="tabpanel" aria-labelledby="tab-btn-save" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
             <div style="font-size: 0.8rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.6rem;">
               <span>💾 Save Data &amp; Profile Backup</span>
             </div>
@@ -284,7 +305,7 @@ export class SettingsModal {
           </div>
 
           <!-- Section 5: Diagnostics & Feedback (BL-69, BL-70) -->
-          <div class="settings-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); display: flex; flex-direction: column; gap: 0.75rem;">
+          <div class="settings-group settings-tab-panel" id="settings-panel-diagnostics" role="tabpanel" aria-labelledby="tab-btn-diagnostics" style="background: rgba(0, 0, 0, 0.25); padding: 0.9rem 1.1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); display: flex; flex-direction: column; gap: 0.75rem;">
             <div style="font-size: 0.8rem; color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em;">
               🔬 Diagnostics &amp; Support
             </div>
@@ -326,6 +347,15 @@ export class SettingsModal {
     const doneBtn = this.modalEl.querySelector('#btn-done-settings');
     if (closeBtn) closeBtn.onclick = () => this.close();
     if (doneBtn) doneBtn.onclick = () => this.close();
+
+    // Navigation Tab Switching (BL-107)
+    const tabBtns = this.modalEl.querySelectorAll('.settings-tab-btn');
+    tabBtns.forEach((btn) => {
+      btn.onclick = () => {
+        const tabId = btn.getAttribute('data-tab');
+        if (tabId) this.switchTab(tabId);
+      };
+    });
 
     this.modalEl.onclick = (e) => {
       if (e.target === this.modalEl) this.close();
@@ -740,9 +770,36 @@ export class SettingsModal {
     }
   }
 
-  open() {
+  /**
+   * Switch the active settings category tab
+   * @param {string} tabId 'audio' | 'display' | 'controls' | 'save' | 'diagnostics'
+   */
+  switchTab(tabId) {
+    if (!this.modalEl) return;
+    this._activeTab = tabId;
+
+    const tabBtns = this.modalEl.querySelectorAll('.settings-tab-btn');
+    tabBtns.forEach((btn) => {
+      const match = btn.getAttribute('data-tab') === tabId;
+      btn.classList.toggle('active', match);
+      btn.setAttribute('aria-selected', match ? 'true' : 'false');
+    });
+
+    const panels = this.modalEl.querySelectorAll('.settings-tab-panel');
+    panels.forEach((panel) => {
+      const match = panel.id === `settings-panel-${tabId}`;
+      panel.classList.toggle('active', match);
+    });
+  }
+
+  open(targetTab = null) {
     this.ensureDom();
     this.refresh();
+    if (targetTab) {
+      this.switchTab(targetTab);
+    } else if (this._activeTab) {
+      this.switchTab(this._activeTab);
+    }
     if (this.modalEl) {
       this.modalEl.style.display = 'flex';
       this.isOpen = true;
