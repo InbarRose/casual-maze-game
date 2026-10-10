@@ -47,6 +47,7 @@ import './unit/engine/multi-elevation-pathfinding.test.mjs';
 import './unit/engine/canvas-visual-regression.test.mjs';
 import './unit/engine/entrance-exit-visuals.test.mjs';
 import './unit/engine/interact-directions-disambiguation.test.mjs';
+import './unit/engine/fog-expansion.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/base-entity.test.mjs';

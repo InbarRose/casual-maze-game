@@ -1887,8 +1887,8 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
       "height": 17
     },
     "config": {
-      "fogOfWar": false,
-      "viewRadius": 8,
+      "fogOfWar": true,
+      "viewRadius": 7,
       "allowFreePan": true,
       "tileSize": 32,
       "theme": "jungle"

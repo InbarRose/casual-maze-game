@@ -488,8 +488,8 @@ This document tracks project milestones, current release status, active developm
 - [ ] **Additional Puzzle & Trap Entities**:
   - [x] Floor-plate traps (momentary or single-fire activation when stepped on).
   - [ ] One-way directional gates / sliding doors.
-- [ ] **Strategic Fog of War & Exploratory Vision Dynamics (`BL-88`)**:
-  - Expand dynamic Fog of War into more campaign levels (e.g. dense jungle canopies, subterranean crypts, twilight temples) with varied sight radii (`viewRadius: 4..8`) and warm torch light gradients, elevating exploration feel and tactical minimap radar value.
+- [x] **Strategic Fog of War & Exploratory Vision Dynamics (`BL-88`)**:
+  - Expanded dynamic Fog of War into climatic campaign chapter finales (Level 4, 8, 12, 16, 20, 24, 28, 29, 30, 31, 32) with calibrated sight radii (`viewRadius: 6..7`), 360-degree raycasting line-of-sight, torch lighting glow, and explored memory shading, elevating exploration discovery and minimap radar value without breaking puzzle solvability (ADR-0011).
 - [x] **Viewport Zoom & Consistent Optical Scale (`BL-87`)**:
   - Decouple canvas tile rendering from "fit-to-screen" squash; establish a default optical tile scale ($32\text{px}$–$40\text{px}$) so larger levels extend beyond viewport bounds and scroll cleanly with camera follow; provide intuitive zoom controls (`+`/`-`, mouse wheel, pinch-to-zoom, HUD buttons).
 - [x] **Translucent Disambiguation & Two-Stage Interaction Reveal (`BL-91`)**:

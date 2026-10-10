@@ -1995,7 +1995,7 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
       "height": 19
     },
     "config": {
-      "fogOfWar": false,
+      "fogOfWar": true,
       "viewRadius": 7,
       "allowFreePan": true,
       "tileSize": 32,

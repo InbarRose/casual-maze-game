@@ -11,8 +11,8 @@
     "height": 17
   },
   "config": {
-    "fogOfWar": false,
-    "viewRadius": 8,
+    "fogOfWar": true,
+    "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
     "theme": "jungle"
