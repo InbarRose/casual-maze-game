@@ -93,6 +93,7 @@ import './unit/editor/generator-integration.test.mjs';
 import './unit/editor/custom-prefabs.test.mjs';
 import './unit/editor/diagnostic-pins-validation.test.mjs';
 import './unit/editor/entrance-exit-clash.test.mjs';
+import './unit/editor/editor-perspective-and-ui.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
@@ -131,6 +132,7 @@ import './unit/ui/app-header.test.mjs';
 import './unit/ui/touch-controls.test.mjs';
 import './unit/ui/maze-html-bootstrap.test.mjs';
 import './unit/ui/victory-quick-advance.test.mjs';
+import './unit/ui/victory-modal-streamline.test.mjs';
 import './unit/ui/breadcrumbs-navigation.test.mjs';
 import './unit/ui/high-contrast-mode.test.mjs';
 import './unit/ui/mobile-controls.test.mjs';

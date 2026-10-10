@@ -60,9 +60,39 @@ export class EditorCanvas {
     this.hoverGridPos = { x: -1, y: -1 };
     this.lastPaintedGridPos = null;
     this.diagnosticPin = null; // { x, y, z, message, type, timestamp } (BL-75)
+    this.perspective = '2d'; // '2d' | '2.5d' (BL-110)
 
     this.initEvents();
     this.centerInViewport();
+  }
+
+  /**
+   * Set perspective mode ('2d' or '2.5d') (BL-110)
+   * @param {'2d'|'2.5d'} mode
+   */
+  setPerspective(mode) {
+    if (mode === '2d' || mode === '2.5d') {
+      this.perspective = mode;
+      this.render();
+    }
+  }
+
+  /**
+   * Toggle perspective mode between '2d' and '2.5d' (BL-110)
+   * @returns {'2d'|'2.5d'} Active mode after toggling
+   */
+  togglePerspective() {
+    this.perspective = this.perspective === '2.5d' ? '2d' : '2.5d';
+    this.render();
+    return this.perspective;
+  }
+
+  /**
+   * Get current perspective mode ('2d' or '2.5d') (BL-110)
+   * @returns {'2d'|'2.5d'}
+   */
+  getPerspective() {
+    return this.perspective;
   }
 
   /**
@@ -934,6 +964,9 @@ export class EditorCanvas {
       ? (this.layerViewMode === 'solo' ? 0.0 : (this.layerViewMode === 'all' ? 1.0 : this.layerOpacity))
       : 1.0;
 
+    const is25D = this.perspective === '2.5d';
+    const wallH = is25D ? Math.max(3, Math.round(effTile * 0.38)) : Math.round(effTile * 0.22);
+
     for (let y = 0; y < mazeH; y++) {
       for (let x = 0; x < mazeW; x++) {
         const px = x * effTile;
@@ -948,16 +981,58 @@ export class EditorCanvas {
           }
 
           if (gTile === TILES.WALL) {
-            ctx.fillStyle = theme.wall;
-            ctx.fillRect(px, py, effTile, effTile);
-            ctx.fillStyle = theme.wallTop;
-            ctx.fillRect(px, py, effTile, effTile * 0.22);
-            ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
-            ctx.fillRect(px + effTile * 0.1, py + effTile * 0.58, effTile * 0.8, 1.5);
-            ctx.fillRect(px + effTile * 0.5, py + effTile * 0.22, 1.5, effTile * 0.36);
+            if (is25D) {
+              // 2.5D Isometric / Oblique Extruded Wall (BL-110)
+              ctx.fillStyle = theme.wallTop || '#64748b';
+              ctx.fillRect(px, py, effTile, effTile);
+              // Top cap highlight edges
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+              ctx.fillRect(px, py, effTile, Math.max(1, effTile * 0.08));
+              ctx.fillRect(px, py, Math.max(1, effTile * 0.08), effTile);
+              // Top cap inset shadow
+              ctx.fillStyle = 'rgba(0, 0, 0, 0.24)';
+              ctx.fillRect(px + effTile - Math.max(1, effTile * 0.08), py, Math.max(1, effTile * 0.08), effTile);
+              ctx.fillRect(px, py + effTile - Math.max(1, effTile * 0.08), effTile, Math.max(1, effTile * 0.08));
+
+              // Front drop face if south tile is open/floor or off-grid
+              const isSouthOpen = y + 1 >= mazeH || (ground[y + 1]?.[x] !== TILES.WALL);
+              if (isSouthOpen) {
+                ctx.fillStyle = theme.wall || '#334155';
+                ctx.fillRect(px, py + effTile, effTile, wallH);
+                // Masonry courses and vertical brick seams
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+                ctx.fillRect(px, py + effTile + wallH * 0.5, effTile, 1.2);
+                ctx.fillRect(px + effTile * 0.35, py + effTile, 1.2, wallH * 0.5);
+                ctx.fillRect(px + effTile * 0.72, py + effTile + wallH * 0.5, 1.2, wallH * 0.5);
+                // Soft cast drop shadow on floor below
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+                ctx.fillRect(px, py + effTile + wallH, effTile, Math.max(2, Math.round(effTile * 0.12)));
+              }
+            } else {
+              // 2D Technical Schematic Drafting Mode
+              ctx.fillStyle = theme.wall;
+              ctx.fillRect(px, py, effTile, effTile);
+              ctx.fillStyle = theme.wallTop;
+              ctx.fillRect(px, py, effTile, effTile * 0.22);
+              ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
+              ctx.fillRect(px + effTile * 0.1, py + effTile * 0.58, effTile * 0.8, 1.5);
+              ctx.fillRect(px + effTile * 0.5, py + effTile * 0.22, 1.5, effTile * 0.36);
+            }
           } else {
             ctx.fillStyle = (x + y) % 2 === 0 ? theme.floorAlt : theme.floor;
             ctx.fillRect(px, py, effTile, effTile);
+
+            if (is25D) {
+              // Ambient occlusion shadows on floor adjacent to walls
+              if (y > 0 && ground[y - 1]?.[x] === TILES.WALL) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+                ctx.fillRect(px, py, effTile, Math.max(2, Math.round(effTile * 0.14)));
+              }
+              if (x > 0 && ground[y]?.[x - 1] === TILES.WALL) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+                ctx.fillRect(px, py, Math.max(1, Math.round(effTile * 0.1)), effTile);
+              }
+            }
 
             // Underpass corridor on ground layer
             if (gTile === TILES.BRIDGE_EW) {
@@ -1005,6 +1080,11 @@ export class EditorCanvas {
           if (overheadAlpha < 1.0) {
             ctx.globalAlpha = overheadAlpha;
           }
+          if (is25D) {
+            // Ground underpass shadow cast by overhead bridge
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
+            ctx.fillRect(px + effTile * 0.08, py + effTile * 0.12, effTile * 0.84, effTile * 0.88);
+          }
           if (oTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
             // B_EW Overhead spans North-South
             ctx.fillStyle = theme.bridgeOverhead;
@@ -1012,6 +1092,14 @@ export class EditorCanvas {
             ctx.fillStyle = theme.bridgeRailing;
             ctx.fillRect(px + effTile * 0.10, py, effTile * 0.08, effTile);
             ctx.fillRect(px + effTile * 0.82, py, effTile * 0.08, effTile);
+            if (is25D) {
+              // 3D vertical railing posts
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+              ctx.fillRect(px + effTile * 0.10, py + effTile * 0.2, effTile * 0.08, 2);
+              ctx.fillRect(px + effTile * 0.10, py + effTile * 0.8, effTile * 0.08, 2);
+              ctx.fillRect(px + effTile * 0.82, py + effTile * 0.2, effTile * 0.08, 2);
+              ctx.fillRect(px + effTile * 0.82, py + effTile * 0.8, effTile * 0.08, 2);
+            }
           } else if (oTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
             // B_NS Overhead spans East-West
             ctx.fillStyle = theme.bridgeOverhead;
@@ -1019,12 +1107,20 @@ export class EditorCanvas {
             ctx.fillStyle = theme.bridgeRailing;
             ctx.fillRect(px, py + effTile * 0.10, effTile, effTile * 0.08);
             ctx.fillRect(px, py + effTile * 0.82, effTile, effTile * 0.08);
+            if (is25D) {
+              // 3D vertical railing posts
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+              ctx.fillRect(px + effTile * 0.2, py + effTile * 0.10, 2, effTile * 0.08);
+              ctx.fillRect(px + effTile * 0.8, py + effTile * 0.10, 2, effTile * 0.08);
+              ctx.fillRect(px + effTile * 0.2, py + effTile * 0.82, 2, effTile * 0.08);
+              ctx.fillRect(px + effTile * 0.8, py + effTile * 0.82, 2, effTile * 0.08);
+            }
           }
           ctx.restore();
         }
 
-        // Grid lines
-        ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.06)';
+        // Grid lines (subtle in 2.5D, standard in 2D)
+        ctx.strokeStyle = is25D ? (theme.floorGrid || 'rgba(255, 255, 255, 0.04)') : (theme.floorGrid || 'rgba(255, 255, 255, 0.06)');
         ctx.lineWidth = 1;
         ctx.strokeRect(px, py, effTile, effTile);
       }
@@ -1041,6 +1137,12 @@ export class EditorCanvas {
         }
         const spX = this.level.spawn.x * effTile;
         const spY = this.level.spawn.y * effTile;
+        if (is25D) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+          ctx.beginPath();
+          ctx.ellipse(spX + effTile / 2, spY + effTile * 0.65, effTile * 0.32, effTile * 0.12, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.fillStyle = '#34d399';
         ctx.beginPath();
         ctx.arc(spX + effTile / 2, spY + effTile / 2, effTile * 0.36, 0, Math.PI * 2);
@@ -1072,6 +1174,12 @@ export class EditorCanvas {
         }
         const tspX = this.level.testSpawn.x * effTile;
         const tspY = this.level.testSpawn.y * effTile;
+        if (is25D) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+          ctx.beginPath();
+          ctx.ellipse(tspX + effTile / 2, tspY + effTile * 0.65, effTile * 0.32, effTile * 0.12, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.fillStyle = '#f43f5e';
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
@@ -1098,6 +1206,12 @@ export class EditorCanvas {
         }
         const exX = this.level.exit.x * effTile;
         const exY = this.level.exit.y * effTile;
+        if (is25D) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+          ctx.beginPath();
+          ctx.ellipse(exX + effTile / 2, exY + effTile * 0.68, effTile * 0.36, effTile * 0.14, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
         const pOuter = theme.portalOuter || '#0284c7';
         const pInner = theme.portalInner || '#38bdf8';
 
@@ -1141,6 +1255,12 @@ export class EditorCanvas {
       ctx.save();
       if (!isEntityActive && this.layerViewMode !== 'all') {
         ctx.globalAlpha = this.layerOpacity || 0.35;
+      }
+      if (is25D) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+        ctx.beginPath();
+        ctx.ellipse(enX + effTile / 2, enY + effTile * 0.65, effTile * 0.28, effTile * 0.1, 0, 0, Math.PI * 2);
+        ctx.fill();
       }
       if (entity.type === ENTITY_TYPES.KEY) {
         ctx.fillStyle = entity.color || '#fbbf24';
