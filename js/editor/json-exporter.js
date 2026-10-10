@@ -23,6 +23,7 @@ export class JsonExporter {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    return filename;
   }
 
   /**

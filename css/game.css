@@ -1457,6 +1457,22 @@
   background: rgba(56, 189, 248, 0.2);
 }
 
+.hud-feed-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.78rem;
+  border-radius: var(--radius-sm, 6px);
+  transition: all 0.15s ease;
+}
+
+.hud-feed-pill.active {
+  border-color: #38bdf8;
+  background: rgba(56, 189, 248, 0.22);
+  color: #38bdf8;
+}
+
 /* Responsive Island Collapse for Smaller Viewports */
 @media (max-width: 900px) {
   .game-hud-top {
@@ -1514,11 +1530,11 @@
   }
 
   .game-activity-feed {
-    bottom: 0.5rem;
+    bottom: 5.5rem;
     left: 0.5rem;
-    max-width: calc(100vw - 1rem);
-    max-height: 100px;
-    z-index: 85;
+    width: min(340px, calc(100vw - 1rem));
+    max-height: 180px;
+    z-index: 100;
   }
 
   .contextual-interact-btn {

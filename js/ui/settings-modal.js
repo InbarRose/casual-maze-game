@@ -432,9 +432,9 @@ export class SettingsModal {
         this.audio.playTabClick?.() || this.audio.playClick();
         const filename = StorageManager.downloadFullBackupFile();
         if (saveMsg) {
-          saveMsg.textContent = `Backup downloaded: ${filename}!`;
+          saveMsg.textContent = `📥 Saved to Downloads: ${filename}!`;
           saveMsg.style.color = 'var(--emerald)';
-          setTimeout(() => { if (saveMsg.textContent.includes('Backup downloaded')) saveMsg.textContent = ''; }, 4000);
+          setTimeout(() => { if (saveMsg.textContent.includes('Saved to Downloads')) saveMsg.textContent = ''; }, 5000);
         }
       };
     }

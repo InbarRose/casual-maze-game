@@ -736,10 +736,11 @@
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `walkthrough_level_${currentReplayData.levelId}.json`;
+      const fn = `walkthrough_level_${currentReplayData.levelId}.json`;
+      a.download = fn;
       a.click();
       URL.revokeObjectURL(url);
-      showToast('Walkthrough JSON exported!', 'success');
+      showToast(`📥 Saved ${fn} to Downloads folder!`, 'success');
     });
 
     // Custom Replay File Upload

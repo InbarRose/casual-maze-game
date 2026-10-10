@@ -259,6 +259,7 @@ export function setupMocks() {
             else if (classes.has(c)) classes.delete(c);
             else classes.add(c);
             _className = Array.from(classes).join(' ');
+            return classes.has(c);
           },
           contains(c) { return classes.has(c); },
         },

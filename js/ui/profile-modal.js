@@ -209,7 +209,7 @@ export class ProfileModal {
     if (downloadBtn) {
       downloadBtn.onclick = () => {
         const file = StorageManager.downloadSaveFile();
-        this.showMessage(`Saved to ${file}`, 'var(--emerald)');
+        this.showMessage(`📥 Saved to Downloads: ${file}`, 'var(--emerald)');
       };
     }
 

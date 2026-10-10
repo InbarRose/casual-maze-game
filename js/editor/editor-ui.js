@@ -381,7 +381,8 @@ export class EditorUI {
         }
       }
       console.info('[MazeGame:Editor] Exporting level JSON to file:', this.level.title);
-      JsonExporter.exportToFile(this.level);
+      const filename = JsonExporter.exportToFile(this.level);
+      this.showToast(`📥 Exported ${filename} (saved to Downloads folder)!`, 'success');
     });
 
     document.getElementById('btn-copy-json')?.addEventListener('click', async () => {
