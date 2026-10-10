@@ -1605,4 +1605,122 @@ export class EditorCanvas {
   isRamp(tile) {
     return tile === TILES.RAMP_N || tile === TILES.RAMP_S || tile === TILES.RAMP_E || tile === TILES.RAMP_W;
   }
+
+  /**
+   * Render overview radar mini-map into provided HTML canvas (BL-103)
+   * @param {HTMLCanvasElement} miniCanvas
+   */
+  renderMiniMap(miniCanvas) {
+    if (!miniCanvas || !this.level) return;
+    const miniCtx = miniCanvas.getContext('2d');
+    if (!miniCtx) return;
+
+    const { width: mazeW, height: mazeH } = this.level.dimensions;
+    const cw = miniCanvas.width;
+    const ch = miniCanvas.height;
+
+    // Background
+    miniCtx.fillStyle = '#090d13';
+    miniCtx.fillRect(0, 0, cw, ch);
+
+    const pad = 8;
+    const availW = cw - pad * 2;
+    const availH = ch - pad * 2;
+    const scale = Math.min(availW / mazeW, availH / mazeH);
+    const offsetX = pad + (availW - mazeW * scale) / 2;
+    const offsetY = pad + (availH - mazeH * scale) / 2;
+
+    this.miniMapTransform = { scale, offsetX, offsetY, mazeW, mazeH };
+
+    const ground = this.level.layers.ground || [];
+    const overhead = this.level.layers.overhead || [];
+    const isOverhead = this.activeLayer === LAYERS.OVERHEAD;
+
+    // 1. Draw floor base
+    miniCtx.fillStyle = '#161b22';
+    miniCtx.fillRect(offsetX, offsetY, mazeW * scale, mazeH * scale);
+
+    // 2. Draw ground walls
+    miniCtx.fillStyle = '#484f58';
+    for (let y = 0; y < mazeH; y++) {
+      for (let x = 0; x < mazeW; x++) {
+        if (ground[y]?.[x] === TILES.WALL) {
+          miniCtx.fillRect(offsetX + x * scale, offsetY + y * scale, Math.max(1, scale), Math.max(1, scale));
+        }
+      }
+    }
+
+    // 3. Draw overhead bridges / walkways
+    if (overhead.length > 0) {
+      miniCtx.fillStyle = isOverhead ? '#fbbf24' : 'rgba(251, 191, 36, 0.4)';
+      for (let y = 0; y < mazeH; y++) {
+        for (let x = 0; x < mazeW; x++) {
+          if (overhead[y]?.[x] && overhead[y][x] !== 0) {
+            miniCtx.fillRect(offsetX + x * scale, offsetY + y * scale, Math.max(1, scale), Math.max(1, scale));
+          }
+        }
+      }
+    }
+
+    // 4. Draw key entities (Spawn, Exit, Keys, Doors)
+    if (this.level.spawn) {
+      miniCtx.fillStyle = '#34d399';
+      miniCtx.fillRect(offsetX + this.level.spawn.x * scale - 1, offsetY + this.level.spawn.y * scale - 1, Math.max(3, scale), Math.max(3, scale));
+    }
+    if (this.level.exit) {
+      miniCtx.fillStyle = '#38bdf8';
+      miniCtx.fillRect(offsetX + this.level.exit.x * scale - 1, offsetY + this.level.exit.y * scale - 1, Math.max(3, scale), Math.max(3, scale));
+    }
+    for (const ent of (this.level.entities || [])) {
+      if (ent.type === 'key') miniCtx.fillStyle = ent.color || '#fbbf24';
+      else if (ent.type === 'door') miniCtx.fillStyle = ent.color || '#f43f5e';
+      else if (ent.type === 'lever') miniCtx.fillStyle = '#a855f7';
+      else miniCtx.fillStyle = '#e2e8f0';
+      miniCtx.fillRect(offsetX + ent.x * scale, offsetY + ent.y * scale, Math.max(2, scale * 0.8), Math.max(2, scale * 0.8));
+    }
+
+    // 5. Draw active canvas viewport indicator rectangle
+    const effTile = this.getEffectiveTileSize();
+    const vpLeft = -this.panX / effTile;
+    const vpTop = -this.panY / effTile;
+    const vpWidth = this.canvas.width / effTile;
+    const vpHeight = this.canvas.height / effTile;
+
+    const vpRectX = offsetX + vpLeft * scale;
+    const vpRectY = offsetY + vpTop * scale;
+    const vpRectW = vpWidth * scale;
+    const vpRectH = vpHeight * scale;
+
+    miniCtx.save();
+    miniCtx.strokeStyle = '#38bdf8';
+    miniCtx.lineWidth = 1.5;
+    miniCtx.fillStyle = 'rgba(56, 189, 248, 0.12)';
+    miniCtx.fillRect(vpRectX, vpRectY, vpRectW, vpRectH);
+    miniCtx.strokeRect(vpRectX, vpRectY, vpRectW, vpRectH);
+
+    // Glowing border corners
+    miniCtx.strokeStyle = '#ffffff';
+    miniCtx.lineWidth = 2;
+    miniCtx.strokeRect(offsetX, offsetY, mazeW * scale, mazeH * scale);
+    miniCtx.restore();
+  }
+
+  /**
+   * Navigate editor canvas by clicking/dragging on mini-map (BL-103)
+   * @param {number} clientX
+   * @param {number} clientY
+   * @param {HTMLCanvasElement} miniCanvas
+   */
+  handleMiniMapNavigation(clientX, clientY, miniCanvas) {
+    if (!miniCanvas || !this.miniMapTransform) return;
+    const rect = miniCanvas.getBoundingClientRect();
+    const mx = clientX - rect.left;
+    const my = clientY - rect.top;
+
+    const { scale, offsetX, offsetY, mazeW, mazeH } = this.miniMapTransform;
+    const gridX = Math.max(0, Math.min(mazeW - 1, Math.round((mx - offsetX) / scale)));
+    const gridY = Math.max(0, Math.min(mazeH - 1, Math.round((my - offsetY) / scale)));
+
+    this.centerOnTile(gridX, gridY);
+  }
 }

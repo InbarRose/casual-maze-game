@@ -493,19 +493,90 @@ export class EditorUI {
     document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
       this.editorCanvas.setZoom(this.editorCanvas.zoom * 1.25);
       this.updateZoomBadge();
+      this.updateMiniMap();
       console.info(`[MazeGame:Editor] Zoom In: ${Math.round(this.editorCanvas.zoom * 100)}%`);
     });
     document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
       this.editorCanvas.setZoom(this.editorCanvas.zoom / 1.25);
       this.updateZoomBadge();
+      this.updateMiniMap();
       console.info(`[MazeGame:Editor] Zoom Out: ${Math.round(this.editorCanvas.zoom * 100)}%`);
     });
     document.getElementById('btn-zoom-fit')?.addEventListener('click', () => {
       this.editorCanvas.zoomToFit();
       this.updateZoomBadge();
+      this.updateMiniMap();
       console.info(`[MazeGame:Editor] Zoom to Fit: ${Math.round(this.editorCanvas.zoom * 100)}%`);
     });
     this.updateZoomBadge();
+
+    // Accordion Tool Palette Collapsible Headers (BL-104)
+    document.querySelectorAll('.sidebar-accordion-header').forEach(header => {
+      header.addEventListener('click', () => {
+        const accordion = header.closest('.sidebar-accordion');
+        if (accordion) {
+          accordion.classList.toggle('active');
+        }
+      });
+    });
+
+    // Interactive Floating Mini-Map Overview HUD (BL-103)
+    this.initMiniMap();
+  }
+
+  /**
+   * Initialize interactive mini-map HUD and events (BL-103)
+   */
+  initMiniMap() {
+    const miniHud = document.getElementById('editor-minimap-hud');
+    const miniCanvas = document.getElementById('editor-minimap-canvas');
+    const btnToggle = document.getElementById('btn-toggle-minimap');
+
+    if (btnToggle && miniHud) {
+      btnToggle.addEventListener('click', () => {
+        miniHud.classList.toggle('minimized');
+        btnToggle.textContent = miniHud.classList.contains('minimized') ? '▲' : '_';
+      });
+    }
+
+    if (miniCanvas) {
+      let isMiniMouseDown = false;
+
+      const handleMiniNav = (e) => {
+        if (!this.editorCanvas) return;
+        this.editorCanvas.handleMiniMapNavigation(e.clientX, e.clientY, miniCanvas);
+        this.updateMiniMap();
+      };
+
+      miniCanvas.addEventListener('mousedown', (e) => {
+        isMiniMouseDown = true;
+        handleMiniNav(e);
+      });
+
+      window.addEventListener('mousemove', (e) => {
+        if (isMiniMouseDown) {
+          handleMiniNav(e);
+        }
+      });
+
+      window.addEventListener('mouseup', () => {
+        if (isMiniMouseDown) {
+          isMiniMouseDown = false;
+        }
+      });
+    }
+
+    this.updateMiniMap();
+  }
+
+  /**
+   * Refresh mini-map overview render pass (BL-103)
+   */
+  updateMiniMap() {
+    const miniCanvas = document.getElementById('editor-minimap-canvas');
+    if (miniCanvas && this.editorCanvas) {
+      this.editorCanvas.renderMiniMap(miniCanvas);
+    }
   }
 
   setBrushSize(size) {
@@ -883,6 +954,8 @@ export class EditorUI {
       const count = (this.level.entities || []).length;
       entEl.textContent = `📦 ${count} Entit${count === 1 ? 'y' : 'ies'}`;
     }
+
+    this.updateMiniMap();
   }
 
   playTest(customTestParams = null) {

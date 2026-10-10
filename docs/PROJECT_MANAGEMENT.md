@@ -151,6 +151,11 @@ This document tracks project milestones, current release status, active developm
 - [x] **Visual Fidelity Polish & AAA Map Editor Studio Sprint (BL-101, BL-102, ADR-0017)**:
   - **Procedural Environmental Fidelity & Wall Sconce Flares (BL-101, CMP-02, CMP-11)**: Enhance canvas rendering with biome-specific micro-textures (cobblestones, flagstones, moss growth, mineral veins), dynamic animated torch sconces on walls with warm radial light flicker, corner ambient occlusion, and corridor dust particles.
   - **AAA Map Editor Studio Overhaul (BL-102, CMP-08, CMP-09, CMP-10)**: Redesign Map Editor UI into a dark glassmorphic professional IDE layout with categorized collapsible tool palettes, active tool indicator cards, interactive canvas mini-map overview HUD, real-time statistics telemetry, and polished tooltips.
+- [x] **Interactive Map Editor Mini-Map Overview HUD & Surface Polish Sprint (BL-103, BL-104, BL-105, ADR-0018)**:
+  - **Interactive Mini-Map Overview HUD (BL-103, CMP-08, CMP-10)**: Floating glassmorphic mini-map canvas (`#editor-minimap-hud`) tracking visible viewport bounds and enabling instant 1-click drag navigation across large labyrinths.
+  - **Categorized Accordion Tool Palette (BL-104, CMP-08, CMP-09)**: Grouped sidebar tools into collapsible accordion cards (`Draw Tools`, `Tiles & Bridges`, `Elevation Ramps`, `Architectural Prefabs`, `Custom Prefabs`, `Entities & Markers`) with item count badges, rotating chevrons, and minimized workspace states.
+  - **Procedural Surface Shaders & Animated Fluid Polish (BL-105, CMP-02, CMP-11)**: Animated water puddles with concentric ripples in Caves, Jungles, and Dungeons; molten lava bubbling hotspots in Magma; and diamond ice crystal sparkles in Snow biomes.
+
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
