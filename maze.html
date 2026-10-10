@@ -571,6 +571,7 @@
     import { getStoryline, getNextStoryChapter } from './js/stories/storylines.js';
     import { audioFX } from './js/ui/audio-fx.js';
     import { GameMenu } from './js/ui/game-menu.js';
+    import { getKeyColorblindShape } from './js/core/constants.js';
 
     // Migrate storage schema on startup (BL-36)
     StorageManager.migrateSaveData();
@@ -1210,11 +1211,13 @@
             if (totalItemCount > 0) {
               for (const keyId of heldKeyIds) {
                 const key = currentLevel.entities.find(e => e.id === keyId) || (state.keys ? state.keys.find(k => k.id === keyId) : null) || { name: 'Key', color: '#fbbf24' };
+                const shapeInfo = getKeyColorblindShape(key.color || key.name || key.id);
                 const pill = document.createElement('div');
                 pill.className = 'key-pill';
                 pill.style.borderColor = key.color || '#fbbf24';
                 pill.style.boxShadow = `0 0 10px ${key.color ? key.color + '60' : 'rgba(251,191,36,0.35)'}`;
-                pill.innerHTML = `<span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 8px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
+                pill.title = `${key.name || 'Key'} (${shapeInfo.label} Glyph)`;
+                pill.innerHTML = `<span class="key-shape-badge" style="color:${key.color || '#fbbf24'};">${shapeInfo.symbol}</span> <span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 8px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
                 keysListEl.appendChild(pill);
               }
 

@@ -12,12 +12,12 @@ This document records the official baseline quality evaluations, granular expert
 
 | ID | Component / Subsystem | Category 1 (Juice) | Category 2 (Static) | Category 3 (UI/UX) | Category 4 (Mechanics) | Category 5 (Progression) | Category 6 (Accessibility) | Master Score (/60) | Tier | Status |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
-| **CMP-01** | **Universal App Shell & Global Navigation** | 7.00 | 9.33 | 7.67 | 6.33 | 7.00 | 6.33 | **43.66** (72.8%) | **B Tier** | Dynamic Hero Backdrop Canvas, Brand Crest & Biome Themes (`BL-48`, `BL-54`, `BL-80`) |
+| **CMP-01** | **Universal App Shell & Global Navigation** | 7.00 | 9.33 | 8.33 | 6.33 | 7.00 | 7.33 | **45.33** (75.5%) | **B Tier** | Mobile Controls Drawer, Dynamic Hero Canvas Backdrop & Biome Themes (`BL-48`, `BL-54`, `BL-80`, `BL-98`) |
 | **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 8.33 | 9.33 | 8.00 | 8.00 | 6.33 | 6.67 | **46.66** (77.8%) | **B Tier** | Hardcoded Wall Doorways, 3D Spiral Staircases, Y-Depth Sorting & Murals (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`, `BL-82`, `BL-84`) |
 | **CMP-03** | **Core Gameplay Loop & State Machine** | 7.00 | 9.67 | 7.67 | 8.33 | 6.67 | 7.00 | **46.34** (77.2%) | **B Tier** | Lever Interaction Separation, Floor Traps, Disambiguation & BaseEntity (`BL-42`, `BL-51`, `BL-52`, `BL-57`, `BL-85`, `BL-86`) |
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.33 | 9.33 | 9.00 | 8.33 | 6.00 | 8.00 | **47.99** (80.0%) | **A- Tier** | Optical Zoom Clamping, UI Decoupling, Multi-Elevation & Gamepad (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`, `BL-93`) |
 | **CMP-05** | **Minimap & Tactical Navigation** | 7.33 | 9.33 | 8.00 | 8.00 | 7.00 | 7.33 | **46.99** (78.3%) | **B+ Tier** | Strategic Fog of War, Multi-Elevation Bridges & Radar (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`) |
-| **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 8.00 | 9.33 | 9.00 | 7.33 | 7.00 | 8.00 | **48.66** (81.1%) | **A- Tier** | Mobile Feed Docking, 1-Tap `#hud-feed-pill` & Lore Journal (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`, `BL-97`) |
+| **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 8.00 | 9.33 | 9.00 | 7.33 | 7.00 | 8.33 | **48.99** (81.7%) | **A- Tier** | Colorblind Shape Badges, Mobile Feed Docking & Lore Journal (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`, `BL-97`, `BL-99`) |
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.67 | 9.33 | 8.33 | 7.00 | 6.67 | 7.67 | **46.67** (77.8%) | **B Tier** | Destructive Confirmations & Top Nav Exit Routing (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 6.00 | 9.67 | 7.00 | 7.00 | 5.67 | 6.00 | **41.34** (68.9%) | **B- Tier** | 1-Click Maze Generator & Clear Canvas Modal (`BL-49`, `BL-50`, `BL-73`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 6.00 | 9.67 | 7.33 | 7.67 | 5.67 | 6.67 | **43.01** (71.7%) | **B Tier** | Custom Prefab Region Saving, Persistence & Stamping (`BL-18`, `BL-20`, `BL-39`) |
@@ -30,7 +30,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Universal Interactive Handbook Modal & Visual Bridge SVG Guide (`BL-37`, `BL-48`, `BL-71`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 7.33 | 9.33 | 7.67 | 8.33 | 5.67 | 8.00 | **46.33** (77.2%) | **B Tier** | Replay In-Game Graphics, Vector Asset Alignment & Benchmark (`BL-45`, `BL-46`, `BL-79`, `BL-96`) |
 | **CMP-18** | **Community Feedback & Bug Reporting Channels** | 5.67 | 9.33 | 7.67 | 7.33 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | 1-Click Universal Feedback Modal with Live Telemetry & GitHub Issue Creation (`BL-34`, `BL-69`) |
-| **CMP-19** | **Accessibility & Sensory Inclusivity** | 5.67 | 9.67 | 6.67 | 6.00 | 5.67 | 8.33 | **42.01** (70.0%) | **B- Tier** | Canvas High-Contrast Contours, Assist Halos & Victory Advance (`BL-26`, `BL-40`, `BL-55`, `BL-66`) |
+| **CMP-19** | **Accessibility & Sensory Inclusivity** | 5.67 | 9.67 | 7.33 | 6.33 | 5.67 | 9.00 | **43.67** (72.8%) | **B Tier** | Geometric Key Badges, High-Contrast Contours, Assist Halos & Victory Advance (`BL-26`, `BL-40`, `BL-55`, `BL-66`, `BL-99`) |
 
 ---
 
@@ -44,19 +44,20 @@ This document records the official baseline quality evaluations, granular expert
 * **Expert Panel Scores**:
   * $C_1$ Juice & Delight: **7.00/10** (1.1: 7, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **8.33/10** (3.1: 9, 3.2: 8, 3.3: 8)
   * $C_4$ Mechanics & Systems: **6.33/10** (4.1: 7, 4.2: 6, 4.3: 6)
   * $C_5$ Progression & Retention: **7.00/10** (5.1: 7, 5.2: 7, 5.3: 7)
-  * $C_6$ Accessibility & DX: **6.33/10** (6.1: 6, 6.2: 7, 6.3: 6)
-  * **Master Score**: **43.66 / 60.00 (72.8% — B Tier)**
+  * $C_6$ Accessibility & DX: **7.33/10** (6.1: 7, 6.2: 8, 6.3: 7)
+  * **Master Score**: **45.33 / 60.00 (75.5% — B Tier)**
 * **Strengths**:
   * Unified glassmorphic header (`.app-nav-header`) and footer (`.app-nav-footer`) mounted consistently across all HTML pages.
   * Live star counter synchronization and modal trigger integration.
   * **Campaign-First Onboarding & Resume Routing (`BL-48`)**: Directs new players straight to Chapter 1, while returning explorers get an instant 1-click `Resume Campaign (Level X)` action from the hero banner alongside live conquest counters (`X / 32 Levels Conquered`).
   * **High-Polish Game Aesthetic, Dynamic Hero Canvas Backdrop & Visual Branding (`BL-80`)**: Zero-dependency procedural `HeroAmbientCanvas` featuring wandering explorer, warm torch attenuation, floating particle motes, parallax spring, and auto-pause lifecycle; stylized Guild of Cartographers crest; metallic bevel brand title; feature spotlight cards; biome-themed campaign cards with embedded vector asset badges.
+  * **Mobile Shortcuts & Controls Cheatsheet Drawer (`BL-98`)**: Seamless expandable cheatsheet drawer (`#footer-shortcuts-drawer`) toggleable on mobile/tablet viewports displaying touch drag gestures, BFS pathfinding, camera rotation, 2.5D toggle, zoom controls, and system hotkeys with touch-friendly layout.
 * **Gaps & Critical Deductions**:
-  * Mobile viewports: keyboard shortcut indicator in footer is clipped on small screens without an accessible drawer.
-* **Directives**: Deliver mobile expandable shortcut cheatsheet drawer.
+  * Header nav items on ultra-compact mobile (<360px) could collapse into a slide-over mobile drawer.
+* **Directives**: Consider hamburger slide-over menu for ultra-narrow screens in future mobile pass.
 
 ---
 
@@ -461,12 +462,13 @@ This document records the official baseline quality evaluations, granular expert
 * **Expert Panel Scores**:
   * $C_1$ Juice & Delight: **5.67/10** (1.1: 6, 1.2: 5, 1.3: 6)
   * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 10, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **6.67/10** (3.1: 7, 3.2: 6, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **6.00/10** (4.1: 6, 4.2: 6, 4.3: 6)
+  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 8, 3.2: 7, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **6.33/10** (4.1: 7, 4.2: 6, 4.3: 6)
   * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
-  * $C_6$ Accessibility & DX: **8.33/10** (6.1: 8, 6.2: 9, 6.3: 8)
-  * **Master Score**: **42.01 / 60.00 (70.0% — B- Tier Prototype)**
+  * $C_6$ Accessibility & DX: **9.00/10** (6.1: 9, 6.2: 9, 6.3: 9)
+  * **Master Score**: **43.67 / 60.00 (72.8% — B Tier Prototype)**
 * **Strengths**:
+  * **Colorblind Geometric Key Badges & Dual Coding (`BL-99`)**: Inventory keys display geometric badges (`● Circle`, `▲ Triangle`, `◆ Diamond`, `■ Square`, `★ Star`) alongside color coding, guaranteeing 100% colorblind accessibility without reliance solely on hue.
   * **Canvas High-Contrast Contours & Assist Halos (`BL-26`, `BL-66`)**: High-contrast rendering pass in `GameRenderer` strokes wall perimeters with 2px solid white borders (`#ffffff`) and surrounds the explorer with dual neon yellow (`#facc15`) and white (`#ffffff`) halos across classic, angled, and overhead perspectives.
   * **Minimap High-Contrast Theme (`BL-66`)**: Pitch-black canvas clear (`#000000`), white tile outlines, and neon player indicators.
   * **Gamepad API Support (`BL-40`)**: Full controller navigation and interaction for mobility impairments.

@@ -220,11 +220,16 @@ export function initAppHeader(options = {}) {
       </div>
 
       <div class="footer-center shortcuts-hint">
-        <span><kbd>WASD</kbd> Move</span>
-        <span><kbd>Q/R</kbd> Rotate 90°</span>
-        <span><kbd>V</kbd> 2.5D Mode</span>
-        <span><kbd>M</kbd> Minimap</span>
-        <span><kbd>Esc</kbd> Menu</span>
+        <button type="button" id="btn-footer-shortcuts-toggle" class="footer-shortcuts-btn" title="Toggle Controls &amp; Shortcuts Cheat Sheet">
+          ⌨️ <span class="shortcuts-btn-text">Controls</span>
+        </button>
+        <div class="desktop-shortcuts-strip">
+          <span><kbd>WASD</kbd> Move</span>
+          <span><kbd>Q/R</kbd> Rotate 90°</span>
+          <span><kbd>V</kbd> 2.5D Mode</span>
+          <span><kbd>M</kbd> Minimap</span>
+          <span><kbd>Esc</kbd> Menu</span>
+        </div>
       </div>
 
       <div class="footer-right">
@@ -241,6 +246,27 @@ export function initAppHeader(options = {}) {
         <a href="https://github.com/InbarRose/casual-maze-game" target="_blank" rel="noopener" class="footer-link">GitHub</a>
       </div>
     </div>
+
+    <!-- Mobile Expandable Controls Drawer (BL-98) -->
+    <div id="footer-shortcuts-drawer" class="footer-shortcuts-drawer hidden" aria-label="Controls and gestures cheat sheet">
+      <div class="shortcuts-drawer-inner">
+        <div class="shortcuts-drawer-section">
+          <strong>🎮 Movement &amp; Touch</strong>
+          <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>Arrows</kbd> / Touch Drag Steering</span>
+          <span>Tap corridor floor: Click-to-Move BFS Pathfinding</span>
+        </div>
+        <div class="shortcuts-drawer-section">
+          <strong>✨ Mechanisms &amp; Camera</strong>
+          <span><kbd>E</kbd> / <kbd>Space</kbd> Interact | <kbd>1</kbd>..<kbd>9</kbd> Disambiguate</span>
+          <span><kbd>Q</kbd>/<kbd>R</kbd> Rotate World | <kbd>+</kbd>/<kbd>−</kbd> Zoom (0.5x..2.0x)</span>
+          <span><kbd>V</kbd> Toggle 2.5D / Top-Down | <kbd>F</kbd> Action Feed | <kbd>H</kbd> HUD Bar</span>
+        </div>
+        <div class="shortcuts-drawer-section">
+          <strong>📜 Journal &amp; System</strong>
+          <span><kbd>J</kbd> Lore Journal | <kbd>M</kbd> Minimap | <kbd>Esc</kbd>/<kbd>P</kbd> Menu</span>
+        </div>
+      </div>
+    </div>
   `;
 
   const footerGuideBtn = footer.querySelector('#btn-footer-guide');
@@ -251,6 +277,16 @@ export function initAppHeader(options = {}) {
   const footerFeedbackBtn = footer.querySelector('#btn-footer-feedback');
   if (footerFeedbackBtn) {
     footerFeedbackBtn.onclick = () => feedbackModal.open({ pageTitle: typeof document !== 'undefined' ? document.title : 'Casual Maze Game' });
+  }
+
+  const shortcutsToggleBtn = footer.querySelector('#btn-footer-shortcuts-toggle');
+  const shortcutsDrawer = footer.querySelector('#footer-shortcuts-drawer');
+  if (shortcutsToggleBtn && shortcutsDrawer) {
+    shortcutsToggleBtn.onclick = () => {
+      const isHidden = shortcutsDrawer.classList.toggle('hidden');
+      shortcutsToggleBtn.classList.toggle('active', !isHidden);
+      try { audioFX.playClick(); } catch (_) {}
+    };
   }
 
   return { header, footer, profileModal, settingsModal, feedbackModal, guideModal };

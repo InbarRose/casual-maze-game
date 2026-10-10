@@ -803,13 +803,88 @@ kbd {
   font-size: 0.76rem;
 }
 
-.shortcuts-hint kbd {
+.desktop-shortcuts-strip {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.shortcuts-hint kbd,
+.footer-shortcuts-drawer kbd {
   background: #1e293b;
   border: 1px solid #334155;
   border-radius: 4px;
   padding: 1px 5px;
   font-family: var(--font-mono);
   color: var(--text);
+  font-size: 0.76rem;
+}
+
+.footer-shortcuts-btn {
+  display: none;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.footer-shortcuts-btn:hover,
+.footer-shortcuts-btn.active {
+  background: rgba(56, 189, 248, 0.22);
+  border-color: #38bdf8;
+  color: #ffffff;
+}
+
+.footer-shortcuts-drawer {
+  width: 100%;
+  max-width: 1440px;
+  margin: 0.65rem auto 0;
+  padding: 0.75rem 1rem;
+  background: rgba(15, 23, 42, 0.95);
+  border: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.3));
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  transition: all 0.2s ease;
+}
+
+.footer-shortcuts-drawer.hidden {
+  display: none;
+}
+
+.shortcuts-drawer-inner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+.shortcuts-drawer-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.shortcuts-drawer-section strong {
+  color: var(--text);
+  font-size: 0.8rem;
+  margin-bottom: 0.15rem;
+}
+
+@media (max-width: 860px) {
+  .desktop-shortcuts-strip {
+    display: none;
+  }
+  .footer-shortcuts-btn {
+    display: inline-flex;
+  }
 }
 
 /* Modals */
