@@ -1381,6 +1381,46 @@
   100% { transform: scale(1); opacity: 1; }
 }
 
+/* Responsive HUD Collapse (BL-92, ADR-0010) */
+.hud-collapse-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background 0.15s ease, border-color 0.15s ease;
+}
+
+.game-hud-top.hud-collapsed .hud-breadcrumbs,
+.game-hud-top.hud-collapsed .rotation-control-group,
+.game-hud-top.hud-collapsed .zoom-control-group,
+.game-hud-top.hud-collapsed .elevation-badge,
+.game-hud-top.hud-collapsed .room-badge,
+.game-hud-top.hud-collapsed .hud-stat:not(:first-child) {
+  display: none !important;
+}
+
+.game-hud-top.hud-collapsed {
+  gap: 0.35rem;
+}
+
+.game-hud-top.hud-collapsed .hud-island {
+  padding: 0.2rem 0.45rem;
+  background: rgba(15, 23, 42, 0.72);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.game-hud-top.hud-collapsed .hud-card {
+  padding: 0.2rem 0.4rem;
+  gap: 0.3rem;
+}
+
+.game-hud-top.hud-collapsed .hud-collapse-toggle {
+  transform: rotate(180deg);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.2);
+}
+
 /* Responsive Island Collapse for Smaller Viewports */
 @media (max-width: 900px) {
   .game-hud-top {
@@ -1392,6 +1432,80 @@
   }
   .hide-mobile {
     display: none !important;
+  }
+}
+
+/* Strict Mobile & Compact Screen Overlap Prevention (BL-92) */
+@media (max-width: 768px) {
+  .controls-hint-bar {
+    display: none !important;
+  }
+
+  .game-hud-top {
+    top: 0.5rem;
+    left: 0.5rem;
+    right: 0.5rem;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+  }
+
+  .hud-breadcrumbs {
+    display: none !important;
+  }
+
+  .rotation-control-group,
+  .zoom-control-group {
+    display: none !important;
+  }
+
+  .hud-island {
+    padding: 0.25rem 0.4rem;
+  }
+
+  .hud-stat:not(:first-child) {
+    display: none !important;
+  }
+
+  .minimap-container {
+    top: 4.25rem;
+    right: 0.5rem;
+    max-width: 130px;
+    z-index: 90;
+  }
+
+  .minimap-container.is-minimized {
+    max-width: 80px;
+  }
+
+  .game-activity-feed {
+    bottom: 0.5rem;
+    left: 0.5rem;
+    max-width: calc(100vw - 1rem);
+    max-height: 100px;
+    z-index: 85;
+  }
+
+  .contextual-interact-btn {
+    right: 0.75rem;
+    bottom: 4.5rem;
+    z-index: 110;
+  }
+
+  .hud-disambig-drawer {
+    right: 0.75rem;
+    bottom: 4.5rem;
+    max-width: calc(100vw - 1.5rem);
+    z-index: 120;
+  }
+
+  .virtual-controls[data-dock="top-left"] {
+    top: 4.25rem;
+    left: 0.5rem;
+  }
+
+  .virtual-controls[data-dock="top-right"] {
+    top: 4.25rem;
+    right: 0.5rem;
   }
 }
 
