@@ -421,4 +421,142 @@ describe('Engine > Directional Proximity & Multi-Target Disambiguation (BL-85)',
 
     gameLoop.stop();
   });
+
+  it('supports two-stage interaction reveal and progressive disambiguation (BL-91, ADR-009)', () => {
+    const mockCanvas = {
+      getContext: () => ({
+        fillRect: () => {},
+        clearRect: () => {},
+        getImageData: () => ({ data: new Uint8ClampedArray(4) }),
+        putImageData: () => {},
+        createImageData: () => ({ data: new Uint8ClampedArray(4) }),
+        setTransform: () => {},
+        drawImage: () => {},
+        save: () => {},
+        restore: () => {},
+        beginPath: () => {},
+        closePath: () => {},
+        stroke: () => {},
+        fill: () => {},
+        moveTo: () => {},
+        lineTo: () => {},
+        arc: () => {},
+        rect: () => {},
+      }),
+      width: 800,
+      height: 600,
+    };
+
+    const multiItemLevel = {
+      id: 991,
+      name: 'Disambiguation Chamber',
+      dimensions: { width: 10, height: 10 },
+      spawn: { x: 5, y: 5 },
+      exits: [],
+      grid: Array(10).fill(null).map(() => Array(10).fill(0)),
+      layers: {
+        ground: Array(10).fill(null).map(() => Array(10).fill(0)),
+      },
+      entities: [
+        {
+          type: ENTITY_TYPES.SIGNPOST,
+          id: 'sign_stage1',
+          name: 'First Sign',
+          title: 'First Sign',
+          text: 'Notice',
+          x: 5,
+          y: 4, // Directly in front (North)
+        },
+        {
+          type: ENTITY_TYPES.LEVER,
+          id: 'lever_stage1',
+          name: 'Adjacent Lever',
+          x: 6,
+          y: 5, // Flank (East)
+          state: false,
+          targets: [{ action: 'toggle_tile', layer: 'ground', x: 2, y: 2, stateA: 0, stateB: 1 }],
+        },
+      ],
+    };
+
+    let disambigModeEvents = [];
+    let interactionCallbacks = [];
+
+    const gameLoop = new GameLoop({
+      mainCanvas: mockCanvas,
+      minimapCanvas: mockCanvas,
+      level: multiItemLevel,
+      uiCallbacks: {
+        onDisambiguationModeChanged: (active, candidates) => {
+          disambigModeEvents.push({ active, count: candidates?.length });
+        },
+        onInteractionAvailable: (interaction, targetPos, screenPos, playerPos, candidates, isDisambiguating) => {
+          interactionCallbacks.push({ interaction, isDisambiguating, candidateCount: candidates?.length });
+        },
+      },
+    });
+
+    gameLoop.player.facing = 'north';
+    gameLoop.update(0.016);
+
+    const candidates = gameLoop.getAllAvailableInteractions();
+    assertEqual(candidates.length, 2, '2 interaction candidates nearby');
+    assertEqual(gameLoop.isDisambiguating, false, 'Starts in Stage 1 (passive walkby, isDisambiguating=false)');
+
+    // In Stage 1: triggerInteract() enters disambiguation mode (Stage 2)
+    gameLoop.triggerInteract();
+    assertEqual(gameLoop.isDisambiguating, true, 'isDisambiguating becomes true after first triggerInteract()');
+    assertEqual(disambigModeEvents.length, 1, 'onDisambiguationModeChanged event emitted');
+    assertEqual(disambigModeEvents[0].active, true, 'Event marked active');
+    assertEqual(disambigModeEvents[0].count, 2, 'Event reports 2 candidates');
+
+    // Calling closeDisambiguation() returns to Stage 1
+    gameLoop.closeDisambiguation();
+    assertEqual(gameLoop.isDisambiguating, false, 'closeDisambiguation() resets isDisambiguating to false');
+    assertEqual(disambigModeEvents.length, 2, 'Second disambiguation mode event emitted');
+    assertEqual(disambigModeEvents[1].active, false, 'Event marked inactive');
+
+    // Open Stage 2 again
+    gameLoop.triggerInteract();
+    assertEqual(gameLoop.isDisambiguating, true, 'Stage 2 re-opened');
+
+    // Selecting candidate 2 via handleManualInteract(2) executes lever and resets disambiguation
+    const lever = gameLoop.entities.find(e => e.id === 'lever_stage1');
+    assertEqual(lever.state, false, 'Lever initially false');
+    gameLoop.handleManualInteract(2);
+    assertEqual(lever.state, true, 'Lever toggled by candidate 2 selection');
+    assertEqual(gameLoop.isDisambiguating, false, 'isDisambiguating reset to false after manual selection');
+
+    // Open Stage 2 again, then confirm candidate 1 with second triggerInteract()
+    let signpostRead = false;
+    gameLoop.uiCallbacks.onSignpostRead = () => { signpostRead = true; };
+    gameLoop.triggerInteract();
+    assertEqual(gameLoop.isDisambiguating, true, 'Stage 2 active for signpost confirmation');
+    gameLoop.triggerInteract();
+    assert(signpostRead, 'Second triggerInteract() executes primary candidate #1');
+    assertEqual(gameLoop.isDisambiguating, false, 'isDisambiguating reset to false after confirmation');
+
+    // Test player movement clears disambiguation mode
+    gameLoop.triggerInteract();
+    assertEqual(gameLoop.isDisambiguating, true, 'Stage 2 active before move');
+    // Try moving south to (5, 6)
+    const moveAllowed = gameLoop.tryMove(5, 6);
+    assert(moveAllowed, 'Player move allowed');
+    assertEqual(gameLoop.isDisambiguating, false, 'Moving closes disambiguation mode');
+
+    // Test single candidate directly executes without entering disambiguation mode
+    gameLoop.player.gridX = 5;
+    gameLoop.player.gridY = 3; // (5, 3) is adjacent only to signpost at (5, 4)
+    gameLoop.player.facing = 'south';
+    gameLoop.update(0.016);
+    const singleCandidates = gameLoop.getAllAvailableInteractions();
+    assertEqual(singleCandidates.length, 1, 'Only 1 candidate adjacent at (5, 3)');
+    signpostRead = false;
+    gameLoop.triggerInteract();
+    assert(signpostRead, 'Single candidate immediately executed by triggerInteract() without Stage 2');
+    assertEqual(gameLoop.isDisambiguating, false, 'isDisambiguating remains false for single candidate');
+
+    gameLoop.stop();
+  });
 });
+

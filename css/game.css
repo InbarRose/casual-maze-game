@@ -1404,7 +1404,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(15, 23, 42, 0.88);
+  background: rgba(15, 23, 42, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   border: 1.5px solid rgba(56, 189, 248, 0.9);
@@ -1413,13 +1413,38 @@
   font-family: var(--font-mono, monospace);
   font-size: 0.72rem;
   font-weight: 700;
-  box-shadow: 0 0 12px rgba(56, 189, 248, 0.5), inset 0 0 6px rgba(56, 189, 248, 0.3);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.4), inset 0 0 6px rgba(56, 189, 248, 0.2);
   cursor: pointer;
   z-index: 125;
   pointer-events: auto;
   user-select: none;
   animation: pulseTileIndicator 1.8s ease-in-out infinite;
   transition: transform 0.15s ease, background 0.15s ease, border-color 0.15s ease;
+}
+
+.hud-tile-count-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: 9999px;
+  background: #38bdf8;
+  color: #0f172a;
+  font-family: var(--font-mono, monospace);
+  font-size: 0.62rem;
+  font-weight: 800;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 6px rgba(56, 189, 248, 0.6);
+  border: 1px solid rgba(15, 23, 42, 0.8);
+  pointer-events: none;
+}
+
+.hud-tile-count-badge.hidden {
+  display: none !important;
 }
 
 .hud-tile-indicator:hover {
@@ -1547,16 +1572,16 @@
   align-items: center;
   gap: 0.35rem;
   padding: 0.25rem 0.6rem;
-  background: rgba(15, 23, 42, 0.92);
+  background: rgba(15, 23, 42, 0.72);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
-  border: 1.5px solid rgba(56, 189, 248, 0.9);
+  border: 1.5px solid rgba(56, 189, 248, 0.75);
   border-radius: var(--radius-full, 9999px);
   color: #f8fafc;
   font-family: var(--font-sans, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif);
   font-size: 0.72rem;
   font-weight: 600;
-  box-shadow: 0 0 14px rgba(56, 189, 248, 0.45);
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.35);
   cursor: pointer;
   pointer-events: auto;
   user-select: none;
@@ -1566,11 +1591,11 @@
 }
 
 .hud-disambig-pill:hover {
-  background: rgba(56, 189, 248, 0.25);
+  background: rgba(56, 189, 248, 0.3);
   border-color: #38bdf8;
   color: #ffffff;
   transform: translate(-50%, -50%) scale(1.1);
-  box-shadow: 0 0 20px rgba(56, 189, 248, 0.85);
+  box-shadow: 0 0 18px rgba(56, 189, 248, 0.75);
 }
 
 .hud-disambig-pill-num {
@@ -1603,17 +1628,17 @@
   bottom: 8.25rem;
   width: 260px;
   max-width: calc(100vw - 3rem);
-  background: rgba(15, 23, 42, 0.94);
+  background: rgba(15, 23, 42, 0.72);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1.5px solid rgba(56, 189, 248, 0.6);
+  border: 1.5px solid rgba(56, 189, 248, 0.5);
   border-radius: var(--radius-lg, 12px);
   padding: 0.6rem;
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   z-index: 120;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 16px rgba(56, 189, 248, 0.2);
   animation: slideInSideAction 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -1642,8 +1667,10 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0.4rem 0.6rem;
-  background: rgba(30, 41, 59, 0.75);
-  border: 1px solid rgba(56, 189, 248, 0.35);
+  background: rgba(30, 41, 59, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 6px;
   color: #f1f5f9;
   font-size: 0.78rem;

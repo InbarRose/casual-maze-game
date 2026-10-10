@@ -19,9 +19,10 @@
     <!-- Main 2D Canvas -->
     <canvas id="game-canvas"></canvas>
 
-    <!-- Subtle In-World Tile [E] Overlay Indicator (BL-42) -->
+    <!-- Subtle In-World Tile [E] Overlay Indicator (BL-42, BL-91) -->
     <button id="hud-tile-indicator" class="hud-tile-indicator hidden" aria-label="Interact [E]" title="Interact [E]">
       <span class="hud-tile-key">E</span>
+      <span id="hud-tile-count" class="hud-tile-count-badge hidden"></span>
     </button>
 
     <!-- Multi-Target In-World Disambiguation Container (BL-85) -->
@@ -1486,9 +1487,10 @@
         onRequestRestart: () => {
           promptRestartConfirmation();
         },
-        onInteractionAvailable: (interaction, targetOrPlayerPos, targetScreenPos, playerScreenPos, allCandidates = []) => {
+        onInteractionAvailable: (interaction, targetOrPlayerPos, targetScreenPos, playerScreenPos, allCandidates = [], isDisambiguating = false) => {
           const btnContextual = document.getElementById('hud-contextual-interact');
           const tileIndicator = document.getElementById('hud-tile-indicator');
+          const tileCountBadge = document.getElementById('hud-tile-count');
           const disambigContainer = document.getElementById('hud-tile-indicators-container');
           const disambigDrawer = document.getElementById('hud-disambig-drawer');
           const disambigList = document.getElementById('hud-disambig-list');
@@ -1500,29 +1502,65 @@
           const candidates = (interaction && interaction.candidates && interaction.candidates.length > 0)
             ? interaction.candidates
             : allCandidates;
+          const disambigActive = isDisambiguating || (interaction && interaction.isDisambiguating);
 
           if (interaction && candidates.length > 1) {
-            // MULTI-TARGET DISAMBIGUATION (BL-85)
-            // 1. Hide single indicator
-            if (tileIndicator) tileIndicator.classList.add('hidden');
+            // MULTI-TARGET DISAMBIGUATION (BL-85, BL-91, ADR-009)
+            if (disambigActive) {
+              // STAGE 2: Active Engagement - Reveal numbered pills and action drawer
+              if (tileIndicator) tileIndicator.classList.add('hidden');
+              if (tileCountBadge) tileCountBadge.classList.add('hidden');
 
-            // 2. Render in-world floating pills over each candidate
-            if (disambigContainer) {
-              disambigContainer.innerHTML = '';
-              candidates.forEach((cand) => {
-                if (cand.screenPos) {
-                  const pill = document.createElement('button');
-                  pill.className = 'hud-disambig-pill';
-                  pill.setAttribute('aria-label', `[${cand.index}] ${cand.name || cand.label}`);
-                  pill.title = `[${cand.index}] ${cand.name || cand.label}`;
-                  pill.style.left = `${cand.screenPos.x}px`;
-                  pill.style.top = `${cand.screenPos.y}px`;
-                  pill.innerHTML = `
-                    <span class="hud-disambig-pill-num">${cand.index}</span>
-                    <span class="hud-disambig-pill-icon">${cand.icon || '✨'}</span>
-                    <span class="hud-disambig-pill-label">${cand.name || cand.label}</span>
+              if (disambigContainer) {
+                disambigContainer.innerHTML = '';
+                candidates.forEach((cand) => {
+                  if (cand.screenPos) {
+                    const pill = document.createElement('button');
+                    pill.className = 'hud-disambig-pill';
+                    pill.setAttribute('aria-label', `[${cand.index}] ${cand.name || cand.label}`);
+                    pill.title = `[${cand.index}] ${cand.name || cand.label}`;
+                    pill.style.left = `${cand.screenPos.x}px`;
+                    pill.style.top = `${cand.screenPos.y}px`;
+                    pill.innerHTML = `
+                      <span class="hud-disambig-pill-num">${cand.index}</span>
+                      <span class="hud-disambig-pill-icon">${cand.icon || '✨'}</span>
+                      <span class="hud-disambig-pill-label">${cand.name || cand.label}</span>
+                    `;
+                    pill.addEventListener('click', (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (window.gameLoop) {
+                        window.gameLoop.handleManualInteract(cand.index);
+                        audioFX.playClick();
+                      }
+                    });
+                    pill.addEventListener('pointerdown', (e) => e.stopPropagation());
+                    disambigContainer.appendChild(pill);
+                  }
+                });
+                disambigContainer.classList.remove('hidden');
+              }
+
+              if (btnContextual) {
+                if (iconEl) iconEl.textContent = '🔢';
+                if (labelEl) labelEl.textContent = `Choose Action (${candidates.length} nearby)`;
+                if (subtextEl) subtextEl.textContent = `Press [1..${candidates.length}] or [E] for #${candidates[0].index}`;
+                if (badgeEl) badgeEl.textContent = `[1-${candidates.length}]`;
+                btnContextual.classList.remove('hidden');
+              }
+
+              if (disambigDrawer && disambigList) {
+                disambigList.innerHTML = '';
+                candidates.forEach((cand) => {
+                  const row = document.createElement('button');
+                  row.className = 'hud-disambig-row';
+                  row.setAttribute('aria-label', `Select [${cand.index}] ${cand.name || cand.label}`);
+                  row.innerHTML = `
+                    <span class="hud-disambig-row-num">[${cand.index}]</span>
+                    <span class="hud-disambig-row-icon">${cand.icon || '✨'}</span>
+                    <span class="hud-disambig-row-text">${cand.name || cand.label}</span>
                   `;
-                  pill.addEventListener('click', (e) => {
+                  row.addEventListener('click', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
                     if (window.gameLoop) {
@@ -1530,45 +1568,39 @@
                       audioFX.playClick();
                     }
                   });
-                  pill.addEventListener('pointerdown', (e) => e.stopPropagation());
-                  disambigContainer.appendChild(pill);
-                }
-              });
-              disambigContainer.classList.remove('hidden');
-            }
-
-            // 3. Render side action button & drawer
-            if (btnContextual) {
-              if (iconEl) iconEl.textContent = '🔢';
-              if (labelEl) labelEl.textContent = `Choose Action (${candidates.length} nearby)`;
-              if (subtextEl) subtextEl.textContent = `Press [1..${candidates.length}] or [E] for #${candidates[0].index}`;
-              if (badgeEl) badgeEl.textContent = `[1-${candidates.length}]`;
-              btnContextual.classList.remove('hidden');
-            }
-
-            if (disambigDrawer && disambigList) {
-              disambigList.innerHTML = '';
-              candidates.forEach((cand) => {
-                const row = document.createElement('button');
-                row.className = 'hud-disambig-row';
-                row.setAttribute('aria-label', `Select [${cand.index}] ${cand.name || cand.label}`);
-                row.innerHTML = `
-                  <span class="hud-disambig-row-num">[${cand.index}]</span>
-                  <span class="hud-disambig-row-icon">${cand.icon || '✨'}</span>
-                  <span class="hud-disambig-row-text">${cand.name || cand.label}</span>
-                `;
-                row.addEventListener('click', (e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  if (window.gameLoop) {
-                    window.gameLoop.handleManualInteract(cand.index);
-                    audioFX.playClick();
-                  }
+                  row.addEventListener('pointerdown', (e) => e.stopPropagation());
+                  disambigList.appendChild(row);
                 });
-                row.addEventListener('pointerdown', (e) => e.stopPropagation());
-                disambigList.appendChild(row);
-              });
-              disambigDrawer.classList.remove('hidden');
+                disambigDrawer.classList.remove('hidden');
+              }
+            } else {
+              // STAGE 1: Passive Walkby - Show single indicator with quantity badge, hide popups
+              if (disambigContainer) {
+                disambigContainer.classList.add('hidden');
+                disambigContainer.innerHTML = '';
+              }
+              if (disambigDrawer) {
+                disambigDrawer.classList.add('hidden');
+              }
+
+              const indicatorPos = targetScreenPos || targetOrPlayerPos;
+              if (tileIndicator && indicatorPos) {
+                tileIndicator.style.left = `${indicatorPos.x}px`;
+                tileIndicator.style.top = `${indicatorPos.y}px`;
+                tileIndicator.classList.remove('hidden');
+              }
+              if (tileCountBadge) {
+                tileCountBadge.textContent = String(candidates.length);
+                tileCountBadge.classList.remove('hidden');
+              }
+
+              if (btnContextual) {
+                if (iconEl) iconEl.textContent = candidates[0].icon || '✨';
+                if (labelEl) labelEl.textContent = `${candidates[0].name || candidates[0].label || 'Interact'} (${candidates.length})`;
+                if (subtextEl) subtextEl.textContent = 'Press [E] to choose';
+                if (badgeEl) badgeEl.textContent = `[E] • ${candidates.length}`;
+                btnContextual.classList.remove('hidden');
+              }
             }
           } else if (interaction) {
             // SINGLE INTERACTION (BL-42)
@@ -1578,6 +1610,10 @@
             }
             if (disambigDrawer) {
               disambigDrawer.classList.add('hidden');
+            }
+            if (tileCountBadge) {
+              tileCountBadge.classList.add('hidden');
+              tileCountBadge.textContent = '';
             }
 
             const indicatorPos = targetScreenPos || targetOrPlayerPos;
@@ -1597,6 +1633,7 @@
           } else {
             // NO INTERACTION AVAILABLE
             if (tileIndicator) tileIndicator.classList.add('hidden');
+            if (tileCountBadge) tileCountBadge.classList.add('hidden');
             if (btnContextual) btnContextual.classList.add('hidden');
             if (disambigContainer) {
               disambigContainer.classList.add('hidden');
@@ -1613,14 +1650,18 @@
     window.gameLoop = gameLoop;
     gameLoop.start();
 
-    // Subtle In-World Tile [E] Overlay Indicator Handler (BL-42)
+    // Subtle In-World Tile [E] Overlay Indicator Handler (BL-42, BL-91)
     const hudTileIndicator = document.getElementById('hud-tile-indicator');
     if (hudTileIndicator) {
       hudTileIndicator.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         if (window.gameLoop) {
-          window.gameLoop.handleManualInteract();
+          if (typeof window.gameLoop.triggerInteract === 'function') {
+            window.gameLoop.triggerInteract();
+          } else {
+            window.gameLoop.handleManualInteract();
+          }
           audioFX.playClick();
         }
       });
@@ -1629,14 +1670,18 @@
       });
     }
 
-    // Discreet Side Contextual Action Button Handler (Mobile & Mouse)
+    // Discreet Side Contextual Action Button Handler (Mobile & Mouse) (BL-42, BL-91)
     const btnContextualInteract = document.getElementById('hud-contextual-interact');
     if (btnContextualInteract) {
       btnContextualInteract.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         if (window.gameLoop) {
-          window.gameLoop.handleManualInteract();
+          if (typeof window.gameLoop.triggerInteract === 'function') {
+            window.gameLoop.triggerInteract();
+          } else {
+            window.gameLoop.handleManualInteract();
+          }
           audioFX.playClick();
         }
       });
