@@ -46,6 +46,7 @@ export class EditorUI {
     this.guideModal = new GuideModal(this);
     this.pushHistory();
     this.updateValidationState();
+    this.updateStatusBarTelemetry();
 
     // Check URL parameters for preset levels (?level=X, ?tutorial=X, ?preset=X, ?id=X)
     if (typeof window !== 'undefined' && window.location?.search) {
@@ -80,6 +81,7 @@ export class EditorUI {
         this.pushHistory();
         this.autoSave();
         this.updateValidationState();
+        this.updateStatusBarTelemetry();
       },
       onEntityClick: (entity) => {
         this.inspector.open(entity, this.level);
@@ -88,6 +90,7 @@ export class EditorUI {
         this.pushHistory();
         this.autoSave();
         this.updateValidationState();
+        this.updateStatusBarTelemetry();
         const z = targetZ ?? (this.editorCanvas.activeLayer === 'overhead' ? 1 : 0);
         const objName = ref?.name || (type === 'spawn' ? 'Spawn Point' : (type === 'test_spawn' ? 'Test Spawn' : (type === 'exit' ? 'Exit Portal' : 'Object')));
         this.showToast(`Relocated ${objName} to (${toX}, ${toY}, ${z})!`, 'success');
@@ -140,6 +143,7 @@ export class EditorUI {
         this.pushHistory();
         this.autoSave();
         this.updateValidationState();
+        this.updateStatusBarTelemetry();
         this.editorCanvas.render();
         this.showToast(`Deleted ${entity.type} "${entity.id}"`, 'info');
       },
@@ -235,7 +239,7 @@ export class EditorUI {
       this.editorCanvas.setActiveLayer(layer);
       const z = layer === LAYERS.OVERHEAD ? 1 : 0;
       if (statusLayer) {
-        statusLayer.textContent = layer === LAYERS.OVERHEAD ? 'Layer: OVERHEAD (Z=1)' : 'Layer: GROUND (Z=0)';
+        statusLayer.innerHTML = `<span class="status-pip ${layer === LAYERS.OVERHEAD ? 'overhead' : 'ground'}">●</span> Layer: ${layer.toUpperCase()}`;
       }
       console.info(`[MazeGame:Editor] Active layer switched to "${layer.toUpperCase()}" (Z-Level: ${z})`);
     };
@@ -862,6 +866,23 @@ export class EditorUI {
     this.pushHistory();
     this.autoSave();
     this.updateValidationState();
+    this.updateStatusBarTelemetry();
+  }
+
+  /**
+   * Update live AAA telemetry indicators in bottom status bar (BL-102)
+   */
+  updateStatusBarTelemetry() {
+    const sizeEl = document.getElementById('status-grid-size');
+    if (sizeEl && this.level?.dimensions) {
+      sizeEl.textContent = `📐 ${this.level.dimensions.width}×${this.level.dimensions.height}`;
+    }
+
+    const entEl = document.getElementById('status-entity-count');
+    if (entEl && this.level) {
+      const count = (this.level.entities || []).length;
+      entEl.textContent = `📦 ${count} Entit${count === 1 ? 'y' : 'ies'}`;
+    }
   }
 
   playTest(customTestParams = null) {

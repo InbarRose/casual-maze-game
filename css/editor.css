@@ -260,18 +260,72 @@
   margin: 0 0.15rem;
 }
 
-/* Bottom Status Bar */
+/* Bottom Status Bar (AAA Studio Telemetry - BL-102) */
 .editor-status-bar {
   grid-column: 1 / -1;
-  background: var(--card-bg);
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-top: 1px solid var(--card-border);
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 1rem;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-family: var(--font-mono);
   color: var(--text-muted);
+  z-index: 50;
+  user-select: none;
+}
+
+.status-bar-left, .status-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.status-chip {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.15rem 0.45rem;
+  border-radius: var(--radius-sm);
+  color: var(--text);
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.status-pip {
+  font-size: 0.65rem;
+  line-height: 1;
+}
+
+.status-pip.ground {
+  color: #34d399;
+  text-shadow: 0 0 6px rgba(52, 211, 153, 0.6);
+}
+
+.status-pip.overhead {
+  color: #fbbf24;
+  text-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+}
+
+.status-hint {
+  color: var(--text-muted);
+  font-size: 0.68rem;
+  opacity: 0.85;
+}
+
+.status-version-badge {
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 0.65rem;
+  padding: 0.15rem 0.4rem;
+  border-radius: var(--radius-sm);
+  letter-spacing: 0.04em;
 }
 
 /* Entity Inspector Drawer / Modal */

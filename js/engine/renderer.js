@@ -433,6 +433,7 @@ export class GameRenderer {
     const angle = camera ? camera.getDiscreteRotation() : 0;
     const isRotated90or270 = angle === 90 || angle === 270;
     const themeKey = theme.id || level.config?.theme || 'dungeon';
+    const seed = (level.id ? String(level.id).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 42);
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
@@ -452,7 +453,13 @@ export class GameRenderer {
           const isAlt = (x + y) % 2 === 0;
           ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
           ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
+
+          // Rich procedural floor micro-textures and masonry variety (BL-101)
+          this.renderProceduralFloorDetails(ctx, x, y, screen.x, screen.y, tileSize, themeKey, seed);
         }
+
+        // Ambient Occlusion / Corner drop shadows from adjacent walls (BL-101)
+        this.renderFloorAmbientOcclusion(ctx, x, y, screen.x, screen.y, tileSize, ground);
 
         ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.02)';
         ctx.lineWidth = 1;
@@ -476,6 +483,104 @@ export class GameRenderer {
         }
       }
     }
+  }
+
+  /**
+   * Render rich procedural floor tile details based on deterministic hash (BL-101)
+   */
+  renderProceduralFloorDetails(ctx, x, y, sx, sy, tileSize, themeKey, seed) {
+    const hash = this.getDecorHash(x, y, seed + 101);
+
+    if (themeKey === 'dungeon') {
+      // Flagstone pavers with mortar bevels or cobblestone accents
+      if (hash < 0.35) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.035)';
+        ctx.fillRect(sx + 2, sy + 2, tileSize * 0.42, tileSize * 0.42);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
+        ctx.fillRect(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.45, tileSize * 0.45);
+      } else if (hash >= 0.75 && hash < 0.88) {
+        // Subtle worn floor drain or stone ring
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.14, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    } else if (themeKey === 'jungle') {
+      // Fallen leaves and moss fringes on floor
+      if (hash < 0.30) {
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.12)';
+        ctx.beginPath();
+        ctx.ellipse(sx + tileSize * 0.35, sy + tileSize * 0.4, tileSize * 0.15, tileSize * 0.08, 0.4, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (hash >= 0.70 && hash < 0.85) {
+        ctx.fillStyle = 'rgba(234, 179, 8, 0.2)';
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.65, sy + tileSize * 0.6, 2, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize * 0.72, sy + tileSize * 0.68, 1.5, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (themeKey === 'lava') {
+      // Basalt cracks with molten glowing veins
+      if (hash < 0.28) {
+        ctx.strokeStyle = 'rgba(249, 115, 22, 0.35)';
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(sx + tileSize * 0.2, sy + tileSize * 0.3);
+        ctx.lineTo(sx + tileSize * 0.5, sy + tileSize * 0.55);
+        ctx.lineTo(sx + tileSize * 0.8, sy + tileSize * 0.7);
+        ctx.stroke();
+      }
+    } else if (themeKey === 'snow') {
+      // Frost speckles and snow drifts
+      if (hash < 0.35) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.4, sy + tileSize * 0.35, tileSize * 0.12, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (themeKey === 'cave') {
+      // Sparkling subterranean crystals and damp floor pools
+      if (hash < 0.22) {
+        ctx.fillStyle = 'rgba(192, 132, 252, 0.3)';
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (themeKey === 'sunset' || themeKey === 'temple') {
+      // Polished sandstone inlay squares
+      if (hash < 0.32) {
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.18)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(sx + tileSize * 0.2, sy + tileSize * 0.2, tileSize * 0.6, tileSize * 0.6);
+      }
+    }
+  }
+
+  /**
+   * Render soft ambient occlusion contact shadows on floor tiles adjacent to walls (BL-101)
+   */
+  renderFloorAmbientOcclusion(ctx, x, y, sx, sy, tileSize, ground) {
+    const isWall = (gx, gy) => ground[gy]?.[gx] === TILES.WALL || ground[gy]?.[gx] === TILES.SECRET_WALL;
+    const hasNorth = isWall(x, y - 1);
+    const hasWest = isWall(x - 1, y);
+    const hasEast = isWall(x + 1, y);
+
+    ctx.save();
+    if (hasNorth) {
+      // Soft drop shadow cast from northern wall
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.fillRect(sx, sy, tileSize, Math.round(tileSize * 0.16));
+    }
+    if (hasWest) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillRect(sx, sy, Math.round(tileSize * 0.12), tileSize);
+    }
+    if (hasEast) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.12)';
+      ctx.fillRect(sx + tileSize - Math.round(tileSize * 0.12), sy, Math.round(tileSize * 0.12), tileSize);
+    }
+    ctx.restore();
   }
 
   /**
@@ -2738,27 +2843,35 @@ export class GameRenderer {
     if (themeKey === 'dungeon') {
       if (hasSouthCorridor && hash < 0.12) {
         this.renderDungeonSkeleton(ctx, screenX, sy, tileSize);
-      } else if (hasSouthCorridor && hash >= 0.12 && hash < 0.26) {
+      } else if (hasSouthCorridor && hash >= 0.12 && hash < 0.24) {
+        this.renderWallTorchSconce(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.24 && hash < 0.36) {
         this.renderIronChains(ctx, screenX, sy, tileSize, hash);
-      } else if (hash >= 0.26 && hash < 0.38) {
+      } else if (hash >= 0.36 && hash < 0.48) {
         this.renderCobweb(ctx, screenX, sy, tileSize, hash);
       }
     } else if (themeKey === 'jungle') {
-      if (hasSouthCorridor && hash < 0.30) {
+      if (hasSouthCorridor && hash < 0.15) {
+        this.renderWallTorchSconce(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.15 && hash < 0.35) {
         this.renderJungleVines(ctx, screenX, sy, tileSize, hash);
-      } else if (hasSouthCorridor && hash >= 0.30 && hash < 0.50) {
+      } else if (hasSouthCorridor && hash >= 0.35 && hash < 0.55) {
         this.renderFernPatch(ctx, screenX, sy, tileSize, hash);
       }
     } else if (themeKey === 'temple') {
-      if (hasSouthCorridor && hash < 0.22) {
+      if (hasSouthCorridor && hash < 0.16) {
+        this.renderWallTorchSconce(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.16 && hash < 0.32) {
         this.renderTempleArch(ctx, screenX, sy, tileSize);
-      } else if (hasSouthCorridor && hash >= 0.22 && hash < 0.45) {
+      } else if (hasSouthCorridor && hash >= 0.32 && hash < 0.50) {
         this.renderTempleGlyph(ctx, screenX, sy, tileSize, hash);
       }
     } else if (themeKey === 'cave') {
-      if (hash < 0.25) {
+      if (hasSouthCorridor && hash < 0.14) {
+        this.renderWallTorchSconce(ctx, screenX, sy, tileSize, hash);
+      } else if (hash >= 0.14 && hash < 0.32) {
         this.renderCrystalGeode(ctx, screenX, sy, tileSize, hash);
-      } else if (hasSouthCorridor && hash >= 0.25 && hash < 0.45) {
+      } else if (hasSouthCorridor && hash >= 0.32 && hash < 0.50) {
         this.renderStalactite(ctx, screenX, sy, tileSize, hash);
       }
     } else if (themeKey === 'lava') {
@@ -2766,11 +2879,15 @@ export class GameRenderer {
         this.renderMagmaFissure(ctx, screenX, sy, tileSize, hash);
       }
     } else if (themeKey === 'sunset') {
-      if (hasSouthCorridor && hash < 0.25) {
+      if (hasSouthCorridor && hash < 0.16) {
+        this.renderWallTorchSconce(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.16 && hash < 0.35) {
         this.renderAstrolabeRings(ctx, screenX, sy, tileSize);
       }
     } else if (themeKey === 'snow') {
-      if (hasSouthCorridor && hash < 0.35) {
+      if (hasSouthCorridor && hash < 0.16) {
+        this.renderWallTorchSconce(ctx, screenX, sy, tileSize, hash);
+      } else if (hasSouthCorridor && hash >= 0.16 && hash < 0.42) {
         this.renderIcicles(ctx, screenX, sy, tileSize, hash);
       }
     }
@@ -2798,6 +2915,55 @@ export class GameRenderer {
     let h = (x * 374761393 + y * 668265263 + seed * 1013904223) | 0;
     h = Math.imul(h ^ (h >>> 13), 1274126177);
     return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+  }
+
+  /**
+   * Render an animated wall torch sconce with flickering flame and radial ambient light cone (BL-101)
+   */
+  renderWallTorchSconce(ctx, screenX, screenY, tileSize, hash) {
+    ctx.save();
+    const cx = screenX + tileSize * 0.5;
+    const wallH = Math.round(tileSize * 0.38);
+    const torchY = screenY + tileSize - Math.round(wallH * 0.45);
+    const pulse = Math.sin(this.exitPulseTimer * 3.5 + hash * 20) * 0.18 + 0.82;
+
+    // 1. Warm radial ambient light cast onto wall and floor
+    if (typeof ctx.createRadialGradient === 'function') {
+      const lightRadius = tileSize * 0.9 * pulse;
+      const grad = ctx.createRadialGradient(cx, torchY - 2, 2, cx, torchY - 2, lightRadius);
+      grad.addColorStop(0, 'rgba(251, 146, 60, 0.32)');
+      grad.addColorStop(0.5, 'rgba(249, 115, 22, 0.12)');
+      grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.arc(cx, torchY - 2, lightRadius, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 2. Iron wall mount bracket & ring
+    ctx.fillStyle = '#0f172a';
+    ctx.fillRect(cx - 2, torchY - 4, 4, Math.round(tileSize * 0.22));
+    ctx.fillStyle = '#334155';
+    ctx.fillRect(cx - 3, torchY + Math.round(tileSize * 0.08), 6, 2);
+
+    // 3. Wooden torch rod
+    ctx.fillStyle = '#78350f';
+    ctx.fillRect(cx - 1.5, torchY - 6, 3, 6);
+
+    // 4. Flickering Flame (Dual-tone orange core and yellow tip)
+    const flameH = Math.max(3, Math.round(tileSize * 0.14 * pulse));
+    const flameW = Math.max(2, Math.round(tileSize * 0.09 * pulse));
+    ctx.fillStyle = '#ea580c';
+    ctx.beginPath();
+    ctx.ellipse(cx, torchY - 7, flameW, flameH, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.ellipse(cx, torchY - 8, flameW * 0.6, flameH * 0.7, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
   }
 
   renderDungeonSkeleton(ctx, screenX, screenY, tileSize) {
