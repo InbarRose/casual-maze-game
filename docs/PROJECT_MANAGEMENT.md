@@ -159,6 +159,13 @@ This document tracks project milestones, current release status, active developm
   - **In-Game Pause Command Center (BL-106, CMP-07)**: Redesigned the bulky monolithic 14-button pause menu drawer into a sleek, categorized 2-column command center (`Primary Actions`, `View & Exploration`, `Preferences & System`, `Session Exit`), eliminating vertical overflow and visual fatigue on laptops and mobile devices while preserving all button IDs, shortcuts, and tests.
   - **Segmented Settings Navigation Tabs (BL-107, CMP-15)**: Replaced the unwieldy 70vh monolithic settings scroll with a streamlined 5-category tab bar (`🔊 Audio`, `🎥 Display`, `🎮 Controls`, `💾 Save Data`, `🔬 Support`), supporting live keyboard navigation, instant tab switching via `switchTab(tabId)`, and direct category jumps without visual bloat.
   - **Automated QA Coverage**: Added tab switching assertions to `tests/unit/ui/app-header.test.mjs`; verified 126 test suites and 607 tests passing (0 failed, 8,123 assertions, 23/23 zero-drift checks passed).
+- [x] **Universal Menu Navigation, Modal Stacking Isolation & Test Suite Sprint (BL-111, ADR-0020)**:
+  - **Modal Backdrop Opacity & Interactivity Lifecycle (CMP-07, CMP-15)**: Fixed unclickable/invisible dialogs by strictly ensuring `SettingsModal`, `ProfileModal`, and `FeedbackModal` add the `.active` class to `.modal-backdrop` and `.modal-open` to `document.body` upon opening, and remove both on closing (aligning with `css/main.css` transition rules).
+  - **Home Page Hero Settings Trigger (CMP-01)**: Added `#btn-hero-settings` to the hero action buttons bar on `index.html` and bound it to open `getSettingsModal()` with tactile audio feedback.
+  - **Map Editor Properties Modal Isolation (CMP-08, CMP-15)**: Renamed Map Editor's Level Properties modal from `#settings-modal` to `#properties-modal` (and associated buttons to `#btn-properties`, `#properties-btn-close`, `#properties-btn-save`), preventing ID collision and listener hijacking of the global Settings dialog.
+  - **Z-Index Modal Stacking Hierarchy (CMP-07, CMP-15)**: Elevated global dialog backdrops (`#settings-modal`, `#profile-modal`, `#feedback-modal`, `#guide-modal`) to `z-index: 1100`, ensuring they always stack cleanly in front of in-game pause and level complete overlays (`z-index: 1000`).
+  - **Comprehensive Menus, Action Buttons & Settings Test Suite (CMP-07, CMP-15)**: Created `tests/unit/ui/menus-and-buttons.test.mjs` verifying header buttons, home hero buttons, pause drawer buttons, settings tab panels, profile codename persistence, and modal isolation.
+  - **Automated QA Coverage**: 127 test suites, 614 tests passing (0 failed, 8,190 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 
