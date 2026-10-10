@@ -109,4 +109,16 @@ describe('Engine > Viewport Zoom & Optical Scale (BL-87)', () => {
     input.handleKeyDown({ code: 'Digit0', key: '0', preventDefault: () => {} });
     assertEqual(commandsDispatched[commandsDispatched.length - 1], GAME_COMMANDS.ZOOM_RESET);
   });
+
+  it('strictly clamps zoom to bounds [0.5, 2.0] across arbitrary numeric inputs (BL-93)', () => {
+    const camera = new Camera(800, 600, 36);
+    assertEqual(camera.setZoom(-10), 0.5);
+    assertEqual(camera.setZoom(0.49), 0.5);
+    assertEqual(camera.setZoom(0.5), 0.5);
+    assertEqual(camera.setZoom(1.0), 1.0);
+    assertEqual(camera.setZoom(2.0), 2.0);
+    assertEqual(camera.setZoom(2.01), 2.0);
+    assertEqual(camera.setZoom(999), 2.0);
+    assertEqual(camera.setZoom('invalid'), 2.0); // Preserves previous valid zoom
+  });
 });

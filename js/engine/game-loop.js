@@ -99,6 +99,9 @@ export class GameLoop {
     this.tileSize = tileSize;
     const savedZoom = StorageManager.getSetting('viewport_zoom', 1.0);
     this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize, savedZoom);
+    if (typeof document !== 'undefined' && document.documentElement) {
+      document.documentElement.style.setProperty('--camera-zoom', String(this.camera.zoom));
+    }
     this.fog = this.level.config?.fogOfWar
       ? new FogOfWar(this.level.dimensions.width, this.level.dimensions.height)
       : null;
@@ -359,6 +362,9 @@ export class GameLoop {
     const newZoom = this.camera.setZoom(level);
     this.tileSize = this.camera.tileSize;
     StorageManager.setSetting('viewport_zoom', newZoom);
+    if (typeof document !== 'undefined' && document.documentElement) {
+      document.documentElement.style.setProperty('--camera-zoom', String(newZoom));
+    }
     this.notifyUI();
     globalEvents.emit('camera:zoom_changed', {
       zoom: newZoom,

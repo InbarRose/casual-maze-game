@@ -15,9 +15,9 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-01** | **Universal App Shell & Global Navigation** | 7.00 | 9.33 | 7.67 | 6.33 | 7.00 | 6.33 | **43.66** (72.8%) | **B Tier** | Dynamic Hero Backdrop Canvas, Brand Crest & Biome Themes (`BL-48`, `BL-54`, `BL-80`) |
 | **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 8.33 | 9.33 | 8.00 | 8.00 | 6.33 | 6.67 | **46.66** (77.8%) | **B Tier** | Hardcoded Wall Doorways, 3D Spiral Staircases, Y-Depth Sorting & Murals (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`, `BL-82`, `BL-84`) |
 | **CMP-03** | **Core Gameplay Loop & State Machine** | 7.00 | 9.67 | 7.67 | 8.33 | 6.67 | 7.00 | **46.34** (77.2%) | **B Tier** | Lever Interaction Separation, Floor Traps, Disambiguation & BaseEntity (`BL-42`, `BL-51`, `BL-52`, `BL-57`, `BL-85`, `BL-86`) |
-| **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.00 | 9.33 | 8.67 | 8.00 | 6.00 | 7.67 | **46.67** (77.8%) | **B Tier** | Multi-Elevation Pathfinding, Deadzone-Free Touch & Gamepad Support (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`) |
+| **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.33 | 9.33 | 9.00 | 8.33 | 6.00 | 8.00 | **47.99** (80.0%) | **A- Tier** | Optical Zoom Clamping, UI Decoupling, Multi-Elevation & Gamepad (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`, `BL-93`) |
 | **CMP-05** | **Minimap & Tactical Navigation** | 7.33 | 9.33 | 8.00 | 8.00 | 7.00 | 7.33 | **46.99** (78.3%) | **B+ Tier** | Strategic Fog of War, Multi-Elevation Bridges & Radar (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`) |
-| **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 7.33 | 9.33 | 8.33 | 7.00 | 7.00 | 7.00 | **46.00** (76.7%) | **B Tier** | Lore Journal, Activity Feed, Numbered Action Drawer & Directional [E] (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`) |
+| **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 7.67 | 9.33 | 8.67 | 7.33 | 7.00 | 7.67 | **47.67** (79.5%) | **A- Tier** | Interactive Action Feed History, In-World Optical Scaling & Lore Journal (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`) |
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.67 | 9.33 | 8.33 | 7.00 | 6.67 | 7.67 | **46.67** (77.8%) | **B Tier** | Destructive Confirmations & Top Nav Exit Routing (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 6.00 | 9.67 | 7.00 | 7.00 | 5.67 | 6.00 | **41.34** (68.9%) | **B- Tier** | 1-Click Maze Generator & Clear Canvas Modal (`BL-49`, `BL-50`, `BL-73`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 6.00 | 9.67 | 7.33 | 7.67 | 5.67 | 6.67 | **43.01** (71.7%) | **B Tier** | Custom Prefab Region Saving, Persistence & Stamping (`BL-18`, `BL-20`, `BL-39`) |
@@ -114,15 +114,16 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/input-manager.js`, `js/engine/game-loop.js`, `maze.html`, `css/game.css`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **7.00/10** (1.1: 7, 1.2: 7, 1.3: 7)
+  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
-  * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
+  * $C_3$ UI/UX & Ergonomics: **9.00/10** (3.1: 9, 3.2: 9, 3.3: 9)
+  * $C_4$ Mechanics & Systems: **8.33/10** (4.1: 9, 4.2: 8, 4.3: 8)
   * $C_5$ Progression & Retention: **6.00/10** (5.1: 6, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **7.67/10** (6.1: 8, 6.2: 8, 6.3: 7)
-  * **Master Score**: **46.67 / 60.00 (77.8% — B Tier)**
+  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
+  * **Master Score**: **47.99 / 60.00 (80.0% — A- Tier)**
 * **Strengths**:
   * Multi-input support for keyboard (`WASD`, arrows), mouse click-to-move BFS, mobile touch gestures, and virtual D-pad.
+  * **Viewport Zoom Optical Clamping & UI Decoupling (`BL-93`)**: Strict zoom bounding between $0.5\times$ and $2.0\times$ across mouse wheel, touch pinch, and HUD buttons (`−`, `100%`, `+`), with `--camera-zoom` CSS custom property scaling in-world indicator elements dynamically while keeping menus, navigation bars, and modals 100% isolated and distortion-free (ADR-0013).
   * **Continuous Touch Drag Steering (`BL-67`)**: Sliding a finger across the canvas automatically steers the explorer in cardinal directions with a rapid 125ms auto-step repeat rate and dynamic mid-drag heading adjustments.
   * **Moveable & Top-Docked Virtual Controls (`BL-63`)**: Virtual D-pad defaults to top-left to avoid mobile browser navigation bar/gesture conflicts; includes 4-quadrant docking cycles (`top-left`, `top-right`, `bottom-left`, `bottom-right`), dragging handle with persistence, and minimize toggle.
   * **Continuous Touch Auto-Repeat (`BL-63`)**: Holding a virtual button auto-repeats steps smoothly (115ms interval after 220ms initial hold delay).
@@ -164,15 +165,17 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/game-loop.js`, `css/game.css`, `maze.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
+  * $C_1$ Juice & Delight: **7.67/10** (1.1: 8, 1.2: 8, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.33/10** (3.1: 9, 3.2: 8, 3.3: 8)
-  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
   * $C_5$ Progression & Retention: **7.00/10** (5.1: 7, 5.2: 7, 5.3: 7)
-  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
-  * **Master Score**: **46.00 / 60.00 (76.7% — B Tier Prototype)**
+  * $C_6$ Accessibility & DX: **7.67/10** (6.1: 8, 6.2: 8, 6.3: 7)
+  * **Master Score**: **47.67 / 60.00 (79.5% — A- Tier)**
 * **Strengths**:
-  * **Action Activity Feed with Category Filter Toggles (`BL-81`)**: Dedicated docked action streamer at bottom-left with category filter pills (`All`, `📜 Lore`, `⚙️ Mech`, `🗝️ Items`) and collapse/expand toggle (`_`/`▲`), logging only discrete mechanisms, keys, gates, and lore without high-frequency step noise.
+  * **Interactive Action Activity Feed History & Companion Log (`BL-81`, `BL-94`)**: Eliminates notification ephemerality by allowing players to click the feed bar or history button (📜 / `#btn-feed-history`) to inspect full chronological history inside the companion Activity History modal, with category filter pills (`All`, `📜 Lore`, `⚙️ Mech`, `🗝️ Items`, `⚠️ Warnings`) (ADR-0013).
+  * **Optical Indicator Zoom Scaling (`BL-93`)**: In-world interactive overlay indicators (`.hud-tile-indicator`, `.hud-disambig-pill`) scale smoothly with `--camera-zoom` factor via `clamp(0.75, var(--camera-zoom, 1), 1.35)`, eliminating visual size mismatch during camera zoom.
+  * **Translucent Disambiguation & Two-Stage Interaction Reveal (`BL-91`)**: Glassmorphic indicators (`backdrop-filter: blur(8px)`, semi-translucent background) and 2-stage interaction flow prevent avatar occlusion when multiple items are nearby.
   * **Level Lore Journal (`BL-81`)**: Companion to inventory in HUD (`#hud-journal-btn`) with dynamic counter and hotkey (`J`), allowing players to re-read and browse all collected Architect Notes and wall murals in a parchment viewer.
   * **Unobtrusive Single-Prompt Note Examination (`BL-81`)**: Eradication of the 3-popup barrage when stepping on Architect Notes. Stepping onto a note tile now renders ONLY a single in-world indicator (`[E] Read Architect Note`), with user configuration (`Note & Lore Presentation`) to choose between modal cards and feed streaming.
   * **Collapsible Top Minimap Radar (`BL-68`)**: Minimap is top-docked across desktop and mobile (`top: 4.25rem; right: 0.75rem;`), keeping the bottom canvas completely free from touch interference, with a 1-tap minimize toggle (`_`/`▲`) and localStorage persistence.
