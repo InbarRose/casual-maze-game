@@ -662,24 +662,24 @@ export class EditorUI {
   }
 
   initSettingsModal() {
-    const modal = document.getElementById('settings-modal');
-    const btnOpen = document.getElementById('btn-settings');
-    const btnSave = document.getElementById('settings-btn-save');
-    const btnClose = document.getElementById('settings-btn-close');
+    const modal = document.getElementById('properties-modal') || document.getElementById('settings-modal');
+    const btnOpen = document.getElementById('btn-properties') || document.getElementById('btn-settings');
+    const btnSave = document.getElementById('properties-btn-save') || document.getElementById('settings-btn-save');
+    const btnClose = document.getElementById('properties-btn-close') || document.getElementById('settings-btn-close');
 
     // Tab Navigation within Properties Modal
     document.querySelectorAll('#prop-modal-tabs .modal-tab-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         const targetTab = btn.dataset.tab;
         document.querySelectorAll('#prop-modal-tabs .modal-tab-btn').forEach(b => b.classList.toggle('active', b === btn));
-        document.querySelectorAll('#settings-modal .modal-tab-pane').forEach(pane => {
+        modal?.querySelectorAll('.modal-tab-pane').forEach(pane => {
           pane.classList.toggle('active', pane.id === `pane-prop-${targetTab}`);
         });
       });
     });
 
     // Dimension Quick Preset Buttons
-    document.querySelectorAll('#settings-modal .dim-preset-btn').forEach(btn => {
+    modal?.querySelectorAll('.dim-preset-btn').forEach(btn => {
       btn.addEventListener('click', () => {
         document.getElementById('set-width').value = btn.dataset.w;
         document.getElementById('set-height').value = btn.dataset.h;

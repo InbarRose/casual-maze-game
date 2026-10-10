@@ -888,6 +888,13 @@ kbd {
 }
 
 /* Modals */
+#settings-modal,
+#profile-modal,
+#feedback-modal,
+#guide-modal {
+  z-index: 1100;
+}
+
 .profile-card, .settings-card {
   max-width: 580px;
   width: 92%;
