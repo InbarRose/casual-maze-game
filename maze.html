@@ -153,6 +153,11 @@
         <button id="btn-open-menu" class="btn btn-primary btn-sm" title="Open Game Menu & Options (Esc / P)">
           ⏸️ <span class="hide-mobile">Menu [P]</span>
         </button>
+
+        <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
+        <button id="btn-hud-collapse" class="btn btn-secondary btn-sm btn-icon hud-collapse-toggle" title="Collapse / Expand HUD Bar [H]" aria-label="Toggle HUD Visibility">
+          📐
+        </button>
       </div>
     </header>
 
@@ -650,6 +655,13 @@
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${tenths}`;
     }
 
+    // Obscured Viewport Auto-Pause & Resume Coordinator (BL-92, ADR-0010)
+    function setViewObscured(obscured, modalId = 'modal') {
+      if (window.gameLoop && typeof window.gameLoop.setObscured === 'function') {
+        window.gameLoop.setObscured(obscured, modalId);
+      }
+    }
+
     // Check if in custom playtest mode, story mode, or campaign
     const urlParams = new URLSearchParams(window.location.search);
     const isCustomMode = urlParams.get('mode') === 'custom' || currentLevel.id === 'custom' || currentLevel.id.startsWith('project_');
@@ -783,11 +795,13 @@
       if (inspectTextEl) inspectTextEl.textContent = data.text || '';
       if (inspectResponseEl) inspectResponseEl.textContent = data.response ? `"${data.response}"` : '';
       inspectModal.classList.add('active');
+      setViewObscured(true, 'inspect_modal');
     }
 
     function closeInspectModal() {
       if (inspectModal) {
         inspectModal.classList.remove('active');
+        setViewObscured(false, 'inspect_modal');
       }
     }
 
@@ -940,6 +954,7 @@
       renderJournalModal();
       journalModal.style.display = 'flex';
       journalModal.classList.add('active');
+      setViewObscured(true, 'journal_modal');
     }
 
     function closeJournalModal() {
@@ -947,6 +962,7 @@
       audioFX.playModalClose();
       journalModal.style.display = 'none';
       journalModal.classList.remove('active');
+      setViewObscured(false, 'journal_modal');
     }
 
     function toggleJournalModal() {
@@ -992,11 +1008,13 @@
         }
       }
       pedestalModal.classList.add('active');
+      setViewObscured(true, 'pedestal_modal');
     }
 
     function closePedestalModal() {
       if (pedestalModal) {
         pedestalModal.classList.remove('active');
+        setViewObscured(false, 'pedestal_modal');
       }
     }
 
@@ -1010,12 +1028,14 @@
     function promptRestartConfirmation() {
       if (restartConfirmModal) {
         restartConfirmModal.classList.add('active');
+        setViewObscured(true, 'restart_modal');
       }
     }
 
     function cancelRestart() {
       if (restartConfirmModal) {
         restartConfirmModal.classList.remove('active');
+        setViewObscured(false, 'restart_modal');
       }
     }
 
@@ -1402,6 +1422,7 @@
           }
 
           victoryModal.classList.add('active');
+          setViewObscured(true, 'victory_modal');
           launchVictoryConfetti();
 
           const victorySubtitle = document.getElementById('victory-subtitle');
@@ -1748,10 +1769,14 @@
 
       renderActivityModalList();
       activityModal.classList.add('active');
+      setViewObscured(true, 'activity_modal');
     }
 
     function closeActivityLogModal() {
-      if (activityModal) activityModal.classList.remove('active');
+      if (activityModal) {
+        activityModal.classList.remove('active');
+        setViewObscured(false, 'activity_modal');
+      }
     }
 
     function toggleActivityLogModal() {
@@ -1881,6 +1906,9 @@
       if (e.code === 'KeyJ' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         toggleJournalModal();
+      } else if (e.code === 'KeyH' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        btnHudCollapse?.click();
       } else if (e.code === 'KeyL' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         toggleActivityLogModal();
@@ -1894,6 +1922,7 @@
         if (victoryModal) {
           stopVictoryConfetti();
           victoryModal.classList.remove('active');
+          setViewObscured(false, 'victory_modal');
         }
       }
     });
@@ -1907,6 +1936,7 @@
       modalEl: pauseModalEl,
       onResume: () => {
         audioFX.playModalClose();
+        setViewObscured(false, 'pause_menu');
         if (window.gameLoop && !window.gameLoop.isRunning) {
           window.gameLoop.start();
         }
@@ -1983,6 +2013,7 @@
       if (window.gameLoop && window.gameLoop.isRunning) {
         window.gameLoop.stop();
       }
+      setViewObscured(true, 'pause_menu');
       gameMenu.pause({
         title: currentLevel.title || 'Labyrinth',
         timeStr: formatTime(window.gameLoop ? window.gameLoop.elapsedTime : 0),
@@ -2003,6 +2034,7 @@
       if (window.gameLoop && window.gameLoop.isRunning) {
         window.gameLoop.stop();
       }
+      setViewObscured(true, 'pause_menu');
       gameMenu.promptQuit({
         title: currentLevel.title || 'Labyrinth',
         timeStr: formatTime(window.gameLoop ? window.gameLoop.elapsedTime : 0),
@@ -2064,6 +2096,7 @@
       stopVictoryConfetti();
       lastRenderedKeyIds = '';
       victoryModal.classList.remove('active');
+      setViewObscured(false, 'victory_modal');
       gameLoop.restartLevel();
     });
     btnDownloadLog.addEventListener('click', () => {
@@ -2319,6 +2352,31 @@
     }
 
     initDraggableControls();
+
+    // Responsive HUD Collapse Controller (BL-92, ADR-0010)
+    const gameHudTop = document.querySelector('.game-hud-top');
+    const btnHudCollapse = document.getElementById('btn-hud-collapse');
+    if (gameHudTop && btnHudCollapse) {
+      function applyHudCollapsed(collapsed) {
+        gameHudTop.classList.toggle('hud-collapsed', collapsed);
+        btnHudCollapse.title = collapsed ? 'Expand HUD Bar [H]' : 'Collapse HUD Bar [H]';
+        try {
+          localStorage.setItem('maze_hud_collapsed', collapsed ? 'true' : 'false');
+        } catch (err) {}
+      }
+
+      btnHudCollapse.addEventListener('click', (e) => {
+        e.stopPropagation();
+        audioFX.playClick();
+        applyHudCollapsed(!gameHudTop.classList.contains('hud-collapsed'));
+      });
+
+      try {
+        if (localStorage.getItem('maze_hud_collapsed') === 'true') {
+          applyHudCollapsed(true);
+        }
+      } catch (err) {}
+    }
 
     // Real-Time In-Game Action Activity Feed & Category Filter Controls (BL-81)
     const activityFeedEl = document.getElementById('game-activity-feed');

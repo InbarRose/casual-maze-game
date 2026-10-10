@@ -58,6 +58,7 @@ export class GameLoop {
 
     this.isRunning = false;
     this.isPaused = false;
+    this.obscuringOverlays = new Set();
     this.isWon = false;
     this.lastTime = 0;
     this.elapsedTime = 0; // in milliseconds
@@ -665,6 +666,15 @@ export class GameLoop {
         }
       });
     }
+
+    // Auto-Pause & Resume synchronization (BL-92, ADR-0010)
+    globalEvents.on('game:paused', () => {
+      this.isPaused = true;
+    });
+    globalEvents.on('game:resumed', () => {
+      this.isPaused = false;
+      this.lastTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    });
 
     this.handleKeyDown = (e) => {
       if (this.inputManager) {
@@ -2535,6 +2545,46 @@ export class GameLoop {
       this.uiCallbacks.onDisambiguationModeChanged(false);
     }
     this.checkContextualInteraction();
+  }
+
+  /**
+   * Pause gameplay simulation (timer, entity ticks, movement)
+   */
+  pause() {
+    this.isPaused = true;
+    globalEvents.emit('game:paused');
+  }
+
+  /**
+   * Resume gameplay simulation
+   */
+  resume() {
+    this.isPaused = false;
+    this.lastTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    globalEvents.emit('game:resumed');
+  }
+
+  /**
+   * Automatically pause or resume gameplay when an obscuring modal or overlay covers the maze view (BL-92, ADR-0010)
+   * @param {boolean} obscured Whether the view is now obscured
+   * @param {string} [overlayId='overlay'] Identifier for the obscuring UI element
+   */
+  setObscured(obscured, overlayId = 'overlay') {
+    if (!this.obscuringOverlays) {
+      this.obscuringOverlays = new Set();
+    }
+    if (obscured) {
+      this.obscuringOverlays.add(overlayId);
+      this.isPaused = true;
+      globalEvents.emit('game:paused', { reason: `obscured:${overlayId}` });
+    } else {
+      this.obscuringOverlays.delete(overlayId);
+      if (this.obscuringOverlays.size === 0) {
+        this.isPaused = false;
+        this.lastTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+        globalEvents.emit('game:resumed', { reason: `unobscured:${overlayId}` });
+      }
+    }
   }
 
   /**
