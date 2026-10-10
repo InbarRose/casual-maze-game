@@ -16,7 +16,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 8.33 | 9.33 | 8.00 | 8.00 | 6.33 | 6.67 | **46.66** (77.8%) | **B Tier** | Hardcoded Wall Doorways, 3D Spiral Staircases, Y-Depth Sorting & Murals (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`, `BL-82`, `BL-84`) |
 | **CMP-03** | **Core Gameplay Loop & State Machine** | 7.00 | 9.67 | 7.67 | 8.33 | 6.67 | 7.00 | **46.34** (77.2%) | **B Tier** | Lever Interaction Separation, Floor Traps, Disambiguation & BaseEntity (`BL-42`, `BL-51`, `BL-52`, `BL-57`, `BL-85`, `BL-86`) |
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.00 | 9.33 | 8.67 | 8.00 | 6.00 | 7.67 | **46.67** (77.8%) | **B Tier** | Multi-Elevation Pathfinding, Deadzone-Free Touch & Gamepad Support (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`) |
-| **CMP-05** | **Minimap & Tactical Navigation** | 6.67 | 9.33 | 7.67 | 7.33 | 6.33 | 7.00 | **44.33** (73.9%) | **B Tier** | Multi-Elevation Bridges, Tactical Entities & High-Contrast Contours (`BL-17`, `BL-51`, `BL-65`, `BL-66`) |
+| **CMP-05** | **Minimap & Tactical Navigation** | 7.33 | 9.33 | 8.00 | 8.00 | 7.00 | 7.33 | **46.99** (78.3%) | **B+ Tier** | Strategic Fog of War, Multi-Elevation Bridges & Radar (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`) |
 | **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 7.33 | 9.33 | 8.33 | 7.00 | 7.00 | 7.00 | **46.00** (76.7%) | **B Tier** | Lore Journal, Activity Feed, Numbered Action Drawer & Directional [E] (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`) |
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.67 | 9.33 | 8.33 | 7.00 | 6.67 | 7.67 | **46.67** (77.8%) | **B Tier** | Destructive Confirmations & Top Nav Exit Routing (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 6.00 | 9.67 | 7.00 | 7.00 | 5.67 | 6.00 | **41.34** (68.9%) | **B- Tier** | 1-Click Maze Generator & Clear Canvas Modal (`BL-49`, `BL-50`, `BL-73`) |
@@ -137,17 +137,18 @@ This document records the official baseline quality evaluations, granular expert
 ---
 
 ### CMP-05: Minimap & Tactical Navigation
-*Files: `js/engine/minimap.js`, `js/engine/game-loop.js`*
+*Files: `js/engine/minimap.js`, `js/engine/game-loop.js`, `js/engine/fog.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.67/10** (1.1: 7, 1.2: 6, 1.3: 7)
+  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
-  * $C_5$ Progression & Retention: **6.33/10** (5.1: 6, 5.2: 6, 5.3: 7)
-  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
-  * **Master Score**: **44.33 / 60.00 (73.9% — B Tier)**
+  * $C_3$ UI/UX & Ergonomics: **8.00/10** (3.1: 8, 3.2: 8, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
+  * $C_5$ Progression & Retention: **7.00/10** (5.1: 7, 5.2: 7, 5.3: 7)
+  * $C_6$ Accessibility & DX: **7.33/10** (6.1: 7, 6.2: 8, 6.3: 7)
+  * **Master Score**: **46.99 / 60.00 (78.3% — B+ Tier)**
 * **Strengths**:
+  * **Strategic Fog of War & Exploratory Vision Dynamics (`BL-88`)**: Strategic expansion of 3-state Fog of War across climatic chapter finales (Level 4, 8, 12, 16, 20, 24, 28, 29, 30, 31, 32) transforms the minimap radar into an essential exploration companion. Dynamic raycasting incrementally maps discovered rooms and upper bridge networks in real time.
   * **Multi-Elevation & Bridge Shading (`BL-65`)**: Elevated bridges (`B_EW`, `B_NS`) render with cobalt bridge deck spans (`#0369a1`) and bright cyan center walkway planks (`#38bdf8`); directional ramps (`R_*`) render incline shading with directional notch markers.
   * **Tactical Entity Indicators (`BL-65`)**: Uncollected keys render glowing gold pips (`#facc15`), locked doors render security barrier crossbars (`#ef4444`), levers render amber/emerald switch nodes, and teleporters render violet rings.
   * **Radar Sweep Wave & Elevation Beacon (`BL-65`)**: Atmospheric circular sonar pulse emanates from player location, complemented by cyan elevation rings when player is traversing upper bridge decks (`player.elevation === 1`) and tactical corner brackets.

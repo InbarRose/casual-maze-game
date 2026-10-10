@@ -1920,7 +1920,7 @@ export const CAMPAIGN_CH3_LEVELS = Object.freeze([
       "height": 17
     },
     "config": {
-      "fogOfWar": false,
+      "fogOfWar": true,
       "viewRadius": 7,
       "allowFreePan": true,
       "tileSize": 32,
