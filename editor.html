@@ -366,11 +366,18 @@
       </div>
     </main>
 
-    <!-- Bottom Status Bar -->
+    <!-- Bottom Status Bar (AAA Studio Telemetry - BL-102) -->
     <footer class="editor-status-bar">
-      <span id="status-coord">X: --, Y: --</span>
-      <span id="status-layer">Layer: GROUND</span>
-      <span>Middle-Click / Space+Drag to Pan • Wheel to Zoom</span>
+      <div class="status-bar-left">
+        <span class="status-item status-chip" id="status-coord">📍 (X: --, Y: --, Z: 0)</span>
+        <span class="status-item status-chip" id="status-layer"><span class="status-pip ground">●</span> Layer: GROUND</span>
+        <span class="status-item status-chip" id="status-grid-size">📐 21×21</span>
+        <span class="status-item status-chip" id="status-entity-count">📦 0 Entities</span>
+      </div>
+      <div class="status-bar-right">
+        <span class="status-hint">Space+Drag Pan • Wheel Zoom • [1]/[2] Layers</span>
+        <span class="status-version-badge">ARCHITECT v1.26.0</span>
+      </div>
     </footer>
   </div>
 

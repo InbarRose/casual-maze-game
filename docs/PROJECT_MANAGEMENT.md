@@ -148,6 +148,9 @@ This document tracks project milestones, current release status, active developm
   - **Configurable Keybinding Presets (BL-100, CMP-04, CMP-15)**: Implement selectable movement key presets in `constants.js` and `InputManager` (`WASD & Arrows`, `Arrow Keys Only`, `ESDF`, `AZERTY (ZQSD)`, `Numpad (8462)`) with live persistence.
   - **Pointer Click-to-Move vs Drag Navigation Toggle (BL-100, CMP-04, CMP-15)**: Implement toggleable pointer movement modes in `GameLoop` and `SettingsModal` (`click_path` BFS pathfinding, `drag_only` swipe/drag steering, or `disabled`).
   - **Settings UI Controls Card**: Render interactive dropdowns for keyboard presets and mouse modes in `SettingsModal`.
+- [x] **Visual Fidelity Polish & AAA Map Editor Studio Sprint (BL-101, BL-102, ADR-0017)**:
+  - **Procedural Environmental Fidelity & Wall Sconce Flares (BL-101, CMP-02, CMP-11)**: Enhance canvas rendering with biome-specific micro-textures (cobblestones, flagstones, moss growth, mineral veins), dynamic animated torch sconces on walls with warm radial light flicker, corner ambient occlusion, and corridor dust particles.
+  - **AAA Map Editor Studio Overhaul (BL-102, CMP-08, CMP-09, CMP-10)**: Redesign Map Editor UI into a dark glassmorphic professional IDE layout with categorized collapsible tool palettes, active tool indicator cards, interactive canvas mini-map overview HUD, real-time statistics telemetry, and polished tooltips.
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 

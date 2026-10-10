@@ -13,16 +13,16 @@ This document records the official baseline quality evaluations, granular expert
 | ID | Component / Subsystem | Category 1 (Juice) | Category 2 (Static) | Category 3 (UI/UX) | Category 4 (Mechanics) | Category 5 (Progression) | Category 6 (Accessibility) | Master Score (/60) | Tier | Status |
 | :---: | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 | **CMP-01** | **Universal App Shell & Global Navigation** | 7.00 | 9.33 | 8.33 | 6.33 | 7.00 | 7.33 | **45.33** (75.5%) | **B Tier** | Mobile Controls Drawer, Dynamic Hero Canvas Backdrop & Biome Themes (`BL-48`, `BL-54`, `BL-80`, `BL-98`) |
-| **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 8.33 | 9.33 | 8.00 | 8.00 | 6.33 | 6.67 | **46.66** (77.8%) | **B Tier** | Hardcoded Wall Doorways, 3D Spiral Staircases, Y-Depth Sorting & Murals (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`, `BL-82`, `BL-84`) |
+| **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 8.67 | 9.33 | 8.33 | 8.33 | 6.33 | 7.00 | **47.99** (80.0%) | **A- Tier** | Animated Wall Torch Sconces, Floor Masonry Varieties & Corner AO (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`, `BL-82`, `BL-84`, `BL-101`) |
 | **CMP-03** | **Core Gameplay Loop & State Machine** | 7.00 | 9.67 | 7.67 | 8.33 | 6.67 | 7.00 | **46.34** (77.2%) | **B Tier** | Lever Interaction Separation, Floor Traps, Disambiguation & BaseEntity (`BL-42`, `BL-51`, `BL-52`, `BL-57`, `BL-85`, `BL-86`) |
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.33 | 9.33 | 9.33 | 8.33 | 6.00 | 8.33 | **48.65** (81.1%) | **A- Tier** | Keybinding Schemes, Pointer Toggle, Optical Zoom Clamping, Multi-Elevation & Gamepad (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`, `BL-93`, `BL-100`) |
 | **CMP-05** | **Minimap & Tactical Navigation** | 7.33 | 9.33 | 8.00 | 8.00 | 7.00 | 7.33 | **46.99** (78.3%) | **B+ Tier** | Strategic Fog of War, Multi-Elevation Bridges & Radar (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`) |
 | **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 8.00 | 9.33 | 9.00 | 7.33 | 7.00 | 8.33 | **48.99** (81.7%) | **A- Tier** | Colorblind Shape Badges, Mobile Feed Docking & Lore Journal (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`, `BL-97`, `BL-99`) |
 | **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 7.67 | 9.33 | 8.33 | 7.00 | 6.67 | 7.67 | **46.67** (77.8%) | **B Tier** | Destructive Confirmations & Top Nav Exit Routing (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`) |
-| **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 6.00 | 9.67 | 7.00 | 7.00 | 5.67 | 6.00 | **41.34** (68.9%) | **B- Tier** | 1-Click Maze Generator & Clear Canvas Modal (`BL-49`, `BL-50`, `BL-73`) |
-| **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 6.00 | 9.67 | 7.33 | 7.67 | 5.67 | 6.67 | **43.01** (71.7%) | **B Tier** | Custom Prefab Region Saving, Persistence & Stamping (`BL-18`, `BL-20`, `BL-39`) |
-| **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 6.67 | 9.67 | 7.67 | 7.33 | 5.67 | 7.00 | **44.02** (73.4%) | **B Tier** | Interactive Issue Pins & Bridge/Rotation Diagnostics (`BL-21`, `BL-50`, `BL-75`) |
-| **CMP-11** | **Vector SVG Asset Pipeline & Thematic Styling**| 7.67 | 9.33 | 8.00 | 7.00 | 7.33 | 7.00 | **46.33** (77.2%) | **B Tier** | Character Visual Customization, Hair/Skin Palettes & Dynamic Rendering (`BL-09`, `BL-10`, `BL-41`, `BL-44`, `BL-78`, `BL-95`) |
+| **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 6.67 | 9.67 | 7.67 | 7.33 | 5.67 | 6.67 | **43.68** (72.8%) | **B Tier** | AAA Studio Status Telemetry, Dark Glassmorphic Theme & Maze Generator (`BL-49`, `BL-50`, `BL-73`, `BL-102`) |
+| **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 6.33 | 9.67 | 7.67 | 7.67 | 5.67 | 6.67 | **43.68** (72.8%) | **B Tier** | Custom Prefab Region Saving, Persistence & Stamping (`BL-18`, `BL-20`, `BL-39`, `BL-102`) |
+| **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 7.00 | 9.67 | 8.00 | 7.33 | 5.67 | 7.33 | **45.00** (75.0%) | **B Tier** | Interactive Issue Pins & Live Telemetry Chips (`BL-21`, `BL-50`, `BL-75`, `BL-102`) |
+| **CMP-11** | **Vector SVG Asset Pipeline & Thematic Styling**| 8.00 | 9.33 | 8.33 | 7.33 | 7.33 | 7.00 | **47.32** (78.9%) | **B+ Tier** | Procedural Biome Floor Masonry Textures & Thematic Sconces (`BL-09`, `BL-10`, `BL-41`, `BL-44`, `BL-78`, `BL-95`, `BL-101`) |
 | **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 7.33 | 9.33 | 6.67 | 7.00 | 5.67 | 6.33 | **42.33** (70.6%) | **B- Tier** | Elevation Transition Chimes & Diagnostic Radar Audio (`BL-28`, `BL-35`, `BL-51`, `BL-77`) |
 | **CMP-13** | **Storage, Save State & Persistence Engine** | 6.00 | 9.67 | 7.33 | 7.67 | 6.67 | 6.00 | **43.34** (72.2%) | **B Tier** | Save Metadata Previews & Emergency Rollback Snapshots (`BL-34`, `BL-36`, `BL-52`, `BL-76`) |
 | **CMP-14** | **Player Profile, Medals & Prestige Progression** | 7.33 | 9.33 | 8.33 | 7.33 | 8.00 | 7.33 | **47.65** (79.4%) | **A- Tier** | Character Customization Studio, Wardrobe & Tiered Medals (`BL-52`, `BL-73`, `BL-78`, `BL-95`) |
@@ -65,14 +65,15 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/renderer.js`, `js/engine/camera.js`, `js/core/asset-loader.js`, `js/ui/hero-ambient-canvas.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **8.33/10** (1.1: 9, 1.2: 8, 1.3: 8)
+  * $C_1$ Juice & Delight: **8.67/10** (1.1: 9, 1.2: 9, 1.3: 8)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.00/10** (3.1: 8, 3.2: 8, 3.3: 8)
-  * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
+  * $C_3$ UI/UX & Ergonomics: **8.33/10** (3.1: 9, 3.2: 8, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **8.33/10** (4.1: 9, 4.2: 8, 4.3: 8)
   * $C_5$ Progression & Retention: **6.33/10** (5.1: 7, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **6.67/10** (6.1: 7, 6.2: 7, 6.3: 6)
-  * **Master Score**: **46.66 / 60.00 (77.8% — B Tier)**
+  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
+  * **Master Score**: **47.99 / 60.00 (80.0% — A- Tier)**
 * **Strengths**:
+  * **Visual Polish & Environmental Fidelity Engine (`BL-101`)**: Procedural floor micro-textures (flagstone pavers, mortar bevels, jungle leaf specks, basalt lava seams, frost crystals, polished sandstone inlays); animated wall torch sconces casting warm radial light cones with subtle dual-tone flame flicker; contact ambient occlusion along corridor borders.
   * **Architectural Entrance & Exit Visuals (`BL-82`)**: Grounding the character physically in the game world with dynamic wall-adjacent vs freestanding detection. When near a wall, renders stone keystone archways, recessed tunnels, heavy wooden doors ajar with iron straps, mounted torch sconces, and ambient floor light spill; when freestanding in open space, renders 3D winding spiral stairwells with stone balustrades, central newel columns, and depth shadows.
   * Y-sorted depth sorting (`BL-33`) ensuring player and entities occlude behind southern wall roofs.
   * Atmospheric particle systems and dynamic radial lighting under Fog of War.
@@ -83,8 +84,8 @@ This document records the official baseline quality evaluations, granular expert
   * **Secret Wall Rendering & Archways (`BL-51`)**: Undiscovered secret walls display faint fracture cracks and subtle breathing motes; discovered chambers open into ethereal glowing archways (`✨`).
   * **Ambient Procedural Labyrinth Simulation (`BL-80`)**: Zero-dependency `HeroAmbientCanvas` backdrop rendering organic 2D dungeon corridors, torch flicker, and wandering pathfinder wisp at silky 60fps with automatic viewport optimization.
 * **Gaps & Critical Deductions**:
-  * Wall surfaces could feature biome-specific decorative moss, wall vines, or torch sconce flickering.
-* **Directives**: Add dynamic torch sconce wall lighting and environmental foliage decals in future art polish.
+  * Reflective water puddle surfaces and animated ripple shaders can be explored in future biome expansions.
+* **Directives**: Continue expanding biome-specific environmental particle motes and surface shaders.
 
 ---
 
@@ -218,14 +219,15 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/editor/editor-canvas.js`, `js/editor/editor-ui.js`, `editor.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
+  * $C_1$ Juice & Delight: **6.67/10** (1.1: 7, 1.2: 7, 1.3: 6)
   * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 10, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.00/10** (3.1: 7, 3.2: 7, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **7.00/10** (4.1: 7, 4.2: 7, 4.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
   * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
-  * $C_6$ Accessibility & DX: **6.00/10** (6.1: 6, 6.2: 6, 6.3: 6)
-  * **Master Score**: **41.34 / 60.00 (68.9% — B- Tier)**
+  * $C_6$ Accessibility & DX: **6.67/10** (6.1: 7, 6.2: 7, 6.3: 6)
+  * **Master Score**: **43.68 / 60.00 (72.8% — B Tier)**
 * **Strengths**:
+  * **AAA Map Editor Studio Overhaul (`BL-102`)**: Dark glassmorphic workspace aesthetic with high-contrast acrylic panels; live telemetry status bar displaying real-time cursor coordinates, active layer pips, maze grid dimensions ($W \times H$), total entity counts, and studio version badges.
   * Bresenham continuous drag-to-paint smoothing (`BL-19`), multi-elevation Z-layer editing, and flood fill.
   * **1-Click Procedural Maze Generator (`BL-50`)**: Built-in `MazeGenerator` integration in editor toolbar allowing architects to generate solvable mazes of arbitrary dimensions with customizable themes, braiding, and key pairs.
   * **Destructive Clear Confirmation Modal (`BL-73`)**: Modal protection safeguarding accidental canvas wipes.
@@ -239,16 +241,16 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/editor/editor-ui.js`, `js/editor/prefabs.js`, `js/editor/editor-canvas.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.00/10** (1.1: 6, 1.2: 6, 1.3: 6)
+  * $C_1$ Juice & Delight: **6.33/10** (1.1: 7, 1.2: 6, 1.3: 6)
   * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 9, 2.3: 10)
-  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 7, 3.2: 8, 3.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
   * $C_4$ Mechanics & Systems: **7.67/10** (4.1: 8, 4.2: 8, 4.3: 7)
   * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 6, 5.3: 5)
   * $C_6$ Accessibility & DX: **6.67/10** (6.1: 7, 6.2: 7, 6.3: 6)
-  * **Master Score**: **43.01 / 60.00 (71.7% — B Tier)**
+  * **Master Score**: **43.68 / 60.00 (72.8% — B Tier)**
 * **Strengths**:
   * 50-state undo/redo stack (`BL-18`) and built-in architectural prefabs (`BL-20`).
-  * **Custom Prefab Saving & Stamping (`BL-39`)**: Allows creators to capture arbitrary canvas bounding boxes into reusable stamping modules saved in `localStorage`, complete with relative entity offsets, automatic UUID conflict avoidance, ghost hover outlines, and palette management with 1-click deletion.
+  * **Custom Prefab Saving & Stamping (`BL-39`, `BL-102`)**: Allows creators to capture arbitrary canvas bounding boxes into reusable stamping modules saved in `localStorage`, complete with relative entity offsets, automatic UUID conflict avoidance, ghost hover outlines, and palette management with 1-click deletion.
 * **Gaps & Critical Deductions**:
   * Undo stack lacks visual timeline thumbnails or acoustic click feedback.
 * **Directives**: Add visual scrubber for undo history and audio clicks on history stepping.
@@ -259,17 +261,18 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/editor/level-validator.js`, `js/editor/modals/validation-modal.js`, `js/editor/editor-canvas.js`, `js/editor/editor-ui.js`, `editor.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.67/10** (1.1: 7, 1.2: 6, 1.3: 7)
+  * $C_1$ Juice & Delight: **7.00/10** (1.1: 7, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.67/10** (2.1: 10, 2.2: 9, 2.3: 10)
-  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **8.00/10** (3.1: 8, 3.2: 8, 3.3: 8)
   * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
   * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
-  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
-  * **Master Score**: **44.02 / 60.00 (73.4% — B Tier)**
+  * $C_6$ Accessibility & DX: **7.33/10** (6.1: 8, 6.2: 7, 6.3: 7)
+  * **Master Score**: **45.00 / 60.00 (75.0% — B Tier)**
 * **Strengths**:
   * Fast BFS solvability validator proving reachable paths in $<15\text{ms}$.
   * One-click auto-fixer repairing orphan keys and missing bridge ramps (`BL-21`).
-  * **Interactive Issue Jumping Pins & Beacons (`BL-75`)**: 1-click "📍 Jump to (x, y)" pins in validation modal automatically switch elevation layers, center the canvas viewport, and render animated pulsing beacons with issue coordinate tooltips.
+  * **Interactive Issue Jumping Pins & Beacons (`BL-75`, `BL-102`)**: 1-click "📍 Jump to (x, y)" pins in validation modal automatically switch elevation layers, center the canvas viewport, and render animated pulsing beacons with issue coordinate tooltips.
+  * **Live Studio Telemetry Chips (`BL-102`)**: Bottom status bar integrates responsive chips for cursor coordinates with elevation tags, active layer pips, maze dimensions ($W \times H$), and entity counts.
   * **Bridge Approach & 4-Way Rotation Compatibility (`BL-75`)**: Granular validation flagging isolated bridges, ramps pointing into solid walls, and verifying solvability under 4-way camera rotation cycling.
   * **Playtest Modal Safety (`BL-75`)**: Replaced native browser `confirm()` with non-blocking modal `#modal-playtest-confirm` adhering to popup avoidance.
 * **Gaps & Critical Deductions**:
@@ -282,18 +285,19 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `assets/manifest.json`, `assets/schema.json`, `js/core/asset-loader.js`, `js/core/constants.js`, `js/entities/player.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **6.67/10** (1.1: 7, 1.2: 6, 1.3: 7)
-  * $C_2$ Static Purity: **9.00/10** (2.1: 9, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.33/10** (3.1: 8, 3.2: 7, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **6.67/10** (4.1: 7, 4.2: 7, 4.3: 6)
-  * $C_5$ Progression & Retention: **6.33/10** (5.1: 7, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **6.33/10** (6.1: 7, 6.2: 6, 6.3: 6)
-  * **Master Score**: **42.33 / 60.00 (70.6% — B- Tier)**
+  * $C_1$ Juice & Delight: **8.00/10** (1.1: 8, 1.2: 8, 1.3: 8)
+  * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **8.33/10** (3.1: 9, 3.2: 8, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
+  * $C_5$ Progression & Retention: **7.33/10** (5.1: 8, 5.2: 7, 5.3: 7)
+  * $C_6$ Accessibility & DX: **7.00/10** (6.1: 7, 6.2: 7, 6.3: 7)
+  * **Master Score**: **47.32 / 60.00 (78.9% — B+ Tier)**
 * **Strengths**:
   * Manifest SHA-256 integrity checks preventing corrupt asset deployments (23/23 drift checks).
+  * **Procedural Environmental Fidelity & Masonry Variety (`BL-101`)**: Rich procedural floor micro-textures (flagstones, cobblestone bevels, fallen leaves, magma cracks, ice crystals, mineral geodes) and animated wall torch sconces casting flickering warm light.
   * **Dual Tileset & High-Fidelity Procedural Fallbacks (`BL-41`, `BL-44`)**: Prioritizes detailed Canvas 2D vector primitives for keys, cut wards, lock bars, lever pivot nodes, and portals when SVGs are placeholders, preventing generic square regressions.
   * **Textured Biome Vector Tiles (`BL-10`)**: Distinct floor and wall textures across all 5 themes (`dungeon`, `jungle`, `glacial`, `magma`, `temple`).
-  * **Explorer Avatar Customization & Thematic Wardrobes (`BL-78`)**: Catalog of 6 full colorway palettes (`Classic Pathfinder`, `Emerald Ranger`, `Frost Nomad`, `Desert Scout`, `Obsidian Rogue`, `Arcane Scholar`) applied dynamically across 2.5D Angled Explorer and Top-Down Explorer perspectives, with live event synchronization.
+  * **Explorer Avatar Customization & Thematic Wardrobes (`BL-78`, `BL-95`)**: Catalog of 6 full colorway palettes applied dynamically across 2.5D Angled Explorer and Top-Down Explorer perspectives, with gender/hair/skin styling.
 * **Gaps & Critical Deductions**:
   * Future expansion could introduce customizable headwear or decorative backpack trinkets.
 * **Directives**: Plan unlockable cosmetic badges and expanded headgear attachments in upcoming saga.

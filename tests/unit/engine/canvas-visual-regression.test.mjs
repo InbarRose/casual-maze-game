@@ -89,4 +89,31 @@ describe('QA > Canvas Visual Regression & Performance Benchmark (BL-79, CMP-17)'
 
     player.destroy();
   });
+
+  it('verifies procedural floor details, ambient occlusion, and wall torch sconces execute safely (BL-101)', () => {
+    const renderer = new GameRenderer(canvas);
+    let threw = false;
+
+    try {
+      // Test procedural floor details across multiple biome themes
+      for (const theme of ['dungeon', 'jungle', 'lava', 'snow', 'cave', 'sunset']) {
+        renderer.renderProceduralFloorDetails(ctx, 3, 4, 96, 128, 32, theme, 42);
+      }
+
+      // Test floor ambient occlusion
+      const mockGround = [
+        [1, 1, 1],
+        [1, 0, 1],
+        [1, 0, 1]
+      ];
+      renderer.renderFloorAmbientOcclusion(ctx, 1, 1, 32, 32, 32, mockGround);
+
+      // Test wall torch sconce rendering
+      renderer.renderWallTorchSconce(ctx, 64, 64, 32, 0.15);
+    } catch {
+      threw = true;
+    }
+
+    assert(!threw, 'BL-101 procedural environmental fidelity rendering threw an unexpected error');
+  });
 });
