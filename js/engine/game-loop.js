@@ -177,6 +177,9 @@ export class GameLoop {
     // Level Lore Journal state (BL-81)
     this.levelJournal = [];
 
+    // Multi-target interaction disambiguation state (BL-85, BL-91, ADR-009)
+    this.isDisambiguating = false;
+
     // Initial fog update
     this.updateFog();
 
@@ -617,7 +620,7 @@ export class GameLoop {
   bindInputs() {
     if (this.inputManager) {
       this.inputManager.on(GAME_COMMANDS.INTERACT, () => {
-        this.handleManualInteract();
+        this.triggerInteract();
       });
       this.inputManager.on(GAME_COMMANDS.SELECT_OPTION, ({ index }) => {
         this.handleManualInteract(index);
@@ -651,6 +654,10 @@ export class GameLoop {
         }
       });
       this.inputManager.on(GAME_COMMANDS.PAUSE, () => {
+        if (this.isDisambiguating) {
+          this.closeDisambiguation();
+          return;
+        }
         if (typeof this.uiCallbacks.onTogglePause === 'function') {
           this.uiCallbacks.onTogglePause();
         } else {
@@ -1275,38 +1282,8 @@ export class GameLoop {
       }
     }
 
-    // 8. Check for available contextual interaction (BL-42, BL-85)
-    if (typeof this.uiCallbacks.onInteractionAvailable === 'function') {
-      const candidates = this.getAllAvailableInteractions();
-      let interaction = null;
-      let targetScreenPos = null;
-      let playerScreenPos = null;
-      let candidatesWithPos = [];
-
-      if (this.camera && this.player) {
-        playerScreenPos = this.camera.worldToScreen(this.player.worldX, this.player.worldY, true);
-      }
-
-      if (candidates && candidates.length > 0) {
-        candidatesWithPos = candidates.map(c => {
-          let screenPos = null;
-          if (this.camera && c.x !== undefined && c.y !== undefined) {
-            const tileTopLeft = this.camera.tileToScreen ? this.camera.tileToScreen(c.x, c.y) : this.camera.worldToScreen(c.x * this.camera.tileSize, c.y * this.camera.tileSize, true);
-            screenPos = {
-              x: tileTopLeft.x + this.camera.tileSize / 2,
-              y: tileTopLeft.y + this.camera.tileSize / 2,
-            };
-          }
-          return { ...c, screenPos };
-        });
-
-        const primary = candidatesWithPos[0];
-        targetScreenPos = primary.screenPos;
-        interaction = { ...primary, candidates: candidatesWithPos };
-      }
-
-      this.uiCallbacks.onInteractionAvailable(interaction, targetScreenPos || playerScreenPos, targetScreenPos, playerScreenPos, candidatesWithPos);
-    }
+    // 8. Check for available contextual interaction (BL-42, BL-85, BL-91)
+    this.checkContextualInteraction();
   }
 
   /**
@@ -1683,6 +1660,47 @@ export class GameLoop {
   }
 
   /**
+   * Check for available contextual interactions and invoke UI callbacks (BL-42, BL-85, BL-91)
+   */
+  checkContextualInteraction() {
+    if (typeof this.uiCallbacks.onInteractionAvailable !== 'function') return;
+
+    const candidates = this.getAllAvailableInteractions();
+    let interaction = null;
+    let targetScreenPos = null;
+    let playerScreenPos = null;
+    let candidatesWithPos = [];
+
+    if (this.camera && this.player) {
+      playerScreenPos = this.camera.worldToScreen(this.player.worldX, this.player.worldY, true);
+    }
+
+    if (candidates && candidates.length > 0) {
+      candidatesWithPos = candidates.map(c => {
+        let screenPos = null;
+        if (this.camera && c.x !== undefined && c.y !== undefined) {
+          const tileTopLeft = this.camera.tileToScreen ? this.camera.tileToScreen(c.x, c.y) : this.camera.worldToScreen(c.x * this.camera.tileSize, c.y * this.camera.tileSize, true);
+          screenPos = {
+            x: tileTopLeft.x + this.camera.tileSize / 2,
+            y: tileTopLeft.y + this.camera.tileSize / 2,
+          };
+        }
+        return { ...c, screenPos };
+      });
+
+      const primary = candidatesWithPos[0];
+      targetScreenPos = primary.screenPos;
+      interaction = { ...primary, candidates: candidatesWithPos, isDisambiguating: this.isDisambiguating };
+    } else {
+      if (this.isDisambiguating) {
+        this.isDisambiguating = false;
+      }
+    }
+
+    this.uiCallbacks.onInteractionAvailable(interaction, targetScreenPos || playerScreenPos, targetScreenPos, playerScreenPos, candidatesWithPos, this.isDisambiguating);
+  }
+
+  /**
    * Attempt to move player towards target cell coordinate
    * @param {number} targetX
    * @param {number} targetY
@@ -1716,6 +1734,9 @@ export class GameLoop {
     });
 
     if (check.allowed) {
+      if (this.isDisambiguating) {
+        this.closeDisambiguation();
+      }
       // If door was unlocked
       if (check.doorToUnlock) {
         check.doorToUnlock.open();
@@ -2455,6 +2476,13 @@ export class GameLoop {
    * @param {number|object} [target=1] 1-based candidate index, or candidate object/entity
    */
   handleManualInteract(target = 1) {
+    if (this.isDisambiguating) {
+      this.isDisambiguating = false;
+      if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
+        this.uiCallbacks.onDisambiguationModeChanged(false);
+      }
+    }
+
     const candidates = this.getAllAvailableInteractions();
     if (!candidates || candidates.length === 0) return;
 
@@ -2473,6 +2501,40 @@ export class GameLoop {
     }
 
     this.executeInteraction(chosen);
+    this.checkContextualInteraction();
+  }
+
+  /**
+   * Trigger interaction with two-stage reveal support for multi-target situations (BL-91, ADR-009)
+   */
+  triggerInteract() {
+    const candidates = this.getAllAvailableInteractions();
+    if (!candidates || candidates.length === 0) return;
+
+    if (candidates.length > 1 && !this.isDisambiguating) {
+      // Stage 1 -> Stage 2: Reveal numbered pills and action drawer
+      this.isDisambiguating = true;
+      if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
+        this.uiCallbacks.onDisambiguationModeChanged(true, candidates);
+      }
+      this.checkContextualInteraction();
+      return;
+    }
+
+    // Either single interaction, or player confirmed primary candidate while disambiguation is active
+    this.handleManualInteract(1);
+  }
+
+  /**
+   * Close multi-target disambiguation mode back to Stage 1 (BL-91, ADR-009)
+   */
+  closeDisambiguation() {
+    if (!this.isDisambiguating) return;
+    this.isDisambiguating = false;
+    if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
+      this.uiCallbacks.onDisambiguationModeChanged(false);
+    }
+    this.checkContextualInteraction();
   }
 
   /**
