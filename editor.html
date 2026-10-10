@@ -115,28 +115,36 @@
         </div>
       </div>
 
-      <!-- Tools -->
-      <div>
-        <div class="sidebar-section-title">Draw Tools</div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn active" data-tool="pencil" title="Pencil Tool [P] — Click or drag to draw selected tile">
-            <span class="palette-icon">✏️</span> Pencil
-          </button>
-          <button type="button" class="palette-btn" data-tool="line" title="Line / Wall Tool [L] — Click &amp; drag straight or diagonal walls">
-            <span class="palette-icon">📏</span> Line / Wall
-          </button>
-          <button type="button" class="palette-btn" data-tool="fill" title="Flood Fill Tool [F] — Fill contiguous region with selected tile">
-            <span class="palette-icon">🪣</span> Fill
-          </button>
-          <button type="button" class="palette-btn" data-tool="eraser" title="Eraser Tool [E] — Erase tiles and entities to floor">
-            <span class="palette-icon">🧹</span> Eraser
-          </button>
-          <button type="button" class="palette-btn" data-tool="select" title="Inspect Tool [S] — Click an entity to configure properties & wiring">
-            <span class="palette-icon">🔍</span> Inspect
-          </button>
-          <button type="button" class="palette-btn" data-tool="move" title="Grab &amp; Move Tool [G] — Click &amp; drag any key, door, lever, spawn, or exit to relocate it across the labyrinth">
-            <span class="palette-icon">✋</span> Grab / Move
-          </button>
+      <!-- Tools Accordion -->
+      <div class="sidebar-accordion active" data-accordion="tools">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Draw Tools Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Draw Tools</span>
+          </div>
+          <span class="accordion-badge">6</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn active" data-tool="pencil" title="Pencil Tool [P] — Click or drag to draw selected tile">
+              <span class="palette-icon">✏️</span> Pencil
+            </button>
+            <button type="button" class="palette-btn" data-tool="line" title="Line / Wall Tool [L] — Click &amp; drag straight or diagonal walls">
+              <span class="palette-icon">📏</span> Line / Wall
+            </button>
+            <button type="button" class="palette-btn" data-tool="fill" title="Flood Fill Tool [F] — Fill contiguous region with selected tile">
+              <span class="palette-icon">🪣</span> Fill
+            </button>
+            <button type="button" class="palette-btn" data-tool="eraser" title="Eraser Tool [E] — Erase tiles and entities to floor">
+              <span class="palette-icon">🧹</span> Eraser
+            </button>
+            <button type="button" class="palette-btn" data-tool="select" title="Inspect Tool [S] — Click an entity to configure properties & wiring">
+              <span class="palette-icon">🔍</span> Inspect
+            </button>
+            <button type="button" class="palette-btn" data-tool="move" title="Grab &amp; Move Tool [G] — Click &amp; drag any key, door, lever, spawn, or exit to relocate it across the labyrinth">
+              <span class="palette-icon">✋</span> Grab / Move
+            </button>
+          </div>
         </div>
       </div>
 
@@ -155,184 +163,218 @@
         </div>
       </div>
 
-      <!-- Tile Palette -->
-      <div>
-        <div class="sidebar-section-title">Tiles</div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn" data-tile="1" title="Solid Wall [1] — Impassable barrier">
-            <span class="palette-icon">🧱</span> Wall
-          </button>
-          <button type="button" class="palette-btn" data-tile="0" title="Walkable Floor [0] — Open pathway">
-            <span class="palette-icon">⬜</span> Floor
-          </button>
-          <button type="button" class="palette-btn" data-tile="B_EW" title="Bridge East-West — Ground moves E-W under bridge; Overhead moves N-S across">
-            <span class="palette-icon">🌉</span> Bridge EW
-          </button>
-          <button type="button" class="palette-btn" data-tile="B_NS" title="Bridge North-South — Ground moves N-S under bridge; Overhead moves E-W across">
-            <span class="palette-icon">🌉</span> Bridge NS
-          </button>
+      <!-- Tile Palette Accordion -->
+      <div class="sidebar-accordion active" data-accordion="tiles">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Tiles & Bridges Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Tiles &amp; Bridges</span>
+          </div>
+          <span class="accordion-badge">4</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn" data-tile="1" title="Solid Wall [1] — Impassable barrier">
+              <span class="palette-icon">🧱</span> Wall
+            </button>
+            <button type="button" class="palette-btn" data-tile="0" title="Walkable Floor [0] — Open pathway">
+              <span class="palette-icon">⬜</span> Floor
+            </button>
+            <button type="button" class="palette-btn" data-tile="B_EW" title="Bridge East-West — Ground moves E-W under bridge; Overhead moves N-S across">
+              <span class="palette-icon">🌉</span> Bridge EW
+            </button>
+            <button type="button" class="palette-btn" data-tile="B_NS" title="Bridge North-South — Ground moves N-S under bridge; Overhead moves E-W across">
+              <span class="palette-icon">🌉</span> Bridge NS
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Elevation Ramps -->
-      <div>
-        <div class="sidebar-section-title">Ramps (Elevation 0 ➔ 1)</div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn" data-tile="R_N" title="Ramp North — Moving North climbs Ground (0) ➔ Overhead (1)">
-            <span class="palette-icon">▲</span> Ramp N
-          </button>
-          <button type="button" class="palette-btn" data-tile="R_S" title="Ramp South — Moving South climbs Ground (0) ➔ Overhead (1)">
-            <span class="palette-icon">▼</span> Ramp S
-          </button>
-          <button type="button" class="palette-btn" data-tile="R_E" title="Ramp East — Moving East climbs Ground (0) ➔ Overhead (1)">
-            <span class="palette-icon">▶</span> Ramp E
-          </button>
-          <button type="button" class="palette-btn" data-tile="R_W" title="Ramp West — Moving West climbs Ground (0) ➔ Overhead (1)">
-            <span class="palette-icon">◀</span> Ramp W
-          </button>
+      <!-- Elevation Ramps Accordion -->
+      <div class="sidebar-accordion active" data-accordion="ramps">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Elevation Ramps Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Elevation Ramps (0 ➔ 1)</span>
+          </div>
+          <span class="accordion-badge">4</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn" data-tile="R_N" title="Ramp North — Moving North climbs Ground (0) ➔ Overhead (1)">
+              <span class="palette-icon">▲</span> Ramp N
+            </button>
+            <button type="button" class="palette-btn" data-tile="R_S" title="Ramp South — Moving South climbs Ground (0) ➔ Overhead (1)">
+              <span class="palette-icon">▼</span> Ramp S
+            </button>
+            <button type="button" class="palette-btn" data-tile="R_E" title="Ramp East — Moving East climbs Ground (0) ➔ Overhead (1)">
+              <span class="palette-icon">▶</span> Ramp E
+            </button>
+            <button type="button" class="palette-btn" data-tile="R_W" title="Ramp West — Moving West climbs Ground (0) ➔ Overhead (1)">
+              <span class="palette-icon">◀</span> Ramp W
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Architectural Prefab Palette (BL-20) -->
-      <div>
-        <div class="sidebar-section-title">
-          <span>Architectural Prefabs</span>
-          <span style="font-size: 0.65rem; color: var(--accent);">Stamp</span>
-        </div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn" data-prefab="bridge_crossing" title="Bridge Crossing (5x5) — Complete elevated overpass with ramps and crossway">
-            <span class="palette-icon">🌉</span> Bridge Cross
-          </button>
-          <button type="button" class="palette-btn" data-prefab="vault_gate" title="Locked Vault Gate (5x3) — Wall barrier with locked door and matching color key">
-            <span class="palette-icon">🔒</span> Vault Gate
-          </button>
-          <button type="button" class="palette-btn" data-prefab="chamber_room" title="Pillared Chamber (5x5) — Spacious room with decorative corner pillars">
-            <span class="palette-icon">🏛️</span> Chamber
-          </button>
-          <button type="button" class="palette-btn" data-prefab="cross_intersection" title="4-Way Crossroads (5x5) — Smooth 4-way corridor intersection">
-            <span class="palette-icon">➕</span> 4-Way Cross
-          </button>
-          <button type="button" class="palette-btn" data-prefab="puzzle_sanctum" title="Riddle Sanctum (5x5) — Enclosed sanctum with pedestal, relic, and locked gate">
-            <span class="palette-icon">🦅</span> Sanctum
-          </button>
-          <button type="button" class="palette-btn" data-prefab="switch_hub" title="Clockwork Switch Hub (5x4) — Lever wired to toggle passage walls">
-            <span class="palette-icon">🕹️</span> Switch Hub
-          </button>
+      <!-- Architectural Prefab Palette Accordion (BL-20) -->
+      <div class="sidebar-accordion active" data-accordion="prefabs">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Architectural Prefabs Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Architectural Prefabs</span>
+          </div>
+          <span class="accordion-badge">6</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn" data-prefab="bridge_crossing" title="Bridge Crossing (5x5) — Complete elevated overpass with ramps and crossway">
+              <span class="palette-icon">🌉</span> Bridge Cross
+            </button>
+            <button type="button" class="palette-btn" data-prefab="vault_gate" title="Locked Vault Gate (5x3) — Wall barrier with locked door and matching color key">
+              <span class="palette-icon">🔒</span> Vault Gate
+            </button>
+            <button type="button" class="palette-btn" data-prefab="chamber_room" title="Pillared Chamber (5x5) — Spacious room with decorative corner pillars">
+              <span class="palette-icon">🏛️</span> Chamber
+            </button>
+            <button type="button" class="palette-btn" data-prefab="cross_intersection" title="4-Way Crossroads (5x5) — Smooth 4-way corridor intersection">
+              <span class="palette-icon">➕</span> 4-Way Cross
+            </button>
+            <button type="button" class="palette-btn" data-prefab="puzzle_sanctum" title="Riddle Sanctum (5x5) — Enclosed sanctum with pedestal, relic, and locked gate">
+              <span class="palette-icon">🦅</span> Sanctum
+            </button>
+            <button type="button" class="palette-btn" data-prefab="switch_hub" title="Clockwork Switch Hub (5x4) — Lever wired to toggle passage walls">
+              <span class="palette-icon">🕹️</span> Switch Hub
+            </button>
+          </div>
         </div>
       </div>
 
-      <!-- Custom Prefab Palette (BL-39) -->
-      <div>
-        <div class="sidebar-section-title" style="display: flex; justify-content: space-between; align-items: center;">
-          <span>Custom Prefabs</span>
+      <!-- Custom Prefab Palette Accordion (BL-39) -->
+      <div class="sidebar-accordion active" data-accordion="custom-prefabs">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Custom Prefabs Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Custom Prefabs</span>
+          </div>
           <button type="button" id="btn-open-save-prefab" class="btn btn-secondary btn-xs" style="padding: 2px 6px; font-size: 0.65rem;" title="Capture level region as reusable custom prefab (BL-39)">
             💾 Save Region
           </button>
-        </div>
-        <div id="custom-prefab-palette" class="palette-grid" style="grid-template-columns: 1fr; gap: 4px;">
-          <!-- Dynamically populated by EditorUI -->
+        </button>
+        <div class="sidebar-accordion-content">
+          <div id="custom-prefab-palette" class="palette-grid" style="grid-template-columns: 1fr; gap: 4px;">
+            <!-- Dynamically populated by EditorUI -->
+          </div>
         </div>
       </div>
 
-      <!-- Entities & Markers -->
-      <div>
-        <div class="sidebar-section-title">Entities &amp; Markers</div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn" data-entity="spawn" title="Player Entrance Spawn (S)">
-            <span class="palette-icon">🟢</span> Spawn
-          </button>
-          <button type="button" class="palette-btn" data-entity="test_spawn" title="Custom Test Spawn Point (🧪) for playtesting">
-            <span class="palette-icon">🧪</span> Test Spawn
-          </button>
-          <button type="button" class="palette-btn" data-entity="exit" title="Exit Goal Portal (E)">
-            <span class="palette-icon">🔵</span> Exit
-          </button>
-          <button type="button" class="palette-btn" data-entity="lever" title="Lever Switch (🕹️) — Wire to toggle walls, gates & bridges">
-            <span class="palette-icon">🕹️</span> Lever
-          </button>
-          <button type="button" class="palette-btn" data-entity="pedestal" title="Riddle Pedestal (🏛️) — Inscribed socket that accepts carryable riddle relics">
-            <span class="palette-icon">🏛️</span> Pedestal
-          </button>
-          <button type="button" class="palette-btn" data-entity="riddle_item" title="Carryable Riddle Relic (🦅) — Pick up and place into matching pedestals">
-            <span class="palette-icon">🦅</span> Relic
-          </button>
-          <button type="button" class="palette-btn" data-entity="checkpoint" title="Checkpoint Beacon (🚩) — Mid-level checkpoint respawn">
-            <span class="palette-icon">🚩</span> Checkpoint
-          </button>
-          <button type="button" class="palette-btn" data-entity="note" title="Wall Art / Inscription (📜) — Interactive lore tablet or decoration">
-            <span class="palette-icon">📜</span> Note / Art
-          </button>
-          <button type="button" class="palette-btn" data-entity="bonus_item" title="Bonus Gem (💎) — Score booster collectible">
-            <span class="palette-icon">💎</span> Bonus Gem
-          </button>
-        </div>
-
-        <!-- Carryable Riddle Relics Subgrid -->
-        <div style="margin-top:0.75rem;">
-          <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Riddle Relics &amp; Statues</div>
-          <div class="color-palette-subgrid">
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🦅" data-itemtype="falcon_statue" data-name="Falcon Statue" data-style="statue_falcon" title="Falcon Statue (🦅)">
-              <span>🦅</span><span style="font-size:0.65rem;">Falcon</span>
+      <!-- Entities & Markers Accordion -->
+      <div class="sidebar-accordion active" data-accordion="entities">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Entities & Collectibles Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Entities &amp; Markers</span>
+          </div>
+          <span class="accordion-badge">10</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn" data-entity="spawn" title="Player Entrance Spawn (S)">
+              <span class="palette-icon">🟢</span> Spawn
             </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🦁" data-itemtype="lion_statue" data-name="Lion Statue" data-style="statue_lion" title="Lion Statue (🦁)">
-              <span>🦁</span><span style="font-size:0.65rem;">Lion</span>
+            <button type="button" class="palette-btn" data-entity="test_spawn" title="Custom Test Spawn Point (🧪) for playtesting">
+              <span class="palette-icon">🧪</span> Test Spawn
             </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🐍" data-itemtype="serpent_statue" data-name="Serpent Statue" data-style="statue_serpent" title="Serpent Statue (🐍)">
-              <span>🐍</span><span style="font-size:0.65rem;">Serpent</span>
+            <button type="button" class="palette-btn" data-entity="exit" title="Exit Goal Portal (E)">
+              <span class="palette-icon">🔵</span> Exit
             </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🐻" data-itemtype="bear_statue" data-name="Bear Statue" data-style="statue_bear" title="Bear Statue (🐻)">
-              <span>🐻</span><span style="font-size:0.65rem;">Bear</span>
+            <button type="button" class="palette-btn" data-entity="lever" title="Lever Switch (🕹️) — Wire to toggle walls, gates & bridges">
+              <span class="palette-icon">🕹️</span> Lever
             </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🏆" data-itemtype="chalice_sun" data-name="Solar Chalice" data-style="chalice_sun" title="Solar Chalice (🏆)">
-              <span>🏆</span><span style="font-size:0.65rem;">Chalice</span>
+            <button type="button" class="palette-btn" data-entity="pedestal" title="Riddle Pedestal (🏛️) — Inscribed socket that accepts carryable riddle relics">
+              <span class="palette-icon">🏛️</span> Pedestal
             </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🔮" data-itemtype="orb_moon" data-name="Lunar Orb" data-style="orb_moon" title="Lunar Orb (🔮)">
-              <span>🔮</span><span style="font-size:0.65rem;">Moon Orb</span>
+            <button type="button" class="palette-btn" data-entity="riddle_item" title="Carryable Riddle Relic (🦅) — Pick up and place into matching pedestals">
+              <span class="palette-icon">🦅</span> Relic
+            </button>
+            <button type="button" class="palette-btn" data-entity="checkpoint" title="Checkpoint Beacon (🚩) — Mid-level checkpoint respawn">
+              <span class="palette-icon">🚩</span> Checkpoint
+            </button>
+            <button type="button" class="palette-btn" data-entity="note" title="Wall Art / Inscription (📜) — Interactive lore tablet or decoration">
+              <span class="palette-icon">📜</span> Note / Art
+            </button>
+            <button type="button" class="palette-btn" data-entity="bonus_item" title="Bonus Gem (💎) — Score booster collectible">
+              <span class="palette-icon">💎</span> Bonus Gem
             </button>
           </div>
-        </div>
 
-        <!-- Multi-Colored Keys Palette -->
-        <div style="margin-top:0.75rem;">
-          <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Collectible Keys</div>
-          <div class="color-palette-subgrid">
-            <button type="button" class="palette-btn" data-entity="key" data-color="#fbbf24" data-name="Golden Key" title="Golden Key (#fbbf24)">
-              <span>🔑</span><span style="font-size:0.65rem;">Gold</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="key" data-color="#f43f5e" data-name="Ruby Key" title="Ruby Red Key (#f43f5e)">
-              <span>🔴</span><span style="font-size:0.65rem;">Ruby</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="key" data-color="#38bdf8" data-name="Sapphire Key" title="Sapphire Blue Key (#38bdf8)">
-              <span>🔵</span><span style="font-size:0.65rem;">Sapphire</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="key" data-color="#34d399" data-name="Emerald Key" title="Emerald Green Key (#34d399)">
-              <span>🟢</span><span style="font-size:0.65rem;">Emerald</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="key" data-color="#a855f7" data-name="Amethyst Key" title="Amethyst Purple Key (#a855f7)">
-              <span>🟣</span><span style="font-size:0.65rem;">Amethyst</span>
-            </button>
+          <!-- Carryable Riddle Relics Subgrid -->
+          <div style="margin-top:0.75rem;">
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Riddle Relics &amp; Statues</div>
+            <div class="color-palette-subgrid">
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🦅" data-itemtype="falcon_statue" data-name="Falcon Statue" data-style="statue_falcon" title="Falcon Statue (🦅)">
+                <span>🦅</span><span style="font-size:0.65rem;">Falcon</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🦁" data-itemtype="lion_statue" data-name="Lion Statue" data-style="statue_lion" title="Lion Statue (🦁)">
+                <span>🦁</span><span style="font-size:0.65rem;">Lion</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🐍" data-itemtype="serpent_statue" data-name="Serpent Statue" data-style="statue_serpent" title="Serpent Statue (🐍)">
+                <span>🐍</span><span style="font-size:0.65rem;">Serpent</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🐻" data-itemtype="bear_statue" data-name="Bear Statue" data-style="statue_bear" title="Bear Statue (🐻)">
+                <span>🐻</span><span style="font-size:0.65rem;">Bear</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🏆" data-itemtype="chalice_sun" data-name="Solar Chalice" data-style="chalice_sun" title="Solar Chalice (🏆)">
+                <span>🏆</span><span style="font-size:0.65rem;">Chalice</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🔮" data-itemtype="orb_moon" data-name="Lunar Orb" data-style="orb_moon" title="Lunar Orb (🔮)">
+                <span>🔮</span><span style="font-size:0.65rem;">Moon Orb</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        <!-- Multi-Colored Doors Palette -->
-        <div style="margin-top:0.75rem;">
-          <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Locked Gates / Doors</div>
-          <div class="color-palette-subgrid">
-            <button type="button" class="palette-btn" data-entity="door" data-color="#fbbf24" title="Gold Gate (#fbbf24)">
-              <span>🚪</span><span style="font-size:0.65rem;">Gold</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="door" data-color="#f43f5e" title="Ruby Gate (#f43f5e)">
-              <span>🚪</span><span style="font-size:0.65rem; color:#f43f5e;">Ruby</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="door" data-color="#38bdf8" title="Sapphire Gate (#38bdf8)">
-              <span>🚪</span><span style="font-size:0.65rem; color:#38bdf8;">Sapphire</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="door" data-color="#34d399" title="Emerald Gate (#34d399)">
-              <span>🚪</span><span style="font-size:0.65rem; color:#34d399;">Emerald</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="door" data-color="#a855f7" title="Amethyst Gate (#a855f7)">
-              <span>🚪</span><span style="font-size:0.65rem; color:#a855f7;">Amethyst</span>
-            </button>
+          <!-- Multi-Colored Keys Palette -->
+          <div style="margin-top:0.75rem;">
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Collectible Keys</div>
+            <div class="color-palette-subgrid">
+              <button type="button" class="palette-btn" data-entity="key" data-color="#fbbf24" data-name="Golden Key" title="Golden Key (#fbbf24)">
+                <span>🔑</span><span style="font-size:0.65rem;">Gold</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="key" data-color="#f43f5e" data-name="Ruby Key" title="Ruby Red Key (#f43f5e)">
+                <span>🔴</span><span style="font-size:0.65rem;">Ruby</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="key" data-color="#38bdf8" data-name="Sapphire Key" title="Sapphire Blue Key (#38bdf8)">
+                <span>🔵</span><span style="font-size:0.65rem;">Sapphire</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="key" data-color="#34d399" data-name="Emerald Key" title="Emerald Green Key (#34d399)">
+                <span>🟢</span><span style="font-size:0.65rem;">Emerald</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="key" data-color="#a855f7" data-name="Amethyst Key" title="Amethyst Purple Key (#a855f7)">
+                <span>🟣</span><span style="font-size:0.65rem;">Amethyst</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Multi-Colored Doors Palette -->
+          <div style="margin-top:0.75rem;">
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Locked Gates / Doors</div>
+            <div class="color-palette-subgrid">
+              <button type="button" class="palette-btn" data-entity="door" data-color="#fbbf24" title="Gold Gate (#fbbf24)">
+                <span>🚪</span><span style="font-size:0.65rem;">Gold</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="door" data-color="#f43f5e" title="Ruby Gate (#f43f5e)">
+                <span>🚪</span><span style="font-size:0.65rem; color:#f43f5e;">Ruby</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="door" data-color="#38bdf8" title="Sapphire Gate (#38bdf8)">
+                <span>🚪</span><span style="font-size:0.65rem; color:#38bdf8;">Sapphire</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="door" data-color="#34d399" title="Emerald Gate (#34d399)">
+                <span>🚪</span><span style="font-size:0.65rem; color:#34d399;">Emerald</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="door" data-color="#a855f7" title="Amethyst Gate (#a855f7)">
+                <span>🚪</span><span style="font-size:0.65rem; color:#a855f7;">Amethyst</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -357,6 +399,18 @@
       </div>
 
       <canvas id="editor-canvas"></canvas>
+
+      <!-- Interactive Mini-Map Overview HUD (BL-103) -->
+      <div class="editor-minimap-hud" id="editor-minimap-hud">
+        <div class="minimap-hud-header">
+          <span class="minimap-hud-title">🗺️ RADAR OVERVIEW</span>
+          <button type="button" class="minimap-toggle-btn" id="btn-toggle-minimap" title="Toggle Mini-Map Overview [_]">_</button>
+        </div>
+        <div class="minimap-canvas-container" id="minimap-canvas-container">
+          <canvas id="editor-minimap-canvas" width="160" height="160"></canvas>
+          <div class="minimap-hint">Click / Drag to Pan</div>
+        </div>
+      </div>
 
       <div class="viewport-overlay-controls">
         <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In (+)">+</button>

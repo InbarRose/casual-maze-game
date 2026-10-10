@@ -505,6 +505,19 @@ export class GameRenderer {
         ctx.beginPath();
         ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.14, 0, Math.PI * 2);
         ctx.stroke();
+      } else if (hash >= 0.88 && hash < 0.95) {
+        // Reflective water puddle with subtle shimmer (BL-105)
+        const shimmer = Math.sin((this.exitPulseTimer || 0) * 2 + hash * 10) * 0.05 + 0.12;
+        ctx.fillStyle = `rgba(56, 189, 248, ${shimmer})`;
+        ctx.beginPath();
+        ctx.ellipse(sx + tileSize * 0.45, sy + tileSize * 0.52, tileSize * 0.22, tileSize * 0.14, 0.2, 0, Math.PI * 2);
+        ctx.fill();
+        // Concentric ripple ring
+        ctx.strokeStyle = `rgba(255, 255, 255, ${shimmer * 0.8})`;
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.ellipse(sx + tileSize * 0.45, sy + tileSize * 0.52, tileSize * 0.12, tileSize * 0.07, 0.2, 0, Math.PI * 2);
+        ctx.stroke();
       }
     } else if (themeKey === 'jungle') {
       // Fallen leaves and moss fringes on floor
@@ -519,40 +532,84 @@ export class GameRenderer {
         ctx.arc(sx + tileSize * 0.65, sy + tileSize * 0.6, 2, 0, Math.PI * 2);
         ctx.arc(sx + tileSize * 0.72, sy + tileSize * 0.68, 1.5, 0, Math.PI * 2);
         ctx.fill();
+      } else if (hash >= 0.85 && hash < 0.93) {
+        // Rainforest moisture pool with leaf reflection (BL-105)
+        const ripple = Math.sin((this.exitPulseTimer || 0) * 2.5 + hash * 12) * 0.04 + 0.14;
+        ctx.fillStyle = `rgba(34, 197, 94, ${ripple})`;
+        ctx.beginPath();
+        ctx.ellipse(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.24, tileSize * 0.15, -0.3, 0, Math.PI * 2);
+        ctx.fill();
       }
     } else if (themeKey === 'lava') {
-      // Basalt cracks with molten glowing veins
+      // Basalt cracks with molten glowing veins and bubbling hot spots (BL-105)
       if (hash < 0.28) {
-        ctx.strokeStyle = 'rgba(249, 115, 22, 0.35)';
-        ctx.lineWidth = 1.2;
+        const glowPulse = Math.sin((this.exitPulseTimer || 0) * 3 + hash * 8) * 0.15 + 0.35;
+        ctx.strokeStyle = `rgba(249, 115, 22, ${glowPulse})`;
+        ctx.lineWidth = 1.3;
         ctx.beginPath();
         ctx.moveTo(sx + tileSize * 0.2, sy + tileSize * 0.3);
         ctx.lineTo(sx + tileSize * 0.5, sy + tileSize * 0.55);
         ctx.lineTo(sx + tileSize * 0.8, sy + tileSize * 0.7);
         ctx.stroke();
+      } else if (hash >= 0.78 && hash < 0.88) {
+        // Magma bubble hotspot pore
+        const bubble = Math.sin((this.exitPulseTimer || 0) * 4 + hash * 15) * 0.2 + 0.3;
+        ctx.fillStyle = `rgba(239, 68, 68, ${bubble})`;
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = `rgba(251, 191, 36, ${bubble + 0.2})`;
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.05, 0, Math.PI * 2);
+        ctx.fill();
       }
     } else if (themeKey === 'snow') {
-      // Frost speckles and snow drifts
+      // Frost speckles, snow drifts, and sparkling ice facets (BL-105)
       if (hash < 0.35) {
         ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
         ctx.beginPath();
         ctx.arc(sx + tileSize * 0.4, sy + tileSize * 0.35, tileSize * 0.12, 0, Math.PI * 2);
         ctx.fill();
+      } else if (hash >= 0.80 && hash < 0.90) {
+        // Diamond ice sparkle glint
+        const glint = Math.max(0, Math.sin((this.exitPulseTimer || 0) * 3.5 + hash * 20)) * 0.4;
+        if (glint > 0.05) {
+          ctx.strokeStyle = `rgba(255, 255, 255, ${glint})`;
+          ctx.lineWidth = 1;
+          const cx = sx + tileSize * 0.6;
+          const cy = sy + tileSize * 0.4;
+          ctx.beginPath();
+          ctx.moveTo(cx - 3, cy); ctx.lineTo(cx + 3, cy);
+          ctx.moveTo(cx, cy - 3); ctx.lineTo(cx, cy + 3);
+          ctx.stroke();
+        }
       }
     } else if (themeKey === 'cave') {
-      // Sparkling subterranean crystals and damp floor pools
+      // Sparkling subterranean crystals and damp moisture pools (BL-105)
       if (hash < 0.22) {
-        ctx.fillStyle = 'rgba(192, 132, 252, 0.3)';
+        const pulse = Math.sin((this.exitPulseTimer || 0) * 2.2 + hash * 14) * 0.15 + 0.35;
+        ctx.fillStyle = `rgba(192, 132, 252, ${pulse})`;
         ctx.beginPath();
         ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, 2, 0, Math.PI * 2);
         ctx.fill();
+      } else if (hash >= 0.78 && hash < 0.89) {
+        // Subterranean drip pool with ripples
+        const damp = Math.sin((this.exitPulseTimer || 0) * 1.8 + hash * 9) * 0.06 + 0.15;
+        ctx.fillStyle = `rgba(168, 85, 247, ${damp})`;
+        ctx.beginPath();
+        ctx.ellipse(sx + tileSize * 0.48, sy + tileSize * 0.54, tileSize * 0.2, tileSize * 0.12, 0.1, 0, Math.PI * 2);
+        ctx.fill();
       }
     } else if (themeKey === 'sunset' || themeKey === 'temple') {
-      // Polished sandstone inlay squares
+      // Polished sandstone inlay squares and gilded flecks (BL-105)
       if (hash < 0.32) {
         ctx.strokeStyle = 'rgba(251, 191, 36, 0.18)';
         ctx.lineWidth = 1;
         ctx.strokeRect(sx + tileSize * 0.2, sy + tileSize * 0.2, tileSize * 0.6, tileSize * 0.6);
+      } else if (hash >= 0.82 && hash < 0.92) {
+        const goldShine = Math.sin((this.exitPulseTimer || 0) * 2.8 + hash * 16) * 0.15 + 0.25;
+        ctx.fillStyle = `rgba(251, 191, 36, ${goldShine})`;
+        ctx.fillRect(sx + tileSize * 0.45, sy + tileSize * 0.45, tileSize * 0.1, tileSize * 0.1);
       }
     }
   }

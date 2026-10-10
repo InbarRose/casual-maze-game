@@ -260,6 +260,165 @@
   margin: 0 0.15rem;
 }
 
+/* Sidebar Accordion Cards (BL-104) */
+.sidebar-accordion {
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: var(--radius-md);
+  background: rgba(22, 27, 34, 0.6);
+  backdrop-filter: blur(8px);
+  margin-bottom: 0.75rem;
+  overflow: hidden;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar-accordion:hover {
+  border-color: rgba(56, 189, 248, 0.25);
+}
+
+.sidebar-accordion-header {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.03);
+  border: none;
+  border-bottom: 1px solid transparent;
+  padding: 0.55rem 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  color: var(--text);
+  font-family: inherit;
+  user-select: none;
+  transition: background 0.15s ease;
+}
+
+.sidebar-accordion-header:hover {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.sidebar-accordion.active .sidebar-accordion-header {
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+.accordion-header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.accordion-chevron {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  transition: transform 0.2s ease;
+}
+
+.sidebar-accordion:not(.active) .accordion-chevron {
+  transform: rotate(-90deg);
+}
+
+.accordion-badge {
+  background: rgba(56, 189, 248, 0.15);
+  border: 1px solid rgba(56, 189, 248, 0.3);
+  color: var(--accent);
+  font-size: 0.65rem;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  padding: 0.1rem 0.4rem;
+  border-radius: 999px;
+}
+
+.sidebar-accordion-content {
+  padding: 0.65rem;
+  display: block;
+}
+
+.sidebar-accordion:not(.active) .sidebar-accordion-content {
+  display: none;
+}
+
+/* Floating Interactive Mini-Map Overview HUD (BL-103) */
+.editor-minimap-hud {
+  position: absolute;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  background: rgba(15, 23, 42, 0.92);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(56, 189, 248, 0.35);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6), 0 0 16px rgba(56, 189, 248, 0.15);
+  border-radius: var(--radius-md);
+  z-index: 25;
+  overflow: hidden;
+  user-select: none;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.minimap-hud-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.3rem 0.6rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.minimap-hud-title {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: 0.05em;
+}
+
+.minimap-toggle-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0 0.25rem;
+  line-height: 1;
+  transition: color 0.15s ease;
+}
+
+.minimap-toggle-btn:hover {
+  color: #ffffff;
+}
+
+.minimap-canvas-container {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  background: #090d13;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#editor-minimap-canvas {
+  display: block;
+  width: 160px;
+  height: 160px;
+  cursor: crosshair;
+}
+
+.minimap-hint {
+  position: absolute;
+  bottom: 4px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  color: rgba(255, 255, 255, 0.4);
+  pointer-events: none;
+}
+
+.editor-minimap-hud.minimized .minimap-canvas-container {
+  display: none;
+}
+
 /* Bottom Status Bar (AAA Studio Telemetry - BL-102) */
 .editor-status-bar {
   grid-column: 1 / -1;

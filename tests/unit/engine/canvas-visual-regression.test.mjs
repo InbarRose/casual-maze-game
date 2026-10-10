@@ -10,6 +10,7 @@ import { Lever } from '../../../js/entities/lever.js';
 import { Teleporter } from '../../../js/entities/teleporter.js';
 import { Pedestal } from '../../../js/entities/pedestal.js';
 import { GameRenderer } from '../../../js/engine/renderer.js';
+import { EditorCanvas } from '../../../js/editor/editor-canvas.js';
 import { TILES, EXPLORER_OUTFITS } from '../../../js/core/constants.js';
 
 describe('QA > Canvas Visual Regression & Performance Benchmark (BL-79, CMP-17)', () => {
@@ -115,5 +116,62 @@ describe('QA > Canvas Visual Regression & Performance Benchmark (BL-79, CMP-17)'
     }
 
     assert(!threw, 'BL-101 procedural environmental fidelity rendering threw an unexpected error');
+  });
+
+  it('verifies BL-105 surface shaders (puddles, ripples, magma pulses) and BL-103 editor mini-map radar', () => {
+    const renderer = new GameRenderer(canvas);
+    renderer.exitPulseTimer = 1.25;
+    let threwShaders = false;
+
+    try {
+      // Test surface shader variations across biomes with high hash triggers
+      for (const theme of ['dungeon', 'jungle', 'lava', 'snow', 'cave', 'sunset']) {
+        // Test different coordinate combinations to exercise ripple & shimmer code paths
+        for (let x = 0; x < 5; x++) {
+          for (let y = 0; y < 5; y++) {
+            renderer.renderProceduralFloorDetails(ctx, x, y, x * 32, y * 32, 32, theme, 77);
+          }
+        }
+      }
+    } catch {
+      threwShaders = true;
+    }
+    assert(!threwShaders, 'BL-105 surface shader floor details threw an unexpected error');
+
+    // Test BL-103 editor mini-map radar overview render
+    let threwMiniMap = false;
+    try {
+      const mockLevel = {
+        dimensions: { width: 15, height: 15 },
+        config: { theme: 'dungeon' },
+        layers: {
+          ground: Array.from({ length: 15 }, () => Array(15).fill(0)),
+          overhead: Array.from({ length: 15 }, () => Array(15).fill(0)),
+        },
+        spawn: { x: 1, y: 1 },
+        exit: { x: 13, y: 13 },
+        entities: [
+          { type: 'key', x: 3, y: 3, color: '#fbbf24' },
+          { type: 'door', x: 5, y: 5, color: '#fbbf24' },
+        ],
+      };
+
+      const miniCanvas = createMockCanvas(160, 160);
+      const editorCanvas = new EditorCanvas({
+        canvas,
+        level: mockLevel,
+      });
+
+      editorCanvas.renderMiniMap(miniCanvas);
+      assert(editorCanvas.miniMapTransform !== undefined, 'MiniMap transform must be defined after render');
+      assertEqual(editorCanvas.miniMapTransform.mazeW, 15, 'Maze width matches');
+
+      // Test mini-map click navigation
+      editorCanvas.handleMiniMapNavigation(80, 80, miniCanvas);
+    } catch (err) {
+      assert(false, `Mini-map render failed: ${err.message}\n${err.stack}`);
+      threwMiniMap = true;
+    }
+    assert(!threwMiniMap, 'BL-103 editor mini-map radar rendering threw an unexpected error');
   });
 });
