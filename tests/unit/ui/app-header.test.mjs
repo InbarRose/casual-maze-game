@@ -82,6 +82,19 @@ describe('UI > Universal App Navigation & Modals', () => {
     StorageManager.setSetting('smooth_rotation', false);
     assertEqual(StorageManager.getSetting('smooth_rotation'), false);
 
+    // Test keybinding preset and mouse movement mode persistence (Issue #63, BL-100)
+    StorageManager.setSetting('keybinding_preset', 'esdf');
+    assertEqual(StorageManager.getSetting('keybinding_preset'), 'esdf');
+
+    StorageManager.setSetting('mouse_move_mode', 'drag_only');
+    assertEqual(StorageManager.getSetting('mouse_move_mode'), 'drag_only');
+
+    settingsModal.refresh();
+    const keySelect = settingsModal.modalEl.querySelector('#setting-keybinding-select');
+    const mouseSelect = settingsModal.modalEl.querySelector('#setting-mouse-mode-select');
+    if (keySelect) assertEqual(keySelect.value, 'esdf');
+    if (mouseSelect) assertEqual(mouseSelect.value, 'drag_only');
+
     settingsModal.close();
     assertEqual(settingsModal.isOpen, false);
   });

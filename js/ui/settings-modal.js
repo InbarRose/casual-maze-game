@@ -146,6 +146,34 @@ export class SettingsModal {
               </label>
             </div>
 
+            <!-- Movement Keybinding Scheme (Issue #63, BL-100) -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <div>
+                <div style="font-size: 0.85rem; font-weight: 600;">Keyboard Movement Keys</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Choose your preferred directional key scheme</div>
+              </div>
+              <select id="setting-keybinding-select" style="background: rgba(0,0,0,0.5); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); color: var(--text); padding: 0.35rem 0.65rem; font-size: 0.82rem; outline: none; cursor: pointer;">
+                <option value="wasd_arrows">WASD &amp; Arrow Keys</option>
+                <option value="arrows_only">Arrow Keys Only</option>
+                <option value="esdf">ESDF (Touch Typist)</option>
+                <option value="azerty">AZERTY (ZQSD)</option>
+                <option value="numpad">Numpad (8462 / Arrows)</option>
+              </select>
+            </div>
+
+            <!-- Mouse / Touch Pointer Movement Mode (Issue #63, BL-100) -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.06);">
+              <div>
+                <div style="font-size: 0.85rem; font-weight: 600;">Mouse &amp; Tap Navigation</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Configure how floor clicks/taps move your explorer</div>
+              </div>
+              <select id="setting-mouse-mode-select" style="background: rgba(0,0,0,0.5); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); color: var(--text); padding: 0.35rem 0.65rem; font-size: 0.82rem; outline: none; cursor: pointer;">
+                <option value="click_path">Click / Tap: Pathfinding (Default)</option>
+                <option value="drag_only">Drag / Swipe Steering Only</option>
+                <option value="disabled">Disabled (Keys / Gamepad Only)</option>
+              </select>
+            </div>
+
             <!-- Enable Single-Letter Hotkeys Toggle -->
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.06);">
               <div>
@@ -159,8 +187,8 @@ export class SettingsModal {
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.8rem;">
-              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">WASD</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Arrows</kbd> : Move Explorer</div>
-              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Click / Tap</kbd> : Click to Move &amp; Interact</div>
+              <div id="settings-move-keys-label"><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">WASD</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Arrows</kbd> : Move Explorer</div>
+              <div id="settings-mouse-mode-label"><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Click / Tap</kbd> : Click to Move &amp; Interact</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Q</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">R</kbd> : Rotate Camera 90°</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">E</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Space</kbd> : Examine / Interact</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">V</kbd> : Toggle 2.5D / Top-Down</div>
@@ -394,6 +422,34 @@ export class SettingsModal {
         const mode = noteModeSelect.value;
         StorageManager.setSetting('note_display_mode', mode);
         globalEvents.emit('settings:note_mode_changed', { mode });
+      };
+    }
+
+    // Movement Keybinding Scheme Selector (Issue #63, BL-100)
+    const keybindingSelect = this.modalEl.querySelector('#setting-keybinding-select');
+    if (keybindingSelect) {
+      keybindingSelect.onchange = () => {
+        const preset = keybindingSelect.value;
+        StorageManager.setSetting('keybinding_preset', preset);
+        this._updateControlsCardLabels(preset, mouseModeSelect ? mouseModeSelect.value : 'click_path');
+        globalEvents.emit('settings:controls_changed', {
+          keybindingPreset: preset,
+          mouseMoveMode: mouseModeSelect ? mouseModeSelect.value : 'click_path',
+        });
+      };
+    }
+
+    // Pointer Movement Mode Selector (Issue #63, BL-100)
+    const mouseModeSelect = this.modalEl.querySelector('#setting-mouse-mode-select');
+    if (mouseModeSelect) {
+      mouseModeSelect.onchange = () => {
+        const mode = mouseModeSelect.value;
+        StorageManager.setSetting('mouse_move_mode', mode);
+        this._updateControlsCardLabels(keybindingSelect ? keybindingSelect.value : 'wasd_arrows', mode);
+        globalEvents.emit('settings:controls_changed', {
+          keybindingPreset: keybindingSelect ? keybindingSelect.value : 'wasd_arrows',
+          mouseMoveMode: mode,
+        });
       };
     }
 
@@ -638,10 +694,50 @@ export class SettingsModal {
     if (bgmLabel) bgmLabel.textContent = `${volBgm}%`;
     if (perspSelect) perspSelect.value = perspective;
     if (smoothRotToggle) smoothRotToggle.checked = smoothRot;
-    if (contrastToggle) contrastToggle.checked = highContrast;
+
     if (noteModeSelect) noteModeSelect.value = noteMode;
     if (hotkeysToggleEl) hotkeysToggleEl.checked = effectiveHotkeys;
     if (simpleModeCbEl) simpleModeCbEl.checked = !effectiveHotkeys;
+
+    const keybindingPreset = StorageManager.getSetting('keybinding_preset', 'wasd_arrows');
+    const mouseMoveMode = StorageManager.getSetting('mouse_move_mode', 'click_path');
+
+    const keybindingSelect = this.modalEl.querySelector('#setting-keybinding-select');
+    const mouseModeSelect = this.modalEl.querySelector('#setting-mouse-mode-select');
+
+    if (keybindingSelect) keybindingSelect.value = keybindingPreset;
+    if (mouseModeSelect) mouseModeSelect.value = mouseMoveMode;
+    this._updateControlsCardLabels(keybindingPreset, mouseMoveMode);
+  }
+
+  _updateControlsCardLabels(keybindingPreset, mouseMoveMode) {
+    if (!this.modalEl) return;
+    const moveKeysLabel = this.modalEl.querySelector('#settings-move-keys-label');
+    const mouseModeLabel = this.modalEl.querySelector('#settings-mouse-mode-label');
+
+    if (moveKeysLabel) {
+      if (keybindingPreset === 'arrows_only') {
+        moveKeysLabel.innerHTML = '<kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Arrows</kbd> : Move Explorer';
+      } else if (keybindingPreset === 'esdf') {
+        moveKeysLabel.innerHTML = '<kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">ESDF</kbd> : Move Explorer';
+      } else if (keybindingPreset === 'azerty') {
+        moveKeysLabel.innerHTML = '<kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">ZQSD</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Arrows</kbd> : Move Explorer';
+      } else if (keybindingPreset === 'numpad') {
+        moveKeysLabel.innerHTML = '<kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Numpad 8462</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Arrows</kbd> : Move';
+      } else {
+        moveKeysLabel.innerHTML = '<kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">WASD</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Arrows</kbd> : Move Explorer';
+      }
+    }
+
+    if (mouseModeLabel) {
+      if (mouseMoveMode === 'drag_only') {
+        mouseModeLabel.innerHTML = '<kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Drag / Swipe</kbd> : Drag to Steer (Tapping Ignored)';
+      } else if (mouseMoveMode === 'disabled') {
+        mouseModeLabel.innerHTML = '<kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Pointer Move</kbd> : Disabled (Keys/Gamepad Only)';
+      } else {
+        mouseModeLabel.innerHTML = '<kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Click / Tap</kbd> : Click to Move &amp; Interact';
+      }
+    }
   }
 
   open() {
