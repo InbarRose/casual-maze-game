@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Casual Maze Game — Diagnostics, Replay Theater & Test Lab</title>
   <link rel="stylesheet" href="css/main.css" />
+  <link rel="stylesheet" href="css/game.css" />
   <style>
     body {
       background-color: var(--bg-deep, #080c14);
@@ -206,87 +207,325 @@
       background: rgba(244, 63, 94, 0.08);
     }
 
-    /* Replay Theater UI */
-    .theater-layout {
-      display: grid;
-      grid-template-columns: 1fr 340px;
-      gap: 1.5rem;
-    }
-
-    @media (max-width: 900px) {
-      .theater-layout {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    .viewport-box {
-      background: #000;
-      border: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.3));
-      border-radius: var(--radius-lg, 12px);
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
-    }
-
-    #replay-canvas {
-      display: block;
+    /* Replay & Walkthrough Theater — Grand Screen Experience (BL-112) */
+    .test-container {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 1.25rem 1rem;
       width: 100%;
-      height: auto;
-      max-height: 520px;
-      aspect-ratio: 4 / 3;
     }
 
-    .playback-toolbar {
+    .theater-top-bar {
       display: flex;
+      justify-content: space-between;
       align-items: center;
       gap: 0.75rem;
-      padding: 0.75rem 1rem;
-      background: var(--bg-glass-elevated, rgba(22, 32, 50, 0.92));
+      padding: 0.75rem 1.25rem;
+      background: var(--bg-glass, rgba(13, 19, 31, 0.85));
       border: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.25));
       border-radius: var(--radius-md, 8px);
-      margin-top: 1rem;
+      margin-bottom: 0.85rem;
       flex-wrap: wrap;
     }
 
-    .scrub-timeline {
+    .theater-source-group, .theater-file-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+
+    .theater-select {
+      background: rgba(15, 23, 42, 0.9);
+      color: #fff;
+      border: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.35));
+      padding: 0.45rem 0.85rem;
+      border-radius: var(--radius-sm, 6px);
+      font-size: 0.88rem;
+      font-weight: 600;
+      min-width: 240px;
+      cursor: pointer;
+    }
+
+    .theater-level-pill {
+      font-size: 0.78rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 9999px;
+      background: rgba(56, 189, 248, 0.12);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent, #38bdf8);
+      font-weight: 700;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .replay-stage-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      width: 100%;
+    }
+
+    .replay-viewport {
+      position: relative;
+      width: 100%;
+      height: clamp(520px, 68vh, 800px);
+      background: #04070e;
+      border: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.35));
+      border-radius: var(--radius-lg, 12px);
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.7), 0 0 35px rgba(56, 189, 248, 0.12);
+      user-select: none;
+      touch-action: none;
+    }
+
+    .replay-stage-wrapper.is-fullscreen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      z-index: 99999;
+      background: #04070e;
+      display: flex;
+      flex-direction: column;
+      padding: 0;
+      margin: 0;
+    }
+
+    .replay-stage-wrapper.is-fullscreen .replay-viewport {
       flex: 1;
-      min-width: 200px;
+      height: 100%;
+      border-radius: 0;
+      border: none;
+    }
+
+    .replay-stage-wrapper.is-fullscreen .media-play-deck {
+      border-radius: 0;
+      border-left: none;
+      border-right: none;
+      border-bottom: none;
+      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.7);
+    }
+
+    .replay-viewport.is-fullscreen {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+      max-height: 100vh;
+      z-index: 99999;
+      border-radius: 0;
+      border: none;
+    }
+
+    #replay-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    /* Floating Game HUD inside Replay Viewport */
+    .replay-hud-top {
+      position: absolute;
+      top: 0.85rem;
+      left: 0.85rem;
+      right: 0.85rem;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .replay-hud-top .hud-island {
+      pointer-events: auto;
+    }
+
+    /* Tactical Minimap inside Replay Viewport */
+    .replay-minimap-container {
+      position: absolute;
+      top: 4.8rem;
+      right: 0.85rem;
+      z-index: 25;
+      pointer-events: auto;
+    }
+
+    /* Activity Feed inside Replay Viewport */
+    .replay-activity-feed {
+      position: absolute;
+      bottom: 1rem;
+      left: 0.85rem;
+      z-index: 25;
+      width: min(380px, calc(100% - 1.7rem));
+      pointer-events: auto;
+    }
+
+    /* Media Play Menu Deck */
+    .media-play-deck {
+      background: var(--bg-glass-elevated, rgba(15, 23, 42, 0.95));
+      border: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.3));
+      border-radius: var(--radius-lg, 12px);
+      padding: 0.85rem 1.25rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .replay-viewport.is-fullscreen .media-play-deck {
+      position: absolute;
+      bottom: 1rem;
+      left: 1.5rem;
+      right: 1.5rem;
+      z-index: 60;
+      backdrop-filter: blur(20px);
+    }
+
+    .media-scrubber-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .media-timeline-wrap {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .media-timeline {
+      width: 100%;
       accent-color: var(--accent, #38bdf8);
+      cursor: pointer;
+      height: 6px;
+      border-radius: 4px;
+    }
+
+    .media-time-current, .media-time-total {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.85rem;
+      color: var(--text-muted, #94a3b8);
+      min-width: 54px;
+    }
+
+    .media-time-current {
+      text-align: right;
+      color: var(--accent, #38bdf8);
+      font-weight: 700;
+    }
+
+    .media-step-pill {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.78rem;
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.2rem 0.55rem;
+      border-radius: 9999px;
+      color: #e2e8f0;
+      white-space: nowrap;
+    }
+
+    .media-controls-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .media-transport-group {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .media-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.35rem;
+      padding: 0.45rem 0.75rem;
+      border-radius: var(--radius-sm, 6px);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text, #f1f5f9);
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+
+    .media-btn:hover {
+      background: rgba(56, 189, 248, 0.15);
+      border-color: var(--accent, #38bdf8);
+      color: #fff;
+    }
+
+    .media-btn-hero {
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      border-color: rgba(56, 189, 248, 0.6);
+      color: #030712;
+      font-weight: 800;
+      padding: 0.45rem 1.15rem;
+      box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+    }
+
+    .media-btn-hero:hover {
+      box-shadow: 0 0 24px rgba(56, 189, 248, 0.6);
+      transform: translateY(-1px);
+    }
+
+    .media-action-pill {
+      font-family: var(--font-mono, monospace);
+      font-size: 0.82rem;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 0.35rem 0.75rem;
+      border-radius: var(--radius-sm, 6px);
+      color: var(--accent, #38bdf8);
+      max-width: 420px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .media-options-group {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      flex-wrap: wrap;
     }
 
     .speed-btn-group {
       display: flex;
-      gap: 0.25rem;
+      gap: 0.2rem;
     }
 
     .speed-pill {
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.1);
       color: var(--text-muted, #94a3b8);
-      padding: 0.2rem 0.6rem;
+      padding: 0.25rem 0.55rem;
       border-radius: 9999px;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .speed-pill:hover {
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.25);
     }
 
     .speed-pill.active {
       background: var(--accent, #38bdf8);
       color: #030712;
       border-color: var(--accent, #38bdf8);
-    }
-
-    .theater-sidebar {
-      background: var(--bg-glass-card, rgba(17, 24, 39, 0.78));
-      border: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.2));
-      border-radius: var(--radius-lg, 12px);
-      padding: 1.25rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
     }
 
     .diagnostic-code-box {
@@ -342,70 +581,167 @@
 
     <!-- TAB 1: REPLAY & WALKTHROUGH THEATER -->
     <section class="tab-content-panel active" id="panel-replay">
-      <div class="theater-layout">
-        <div>
-          <!-- Canvas Viewport -->
-          <div class="viewport-box">
-            <canvas id="replay-canvas" width="800" height="600"></canvas>
-            <div id="replay-status-overlay" style="position: absolute; top: 1rem; left: 1rem; display: flex; gap: 0.5rem;">
-              <span class="badge badge-cyan" id="replay-badge-state">PAUSED</span>
-              <span class="badge" id="replay-badge-step" style="background: rgba(0,0,0,0.6); color: #fff;">Step 0 / 0</span>
+      <!-- Theater Source & Actions Toolbar -->
+      <div class="theater-top-bar">
+        <div class="theater-source-group">
+          <label for="select-replay-level" style="font-size: 0.85rem; font-weight: 700;">Level:</label>
+          <select id="select-replay-level" class="theater-select">
+            <!-- Populated dynamically via JS -->
+          </select>
+          <button id="btn-compute-walkthrough" class="btn btn-primary btn-sm" title="Compute optimal solver route">
+            ✨ Compute Solver Walkthrough
+          </button>
+          <span class="theater-level-pill" id="theater-level-info">
+            <span id="theater-level-theme">🏰 Dungeon</span>
+            <span id="theater-level-par">👣 Par: 0</span>
+          </span>
+        </div>
+
+        <div class="theater-file-group">
+          <input type="file" id="input-replay-file" accept=".json" style="display: none;" />
+          <button id="btn-upload-replay" class="btn btn-secondary btn-sm" title="Load debug log or replay file" onclick="document.getElementById('input-replay-file').click()">
+            📂 Load Replay / Log JSON
+          </button>
+          <button id="btn-download-walkthrough-json" class="btn btn-secondary btn-sm" title="Export current walkthrough or run to JSON">
+            💾 Export JSON
+          </button>
+        </div>
+      </div>
+
+      <!-- Theater Stage Wrapper -->
+      <div class="replay-stage-wrapper">
+        <!-- Expansive Game Viewport -->
+        <div class="replay-viewport" id="replay-viewport" tabindex="0">
+          <canvas id="replay-canvas"></canvas>
+
+          <!-- Authentic In-Game HUD Overlay (Top Islands) -->
+          <header class="game-hud-top replay-hud-top">
+            <!-- Left Island: Level Title, Chapter, Elevation & Keys -->
+            <div class="hud-island hud-island-left">
+              <div class="hud-card" id="replay-level-card">
+                <span class="hud-title" id="replay-hud-title">🏰 Level 1: First Footsteps</span>
+                <span class="badge badge-gold" id="replay-hud-chapter">Chapter 1</span>
+                <span class="badge" id="replay-hud-elevation" style="background: rgba(56, 189, 248, 0.15); color: var(--accent);">Ground Floor</span>
+              </div>
+              <div class="hud-card inventory-card" id="replay-inventory-card" title="Carried Keys">
+                <span class="inventory-count-badge" id="replay-inventory-count">0</span>
+                <div class="inventory-list" id="replay-keys-list">
+                  <span class="inventory-empty-slot">Empty</span>
+                </div>
+              </div>
             </div>
-          </div>
 
-          <!-- Playback Controls -->
-          <div class="playback-toolbar">
-            <button id="btn-replay-reset" class="btn btn-secondary btn-sm" title="Restart [Home]">⏮ Reset</button>
-            <button id="btn-replay-prev" class="btn btn-secondary btn-sm" title="Previous Step [Left]">◀ Prev</button>
-            <button id="btn-replay-play" class="btn btn-primary btn-sm" title="Play / Pause [Space]">▶ Play</button>
-            <button id="btn-replay-next" class="btn btn-secondary btn-sm" title="Next Step [Right]">Next ▶</button>
+            <!-- Right Island: Timer, Steps, State, Perspective & Fullscreen -->
+            <div class="hud-island hud-island-right">
+              <div class="hud-card" id="replay-stats-card">
+                <div class="hud-stat">⏱ <strong id="replay-hud-timer">00:00.0</strong></div>
+                <div class="hud-stat">👣 <strong id="replay-hud-steps">0 / 0</strong></div>
+                <div class="hud-stat"><span class="badge badge-cyan" id="replay-badge-state">PAUSED</span></div>
+              </div>
 
-            <input type="range" class="scrub-timeline" id="replay-scrubber" min="0" max="0" value="0" />
+              <!-- Perspective Toggle Button -->
+              <button id="btn-replay-perspective" class="btn btn-secondary btn-sm" title="Toggle 2.5D / Top-Down View [V]">
+                📐 <span class="hide-mobile">2.5D View [V]</span>
+              </button>
 
-            <div class="speed-btn-group">
-              <button class="speed-pill" data-speed="0.5">0.5x</button>
-              <button class="speed-pill active" data-speed="1.0">1x</button>
-              <button class="speed-pill" data-speed="2.0">2x</button>
-              <button class="speed-pill" data-speed="4.0">4x</button>
+              <!-- Rotation Controls Dial -->
+              <div class="rotation-control-group" id="replay-rotation-control-group">
+                <button id="btn-replay-rotate-left" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CCW [Q]">↺</button>
+                <span id="replay-compass-badge" class="compass-badge" title="Compass Heading">🧭 N</span>
+                <button id="btn-replay-rotate-right" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CW [R]">↻</button>
+              </div>
+
+              <!-- Radar Toggle -->
+              <button id="btn-replay-minimap-toggle" class="btn btn-secondary btn-sm btn-icon" title="Toggle Radar Minimap [M]">
+                🗺️
+              </button>
+
+              <!-- Fullscreen Toggle Button -->
+              <button id="btn-replay-fullscreen" class="btn btn-secondary btn-sm btn-icon" title="Toggle Fullscreen Theater [F]">
+                ⛶
+              </button>
             </div>
+          </header>
+
+          <!-- Tactical Minimap Radar Overlay -->
+          <aside class="minimap-container replay-minimap-container" id="replay-minimap-container">
+            <div class="minimap-header">
+              <span class="minimap-title">Tactical Radar</span>
+              <button type="button" class="minimap-toggle-btn" id="btn-replay-minimap-min" title="Minimize / Expand Radar">_</button>
+            </div>
+            <div class="minimap-body">
+              <canvas id="replay-minimap-canvas" width="180" height="180"></canvas>
+            </div>
+          </aside>
+
+          <!-- Real-Time Action Activity Feed Overlay -->
+          <div class="game-activity-feed replay-activity-feed" id="replay-activity-feed" aria-live="polite">
+            <div class="activity-feed-header">
+              <span class="activity-feed-title" id="replay-feed-title">⚡ Action Feed</span>
+              <div class="activity-filter-pills" role="toolbar" aria-label="Feed category filters">
+                <button type="button" class="feed-pill active" data-filter="all" title="Show All Events">All</button>
+                <button type="button" class="feed-pill" data-filter="lore" title="Notes & Inscriptions">📜 Lore</button>
+                <button type="button" class="feed-pill" data-filter="mech" title="Switches & Gates">⚙️ Mech</button>
+                <button type="button" class="feed-pill" data-filter="item" title="Keys & Relics">🗝️ Items</button>
+              </div>
+              <div class="activity-feed-actions">
+                <button type="button" class="feed-toggle-btn" id="btn-replay-feed-toggle" title="Minimize / Expand Feed">_</button>
+              </div>
+            </div>
+            <div class="activity-feed-items" id="replay-activity-feed-items"></div>
           </div>
         </div>
 
-        <!-- Theater Sidebar Controls -->
-        <aside class="theater-sidebar">
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">Select Level to Replay:</label>
-            <select id="select-replay-level" style="width: 100%; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid var(--border-glass-bright); padding: 0.5rem; border-radius: 6px;">
-              <!-- Populated dynamically via JS -->
-            </select>
+        <!-- Media Play Menu Deck -->
+        <div class="media-play-deck" id="media-play-deck">
+          <!-- Scrubber Timeline Bar -->
+          <div class="media-scrubber-bar">
+            <span class="media-time-current" id="media-time-current">00:00.0</span>
+            <div class="media-timeline-wrap">
+              <input type="range" class="media-timeline" id="replay-scrubber" min="0" max="0" value="0" />
+            </div>
+            <span class="media-time-total" id="media-time-total">00:00.0</span>
+            <span class="media-step-pill" id="media-step-pill">Step 0 / 0</span>
           </div>
 
-          <div style="display: flex; flex-direction: column; gap: 0.5rem;">
-            <button id="btn-compute-walkthrough" class="btn btn-primary" style="width: 100%; justify-content: center;">
-              ✨ Compute Solver Walkthrough
-            </button>
-            <button id="btn-download-walkthrough-json" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center;">
-              💾 Export Walkthrough JSON
-            </button>
-          </div>
+          <!-- Controls & Status Strip -->
+          <div class="media-controls-strip">
+            <!-- Transport Controls -->
+            <div class="media-transport-group">
+              <button id="btn-replay-reset" class="media-btn" title="Restart [Home / 0]">⏮</button>
+              <button id="btn-replay-prev" class="media-btn" title="Previous Step [Left Arrow]">◀</button>
+              <button id="btn-replay-play" class="media-btn media-btn-hero" title="Play / Pause [Space]">▶ Play</button>
+              <button id="btn-replay-next" class="media-btn" title="Next Step [Right Arrow]">Next ▶</button>
+              <button id="btn-replay-end" class="media-btn" title="Jump to End [End]">⏭</button>
+            </div>
 
-          <hr style="border: none; border-top: 1px solid rgba(255,255,255,0.08);" />
+            <!-- Telemetry & Action Detail -->
+            <div class="media-action-pill" id="media-action-pill" title="Current Step Details">
+              Waiting for level selection...
+            </div>
+            <div id="replay-action-detail" style="display: none;"></div>
+            <div id="replay-badge-step" style="display: none;"></div>
 
-          <div>
-            <label style="display: block; font-size: 0.85rem; font-weight: 700; margin-bottom: 0.4rem;">Inspect Custom Game Replay:</label>
-            <p style="font-size: 0.78rem; color: var(--text-muted); margin-bottom: 0.5rem;">
-              Drop or load any exported debug log or replay JSON file to step through the exact player run:
-            </p>
-            <input type="file" id="input-replay-file" accept=".json" style="display: none;" />
-            <button id="btn-upload-replay" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center;" onclick="document.getElementById('input-replay-file').click()">
-              📂 Load Replay / Debug Log JSON
-            </button>
-          </div>
+            <!-- Options Group -->
+            <div class="media-options-group">
+              <div class="speed-btn-group">
+                <button class="speed-pill" data-speed="0.5">0.5x</button>
+                <button class="speed-pill active" data-speed="1.0">1x</button>
+                <button class="speed-pill" data-speed="2.0">2x</button>
+                <button class="speed-pill" data-speed="4.0">4x</button>
+                <button class="speed-pill" data-speed="8.0">8x</button>
+              </div>
 
-          <div id="replay-action-detail" style="font-size: 0.82rem; font-family: var(--font-mono); color: var(--accent); background: rgba(0,0,0,0.3); padding: 0.5rem; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05);">
-            Waiting for level selection...
+              <button id="btn-replay-sound" class="btn btn-secondary btn-xs media-option-btn" title="Toggle Replay Audio FX">
+                🔊 Sound: ON
+              </button>
+
+              <button id="btn-replay-loop" class="btn btn-secondary btn-xs media-option-btn" title="Toggle Continuous Loop">
+                🔁 Loop: OFF
+              </button>
+            </div>
           </div>
-        </aside>
+        </div>
       </div>
     </section>
 
@@ -515,6 +851,8 @@
     import { StorageManager } from './js/core/storage.js';
     import { ENGINE_VERSION } from './js/core/version.js';
     import { initAppHeader } from './js/ui/app-header.js';
+    import { globalEvents } from './js/core/events.js';
+    import { getKeyColorblindShape } from './js/core/constants.js';
 
     // Mount Universal App Header & Footer
     initAppHeader({ activeTab: 'test' });
@@ -561,22 +899,94 @@
     });
 
     // -------------------------------------------------------------
-    // 1. REPLAY THEATER CONTROLLER
+    // 1. REPLAY THEATER CONTROLLER (BL-112, ADR-0021)
     // -------------------------------------------------------------
+    const replayViewport = document.getElementById('replay-viewport');
     const replayCanvas = document.getElementById('replay-canvas');
-    const selectLevel = document.getElementById('select-replay-level');
+    const replayMinimapCanvas = document.getElementById('replay-minimap-canvas');
+    const replayMinimapContainer = document.getElementById('replay-minimap-container');
+    const btnMinimapMin = document.getElementById('btn-replay-minimap-min');
+    const btnMinimapToggle = document.getElementById('btn-replay-minimap-toggle');
+    const btnFullscreen = document.getElementById('btn-replay-fullscreen');
+
+    const replayHudTitle = document.getElementById('replay-hud-title');
+    const replayHudChapter = document.getElementById('replay-hud-chapter');
+    const replayHudElevation = document.getElementById('replay-hud-elevation');
+    const replayInventoryCard = document.getElementById('replay-inventory-card');
+    const replayInventoryCount = document.getElementById('replay-inventory-count');
+    const replayKeysList = document.getElementById('replay-keys-list');
+    const replayHudTimer = document.getElementById('replay-hud-timer');
+    const replayHudSteps = document.getElementById('replay-hud-steps');
+    const replayBadgeState = document.getElementById('replay-badge-state');
+    const btnPerspective = document.getElementById('btn-replay-perspective');
+    const btnRotateLeft = document.getElementById('btn-replay-rotate-left');
+    const btnRotateRight = document.getElementById('btn-replay-rotate-right');
+    const compassBadge = document.getElementById('replay-compass-badge');
+
+    const replayActivityFeed = document.getElementById('replay-activity-feed');
+    const replayActivityFeedItems = document.getElementById('replay-activity-feed-items');
+    const btnFeedToggle = document.getElementById('btn-replay-feed-toggle');
+    const feedPills = document.querySelectorAll('#replay-activity-feed .feed-pill');
+
+    const scrubber = document.getElementById('replay-scrubber');
+    const mediaTimeCurrent = document.getElementById('media-time-current');
+    const mediaTimeTotal = document.getElementById('media-time-total');
+    const mediaStepPill = document.getElementById('media-step-pill');
+    const mediaActionPill = document.getElementById('media-action-pill');
+
     const btnPlay = document.getElementById('btn-replay-play');
     const btnReset = document.getElementById('btn-replay-reset');
     const btnPrev = document.getElementById('btn-replay-prev');
     const btnNext = document.getElementById('btn-replay-next');
-    const scrubber = document.getElementById('replay-scrubber');
-    const badgeState = document.getElementById('replay-badge-state');
+    const btnEnd = document.getElementById('btn-replay-end');
+    const btnSound = document.getElementById('btn-replay-sound');
+    const btnLoop = document.getElementById('btn-replay-loop');
+    const speedPills = document.querySelectorAll('.speed-pill');
+    const selectLevel = document.getElementById('select-replay-level');
+
+    // Backward-compatibility aliases for automated test suites
+    const badgeState = replayBadgeState;
     const badgeStep = document.getElementById('replay-badge-step');
     const actionDetail = document.getElementById('replay-action-detail');
-    const speedPills = document.querySelectorAll('.speed-pill');
 
     let replayPlayer = null;
     let currentReplayData = null;
+    let replaySoundEnabled = true;
+    let currentFeedCategory = 'all';
+    let lastRenderedKeyIds = '';
+    let totalEstimatedMs = 0;
+
+    // Helper: Format milliseconds into MM:SS.s
+    function formatReplayTime(ms) {
+      const validMs = Math.max(0, Number(ms) || 0);
+      const totalSec = validMs / 1000;
+      const mins = Math.floor(totalSec / 60);
+      const secs = Math.floor(totalSec % 60);
+      const tenths = Math.floor((validMs % 1000) / 100);
+      return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${tenths}`;
+    }
+
+    // Dynamic Viewport Canvas Resizing
+    function resizeReplayCanvas() {
+      if (!replayViewport || !replayCanvas) return;
+      const rect = replayViewport.getBoundingClientRect();
+      const width = Math.max(320, Math.floor(rect.width));
+      const height = Math.max(240, Math.floor(rect.height));
+      if (replayPlayer) {
+        replayPlayer.resize(width, height);
+      } else {
+        replayCanvas.width = width;
+        replayCanvas.height = height;
+      }
+    }
+
+    if (typeof ResizeObserver !== 'undefined' && replayViewport) {
+      const resizeObserver = new ResizeObserver(() => {
+        resizeReplayCanvas();
+      });
+      resizeObserver.observe(replayViewport);
+    }
+    window.addEventListener('resize', resizeReplayCanvas);
 
     // Populate Level Selector
     if (selectLevel && ALL_LEVELS) {
@@ -589,6 +999,182 @@
       });
     }
 
+    // Filter Activity Feed Cards
+    function setFeedFilter(filter) {
+      currentFeedCategory = filter;
+      feedPills.forEach(pill => {
+        pill.classList.toggle('active', pill.dataset.filter === filter);
+      });
+      if (replayActivityFeedItems) {
+        for (const child of replayActivityFeedItems.children) {
+          const itemCat = child.dataset.category || 'info';
+          const matches = currentFeedCategory === 'all' ||
+            (currentFeedCategory === 'lore' && itemCat === 'lore') ||
+            (currentFeedCategory === 'mech' && (itemCat === 'mech' || itemCat === 'lever' || itemCat === 'door')) ||
+            (currentFeedCategory === 'item' && (itemCat === 'item' || itemCat === 'key'));
+          child.style.display = matches ? 'flex' : 'none';
+        }
+      }
+    }
+
+    feedPills.forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setFeedFilter(pill.dataset.filter);
+        if (replaySoundEnabled) audioFX.playClick();
+      });
+    });
+
+    btnFeedToggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (replayActivityFeed) {
+        const isMin = replayActivityFeed.classList.toggle('minimized');
+        btnFeedToggle.textContent = isMin ? '▲' : '_';
+      }
+      if (replaySoundEnabled) audioFX.playClick();
+    });
+
+    // Append Animated Card to Action Activity Feed
+    function logReplayActivity(message, type = 'info', icon = '⚡', category = 'info') {
+      if (!replayActivityFeedItems) return;
+      if (replayPlayer?.isSeeking) return;
+
+      const item = document.createElement('div');
+      item.className = `activity-log-item ${type}`;
+      item.dataset.category = category;
+      item.innerHTML = `<span class="activity-log-icon">${icon}</span> <span class="activity-log-text">${message}</span>`;
+
+      const matches = currentFeedCategory === 'all' ||
+        (currentFeedCategory === 'lore' && category === 'lore') ||
+        (currentFeedCategory === 'mech' && (category === 'mech' || category === 'lever' || category === 'door')) ||
+        (currentFeedCategory === 'item' && (category === 'item' || category === 'key'));
+      if (!matches) {
+        item.style.display = 'none';
+      }
+
+      replayActivityFeedItems.appendChild(item);
+
+      while (replayActivityFeedItems.children.length > 6) {
+        replayActivityFeedItems.removeChild(replayActivityFeedItems.firstChild);
+      }
+
+      setTimeout(() => {
+        item.style.opacity = '0';
+        item.style.transform = 'translateY(-8px)';
+        setTimeout(() => item.remove(), 400);
+      }, 4500);
+    }
+
+    // Connect Global Event Bus to Replay Activity Feed & Audio
+    globalEvents.on('key:collected', (data) => {
+      if (replaySoundEnabled && !replayPlayer?.isSeeking) audioFX.playKeyPickup();
+      const coords = (data.x !== undefined && data.y !== undefined) ? ` at (${data.x}, ${data.y})` : '';
+      logReplayActivity(`Collected <strong>${data.name || 'Key'}</strong>${coords}`, 'key-event', '🗝️', 'item');
+    });
+
+    globalEvents.on('door:unlocked', (data) => {
+      if (replaySoundEnabled && !replayPlayer?.isSeeking) audioFX.playDoorUnlock();
+      const coords = (data.x !== undefined && data.y !== undefined) ? ` at (${data.x}, ${data.y})` : '';
+      logReplayActivity(`Unlocked <strong>${data.doorName || 'Gate'}</strong>${coords}`, 'door-event', '🔓', 'mech');
+    });
+
+    globalEvents.on('door:locked', (data) => {
+      if (replaySoundEnabled && !replayPlayer?.isSeeking) audioFX.playHazardHit();
+      const coords = (data.x !== undefined && data.y !== undefined) ? ` at (${data.x}, ${data.y})` : '';
+      logReplayActivity(`<strong>${data.doorName || 'Gate'}</strong>${coords} is locked!`, 'locked-warn', '🔒', 'mech');
+    });
+
+    globalEvents.on('lever:toggled', (data) => {
+      if (replaySoundEnabled && !replayPlayer?.isSeeking) audioFX.playLeverToggle(data.state);
+      const stateName = data.state ? 'ON' : 'OFF';
+      const coords = (data.x !== undefined && data.y !== undefined) ? ` at (${data.x}, ${data.y})` : '';
+      logReplayActivity(`<strong>${data.name || 'Switch'}</strong>${coords} toggled ${stateName}`, data.state ? 'lever-on' : 'lever-off', data.state ? '⚡' : '🔌', 'mech');
+    });
+
+    globalEvents.on('teleport:used', (data) => {
+      if (replaySoundEnabled && !replayPlayer?.isSeeking && audioFX.playTeleport) audioFX.playTeleport();
+      logReplayActivity(`Teleported to (${data.x}, ${data.y})`, 'teleport-event', '🌀', 'mech');
+    });
+
+    globalEvents.on('player:elevation_changed', (data) => {
+      const elName = data.elevation === 1 ? 'Bridge (Elevation 1)' : 'Ground Floor';
+      logReplayActivity(`Ascended to <strong>${elName}</strong>`, 'elevation-event', '🪜', 'mech');
+    });
+
+    globalEvents.on('note:examined', (data) => {
+      if (replaySoundEnabled && !replayPlayer?.isSeeking && audioFX.playNoteRead) audioFX.playNoteRead();
+      logReplayActivity(`Inspected: <em>"${data.title || 'Ancient Inscription'}"</em>`, 'lore-event', '📜', 'lore');
+    });
+
+    // In-Game Floating HUD Synchronizer
+    function handleReplayStateUpdate(state) {
+      if (!state) return;
+
+      if (replayHudElevation && state.elevation) {
+        replayHudElevation.textContent = state.elevation;
+      }
+      if (replayHudTimer && state.time !== undefined) {
+        replayHudTimer.textContent = formatReplayTime(state.time);
+      }
+      if (compassBadge && state.compassHeading) {
+        compassBadge.textContent = `🧭 ${state.compassHeading}`;
+      }
+      if (btnPerspective && state.cameraMode) {
+        const isAngled = state.cameraMode === 'angled';
+        btnPerspective.innerHTML = isAngled
+          ? `📐 <span class="hide-mobile">2.5D View [V]</span>`
+          : `🗺️ <span class="hide-mobile">Top-Down [V]</span>`;
+        btnPerspective.title = isAngled
+          ? 'Current: Angled 2.5D View (Press V to switch to Top-Down)'
+          : 'Current: Top-Down View (Press V to switch to Angled 2.5D)';
+        btnPerspective.classList.toggle('btn-primary', isAngled);
+        btnPerspective.classList.toggle('btn-secondary', !isAngled);
+      }
+
+      // Sync Carried Inventory Keys with Colorblind Glyphs
+      const heldKeyIds = state.inventory || [];
+      const carriedItemIds = (state.carriedItems || []).map(i => i.id || i.name);
+      const keyFingerprint = heldKeyIds.join(',') + '|' + carriedItemIds.join(',');
+
+      if (keyFingerprint !== lastRenderedKeyIds && replayKeysList) {
+        lastRenderedKeyIds = keyFingerprint;
+        replayKeysList.innerHTML = '';
+        const totalCount = heldKeyIds.length + carriedItemIds.length;
+        if (replayInventoryCount) replayInventoryCount.textContent = String(totalCount);
+        if (replayInventoryCard) replayInventoryCard.classList.toggle('has-items', totalCount > 0);
+
+        if (totalCount > 0) {
+          if (Array.isArray(state.keys)) {
+            for (const key of state.keys) {
+              const shapeInfo = getKeyColorblindShape(key.color || key.name || key.id);
+              const pill = document.createElement('div');
+              pill.className = 'key-pill';
+              pill.style.borderColor = key.color || '#fbbf24';
+              pill.style.boxShadow = `0 0 10px ${key.color ? key.color + '60' : 'rgba(251,191,36,0.35)'}`;
+              pill.title = `${key.name || 'Key'} (${shapeInfo.label} Glyph)`;
+              pill.innerHTML = `<span class="key-shape-badge" style="color:${key.color || '#fbbf24'};">${shapeInfo.symbol}</span> <span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 8px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
+              replayKeysList.appendChild(pill);
+            }
+          }
+          if (Array.isArray(state.carriedItems)) {
+            for (const item of state.carriedItems) {
+              const itemPill = document.createElement('div');
+              itemPill.className = 'key-pill';
+              itemPill.style.borderColor = item.color || '#f97316';
+              const icon = item.itemType === 'torch' ? '🔥' : (item.itemType === 'relic' ? '👑' : '💎');
+              itemPill.innerHTML = `<span>${icon}</span> <span class="key-name">${item.name || 'Item'}</span>`;
+              replayKeysList.appendChild(itemPill);
+            }
+          }
+        } else {
+          const emptySpan = document.createElement('span');
+          emptySpan.className = 'inventory-empty-slot';
+          emptySpan.textContent = 'Empty';
+          replayKeysList.appendChild(emptySpan);
+        }
+      }
+    }
+
     function loadReplayPayload(level, replay) {
       currentReplayData = replay;
       if (selectLevel) selectLevel.value = String(level.id);
@@ -598,11 +1184,28 @@
         assetLoader.preloadTheme(level.config.theme).catch(() => {});
       }
 
+      // Update Top HUD Level Information
+      if (replayHudTitle) {
+        replayHudTitle.textContent = `🏰 ${level.title || ('Level ' + level.id)}`;
+      }
+      if (replayHudChapter) {
+        const chapterNum = level.chapter || (String(level.id).startsWith('story') ? 'Story' : (String(level.id).startsWith('tutorial') ? 'Tutorial' : 'Chapter 1'));
+        replayHudChapter.textContent = typeof chapterNum === 'number' ? `Chapter ${chapterNum}` : chapterNum;
+      }
+
+      const actions = replay?.actions || [];
+      const totalSteps = actions.length;
+      totalEstimatedMs = actions[totalSteps - 1]?.elapsedMs || (totalSteps * 280);
+
       if (!replayPlayer) {
         replayPlayer = new ReplayPlayer({
           canvas: replayCanvas,
+          minimapCanvas: replayMinimapCanvas,
           level,
           replay,
+          uiCallbacks: {
+            onStateUpdate: handleReplayStateUpdate,
+          },
           onStep: handlePlayerStep,
           onStateChange: handlePlayerStateChange,
         });
@@ -610,9 +1213,16 @@
         replayPlayer.load(level, replay);
       }
 
-      scrubber.max = replay.actions.length;
+      scrubber.max = totalSteps;
       scrubber.value = 0;
-      updateStepUI(0, replay.actions.length, null);
+      updateStepUI(0, totalSteps, null);
+      resizeReplayCanvas();
+
+      // Reset activity feed with welcome banner
+      if (replayActivityFeedItems) {
+        replayActivityFeedItems.innerHTML = '';
+      }
+      logReplayActivity(`Ready: Loaded <strong>${level.title || ('Level ' + level.id)}</strong> (${totalSteps} steps)`, 'info', '🎬', 'mech');
     }
 
     function parseReplayOrLog(rawJson) {
@@ -673,6 +1283,21 @@
     }
 
     function updateStepUI(step, total, action) {
+      const timeMs = action ? action.elapsedMs : 0;
+      if (mediaTimeCurrent) mediaTimeCurrent.textContent = formatReplayTime(timeMs);
+      if (mediaTimeTotal) mediaTimeTotal.textContent = formatReplayTime(totalEstimatedMs);
+      if (mediaStepPill) mediaStepPill.textContent = `Step ${step} / ${total}`;
+      if (replayHudSteps) replayHudSteps.textContent = `${step} / ${total}`;
+
+      if (mediaActionPill) {
+        if (action) {
+          mediaActionPill.textContent = `Step ${step}: ${action.action.toUpperCase()} ${action.direction || ''} ➔ (${action.to.x}, ${action.to.y}, Z=${action.to.elevation})`;
+        } else {
+          mediaActionPill.textContent = `Ready. Total steps: ${total}`;
+        }
+      }
+
+      // Backward compatibility
       if (badgeStep) badgeStep.textContent = `Step ${step} / ${total}`;
       if (actionDetail) {
         if (action) {
@@ -683,34 +1308,59 @@
       }
     }
 
-    // Playback Button Listeners
+    // Media Play Deck Transport Controls
     btnPlay?.addEventListener('click', () => {
-      audioFX.playClick();
+      if (replaySoundEnabled) audioFX.playClick();
       replayPlayer?.togglePlay();
     });
 
     btnReset?.addEventListener('click', () => {
-      audioFX.playClick();
+      if (replaySoundEnabled) audioFX.playClick();
       replayPlayer?.restart();
+      logReplayActivity('Reset to beginning', 'info', '⏮', 'mech');
     });
 
     btnPrev?.addEventListener('click', () => {
-      audioFX.playClick();
+      if (replaySoundEnabled) audioFX.playClick();
       replayPlayer?.stepBackward();
     });
 
     btnNext?.addEventListener('click', () => {
-      audioFX.playClick();
+      if (replaySoundEnabled) audioFX.playClick();
       replayPlayer?.stepForward();
     });
 
+    btnEnd?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      replayPlayer?.jumpToEnd();
+      logReplayActivity('Jumped to walkthrough end', 'info', '⏭', 'mech');
+    });
+
     scrubber?.addEventListener('input', (e) => {
-      replayPlayer?.seekTo(Number(e.target.value));
+      const targetStep = Number(e.target.value);
+      replayPlayer?.seekTo(targetStep);
+      logReplayActivity(`Seeked to Step ${targetStep}`, 'info', '⏩', 'mech');
+    });
+
+    btnSound?.addEventListener('click', () => {
+      audioFX.playClick();
+      replaySoundEnabled = !replaySoundEnabled;
+      btnSound.textContent = replaySoundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
+      btnSound.classList.toggle('active', replaySoundEnabled);
+    });
+
+    btnLoop?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      if (replayPlayer) {
+        const isLoop = replayPlayer.toggleLoop();
+        btnLoop.textContent = isLoop ? '🔁 Loop: ON' : '🔁 Loop: OFF';
+        btnLoop.classList.toggle('active', isLoop);
+      }
     });
 
     speedPills.forEach(pill => {
       pill.addEventListener('click', () => {
-        audioFX.playClick();
+        if (replaySoundEnabled) audioFX.playClick();
         speedPills.forEach(p => p.classList.remove('active'));
         pill.classList.add('active');
         const speed = parseFloat(pill.dataset.speed);
@@ -718,19 +1368,108 @@
       });
     });
 
+    // Camera Perspective & Rotation Dial Controls
+    btnPerspective?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      replayPlayer?.togglePerspective();
+    });
+
+    btnRotateLeft?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      replayPlayer?.rotateLeft();
+    });
+
+    btnRotateRight?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      replayPlayer?.rotateRight();
+    });
+
+    // Tactical Radar Minimap Controls
+    btnMinimapToggle?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      if (replayMinimapContainer) {
+        const isHidden = replayMinimapContainer.style.display === 'none';
+        replayMinimapContainer.style.display = isHidden ? '' : 'none';
+        btnMinimapToggle.classList.toggle('active', isHidden);
+      }
+    });
+
+    btnMinimapMin?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      if (replayMinimapContainer) {
+        const isMin = replayMinimapContainer.classList.toggle('minimized');
+        btnMinimapMin.textContent = isMin ? '▲' : '_';
+      }
+    });
+
+    // Fullscreen Theater Mode
+    btnFullscreen?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      const stage = document.querySelector('.replay-stage-wrapper');
+      if (!stage) return;
+      const isFs = stage.classList.toggle('is-fullscreen');
+      btnFullscreen.textContent = isFs ? '✕' : '⛶';
+      btnFullscreen.title = isFs ? 'Exit Fullscreen [F / Esc]' : 'Toggle Fullscreen Theater [F]';
+      setTimeout(resizeReplayCanvas, 50);
+    });
+
+    // Keyboard Shortcuts (Space, Arrows, Home, End, V, Q/R, M, F, Esc)
+    window.addEventListener('keydown', (e) => {
+      const activeTag = document.activeElement?.tagName;
+      if (activeTag === 'INPUT' || activeTag === 'TEXTAREA' || activeTag === 'SELECT') return;
+
+      const stage = document.querySelector('.replay-stage-wrapper');
+      const isFs = stage?.classList.contains('is-fullscreen');
+
+      if (e.key === ' ' || e.code === 'Space') {
+        e.preventDefault();
+        replayPlayer?.togglePlay();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        replayPlayer?.stepBackward();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        replayPlayer?.stepForward();
+      } else if (e.key === 'Home' || e.key === '0') {
+        e.preventDefault();
+        replayPlayer?.restart();
+      } else if (e.key === 'End') {
+        e.preventDefault();
+        replayPlayer?.jumpToEnd();
+      } else if (e.key === 'v' || e.key === 'V') {
+        e.preventDefault();
+        replayPlayer?.togglePerspective();
+      } else if (e.key === 'q' || e.key === 'Q') {
+        e.preventDefault();
+        replayPlayer?.rotateLeft();
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        replayPlayer?.rotateRight();
+      } else if (e.key === 'm' || e.key === 'M') {
+        e.preventDefault();
+        btnMinimapToggle?.click();
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        btnFullscreen?.click();
+      } else if (e.key === 'Escape' && isFs) {
+        e.preventDefault();
+        btnFullscreen?.click();
+      }
+    });
+
     selectLevel?.addEventListener('change', (e) => {
-      audioFX.playClick();
+      if (replaySoundEnabled) audioFX.playClick();
       initReplayForLevel(e.target.value);
     });
 
     document.getElementById('btn-compute-walkthrough')?.addEventListener('click', () => {
-      audioFX.playClick();
+      if (replaySoundEnabled) audioFX.playClick();
       if (selectLevel) initReplayForLevel(selectLevel.value);
       showToast('Computed optimal solver walkthrough!', 'success');
     });
 
     document.getElementById('btn-download-walkthrough-json')?.addEventListener('click', () => {
-      audioFX.playClick();
+      if (replaySoundEnabled) audioFX.playClick();
       if (!currentReplayData) return;
       const blob = new Blob([JSON.stringify(currentReplayData, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
@@ -765,18 +1504,18 @@
     });
 
     // Viewport Drag-and-Drop Replay / Debug Log
-    const viewportBox = document.querySelector('.viewport-box');
-    if (viewportBox) {
-      viewportBox.addEventListener('dragover', (e) => {
+    const dropZones = [document.querySelector('.replay-stage-wrapper'), replayViewport].filter(Boolean);
+    dropZones.forEach(zone => {
+      zone.addEventListener('dragover', (e) => {
         e.preventDefault();
-        viewportBox.style.borderColor = 'var(--accent, #38bdf8)';
+        if (replayViewport) replayViewport.style.borderColor = 'var(--accent, #38bdf8)';
       });
-      viewportBox.addEventListener('dragleave', () => {
-        viewportBox.style.borderColor = '';
+      zone.addEventListener('dragleave', () => {
+        if (replayViewport) replayViewport.style.borderColor = '';
       });
-      viewportBox.addEventListener('drop', (e) => {
+      zone.addEventListener('drop', (e) => {
         e.preventDefault();
-        viewportBox.style.borderColor = '';
+        if (replayViewport) replayViewport.style.borderColor = '';
         const file = e.dataTransfer.files[0];
         if (file) {
           const reader = new FileReader();
@@ -793,7 +1532,7 @@
           reader.readAsText(file);
         }
       });
-    }
+    });
 
     // Process URL Query Parameters (mode, level, source, autoplay)
     const urlParams = new URLSearchParams(window.location.search);
