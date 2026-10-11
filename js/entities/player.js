@@ -464,6 +464,19 @@ export class Player {
   }
 
   /**
+   * Render 2.5D explorer sprite centered at (screenX, screenY)
+   * Compatibility alias for profile and UI previews (BL-115)
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {number} screenX
+   * @param {number} screenY
+   * @param {number} [tileSize=32]
+   * @param {number} [rotationAngle=0]
+   */
+  drawExplorerSprite(ctx, screenX, screenY, tileSize = 32, rotationAngle = 0) {
+    this.renderAngledExplorer(ctx, screenX, screenY, tileSize, rotationAngle);
+  }
+
+  /**
    * Render 2.5D Angled Explorer (Flannel shirt, blue jeans, brown backpack)
    * @param {CanvasRenderingContext2D} ctx
    * @param {number} screenX

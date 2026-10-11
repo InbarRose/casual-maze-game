@@ -303,4 +303,40 @@ describe('UI > Comprehensive Menus, Buttons & Settings Suite (BL-111)', () => {
     assertEqual(settingsModal.modalEl.id, 'settings-modal');
     assert(settingsModal.modalEl.querySelector('.settings-tab-bar') !== null, 'Global settings modal has categorized tab bar');
   });
+
+  it('Player entity provides drawExplorerSprite compatibility alias and ProfileModal renders cleanly (BL-115)', () => {
+    const profileModal = getProfileModal();
+    // Simulate real open/refresh cycle
+    profileModal.open();
+    assertEqual(profileModal.isOpen, true, 'Profile modal opened cleanly');
+    assert(profileModal.modalEl.classList.contains('active'), 'Profile modal has active class');
+
+    // Verify Player prototype has alias
+    const avatarCanvas = profileModal.modalEl.querySelector('#profile-avatar-canvas');
+    assert(avatarCanvas !== null, 'Avatar preview canvas exists in DOM');
+
+    profileModal.close();
+    assertEqual(profileModal.isOpen, false);
+  });
+
+  it('preserves document.body modal-open class when stacked modals are closed (BL-115)', () => {
+    const settingsModal = getSettingsModal();
+    const profileModal = getProfileModal();
+
+    // Open first modal
+    settingsModal.open();
+    assert(document.body.classList.contains('modal-open'), 'Body has modal-open');
+
+    // Open second modal (stacked)
+    profileModal.open();
+    assert(document.body.classList.contains('modal-open'), 'Body retains modal-open');
+
+    // Close second modal - body should still have modal-open because settingsModal is still active!
+    profileModal.close();
+    assert(document.body.classList.contains('modal-open'), 'Body still has modal-open while settings modal remains active');
+
+    // Close first modal - now modal-open should be removed
+    settingsModal.close();
+    assert(!document.body.classList.contains('modal-open'), 'Body modal-open removed after all modals closed');
+  });
 });

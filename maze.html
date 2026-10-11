@@ -149,6 +149,16 @@
           </button>
         </div>
 
+        <!-- Settings Quick Button (BL-115) -->
+        <button id="hud-btn-settings" class="btn btn-secondary btn-sm" title="Open Game Settings [Audio, Video, Controls] [O]">
+          ⚙️ <span class="hide-mobile">Settings</span>
+        </button>
+
+        <!-- Player Profile Quick Button (BL-115) -->
+        <button id="hud-btn-profile" class="btn btn-secondary btn-sm profile-pill-btn" title="Open Player Profile &amp; Save Management">
+          <span id="hud-profile-avatar">🧭</span> <span class="hide-mobile" id="hud-profile-name">Explorer</span>
+        </button>
+
         <!-- Pause / Game Menu Button -->
         <button id="btn-open-menu" class="btn btn-primary btn-sm" title="Open Game Menu & Options (Esc / P)">
           ⏸️ <span class="hide-mobile">Menu [P]</span>
@@ -684,6 +694,7 @@
     import { audioFX } from './js/ui/audio-fx.js';
     import { GameMenu } from './js/ui/game-menu.js';
     import { getKeyColorblindShape } from './js/core/constants.js';
+    import { getSettingsModal, getProfileModal } from './js/ui/app-header.js';
 
     // Migrate storage schema on startup (BL-36)
     StorageManager.migrateSaveData();
@@ -2044,6 +2055,14 @@
       if (e.code === 'KeyJ' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         toggleJournalModal();
+      } else if (e.code === 'KeyO' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        audioFX.playModalOpen();
+        getSettingsModal().open();
+      } else if (e.code === 'KeyU' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        audioFX.playModalOpen();
+        getProfileModal().open();
       } else if (e.code === 'KeyH' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         btnHudCollapse?.click();
@@ -2137,12 +2156,20 @@
         window.location.href = 'index.html';
       },
       isOtherModalOpen: () => {
+        const settingsEl = document.getElementById('settings-modal');
+        const profileEl = document.getElementById('profile-modal');
+        const feedbackEl = document.getElementById('feedback-modal');
+        const guideEl = document.getElementById('guide-modal');
         return (
           (activityModal && activityModal.classList.contains('active')) ||
           (victoryModal && victoryModal.classList.contains('active')) ||
           (restartConfirmModal && restartConfirmModal.classList.contains('active')) ||
           (inspectModal && inspectModal.classList.contains('active')) ||
-          (pedestalModal && pedestalModal.classList.contains('active'))
+          (pedestalModal && pedestalModal.classList.contains('active')) ||
+          (settingsEl && settingsEl.classList.contains('active')) ||
+          (profileEl && profileEl.classList.contains('active')) ||
+          (feedbackEl && feedbackEl.classList.contains('active')) ||
+          (guideEl && guideEl.classList.contains('active'))
         );
       },
     });
@@ -2193,6 +2220,41 @@
           audioFX.playModalOpen();
           promptQuitConfirmation();
         }
+      });
+    }
+
+    // Direct HUD Access: Settings & Player Profile (BL-115)
+    const hudBtnSettings = document.getElementById('hud-btn-settings');
+    const hudBtnProfile = document.getElementById('hud-btn-profile');
+    const hudProfileAvatar = document.getElementById('hud-profile-avatar');
+    const hudProfileName = document.getElementById('hud-profile-name');
+
+    const updateHudProfile = (profile) => {
+      const p = profile || StorageManager.getPlayerProfile();
+      if (hudProfileAvatar) hudProfileAvatar.textContent = p.rankIcon || '🧭';
+      if (hudProfileName) hudProfileName.textContent = p.name || 'Explorer';
+    };
+    updateHudProfile();
+
+    window.addEventListener('player-profile:updated', (e) => {
+      updateHudProfile(e.detail);
+    });
+
+    if (hudBtnSettings) {
+      hudBtnSettings.addEventListener('click', () => {
+        audioFX.playModalOpen();
+        setViewObscured(true, 'settings_modal');
+        const modal = getSettingsModal();
+        modal.open();
+      });
+    }
+
+    if (hudBtnProfile) {
+      hudBtnProfile.addEventListener('click', () => {
+        audioFX.playModalOpen();
+        setViewObscured(true, 'profile_modal');
+        const modal = getProfileModal();
+        modal.open();
       });
     }
 

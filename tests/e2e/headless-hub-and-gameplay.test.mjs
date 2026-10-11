@@ -343,6 +343,113 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
     await ch2Page.close();
   });
 
+  it('verifies Settings and Player Profile modals open cleanly from Hub, Game HUD, Pause Drawer, and Architect Studio (BL-115)', async () => {
+    if (!browserAvailable) return;
+
+    // 1. Hub (index.html): Header Settings, Hero Settings, and Header Profile
+    const hubPage = await session.openPage('index.html');
+    await new Promise(r => setTimeout(r, 1200));
+
+    // Test Hero Settings
+    const heroSettingsRes = await hubPage.evaluate(`(() => {
+      document.getElementById('btn-hero-settings')?.click();
+      const modal = document.getElementById('settings-modal');
+      const open = modal && modal.style.display === 'flex' && modal.classList.contains('active');
+      document.getElementById('btn-close-settings')?.click();
+      return open;
+    })()`);
+    assert(heroSettingsRes, 'Settings modal opened from Hero Settings button in Hub');
+
+    // Test App Header Settings
+    const headerSettingsRes = await hubPage.evaluate(`(() => {
+      document.getElementById('btn-app-settings')?.click();
+      const modal = document.getElementById('settings-modal');
+      const open = modal && modal.style.display === 'flex' && modal.classList.contains('active');
+      document.getElementById('btn-close-settings')?.click();
+      return open;
+    })()`);
+    assert(headerSettingsRes, 'Settings modal opened from App Header Settings button in Hub');
+
+    // Test App Header Profile
+    const headerProfileRes = await hubPage.evaluate(`(() => {
+      document.getElementById('btn-app-profile')?.click();
+      const modal = document.getElementById('profile-modal');
+      const open = modal && modal.style.display === 'flex' && modal.classList.contains('active');
+      document.getElementById('btn-close-profile')?.click();
+      return open;
+    })()`);
+    assert(headerProfileRes, 'Player Profile modal opened from App Header Profile button in Hub without error');
+    await hubPage.close();
+
+    // 2. Active Game View (maze.html?id=1): HUD buttons and Pause Drawer buttons
+    const gamePage = await session.openPage('maze.html?id=1');
+    await new Promise(r => setTimeout(r, 1200));
+
+    // Test In-Game HUD Settings button
+    const hudSettingsRes = await gamePage.evaluate(`(() => {
+      document.getElementById('hud-btn-settings')?.click();
+      const modal = document.getElementById('settings-modal');
+      const open = modal && modal.style.display === 'flex' && modal.classList.contains('active');
+      document.getElementById('btn-close-settings')?.click();
+      return open;
+    })()`);
+    assert(hudSettingsRes, 'Settings modal opened from direct HUD button in maze.html');
+
+    // Test In-Game HUD Profile button
+    const hudProfileRes = await gamePage.evaluate(`(() => {
+      document.getElementById('hud-btn-profile')?.click();
+      const modal = document.getElementById('profile-modal');
+      const open = modal && modal.style.display === 'flex' && modal.classList.contains('active');
+      document.getElementById('btn-close-profile')?.click();
+      return open;
+    })()`);
+    assert(hudProfileRes, 'Player Profile modal opened from direct HUD button in maze.html');
+
+    // Test Pause Drawer Settings and Profile buttons
+    const pauseMenuRes = await gamePage.evaluate(`(() => {
+      document.getElementById('btn-open-menu')?.click();
+      // Click pause settings
+      document.getElementById('btn-pause-settings')?.click();
+      const settingsModal = document.getElementById('settings-modal');
+      const settingsOpen = settingsModal && settingsModal.style.display === 'flex';
+      document.getElementById('btn-close-settings')?.click();
+
+      // Click pause profile
+      document.getElementById('btn-pause-profile')?.click();
+      const profileModal = document.getElementById('profile-modal');
+      const profileOpen = profileModal && profileModal.style.display === 'flex';
+      document.getElementById('btn-close-profile')?.click();
+
+      // Resume game
+      document.getElementById('btn-pause-close')?.click();
+      return { settingsOpen, profileOpen };
+    })()`);
+    assert(pauseMenuRes.settingsOpen, 'Settings modal opened from pause drawer in maze.html');
+    assert(pauseMenuRes.profileOpen, 'Player Profile modal opened from pause drawer in maze.html');
+    await gamePage.close();
+
+    // 3. Architect Studio (editor.html): Toolbar Settings and Profile buttons
+    const edPage = await session.openPage('editor.html');
+    await new Promise(r => setTimeout(r, 1200));
+
+    const edRes = await edPage.evaluate(`(() => {
+      document.getElementById('btn-editor-settings')?.click();
+      const settingsModal = document.getElementById('settings-modal');
+      const settingsOpen = settingsModal && settingsModal.style.display === 'flex';
+      document.getElementById('btn-close-settings')?.click();
+
+      document.getElementById('btn-editor-profile')?.click();
+      const profileModal = document.getElementById('profile-modal');
+      const profileOpen = profileModal && profileModal.style.display === 'flex';
+      document.getElementById('btn-close-profile')?.click();
+
+      return { settingsOpen, profileOpen };
+    })()`);
+    assert(edRes.settingsOpen, 'Settings modal opened from Architect Studio toolbar');
+    assert(edRes.profileOpen, 'Player Profile modal opened from Architect Studio toolbar');
+    await edPage.close();
+  });
+
   it('cleans up headless browser session', async () => {
     if (session) {
       await session.stop();

@@ -6,7 +6,7 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Milestone: `v1.19.0` (In Progress)
+### Current Milestone: `v1.20.0` (In Progress)
 
 - [x] **Level Design Philosophy & Architectural Principles Documentation**:
   - Published [`docs/LEVEL_DESIGN_PHILOSOPHY.md`](LEVEL_DESIGN_PHILOSOPHY.md) establishing the 4-stage *Kishōtenketsu* methodology (Introduction, Development, Twist, Synthesis) for labyrinth design.
@@ -570,6 +570,15 @@ This document tracks project milestones, current release status, active developm
   - Implemented 4-second initialization watchdog in `maze.html` providing a floating recovery dock with Retry and Return to Hub actions.
   - Built zero-dependency headless browser E2E test suite (`tests/e2e/headless-hub-and-gameplay.test.mjs` and runner `tests/suites/e2e.mjs`) validating Hub navigation, mode switcher tabs, level selection, and live player movement with zero console errors.
   - Configured `npm run test:e2e` in GitHub Actions CI workflow (`.github/workflows/ci.yml`) as a mandatory quality gate on all PRs to `main` (ADR-0026).
+- [x] **Universal Settings & Player Profile Accessibility, Stacked Modal Resilience & Automatic Version Incrementing (`BL-115`)**:
+  - Resolved `TypeError: previewPlayer.drawExplorerSprite is not a function` in `ProfileModal.refresh()`, eliminating silent opening failures across all pages.
+  - Added `drawExplorerSprite` method on `Player` entity and guarded avatar canvas rendering with non-fatal `try...catch` boundaries.
+  - Added direct in-game HUD triggers (`#hud-btn-settings`, `#hud-btn-profile`) in `maze.html` right navigation island with hotkeys (<kbd>O</kbd>, <kbd>U</kbd>).
+  - Added dedicated Architect Studio toolbar triggers (`#btn-editor-settings`, `#btn-editor-profile`) in `editor.html`.
+  - Updated `isOtherModalOpen()` in `maze.html` to check active settings and profile modals, preventing unwanted pause toggling on <kbd>Esc</kbd>.
+  - Resolved modal stacking scroll lock bug by verifying if remaining `.modal-backdrop.active` exist before removing `modal-open` from `document.body`.
+  - Bumped engine and package version to `v1.20.0` with strict automated version incrementing discipline.
+  - Expanded unit tests (`menus-and-buttons.test.mjs`) and headless browser E2E tests (`headless-hub-and-gameplay.test.mjs`) verifying clean modal interactivity across all surfaces (ADR-0027).
 
 ### Strategic Architecture Initiative: Modernization & SOLID Refactoring (`v2.0.0` Roadmap)
 *Objective: Transform monolithic "god-classes" and procedural switch blocks into simple, elegant, explainable, highly testable, readable, and robust Object-Oriented modules adhering strictly to SOLID principles and clean architectural separation.*
@@ -626,6 +635,7 @@ All architectural decisions are documented in `docs/adr/`:
 | [0024](adr/0024-walkthrough-replay-fullscreen-theater-and-activity-feed.md) | Walkthrough Replay Fullscreen Grand Theater & Synchronized Action Activity Feed | Accepted | 2026-10-11 |
 | [0025](adr/0025-component-coverage-scoring-and-thematic-asset-unification.md) | Platform Component Audit Test Coverage, Subsystem Quality Scoring & Thematic Asset Unification | Accepted | 2026-10-11 |
 | [0026](adr/0026-resilient-level-loader-and-headless-browser-ci.md) | Resilient Level Loader Strategy, Fallback Watchdog, and Headless Browser CI Gating | Accepted | 2026-10-11 |
+| [0027](adr/0027-universal-settings-profile-access-and-versioning.md) | Universal Settings and Player Profile Accessibility, Stacked Modal Resilience, and Continuous Version Incrementing | Accepted | 2026-10-11 |
 
 ---
 

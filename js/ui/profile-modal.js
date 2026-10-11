@@ -414,17 +414,25 @@ export class ProfileModal {
     }
 
     // 5. Draw Avatar Preview Canvas
-    const avatarCanvas = this.modalEl.querySelector('#profile-avatar-canvas');
-    if (avatarCanvas && typeof avatarCanvas.getContext === 'function') {
-      const actx = avatarCanvas.getContext('2d');
-      if (actx) {
-        actx.clearRect(0, 0, 80, 80);
-        // Create preview player instance
-        const previewPlayer = new Player(0, 0, 0, 48, [], currentOutfitId, custom);
-        previewPlayer.facing = 'south';
-        // Draw 2.5D explorer centered
-        previewPlayer.drawExplorerSprite(actx, 40, 44, 48, 0);
+    try {
+      const avatarCanvas = this.modalEl.querySelector('#profile-avatar-canvas');
+      if (avatarCanvas && typeof avatarCanvas.getContext === 'function') {
+        const actx = avatarCanvas.getContext('2d');
+        if (actx) {
+          actx.clearRect(0, 0, 80, 80);
+          // Create preview player instance
+          const previewPlayer = new Player(0, 0, 0, 48, [], currentOutfitId, custom);
+          previewPlayer.facing = 'south';
+          // Draw 2.5D explorer centered
+          if (typeof previewPlayer.drawExplorerSprite === 'function') {
+            previewPlayer.drawExplorerSprite(actx, 40, 44, 48, 0);
+          } else if (typeof previewPlayer.renderAngledExplorer === 'function') {
+            previewPlayer.renderAngledExplorer(actx, 40, 44, 48, 0);
+          }
+        }
       }
+    } catch (err) {
+      console.warn('[MazeGame:ProfileModal] Failed to render avatar preview:', err);
     }
 
     // Render Explorer Wardrobe Grid (BL-78)
@@ -482,7 +490,11 @@ export class ProfileModal {
 
   open() {
     this.ensureDom();
-    this.refresh();
+    try {
+      this.refresh();
+    } catch (err) {
+      console.warn('[MazeGame:ProfileModal] Non-fatal refresh warning on open:', err);
+    }
     if (this.modalEl) {
       this.modalEl.style.display = 'flex';
       this.modalEl.classList.add('active');
@@ -498,7 +510,10 @@ export class ProfileModal {
       this.modalEl.style.display = 'none';
       this.modalEl.classList.remove('active');
       if (typeof document !== 'undefined') {
-        document.body.classList.remove('modal-open');
+        const remainingActive = document.querySelector('.modal-backdrop.active');
+        if (!remainingActive) {
+          document.body.classList.remove('modal-open');
+        }
       }
       this.isOpen = false;
     }
