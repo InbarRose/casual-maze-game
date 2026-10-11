@@ -338,30 +338,85 @@ export class Player {
   }
 
   /**
+   * Update active tile size and recalibrate world coordinate centering
+   * @param {number} size
+   */
+  setTileSize(size) {
+    if (typeof size !== 'number' || size <= 0 || size === this.tileSize) return;
+    this.tileSize = size;
+    if (this.isMoving) {
+      const fromWorldX = this.fromGridX * this.tileSize + this.tileSize / 2;
+      const fromWorldY = this.fromGridY * this.tileSize + this.tileSize / 2;
+      const toWorldX = this.targetGridX * this.tileSize + this.tileSize / 2;
+      const toWorldY = this.targetGridY * this.tileSize + this.tileSize / 2;
+      const t = this.moveProgress;
+      const smoothT = t * t * (3 - 2 * t);
+      this.worldX = fromWorldX + (toWorldX - fromWorldX) * smoothT;
+      this.worldY = fromWorldY + (toWorldY - fromWorldY) * smoothT;
+    } else {
+      this.worldX = this.gridX * this.tileSize + this.tileSize / 2;
+      this.worldY = this.gridY * this.tileSize + this.tileSize / 2;
+    }
+  }
+
+  /**
+   * Set player cardinal facing with automatic alias normalization
+   * @param {string} dir 'north'|'south'|'east'|'west'|'up'|'down'|'left'|'right'
+   */
+  setFacing(dir) {
+    if (!dir) return;
+    const map = {
+      up: 'north',
+      down: 'south',
+      left: 'west',
+      right: 'east',
+      north: 'north',
+      south: 'south',
+      east: 'east',
+      west: 'west',
+    };
+    const norm = map[String(dir).toLowerCase()];
+    if (norm) {
+      this.facing = norm;
+    }
+  }
+
+  /**
    * Translate world facing ('north', 'south', 'east', 'west') to screen facing given camera rotation
-   * @param {'north'|'south'|'east'|'west'} worldFacing
+   * @param {'north'|'south'|'east'|'west'|string} worldFacing
    * @param {number} [rotationAngle=0]
    * @returns {'north'|'south'|'east'|'west'}
    */
   getScreenFacing(worldFacing, rotationAngle = 0) {
+    const map = {
+      up: 'north',
+      down: 'south',
+      left: 'west',
+      right: 'east',
+      north: 'north',
+      south: 'south',
+      east: 'east',
+      west: 'west',
+    };
+    const norm = map[String(worldFacing).toLowerCase()] || 'south';
     const angle = ((Math.round(rotationAngle) % 360) + 360) % 360;
     if (angle === 90) {
-      if (worldFacing === 'north') return 'west';
-      if (worldFacing === 'south') return 'east';
-      if (worldFacing === 'east') return 'north';
-      if (worldFacing === 'west') return 'south';
+      if (norm === 'north') return 'west';
+      if (norm === 'south') return 'east';
+      if (norm === 'east') return 'north';
+      if (norm === 'west') return 'south';
     } else if (angle === 180) {
-      if (worldFacing === 'north') return 'south';
-      if (worldFacing === 'south') return 'north';
-      if (worldFacing === 'east') return 'west';
-      if (worldFacing === 'west') return 'east';
+      if (norm === 'north') return 'south';
+      if (norm === 'south') return 'north';
+      if (norm === 'east') return 'west';
+      if (norm === 'west') return 'east';
     } else if (angle === 270) {
-      if (worldFacing === 'north') return 'east';
-      if (worldFacing === 'south') return 'west';
-      if (worldFacing === 'east') return 'south';
-      if (worldFacing === 'west') return 'north';
+      if (norm === 'north') return 'east';
+      if (norm === 'south') return 'west';
+      if (norm === 'east') return 'south';
+      if (norm === 'west') return 'north';
     }
-    return worldFacing;
+    return norm;
   }
 
   /**

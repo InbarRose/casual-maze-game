@@ -579,6 +579,15 @@ This document tracks project milestones, current release status, active developm
   - Resolved modal stacking scroll lock bug by verifying if remaining `.modal-backdrop.active` exist before removing `modal-open` from `document.body`.
   - Bumped engine and package version to `v1.20.0` with strict automated version incrementing discipline.
   - Expanded unit tests (`menus-and-buttons.test.mjs`) and headless browser E2E tests (`headless-hub-and-gameplay.test.mjs`) verifying clean modal interactivity across all surfaces (ADR-0027).
+- [x] **Discrete Stepped Viewport Zoom, Replay Character Orientation, Mobile Touch Navigation Modes, Top Activity Feed Docking & Streamlined Command HUD (`BL-116`)**:
+  - Replaced continuous floating zoom with discrete verified step ladder (`VIEWPORT_ZOOM.STEPS = [0.5, 0.75, 1.0, 1.25, 1.5, 2.0]`) producing exact integer tile pixel widths (18, 27, 36, 45, 54, 72px) and eliminating subpixel sprite jitter.
+  - Unified zoom step controls (`zoomIn()`, `zoomOut()`, `resetZoom()`, and wheel snapping) across Live Game (`maze.html`), Architect Studio (`editor.html`), and Replay Theatre (`test.html`).
+  - Added `player.setTileSize(size)` to synchronize character centering coordinates instantly upon zoom changes.
+  - Derived authentic cardinal orientation in Replay Theatre (`ReplayPlayer._executeAction()`), normalizing `'up'/'down'/'left'/'right'` aliases to `'north'/'south'/'west'/'east'` and animating stride cadence with `pulseTimer`.
+  - Added runtime mobile touch navigation mode toggle (`#btn-touch-mode-toggle`, `GameLoop.toggleTouchNavigationMode()`) alternating between **Tap to Move (BFS Pathfinding)** and **Hold & Drag to Steer**, displaying red feedback rings on unreachable barriers.
+  - Relocated mobile activity feed to dock from the top (`top: 4.5rem; bottom: auto;`) with interactive draggable header (`#activity-feed-header`), keeping bottom virtual controls clear.
+  - Clustered top HUD action buttons into `.hud-action-cluster` with `flex-wrap: nowrap`, eliminating layout collisions with minimap minimize toggle.
+  - Incremented version to `v1.21.0` in `package.json`, `js/core/version.js`, `test.html`, and documentation (ADR-0028).
 
 ### Strategic Architecture Initiative: Modernization & SOLID Refactoring (`v2.0.0` Roadmap)
 *Objective: Transform monolithic "god-classes" and procedural switch blocks into simple, elegant, explainable, highly testable, readable, and robust Object-Oriented modules adhering strictly to SOLID principles and clean architectural separation.*

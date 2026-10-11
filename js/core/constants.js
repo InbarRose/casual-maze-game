@@ -514,12 +514,57 @@ export function getKeyCodesForPreset(presetId = 'wasd_arrows') {
 }
 
 export const VIEWPORT_ZOOM = Object.freeze({
+  STEPS: Object.freeze([0.5, 0.75, 1.0, 1.25, 1.5, 2.0]),
   MIN: 0.5,
   MAX: 2.0,
-  STEP: 0.1,
+  STEP: 0.25,
   DEFAULT: 1.0,
   BASE_TILE_SIZE: 36,
 });
+
+/**
+ * Get the next discrete stepped zoom level
+ * @param {number} currentZoom
+ * @param {number} [direction=1] Positive for zoom in, negative for zoom out
+ * @param {readonly number[]} [steps=VIEWPORT_ZOOM.STEPS]
+ * @returns {number}
+ */
+export function getNextZoomStep(currentZoom, direction = 1, steps = VIEWPORT_ZOOM.STEPS) {
+  const eps = 0.02;
+  const zoom = typeof currentZoom === 'number' && !isNaN(currentZoom) ? currentZoom : 1.0;
+  if (direction > 0) {
+    for (const step of steps) {
+      if (step > zoom + eps) return step;
+    }
+    return steps[steps.length - 1];
+  } else {
+    for (let i = steps.length - 1; i >= 0; i--) {
+      if (steps[i] < zoom - eps) return steps[i];
+    }
+    return steps[0];
+  }
+}
+
+/**
+ * Snap arbitrary zoom level to nearest discrete step
+ * @param {number} zoom
+ * @param {readonly number[]} [steps=VIEWPORT_ZOOM.STEPS]
+ * @returns {number}
+ */
+export function snapToClosestZoomStep(zoom, steps = VIEWPORT_ZOOM.STEPS) {
+  if (typeof zoom !== 'number' || isNaN(zoom)) return steps.find(s => s === 1.0) || steps[0];
+  let closest = steps[0];
+  let minDiff = Math.abs(zoom - closest);
+  for (let i = 1; i < steps.length; i++) {
+    const diff = Math.abs(zoom - steps[i]);
+    if (diff < minDiff) {
+      minDiff = diff;
+      closest = steps[i];
+    }
+  }
+  return closest;
+}
+
 
 export const KEY_COLORS = Object.freeze({
   GOLD: '#fbbf24',

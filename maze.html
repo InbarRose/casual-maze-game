@@ -149,30 +149,38 @@
           </button>
         </div>
 
-        <!-- Settings Quick Button (BL-115) -->
-        <button id="hud-btn-settings" class="btn btn-secondary btn-sm" title="Open Game Settings [Audio, Video, Controls] [O]">
-          ⚙️ <span class="hide-mobile">Settings</span>
+        <!-- Mobile Touch Mode Toggle (BL-116) -->
+        <button id="btn-touch-mode-toggle" class="btn btn-secondary btn-sm hud-touch-pill" title="Toggle Navigation: Tap to Move (BFS) vs Hold &amp; Drag Steer" aria-label="Toggle Touch Navigation Mode">
+          👆 <span class="hide-mobile" id="touch-mode-label">Tap Move</span>
         </button>
 
-        <!-- Player Profile Quick Button (BL-115) -->
-        <button id="hud-btn-profile" class="btn btn-secondary btn-sm profile-pill-btn" title="Open Player Profile &amp; Save Management">
-          <span id="hud-profile-avatar">🧭</span> <span class="hide-mobile" id="hud-profile-name">Explorer</span>
-        </button>
+        <!-- Streamlined Action Cluster (BL-116) -->
+        <div class="hud-action-cluster" id="hud-action-cluster">
+          <!-- Settings Quick Button (BL-115) -->
+          <button id="hud-btn-settings" class="btn btn-secondary btn-sm btn-icon" title="Open Game Settings [Audio, Video, Controls] [O]" aria-label="Settings">
+            ⚙️
+          </button>
 
-        <!-- Pause / Game Menu Button -->
-        <button id="btn-open-menu" class="btn btn-primary btn-sm" title="Open Game Menu & Options (Esc / P)">
-          ⏸️ <span class="hide-mobile">Menu [P]</span>
-        </button>
+          <!-- Player Profile Quick Button (BL-115) -->
+          <button id="hud-btn-profile" class="btn btn-secondary btn-sm profile-pill-btn" title="Open Player Profile &amp; Save Management" aria-label="Player Profile">
+            <span id="hud-profile-avatar">🧭</span> <span class="hide-mobile" id="hud-profile-name">Explorer</span>
+          </button>
 
-        <!-- Responsive Quick Feed Pill (BL-97) -->
-        <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
-          ⚡ <span class="hide-mobile">Feed</span>
-        </button>
+          <!-- Pause / Game Menu Button -->
+          <button id="btn-open-menu" class="btn btn-primary btn-sm" title="Open Game Menu &amp; Options (Esc / P)" aria-label="Game Menu">
+            ⏸️ <span class="hide-mobile">Menu [P]</span>
+          </button>
 
-        <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
-        <button id="btn-hud-collapse" class="btn btn-secondary btn-sm btn-icon hud-collapse-toggle" title="Collapse / Expand HUD Bar [H]" aria-label="Toggle HUD Visibility">
-          📐
-        </button>
+          <!-- Responsive Quick Feed Pill (BL-97) -->
+          <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
+            ⚡ <span class="hide-mobile">Feed</span>
+          </button>
+
+          <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
+          <button id="btn-hud-collapse" class="btn btn-secondary btn-sm btn-icon hud-collapse-toggle" title="Collapse / Expand HUD Bar [H]" aria-label="Toggle HUD Visibility">
+            📐
+          </button>
+        </div>
       </div>
     </header>
 
@@ -2684,6 +2692,76 @@
       });
     }
 
+    // Draggable & Movable Activity Feed Bar (BL-116)
+    const feedHeader = document.getElementById('activity-feed-header');
+    if (activityFeedEl && feedHeader) {
+      let isDraggingFeed = false;
+      let feedStartX = 0, feedStartY = 0;
+      let feedInitLeft = 0, feedInitTop = 0;
+
+      const onFeedDragStart = (clientX, clientY) => {
+        if (activityFeedEl.classList.contains('minimized')) return;
+        isDraggingFeed = true;
+        feedStartX = clientX;
+        feedStartY = clientY;
+        const rect = activityFeedEl.getBoundingClientRect();
+        feedInitLeft = rect.left;
+        feedInitTop = rect.top;
+        activityFeedEl.classList.add('is-dragging');
+        activityFeedEl.style.bottom = 'auto';
+        activityFeedEl.style.left = `${feedInitLeft}px`;
+        activityFeedEl.style.top = `${feedInitTop}px`;
+      };
+
+      const onFeedDragMove = (clientX, clientY) => {
+        if (!isDraggingFeed) return;
+        const dx = clientX - feedStartX;
+        const dy = clientY - feedStartY;
+        const maxW = window.innerWidth - (activityFeedEl.offsetWidth || 280);
+        const maxH = window.innerHeight - (activityFeedEl.offsetHeight || 80);
+        const newLeft = Math.max(6, Math.min(maxW - 6, feedInitLeft + dx));
+        const newTop = Math.max(6, Math.min(maxH - 6, feedInitTop + dy));
+        activityFeedEl.style.left = `${Math.round(newLeft)}px`;
+        activityFeedEl.style.top = `${Math.round(newTop)}px`;
+      };
+
+      const onFeedDragEnd = () => {
+        if (!isDraggingFeed) return;
+        isDraggingFeed = false;
+        activityFeedEl.classList.remove('is-dragging');
+      };
+
+      feedHeader.addEventListener('mousedown', (e) => {
+        if (e.target.closest('.feed-pill') || e.target.closest('.feed-toggle-btn') || e.target.closest('.feed-history-btn')) return;
+        e.preventDefault();
+        onFeedDragStart(e.clientX, e.clientY);
+        const onMouseMove = (ev) => onFeedDragMove(ev.clientX, ev.clientY);
+        const onMouseUp = () => {
+          onFeedDragEnd();
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('mouseup', onMouseUp);
+        };
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+      });
+
+      feedHeader.addEventListener('touchstart', (e) => {
+        if (e.target.closest('.feed-pill') || e.target.closest('.feed-toggle-btn') || e.target.closest('.feed-history-btn')) return;
+        const t = e.touches[0];
+        onFeedDragStart(t.clientX, t.clientY);
+      }, { passive: true });
+
+      feedHeader.addEventListener('touchmove', (e) => {
+        if (!isDraggingFeed) return;
+        if (e.cancelable) e.preventDefault();
+        const t = e.touches[0];
+        onFeedDragMove(t.clientX, t.clientY);
+      }, { passive: false });
+
+      feedHeader.addEventListener('touchend', onFeedDragEnd, { passive: true });
+      feedHeader.addEventListener('touchcancel', onFeedDragEnd, { passive: true });
+    }
+
     function addActivityLog(message, type = 'info', icon = 'ℹ️', category = 'info') {
       const timeMs = window.gameLoop ? window.gameLoop.elapsedTime : 0;
       const timeStr = formatTime(timeMs);
@@ -2847,6 +2925,37 @@
 
     globalEvents.on('camera:zoom_changed', ({ zoom }) => {
       updateZoomBadge(zoom);
+    });
+
+    // Mobile Touch Navigation Mode UI Wiring (BL-116)
+    const btnTouchModeToggle = document.getElementById('btn-touch-mode-toggle');
+    function updateTouchModeUI(mode) {
+      const isTap = mode !== 'drag_only';
+      if (btnTouchModeToggle) {
+        btnTouchModeToggle.title = isTap
+          ? 'Mode: Tap to Move (Pathfinding BFS) — Click to switch to Hold & Drag Steer'
+          : 'Mode: Hold & Drag Steer — Click to switch to Tap to Move (Pathfinding BFS)';
+        btnTouchModeToggle.innerHTML = isTap
+          ? '👆 <span class="hide-mobile" id="touch-mode-label">Tap Move</span>'
+          : '🕹️ <span class="hide-mobile" id="touch-mode-label">Hold Steer</span>';
+        btnTouchModeToggle.classList.toggle('active', isTap);
+      }
+    }
+
+    if (window.gameLoop) {
+      updateTouchModeUI(window.gameLoop.mouseMoveMode);
+    }
+
+    btnTouchModeToggle?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        const next = window.gameLoop.toggleTouchNavigationMode();
+        updateTouchModeUI(next);
+      }
+    });
+
+    globalEvents.on('settings:controls_changed', ({ mouseMoveMode }) => {
+      if (mouseMoveMode) updateTouchModeUI(mouseMoveMode);
     });
 
     if (window.gameLoop?.renderer) {

@@ -489,18 +489,24 @@ export class EditorUI {
     // Settings Modal
     this.initSettingsModal();
 
-    // Zoom buttons in viewport overlay
+    // Zoom buttons in viewport overlay (BL-116: discrete stepped zoom)
     document.getElementById('btn-zoom-in')?.addEventListener('click', () => {
-      this.editorCanvas.setZoom(this.editorCanvas.zoom * 1.25);
+      this.editorCanvas.zoomIn();
       this.updateZoomBadge();
       this.updateMiniMap();
       console.info(`[MazeGame:Editor] Zoom In: ${Math.round(this.editorCanvas.zoom * 100)}%`);
     });
     document.getElementById('btn-zoom-out')?.addEventListener('click', () => {
-      this.editorCanvas.setZoom(this.editorCanvas.zoom / 1.25);
+      this.editorCanvas.zoomOut();
       this.updateZoomBadge();
       this.updateMiniMap();
       console.info(`[MazeGame:Editor] Zoom Out: ${Math.round(this.editorCanvas.zoom * 100)}%`);
+    });
+    document.getElementById('zoom-badge')?.addEventListener('click', () => {
+      this.editorCanvas.resetZoom();
+      this.updateZoomBadge();
+      this.updateMiniMap();
+      console.info(`[MazeGame:Editor] Reset Zoom: ${Math.round(this.editorCanvas.zoom * 100)}%`);
     });
     document.getElementById('btn-zoom-fit')?.addEventListener('click', () => {
       this.editorCanvas.zoomToFit();

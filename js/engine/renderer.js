@@ -3267,15 +3267,16 @@ export class GameRenderer {
     const worldY = clickTarget.y * tileSize + tileSize / 2;
     const screen = camera.worldToScreen(worldX, worldY, true);
 
+    const color = clickTarget.invalid ? '244, 63, 94' : '56, 189, 248';
     ctx.save();
-    ctx.strokeStyle = `rgba(56, 189, 248, ${alpha * 0.85})`;
+    ctx.strokeStyle = `rgba(${color}, ${alpha * 0.85})`;
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.arc(screen.x, screen.y, Math.max(2, radius), 0, Math.PI * 2);
     ctx.stroke();
 
     // Inner core dot
-    ctx.fillStyle = `rgba(56, 189, 248, ${alpha * 0.7})`;
+    ctx.fillStyle = `rgba(${color}, ${alpha * 0.7})`;
     ctx.beginPath();
     ctx.arc(screen.x, screen.y, Math.max(1, 3 * (1 - t)), 0, Math.PI * 2);
     ctx.fill();

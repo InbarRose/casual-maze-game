@@ -2,7 +2,7 @@
  * Level Editor Interactive Canvas Component
  */
 
-import { TILES, LAYERS, THEMES, ENTITY_TYPES } from '../core/constants.js';
+import { TILES, LAYERS, THEMES, ENTITY_TYPES, VIEWPORT_ZOOM, getNextZoomStep, snapToClosestZoomStep } from '../core/constants.js';
 import { PREFABS, stampPrefab, getCustomPrefab } from './prefabs.js';
 
 export class EditorCanvas {
@@ -179,6 +179,35 @@ export class EditorCanvas {
     this.panY = centerY - (centerY - this.panY) * (clamped / this.zoom);
     this.zoom = clamped;
     this.render();
+  }
+
+  /**
+   * Zoom in to next discrete step
+   * @returns {number}
+   */
+  zoomIn() {
+    const nextStep = getNextZoomStep(this.zoom, 1);
+    this.setZoom(nextStep);
+    return this.zoom;
+  }
+
+  /**
+   * Zoom out to previous discrete step
+   * @returns {number}
+   */
+  zoomOut() {
+    const nextStep = getNextZoomStep(this.zoom, -1);
+    this.setZoom(nextStep);
+    return this.zoom;
+  }
+
+  /**
+   * Reset zoom to default 1.0x
+   * @returns {number}
+   */
+  resetZoom() {
+    this.setZoom(VIEWPORT_ZOOM.DEFAULT);
+    return this.zoom;
   }
 
   /**
@@ -714,19 +743,11 @@ export class EditorCanvas {
 
   handleWheel(e) {
     e.preventDefault();
-    const rect = this.canvas.getBoundingClientRect();
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-
-    const zoomFactor = e.deltaY < 0 ? 1.15 : 0.85;
-    const newZoom = Math.max(0.15, Math.min(5.0, this.zoom * zoomFactor));
-
-    // Zoom centered on cursor
-    this.panX = mouseX - (mouseX - this.panX) * (newZoom / this.zoom);
-    this.panY = mouseY - (mouseY - this.panY) * (newZoom / this.zoom);
-    this.zoom = newZoom;
-
-    this.render();
+    if (e.deltaY < 0) {
+      this.zoomIn();
+    } else {
+      this.zoomOut();
+    }
   }
 
   /**

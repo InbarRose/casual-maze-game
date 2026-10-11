@@ -121,4 +121,40 @@ describe('Engine > Viewport Zoom & Optical Scale (BL-87)', () => {
     assertEqual(camera.setZoom(999), 2.0);
     assertEqual(camera.setZoom('invalid'), 2.0); // Preserves previous valid zoom
   });
+
+  it('steps sequentially through predefined discrete zoom levels producing exact integer tile sizes (BL-116)', () => {
+    const camera = new Camera(800, 600, 36);
+    assertEqual(camera.zoom, 1.0);
+    assertEqual(camera.tileSize, 36);
+
+    // Zoom In sequence
+    assertEqual(camera.zoomIn(), 1.25);
+    assertEqual(camera.tileSize, 45); // 36 * 1.25 = 45 exact integer
+
+    assertEqual(camera.zoomIn(), 1.5);
+    assertEqual(camera.tileSize, 54); // 36 * 1.5 = 54 exact integer
+
+    assertEqual(camera.zoomIn(), 2.0);
+    assertEqual(camera.tileSize, 72); // 36 * 2.0 = 72 exact integer
+
+    // Clamped at top step
+    assertEqual(camera.zoomIn(), 2.0);
+
+    // Zoom Out sequence
+    assertEqual(camera.zoomOut(), 1.5);
+    assertEqual(camera.zoomOut(), 1.25);
+    assertEqual(camera.zoomOut(), 1.0);
+    assertEqual(camera.zoomOut(), 0.75);
+    assertEqual(camera.tileSize, 27); // 36 * 0.75 = 27 exact integer
+
+    assertEqual(camera.zoomOut(), 0.5);
+    assertEqual(camera.tileSize, 18); // 36 * 0.5 = 18 exact integer
+
+    // Clamped at bottom step
+    assertEqual(camera.zoomOut(), 0.5);
+
+    // Reset to default
+    assertEqual(camera.resetZoom(), 1.0);
+    assertEqual(camera.tileSize, 36);
+  });
 });

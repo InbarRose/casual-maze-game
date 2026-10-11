@@ -313,4 +313,64 @@ describe('Minimap Pinch-to-Zoom & Pan Gestures (BL-17)', () => {
     const zoomText = operations.find(op => op.op === 'fillText' && op.text.includes('2.5×'));
     assert(zoomText !== undefined, 'Rendered "2.5×" HUD zoom badge in corner of minimap');
   });
+
+  it('toggles mobile touch navigation mode between Tap to Move and Hold Steer (BL-116)', () => {
+    if (typeof localStorage !== 'undefined' && localStorage.clear) {
+      localStorage.clear();
+    }
+    const main = createMockCanvas(800, 600);
+    const mini = createMockCanvas(180, 180);
+    const level = createMockLevel(10, 10);
+
+    const loop = new GameLoop({
+      mainCanvas: main.canvas,
+      minimapCanvas: mini.canvas,
+      level,
+    });
+
+    assertEqual(loop.mouseMoveMode, 'click_path');
+
+    // Toggle to drag only
+    const mode1 = loop.toggleTouchNavigationMode();
+    assertEqual(mode1, 'drag_only');
+    assertEqual(loop.mouseMoveMode, 'drag_only');
+
+    // Toggle back to click_path
+    const mode2 = loop.toggleTouchNavigationMode();
+    assertEqual(mode2, 'click_path');
+    assertEqual(loop.mouseMoveMode, 'click_path');
+
+    loop.destroy();
+  });
+
+  it('synchronizes player tile size and world coordinates when zoom changes (BL-116)', () => {
+    const main = createMockCanvas(800, 600);
+    const mini = createMockCanvas(180, 180);
+    const level = createMockLevel(10, 10);
+
+    const loop = new GameLoop({
+      mainCanvas: main.canvas,
+      minimapCanvas: mini.canvas,
+      level,
+    });
+
+    // Default 1.0x -> tileSize = 36
+    assertEqual(loop.camera.zoom, 1.0);
+    assertEqual(loop.tileSize, 36);
+    assertEqual(loop.player.tileSize, 36);
+
+    // Zoom in stepped
+    loop.zoomIn(); // 1.25x -> tileSize = 45
+    assertEqual(loop.camera.zoom, 1.25);
+    assertEqual(loop.tileSize, 45);
+    assertEqual(loop.player.tileSize, 45);
+    assertEqual(loop.player.worldX, loop.player.gridX * 45 + 45 / 2);
+
+    // Zoom out stepped
+    loop.zoomOut();
+    assertEqual(loop.camera.zoom, 1.0);
+    assertEqual(loop.player.tileSize, 36);
+
+    loop.destroy();
+  });
 });
