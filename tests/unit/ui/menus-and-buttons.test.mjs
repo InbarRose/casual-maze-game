@@ -339,4 +339,19 @@ describe('UI > Comprehensive Menus, Buttons & Settings Suite (BL-111)', () => {
     settingsModal.close();
     assert(!document.body.classList.contains('modal-open'), 'Body modal-open removed after all modals closed');
   });
+
+  it('validates streamlined HUD action cluster and mobile touch toggle in maze.html (BL-116)', async () => {
+    const fs = await import('node:fs');
+    const path = await import('node:path');
+    const htmlPath = path.resolve('maze.html');
+    const html = fs.readFileSync(htmlPath, 'utf8');
+
+    assert(html.includes('id="btn-touch-mode-toggle"'), 'maze.html contains #btn-touch-mode-toggle');
+    assert(html.includes('class="hud-action-cluster"'), 'maze.html groups action buttons in .hud-action-cluster');
+    assert(html.includes('id="hud-btn-settings"'), 'maze.html contains #hud-btn-settings');
+    assert(html.includes('id="hud-btn-profile"'), 'maze.html contains #hud-btn-profile');
+    assert(html.includes('id="btn-open-menu"'), 'maze.html contains #btn-open-menu');
+    assert(html.includes('id="btn-hud-feed-pill"'), 'maze.html contains #btn-hud-feed-pill');
+    assert(html.includes('id="btn-hud-collapse"'), 'maze.html contains #btn-hud-collapse');
+  });
 });

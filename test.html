@@ -550,7 +550,7 @@
       <div>
         <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.25rem;">
           <h1 style="font-size: 1.6rem; font-weight: 800;">🧪 Diagnostics &amp; Replay Theater</h1>
-          <span class="badge badge-cyan" id="badge-version">v1.20.0</span>
+          <span class="badge badge-cyan" id="badge-version">v1.21.0</span>
         </div>
         <p style="font-size: 0.88rem; color: var(--text-muted);">
           Browser automated test runner, deterministic game replay visualizer, and GitHub issue diagnostic reporting.
@@ -637,6 +637,13 @@
                 <div class="hud-stat">⏱ <strong id="replay-hud-timer">00:00.0</strong></div>
                 <div class="hud-stat">👣 <strong id="replay-hud-steps">0 / 0</strong></div>
                 <div class="hud-stat"><span class="badge badge-cyan" id="replay-badge-state">PAUSED</span></div>
+              </div>
+
+              <!-- Stepped Zoom Controls Group (BL-116) -->
+              <div class="zoom-control-group" id="replay-zoom-control-group">
+                <button id="btn-replay-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out [-]" aria-label="Zoom Out">−</button>
+                <span id="replay-zoom-badge" class="zoom-badge" title="Reset Zoom to 100% [0]">100%</span>
+                <button id="btn-replay-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In [+]" aria-label="Zoom In">+</button>
               </div>
 
               <!-- Perspective Toggle Button -->
@@ -921,8 +928,10 @@
     const replayBadgeState = document.getElementById('replay-badge-state');
     const btnPerspective = document.getElementById('btn-replay-perspective');
     const btnRotateLeft = document.getElementById('btn-replay-rotate-left');
-    const btnRotateRight = document.getElementById('btn-replay-rotate-right');
     const compassBadge = document.getElementById('replay-compass-badge');
+    const btnReplayZoomIn = document.getElementById('btn-replay-zoom-in');
+    const btnReplayZoomOut = document.getElementById('btn-replay-zoom-out');
+    const replayZoomBadge = document.getElementById('replay-zoom-badge');
 
     const replayActivityFeed = document.getElementById('replay-activity-feed');
     const replayActivityFeedItems = document.getElementById('replay-activity-feed-items');
@@ -1402,6 +1411,41 @@
       replayPlayer?.rotateRight();
     });
 
+    // Stepped Zoom Controls (BL-116)
+    function updateReplayZoomBadge() {
+      if (replayZoomBadge && replayPlayer) {
+        replayZoomBadge.textContent = `${Math.round(replayPlayer.zoom * 100)}%`;
+      }
+    }
+
+    btnReplayZoomIn?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      replayPlayer?.zoomIn();
+      updateReplayZoomBadge();
+    });
+
+    btnReplayZoomOut?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      replayPlayer?.zoomOut();
+      updateReplayZoomBadge();
+    });
+
+    replayZoomBadge?.addEventListener('click', () => {
+      if (replaySoundEnabled) audioFX.playClick();
+      replayPlayer?.resetZoom();
+      updateReplayZoomBadge();
+    });
+
+    replayCanvas?.addEventListener('wheel', (e) => {
+      e.preventDefault();
+      if (e.deltaY < 0) {
+        replayPlayer?.zoomIn();
+      } else {
+        replayPlayer?.zoomOut();
+      }
+      updateReplayZoomBadge();
+    }, { passive: false });
+
     // Tactical Radar Minimap Controls
     btnMinimapToggle?.addEventListener('click', () => {
       if (replaySoundEnabled) audioFX.playClick();
@@ -1457,6 +1501,15 @@
       } else if (e.key === 'v' || e.key === 'V') {
         e.preventDefault();
         replayPlayer?.togglePerspective();
+      } else if (e.key === '=' || e.key === '+' || e.code === 'Equal' || e.code === 'NumpadAdd') {
+        e.preventDefault();
+        btnReplayZoomIn?.click();
+      } else if (e.key === '-' || e.key === '_' || e.code === 'Minus' || e.code === 'NumpadSubtract') {
+        e.preventDefault();
+        btnReplayZoomOut?.click();
+      } else if (e.key === '0' || e.code === 'Digit0' || e.code === 'Numpad0') {
+        e.preventDefault();
+        replayZoomBadge?.click();
       } else if (e.key === 'q' || e.key === 'Q') {
         e.preventDefault();
         replayPlayer?.rotateLeft();
