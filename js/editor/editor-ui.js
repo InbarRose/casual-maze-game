@@ -522,10 +522,16 @@ export class EditorUI {
 
     // Interactive Floating Mini-Map Overview HUD (BL-103)
     this.initMiniMap();
+
+    // 2D / 2.5D Perspective Controls (BL-110)
+    this.initPerspectiveControls();
+
+    // Sidebar Category Navigation & Live Search (BL-110)
+    this.initSidebarCategoryAndSearch();
   }
 
   /**
-   * Initialize interactive mini-map HUD and events (BL-103)
+   * Initialize interactive mini-map HUD and events (BL-103, BL-110)
    */
   initMiniMap() {
     const miniHud = document.getElementById('editor-minimap-hud');
@@ -535,7 +541,9 @@ export class EditorUI {
     if (btnToggle && miniHud) {
       btnToggle.addEventListener('click', () => {
         miniHud.classList.toggle('minimized');
-        btnToggle.textContent = miniHud.classList.contains('minimized') ? '▲' : '_';
+        const isMin = miniHud.classList.contains('minimized');
+        btnToggle.textContent = isMin ? '▲' : '−';
+        btnToggle.title = isMin ? 'Expand Mini-Map Overview [_]' : 'Collapse Mini-Map Overview [_]';
       });
     }
 
@@ -576,6 +584,181 @@ export class EditorUI {
     const miniCanvas = document.getElementById('editor-minimap-canvas');
     if (miniCanvas && this.editorCanvas) {
       this.editorCanvas.renderMiniMap(miniCanvas);
+    }
+  }
+
+  /**
+   * Initialize 2D / 2.5D Perspective Switcher (BL-110)
+   */
+  initPerspectiveControls() {
+    const btnPerspective = document.getElementById('btn-perspective');
+    const btnHudPerspective = document.getElementById('btn-hud-perspective');
+
+    btnPerspective?.addEventListener('click', () => {
+      this.togglePerspective();
+    });
+
+    btnHudPerspective?.addEventListener('click', () => {
+      this.togglePerspective();
+    });
+
+    this.updatePerspectiveUI(this.editorCanvas?.getPerspective?.() || '2d');
+  }
+
+  /**
+   * Toggle editor perspective between 2D and 2.5D (BL-110)
+   */
+  togglePerspective() {
+    if (!this.editorCanvas) return;
+    const newMode = this.editorCanvas.togglePerspective();
+    this.updatePerspectiveUI(newMode);
+    const label = newMode === '2.5d' ? '2.5D Angled View' : '2D Blueprint View';
+    this.showToast(`Switched to ${label}`, 'info', 1500);
+    console.info(`[MazeGame:Editor] View perspective toggled to "${newMode}"`);
+  }
+
+  /**
+   * Update Perspective UI indicators across HUD, buttons, and status bar (BL-110)
+   * @param {'2d'|'2.5d'} mode
+   */
+  updatePerspectiveUI(mode) {
+    const is25D = mode === '2.5d';
+    const btnPerspective = document.getElementById('btn-perspective');
+    const btnHudPerspective = document.getElementById('btn-hud-perspective');
+    const labelEl = document.getElementById('perspective-label');
+    const statusPerspective = document.getElementById('status-perspective');
+
+    if (btnPerspective) {
+      btnPerspective.classList.toggle('active', is25D);
+      btnPerspective.title = is25D
+        ? 'Current: 2.5D Angled View (Click or Press 3 for 2D Blueprint)'
+        : 'Current: 2D Blueprint View (Click or Press 3 for 2.5D Angled)';
+    }
+
+    if (labelEl) {
+      labelEl.textContent = is25D ? '2.5D' : '2D';
+    }
+
+    if (btnHudPerspective) {
+      btnHudPerspective.classList.toggle('active', is25D);
+      btnHudPerspective.textContent = is25D ? '📐 2.5D' : '📐 2D';
+    }
+
+    if (statusPerspective) {
+      statusPerspective.textContent = is25D ? '📐 Mode: 2.5D Angled' : '📐 Mode: 2D Blueprint';
+    }
+  }
+
+  /**
+   * Initialize sidebar category navigation pills and real-time asset search (BL-110)
+   */
+  initSidebarCategoryAndSearch() {
+    const categoryPills = document.querySelectorAll('#sidebar-category-nav .category-pill');
+    const searchInput = document.getElementById('sidebar-asset-search');
+    const clearBtn = document.getElementById('btn-clear-asset-search');
+    const accordions = document.querySelectorAll('.sidebar-accordion');
+
+    // 1. Category Filtering
+    const filterCategory = (category) => {
+      categoryPills.forEach(p => p.classList.toggle('active', p.dataset.category === category));
+
+      accordions.forEach(acc => {
+        const accType = acc.dataset.accordion;
+        let visible = false;
+        let shouldOpen = false;
+
+        if (category === 'all') {
+          visible = true;
+          // In 'all' mode, tools and tiles open, others collapsed
+          shouldOpen = (accType === 'tools' || accType === 'tiles');
+        } else if (category === 'tools') {
+          visible = (accType === 'tools');
+          shouldOpen = true;
+        } else if (category === 'tiles') {
+          visible = (accType === 'tiles' || accType === 'ramps');
+          shouldOpen = true;
+        } else if (category === 'prefabs') {
+          visible = (accType === 'prefabs' || accType === 'custom-prefabs');
+          shouldOpen = true;
+        } else if (category === 'entities') {
+          visible = (accType === 'entities');
+          shouldOpen = true;
+        }
+
+        acc.style.display = visible ? '' : 'none';
+        if (visible && shouldOpen) {
+          acc.classList.add('active');
+        }
+      });
+    };
+
+    categoryPills.forEach(pill => {
+      pill.addEventListener('click', () => {
+        filterCategory(pill.dataset.category);
+        if (searchInput) searchInput.value = '';
+        if (clearBtn) clearBtn.style.display = 'none';
+      });
+    });
+
+    // 2. Real-Time Search Filter
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+        if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
+
+        if (!query) {
+          // Restore active category view
+          const activePill = document.querySelector('#sidebar-category-nav .category-pill.active');
+          filterCategory(activePill?.dataset.category || 'all');
+          return;
+        }
+
+        // Search mode: show all accordions containing matches and filter palette buttons
+        accordions.forEach(acc => {
+          const buttons = acc.querySelectorAll('.palette-btn');
+          let matchCount = 0;
+
+          buttons.forEach(btn => {
+            const text = (btn.textContent || '').toLowerCase();
+            const tool = (btn.dataset.tool || '').toLowerCase();
+            const tile = (btn.dataset.tile || '').toLowerCase();
+            const entity = (btn.dataset.entity || '').toLowerCase();
+            const prefab = (btn.dataset.prefab || '').toLowerCase();
+            const name = (btn.dataset.name || '').toLowerCase();
+            const itemType = (btn.dataset.itemtype || '').toLowerCase();
+            const title = (btn.getAttribute('title') || '').toLowerCase();
+
+            const isMatch = text.includes(query) || tool.includes(query) || tile.includes(query) ||
+              entity.includes(query) || prefab.includes(query) || name.includes(query) ||
+              itemType.includes(query) || title.includes(query);
+
+            if (isMatch) {
+              btn.style.display = '';
+              matchCount++;
+            } else {
+              btn.style.display = 'none';
+            }
+          });
+
+          // Show & expand accordion if it has matches
+          if (matchCount > 0) {
+            acc.style.display = '';
+            acc.classList.add('active');
+          } else {
+            acc.style.display = 'none';
+          }
+        });
+      });
+
+      clearBtn?.addEventListener('click', () => {
+        searchInput.value = '';
+        clearBtn.style.display = 'none';
+        const activePill = document.querySelector('#sidebar-category-nav .category-pill.active');
+        filterCategory(activePill?.dataset.category || 'all');
+        // Restore all button displays
+        document.querySelectorAll('.palette-btn').forEach(b => b.style.display = '');
+        searchInput.focus();
+      });
     }
   }
 
@@ -646,6 +829,8 @@ export class EditorUI {
         document.getElementById('tab-layer-ground')?.click();
       } else if (e.key === '2') {
         document.getElementById('tab-layer-overhead')?.click();
+      } else if (e.key === '3') {
+        this.togglePerspective();
       } else if (e.key.toLowerCase() === 'v') {
         this.openValidationModal();
       } else if (e.key.toLowerCase() === 't') {
