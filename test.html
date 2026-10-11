@@ -907,6 +907,7 @@
     const replayMinimapContainer = document.getElementById('replay-minimap-container');
     const btnMinimapMin = document.getElementById('btn-replay-minimap-min');
     const btnMinimapToggle = document.getElementById('btn-replay-minimap-toggle');
+    const btnMinimap = document.getElementById('btn-replay-minimap') || btnMinimapToggle;
     const btnFullscreen = document.getElementById('btn-replay-fullscreen');
 
     const replayHudTitle = document.getElementById('replay-hud-title');
@@ -934,6 +935,7 @@
     const mediaStepPill = document.getElementById('media-step-pill');
     const mediaActionPill = document.getElementById('media-action-pill');
 
+    const selectLevel = document.getElementById('select-replay-level');
     const btnPlay = document.getElementById('btn-replay-play');
     const btnReset = document.getElementById('btn-replay-reset');
     const btnPrev = document.getElementById('btn-replay-prev');
@@ -942,7 +944,6 @@
     const btnSound = document.getElementById('btn-replay-sound');
     const btnLoop = document.getElementById('btn-replay-loop');
     const speedPills = document.querySelectorAll('.speed-pill');
-    const selectLevel = document.getElementById('select-replay-level');
 
     // Backward-compatibility aliases for automated test suites
     const badgeState = replayBadgeState;
@@ -1181,7 +1182,11 @@
 
       // Preload level theme vector SVG assets (BL-96)
       if (level?.config?.theme && typeof fetch === 'function') {
-        assetLoader.preloadTheme(level.config.theme).catch(() => {});
+        assetLoader.preloadTheme(level.config.theme).then(() => {
+          if (replayPlayer?.gameLoop) {
+            replayPlayer.gameLoop.render();
+          }
+        }).catch(() => {});
       }
 
       // Update Top HUD Level Information
@@ -1211,6 +1216,10 @@
         });
       } else {
         replayPlayer.load(level, replay);
+      }
+
+      if (btnPerspective && replayPlayer) {
+        btnPerspective.textContent = replayPlayer.getPerspective() === 'angled' ? '📐 2.5D' : '📐 Blueprint';
       }
 
       scrubber.max = totalSteps;
@@ -1329,11 +1338,20 @@
       if (replaySoundEnabled) audioFX.playClick();
       replayPlayer?.stepForward();
     });
-
     btnEnd?.addEventListener('click', () => {
       if (replaySoundEnabled) audioFX.playClick();
       replayPlayer?.jumpToEnd();
       logReplayActivity('Jumped to walkthrough end', 'info', '⏭', 'mech');
+    });
+
+
+    btnMinimap?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (replayMinimapCanvas) {
+        const isHidden = replayMinimapCanvas.style.display === 'none';
+        replayMinimapCanvas.style.display = isHidden ? 'block' : 'none';
+        btnMinimap.classList.toggle('active', isHidden);
+      }
     });
 
     scrubber?.addEventListener('input', (e) => {

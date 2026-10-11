@@ -1,4 +1,4 @@
-# 0020. Universal Menu Navigation, Modal Stacking Isolation, and Comprehensive Menu Test Suite
+# 0023. Universal Menu Navigation, Modal Stacking Isolation, and Comprehensive Menu Test Suite
 
 Date: 2026-10-10
 

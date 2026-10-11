@@ -1,4 +1,4 @@
-# 0022. Platform Component Audit Test Coverage, Subsystem Quality Scoring & Thematic Asset Unification
+# 0025. Platform Component Audit Test Coverage, Subsystem Quality Scoring & Thematic Asset Unification
 
 Date: 2026-10-10
 
