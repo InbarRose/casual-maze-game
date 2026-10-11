@@ -6,7 +6,26 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Milestone: `v1.20.0` (In Progress)
+### Current Milestone: `v1.22.0` (Completed & Verified)
+
+- [x] **Mobile Screen Overlay Conflict Detection, Visibility Coordinator & Firm Top Command Bar (BL-117, ADR-0029)**:
+  - **Overlay Conflict Detection & Coordinator (`OverlayManager`)**: Built `js/ui/overlay-manager.js` implementing a deterministic priority ladder (`MODAL (100) > PAUSE_MENU (90) > TOP_BAR (80) > VIRTUAL_CONTROLS (70) > MINIMAP (60) > ACTIVITY_FEED (50) > TUTORIAL_HINT (40)`).
+  - **Automated Modal Suppression**: Hooked `overlayManager.setModalActive(modalId, active)` into `setViewObscured()`, automatically applying `.overlay-suppressed` to background floating overlays when modals or the pause drawer are open.
+  - **Mobile Mutual Exclusion**: On compact viewports ($\le 768\text{px}$), expanding the tactical radar minimap automatically minimizes the activity feed, and expanding the activity feed automatically minimizes the minimap, preventing overlay collision.
+  - **Firm Top Navigation Bar (`#firm-top-bar`)**: Replaced fragmented floating islands with a unified, solid top command deck containing direct toggle buttons for Tactical Radar (`#btn-topbar-minimap`), Activity Feed (`#btn-hud-feed-pill`), Settings (`#hud-btn-settings`), Profile (`#hud-btn-profile`), and Pause Menu (`#btn-open-menu`).
+  - **Spatial AABB Collision Detection**: Built `checkSpatialIntersection` and automatic relocation docking to safe zones on virtual controls dragging or viewport resize.
+  - **Automated Test Coverage**: Added `tests/unit/ui/overlay-manager.test.mjs`; verified 140 test suites and 675 tests passing (0 failed, 8,712 assertions, 23/23 zero-drift checks passed).
+
+- [x] **Discrete Stepped Viewport Zoom, Replay Character Orientation & Mobile Touch Navigation Modes (BL-116, ADR-0028)**:
+  - **Discrete Zoom Ladder**: Standardized zoom across gameplay, architect mode, and Replay Theatre to discrete steps (`0.5, 0.75, 1.0, 1.25, 1.5, 2.0`), eliminating subpixel sprite shimmering and character centering drift.
+  - **Replay Character Orientation & Cadence**: Synchronized cardinal facing and walking pulse animation in Replay Theatre (`test.html`).
+  - **Mobile Touch Navigation Toggle**: Added `#btn-touch-mode-toggle` supporting runtime switching between **Tap to Move (BFS Pathfinding)** and **Hold & Steer**.
+  - **Top Draggable Mobile Activity Feed**: Docked activity feed from the top on mobile screens with touch-draggable header.
+
+- [x] **Universal Settings & Player Profile Accessibility, Stacked Modal Resilience & Automatic Versioning (BL-115, ADR-0027)**:
+  - Fixed avatar preview rendering in Player Profile modal across all entry points.
+  - Added direct HUD buttons (`#hud-btn-settings`, `#hud-btn-profile`) and Architect toolbar buttons (`#btn-editor-settings`, `#btn-editor-profile`).
+  - Established continuous version incrementing policy.
 
 - [x] **Level Design Philosophy & Architectural Principles Documentation**:
   - Published [`docs/LEVEL_DESIGN_PHILOSOPHY.md`](LEVEL_DESIGN_PHILOSOPHY.md) establishing the 4-stage *Kishōtenketsu* methodology (Introduction, Development, Twist, Synthesis) for labyrinth design.

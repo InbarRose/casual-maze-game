@@ -161,6 +161,7 @@ casual-maze-game/
 │   │   ├── settings-modal.js     # Universal settings: procedural audio sliders, perspective, smooth rotation
 │   │   ├── audio-fx.js           # Procedural Web Audio API sound FX synthesizer (zero audio files)
 │   │   ├── game-menu.js          # In-game Pause & Action Menu controller and modal bindings
+│   │   ├── overlay-manager.js    # UI overlay conflict detection, visibility coordinator & mobile mutual exclusion (BL-117, ADR-0029)
 │   │   └── puzzle-modal.js       # Pure static DOM modal for rune sequence and cipher dials
 │   ├── levels/
 │   │   ├── level-loader.js       # Schema validator, URL param parser, static level loader, room normalizer

@@ -58,8 +58,8 @@
       <p class="hud-lore-response" id="hud-lore-response"></p>
     </div>
 
-    <!-- Top HUD Overlay — Floating Islands -->
-    <header class="game-hud-top">
+    <!-- Top HUD Overlay — Firm Command Bar (BL-117, ADR-0029) -->
+    <header class="game-hud-top firm-top-bar" id="firm-top-bar" role="banner">
       <!-- Left Island: Navigation & Level Info -->
       <div class="hud-island hud-island-left">
         <a href="index.html" class="btn btn-secondary btn-sm" id="hud-btn-hub" title="Return to Level Select Hub">← Hub</a>
@@ -154,8 +154,18 @@
           👆 <span class="hide-mobile" id="touch-mode-label">Tap Move</span>
         </button>
 
-        <!-- Streamlined Action Cluster (BL-116) -->
+        <!-- Streamlined Action Cluster (BL-116, BL-117) -->
         <div class="hud-action-cluster" id="hud-action-cluster">
+          <!-- Tactical Radar / Minimap Quick Toggle (BL-117) -->
+          <button id="btn-topbar-minimap" class="btn btn-secondary btn-sm btn-icon hud-minimap-pill active" title="Toggle Tactical Radar [M]" aria-label="Toggle Radar">
+            🗺️
+          </button>
+
+          <!-- Responsive Quick Feed Pill (BL-97, BL-117) -->
+          <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
+            ⚡ <span class="hide-mobile">Feed</span>
+          </button>
+
           <!-- Settings Quick Button (BL-115) -->
           <button id="hud-btn-settings" class="btn btn-secondary btn-sm btn-icon" title="Open Game Settings [Audio, Video, Controls] [O]" aria-label="Settings">
             ⚙️
@@ -169,11 +179,6 @@
           <!-- Pause / Game Menu Button -->
           <button id="btn-open-menu" class="btn btn-primary btn-sm" title="Open Game Menu &amp; Options (Esc / P)" aria-label="Game Menu">
             ⏸️ <span class="hide-mobile">Menu [P]</span>
-          </button>
-
-          <!-- Responsive Quick Feed Pill (BL-97) -->
-          <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
-            ⚡ <span class="hide-mobile">Feed</span>
           </button>
 
           <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
@@ -703,6 +708,7 @@
     import { GameMenu } from './js/ui/game-menu.js';
     import { getKeyColorblindShape } from './js/core/constants.js';
     import { getSettingsModal, getProfileModal } from './js/ui/app-header.js';
+    import { overlayManager, OVERLAY_CATEGORIES, OVERLAY_PRIORITIES } from './js/ui/overlay-manager.js';
 
     // Migrate storage schema on startup (BL-36)
     StorageManager.migrateSaveData();
@@ -799,11 +805,12 @@
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${tenths}`;
     }
 
-    // Obscured Viewport Auto-Pause & Resume Coordinator (BL-92, ADR-0010)
+    // Obscured Viewport Auto-Pause & Resume Coordinator (BL-92, ADR-0010, BL-117, ADR-0029)
     function setViewObscured(obscured, modalId = 'modal') {
       if (window.gameLoop && typeof window.gameLoop.setObscured === 'function') {
         window.gameLoop.setObscured(obscured, modalId);
       }
+      overlayManager.setModalActive(modalId, obscured);
     }
 
     // Check if in custom playtest mode, story mode, or campaign
@@ -2414,6 +2421,19 @@
     bindVirtualButton('vbtn-rot-l', 'KeyQ');
     bindVirtualButton('vbtn-rot-r', 'KeyR');
 
+    // Register UI Overlays with OverlayManager (BL-117, ADR-0029)
+    const firmTopBarEl = document.getElementById('firm-top-bar');
+    const minimapContainerEl = document.getElementById('minimap-container');
+    const activityFeedElement = document.getElementById('game-activity-feed');
+    const virtualControlsElement = document.getElementById('virtual-controls');
+    const tutorialHintCardEl = document.getElementById('tutorial-hint-card');
+
+    if (firmTopBarEl) overlayManager.register('topBar', firmTopBarEl, { category: OVERLAY_CATEGORIES.BAR, priority: OVERLAY_PRIORITIES.TOP_BAR });
+    if (minimapContainerEl) overlayManager.register('minimap', minimapContainerEl, { category: OVERLAY_CATEGORIES.FLOATING, priority: OVERLAY_PRIORITIES.MINIMAP });
+    if (activityFeedElement) overlayManager.register('activityFeed', activityFeedElement, { category: OVERLAY_CATEGORIES.FLOATING, priority: OVERLAY_PRIORITIES.ACTIVITY_FEED });
+    if (virtualControlsElement) overlayManager.register('virtualControls', virtualControlsElement, { category: OVERLAY_CATEGORIES.FLOATING, priority: OVERLAY_PRIORITIES.VIRTUAL_CONTROLS });
+    if (tutorialHintCardEl) overlayManager.register('tutorialHint', tutorialHintCardEl, { category: OVERLAY_CATEGORIES.FLOATING, priority: OVERLAY_PRIORITIES.TUTORIAL_HINT });
+
     // Movable & Dockable Mobile Virtual Controls
     function initDraggableControls() {
       const controls = document.getElementById('virtual-controls');
@@ -2512,6 +2532,7 @@
         try {
           localStorage.setItem('maze_controls_position', JSON.stringify({ left: Math.round(rect.left || initLeft), top: Math.round(rect.top || initTop) }));
         } catch (e) {}
+        overlayManager.detectAndResolveConflicts();
       };
 
       handle.addEventListener('mousedown', (e) => {
@@ -2552,6 +2573,7 @@
         try {
           localStorage.setItem('maze_controls_position', JSON.stringify({ dock: nextDock }));
         } catch (e) {}
+        overlayManager.detectAndResolveConflicts();
       });
 
       minBtn?.addEventListener('click', (e) => {
@@ -2561,24 +2583,38 @@
         minBtn.textContent = isMin ? '▲' : '_';
       });
 
-      // Collapsible Minimap Radar (BL-67)
+      // Collapsible Minimap Radar & Top Bar Integration (BL-67, BL-117)
       const minimapContainer = document.getElementById('minimap-container');
       const minMinimapBtn = document.getElementById('btn-minimap-minimize');
-      if (minimapContainer && minMinimapBtn) {
-        minMinimapBtn.addEventListener('click', (e) => {
-          e.stopPropagation();
-          minimapContainer.classList.toggle('is-minimized');
-          const isMin = minimapContainer.classList.contains('is-minimized');
-          minMinimapBtn.textContent = isMin ? '▲' : '_';
-          try {
-            localStorage.setItem('maze_minimap_minimized', isMin ? 'true' : 'false');
-          } catch (err) {}
-        });
+      const btnTopbarMinimap = document.getElementById('btn-topbar-minimap');
+
+      if (minimapContainer) {
+        if (minMinimapBtn) {
+          minMinimapBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            audioFX.playClick();
+            const isMin = overlayManager.toggleMinimap();
+            try {
+              localStorage.setItem('maze_minimap_minimized', isMin ? 'true' : 'false');
+            } catch (err) {}
+          });
+        }
+
+        if (btnTopbarMinimap) {
+          btnTopbarMinimap.addEventListener('click', (e) => {
+            e.stopPropagation();
+            audioFX.playClick();
+            const isMin = overlayManager.toggleMinimap();
+            try {
+              localStorage.setItem('maze_minimap_minimized', isMin ? 'true' : 'false');
+            } catch (err) {}
+          });
+        }
 
         minimapContainer.addEventListener('click', (e) => {
           if (minimapContainer.classList.contains('is-minimized')) {
-            minimapContainer.classList.remove('is-minimized');
-            minMinimapBtn.textContent = '_';
+            audioFX.playClick();
+            const isMin = overlayManager.toggleMinimap(false);
             try {
               localStorage.setItem('maze_minimap_minimized', 'false');
             } catch (err) {}
@@ -2587,8 +2623,7 @@
 
         try {
           if (localStorage.getItem('maze_minimap_minimized') === 'true') {
-            minimapContainer.classList.add('is-minimized');
-            minMinimapBtn.textContent = '▲';
+            overlayManager.toggleMinimap(true);
           }
         } catch (err) {}
       }
@@ -2659,20 +2694,16 @@
     if (btnHudFeedPill && activityFeedEl) {
       btnHudFeedPill.addEventListener('click', (e) => {
         e.stopPropagation();
-        const isMin = activityFeedEl.classList.toggle('minimized');
-        if (btnFeedToggle) btnFeedToggle.textContent = isMin ? '▲' : '_';
-        btnHudFeedPill.classList.toggle('active', !isMin);
         audioFX.playClick();
+        overlayManager.toggleActivityFeed();
       });
     }
 
     if (btnFeedToggle && activityFeedEl) {
       btnFeedToggle.addEventListener('click', (e) => {
         e.stopPropagation();
-        const isMin = activityFeedEl.classList.toggle('minimized');
-        btnFeedToggle.textContent = isMin ? '▲' : '_';
-        if (btnHudFeedPill) btnHudFeedPill.classList.toggle('active', !isMin);
         audioFX.playClick();
+        overlayManager.toggleActivityFeed();
       });
     }
 
@@ -2729,6 +2760,7 @@
         if (!isDraggingFeed) return;
         isDraggingFeed = false;
         activityFeedEl.classList.remove('is-dragging');
+        overlayManager.detectAndResolveConflicts();
       };
 
       feedHeader.addEventListener('mousedown', (e) => {
@@ -3003,7 +3035,7 @@
       addActivityLog(`Examined <strong>${data.title}</strong>: "${data.text || data.message || ''}"`, 'info', icon, 'lore');
     });
 
-    // Global Hotkeys for HUD and Activity Feed (BL-92, BL-97)
+    // Global Hotkeys for HUD, Minimap, and Activity Feed (BL-92, BL-97, BL-117)
     window.addEventListener('keydown', (e) => {
       // Don't intercept when focusing input fields
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName)) return;
@@ -3017,7 +3049,18 @@
           e.preventDefault();
           btnHudFeedPill.click();
         }
+      } else if (e.key === 'm' || e.key === 'M') {
+        const btnTopbarMinimap = document.getElementById('btn-topbar-minimap');
+        if (btnTopbarMinimap) {
+          e.preventDefault();
+          btnTopbarMinimap.click();
+        }
       }
+    });
+
+    // Viewport Resize Conflict Detection (BL-117, ADR-0029)
+    window.addEventListener('resize', () => {
+      overlayManager.detectAndResolveConflicts();
     });
 
     // Attach audio FX listeners to all interactive buttons and links
