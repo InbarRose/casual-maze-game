@@ -5,22 +5,24 @@
 
 import { ENTITY_TYPES } from '../core/constants.js';
 import { assetLoader } from '../core/asset-loader.js';
+import { BaseEntity } from './base-entity.js';
 
-export class Door {
+export class Door extends BaseEntity {
   /**
    * @param {object} config
    */
-  constructor(config) {
-    this.id = config.id || `door_${Math.random().toString(36).substr(2, 9)}`;
-    this.type = ENTITY_TYPES.DOOR;
-    this.x = config.x ?? 0;
-    this.y = config.y ?? 0;
+  constructor(config = {}) {
+    super({
+      ...config,
+      type: ENTITY_TYPES.DOOR,
+      name: config.name || 'Locked Gate',
+    });
+
     this.requiresKey = config.requiresKey || '';
+    this.keyId = config.keyId || this.requiresKey;
     this.color = config.color || '#fbbf24';
     this.style = config.style || 'classic'; // 'classic' | 'portcullis' | 'laser_barrier' | 'magic_seal' | 'crystal_spikes' | 'vault_hatch'
     this.isOpen = !!config.isOpen;
-    this.z = config.z ?? config.elevation ?? 0;
-    this.elevation = this.z;
     this.orientation = config.orientation || 'auto'; // 'auto' | 'horizontal' | 'vertical'
 
     // Animation progress: 0 = fully closed, 1 = fully open
@@ -28,20 +30,13 @@ export class Door {
     this.useVectorSprite = config.useVectorSprite || false;
   }
 
-  get elevation() {
-    return this.z;
+  getPrompt() {
+    return this.isOpen ? 'Open Passage' : `Unlock Gate (${this.requiresKey || 'Key Required'})`;
   }
 
-  set elevation(value) {
-    this.z = value;
-  }
-
-  /**
-   * Returns canonical (X, Y, Z) coordinate string
-   * @returns {string}
-   */
-  getCoordString() {
-    return `(${this.x}, ${this.y}, ${this.z ?? 0})`;
+  isBlocking(toX, toY, toElevation = 0) {
+    if (this.isOpen) return false;
+    return this.x === toX && this.y === toY && this.z === toElevation;
   }
 
   /**

@@ -96,11 +96,21 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
     gameLoop.player.worldY = 1 * 32 + 16;
     gameLoop.handleCellArrival();
 
-    // Verify Signpost interaction event was dispatched
+    // Verify interaction prompt is available without auto-modal spam (BL-81)
+    const interaction = gameLoop.getAvailableInteraction();
+    assert(interaction, 'Interaction available on signpost tile');
+    assertEqual(interaction.type, 'signpost');
+    assert(interaction.label.includes("Architect's Note #1"));
+
+    // Explorer triggers manual examine / read [E]
+    gameLoop.handleManualInteract();
+
+    // Verify Signpost interaction event was dispatched and recorded in Journal
     const signReadEvent = eventsRecorded.find(e => e.type === 'signpost:read');
-    assert(signReadEvent, 'signpost:read event emitted upon arriving at signpost');
+    assert(signReadEvent, 'signpost:read event emitted upon reading signpost');
     assertEqual(signReadEvent.data.title, "Architect's Note #1");
     assert(signReadEvent.data.text.includes('Every grand labyrinth begins with a single step'));
+    assertEqual(gameLoop.getJournalEntries().length, 1, 'Journal recorded Architect Note');
 
     // 5. Explorer moves to Key location at (2, 10)
     gameLoop.player.gridX = 2;

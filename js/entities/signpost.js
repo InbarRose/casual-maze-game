@@ -4,7 +4,7 @@
  * providing hints, lore, and whimsical observations (inspired by World of Goo's Sign Painter).
  */
 
-import { ENTITY_TYPES, ELEVATION, formatXYZ } from '../core/constants.js';
+import { ENTITY_TYPES, ELEVATION, formatXYZ, isApproachAllowed } from '../core/constants.js';
 
 export class Signpost {
   /**
@@ -24,6 +24,7 @@ export class Signpost {
     this.author = config.author || 'The Architect';
     this.style = config.style || 'stone_tablet'; // 'stone_tablet' | 'wooden_sign' | 'astral_scroll'
     this.read = !!config.read;
+    this.interactDirections = Array.isArray(config.interactDirections) ? [...config.interactDirections] : null;
 
     // Visual animation states
     this.glowTimer = Math.random() * Math.PI * 2;
@@ -44,6 +45,20 @@ export class Signpost {
    */
   getCoordString() {
     return formatXYZ(this.x, this.y, this.z);
+  }
+
+  /**
+   * Check if player can interact with this signpost
+   * @param {number} playerX
+   * @param {number} playerY
+   * @param {number} [playerZ=0]
+   * @returns {boolean}
+   */
+  canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
+    if (this.z !== playerZ) return false;
+    const dist = Math.abs(this.x - playerX) + Math.abs(this.y - playerY);
+    if (dist > 1) return false;
+    return isApproachAllowed(this.x, this.y, playerX, playerY, this.interactDirections);
   }
 
   /**

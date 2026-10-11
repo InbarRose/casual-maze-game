@@ -1,6 +1,5 @@
-/**
- * LocalStorage and SessionStorage persistence helper
- */
+import { ENGINE_VERSION, SAVE_PROFILE_SCHEMA_VERSION } from './version.js';
+import { CHARACTER_CUSTOMIZATION } from './constants.js';
 
 const STORAGE_KEYS = {
   CUSTOM_MAZE: 'casual_maze_custom_data',
@@ -10,6 +9,7 @@ const STORAGE_KEYS = {
   SETTINGS: 'casual_maze_user_settings',
   EDITOR_AUTOSAVE: 'casual_maze_editor_autosave',
   SAVED_PROJECTS: 'casual_maze_saved_projects',
+  VERSION: 'casual_maze_save_version',
 };
 
 export class StorageManager {
@@ -134,6 +134,21 @@ export class StorageManager {
   }
 
   /**
+   * Save entire campaign progress map
+   * @param {Record<string, object>} progress
+   * @returns {boolean}
+   */
+  static saveCampaignProgress(progress) {
+    try {
+      localStorage.setItem(STORAGE_KEYS.PROGRESS, JSON.stringify(progress));
+      return true;
+    } catch (e) {
+      console.error('[StorageManager] Failed to save campaign progress map:', e);
+      return false;
+    }
+  }
+
+  /**
    * Calculate total earned stars for a list of chapter levels
    * @param {Array<{ id: string|number }>} levels
    * @param {Record<string, object>} [progress]
@@ -180,6 +195,15 @@ export class StorageManager {
       console.error('[StorageManager] Failed to save tutorial progress:', e);
       return false;
     }
+  }
+
+  /**
+   * Alias for saveTutorialProgress
+   * @param {string|number} levelId
+   * @param {{ time: number, steps: number }} stats
+   */
+  static saveTutorialCompletion(levelId, stats) {
+    return this.saveTutorialProgress(levelId, stats);
   }
 
   /**
@@ -462,26 +486,127 @@ export class StorageManager {
    * ========================================================= */
 
   /**
-   * Export all game progress, tutorial completions, saved editor projects, and settings
-   * @returns {object} Full save profile object
+   * Export all game progress, tutorial completions, saved editor projects, and settings (BL-76)
+   * @returns {object} Full save profile object with rich metadata
    */
   static exportSaveProfile() {
+    const campaign = this.loadCampaignProgress();
+    const tutorial = this.loadTutorialProgress();
+    const stories = this.loadStoryProgress();
+    const profile = this.getPlayerProfile();
+    const projects = this.getSavedProjectsMap();
+    const settings = this.loadSettings();
+
+    // Calculate summary statistics
+    let totalStars = 0;
+    let completedLevels = 0;
+    for (const rec of Object.values(campaign)) {
+      if (rec?.completed) {
+        completedLevels++;
+        const m = rec.medals || {};
+        totalStars += (m.completion ? 1 : 0) + (m.parSteps ? 1 : 0) + (m.parTime ? 1 : 0) + (m.secretSleuth ? 1 : 0) + (m.flawless ? 1 : 0);
+      }
+    }
+
     return {
-      schemaVersion: '1.0.0',
+      schemaVersion: SAVE_PROFILE_SCHEMA_VERSION || '1.1.0',
       game: 'casual-maze-game',
       exportedAt: new Date().toISOString(),
-      progress: {
-        campaign: this.loadCampaignProgress(),
-        tutorial: this.loadTutorialProgress(),
-        stories: this.loadStoryProgress(),
+      metadata: {
+        engineVersion: ENGINE_VERSION,
+        timestamp: Date.now(),
+        exportedDateFormatted: new Date().toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }),
+        playerName: profile?.name || 'Explorer',
+        prestigeRank: profile?.rank || 'Initiate',
+        totalStars,
+        completedLevels,
+        totalProjects: Object.keys(projects).length,
       },
-      projects: this.getSavedProjectsMap(),
-      settings: this.loadSettings(),
+      profile,
+      progress: {
+        campaign,
+        tutorial,
+        stories,
+      },
+      projects,
+      settings,
     };
   }
 
+  static EMERGENCY_SNAPSHOT_KEY = 'casual_maze_emergency_snapshot';
+
   /**
-   * Import and restore a save profile into local storage
+   * Create an emergency rollback snapshot of current data before destructive actions (BL-76)
+   * @param {string} [reason='pre_restore']
+   * @returns {boolean}
+   */
+  static createEmergencySnapshot(reason = 'pre_restore') {
+    try {
+      if (typeof localStorage === 'undefined') return false;
+      const snapshot = {
+        reason,
+        timestamp: Date.now(),
+        createdAt: new Date().toISOString(),
+        backup: {
+          campaign: this.loadCampaignProgress(),
+          tutorial: this.loadTutorialProgress(),
+          stories: this.loadStoryProgress(),
+          projects: this.getSavedProjectsMap(),
+          settings: this.loadSettings(),
+          profile: this.getPlayerProfile(),
+        },
+      };
+      localStorage.setItem(this.EMERGENCY_SNAPSHOT_KEY, JSON.stringify(snapshot));
+      console.info(`[MazeGame:Storage] Created emergency snapshot (${reason})`);
+      return true;
+    } catch (e) {
+      console.warn('[MazeGame:Storage] Failed to create emergency snapshot:', e);
+      return false;
+    }
+  }
+
+  /**
+   * Check if an emergency rollback snapshot exists (BL-76)
+   * @returns {object|null}
+   */
+  static getEmergencySnapshot() {
+    try {
+      if (typeof localStorage === 'undefined') return null;
+      const raw = localStorage.getItem(this.EMERGENCY_SNAPSHOT_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  /**
+   * Rollback to the emergency snapshot (BL-76)
+   * @returns {{ success: boolean, stats: object }}
+   */
+  static rollbackEmergencySnapshot() {
+    const snapshot = this.getEmergencySnapshot();
+    if (!snapshot || !snapshot.backup) {
+      throw new Error('No emergency snapshot available to rollback.');
+    }
+    const result = this.importSaveProfile(snapshot.backup);
+    try {
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(this.EMERGENCY_SNAPSHOT_KEY);
+      }
+    } catch {}
+    return result;
+  }
+
+  /**
+   * Alias for exportSaveProfile adhering to backup domain terminology
+   * @returns {object}
+   */
+  static exportFullBackup() {
+    return this.exportSaveProfile();
+  }
+
+  /**
+   * Import and restore a save profile into local storage (BL-76)
    * @param {object|string} rawSaveData
    * @returns {{ success: boolean, stats: { campaignLevels: number, tutorialLevels: number, storyChapters: number, projects: number } }}
    */
@@ -495,6 +620,9 @@ export class StorageManager {
       if (!data || typeof data !== 'object') {
         throw new Error('Invalid save file format. Expected a JSON object.');
       }
+
+      // Auto-create snapshot before modifying state
+      this.createEmergencySnapshot('pre_restore');
 
       // Restore Campaign Progress
       const campaign = data.progress?.campaign || data.campaign || {};
@@ -526,6 +654,12 @@ export class StorageManager {
         localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
       }
 
+      // Restore Player Identity (Codename)
+      const playerProfile = data.profile || data.playerProfile;
+      if (playerProfile && typeof playerProfile === 'object' && playerProfile.name) {
+        this.setPlayerName(playerProfile.name);
+      }
+
       const campaignCount = Object.keys(campaign).length;
       const tutorialCount = Object.keys(tutorial).length;
       let storyCount = 0;
@@ -549,6 +683,24 @@ export class StorageManager {
       console.error('[StorageManager] Failed to import save profile:', e);
       throw new Error(`Failed to import save data: ${e.message}`);
     }
+  }
+
+  /**
+   * Alias for importSaveProfile adhering to backup domain terminology
+   * @param {object|string} rawSaveData
+   * @returns {{ success: boolean, stats: object }}
+   */
+  static importFullBackup(rawSaveData) {
+    return this.importSaveProfile(rawSaveData);
+  }
+
+  /**
+   * Alias for downloadSaveFile adhering to backup domain terminology
+   * @param {string} [customFilename]
+   * @returns {string}
+   */
+  static downloadFullBackupFile(customFilename) {
+    return this.downloadSaveFile(customFilename);
   }
 
   /**
@@ -616,6 +768,161 @@ export class StorageManager {
   }
 
   /**
+   * Migrate legacy storage keys and data structures to latest schema
+   * @returns {{ migrated: boolean, version: string, details: string[] }}
+   */
+  static migrateSaveData() {
+    const details = [];
+    let migrated = false;
+
+    try {
+      // 1. Migrate legacy campaign progress missing modern medal or secrets schema
+      const campaign = this.loadCampaignProgress();
+      let campaignUpdated = false;
+      for (const [id, record] of Object.entries(campaign)) {
+        if (record && typeof record === 'object') {
+          if (!record.medals) {
+            record.medals = {
+              completion: !!record.completed,
+              parSteps: !!record.parSteps,
+              parTime: !!record.parTime,
+              flawless: false,
+              secretSleuth: false,
+              tier: record.tier || 'bronze',
+            };
+            campaignUpdated = true;
+          }
+          if (record.bestSecrets === undefined) {
+            record.bestSecrets = 0;
+            campaignUpdated = true;
+          }
+          if (record.bestScore === undefined) {
+            record.bestScore = 0;
+            campaignUpdated = true;
+          }
+        }
+      }
+      if (campaignUpdated) {
+        this.saveCampaignProgress(campaign);
+        details.push('Normalized campaign level records with medals, secrets, and scores');
+        migrated = true;
+      }
+
+      // 2. Migrate legacy sound toggle to settings object
+      try {
+        const legacyMute = localStorage.getItem('casual_maze_sound_muted');
+        if (legacyMute !== null) {
+          const settings = this.loadSettings();
+          if (settings.muted === undefined) {
+            settings.muted = legacyMute === 'true';
+            this.saveSettings(settings);
+            details.push('Migrated legacy sound mute state to settings object');
+            migrated = true;
+          }
+        }
+      } catch (_) {}
+
+      // 3. Set version stamp
+      try {
+        localStorage.setItem(STORAGE_KEYS.VERSION, SAVE_PROFILE_SCHEMA_VERSION);
+      } catch (_) {}
+
+      return { migrated, version: SAVE_PROFILE_SCHEMA_VERSION, details };
+    } catch (err) {
+      console.warn('[MazeGame:Storage] Migration warning:', err);
+      return { migrated: false, version: '1.0.0', details: [err.message] };
+    }
+  }
+
+  /**
+   * Export comprehensive diagnostic bundle for GitHub issue reporting or debugging
+   * @param {object} [context={}] Runtime game context (level, player, moves, errors)
+   * @returns {{ json: object, markdown: string, githubUrl: string }}
+   */
+  static exportDiagnosticBugBundle(context = {}) {
+    const profile = this.getPlayerProfile();
+    const settings = this.loadSettings();
+    const nav = typeof navigator !== 'undefined' ? navigator : null;
+    const scr = typeof window !== 'undefined' && window.screen ? window.screen : null;
+
+    const bundle = {
+      timestamp: new Date().toISOString(),
+      engineVersion: ENGINE_VERSION,
+      schemaVersion: SAVE_PROFILE_SCHEMA_VERSION,
+      client: {
+        userAgent: nav?.userAgent || 'Node.js/Headless',
+        language: nav?.language || 'en-US',
+        platform: nav?.platform || 'Unknown',
+        viewport: typeof window !== 'undefined' ? `${window.innerWidth}x${window.innerHeight}` : 'N/A',
+        screen: scr ? `${scr.width}x${scr.height}` : 'N/A',
+        devicePixelRatio: typeof window !== 'undefined' ? (window.devicePixelRatio || 1) : 1,
+        touchSupport: typeof window !== 'undefined' && ('ontouchstart' in window || (nav && nav.maxTouchPoints > 0)),
+      },
+      playerProfile: {
+        name: profile.name,
+        rank: `${profile.rankIcon} ${profile.rankTitle}`,
+        totalStars: profile.totalStars,
+        conqueredCampaignLevels: profile.campaignLevels,
+      },
+      settings: {
+        theme: settings.theme || 'default',
+        masterVolume: settings.masterVolume ?? 1.0,
+        muted: !!settings.muted,
+        perspective: settings.perspective || '2.5d',
+        highContrast: !!settings.highContrast,
+        hotkeysEnabled: settings.hotkeysEnabled ?? true,
+        keybindingPreset: settings.keybinding_preset || 'wasd_arrows',
+        mouseMoveMode: settings.mouse_move_mode || 'click_path',
+      },
+      activeLevel: {
+        id: String(context.activeLevel?.id || context.levelId || context.level?.id || 'unknown'),
+        title: context.activeLevel?.title || context.levelTitle || context.level?.title || 'Unknown Labyrinth',
+        chapter: context.chapterNumber || context.level?.chapterNumber || null,
+        dimensions: context.level?.dimensions ? `${context.level.dimensions.width}x${context.level.dimensions.height}` : null,
+      },
+      playerState: {
+        position: context.player ? { x: context.player.x, y: context.player.y, elevation: context.player.elevation ?? 0 } : null,
+        facing: context.player?.facing || null,
+        stepsTaken: context.steps ?? context.player?.stepsTaken ?? 0,
+        elapsedTimeFormatted: context.elapsedTimeFormatted || null,
+        inventory: context.inventory || (context.player?.inventory?.map(i => i.id || i)) || [],
+        carriedItems: context.carriedItems || [],
+      },
+      recentTelemetry: (context.recentActions || context.telemetry || []).slice(-20),
+      recentErrors: (context.errors || []).slice(-10),
+    };
+
+    const markdown = [
+      '### Bug Report Diagnostic Bundle',
+      `- **Engine Version**: \`v${bundle.engineVersion}\``,
+      `- **Active Level**: ${bundle.activeLevel.title} (\`${bundle.activeLevel.id}\`)`,
+      `- **Player Coordinates**: ${bundle.playerState.position ? `(${bundle.playerState.position.x}, ${bundle.playerState.position.y}, Z=${bundle.playerState.position.elevation})` : 'N/A'} | Steps: ${bundle.playerState.stepsTaken}`,
+      `- **Client / Platform**: ${bundle.client.userAgent}`,
+      `- **Viewport**: ${bundle.client.viewport} (DPR: ${bundle.client.devicePixelRatio}) | Touch: ${bundle.client.touchSupport}`,
+      '',
+      '<details><summary><b>Full Diagnostic JSON Payload</b></summary>',
+      '',
+      '```json',
+      JSON.stringify(bundle, null, 2),
+      '```',
+      '</details>',
+    ].join('\n');
+
+    const issueTitle = `[Bug] Issue in Level "${bundle.activeLevel.title}" (${bundle.activeLevel.id})`;
+    const issueBody = encodeURIComponent(
+      `## Bug Description\n<!-- Please describe what happened and what you expected to happen -->\n\n## Reproduction Steps\n1. Play level "${bundle.activeLevel.id}"\n2. \n\n${markdown}`
+    );
+    const githubUrl = `https://github.com/InbarRose/casual-maze-game/issues/new?title=${encodeURIComponent(issueTitle)}&body=${issueBody}&labels=bug`;
+
+    return {
+      json: bundle,
+      markdown,
+      githubUrl,
+      githubIssueUrl: githubUrl,
+    };
+  }
+
+  /**
    * Get player profile metadata and computed rank statistics
    * @returns {{ name: string, totalStars: number, campaignLevels: number, storyChapters: number, totalSteps: number, rankTitle: string, rankIcon: string }}
    */
@@ -678,8 +985,13 @@ export class StorageManager {
       rankIcon = '🗺️';
     }
 
+    const outfit = this.getPlayerOutfit();
+    const customization = this.getPlayerCustomization();
+
     return {
       name,
+      outfit,
+      customization,
       totalStars,
       campaignLevels,
       storyChapters,
@@ -690,11 +1002,87 @@ export class StorageManager {
   }
 
   /**
+   * Get player outfit identifier (BL-78)
+   * @returns {string}
+   */
+  static getPlayerOutfit() {
+    return this.getSetting('player_outfit', 'classic');
+  }
+
+  /**
+   * Set and persist player outfit identifier (BL-78)
+   * @param {string} outfitId
+   * @returns {boolean}
+   */
+  static setPlayerOutfit(outfitId) {
+    const valid = ['classic', 'emerald', 'arctic', 'desert', 'obsidian', 'alchemist'];
+    const chosen = valid.includes(outfitId) ? outfitId : 'classic';
+    return this.setSetting('player_outfit', chosen);
+  }
+
+  /**
+   * Get player visual customization options (BL-95, ADR-0014)
+   * @returns {{ gender: string, hairStyle: string, hairColor: string, skinTone: string }}
+   */
+  static getPlayerCustomization() {
+    const defaults = CHARACTER_CUSTOMIZATION?.DEFAULTS || {
+      gender: 'male',
+      hairStyle: 'short',
+      hairColor: 'brunette',
+      skinTone: 'fair',
+    };
+    const saved = this.getSetting('player_customization', null);
+    if (!saved || typeof saved !== 'object') {
+      return { ...defaults };
+    }
+    return {
+      gender: saved.gender || defaults.gender,
+      hairStyle: saved.hairStyle || defaults.hairStyle,
+      hairColor: saved.hairColor || defaults.hairColor,
+      skinTone: saved.skinTone || defaults.skinTone,
+    };
+  }
+
+  /**
+   * Set and persist player visual customization options (BL-95, ADR-0014)
+   * @param {object} customization
+   * @returns {boolean}
+   */
+  static setPlayerCustomization(customization) {
+    const current = this.getPlayerCustomization();
+    const updated = {
+      ...current,
+      ...(customization || {}),
+    };
+    return this.setSetting('player_customization', updated);
+  }
+
+  /**
    * Set and persist player display name
    * @param {string} name
    */
   static setPlayerName(name) {
     const clean = String(name || 'Explorer').trim().slice(0, 24);
     return this.setSetting('player_name', clean || 'Explorer');
+  }
+
+  /**
+   * Reset all campaign, tutorial, and story progress (Destructive action)
+   * @returns {boolean}
+   */
+  static resetAllProgress() {
+    try {
+      this.createEmergencySnapshot('pre_reset');
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem(STORAGE_KEYS.PROGRESS);
+        localStorage.removeItem(STORAGE_KEYS.TUTORIAL_PROGRESS);
+        localStorage.removeItem(STORAGE_KEYS.STORY_PROGRESS);
+      }
+      console.info('[MazeGame:Storage] Reset all campaign, tutorial, and story progress.');
+      return true;
+    } catch (e) {
+      console.error('[MazeGame:Storage] Failed to reset progress:', e);
+      return false;
+    }
   }
 }

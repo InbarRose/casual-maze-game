@@ -30,9 +30,12 @@ export class ReplayPlayer {
   constructor(options = {}) {
     this.canvas = options.canvas || null;
     this.minimapCanvas = options.minimapCanvas || null;
+    this.uiCallbacks = options.uiCallbacks || {};
     this.onStep = options.onStep || (() => {});
     this.onStateChange = options.onStateChange || (() => {});
     this.baseStepDelay = options.baseStepDelay || 280;
+    this.isLooping = options.isLooping || false;
+    this.isSeeking = false;
 
     this.level = null;
     this.replay = null;
@@ -43,6 +46,7 @@ export class ReplayPlayer {
     this.state = REPLAY_STATES.IDLE;
     this.speed = 1.0;
     this._timer = null;
+    this._loopTimer = null;
 
     if (options.level && options.replay) {
       this.load(options.level, options.replay);
@@ -85,13 +89,20 @@ export class ReplayPlayer {
 
     if (!this.canvas || !this.level) return;
 
-    const minimap = this.minimapCanvas || this.canvas;
+    // Never default minimap to this.canvas! Minimap constructor modifies canvas.width & height to 180,
+    // which mutates the main viewport resolution and overwrites the main render with the radar.
+    const minimap = this.minimapCanvas || null;
     this.gameLoop = new GameLoop({
       mainCanvas: this.canvas,
       minimapCanvas: minimap,
       level: JSON.parse(JSON.stringify(this.level)),
-      uiCallbacks: {},
+      uiCallbacks: this.uiCallbacks || {},
     });
+
+    // Calibrate camera viewport bounds to main canvas size
+    if (this.gameLoop.camera && this.canvas.width && this.canvas.height) {
+      this.gameLoop.camera.resize(this.canvas.width, this.canvas.height);
+    }
 
     // Start renderer and initial paint
     if (typeof requestAnimationFrame !== 'undefined') {
@@ -152,6 +163,10 @@ export class ReplayPlayer {
       clearTimeout(this._timer);
       this._timer = null;
     }
+    if (this._loopTimer) {
+      clearTimeout(this._loopTimer);
+      this._loopTimer = null;
+    }
     if (this.state === REPLAY_STATES.PLAYING) {
       this._setState(REPLAY_STATES.PAUSED);
     }
@@ -197,13 +212,17 @@ export class ReplayPlayer {
   _executeAction(action) {
     if (!this.gameLoop || !action) return;
 
+    const ts = this.gameLoop.tileSize || 36;
     if (action.action === 'teleport' || action.isWarp) {
       this.gameLoop.player.gridX = action.to.x;
       this.gameLoop.player.gridY = action.to.y;
       this.gameLoop.player.elevation = action.to.elevation || 0;
-      this.gameLoop.player.worldX = action.to.x * 32 + 16;
-      this.gameLoop.player.worldY = action.to.y * 32 + 16;
+      this.gameLoop.player.worldX = action.to.x * ts + ts / 2;
+      this.gameLoop.player.worldY = action.to.y * ts + ts / 2;
       this.gameLoop.player.isMoving = false;
+      if (action.direction && action.direction !== 'none') {
+        this.gameLoop.player.facing = action.direction;
+      }
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'move') {
       // Auto-unlock puzzle gate if encountering one during playback
@@ -218,9 +237,12 @@ export class ReplayPlayer {
       this.gameLoop.player.gridX = action.to.x;
       this.gameLoop.player.gridY = action.to.y;
       this.gameLoop.player.elevation = action.to.elevation || 0;
-      this.gameLoop.player.worldX = action.to.x * 32 + 16;
-      this.gameLoop.player.worldY = action.to.y * 32 + 16;
+      this.gameLoop.player.worldX = action.to.x * ts + ts / 2;
+      this.gameLoop.player.worldY = action.to.y * ts + ts / 2;
       this.gameLoop.player.isMoving = false;
+      if (action.direction && action.direction !== 'none') {
+        this.gameLoop.player.facing = action.direction;
+      }
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'rotate') {
       if (this.gameLoop.camera) {
@@ -244,10 +266,54 @@ export class ReplayPlayer {
       }
     }
 
+    if (this.gameLoop.camera) {
+      this.gameLoop.camera.snapTo(
+        this.gameLoop.player.worldX,
+        this.gameLoop.player.worldY,
+        this.gameLoop.level.dimensions.width,
+        this.gameLoop.level.dimensions.height
+      );
+    }
+
     this.gameLoop.update(0.016);
     if (this.gameLoop.render) {
       this.gameLoop.render();
     }
+  }
+
+  /**
+   * Set perspective mode ('angled' | 'topdown')
+   * @param {'angled'|'topdown'} mode
+   */
+  setPerspective(mode) {
+    if (this.gameLoop?.renderer) {
+      this.gameLoop.renderer.setPerspective(mode);
+      if (this.gameLoop.render) {
+        this.gameLoop.render();
+      }
+    }
+  }
+
+  /**
+   * Toggle between 2.5D angled and top-down blueprint view
+   * @returns {'angled'|'topdown'}
+   */
+  togglePerspective() {
+    if (this.gameLoop?.renderer) {
+      const current = this.gameLoop.renderer.perspective || 'angled';
+      const next = current === 'angled' ? 'topdown' : 'angled';
+      this.setPerspective(next);
+      return next;
+    }
+    return 'angled';
+  }
+
+  /**
+   * Get current perspective mode
+   * @returns {'angled'|'topdown'}
+   */
+  getPerspective() {
+    return this.gameLoop?.renderer?.perspective || 'angled';
   }
 
   /**
@@ -267,8 +333,18 @@ export class ReplayPlayer {
     this._notifyStep();
 
     if (this.currentStep >= this.totalSteps) {
-      this.pause();
       this._setState(REPLAY_STATES.COMPLETED);
+      if (this.isLooping) {
+        if (this._loopTimer) clearTimeout(this._loopTimer);
+        this._loopTimer = setTimeout(() => {
+          if (this.isLooping && this.state === REPLAY_STATES.COMPLETED) {
+            this.restart();
+            this.play();
+          }
+        }, 900);
+      } else {
+        this.pause();
+      }
     }
 
     return true;
@@ -290,6 +366,7 @@ export class ReplayPlayer {
     if (!this.replay) return;
 
     this.pause();
+    this.isSeeking = true;
     const clamped = Math.max(0, Math.min(this.totalSteps, Math.round(targetIndex)));
 
     // Re-initialize clean loop and fast-forward actions
@@ -299,8 +376,97 @@ export class ReplayPlayer {
     }
 
     this.currentStep = clamped;
+    this.isSeeking = false;
     this._setState(clamped >= this.totalSteps ? REPLAY_STATES.COMPLETED : REPLAY_STATES.PAUSED);
     this._notifyStep();
+  }
+
+  /**
+   * Jump directly to final step
+   */
+  jumpToEnd() {
+    this.seekTo(this.totalSteps);
+  }
+
+  /**
+   * Set continuous looping
+   * @param {boolean} val
+   */
+  setLooping(val) {
+    this.isLooping = Boolean(val);
+  }
+
+  /**
+   * Toggle continuous looping
+   * @returns {boolean}
+   */
+  toggleLoop() {
+    this.isLooping = !this.isLooping;
+    return this.isLooping;
+  }
+
+  /**
+   * Toggle camera perspective between 2.5D and top-down
+   * @returns {'angled'|'topdown'}
+   */
+  togglePerspective() {
+    if (this.gameLoop) {
+      this.gameLoop.togglePerspective();
+      return this.gameLoop.renderer?.perspective || 'angled';
+    }
+    return 'angled';
+  }
+
+  /**
+   * Rotate camera 90° CCW
+   */
+  rotateLeft() {
+    if (this.gameLoop) {
+      this.gameLoop.rotateLeft();
+    }
+  }
+
+  /**
+   * Rotate camera 90° CW
+   */
+  rotateRight() {
+    if (this.gameLoop) {
+      this.gameLoop.rotateRight();
+    }
+  }
+
+  /**
+   * Resize viewport canvas and camera
+   * @param {number} width
+   * @param {number} height
+   */
+  resize(width, height) {
+    if (this.canvas) {
+      this.canvas.width = width;
+      this.canvas.height = height;
+    }
+    if (this.gameLoop?.camera) {
+      this.gameLoop.camera.resize(width, height);
+    }
+    if (this.gameLoop?.render) {
+      this.gameLoop.render();
+    }
+  }
+
+  /**
+   * Return metadata for current loaded level
+   * @returns {object|null}
+   */
+  getLevelInfo() {
+    if (!this.level) return null;
+    return {
+      id: this.level.id,
+      title: this.level.title || `Level ${this.level.id}`,
+      theme: this.level.config?.theme || 'dungeon',
+      dimensions: this.level.dimensions || { width: 0, height: 0 },
+      parSteps: this.level.parSteps || 0,
+      parTime: this.level.parTime || 0,
+    };
   }
 
   /**

@@ -26,13 +26,15 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
       "x": 2,
       "y": 2,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 12,
       "y": 10,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 22,
     "parTime": 14,
@@ -556,17 +558,19 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
       "x": 2,
       "y": 2,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 14,
       "y": 12,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 38,
     "parTime": 23,
-    "architectNote": "Align the stellar dials according to the constellations above. Beyond the cipher lies the Azure Star Key.",
+    "architectNote": "Align the stellar dials according to the celestial dance: first the Sun, second the Moon, third the Horizon.",
     "layers": {
       "ground": [
         [
@@ -1151,7 +1155,7 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
         "y": 2,
         "z": 0,
         "title": "Architect's Note #22",
-        "text": "Align the stellar dials according to the constellations above. Beyond the cipher lies the Azure Star Key.",
+        "text": "Align the stellar dials according to the celestial dance: first the Sun, second the Moon, third the Horizon.",
         "style": "astral_scroll"
       },
       {
@@ -1162,8 +1166,8 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
         "z": 0,
         "puzzleType": "cipher_dial",
         "solution": [
+          0,
           1,
-          3,
           2
         ],
         "name": "Stellar Cipher Dial"
@@ -1188,12 +1192,32 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
         "elevation": 0
       },
       {
-        "id": "wall_note_22",
+        "id": "wall_decor_22_sun",
         "type": "wall_decor",
         "decorType": "carving",
-        "text": "Three concentric dials mirror the dance of sun, moon, and horizon.",
-        "playerDialogue": "Turning the brass rings will align the astronomical coordinates.",
-        "x": 2,
+        "text": "The Solar Crest shines first at dawn: ☀️ Sun.",
+        "playerDialogue": "The first ring must be turned to the Sun.",
+        "x": 4,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "wall_decor_22_moon",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "The Lunar Crescent wanes second at dusk: 🌙 Moon.",
+        "playerDialogue": "The second ring aligns to the Moon.",
+        "x": 5,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "wall_decor_22_horizon",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "The Horizon unites heaven and earth at twilight: 🌅 Horizon.",
+        "playerDialogue": "The third ring rests upon the Horizon.",
+        "x": 6,
         "y": 1,
         "elevation": 0
       }
@@ -1222,13 +1246,15 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
       "x": 2,
       "y": 7,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 17,
       "y": 7,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 30,
     "parTime": 18,
@@ -1355,7 +1381,7 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
           0,
           1,
           0,
-          0,
+          1,
           0,
           0,
           0,
@@ -1376,7 +1402,7 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
           0,
           1,
           0,
-          0,
+          1,
           0,
           0,
           0,
@@ -1390,27 +1416,6 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1,
           0,
           0,
           0,
@@ -1434,12 +1439,33 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
           1,
           0,
           0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
           1,
           0,
           0,
           1,
           0,
           0,
+          1,
+          0,
+          1,
           0,
           0,
           0,
@@ -1933,8 +1959,8 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
         "id": "wall_note_23",
         "type": "wall_decor",
         "decorType": "carving",
-        "text": "Two wards, two disciplines: memory unlocks power, and alignment unlocks wisdom.",
-        "playerDialogue": "First the memory runes, then the conduit lever, then the stellar cipher.",
+        "text": "The celestial ward alignment: 🌅 Horizon first, 🌙 Moon second, and ⭐ Star third.",
+        "playerDialogue": "The inner cipher dials require Horizon, Moon, and Star.",
         "x": 2,
         "y": 6,
         "elevation": 0
@@ -1954,7 +1980,7 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
       "height": 19
     },
     "config": {
-      "fogOfWar": false,
+      "fogOfWar": true,
       "viewRadius": 7,
       "allowFreePan": true,
       "tileSize": 32,
@@ -1964,13 +1990,15 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
       "x": 2,
       "y": 9,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 18,
       "y": 9,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 52,
     "parTime": 32,
@@ -2938,8 +2966,8 @@ export const CAMPAIGN_CH6_LEVELS = Object.freeze([
         "id": "wall_note_24",
         "type": "wall_decor",
         "decorType": "carving",
-        "text": "The apex of astronomical inquiry: only when mind and cosmos align will the vault admit a scholar.",
-        "playerDialogue": "I must unlock the north scriptorium for the golden key, and the south dais to power down the barrier.",
+        "text": "The Stargazer's creed inscribed on stone: ⭐ Star first, 🌙 Moon second, 🌅 Horizon third.",
+        "playerDialogue": "The south cipher dials must be set to Star, Moon, and Horizon.",
         "x": 2,
         "y": 8,
         "elevation": 0

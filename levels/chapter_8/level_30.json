@@ -22,14 +22,16 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "stairs_down"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 13,
     "y": 13,
     "elevation": 0,
-    "style": "portal",
-    "label": "Overpass Gate"
+    "style": "wall_archway",
+    "label": "Overpass Gate",
+    "wallDirection": "north"
   },
   "parSteps": 29,
   "parTime": 18,

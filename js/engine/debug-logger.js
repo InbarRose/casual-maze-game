@@ -424,11 +424,13 @@ export class DebugLogger {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    return filename;
   }
 
   /**
    * Trigger browser file download of replay payload
    * @param {string} [customFilename]
+   * @returns {string|undefined}
    */
   downloadReplay(customFilename) {
     if (typeof window === 'undefined' || typeof document === 'undefined') return;
@@ -445,5 +447,6 @@ export class DebugLogger {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    return filename;
   }
 }

@@ -82,7 +82,51 @@ describe('UI > Universal App Navigation & Modals', () => {
     StorageManager.setSetting('smooth_rotation', false);
     assertEqual(StorageManager.getSetting('smooth_rotation'), false);
 
+    // Test keybinding preset and mouse movement mode persistence (Issue #63, BL-100)
+    StorageManager.setSetting('keybinding_preset', 'esdf');
+    assertEqual(StorageManager.getSetting('keybinding_preset'), 'esdf');
+
+    StorageManager.setSetting('mouse_move_mode', 'drag_only');
+    assertEqual(StorageManager.getSetting('mouse_move_mode'), 'drag_only');
+
+    settingsModal.refresh();
+    const keySelect = settingsModal.modalEl.querySelector('#setting-keybinding-select');
+    const mouseSelect = settingsModal.modalEl.querySelector('#setting-mouse-mode-select');
+    if (keySelect) assertEqual(keySelect.value, 'esdf');
+    if (mouseSelect) assertEqual(mouseSelect.value, 'drag_only');
+
+    // Test Tab switching (BL-107)
+    settingsModal.switchTab('display');
+    assertEqual(settingsModal._activeTab, 'display');
+    const displayPanel = settingsModal.modalEl.querySelector('#settings-panel-display');
+    const audioPanel = settingsModal.modalEl.querySelector('#settings-panel-audio');
+    assert(displayPanel.classList.contains('active'), 'Display panel is active');
+    assert(!audioPanel.classList.contains('active'), 'Audio panel is inactive');
+
+    settingsModal.switchTab('controls');
+    assertEqual(settingsModal._activeTab, 'controls');
+    const controlsPanel = settingsModal.modalEl.querySelector('#settings-panel-controls');
+    assert(controlsPanel.classList.contains('active'), 'Controls panel is active');
+
     settingsModal.close();
     assertEqual(settingsModal.isOpen, false);
+  });
+
+  it('toggles mobile footer shortcuts drawer on button click (BL-98)', () => {
+    const { footer } = initAppHeader({ activeTab: 'hub' });
+    const toggleBtn = footer.querySelector('#btn-footer-shortcuts-toggle');
+    const drawer = footer.querySelector('#footer-shortcuts-drawer');
+
+    assert(toggleBtn !== null, 'Shortcuts toggle button exists in footer');
+    assert(drawer !== null, 'Shortcuts drawer exists in footer');
+    assert(drawer.classList.contains('hidden'), 'Shortcuts drawer is initially hidden');
+
+    toggleBtn.click();
+    assert(!drawer.classList.contains('hidden'), 'Drawer is visible after toggle click');
+    assert(toggleBtn.classList.contains('active'), 'Toggle button is active');
+
+    toggleBtn.click();
+    assert(drawer.classList.contains('hidden'), 'Drawer is hidden after second click');
+    assert(!toggleBtn.classList.contains('active'), 'Toggle button is inactive');
   });
 });

@@ -18,11 +18,14 @@ import '../unit/engine/collision.test.mjs';
 import '../unit/engine/fog.test.mjs';
 import '../unit/engine/camera.test.mjs';
 import '../unit/engine/camera-rotation.test.mjs';
+import '../unit/engine/camera-zoom.test.mjs';
 import '../unit/engine/debug-logger.test.mjs';
 import '../unit/engine/perspective-renderer.test.mjs';
 import '../unit/engine/solver.test.mjs';
 import '../unit/engine/replay-player.test.mjs';
 import '../unit/engine/click-to-move-and-hotkeys.test.mjs';
+import '../unit/engine/entrance-exit-visuals.test.mjs';
+import '../unit/engine/interact-directions-disambiguation.test.mjs';
 
 // Entities
 import '../unit/entities/player.test.mjs';
@@ -52,6 +55,7 @@ import '../unit/editor/editor-canvas.test.mjs';
 import '../unit/editor/editor-buttons-and-functions.test.mjs';
 import '../unit/editor/history-stack.test.mjs';
 import '../unit/editor/prefabs-and-autofix.test.mjs';
+import '../unit/editor/entrance-exit-clash.test.mjs';
 
 // Assets
 import '../unit/assets/asset-catalog.test.mjs';
@@ -62,6 +66,9 @@ import '../unit/ui/audio-fx.test.mjs';
 import '../unit/ui/audio-ambience.test.mjs';
 import '../unit/ui/game-menu.test.mjs';
 import '../unit/ui/app-header.test.mjs';
+import '../unit/ui/hero-ambient-canvas.test.mjs';
+import '../unit/ui/lore-journal.test.mjs';
+import '../unit/ui/celestial-cipher-dials.test.mjs';
 
 const results = await run();
 process.exit(results.failed > 0 ? 1 : 0);

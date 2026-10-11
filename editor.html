@@ -60,15 +60,20 @@
           <button id="btn-redo" class="btn btn-secondary btn-sm" title="Redo (Ctrl+Y)">↻</button>
         </div>
 
-        <button id="btn-validate" class="btn btn-secondary btn-sm validation-badge" title="Check Solvability & Integrity (V)">
-          <span id="val-badge-icon">✅</span> <span id="val-badge-text">Valid</span>
-        </button>
-        <button id="btn-auto-fix" class="btn btn-secondary btn-sm" title="One-Click Diagnostic Auto-Fixer: Resolve reachability, missing ramps, orphaned doors/keys, and bad coordinates">
-          🪄 Auto-Fix
-        </button>
+        <div class="toolbar-group">
+          <button id="btn-validate" class="btn btn-secondary btn-sm validation-badge" title="Check Solvability & Integrity (V)">
+            <span id="val-badge-icon">✅</span> <span id="val-badge-text">Valid</span>
+          </button>
+          <button id="btn-auto-fix" class="btn btn-secondary btn-sm" title="One-Click Diagnostic Auto-Fixer: Resolve reachability, missing ramps, orphaned doors/keys, and bad coordinates">
+            🪄 Auto-Fix
+          </button>
+          <button id="btn-generate-maze" class="btn btn-secondary btn-sm" title="Procedural Maze Generator: 1-Click Solvable Labyrinth (BL-50)">
+            ⚡ Generate
+          </button>
+        </div>
 
         <div class="toolbar-group">
-          <button id="btn-settings" class="btn btn-secondary btn-sm" title="Configure Labyrinth Dimensions & Rules">⚙ Properties</button>
+          <button id="btn-properties" class="btn btn-secondary btn-sm" title="Configure Labyrinth Dimensions & Rules">⚙ Properties</button>
           <button id="btn-guide" class="btn btn-secondary btn-sm" title="Architect Handbook, Guides & Shortcuts [H]">❓ Guide</button>
         </div>
 
@@ -90,6 +95,22 @@
 
     <!-- Left Sidebar Palette -->
     <aside class="editor-sidebar">
+      <!-- Sidebar Asset Category Navigation (BL-110) -->
+      <nav class="sidebar-category-nav" id="sidebar-category-nav" aria-label="Asset Categories">
+        <button type="button" class="category-pill active" data-category="all" title="Show All Asset Palettes">All</button>
+        <button type="button" class="category-pill" data-category="tools" title="Show Draw Tools & Brush Size">🛠️ Tools</button>
+        <button type="button" class="category-pill" data-category="tiles" title="Show Tiles, Bridges & Elevation Ramps">🧱 Tiles</button>
+        <button type="button" class="category-pill" data-category="prefabs" title="Show Architectural & Custom Prefabs">🏛️ Prefabs</button>
+        <button type="button" class="category-pill" data-category="entities" title="Show Entities, Keys, Doors & Relics">📦 Entities</button>
+      </nav>
+
+      <!-- Live Search / Filter Input -->
+      <div class="sidebar-search-box">
+        <span class="sidebar-search-icon">🔍</span>
+        <input type="text" id="sidebar-asset-search" class="sidebar-search-input" placeholder="Filter assets (e.g. key, ramp)..." title="Filter tools, tiles, prefabs, or entities in real-time" />
+        <button type="button" id="btn-clear-asset-search" class="sidebar-search-clear" title="Clear search" style="display:none;">✕</button>
+      </div>
+
       <!-- Visual Tileset / Theme Selector -->
       <div>
         <div class="sidebar-section-title">Visual Tileset</div>
@@ -112,28 +133,36 @@
         </div>
       </div>
 
-      <!-- Tools -->
-      <div>
-        <div class="sidebar-section-title">Draw Tools</div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn active" data-tool="pencil" title="Pencil Tool [P] — Click or drag to draw selected tile">
-            <span class="palette-icon">✏️</span> Pencil
-          </button>
-          <button type="button" class="palette-btn" data-tool="line" title="Line / Wall Tool [L] — Click &amp; drag straight or diagonal walls">
-            <span class="palette-icon">📏</span> Line / Wall
-          </button>
-          <button type="button" class="palette-btn" data-tool="fill" title="Flood Fill Tool [F] — Fill contiguous region with selected tile">
-            <span class="palette-icon">🪣</span> Fill
-          </button>
-          <button type="button" class="palette-btn" data-tool="eraser" title="Eraser Tool [E] — Erase tiles and entities to floor">
-            <span class="palette-icon">🧹</span> Eraser
-          </button>
-          <button type="button" class="palette-btn" data-tool="select" title="Inspect Tool [S] — Click an entity to configure properties & wiring">
-            <span class="palette-icon">🔍</span> Inspect
-          </button>
-          <button type="button" class="palette-btn" data-tool="move" title="Grab &amp; Move Tool [G] — Click &amp; drag any key, door, lever, spawn, or exit to relocate it across the labyrinth">
-            <span class="palette-icon">✋</span> Grab / Move
-          </button>
+      <!-- Tools Accordion -->
+      <div class="sidebar-accordion active" data-accordion="tools">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Draw Tools Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Draw Tools</span>
+          </div>
+          <span class="accordion-badge">6</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn active" data-tool="pencil" title="Pencil Tool [P] — Click or drag to draw selected tile">
+              <span class="palette-icon">✏️</span> Pencil
+            </button>
+            <button type="button" class="palette-btn" data-tool="line" title="Line / Wall Tool [L] — Click &amp; drag straight or diagonal walls">
+              <span class="palette-icon">📏</span> Line / Wall
+            </button>
+            <button type="button" class="palette-btn" data-tool="fill" title="Flood Fill Tool [F] — Fill contiguous region with selected tile">
+              <span class="palette-icon">🪣</span> Fill
+            </button>
+            <button type="button" class="palette-btn" data-tool="eraser" title="Eraser Tool [E] — Erase tiles and entities to floor">
+              <span class="palette-icon">🧹</span> Eraser
+            </button>
+            <button type="button" class="palette-btn" data-tool="select" title="Inspect Tool [S] — Click an entity to configure properties & wiring">
+              <span class="palette-icon">🔍</span> Inspect
+            </button>
+            <button type="button" class="palette-btn" data-tool="move" title="Grab &amp; Move Tool [G] — Click &amp; drag any key, door, lever, spawn, or exit to relocate it across the labyrinth">
+              <span class="palette-icon">✋</span> Grab / Move
+            </button>
+          </div>
         </div>
       </div>
 
@@ -152,171 +181,218 @@
         </div>
       </div>
 
-      <!-- Tile Palette -->
-      <div>
-        <div class="sidebar-section-title">Tiles</div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn" data-tile="1" title="Solid Wall [1] — Impassable barrier">
-            <span class="palette-icon">🧱</span> Wall
-          </button>
-          <button type="button" class="palette-btn" data-tile="0" title="Walkable Floor [0] — Open pathway">
-            <span class="palette-icon">⬜</span> Floor
-          </button>
-          <button type="button" class="palette-btn" data-tile="B_EW" title="Bridge East-West — Ground moves E-W under bridge; Overhead moves N-S across">
-            <span class="palette-icon">🌉</span> Bridge EW
-          </button>
-          <button type="button" class="palette-btn" data-tile="B_NS" title="Bridge North-South — Ground moves N-S under bridge; Overhead moves E-W across">
-            <span class="palette-icon">🌉</span> Bridge NS
-          </button>
-        </div>
-      </div>
-
-      <!-- Elevation Ramps -->
-      <div>
-        <div class="sidebar-section-title">Ramps (Elevation 0 ➔ 1)</div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn" data-tile="R_N" title="Ramp North — Moving North climbs Ground (0) ➔ Overhead (1)">
-            <span class="palette-icon">▲</span> Ramp N
-          </button>
-          <button type="button" class="palette-btn" data-tile="R_S" title="Ramp South — Moving South climbs Ground (0) ➔ Overhead (1)">
-            <span class="palette-icon">▼</span> Ramp S
-          </button>
-          <button type="button" class="palette-btn" data-tile="R_E" title="Ramp East — Moving East climbs Ground (0) ➔ Overhead (1)">
-            <span class="palette-icon">▶</span> Ramp E
-          </button>
-          <button type="button" class="palette-btn" data-tile="R_W" title="Ramp West — Moving West climbs Ground (0) ➔ Overhead (1)">
-            <span class="palette-icon">◀</span> Ramp W
-          </button>
-        </div>
-      </div>
-
-      <!-- Architectural Prefab Palette (BL-20) -->
-      <div>
-        <div class="sidebar-section-title">
-          <span>Architectural Prefabs</span>
-          <span style="font-size: 0.65rem; color: var(--accent);">Stamp</span>
-        </div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn" data-prefab="bridge_crossing" title="Bridge Crossing (5x5) — Complete elevated overpass with ramps and crossway">
-            <span class="palette-icon">🌉</span> Bridge Cross
-          </button>
-          <button type="button" class="palette-btn" data-prefab="vault_gate" title="Locked Vault Gate (5x3) — Wall barrier with locked door and matching color key">
-            <span class="palette-icon">🔒</span> Vault Gate
-          </button>
-          <button type="button" class="palette-btn" data-prefab="chamber_room" title="Pillared Chamber (5x5) — Spacious room with decorative corner pillars">
-            <span class="palette-icon">🏛️</span> Chamber
-          </button>
-          <button type="button" class="palette-btn" data-prefab="cross_intersection" title="4-Way Crossroads (5x5) — Smooth 4-way corridor intersection">
-            <span class="palette-icon">➕</span> 4-Way Cross
-          </button>
-          <button type="button" class="palette-btn" data-prefab="puzzle_sanctum" title="Riddle Sanctum (5x5) — Enclosed sanctum with pedestal, relic, and locked gate">
-            <span class="palette-icon">🦅</span> Sanctum
-          </button>
-          <button type="button" class="palette-btn" data-prefab="switch_hub" title="Clockwork Switch Hub (5x4) — Lever wired to toggle passage walls">
-            <span class="palette-icon">🕹️</span> Switch Hub
-          </button>
-        </div>
-      </div>
-
-      <!-- Entities & Markers -->
-      <div>
-        <div class="sidebar-section-title">Entities &amp; Markers</div>
-        <div class="palette-grid">
-          <button type="button" class="palette-btn" data-entity="spawn" title="Player Entrance Spawn (S)">
-            <span class="palette-icon">🟢</span> Spawn
-          </button>
-          <button type="button" class="palette-btn" data-entity="test_spawn" title="Custom Test Spawn Point (🧪) for playtesting">
-            <span class="palette-icon">🧪</span> Test Spawn
-          </button>
-          <button type="button" class="palette-btn" data-entity="exit" title="Exit Goal Portal (E)">
-            <span class="palette-icon">🔵</span> Exit
-          </button>
-          <button type="button" class="palette-btn" data-entity="lever" title="Lever Switch (🕹️) — Wire to toggle walls, gates & bridges">
-            <span class="palette-icon">🕹️</span> Lever
-          </button>
-          <button type="button" class="palette-btn" data-entity="pedestal" title="Riddle Pedestal (🏛️) — Inscribed socket that accepts carryable riddle relics">
-            <span class="palette-icon">🏛️</span> Pedestal
-          </button>
-          <button type="button" class="palette-btn" data-entity="riddle_item" title="Carryable Riddle Relic (🦅) — Pick up and place into matching pedestals">
-            <span class="palette-icon">🦅</span> Relic
-          </button>
-          <button type="button" class="palette-btn" data-entity="checkpoint" title="Checkpoint Beacon (🚩) — Mid-level checkpoint respawn">
-            <span class="palette-icon">🚩</span> Checkpoint
-          </button>
-          <button type="button" class="palette-btn" data-entity="note" title="Wall Art / Inscription (📜) — Interactive lore tablet or decoration">
-            <span class="palette-icon">📜</span> Note / Art
-          </button>
-          <button type="button" class="palette-btn" data-entity="bonus_item" title="Bonus Gem (💎) — Score booster collectible">
-            <span class="palette-icon">💎</span> Bonus Gem
-          </button>
-        </div>
-
-        <!-- Carryable Riddle Relics Subgrid -->
-        <div style="margin-top:0.75rem;">
-          <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Riddle Relics &amp; Statues</div>
-          <div class="color-palette-subgrid">
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🦅" data-itemtype="falcon_statue" data-name="Falcon Statue" data-style="statue_falcon" title="Falcon Statue (🦅)">
-              <span>🦅</span><span style="font-size:0.65rem;">Falcon</span>
+      <!-- Tile Palette Accordion -->
+      <div class="sidebar-accordion active" data-accordion="tiles">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Tiles & Bridges Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Tiles &amp; Bridges</span>
+          </div>
+          <span class="accordion-badge">4</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn" data-tile="1" title="Solid Wall [1] — Impassable barrier">
+              <span class="palette-icon">🧱</span> Wall
             </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🦁" data-itemtype="lion_statue" data-name="Lion Statue" data-style="statue_lion" title="Lion Statue (🦁)">
-              <span>🦁</span><span style="font-size:0.65rem;">Lion</span>
+            <button type="button" class="palette-btn" data-tile="0" title="Walkable Floor [0] — Open pathway">
+              <span class="palette-icon">⬜</span> Floor
             </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🐍" data-itemtype="serpent_statue" data-name="Serpent Statue" data-style="statue_serpent" title="Serpent Statue (🐍)">
-              <span>🐍</span><span style="font-size:0.65rem;">Serpent</span>
+            <button type="button" class="palette-btn" data-tile="B_EW" title="Bridge East-West — Ground moves E-W under bridge; Overhead moves N-S across">
+              <span class="palette-icon">🌉</span> Bridge EW
             </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🐻" data-itemtype="bear_statue" data-name="Bear Statue" data-style="statue_bear" title="Bear Statue (🐻)">
-              <span>🐻</span><span style="font-size:0.65rem;">Bear</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🏆" data-itemtype="chalice_sun" data-name="Solar Chalice" data-style="chalice_sun" title="Solar Chalice (🏆)">
-              <span>🏆</span><span style="font-size:0.65rem;">Chalice</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🔮" data-itemtype="orb_moon" data-name="Lunar Orb" data-style="orb_moon" title="Lunar Orb (🔮)">
-              <span>🔮</span><span style="font-size:0.65rem;">Moon Orb</span>
+            <button type="button" class="palette-btn" data-tile="B_NS" title="Bridge North-South — Ground moves N-S under bridge; Overhead moves E-W across">
+              <span class="palette-icon">🌉</span> Bridge NS
             </button>
           </div>
         </div>
+      </div>
 
-        <!-- Multi-Colored Keys Palette -->
-        <div style="margin-top:0.75rem;">
-          <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Collectible Keys</div>
-          <div class="color-palette-subgrid">
-            <button type="button" class="palette-btn" data-entity="key" data-color="#fbbf24" data-name="Golden Key" title="Golden Key (#fbbf24)">
-              <span>🔑</span><span style="font-size:0.65rem;">Gold</span>
+      <!-- Elevation Ramps Accordion -->
+      <div class="sidebar-accordion" data-accordion="ramps">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Elevation Ramps Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Elevation Ramps (0 ➔ 1)</span>
+          </div>
+          <span class="accordion-badge">4</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn" data-tile="R_N" title="Ramp North — Moving North climbs Ground (0) ➔ Overhead (1)">
+              <span class="palette-icon">▲</span> Ramp N
             </button>
-            <button type="button" class="palette-btn" data-entity="key" data-color="#f43f5e" data-name="Ruby Key" title="Ruby Red Key (#f43f5e)">
-              <span>🔴</span><span style="font-size:0.65rem;">Ruby</span>
+            <button type="button" class="palette-btn" data-tile="R_S" title="Ramp South — Moving South climbs Ground (0) ➔ Overhead (1)">
+              <span class="palette-icon">▼</span> Ramp S
             </button>
-            <button type="button" class="palette-btn" data-entity="key" data-color="#38bdf8" data-name="Sapphire Key" title="Sapphire Blue Key (#38bdf8)">
-              <span>🔵</span><span style="font-size:0.65rem;">Sapphire</span>
+            <button type="button" class="palette-btn" data-tile="R_E" title="Ramp East — Moving East climbs Ground (0) ➔ Overhead (1)">
+              <span class="palette-icon">▶</span> Ramp E
             </button>
-            <button type="button" class="palette-btn" data-entity="key" data-color="#34d399" data-name="Emerald Key" title="Emerald Green Key (#34d399)">
-              <span>🟢</span><span style="font-size:0.65rem;">Emerald</span>
-            </button>
-            <button type="button" class="palette-btn" data-entity="key" data-color="#a855f7" data-name="Amethyst Key" title="Amethyst Purple Key (#a855f7)">
-              <span>🟣</span><span style="font-size:0.65rem;">Amethyst</span>
+            <button type="button" class="palette-btn" data-tile="R_W" title="Ramp West — Moving West climbs Ground (0) ➔ Overhead (1)">
+              <span class="palette-icon">◀</span> Ramp W
             </button>
           </div>
         </div>
+      </div>
 
-        <!-- Multi-Colored Doors Palette -->
-        <div style="margin-top:0.75rem;">
-          <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Locked Gates / Doors</div>
-          <div class="color-palette-subgrid">
-            <button type="button" class="palette-btn" data-entity="door" data-color="#fbbf24" title="Gold Gate (#fbbf24)">
-              <span>🚪</span><span style="font-size:0.65rem;">Gold</span>
+      <!-- Architectural Prefab Palette Accordion (BL-20) -->
+      <div class="sidebar-accordion" data-accordion="prefabs">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Architectural Prefabs Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Architectural Prefabs</span>
+          </div>
+          <span class="accordion-badge">6</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn" data-prefab="bridge_crossing" title="Bridge Crossing (5x5) — Complete elevated overpass with ramps and crossway">
+              <span class="palette-icon">🌉</span> Bridge Cross
             </button>
-            <button type="button" class="palette-btn" data-entity="door" data-color="#f43f5e" title="Ruby Gate (#f43f5e)">
-              <span>🚪</span><span style="font-size:0.65rem; color:#f43f5e;">Ruby</span>
+            <button type="button" class="palette-btn" data-prefab="vault_gate" title="Locked Vault Gate (5x3) — Wall barrier with locked door and matching color key">
+              <span class="palette-icon">🔒</span> Vault Gate
             </button>
-            <button type="button" class="palette-btn" data-entity="door" data-color="#38bdf8" title="Sapphire Gate (#38bdf8)">
-              <span>🚪</span><span style="font-size:0.65rem; color:#38bdf8;">Sapphire</span>
+            <button type="button" class="palette-btn" data-prefab="chamber_room" title="Pillared Chamber (5x5) — Spacious room with decorative corner pillars">
+              <span class="palette-icon">🏛️</span> Chamber
             </button>
-            <button type="button" class="palette-btn" data-entity="door" data-color="#34d399" title="Emerald Gate (#34d399)">
-              <span>🚪</span><span style="font-size:0.65rem; color:#34d399;">Emerald</span>
+            <button type="button" class="palette-btn" data-prefab="cross_intersection" title="4-Way Crossroads (5x5) — Smooth 4-way corridor intersection">
+              <span class="palette-icon">➕</span> 4-Way Cross
             </button>
-            <button type="button" class="palette-btn" data-entity="door" data-color="#a855f7" title="Amethyst Gate (#a855f7)">
-              <span>🚪</span><span style="font-size:0.65rem; color:#a855f7;">Amethyst</span>
+            <button type="button" class="palette-btn" data-prefab="puzzle_sanctum" title="Riddle Sanctum (5x5) — Enclosed sanctum with pedestal, relic, and locked gate">
+              <span class="palette-icon">🦅</span> Sanctum
             </button>
+            <button type="button" class="palette-btn" data-prefab="switch_hub" title="Clockwork Switch Hub (5x4) — Lever wired to toggle passage walls">
+              <span class="palette-icon">🕹️</span> Switch Hub
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Custom Prefab Palette Accordion (BL-39) -->
+      <div class="sidebar-accordion" data-accordion="custom-prefabs">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Custom Prefabs Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Custom Prefabs</span>
+          </div>
+          <button type="button" id="btn-open-save-prefab" class="btn btn-secondary btn-xs" style="padding: 2px 6px; font-size: 0.65rem;" title="Capture level region as reusable custom prefab (BL-39)">
+            💾 Save Region
+          </button>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div id="custom-prefab-palette" class="palette-grid" style="grid-template-columns: 1fr; gap: 4px;">
+            <!-- Dynamically populated by EditorUI -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Entities & Markers Accordion -->
+      <div class="sidebar-accordion" data-accordion="entities">
+        <button type="button" class="sidebar-accordion-header" title="Toggle Entities & Collectibles Palette">
+          <div class="accordion-header-left">
+            <span class="accordion-chevron">▼</span>
+            <span class="sidebar-section-title">Entities &amp; Markers</span>
+          </div>
+          <span class="accordion-badge">10</span>
+        </button>
+        <div class="sidebar-accordion-content">
+          <div class="palette-grid">
+            <button type="button" class="palette-btn" data-entity="spawn" title="Player Entrance Spawn (S)">
+              <span class="palette-icon">🟢</span> Spawn
+            </button>
+            <button type="button" class="palette-btn" data-entity="test_spawn" title="Custom Test Spawn Point (🧪) for playtesting">
+              <span class="palette-icon">🧪</span> Test Spawn
+            </button>
+            <button type="button" class="palette-btn" data-entity="exit" title="Exit Goal Portal (E)">
+              <span class="palette-icon">🔵</span> Exit
+            </button>
+            <button type="button" class="palette-btn" data-entity="lever" title="Lever Switch (🕹️) — Wire to toggle walls, gates & bridges">
+              <span class="palette-icon">🕹️</span> Lever
+            </button>
+            <button type="button" class="palette-btn" data-entity="pedestal" title="Riddle Pedestal (🏛️) — Inscribed socket that accepts carryable riddle relics">
+              <span class="palette-icon">🏛️</span> Pedestal
+            </button>
+            <button type="button" class="palette-btn" data-entity="riddle_item" title="Carryable Riddle Relic (🦅) — Pick up and place into matching pedestals">
+              <span class="palette-icon">🦅</span> Relic
+            </button>
+            <button type="button" class="palette-btn" data-entity="checkpoint" title="Checkpoint Beacon (🚩) — Mid-level checkpoint respawn">
+              <span class="palette-icon">🚩</span> Checkpoint
+            </button>
+            <button type="button" class="palette-btn" data-entity="note" title="Wall Art / Inscription (📜) — Interactive lore tablet or decoration">
+              <span class="palette-icon">📜</span> Note / Art
+            </button>
+            <button type="button" class="palette-btn" data-entity="bonus_item" title="Bonus Gem (💎) — Score booster collectible">
+              <span class="palette-icon">💎</span> Bonus Gem
+            </button>
+          </div>
+
+          <!-- Carryable Riddle Relics Subgrid -->
+          <div style="margin-top:0.75rem;">
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Riddle Relics &amp; Statues</div>
+            <div class="color-palette-subgrid">
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🦅" data-itemtype="falcon_statue" data-name="Falcon Statue" data-style="statue_falcon" title="Falcon Statue (🦅)">
+                <span>🦅</span><span style="font-size:0.65rem;">Falcon</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🦁" data-itemtype="lion_statue" data-name="Lion Statue" data-style="statue_lion" title="Lion Statue (🦁)">
+                <span>🦁</span><span style="font-size:0.65rem;">Lion</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🐍" data-itemtype="serpent_statue" data-name="Serpent Statue" data-style="statue_serpent" title="Serpent Statue (🐍)">
+                <span>🐍</span><span style="font-size:0.65rem;">Serpent</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🐻" data-itemtype="bear_statue" data-name="Bear Statue" data-style="statue_bear" title="Bear Statue (🐻)">
+                <span>🐻</span><span style="font-size:0.65rem;">Bear</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🏆" data-itemtype="chalice_sun" data-name="Solar Chalice" data-style="chalice_sun" title="Solar Chalice (🏆)">
+                <span>🏆</span><span style="font-size:0.65rem;">Chalice</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="riddle_item" data-symbol="🔮" data-itemtype="orb_moon" data-name="Lunar Orb" data-style="orb_moon" title="Lunar Orb (🔮)">
+                <span>🔮</span><span style="font-size:0.65rem;">Moon Orb</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Multi-Colored Keys Palette -->
+          <div style="margin-top:0.75rem;">
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Collectible Keys</div>
+            <div class="color-palette-subgrid">
+              <button type="button" class="palette-btn" data-entity="key" data-color="#fbbf24" data-name="Golden Key" title="Golden Key (#fbbf24)">
+                <span>🔑</span><span style="font-size:0.65rem;">Gold</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="key" data-color="#f43f5e" data-name="Ruby Key" title="Ruby Red Key (#f43f5e)">
+                <span>🔴</span><span style="font-size:0.65rem;">Ruby</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="key" data-color="#38bdf8" data-name="Sapphire Key" title="Sapphire Blue Key (#38bdf8)">
+                <span>🔵</span><span style="font-size:0.65rem;">Sapphire</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="key" data-color="#34d399" data-name="Emerald Key" title="Emerald Green Key (#34d399)">
+                <span>🟢</span><span style="font-size:0.65rem;">Emerald</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="key" data-color="#a855f7" data-name="Amethyst Key" title="Amethyst Purple Key (#a855f7)">
+                <span>🟣</span><span style="font-size:0.65rem;">Amethyst</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Multi-Colored Doors Palette -->
+          <div style="margin-top:0.75rem;">
+            <div style="font-size:0.72rem; color:var(--text-muted); font-weight:700; text-transform:uppercase; margin-bottom:0.25rem;">Locked Gates / Doors</div>
+            <div class="color-palette-subgrid">
+              <button type="button" class="palette-btn" data-entity="door" data-color="#fbbf24" title="Gold Gate (#fbbf24)">
+                <span>🚪</span><span style="font-size:0.65rem;">Gold</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="door" data-color="#f43f5e" title="Ruby Gate (#f43f5e)">
+                <span>🚪</span><span style="font-size:0.65rem; color:#f43f5e;">Ruby</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="door" data-color="#38bdf8" title="Sapphire Gate (#38bdf8)">
+                <span>🚪</span><span style="font-size:0.65rem; color:#38bdf8;">Sapphire</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="door" data-color="#34d399" title="Emerald Gate (#34d399)">
+                <span>🚪</span><span style="font-size:0.65rem; color:#34d399;">Emerald</span>
+              </button>
+              <button type="button" class="palette-btn" data-entity="door" data-color="#a855f7" title="Amethyst Gate (#a855f7)">
+                <span>🚪</span><span style="font-size:0.65rem; color:#a855f7;">Amethyst</span>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -337,12 +413,30 @@
           <button type="button" class="layer-hud-btn active" id="btn-hud-view-focus" title="Focus Active Layer (Dim Inactive Layer)">Focus</button>
           <button type="button" class="layer-hud-btn" id="btn-hud-view-all" title="Show Both Layers Full Opacity">All</button>
           <button type="button" class="layer-hud-btn" id="btn-hud-view-solo" title="Solo Active Layer (Hide Inactive Layer)">Solo</button>
+          <div class="layer-hud-divider"></div>
+          <button type="button" class="layer-hud-btn" id="btn-hud-perspective" title="Toggle 2D / 2.5D Perspective [3]">📐 2D</button>
         </div>
       </div>
 
       <canvas id="editor-canvas"></canvas>
 
-      <div class="viewport-overlay-controls">
+      <!-- Interactive Mini-Map Overview HUD (BL-103, BL-110) -->
+      <div class="editor-minimap-hud" id="editor-minimap-hud">
+        <div class="minimap-hud-header">
+          <span class="minimap-hud-title">🗺️ RADAR OVERVIEW</span>
+          <button type="button" class="minimap-toggle-btn" id="btn-toggle-minimap" title="Toggle Mini-Map Overview [_]">−</button>
+        </div>
+        <div class="minimap-canvas-container" id="minimap-canvas-container">
+          <canvas id="editor-minimap-canvas" width="160" height="160"></canvas>
+          <div class="minimap-hint">Click / Drag to Pan</div>
+        </div>
+      </div>
+
+      <div class="viewport-overlay-controls" id="viewport-overlay-controls">
+        <button type="button" id="btn-perspective" class="btn btn-secondary btn-sm" title="Toggle 2D Blueprint / 2.5D Angled View [3]" style="font-size:0.75rem; padding:0.2rem 0.5rem;">
+          <span id="perspective-icon">📐</span> <span id="perspective-label">2D</span>
+        </button>
+        <div class="viewport-control-divider"></div>
         <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In (+)">+</button>
         <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out (-)">-</button>
         <span class="zoom-level-badge" id="zoom-badge">100%</span>
@@ -350,20 +444,28 @@
       </div>
     </main>
 
-    <!-- Bottom Status Bar -->
+    <!-- Bottom Status Bar (AAA Studio Telemetry - BL-102) -->
     <footer class="editor-status-bar">
-      <span id="status-coord">X: --, Y: --</span>
-      <span id="status-layer">Layer: GROUND</span>
-      <span>Middle-Click / Space+Drag to Pan • Wheel to Zoom</span>
+      <div class="status-bar-left">
+        <span class="status-item status-chip" id="status-coord">📍 (X: --, Y: --, Z: 0)</span>
+        <span class="status-item status-chip" id="status-layer"><span class="status-pip ground">●</span> Layer: GROUND</span>
+        <span class="status-item status-chip" id="status-perspective">📐 2D Blueprint</span>
+        <span class="status-item status-chip" id="status-grid-size">📐 21×21</span>
+        <span class="status-item status-chip" id="status-entity-count">📦 0 Entities</span>
+      </div>
+      <div class="status-bar-right">
+        <span class="status-hint">Space+Drag Pan • Wheel Zoom • [1]/[2] Layers</span>
+        <span class="status-version-badge">ARCHITECT v1.26.0</span>
+      </div>
     </footer>
   </div>
 
   <!-- Level Properties Modal -->
-  <div class="modal-backdrop" id="settings-modal">
+  <div class="modal-backdrop" id="properties-modal">
     <div class="modal-dialog" style="max-width: 580px;">
       <div class="modal-header">
         <h3 style="font-size: 1.15rem;">⚙ Labyrinth Properties</h3>
-        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="settings-btn-close">✕</button>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="properties-btn-close">✕</button>
       </div>
 
       <!-- Tab Navigation -->
@@ -478,7 +580,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" id="settings-btn-save">Save Properties</button>
+        <button type="button" class="btn btn-primary" id="properties-btn-save">Save Properties</button>
       </div>
     </div>
   </div>
@@ -699,6 +801,66 @@
               <li><strong>Bridge NS (<code>B_NS</code>)</strong>: Ground level runs <strong>North-South</strong> under the bridge; Overhead level runs <strong>East-West</strong> across the bridge deck.</li>
               <li><strong>Directional Ramps (<code>R_N</code>, <code>R_S</code>, <code>R_E</code>, <code>R_W</code>)</strong>: Smoothly transition the player between Ground (0) and Overhead (1). Step in the ramp's arrow direction to climb; step backwards to descend. Side entry is blocked to prevent floating.</li>
             </ul>
+
+            <div class="bridge-diagrams-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 0.9rem;">
+              <!-- B_EW Diagram -->
+              <div class="diagram-box" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 0.8rem; text-align: center;">
+                <div style="font-weight: 700; color: #fbbf24; font-size: 0.85rem; margin-bottom: 0.5rem;">Bridge EW (B_EW) Elevation Crossing</div>
+                <svg viewBox="0 0 240 160" width="100%" height="140" style="max-width: 240px; display: block; margin: 0 auto;">
+                  <rect x="0" y="0" width="240" height="160" fill="#0f172a" rx="6" />
+                  <!-- Ground passage E <-> W (Cyan) -->
+                  <rect x="10" y="60" width="220" height="40" fill="rgba(56, 189, 248, 0.15)" stroke="#38bdf8" stroke-dasharray="4" stroke-width="1.5" rx="4" />
+                  <line x1="20" y1="80" x2="220" y2="80" stroke="#38bdf8" stroke-width="2" />
+                  <text x="120" y="96" fill="#38bdf8" font-size="10" font-weight="700" text-anchor="middle">Ground Tunnel (Z=0) East ↔ West</text>
+
+                  <!-- Overhead Bridge Deck & Ramps N <-> S (Gold) -->
+                  <!-- Ramp South (R_S) -->
+                  <rect x="95" y="10" width="50" height="40" fill="rgba(251, 191, 36, 0.25)" stroke="#fbbf24" stroke-width="1.5" rx="3" />
+                  <text x="120" y="28" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">R_S (▲)</text>
+                  <text x="120" y="42" fill="#94a3b8" font-size="8" text-anchor="middle">Climb South</text>
+
+                  <!-- Bridge EW Deck -->
+                  <rect x="90" y="55" width="60" height="50" fill="#fbbf24" stroke="#d97706" stroke-width="2" rx="4" />
+                  <text x="120" y="80" fill="#1e293b" font-size="11" font-weight="800" text-anchor="middle">B_EW</text>
+                  <text x="120" y="94" fill="#1e293b" font-size="8" font-weight="700" text-anchor="middle">Overhead (Z=1)</text>
+
+                  <!-- Ramp North (R_N) -->
+                  <rect x="95" y="110" width="50" height="40" fill="rgba(251, 191, 36, 0.25)" stroke="#fbbf24" stroke-width="1.5" rx="3" />
+                  <text x="120" y="128" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">R_N (▼)</text>
+                  <text x="120" y="142" fill="#94a3b8" font-size="8" text-anchor="middle">Climb North</text>
+                </svg>
+                <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 0.4rem;">Overhead path runs <strong>North-South</strong>; Ground tunnel runs <strong>East-West</strong> underneath.</div>
+              </div>
+
+              <!-- B_NS Diagram -->
+              <div class="diagram-box" style="background: rgba(15, 23, 42, 0.7); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 0.8rem; text-align: center;">
+                <div style="font-weight: 700; color: #fbbf24; font-size: 0.85rem; margin-bottom: 0.5rem;">Bridge NS (B_NS) Elevation Crossing</div>
+                <svg viewBox="0 0 240 160" width="100%" height="140" style="max-width: 240px; display: block; margin: 0 auto;">
+                  <rect x="0" y="0" width="240" height="160" fill="#0f172a" rx="6" />
+                  <!-- Ground passage N <-> S (Cyan) -->
+                  <rect x="100" y="10" width="40" height="140" fill="rgba(56, 189, 248, 0.15)" stroke="#38bdf8" stroke-dasharray="4" stroke-width="1.5" rx="4" />
+                  <line x1="120" y1="15" x2="120" y2="145" stroke="#38bdf8" stroke-width="2" />
+                  <text x="120" y="152" fill="#38bdf8" font-size="9" font-weight="700" text-anchor="middle">Ground (Z=0) N ↔ S</text>
+
+                  <!-- Overhead Bridge Deck & Ramps E <-> W (Gold) -->
+                  <!-- Ramp East (R_E) -->
+                  <rect x="15" y="60" width="50" height="40" fill="rgba(251, 191, 36, 0.25)" stroke="#fbbf24" stroke-width="1.5" rx="3" />
+                  <text x="40" y="78" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">R_E (▶)</text>
+                  <text x="40" y="92" fill="#94a3b8" font-size="8" text-anchor="middle">Climb East</text>
+
+                  <!-- Bridge NS Deck -->
+                  <rect x="75" y="55" width="90" height="50" fill="#fbbf24" stroke="#d97706" stroke-width="2" rx="4" />
+                  <text x="120" y="80" fill="#1e293b" font-size="11" font-weight="800" text-anchor="middle">B_NS</text>
+                  <text x="120" y="94" fill="#1e293b" font-size="8" font-weight="700" text-anchor="middle">Overhead (Z=1)</text>
+
+                  <!-- Ramp West (R_W) -->
+                  <rect x="175" y="60" width="50" height="40" fill="rgba(251, 191, 36, 0.25)" stroke="#fbbf24" stroke-width="1.5" rx="3" />
+                  <text x="200" y="78" fill="#fbbf24" font-size="10" font-weight="700" text-anchor="middle">R_W (◀)</text>
+                  <text x="200" y="92" fill="#94a3b8" font-size="8" text-anchor="middle">Climb West</text>
+                </svg>
+                <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 0.4rem;">Overhead path runs <strong>East-West</strong>; Ground tunnel runs <strong>North-South</strong> underneath.</div>
+              </div>
+            </div>
           </div>
 
           <!-- Guide 3: Multi-Color Keys & Doors -->
@@ -754,6 +916,7 @@
                 <tr><td><kbd>[</kbd> / <kbd>]</kbd></td><td>Decrease / Increase Brush Size (1x1 to 5x5)</td></tr>
                 <tr><td><kbd>1</kbd></td><td>Switch to Ground Layer (0)</td></tr>
                 <tr><td><kbd>2</kbd></td><td>Switch to Overhead Layer (1)</td></tr>
+                <tr><td><kbd>3</kbd></td><td>Toggle 2D Blueprint / 2.5D Angled View</td></tr>
                 <tr><td><kbd>V</kbd></td><td>Open Solvability Validation Report</td></tr>
                 <tr><td><kbd>T</kbd></td><td>Open Playtest Options Modal</td></tr>
                 <tr><td><kbd>H</kbd> / <kbd>?</kbd></td><td>Open Architect Handbook &amp; Guide</td></tr>
@@ -770,6 +933,157 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" id="guide-btn-dismiss">Got It!</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Procedural Maze Generator Modal (BL-50) -->
+  <div class="modal-backdrop" id="modal-maze-generator" style="display: none;">
+    <div class="modal-dialog" style="max-width: 520px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">⚡ Procedural Maze Generator</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="generator-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 1rem;">
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+          Generate a 100% solvable labyrinth using randomized depth-first search with custom dimensions, biomes, and optional key-door puzzle gating.
+        </p>
+
+        <!-- Dimension Preset / Custom -->
+        <div class="form-group">
+          <label style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Dimensions</label>
+          <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.5rem; margin-bottom: 0.5rem;">
+            <button type="button" class="btn btn-secondary btn-sm gen-size-preset" data-w="11" data-h="11">Small (11×11)</button>
+            <button type="button" class="btn btn-secondary btn-sm gen-size-preset active" data-w="17" data-h="17">Medium (17×17)</button>
+            <button type="button" class="btn btn-secondary btn-sm gen-size-preset" data-w="25" data-h="25">Large (25×25)</button>
+          </div>
+          <div style="display: flex; gap: 0.5rem; align-items: center;">
+            <span style="font-size: 0.75rem; color: var(--text-muted);">Custom (Odd ≥ 7):</span>
+            <input type="number" id="gen-width" class="input-field" value="17" min="7" max="49" step="2" style="width: 70px; text-align: center;" />
+            <span style="color: var(--text-muted);">×</span>
+            <input type="number" id="gen-height" class="input-field" value="17" min="7" max="49" step="2" style="width: 70px; text-align: center;" />
+          </div>
+        </div>
+
+        <!-- Biome Theme -->
+        <div class="form-group">
+          <label for="gen-theme" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Biome Environment</label>
+          <select id="gen-theme" class="input-field" style="width: 100%;">
+            <option value="dungeon">🏰 Subterranean Dungeon</option>
+            <option value="glacial">❄️ Glacial Expanse</option>
+            <option value="jungle">🌴 Overgrowth Jungle</option>
+            <option value="magma">🌋 Magma Chasm</option>
+            <option value="temple">🏛️ Sunken Temple</option>
+            <option value="random">🎲 Random Biome</option>
+          </select>
+        </div>
+
+        <!-- Braid Factor -->
+        <div class="form-group">
+          <div style="display: flex; justify-content: space-between; font-size: 0.8rem;">
+            <span style="font-weight: 600; color: var(--text-secondary);">Circuit Loopiness (Braid)</span>
+            <span id="gen-braid-val" style="font-family: var(--font-mono); color: var(--accent);">25%</span>
+          </div>
+          <input type="range" id="gen-braid" min="0" max="60" value="25" step="5" style="width: 100%;" />
+          <div style="display: flex; justify-content: space-between; font-size: 0.7rem; color: var(--text-muted);">
+            <span>Strict Dead-Ends (0%)</span>
+            <span>Interconnected Loops (60%)</span>
+          </div>
+        </div>
+
+        <!-- Key-Door Pairs -->
+        <div class="form-group">
+          <label for="gen-keys" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Puzzle Gating (Key &amp; Door Pairs)</label>
+          <select id="gen-keys" class="input-field" style="width: 100%;">
+            <option value="0">None (Pure Maze Navigation)</option>
+            <option value="1" selected>1 Key &amp; Locked Door Pair</option>
+            <option value="2">2 Key &amp; Door Pairs</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary" id="generator-btn-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="generator-btn-submit">⚡ Generate Labyrinth</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Capture Custom Prefab Modal (BL-39) -->
+  <div class="modal-backdrop" id="modal-save-prefab" style="display: none;">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem;">💾 Save Custom Prefab Module</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="save-prefab-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="display: flex; flex-direction: column; gap: 0.85rem;">
+        <p style="color: var(--text-muted); font-size: 0.85rem; margin: 0;">
+          Capture an architectural region of your maze into a reusable prefab saved in local storage.
+        </p>
+
+        <div class="form-group">
+          <label for="prefab-capture-name" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Prefab Name</label>
+          <input type="text" id="prefab-capture-name" class="input-field" placeholder="e.g., Hidden Treasury Room" value="Custom Module" style="width: 100%;" />
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label for="prefab-capture-x" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Origin X</label>
+            <input type="number" id="prefab-capture-x" class="input-field" value="0" min="0" style="width: 100%;" />
+          </div>
+          <div class="form-group">
+            <label for="prefab-capture-y" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Origin Y</label>
+            <input type="number" id="prefab-capture-y" class="input-field" value="0" min="0" style="width: 100%;" />
+          </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+          <div class="form-group">
+            <label for="prefab-capture-w" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Width (Tiles)</label>
+            <input type="number" id="prefab-capture-w" class="input-field" value="5" min="1" max="50" style="width: 100%;" />
+          </div>
+          <div class="form-group">
+            <label for="prefab-capture-h" style="font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);">Height (Tiles)</label>
+            <input type="number" id="prefab-capture-h" class="input-field" value="5" min="1" max="50" style="width: 100%;" />
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 1rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary" id="save-prefab-btn-cancel">Cancel</button>
+        <button type="button" class="btn btn-primary" id="save-prefab-btn-submit">💾 Save Prefab</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clear Canvas Confirmation Modal (Popup Avoidance BL-64, BL-73) -->
+  <div class="modal-backdrop" id="modal-clear-confirm" style="display: none;">
+    <div class="modal-dialog" style="max-width: 420px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; color: var(--rose, #f43f5e); margin: 0;">⚠️ Clear Entire Labyrinth?</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="clear-confirm-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; padding: 1rem 0;">
+        Are you sure you want to reset the maze canvas to an empty floor? All placed walls, bridge spans, ramps, and entities will be removed. You can undo this action with <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">Ctrl+Z</kbd>.
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.8rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary" id="clear-confirm-btn-cancel">Cancel</button>
+        <button type="button" class="btn btn-danger" id="clear-confirm-btn-proceed" style="background: #e11d48; border-color: #f43f5e; color: #fff;">Confirm Clear</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Playtest Unsolvable Warning Confirmation Modal (BL-75) -->
+  <div class="modal-backdrop" id="modal-playtest-confirm" style="display: none;">
+    <div class="modal-dialog" style="max-width: 440px;">
+      <div class="modal-header">
+        <h3 style="font-size: 1.15rem; color: #fbbf24; margin: 0;">⚠️ Playtest Unsolvable Maze?</h3>
+        <button type="button" class="btn btn-secondary btn-sm btn-icon" id="playtest-confirm-btn-close">✕</button>
+      </div>
+      <div class="modal-body" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5; padding: 1rem 0;">
+        This maze currently has validation errors or reachable path blockers and may be impossible to complete. Would you like to inspect issues or test anyway?
+      </div>
+      <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 0.5rem; padding-top: 0.8rem; border-top: 1px solid var(--border-color);">
+        <button type="button" class="btn btn-secondary" id="playtest-confirm-btn-issues">📋 View Issues</button>
+        <button type="button" class="btn btn-primary" id="playtest-confirm-btn-proceed">🚀 Playtest Anyway</button>
       </div>
     </div>
   </div>

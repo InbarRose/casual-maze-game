@@ -4,7 +4,7 @@
  * providing atmospheric observations, player reactions, and level-specific lore.
  */
 
-import { ENTITY_TYPES, ELEVATION, formatXYZ } from '../core/constants.js';
+import { ENTITY_TYPES, ELEVATION, formatXYZ, isApproachAllowed } from '../core/constants.js';
 
 export class WallDecor {
   /**
@@ -26,6 +26,7 @@ export class WallDecor {
     this.response = config.response || 'This adds quite a nice atmosphere.';
     this.author = config.author || 'Unknown Artisan';
     this.inspected = !!config.inspected;
+    this.interactDirections = Array.isArray(config.interactDirections) ? [...config.interactDirections] : null;
 
     // Animation timer for subtle torchlight shimmer
     this.shimmerTimer = Math.random() * Math.PI * 2;
@@ -45,6 +46,20 @@ export class WallDecor {
    */
   getCoordString() {
     return formatXYZ(this.x, this.y, this.z);
+  }
+
+  /**
+   * Check if player can interact with this wall decor
+   * @param {number} playerX
+   * @param {number} playerY
+   * @param {number} [playerZ=0]
+   * @returns {boolean}
+   */
+  canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
+    if (this.z !== playerZ) return false;
+    const dist = Math.abs(this.x - playerX) + Math.abs(this.y - playerY);
+    if (dist > 1) return false;
+    return isApproachAllowed(this.x, this.y, playerX, playerY, this.interactDirections);
   }
 
   /**

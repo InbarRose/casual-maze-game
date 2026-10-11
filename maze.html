@@ -19,10 +19,20 @@
     <!-- Main 2D Canvas -->
     <canvas id="game-canvas"></canvas>
 
-    <!-- Subtle In-World Tile [E] Overlay Indicator (BL-42) -->
+    <!-- Subtle In-World Tile [E] Overlay Indicator (BL-42, BL-91) -->
     <button id="hud-tile-indicator" class="hud-tile-indicator hidden" aria-label="Interact [E]" title="Interact [E]">
       <span class="hud-tile-key">E</span>
+      <span id="hud-tile-count" class="hud-tile-count-badge hidden"></span>
     </button>
+
+    <!-- Multi-Target In-World Disambiguation Container (BL-85) -->
+    <div id="hud-tile-indicators-container" class="hud-tile-indicators-container hidden"></div>
+
+    <!-- Multi-Target Disambiguation Selection Drawer (BL-85) -->
+    <div id="hud-disambig-drawer" class="hud-disambig-drawer hidden" aria-label="Multiple interactable objects nearby">
+      <div class="hud-disambig-header">Select Action:</div>
+      <div id="hud-disambig-list" class="hud-disambig-list"></div>
+    </div>
 
     <!-- Discreet Side HUD Action Drawer (BL-42) -->
     <button id="hud-contextual-interact" class="contextual-interact-btn hidden" aria-label="Examine / Interact" title="Examine [E] (Space / Enter)">
@@ -52,13 +62,22 @@
     <header class="game-hud-top">
       <!-- Left Island: Navigation & Level Info -->
       <div class="hud-island hud-island-left">
-        <a href="index.html" class="btn btn-secondary btn-sm" title="Return to Level Select Hub">← Hub</a>
+        <a href="index.html" class="btn btn-secondary btn-sm" id="hud-btn-hub" title="Return to Level Select Hub">← Hub</a>
         <a href="editor.html" class="btn btn-secondary btn-sm" id="hud-btn-editor" style="display: none;">🛠️ Editor</a>
         <div class="hud-card" id="hud-level-card">
-          <span class="tutorial-badge" id="hud-tutorial-badge" style="display: none;">🎓 Tutorial</span>
-          <span class="hud-title" id="hud-level-title">Loading...</span>
-          <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
-          <span class="room-badge" id="hud-room-badge" style="display: none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 600;"></span>
+          <nav class="hud-breadcrumbs" id="hud-breadcrumbs" aria-label="Labyrinth Breadcrumb">
+            <a href="index.html" class="hud-crumb-link" title="Casual Maze Game Hub">Hub</a>
+            <span class="hud-crumb-sep">❯</span>
+            <a href="index.html#campaign" class="hud-crumb-link" id="hud-crumb-chapter">Chapter 1</a>
+            <span class="hud-crumb-sep">❯</span>
+            <span class="hud-crumb-current" id="hud-crumb-level">Level 1</span>
+          </nav>
+          <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+            <span class="tutorial-badge" id="hud-tutorial-badge" style="display: none;">🎓 Tutorial</span>
+            <span class="hud-title" id="hud-level-title">Loading...</span>
+            <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
+            <span class="room-badge" id="hud-room-badge" style="display: none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 600;"></span>
+          </div>
         </div>
       </div>
 
@@ -83,6 +102,12 @@
           </div>
         </div>
 
+        <!-- Level Lore Journal Button (BL-81) -->
+        <button id="hud-journal-btn" class="btn btn-secondary btn-sm hud-journal-btn" title="Open Level Lore Journal [J]">
+          📜 <span class="hide-mobile">Journal</span>
+          <span class="hud-journal-badge" id="hud-journal-count">0</span>
+        </button>
+
         <!-- Hint / Objective Button -->
         <button id="btn-hint" class="btn btn-secondary btn-sm" title="Toggle Tutorial Objective & Hint" style="display: none;">
           💡 <span class="hide-mobile">Hint</span>
@@ -96,6 +121,19 @@
           <div class="hud-stat">⏱ <strong id="hud-timer">00:00.0</strong></div>
           <div class="hud-stat">👣 <strong id="hud-steps">0</strong></div>
           <div class="hud-stat">⭐ <strong id="hud-score">0</strong></div>
+        </div>
+
+        <!-- Viewport Zoom Control Widget (BL-87) -->
+        <div class="zoom-control-group" id="zoom-control-group">
+          <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out [-]" aria-label="Zoom Out">
+            −
+          </button>
+          <span id="hud-zoom-badge" class="zoom-badge" title="Reset Zoom to 100% [0]">
+            100%
+          </span>
+          <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In [+]" aria-label="Zoom In">
+            +
+          </button>
         </div>
 
         <!-- World Rotation Compass Widget -->
@@ -115,6 +153,16 @@
         <button id="btn-open-menu" class="btn btn-primary btn-sm" title="Open Game Menu & Options (Esc / P)">
           ⏸️ <span class="hide-mobile">Menu [P]</span>
         </button>
+
+        <!-- Responsive Quick Feed Pill (BL-97) -->
+        <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
+          ⚡ <span class="hide-mobile">Feed</span>
+        </button>
+
+        <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
+        <button id="btn-hud-collapse" class="btn btn-secondary btn-sm btn-icon hud-collapse-toggle" title="Collapse / Expand HUD Bar [H]" aria-label="Toggle HUD Visibility">
+          📐
+        </button>
       </div>
     </header>
 
@@ -132,18 +180,39 @@
       </div>
     </aside>
 
-    <!-- Real-Time In-Game Activity Log Feed -->
-    <div class="game-activity-feed" id="game-activity-feed" aria-live="polite"></div>
+    <!-- Real-Time In-Game Action Activity Feed (BL-81, BL-94) -->
+    <div class="game-activity-feed" id="game-activity-feed" aria-live="polite">
+      <div class="activity-feed-header" id="activity-feed-header">
+        <span class="activity-feed-title" id="activity-feed-title" title="Open Activity History Log">⚡ Feed</span>
+        <div class="activity-filter-pills" role="toolbar" aria-label="Feed category filters">
+          <button type="button" class="feed-pill active" data-filter="all" title="Show All Events">All</button>
+          <button type="button" class="feed-pill" data-filter="lore" title="Notes & Inscriptions">📜 Lore</button>
+          <button type="button" class="feed-pill" data-filter="mech" title="Switches & Gates">⚙️ Mech</button>
+          <button type="button" class="feed-pill" data-filter="item" title="Keys & Relics">🗝️ Items</button>
+        </div>
+        <div class="activity-feed-actions">
+          <button type="button" class="feed-history-btn" id="btn-feed-history" title="View Full Action History [📜]" aria-label="View Full Action History">📜</button>
+          <button type="button" class="feed-toggle-btn" id="btn-feed-toggle" title="Minimize / Expand Feed" aria-label="Toggle Activity Feed">_</button>
+        </div>
+      </div>
+      <div class="activity-feed-items" id="activity-feed-items"></div>
+    </div>
 
     <!-- Free-Pan Active Banner -->
     <div class="freepan-banner" id="freepan-banner">
       Free-Pan Mode — WASD / Drag to Explore • Press [M] to Center
     </div>
 
-    <!-- Minimap HUD -->
-    <aside class="minimap-container">
-      <canvas id="minimap-canvas" width="180" height="180"></canvas>
-      <span class="minimap-hint">Click / Drag to Pan</span>
+    <!-- Minimap HUD (Top Positioned & Collapsible) -->
+    <aside class="minimap-container" id="minimap-container">
+      <div class="minimap-header" id="minimap-header">
+        <span class="minimap-title">Tactical Radar</span>
+        <button type="button" class="minimap-toggle-btn" id="btn-minimap-minimize" title="Minimize / Expand Radar" aria-label="Toggle Radar">_</button>
+      </div>
+      <div class="minimap-body" id="minimap-body">
+        <canvas id="minimap-canvas" width="180" height="180"></canvas>
+        <span class="minimap-hint">Click / Drag to Pan</span>
+      </div>
     </aside>
 
     <!-- Bottom Controls Hint Bar -->
@@ -154,6 +223,8 @@
       <span>•</span>
       <span><kbd>E</kbd> / <kbd>Space</kbd> Interact</span>
       <span>•</span>
+      <span><kbd>+</kbd> / <kbd>-</kbd> Zoom</span>
+      <span>•</span>
       <span><kbd>V</kbd> View</span>
       <span>•</span>
       <span><kbd>L</kbd> Activity Log</span>
@@ -163,13 +234,26 @@
       <span><kbd>T</kbd> Restart</span>
     </div>
 
-    <!-- Mobile Virtual Controls -->
-    <div class="virtual-controls">
-      <button class="dpad-btn dpad-up" id="vbtn-up" aria-label="Up">▲</button>
-      <button class="dpad-btn dpad-left" id="vbtn-left" aria-label="Left">◀</button>
-      <button class="dpad-btn dpad-center" id="vbtn-act" aria-label="Interact">USE</button>
-      <button class="dpad-btn dpad-right" id="vbtn-right" aria-label="Right">▶</button>
-      <button class="dpad-btn dpad-down" id="vbtn-down" aria-label="Down">▼</button>
+    <!-- Mobile Virtual Controls (Top-Docked & Movable) -->
+    <div class="virtual-controls" id="virtual-controls" data-dock="top-left">
+      <div class="dpad-header" id="dpad-drag-handle" title="Drag to reposition controls">
+        <span class="dpad-grip">⋮⋮ Controls</span>
+        <div class="dpad-header-actions">
+          <button type="button" class="dpad-tool-btn" id="btn-dock-toggle" title="Toggle Position (Top-Left / Top-Right / Bottom-Left / Bottom-Right)" aria-label="Dock Position">⇳</button>
+          <button type="button" class="dpad-tool-btn" id="btn-dpad-minimize" title="Minimize / Expand Controls" aria-label="Minimize Controls">_</button>
+        </div>
+      </div>
+      <div class="dpad-grid" id="dpad-grid">
+        <button type="button" class="dpad-btn dpad-rot-l" id="vbtn-rot-l" aria-label="Rotate CCW" title="Rotate Camera Left [Q]">↺</button>
+        <button type="button" class="dpad-btn dpad-up" id="vbtn-up" aria-label="Up">▲</button>
+        <button type="button" class="dpad-btn dpad-rot-r" id="vbtn-rot-r" aria-label="Rotate CW" title="Rotate Camera Right [R]">↻</button>
+        <button type="button" class="dpad-btn dpad-left" id="vbtn-left" aria-label="Left">◀</button>
+        <button type="button" class="dpad-btn dpad-center" id="vbtn-act" aria-label="Interact">USE</button>
+        <button type="button" class="dpad-btn dpad-right" id="vbtn-right" aria-label="Right">▶</button>
+        <div class="dpad-empty"></div>
+        <button type="button" class="dpad-btn dpad-down" id="vbtn-down" aria-label="Down">▼</button>
+        <div class="dpad-empty"></div>
+      </div>
     </div>
 
     <!-- In-Game Pause & Action Menu Modal -->
@@ -203,51 +287,142 @@
             </div>
           </div>
 
-          <!-- Action Menu List -->
+          <!-- Categorized Command Center Grid (BL-106) -->
           <div class="pause-menu-actions">
-            <button class="btn btn-primary pause-action-btn" id="btn-pause-resume">
-              ▶ <span>Resume Labyrinth [Esc / P]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-restart">
-              🔄 <span>Restart Level [T]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-perspective">
-              📐 <span>View: Angled 2.5D [V]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-freepan">
-              🗺️ <span>Free-Pan Mode [M]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-hint" style="display: none;">
-              📜 <span>Objective &amp; Lore</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-log">
-              📜 <span>Activity Log &amp; Telemetry [L]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-walkthrough">
-              🎬 <span>Watch Solver Walkthrough</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-settings">
-              ⚙️ <span>Game Settings [Audio &amp; View]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-profile">
-              👤 <span>Player Profile &amp; Stats</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-report-issue">
-              🐞 <span>Report Issue on GitHub</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-sound">
-              🔊 <span>Sound FX: ON</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-hotkeys">
-              ⌨️ <span>Hotkeys: ON [Full]</span>
-            </button>
-            <button class="btn btn-secondary pause-action-btn" id="btn-pause-save">
-              💾 <span>Save Game Progress (.json)</span>
-            </button>
-            <button class="btn btn-danger pause-action-btn" id="btn-pause-quit">
-              🏰 <span>Return to Level Select</span>
-            </button>
+            <!-- Primary Actions Group -->
+            <div class="pause-section-group">
+              <div class="pause-section-header">Primary Actions</div>
+              <button class="btn btn-primary pause-action-btn pause-action-prominent" id="btn-pause-resume">
+                ▶ <span>Resume Labyrinth [Esc / P]</span>
+              </button>
+              <button class="btn btn-secondary pause-action-btn" id="btn-pause-restart">
+                🔄 <span>Restart Level [T]</span>
+              </button>
+              <!-- Destructive Confirmation Box: Restart -->
+              <div class="pause-confirm-box hidden" id="pause-restart-confirm">
+                <p class="pause-confirm-msg">⚠️ Restart this labyrinth? All collected keys and steps will be reset.</p>
+                <div class="pause-confirm-btn-row">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-restart-cancel">Cancel</button>
+                  <button type="button" class="btn btn-danger btn-sm" id="btn-pause-restart-confirm">Confirm Restart</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- View & Exploration Controls Group -->
+            <div class="pause-section-group">
+              <div class="pause-section-header">View &amp; Exploration</div>
+              <div class="pause-action-grid">
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-perspective">
+                  📐 <span>View: Angled 2.5D [V]</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-freepan">
+                  🗺️ <span>Free-Pan Mode [M]</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-hint" style="display: none;">
+                  📜 <span>Objective &amp; Lore</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-walkthrough">
+                  🎬 <span>Watch Solver Walkthrough</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-log">
+                  📜 <span>Activity Log &amp; Telemetry [L]</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Game Systems & Preferences Group -->
+            <div class="pause-section-group">
+              <div class="pause-section-header">Preferences &amp; System</div>
+              <div class="pause-action-grid">
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-sound">
+                  🔊 <span>Sound FX: ON</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-hotkeys">
+                  ⌨️ <span>Hotkeys: ON [Full]</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-settings">
+                  ⚙️ <span>Game Settings</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-profile">
+                  👤 <span>Player Profile</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-save">
+                  💾 <span>Save Game (.json)</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-report-issue">
+                  🐞 <span>Report Issue</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Session Exit Group -->
+            <div class="pause-section-group pause-section-danger">
+              <button class="btn btn-danger pause-action-btn" id="btn-pause-quit">
+                🏰 <span>Return to Level Select</span>
+              </button>
+              <!-- Destructive Confirmation Box: Quit to Hub -->
+              <div class="pause-confirm-box hidden" id="pause-quit-confirm">
+                <p class="pause-confirm-msg">⚠️ Exit to Level Select? Current labyrinth run will not be saved.</p>
+                <div class="pause-confirm-btn-row">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-quit-cancel">Cancel</button>
+                  <button type="button" class="btn btn-danger btn-sm" id="btn-pause-quit-confirm">Exit to Hub</button>
+                </div>
+              </div>
+            </div>
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Level Lore Journal Modal (BL-81) -->
+    <div id="journal-modal" class="modal-backdrop journal-modal-backdrop" style="display: none;">
+      <div class="modal-card journal-card" role="dialog" aria-modal="true" aria-labelledby="journal-modal-title">
+        <div class="modal-header">
+          <div style="display: flex; align-items: center; gap: 0.6rem;">
+            <span style="font-size: 1.5rem;">📖</span>
+            <div>
+              <h3 id="journal-modal-title" style="margin: 0; font-size: 1.25rem;">Labyrinth Journal</h3>
+              <div style="font-size: 0.75rem; color: var(--text-muted);" id="journal-modal-subtitle">Notes &amp; Inscriptions Collected This Level</div>
+            </div>
+          </div>
+          <button type="button" class="btn-close" id="btn-close-journal" title="Close Journal [Escape / J]">&times;</button>
+        </div>
+
+        <div class="journal-layout">
+          <!-- Left Column: Discovered Entries List -->
+          <div class="journal-entries-pane">
+            <div class="journal-entries-header">Discovered Inscriptions (<span id="journal-total-count">0</span>)</div>
+            <div class="journal-entries-list" id="journal-entries-list">
+              <div class="journal-empty-state">No notes or inscriptions discovered yet in this level.</div>
+            </div>
+          </div>
+
+          <!-- Right Column: Parchment Viewer -->
+          <div class="journal-reader-pane" id="journal-reader-pane">
+            <div class="journal-reader-empty" id="journal-reader-empty">
+              <span style="font-size: 2.2rem; display: block; margin-bottom: 0.5rem;">📜</span>
+              <p style="margin: 0;">Select an inscription from the list to examine its full text and architectural clues.</p>
+            </div>
+            <div class="journal-reader-content hidden" id="journal-reader-content">
+              <div class="journal-reader-meta">
+                <span class="journal-reader-icon" id="journal-reader-icon">📜</span>
+                <div>
+                  <h4 class="journal-reader-title" id="journal-reader-title">Architect's Note</h4>
+                  <span class="journal-reader-author" id="journal-reader-author">— The Architect</span>
+                </div>
+              </div>
+              <div class="journal-reader-body" id="journal-reader-body"></div>
+              <div class="journal-reader-response hidden" id="journal-reader-response"></div>
+              <div class="journal-reader-footer" id="journal-reader-footer">
+                <span id="journal-reader-discovered-meta">Found at step 0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-glass); padding-top: 0.8rem; margin-top: 0.6rem;">
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Shortcut: <kbd style="background: #1e293b; padding: 2px 5px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">[J]</kbd> or <kbd style="background: #1e293b; padding: 2px 5px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">[Esc]</kbd></span>
+          <button type="button" class="btn btn-primary btn-sm" id="btn-done-journal">Close</button>
         </div>
       </div>
     </div>
@@ -272,6 +447,7 @@
 
           <div class="activity-filter-bar">
             <button class="btn btn-sm btn-secondary filter-btn active" data-filter="all" id="filter-all">All Events (<span id="log-count-all">0</span>)</button>
+            <button class="btn btn-sm btn-secondary filter-btn" data-filter="lore" id="filter-lore">📜 Lore</button>
             <button class="btn btn-sm btn-secondary filter-btn" data-filter="key-door" id="filter-key-door">🗝️ Keys &amp; Gates</button>
             <button class="btn btn-sm btn-secondary filter-btn" data-filter="lever" id="filter-lever">⚡ Levers</button>
             <button class="btn btn-sm btn-secondary filter-btn" data-filter="warning" id="filter-warning">⚠️ Warnings</button>
@@ -295,42 +471,78 @@
 
     <!-- Victory Modal -->
     <div class="modal-backdrop" id="victory-modal">
+      <canvas id="victory-confetti-canvas" style="position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1;"></canvas>
       <div class="modal-dialog victory-card">
         <div class="modal-body">
           <span class="victory-icon" id="vic-icon">🏆</span>
-          <h2 style="font-size: 1.8rem; margin-bottom: 0.35rem;" id="vic-title">Labyrinth Conquered!</h2>
-          <div id="vic-tier-badge" class="victory-tier-badge" style="display: none; margin-bottom: 0.75rem;"></div>
-          <p id="victory-subtitle" style="font-size: 0.95rem;">You successfully escaped the maze.</p>
+          <h2 style="font-size: 1.55rem; margin-bottom: 0.25rem;" id="vic-title">Labyrinth Conquered!</h2>
+          <div id="vic-tier-badge" class="victory-tier-badge" style="display: none; margin-bottom: 0.55rem;"></div>
+          <p id="victory-subtitle" style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.5rem;">You successfully escaped the maze.</p>
 
           <div class="victory-stats-grid">
             <div class="stat-box" id="vic-box-score">
               <div class="stat-val" id="vic-score">0</div>
-              <div class="stat-lbl">Performance Score</div>
+              <div class="stat-lbl">Score</div>
             </div>
-            <div class="stat-box">
+            <div class="stat-box" id="vic-box-time">
               <div class="stat-val" id="vic-time">0.0s</div>
-              <div class="stat-lbl">Time Elapsed</div>
+              <div class="stat-lbl">Time</div>
             </div>
-            <div class="stat-box">
+            <div class="stat-box" id="vic-box-steps">
               <div class="stat-val" id="vic-steps">0</div>
-              <div class="stat-lbl">Steps Taken</div>
+              <div class="stat-lbl">Steps</div>
             </div>
             <div class="stat-box" id="vic-box-secrets" style="display: none;">
               <div class="stat-val" id="vic-secrets">0 / 0</div>
-              <div class="stat-lbl">Secrets Unveiled</div>
+              <div class="stat-lbl">Secrets</div>
             </div>
           </div>
 
-          <div id="victory-medals-container" style="display: flex; justify-content: center; gap: 0.6rem; margin-top: 1.1rem; flex-wrap: wrap;"></div>
+          <div id="victory-medals-container" style="display: flex; justify-content: center; gap: 0.45rem; margin-top: 0.65rem; flex-wrap: wrap;"></div>
         </div>
-        <div class="modal-footer" style="justify-content: center; flex-wrap: wrap; gap: 0.5rem;">
-          <a href="index.html" class="btn btn-secondary">Level Select</a>
-          <button id="btn-vic-watch-replay" class="btn btn-primary" title="Watch an interactive visual replay of this run">🎬 Watch Run Replay</button>
-          <button id="btn-save-progress" class="btn btn-secondary" title="Export game save progress backup to a JSON file">💾 Save Game Progress</button>
-          <button id="btn-download-log" class="btn btn-secondary" title="Download level replay and debug telemetry">📥 Debug Logs</button>
-          <button id="btn-vic-report-issue" class="btn btn-secondary" title="Report an issue or give feedback on GitHub">🐞 Feedback / Report</button>
-          <button id="btn-replay" class="btn btn-secondary">Replay</button>
-          <button id="btn-next-level" class="btn btn-primary">Next Level →</button>
+        <div class="modal-footer victory-footer-streamlined">
+          <!-- Primary Actions: Next Level, Quick Action Icons, More Toggle -->
+          <div class="victory-primary-actions">
+            <button id="btn-next-level" class="btn btn-primary victory-btn-next" title="Advance to next labyrinth [Space / Enter]">Next Level [Space / Enter] →</button>
+            <div class="victory-quick-icons">
+              <button id="btn-vic-quick-retry" class="btn btn-secondary victory-icon-btn" title="Retry Level">
+                <span>🔄</span>
+              </button>
+              <button id="btn-vic-quick-watch" class="btn btn-secondary victory-icon-btn" title="Watch Run Replay">
+                <span>🎬</span>
+              </button>
+              <button id="btn-vic-quick-report" class="btn btn-secondary victory-icon-btn" title="Report Bug / Feedback">
+                <span>🐞</span>
+              </button>
+            </div>
+            <button id="btn-vic-more" class="btn btn-secondary victory-btn-more" title="More Options">
+              <span>More</span> <span id="vic-more-chevron">▾</span>
+            </button>
+          </div>
+
+          <!-- Collapsible "More" Drawer -->
+          <div id="victory-more-drawer" class="victory-more-drawer" style="display: none;">
+            <div class="victory-more-grid">
+              <button id="btn-vic-watch-replay" class="btn btn-secondary victory-drawer-btn" title="Watch an interactive visual replay of this run">
+                <span>🎬</span> <span>Watch Run Replay</span>
+              </button>
+              <button id="btn-replay" class="btn btn-secondary victory-drawer-btn" title="Play this level again">
+                <span>🔄</span> <span>Retry Labyrinth</span>
+              </button>
+              <a href="index.html" id="btn-vic-level-select" class="btn btn-secondary victory-drawer-btn" title="Return to Level Selection">
+                <span>🗺️</span> <span>Level Select Hub</span>
+              </a>
+              <button id="btn-save-progress" class="btn btn-secondary victory-drawer-btn" title="Export game save progress backup">
+                <span>💾</span> <span>Save Progress</span>
+              </button>
+              <button id="btn-download-log" class="btn btn-secondary victory-drawer-btn" title="Download level replay and debug telemetry">
+                <span>📥</span> <span>Debug Telemetry</span>
+              </button>
+              <button id="btn-vic-report-issue" class="btn btn-secondary victory-drawer-btn" title="Report an issue or give feedback on GitHub">
+                <span>🐞</span> <span>Report Bug / Feedback</span>
+              </button>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -416,7 +628,13 @@
     import { getStoryline, getNextStoryChapter } from './js/stories/storylines.js';
     import { audioFX } from './js/ui/audio-fx.js';
     import { GameMenu } from './js/ui/game-menu.js';
+    import { getKeyColorblindShape } from './js/core/constants.js';
 
+    // Migrate storage schema on startup (BL-36)
+    StorageManager.migrateSaveData();
+    if (StorageManager.getSetting('high_contrast', false)) {
+      document.body.classList.add('high-contrast-mode');
+    }
 
     // Global Runtime Error Capture & Telemetry Routing
     window.addEventListener('error', (event) => {
@@ -504,6 +722,13 @@
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}.${tenths}`;
     }
 
+    // Obscured Viewport Auto-Pause & Resume Coordinator (BL-92, ADR-0010)
+    function setViewObscured(obscured, modalId = 'modal') {
+      if (window.gameLoop && typeof window.gameLoop.setObscured === 'function') {
+        window.gameLoop.setObscured(obscured, modalId);
+      }
+    }
+
     // Check if in custom playtest mode, story mode, or campaign
     const urlParams = new URLSearchParams(window.location.search);
     const isCustomMode = urlParams.get('mode') === 'custom' || currentLevel.id === 'custom' || currentLevel.id.startsWith('project_');
@@ -540,6 +765,37 @@
       if (currTutNum) {
         tutorialBadgeEl.textContent = `🎓 Tutorial ${currTutNum}/6`;
       }
+    }
+
+    // Populate In-Game HUD Breadcrumb Hierarchy (BL-54)
+    const hudCrumbChapter = document.getElementById('hud-crumb-chapter');
+    const hudCrumbLevel = document.getElementById('hud-crumb-level');
+
+    if (isCustomMode) {
+      if (hudCrumbChapter) {
+        hudCrumbChapter.textContent = 'Architect Studio';
+        hudCrumbChapter.href = 'editor.html';
+      }
+      if (hudCrumbLevel) hudCrumbLevel.textContent = currentLevel.title || 'Custom Labyrinth';
+    } else if (isStoryMode) {
+      if (hudCrumbChapter) {
+        hudCrumbChapter.textContent = currentStory ? `${currentStory.title} (Ch. ${activeChapterNum})` : `Story Ch. ${activeChapterNum}`;
+        hudCrumbChapter.href = 'index.html#stories';
+      }
+      if (hudCrumbLevel) hudCrumbLevel.textContent = currentLevel.title;
+    } else if (isTutorial) {
+      if (hudCrumbChapter) {
+        hudCrumbChapter.textContent = `Tutorial Academy (Ch. ${currTutNum || 1})`;
+        hudCrumbChapter.href = 'index.html#stories';
+      }
+      if (hudCrumbLevel) hudCrumbLevel.textContent = currentLevel.title;
+    } else {
+      if (hudCrumbChapter) {
+        const chNum = currentLevel.chapterNumber || Math.ceil(parseInt(currentLevel.id, 10) / 4) || 1;
+        hudCrumbChapter.textContent = `Ch. ${chNum}: ${currentLevel.chapterTitle || 'Foundation'}`;
+        hudCrumbChapter.href = 'index.html#campaign';
+      }
+      if (hudCrumbLevel) hudCrumbLevel.textContent = `Lvl ${currentLevel.id}: ${currentLevel.title}`;
     }
 
     // Initialize Story Prologue / Objective Banner if metadata exists
@@ -606,11 +862,13 @@
       if (inspectTextEl) inspectTextEl.textContent = data.text || '';
       if (inspectResponseEl) inspectResponseEl.textContent = data.response ? `"${data.response}"` : '';
       inspectModal.classList.add('active');
+      setViewObscured(true, 'inspect_modal');
     }
 
     function closeInspectModal() {
       if (inspectModal) {
         inspectModal.classList.remove('active');
+        setViewObscured(false, 'inspect_modal');
       }
     }
 
@@ -663,6 +921,141 @@
 
     if (btnCloseLore) btnCloseLore.addEventListener('click', closeLoreCard);
 
+    // Level Lore Journal Controller (BL-81)
+    const hudJournalBtn = document.getElementById('hud-journal-btn');
+    const hudJournalCount = document.getElementById('hud-journal-count');
+    const journalModal = document.getElementById('journal-modal');
+    const journalEntriesList = document.getElementById('journal-entries-list');
+    const journalTotalCount = document.getElementById('journal-total-count');
+    const journalReaderEmpty = document.getElementById('journal-reader-empty');
+    const journalReaderContent = document.getElementById('journal-reader-content');
+    const journalReaderIcon = document.getElementById('journal-reader-icon');
+    const journalReaderTitle = document.getElementById('journal-reader-title');
+    const journalReaderAuthor = document.getElementById('journal-reader-author');
+    const journalReaderBody = document.getElementById('journal-reader-body');
+    const journalReaderResponse = document.getElementById('journal-reader-response');
+    const journalReaderDiscoveredMeta = document.getElementById('journal-reader-discovered-meta');
+    const btnCloseJournal = document.getElementById('btn-close-journal');
+    const btnDoneJournal = document.getElementById('btn-done-journal');
+    let selectedJournalIndex = -1;
+
+    function updateJournalBadge() {
+      const entries = window.gameLoop ? window.gameLoop.getJournalEntries() : [];
+      if (hudJournalCount) hudJournalCount.textContent = entries.length;
+      if (journalTotalCount) journalTotalCount.textContent = entries.length;
+    }
+
+    function renderJournalModal() {
+      if (!journalEntriesList) return;
+      const entries = window.gameLoop ? window.gameLoop.getJournalEntries() : [];
+      updateJournalBadge();
+      journalEntriesList.innerHTML = '';
+
+      if (entries.length === 0) {
+        journalEntriesList.innerHTML = '<div class="journal-empty-state">No architect notes or inscriptions discovered yet in this level.</div>';
+        if (journalReaderEmpty) journalReaderEmpty.style.display = 'block';
+        if (journalReaderContent) journalReaderContent.classList.add('hidden');
+        selectedJournalIndex = -1;
+        return;
+      }
+
+      entries.forEach((entry, idx) => {
+        const itemBtn = document.createElement('button');
+        itemBtn.type = 'button';
+        itemBtn.className = `journal-entry-item ${idx === selectedJournalIndex ? 'active' : ''}`;
+        const icon = entry.decorType === 'note' ? '📝' : (entry.decorType === 'painting' ? '🖼️' : (entry.decorType === 'fresco' ? '🏛️' : '📜'));
+        itemBtn.innerHTML = `
+          <span class="journal-entry-icon">${icon}</span>
+          <div class="journal-entry-info">
+            <span class="journal-entry-title">${entry.title || "Architect's Note"}</span>
+            <span class="journal-entry-sub">— ${entry.author || 'The Architect'}</span>
+          </div>
+        `;
+        itemBtn.addEventListener('click', () => {
+          selectedJournalIndex = idx;
+          displayJournalEntry(entry);
+          renderJournalModal();
+          audioFX.playClick();
+        });
+        journalEntriesList.appendChild(itemBtn);
+      });
+
+      if (selectedJournalIndex >= 0 && entries[selectedJournalIndex]) {
+        displayJournalEntry(entries[selectedJournalIndex]);
+      } else if (entries.length > 0) {
+        selectedJournalIndex = 0;
+        displayJournalEntry(entries[0]);
+        const first = journalEntriesList.querySelector('.journal-entry-item');
+        if (first) first.classList.add('active');
+      }
+    }
+
+    function displayJournalEntry(entry) {
+      if (!journalReaderContent) return;
+      if (journalReaderEmpty) journalReaderEmpty.style.display = 'none';
+      journalReaderContent.classList.remove('hidden');
+
+      const iconMap = { note: '📝', painting: '🖼️', fresco: '🏛️', carving: '🗿', tapestry: '🚩', signpost: '📜' };
+      if (journalReaderIcon) journalReaderIcon.textContent = iconMap[entry.decorType] || '📜';
+      if (journalReaderTitle) journalReaderTitle.textContent = entry.title || 'Observation';
+      if (journalReaderAuthor) {
+        journalReaderAuthor.textContent = `— ${entry.author || 'The Architect'}${entry.facing ? ` (Facing ${entry.facing})` : ''}`;
+      }
+      if (journalReaderBody) journalReaderBody.textContent = entry.text || entry.message || '';
+      if (journalReaderResponse) {
+        if (entry.response) {
+          journalReaderResponse.textContent = `"${entry.response}"`;
+          journalReaderResponse.classList.remove('hidden');
+        } else {
+          journalReaderResponse.classList.add('hidden');
+        }
+      }
+      if (journalReaderDiscoveredMeta) {
+        journalReaderDiscoveredMeta.textContent = `Discovered at step ${entry.discoveredAtSteps ?? 0} • ${formatTime(entry.discoveredAtTime ?? 0)}`;
+      }
+    }
+
+    function openJournalModal() {
+      if (!journalModal) return;
+      audioFX.playModalOpen();
+      renderJournalModal();
+      journalModal.style.display = 'flex';
+      journalModal.classList.add('active');
+      setViewObscured(true, 'journal_modal');
+    }
+
+    function closeJournalModal() {
+      if (!journalModal) return;
+      audioFX.playModalClose();
+      journalModal.style.display = 'none';
+      journalModal.classList.remove('active');
+      setViewObscured(false, 'journal_modal');
+    }
+
+    function toggleJournalModal() {
+      if (journalModal && (journalModal.classList.contains('active') || journalModal.style.display === 'flex')) {
+        closeJournalModal();
+      } else {
+        openJournalModal();
+      }
+    }
+
+    if (hudJournalBtn) hudJournalBtn.addEventListener('click', toggleJournalModal);
+    if (btnCloseJournal) btnCloseJournal.addEventListener('click', closeJournalModal);
+    if (btnDoneJournal) btnDoneJournal.addEventListener('click', closeJournalModal);
+    if (journalModal) {
+      journalModal.addEventListener('click', (e) => {
+        if (e.target === journalModal) closeJournalModal();
+      });
+    }
+
+    globalEvents.on('journal:entry_added', () => {
+      updateJournalBadge();
+      if (journalModal && journalModal.classList.contains('active')) {
+        renderJournalModal();
+      }
+    });
+
     // Pedestal Riddle Dialog Elements & Logic
     const pedestalModal = document.getElementById('pedestal-modal');
     const pedestalModalTitle = document.getElementById('pedestal-modal-title');
@@ -682,11 +1075,13 @@
         }
       }
       pedestalModal.classList.add('active');
+      setViewObscured(true, 'pedestal_modal');
     }
 
     function closePedestalModal() {
       if (pedestalModal) {
         pedestalModal.classList.remove('active');
+        setViewObscured(false, 'pedestal_modal');
       }
     }
 
@@ -700,12 +1095,14 @@
     function promptRestartConfirmation() {
       if (restartConfirmModal) {
         restartConfirmModal.classList.add('active');
+        setViewObscured(true, 'restart_modal');
       }
     }
 
     function cancelRestart() {
       if (restartConfirmModal) {
         restartConfirmModal.classList.remove('active');
+        setViewObscured(false, 'restart_modal');
       }
     }
 
@@ -720,6 +1117,114 @@
 
     if (btnConfirmRestart) btnConfirmRestart.addEventListener('click', confirmRestart);
     if (btnCancelRestart) btnCancelRestart.addEventListener('click', cancelRestart);
+
+    // Diagnostic Bug Bundle Exporter & GitHub Routing (BL-34)
+    function reportDiagnosticIssue() {
+      audioFX.playClick();
+      const bundle = StorageManager.exportDiagnosticBugBundle({
+        levelId: currentLevel?.id,
+        levelTitle: currentLevel?.title,
+        mode: isCustomMode ? 'custom' : (isStoryMode ? 'story' : (isTutorial ? 'tutorial' : 'campaign')),
+        history: typeof gameActivityHistory !== 'undefined' ? gameActivityHistory.slice(0, 15) : [],
+      });
+      if (bundle && bundle.githubIssueUrl) {
+        window.open(bundle.githubIssueUrl, '_blank');
+        showToast('Bug diagnostics generated for GitHub report!', 'info');
+      } else {
+        window.open('https://github.com/InbarRose/casual-maze-game/issues/new?template=bug_report.yml', '_blank');
+      }
+    }
+
+    // Prestige Victory Confetti Particle Cannon (BL-38)
+    let confettiAnimId = null;
+    function launchVictoryConfetti() {
+      const canvas = document.getElementById('victory-confetti-canvas');
+      if (!canvas || !canvas.getContext) return;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const width = canvas.clientWidth || window.innerWidth;
+      const height = canvas.clientHeight || window.innerHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+
+      const colors = ['#f59e0b', '#ec4899', '#3b82f6', '#10b981', '#8b5cf6', '#ef4444', '#eab308'];
+      const particles = [];
+      const particleCount = 70;
+
+      for (let i = 0; i < particleCount; i++) {
+        particles.push({
+          x: width * 0.5 + (Math.random() - 0.5) * 120,
+          y: height * 0.42,
+          vx: (Math.random() - 0.5) * 14,
+          vy: -Math.random() * 11 - 5,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotSpeed: (Math.random() - 0.5) * 10,
+          gravity: 0.28,
+          wobble: Math.random() * 10,
+          wobbleSpeed: Math.random() * 0.1 + 0.05,
+          opacity: 1,
+        });
+      }
+
+      if (confettiAnimId) cancelAnimationFrame(confettiAnimId);
+      const startTime = performance.now();
+
+      function updateConfetti(now) {
+        const elapsed = now - startTime;
+        ctx.clearRect(0, 0, width, height);
+
+        let activeCount = 0;
+        for (const p of particles) {
+          p.x += p.vx;
+          p.y += p.vy;
+          p.vy += p.gravity;
+          p.vx *= 0.98;
+          p.rotation += p.rotSpeed;
+          p.wobble += p.wobbleSpeed;
+
+          if (elapsed > 1800) {
+            p.opacity = Math.max(0, p.opacity - 0.02);
+          }
+
+          if (p.opacity > 0 && p.y < height + 60) {
+            activeCount++;
+            ctx.save();
+            ctx.translate(p.x + Math.sin(p.wobble) * 3, p.y);
+            ctx.rotate((p.rotation * Math.PI) / 180);
+            ctx.fillStyle = p.color;
+            ctx.globalAlpha = p.opacity;
+            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+            ctx.restore();
+          }
+        }
+
+        if (activeCount > 0 && elapsed < 3500) {
+          confettiAnimId = requestAnimationFrame(updateConfetti);
+        } else {
+          ctx.clearRect(0, 0, width, height);
+          confettiAnimId = null;
+        }
+      }
+
+      confettiAnimId = requestAnimationFrame(updateConfetti);
+    }
+
+    function stopVictoryConfetti() {
+      if (confettiAnimId) {
+        cancelAnimationFrame(confettiAnimId);
+        confettiAnimId = null;
+      }
+      const canvas = document.getElementById('victory-confetti-canvas');
+      if (canvas && canvas.getContext) {
+        const ctx = canvas.getContext('2d');
+        if (ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
 
     // Initialize Game Loop
     const gameLoop = new GameLoop({
@@ -763,11 +1268,13 @@
             if (totalItemCount > 0) {
               for (const keyId of heldKeyIds) {
                 const key = currentLevel.entities.find(e => e.id === keyId) || (state.keys ? state.keys.find(k => k.id === keyId) : null) || { name: 'Key', color: '#fbbf24' };
+                const shapeInfo = getKeyColorblindShape(key.color || key.name || key.id);
                 const pill = document.createElement('div');
                 pill.className = 'key-pill';
                 pill.style.borderColor = key.color || '#fbbf24';
                 pill.style.boxShadow = `0 0 10px ${key.color ? key.color + '60' : 'rgba(251,191,36,0.35)'}`;
-                pill.innerHTML = `<span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 8px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
+                pill.title = `${key.name || 'Key'} (${shapeInfo.label} Glyph)`;
+                pill.innerHTML = `<span class="key-shape-badge" style="color:${key.color || '#fbbf24'};">${shapeInfo.symbol}</span> <span style="color:${key.color || '#fbbf24'}; text-shadow: 0 0 8px ${key.color || '#fbbf24'};">🔑</span> <span class="key-name">${key.name || 'Key'}</span>`;
                 keysListEl.appendChild(pill);
               }
 
@@ -830,12 +1337,22 @@
           showToast(`🚪 Entered: ${data.roomTitle}`, 'info');
         },
         onWallDecorInspected: (data) => {
-          audioFX.playModalOpen();
-          openLoreCard(data);
+          const mode = StorageManager.getSetting('note_display_mode', 'modal');
+          if (mode === 'modal') {
+            audioFX.playModalOpen();
+            openLoreCard(data);
+          } else {
+            audioFX.playCollect();
+          }
         },
         onSignpostRead: (data) => {
-          audioFX.playModalOpen();
-          openLoreCard(data);
+          const mode = StorageManager.getSetting('note_display_mode', 'modal');
+          if (mode === 'modal') {
+            audioFX.playModalOpen();
+            openLoreCard(data);
+          } else {
+            audioFX.playCollect();
+          }
         },
         onPedestalInspect: (data) => {
           audioFX.playModalOpen();
@@ -880,7 +1397,7 @@
         onVictory: (stats) => {
           audioFX.playVictory();
           document.getElementById('vic-time').textContent = `${(stats.time / 1000).toFixed(1)}s`;
-          document.getElementById('vic-steps').textContent = stats.steps;
+          document.getElementById('vic-steps').textContent = (stats.steps || 0).toLocaleString();
 
           const vicScore = document.getElementById('vic-score');
           if (vicScore) {
@@ -921,7 +1438,7 @@
             const starPill = document.createElement('div');
             starPill.className = 'victory-medal-pill';
             starPill.style.cssText = 'background: rgba(251, 191, 36, 0.2); border: 1.5px solid #fbbf24; color: #fbbf24;';
-            starPill.innerHTML = '★ <span>Level Cleared</span>';
+            starPill.innerHTML = '★ <span>Cleared</span>';
             medalsContainer.appendChild(starPill);
 
             if (currentLevel.parSteps) {
@@ -945,7 +1462,7 @@
               timePill.style.cssText = earnedTime
                 ? 'background: rgba(56, 189, 248, 0.2); border: 1.5px solid #38bdf8; color: #38bdf8;'
                 : 'background: rgba(100, 116, 139, 0.2); border: 1.5px solid #64748b; color: #94a3b8;';
-              timePill.innerHTML = earnedTime ? `⏱️ <span>Speedrunner (${timeSec}s / ${currentLevel.parTime}s)</span>` : `⏱️ <span>Par: ${currentLevel.parTime}s</span>`;
+              timePill.innerHTML = earnedTime ? `⏱️ <span>Speed (${timeSec}s / ${currentLevel.parTime}s)</span>` : `⏱️ <span>Par: ${currentLevel.parTime}s</span>`;
               medalsContainer.appendChild(timePill);
             }
 
@@ -958,7 +1475,7 @@
                 ? 'background: rgba(168, 85, 247, 0.2); border: 1.5px solid #a855f7; color: #c084fc;'
                 : 'background: rgba(100, 116, 139, 0.2); border: 1.5px solid #64748b; color: #94a3b8;';
               secretsPill.innerHTML = allFound
-                ? `🔍 <span>Secret Sleuth (${stats.secretsFound}/${stats.totalSecrets})</span>`
+                ? `🔍 <span>Sleuth (${stats.secretsFound}/${stats.totalSecrets})</span>`
                 : `🔍 <span>Secrets (${stats.secretsFound}/${stats.totalSecrets})</span>`;
               medalsContainer.appendChild(secretsPill);
             }
@@ -973,7 +1490,19 @@
             }
           }
 
+          const victoryMoreDrawer = document.getElementById('victory-more-drawer');
+          const btnVicMore = document.getElementById('btn-vic-more');
+          if (victoryMoreDrawer) {
+            victoryMoreDrawer.style.display = 'none';
+          }
+          if (btnVicMore) {
+            btnVicMore.classList.remove('active');
+            btnVicMore.innerHTML = '<span>More</span> <span id="vic-more-chevron">▾</span>';
+          }
+
           victoryModal.classList.add('active');
+          setViewObscured(true, 'victory_modal');
+          launchVictoryConfetti();
 
           const victorySubtitle = document.getElementById('victory-subtitle');
 
@@ -985,13 +1514,13 @@
                 : 'Branching path unlocked!';
             }
             btnNextLevel.style.display = 'inline-flex';
-            btnNextLevel.textContent = stats.branchLabel ? `${stats.branchLabel} →` : 'Proceed to Branch →';
+            btnNextLevel.textContent = stats.branchLabel ? `${stats.branchLabel} [Space / Enter] →` : 'Proceed to Branch [Space / Enter] →';
             btnNextLevel.onclick = () => {
               window.location.href = `maze.html?id=${stats.targetLevel}`;
             };
           } else if (isCustomMode) {
             btnNextLevel.style.display = 'inline-flex';
-            btnNextLevel.textContent = '🛠️ Back to Editor';
+            btnNextLevel.textContent = '🛠️ Back to Editor [Space / Enter]';
             btnNextLevel.onclick = () => {
               window.location.href = 'editor.html';
             };
@@ -1004,7 +1533,7 @@
                 victorySubtitle.textContent = `Chapter ${activeChapterNum} conquered! Next chapter unlocked.`;
               }
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = `Chapter ${nextInfo.nextChapterNumber} →`;
+              btnNextLevel.textContent = `Chapter ${nextInfo.nextChapterNumber} [Space / Enter] →`;
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?story=${activeStoryId}&chapter=${nextInfo.nextChapterNumber}`;
               };
@@ -1014,7 +1543,7 @@
                 victorySubtitle.textContent = `🎉 Storyline Completed! You have conquered all chapters of "${storyTitle}"!`;
               }
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = '📜 Return to Stories Hub';
+              btnNextLevel.textContent = '📜 Return to Stories Hub [Space / Enter]';
               btnNextLevel.onclick = () => {
                 window.location.href = 'index.html';
               };
@@ -1025,7 +1554,7 @@
             }
             if (currTutNum < 6) {
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = `Tutorial ${currTutNum + 1} →`;
+              btnNextLevel.textContent = `Tutorial ${currTutNum + 1} [Space / Enter] →`;
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?tutorial=${currTutNum + 1}`;
               };
@@ -1035,7 +1564,7 @@
                 victorySubtitle.textContent = `🎓 All Tutorials Completed! You are now a Master Maze Explorer.`;
               }
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = '🌟 Start Campaign →';
+              btnNextLevel.textContent = '🌟 Start Campaign [Space / Enter] →';
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?id=1`;
               };
@@ -1045,7 +1574,7 @@
             const currentIdNum = parseInt(currentLevel.id, 10);
             if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 32) {
               btnNextLevel.style.display = 'inline-flex';
-              btnNextLevel.textContent = `Level ${currentIdNum + 1} →`;
+              btnNextLevel.textContent = `Level ${currentIdNum + 1} [Space / Enter] →`;
               btnNextLevel.onclick = () => {
                 window.location.href = `maze.html?id=${currentIdNum + 1}`;
               };
@@ -1058,16 +1587,135 @@
         onRequestRestart: () => {
           promptRestartConfirmation();
         },
-        onInteractionAvailable: (interaction, targetOrPlayerPos, targetScreenPos, playerScreenPos) => {
+        onInteractionAvailable: (interaction, targetOrPlayerPos, targetScreenPos, playerScreenPos, allCandidates = [], isDisambiguating = false) => {
           const btnContextual = document.getElementById('hud-contextual-interact');
           const tileIndicator = document.getElementById('hud-tile-indicator');
+          const tileCountBadge = document.getElementById('hud-tile-count');
+          const disambigContainer = document.getElementById('hud-tile-indicators-container');
+          const disambigDrawer = document.getElementById('hud-disambig-drawer');
+          const disambigList = document.getElementById('hud-disambig-list');
           const iconEl = document.getElementById('hud-interact-icon');
           const labelEl = document.getElementById('hud-interact-label');
           const subtextEl = document.getElementById('hud-interact-subtext');
           const badgeEl = document.getElementById('hud-interact-badge');
 
-          if (interaction) {
-            // Subtle in-world tile badge positioned directly over interactable cell (BL-42)
+          const candidates = (interaction && interaction.candidates && interaction.candidates.length > 0)
+            ? interaction.candidates
+            : allCandidates;
+          const disambigActive = isDisambiguating || (interaction && interaction.isDisambiguating);
+
+          if (interaction && candidates.length > 1) {
+            // MULTI-TARGET DISAMBIGUATION (BL-85, BL-91, ADR-009)
+            if (disambigActive) {
+              // STAGE 2: Active Engagement - Reveal numbered pills and action drawer
+              if (tileIndicator) tileIndicator.classList.add('hidden');
+              if (tileCountBadge) tileCountBadge.classList.add('hidden');
+
+              if (disambigContainer) {
+                disambigContainer.innerHTML = '';
+                candidates.forEach((cand) => {
+                  if (cand.screenPos) {
+                    const pill = document.createElement('button');
+                    pill.className = 'hud-disambig-pill';
+                    pill.setAttribute('aria-label', `[${cand.index}] ${cand.name || cand.label}`);
+                    pill.title = `[${cand.index}] ${cand.name || cand.label}`;
+                    pill.style.left = `${cand.screenPos.x}px`;
+                    pill.style.top = `${cand.screenPos.y}px`;
+                    pill.innerHTML = `
+                      <span class="hud-disambig-pill-num">${cand.index}</span>
+                      <span class="hud-disambig-pill-icon">${cand.icon || '✨'}</span>
+                      <span class="hud-disambig-pill-label">${cand.name || cand.label}</span>
+                    `;
+                    pill.addEventListener('click', (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (window.gameLoop) {
+                        window.gameLoop.handleManualInteract(cand.index);
+                        audioFX.playClick();
+                      }
+                    });
+                    pill.addEventListener('pointerdown', (e) => e.stopPropagation());
+                    disambigContainer.appendChild(pill);
+                  }
+                });
+                disambigContainer.classList.remove('hidden');
+              }
+
+              if (btnContextual) {
+                if (iconEl) iconEl.textContent = '🔢';
+                if (labelEl) labelEl.textContent = `Choose Action (${candidates.length} nearby)`;
+                if (subtextEl) subtextEl.textContent = `Press [1..${candidates.length}] or [E] for #${candidates[0].index}`;
+                if (badgeEl) badgeEl.textContent = `[1-${candidates.length}]`;
+                btnContextual.classList.remove('hidden');
+              }
+
+              if (disambigDrawer && disambigList) {
+                disambigList.innerHTML = '';
+                candidates.forEach((cand) => {
+                  const row = document.createElement('button');
+                  row.className = 'hud-disambig-row';
+                  row.setAttribute('aria-label', `Select [${cand.index}] ${cand.name || cand.label}`);
+                  row.innerHTML = `
+                    <span class="hud-disambig-row-num">[${cand.index}]</span>
+                    <span class="hud-disambig-row-icon">${cand.icon || '✨'}</span>
+                    <span class="hud-disambig-row-text">${cand.name || cand.label}</span>
+                  `;
+                  row.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    if (window.gameLoop) {
+                      window.gameLoop.handleManualInteract(cand.index);
+                      audioFX.playClick();
+                    }
+                  });
+                  row.addEventListener('pointerdown', (e) => e.stopPropagation());
+                  disambigList.appendChild(row);
+                });
+                disambigDrawer.classList.remove('hidden');
+              }
+            } else {
+              // STAGE 1: Passive Walkby - Show single indicator with quantity badge, hide popups
+              if (disambigContainer) {
+                disambigContainer.classList.add('hidden');
+                disambigContainer.innerHTML = '';
+              }
+              if (disambigDrawer) {
+                disambigDrawer.classList.add('hidden');
+              }
+
+              const indicatorPos = targetScreenPos || targetOrPlayerPos;
+              if (tileIndicator && indicatorPos) {
+                tileIndicator.style.left = `${indicatorPos.x}px`;
+                tileIndicator.style.top = `${indicatorPos.y}px`;
+                tileIndicator.classList.remove('hidden');
+              }
+              if (tileCountBadge) {
+                tileCountBadge.textContent = String(candidates.length);
+                tileCountBadge.classList.remove('hidden');
+              }
+
+              if (btnContextual) {
+                if (iconEl) iconEl.textContent = candidates[0].icon || '✨';
+                if (labelEl) labelEl.textContent = `${candidates[0].name || candidates[0].label || 'Interact'} (${candidates.length})`;
+                if (subtextEl) subtextEl.textContent = 'Press [E] to choose';
+                if (badgeEl) badgeEl.textContent = `[E] • ${candidates.length}`;
+                btnContextual.classList.remove('hidden');
+              }
+            }
+          } else if (interaction) {
+            // SINGLE INTERACTION (BL-42)
+            if (disambigContainer) {
+              disambigContainer.classList.add('hidden');
+              disambigContainer.innerHTML = '';
+            }
+            if (disambigDrawer) {
+              disambigDrawer.classList.add('hidden');
+            }
+            if (tileCountBadge) {
+              tileCountBadge.classList.add('hidden');
+              tileCountBadge.textContent = '';
+            }
+
             const indicatorPos = targetScreenPos || targetOrPlayerPos;
             if (tileIndicator && indicatorPos) {
               tileIndicator.style.left = `${indicatorPos.x}px`;
@@ -1075,7 +1723,6 @@
               tileIndicator.classList.remove('hidden');
             }
 
-            // Discreet side action drawer
             if (btnContextual) {
               if (iconEl) iconEl.textContent = interaction.icon || '✨';
               if (labelEl) labelEl.textContent = interaction.label || 'Examine';
@@ -1084,8 +1731,17 @@
               btnContextual.classList.remove('hidden');
             }
           } else {
+            // NO INTERACTION AVAILABLE
             if (tileIndicator) tileIndicator.classList.add('hidden');
+            if (tileCountBadge) tileCountBadge.classList.add('hidden');
             if (btnContextual) btnContextual.classList.add('hidden');
+            if (disambigContainer) {
+              disambigContainer.classList.add('hidden');
+              disambigContainer.innerHTML = '';
+            }
+            if (disambigDrawer) {
+              disambigDrawer.classList.add('hidden');
+            }
           }
         },
       }
@@ -1094,14 +1750,18 @@
     window.gameLoop = gameLoop;
     gameLoop.start();
 
-    // Subtle In-World Tile [E] Overlay Indicator Handler (BL-42)
+    // Subtle In-World Tile [E] Overlay Indicator Handler (BL-42, BL-91)
     const hudTileIndicator = document.getElementById('hud-tile-indicator');
     if (hudTileIndicator) {
       hudTileIndicator.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         if (window.gameLoop) {
-          window.gameLoop.handleManualInteract();
+          if (typeof window.gameLoop.triggerInteract === 'function') {
+            window.gameLoop.triggerInteract();
+          } else {
+            window.gameLoop.handleManualInteract();
+          }
           audioFX.playClick();
         }
       });
@@ -1110,14 +1770,18 @@
       });
     }
 
-    // Discreet Side Contextual Action Button Handler (Mobile & Mouse)
+    // Discreet Side Contextual Action Button Handler (Mobile & Mouse) (BL-42, BL-91)
     const btnContextualInteract = document.getElementById('hud-contextual-interact');
     if (btnContextualInteract) {
       btnContextualInteract.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
         if (window.gameLoop) {
-          window.gameLoop.handleManualInteract();
+          if (typeof window.gameLoop.triggerInteract === 'function') {
+            window.gameLoop.triggerInteract();
+          } else {
+            window.gameLoop.handleManualInteract();
+          }
           audioFX.playClick();
         }
       });
@@ -1151,8 +1815,9 @@
 
       const filtered = gameActivityHistory.filter(item => {
         if (currentLogFilter === 'all') return true;
-        if (currentLogFilter === 'key-door') return item.category === 'key' || item.category === 'door';
-        if (currentLogFilter === 'lever') return item.category === 'lever';
+        if (currentLogFilter === 'lore') return item.category === 'lore';
+        if (currentLogFilter === 'key-door') return item.category === 'key' || item.category === 'door' || item.category === 'item';
+        if (currentLogFilter === 'lever') return item.category === 'lever' || item.category === 'mech';
         if (currentLogFilter === 'warning') return item.category === 'warning';
         return true;
       });
@@ -1184,10 +1849,14 @@
 
       renderActivityModalList();
       activityModal.classList.add('active');
+      setViewObscured(true, 'activity_modal');
     }
 
     function closeActivityLogModal() {
-      if (activityModal) activityModal.classList.remove('active');
+      if (activityModal) {
+        activityModal.classList.remove('active');
+        setViewObscured(false, 'activity_modal');
+      }
     }
 
     function toggleActivityLogModal() {
@@ -1214,15 +1883,15 @@
 
     if (btnQuickDownloadLog) {
       btnQuickDownloadLog.addEventListener('click', () => {
-        gameLoop.downloadDebugLog();
-        showToast('Live debug log downloaded!', 'success');
+        const fn = gameLoop.downloadDebugLog();
+        showToast(`📥 Saved debug log ${fn || ''} to Downloads!`, 'success');
       });
     }
 
     if (btnModalDownloadLog) {
       btnModalDownloadLog.addEventListener('click', () => {
-        gameLoop.downloadDebugLog();
-        showToast('Debug telemetry log downloaded!', 'success');
+        const fn = gameLoop.downloadDebugLog();
+        showToast(`📥 Saved debug log ${fn || ''} to Downloads!`, 'success');
       });
     }
 
@@ -1247,12 +1916,9 @@
       }
     });
 
-    document.getElementById('btn-modal-report-issue')?.addEventListener('click', () => {
-      audioFX.playClick();
-      window.open('https://github.com/InbarRose/casual-maze-game/issues/new?template=bug_report.yml', '_blank');
-    });
+    document.getElementById('btn-modal-report-issue')?.addEventListener('click', reportDiagnosticIssue);
 
-    // Keyboard Shortcuts (L for Log, R for Restart, Esc for close modals, Enter for confirm restart)
+    // Keyboard Shortcuts (L for Log, R for Restart, Esc for close modals, Enter for confirm restart, Space/Enter for victory advance)
     window.addEventListener('keydown', (e) => {
       // If lore card is active (BL-42)
       if (hudLoreCard && !hudLoreCard.classList.contains('hidden')) {
@@ -1260,6 +1926,18 @@
           e.preventDefault();
           closeLoreCard();
           return;
+        }
+      }
+
+      // If victory modal is active (BL-55 Quick Advance with Space / Enter)
+      if (victoryModal && victoryModal.classList.contains('active')) {
+        if (e.code === 'Space' || e.code === 'Enter' || e.code === 'NumpadEnter') {
+          e.preventDefault();
+          if (btnNextLevel && btnNextLevel.style.display !== 'none') {
+            audioFX.playTabClick();
+            btnNextLevel.click();
+            return;
+          }
         }
       }
 
@@ -1294,9 +1972,24 @@
         }
       }
 
+      // If journal modal is active (BL-81)
+      if (journalModal && (journalModal.classList.contains('active') || journalModal.style.display === 'flex')) {
+        if (e.code === 'Escape' || e.code === 'KeyJ') {
+          e.preventDefault();
+          closeJournalModal();
+          return;
+        }
+      }
+
       const hotkeysActive = !window.gameLoop || window.gameLoop.areHotkeysEnabled();
 
-      if (e.code === 'KeyL' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.code === 'KeyJ' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        toggleJournalModal();
+      } else if (e.code === 'KeyH' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        btnHudCollapse?.click();
+      } else if (e.code === 'KeyL' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         toggleActivityLogModal();
       } else if (e.code === 'KeyT' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
@@ -1305,7 +1998,12 @@
       } else if (e.code === 'Escape') {
         cancelRestart();
         closeActivityLogModal();
-        if (victoryModal) victoryModal.classList.remove('active');
+        closeJournalModal();
+        if (victoryModal) {
+          stopVictoryConfetti();
+          victoryModal.classList.remove('active');
+          setViewObscured(false, 'victory_modal');
+        }
       }
     });
 
@@ -1318,6 +2016,7 @@
       modalEl: pauseModalEl,
       onResume: () => {
         audioFX.playModalClose();
+        setViewObscured(false, 'pause_menu');
         if (window.gameLoop && !window.gameLoop.isRunning) {
           window.gameLoop.start();
         }
@@ -1394,6 +2093,7 @@
       if (window.gameLoop && window.gameLoop.isRunning) {
         window.gameLoop.stop();
       }
+      setViewObscured(true, 'pause_menu');
       gameMenu.pause({
         title: currentLevel.title || 'Labyrinth',
         timeStr: formatTime(window.gameLoop ? window.gameLoop.elapsedTime : 0),
@@ -1404,6 +2104,38 @@
       if (window.gameLoop?.renderer) {
         gameMenu.updatePerspectiveButtonLabel(window.gameLoop.renderer.perspective);
       }
+    }
+
+    function promptQuitConfirmation() {
+      if (!window.gameLoop || ((window.gameLoop.player?.stepsTaken || 0) === 0 && (window.gameLoop.player?.inventory?.length || 0) === 0)) {
+        window.location.href = 'index.html';
+        return;
+      }
+      if (window.gameLoop && window.gameLoop.isRunning) {
+        window.gameLoop.stop();
+      }
+      setViewObscured(true, 'pause_menu');
+      gameMenu.promptQuit({
+        title: currentLevel.title || 'Labyrinth',
+        timeStr: formatTime(window.gameLoop ? window.gameLoop.elapsedTime : 0),
+        steps: window.gameLoop?.player?.stepsTaken || 0,
+        keysHeld: window.gameLoop?.player?.inventory?.length || 0,
+      });
+      gameMenu.updateSoundButtonLabel(audioFX.isMuted());
+      if (window.gameLoop?.renderer) {
+        gameMenu.updatePerspectiveButtonLabel(window.gameLoop.renderer.perspective);
+      }
+    }
+
+    const hudBtnHub = document.getElementById('hud-btn-hub');
+    if (hudBtnHub) {
+      hudBtnHub.addEventListener('click', (e) => {
+        if (window.gameLoop && ((window.gameLoop.player?.stepsTaken || 0) > 0 || (window.gameLoop.player?.inventory?.length || 0) > 0)) {
+          e.preventDefault();
+          audioFX.playModalOpen();
+          promptQuitConfirmation();
+        }
+      });
     }
 
     if (btnOpenMenu) {
@@ -1441,13 +2173,22 @@
     });
     btnReplay.addEventListener('click', () => {
       audioFX.playClick();
+      stopVictoryConfetti();
       lastRenderedKeyIds = '';
+      const vDrawer = document.getElementById('victory-more-drawer');
+      const vMore = document.getElementById('btn-vic-more');
+      if (vDrawer) vDrawer.style.display = 'none';
+      if (vMore) {
+        vMore.classList.remove('active');
+        vMore.innerHTML = '<span>More</span> <span id="vic-more-chevron">▾</span>';
+      }
       victoryModal.classList.remove('active');
+      setViewObscured(false, 'victory_modal');
       gameLoop.restartLevel();
     });
     btnDownloadLog.addEventListener('click', () => {
-      gameLoop.downloadDebugLog();
-      showToast('Debug log downloaded!', 'success');
+      const fn = gameLoop.downloadDebugLog();
+      showToast(`📥 Saved debug log ${fn || ''} to Downloads!`, 'success');
     });
     document.getElementById('btn-vic-watch-replay')?.addEventListener('click', () => {
       audioFX.playClick();
@@ -1457,36 +2198,84 @@
         window.open('test.html?mode=replay&source=last_run&autoplay=1', '_blank');
       }
     });
-    document.getElementById('btn-vic-report-issue')?.addEventListener('click', () => {
+    document.getElementById('btn-vic-report-issue')?.addEventListener('click', reportDiagnosticIssue);
+
+    // Streamlined Victory Screen "More" Drawer & Quick Action Icons (BL-109, ADR-0021)
+    const btnVicMore = document.getElementById('btn-vic-more');
+    const victoryMoreDrawer = document.getElementById('victory-more-drawer');
+
+    btnVicMore?.addEventListener('click', () => {
       audioFX.playClick();
-      window.open('https://github.com/InbarRose/casual-maze-game/issues', '_blank');
+      if (!victoryMoreDrawer) return;
+      const isHidden = victoryMoreDrawer.style.display === 'none';
+      victoryMoreDrawer.style.display = isHidden ? 'block' : 'none';
+      btnVicMore.classList.toggle('active', isHidden);
+      btnVicMore.innerHTML = isHidden
+        ? '<span>Less</span> <span id="vic-more-chevron">▴</span>'
+        : '<span>More</span> <span id="vic-more-chevron">▾</span>';
     });
+
+    document.getElementById('btn-vic-quick-retry')?.addEventListener('click', () => {
+      btnReplay?.click();
+    });
+
+    document.getElementById('btn-vic-quick-watch')?.addEventListener('click', () => {
+      document.getElementById('btn-vic-watch-replay')?.click();
+    });
+
+    document.getElementById('btn-vic-quick-report')?.addEventListener('click', () => {
+      document.getElementById('btn-vic-report-issue')?.click();
+    });
+
     const handleSaveGameProgress = () => {
       const filename = StorageManager.downloadSaveFile();
-      showToast(`Saved game progress to ${filename}!`, 'success');
+      showToast(`📥 Saved backup ${filename} to Downloads folder!`, 'success');
     };
 
     document.getElementById('btn-hud-save-progress')?.addEventListener('click', handleSaveGameProgress);
     document.getElementById('btn-save-progress')?.addEventListener('click', handleSaveGameProgress);
 
-    // Mobile Virtual Controls Binding
+    // Mobile Virtual Controls Binding & Auto-Repeat
     function bindVirtualButton(btnId, keyCode) {
       const btn = document.getElementById(btnId);
       if (!btn) return;
 
-      const triggerDown = (e) => {
-        e.preventDefault();
-        window.dispatchEvent(new KeyboardEvent('keydown', { code: keyCode, bubbles: true }));
+      let repeatTimer = null;
+      let initialTimer = null;
+
+      const clearTimers = () => {
+        if (initialTimer) { clearTimeout(initialTimer); initialTimer = null; }
+        if (repeatTimer) { clearInterval(repeatTimer); repeatTimer = null; }
       };
+
+      const triggerDown = (e) => {
+        if (e && e.cancelable) e.preventDefault();
+        window.dispatchEvent(new KeyboardEvent('keydown', { code: keyCode, bubbles: true }));
+
+        clearTimers();
+
+        // Directional movement auto-repeats on continuous touch/hold
+        if (keyCode.startsWith('Arrow')) {
+          initialTimer = setTimeout(() => {
+            repeatTimer = setInterval(() => {
+              window.dispatchEvent(new KeyboardEvent('keydown', { code: keyCode, bubbles: true }));
+            }, 115);
+          }, 220);
+        }
+      };
+
       const triggerUp = (e) => {
-        e.preventDefault();
+        if (e && e.cancelable) e.preventDefault();
+        clearTimers();
         window.dispatchEvent(new KeyboardEvent('keyup', { code: keyCode, bubbles: true }));
       };
 
       btn.addEventListener('touchstart', triggerDown, { passive: false });
       btn.addEventListener('touchend', triggerUp, { passive: false });
+      btn.addEventListener('touchcancel', triggerUp, { passive: false });
       btn.addEventListener('mousedown', triggerDown);
       btn.addEventListener('mouseup', triggerUp);
+      btn.addEventListener('mouseleave', triggerUp);
     }
 
     bindVirtualButton('vbtn-up', 'ArrowUp');
@@ -1494,9 +2283,286 @@
     bindVirtualButton('vbtn-left', 'ArrowLeft');
     bindVirtualButton('vbtn-right', 'ArrowRight');
     bindVirtualButton('vbtn-act', 'KeyE');
+    bindVirtualButton('vbtn-rot-l', 'KeyQ');
+    bindVirtualButton('vbtn-rot-r', 'KeyR');
 
-    // Real-Time In-Game Activity Log Feed & Toast Notifications
+    // Movable & Dockable Mobile Virtual Controls
+    function initDraggableControls() {
+      const controls = document.getElementById('virtual-controls');
+      const handle = document.getElementById('dpad-drag-handle');
+      const dockBtn = document.getElementById('btn-dock-toggle');
+      const minBtn = document.getElementById('btn-dpad-minimize');
+      if (!controls || !handle) return;
+
+      const DOCKS = ['top-left', 'top-right', 'bottom-left', 'bottom-right'];
+
+      function applyDock(dock) {
+        if (!controls) return;
+        if (controls.style) {
+          controls.style.left = '';
+          controls.style.top = '';
+          controls.style.right = '';
+          controls.style.bottom = '';
+        }
+        if (!controls.dataset) controls.dataset = {};
+        controls.dataset.dock = dock;
+        if (typeof controls.setAttribute === 'function') {
+          controls.setAttribute('data-dock', dock);
+        }
+      }
+
+      function setFreePos(x, y) {
+        if (!controls) return;
+        if (!controls.dataset) controls.dataset = {};
+        controls.dataset.dock = 'custom';
+        if (typeof controls.setAttribute === 'function') {
+          controls.setAttribute('data-dock', 'custom');
+        }
+        if (controls.style) {
+          controls.style.left = `${x}px`;
+          controls.style.top = `${y}px`;
+          controls.style.right = 'auto';
+          controls.style.bottom = 'auto';
+        }
+      }
+
+      // Restore saved controls dock/position or default to top-left
+      try {
+        const saved = localStorage.getItem('maze_controls_position');
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          if (parsed.dock) {
+            applyDock(parsed.dock);
+          } else if (parsed.left !== undefined && parsed.top !== undefined) {
+            setFreePos(parsed.left, parsed.top);
+          }
+        } else {
+          applyDock('top-left');
+        }
+      } catch (err) {
+        applyDock('top-left');
+      }
+
+      // Repositioning drag logic
+      let isDragging = false;
+      let startX = 0, startY = 0;
+      let initLeft = 0, initTop = 0;
+
+      const onDragStart = (clientX, clientY) => {
+        isDragging = true;
+        startX = clientX;
+        startY = clientY;
+        const rect = controls.getBoundingClientRect ? controls.getBoundingClientRect() : { left: 16, top: 68 };
+        initLeft = rect.left || 16;
+        initTop = rect.top || 68;
+        if (controls.classList?.add) controls.classList.add('is-dragging');
+      };
+
+      const onDragMove = (clientX, clientY) => {
+        if (!isDragging) return;
+        const dx = clientX - startX;
+        const dy = clientY - startY;
+        let newLeft = initLeft + dx;
+        let newTop = initTop + dy;
+
+        const padW = controls.offsetWidth || 160;
+        const padH = controls.offsetHeight || 180;
+        const maxW = (window.innerWidth || 800) - padW - 8;
+        const maxH = (window.innerHeight || 600) - padH - 8;
+
+        newLeft = Math.max(8, Math.min(maxW, newLeft));
+        newTop = Math.max(8, Math.min(maxH, newTop));
+
+        setFreePos(newLeft, newTop);
+      };
+
+      const onDragEnd = () => {
+        if (!isDragging) return;
+        isDragging = false;
+        if (controls.classList?.remove) controls.classList.remove('is-dragging');
+        const rect = controls.getBoundingClientRect ? controls.getBoundingClientRect() : { left: initLeft, top: initTop };
+        try {
+          localStorage.setItem('maze_controls_position', JSON.stringify({ left: Math.round(rect.left || initLeft), top: Math.round(rect.top || initTop) }));
+        } catch (e) {}
+      };
+
+      handle.addEventListener('mousedown', (e) => {
+        if (e.target.closest?.('.dpad-tool-btn')) return;
+        e.preventDefault();
+        onDragStart(e.clientX, e.clientY);
+        const onMouseMove = (ev) => onDragMove(ev.clientX, ev.clientY);
+        const onMouseUp = () => {
+          onDragEnd();
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('mouseup', onMouseUp);
+        };
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+      });
+
+      handle.addEventListener('touchstart', (e) => {
+        if (e.target.closest?.('.dpad-tool-btn')) return;
+        const touch = e.touches[0];
+        onDragStart(touch.clientX, touch.clientY);
+      }, { passive: true });
+
+      handle.addEventListener('touchmove', (e) => {
+        if (!isDragging) return;
+        if (e.cancelable) e.preventDefault();
+        const touch = e.touches[0];
+        onDragMove(touch.clientX, touch.clientY);
+      }, { passive: false });
+
+      handle.addEventListener('touchend', onDragEnd, { passive: true });
+      handle.addEventListener('touchcancel', onDragEnd, { passive: true });
+
+      dockBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const currentDock = (controls.dataset && controls.dataset.dock) || (typeof controls.getAttribute === 'function' ? controls.getAttribute('data-dock') : null) || 'top-left';
+        const nextDock = DOCKS[(DOCKS.indexOf(currentDock) + 1) % DOCKS.length];
+        applyDock(nextDock);
+        try {
+          localStorage.setItem('maze_controls_position', JSON.stringify({ dock: nextDock }));
+        } catch (e) {}
+      });
+
+      minBtn?.addEventListener('click', (e) => {
+        e.stopPropagation();
+        controls.classList.toggle('minimized');
+        const isMin = controls.classList.contains('minimized');
+        minBtn.textContent = isMin ? '▲' : '_';
+      });
+
+      // Collapsible Minimap Radar (BL-67)
+      const minimapContainer = document.getElementById('minimap-container');
+      const minMinimapBtn = document.getElementById('btn-minimap-minimize');
+      if (minimapContainer && minMinimapBtn) {
+        minMinimapBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          minimapContainer.classList.toggle('is-minimized');
+          const isMin = minimapContainer.classList.contains('is-minimized');
+          minMinimapBtn.textContent = isMin ? '▲' : '_';
+          try {
+            localStorage.setItem('maze_minimap_minimized', isMin ? 'true' : 'false');
+          } catch (err) {}
+        });
+
+        minimapContainer.addEventListener('click', (e) => {
+          if (minimapContainer.classList.contains('is-minimized')) {
+            minimapContainer.classList.remove('is-minimized');
+            minMinimapBtn.textContent = '_';
+            try {
+              localStorage.setItem('maze_minimap_minimized', 'false');
+            } catch (err) {}
+          }
+        });
+
+        try {
+          if (localStorage.getItem('maze_minimap_minimized') === 'true') {
+            minimapContainer.classList.add('is-minimized');
+            minMinimapBtn.textContent = '▲';
+          }
+        } catch (err) {}
+      }
+    }
+
+    initDraggableControls();
+
+    // Responsive HUD Collapse Controller (BL-92, ADR-0010)
+    const gameHudTop = document.querySelector('.game-hud-top');
+    const btnHudCollapse = document.getElementById('btn-hud-collapse');
+    if (gameHudTop && btnHudCollapse) {
+      function applyHudCollapsed(collapsed) {
+        gameHudTop.classList.toggle('hud-collapsed', collapsed);
+        btnHudCollapse.title = collapsed ? 'Expand HUD Bar [H]' : 'Collapse HUD Bar [H]';
+        try {
+          localStorage.setItem('maze_hud_collapsed', collapsed ? 'true' : 'false');
+        } catch (err) {}
+      }
+
+      btnHudCollapse.addEventListener('click', (e) => {
+        e.stopPropagation();
+        audioFX.playClick();
+        applyHudCollapsed(!gameHudTop.classList.contains('hud-collapsed'));
+      });
+
+      try {
+        if (localStorage.getItem('maze_hud_collapsed') === 'true') {
+          applyHudCollapsed(true);
+        }
+      } catch (err) {}
+    }
+
+    // Real-Time In-Game Action Activity Feed & Category Filter Controls (BL-81, BL-94)
     const activityFeedEl = document.getElementById('game-activity-feed');
+    const activityFeedItemsEl = document.getElementById('activity-feed-items');
+    const btnFeedToggle = document.getElementById('btn-feed-toggle');
+    const btnFeedHistory = document.getElementById('btn-feed-history');
+    const activityFeedTitle = document.getElementById('activity-feed-title');
+    const feedPills = document.querySelectorAll('.activity-filter-pills .feed-pill');
+    let currentFeedCategory = 'all';
+
+    function setFeedFilter(filter) {
+      currentFeedCategory = filter;
+      feedPills.forEach(pill => {
+        pill.classList.toggle('active', pill.dataset.filter === filter);
+      });
+      if (activityFeedItemsEl) {
+        for (const child of activityFeedItemsEl.children) {
+          const itemCat = child.dataset.category || 'info';
+          const matches = currentFeedCategory === 'all' ||
+            (currentFeedCategory === 'lore' && itemCat === 'lore') ||
+            (currentFeedCategory === 'mech' && (itemCat === 'mech' || itemCat === 'lever' || itemCat === 'door')) ||
+            (currentFeedCategory === 'item' && (itemCat === 'item' || itemCat === 'key'));
+          child.style.display = matches ? 'flex' : 'none';
+        }
+      }
+    }
+
+    feedPills.forEach(pill => {
+      pill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        setFeedFilter(pill.dataset.filter);
+        audioFX.playTabClick();
+      });
+    });
+
+    const btnHudFeedPill = document.getElementById('btn-hud-feed-pill');
+    if (btnHudFeedPill && activityFeedEl) {
+      btnHudFeedPill.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isMin = activityFeedEl.classList.toggle('minimized');
+        if (btnFeedToggle) btnFeedToggle.textContent = isMin ? '▲' : '_';
+        btnHudFeedPill.classList.toggle('active', !isMin);
+        audioFX.playClick();
+      });
+    }
+
+    if (btnFeedToggle && activityFeedEl) {
+      btnFeedToggle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        const isMin = activityFeedEl.classList.toggle('minimized');
+        btnFeedToggle.textContent = isMin ? '▲' : '_';
+        if (btnHudFeedPill) btnHudFeedPill.classList.toggle('active', !isMin);
+        audioFX.playClick();
+      });
+    }
+
+    if (btnFeedHistory) {
+      btnFeedHistory.addEventListener('click', (e) => {
+        e.stopPropagation();
+        audioFX.playClick();
+        openActivityLogModal();
+      });
+    }
+
+    if (activityFeedTitle) {
+      activityFeedTitle.addEventListener('click', (e) => {
+        e.stopPropagation();
+        audioFX.playClick();
+        openActivityLogModal();
+      });
+    }
 
     function addActivityLog(message, type = 'info', icon = 'ℹ️', category = 'info') {
       const timeMs = window.gameLoop ? window.gameLoop.elapsedTime : 0;
@@ -1517,27 +2583,51 @@
         renderActivityModalList();
       }
 
-      // Toast / Feed item
-      if (activityFeedEl) {
+      // Action Activity Feed item
+      const targetContainer = activityFeedItemsEl || activityFeedEl;
+      if (targetContainer) {
         const item = document.createElement('div');
         item.className = `activity-log-item ${type}`;
-        item.innerHTML = `<span>${icon}</span> <span>${message}</span>`;
-        activityFeedEl.appendChild(item);
+        item.dataset.category = category;
+        item.title = 'Click to open full Activity Log History';
+        item.style.cursor = 'pointer';
+        item.innerHTML = `<span class="activity-log-icon">${icon}</span> <span class="activity-log-text">${message}</span>`;
+        item.addEventListener('click', (e) => {
+          e.stopPropagation();
+          audioFX.playClick();
+          openActivityLogModal();
+        });
 
-        while (activityFeedEl.children.length > 4) {
-          activityFeedEl.removeChild(activityFeedEl.firstChild);
+        const matches = currentFeedCategory === 'all' ||
+          (currentFeedCategory === 'lore' && category === 'lore') ||
+          (currentFeedCategory === 'mech' && (category === 'mech' || category === 'lever' || category === 'door')) ||
+          (currentFeedCategory === 'item' && (category === 'item' || category === 'key'));
+        if (!matches) {
+          item.style.display = 'none';
+        }
+
+        targetContainer.appendChild(item);
+        while (targetContainer.children && targetContainer.children.length > 5) {
+          if (typeof targetContainer.removeChild === 'function' && targetContainer.firstChild) {
+            targetContainer.removeChild(targetContainer.firstChild);
+          } else if (targetContainer.firstChild && typeof targetContainer.firstChild.remove === 'function') {
+            targetContainer.firstChild.remove();
+          } else {
+            break;
+          }
         }
 
         setTimeout(() => {
           item.style.opacity = '0';
           item.style.transform = 'translateY(-8px)';
           setTimeout(() => item.remove(), 400);
-        }, 4200);
+        }, 5500);
       }
     }
 
     function showToast(message, type = 'info') {
       const container = document.getElementById('toast-container');
+      if (!container) return;
       const toast = document.createElement('div');
       toast.className = `toast toast-${type}`;
       toast.textContent = message;
@@ -1599,6 +2689,46 @@
       }
     }
 
+    // Viewport Zoom UI Wiring (BL-87)
+    const btnZoomIn = document.getElementById('btn-zoom-in');
+    const btnZoomOut = document.getElementById('btn-zoom-out');
+    const hudZoomBadge = document.getElementById('hud-zoom-badge');
+
+    function updateZoomBadge(zoom) {
+      if (hudZoomBadge) {
+        hudZoomBadge.textContent = `${Math.round((zoom || 1.0) * 100)}%`;
+      }
+    }
+
+    if (window.gameLoop?.camera) {
+      updateZoomBadge(window.gameLoop.camera.zoom);
+    }
+
+    btnZoomIn?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        window.gameLoop.zoomIn();
+      }
+    });
+
+    btnZoomOut?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        window.gameLoop.zoomOut();
+      }
+    });
+
+    hudZoomBadge?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (window.gameLoop) {
+        window.gameLoop.resetZoom();
+      }
+    });
+
+    globalEvents.on('camera:zoom_changed', ({ zoom }) => {
+      updateZoomBadge(zoom);
+    });
+
     if (window.gameLoop?.renderer) {
       updatePerspectiveButton(window.gameLoop.renderer.perspective);
     }
@@ -1620,7 +2750,7 @@
     globalEvents.on('teleport:warped', (data) => {
       audioFX.playTeleport();
       showToast(`Dimensional warp through ${data.name || 'Teleporter'}!`, 'success');
-      addActivityLog(`Warped through <strong>${data.name || 'Teleporter'}</strong> to (${data.to.x}, ${data.to.y}, ${data.to.z ?? 0})`, 'success', '🌀', 'info');
+      addActivityLog(`Warped through <strong>${data.name || 'Teleporter'}</strong> to (${data.to.x}, ${data.to.y}, ${data.to.z ?? 0})`, 'success', '🌀', 'mech');
     });
 
     globalEvents.on('player:hazard_hit', (data) => {
@@ -1632,13 +2762,33 @@
     globalEvents.on('puzzle:solved', (data) => {
       audioFX.playVictory();
       showToast(`Mystic seal unlocked: ${data.name || 'Gate'}!`, 'success');
-      addActivityLog(`Solved mystic seal for <strong>${data.name || 'Gate'}</strong>!`, 'success', '✨', 'door');
+      addActivityLog(`Solved mystic seal for <strong>${data.name || 'Gate'}</strong>!`, 'success', '✨', 'mech');
     });
 
     globalEvents.on('signpost:read', (data) => {
-      audioFX.playModalOpen();
-      showToast(`📜 ${data.title}: "${data.text}"`, 'info');
-      addActivityLog(`Read <strong>${data.title}</strong>: "${data.text}" <em>— ${data.author}</em>`, 'info', '📜', 'info');
+      addActivityLog(`Read <strong>${data.title}</strong>: "${data.text}" <em>— ${data.author}</em>`, 'info', '📜', 'lore');
+    });
+
+    globalEvents.on('wall_decor:inspected', (data) => {
+      const icon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : '🏛️'));
+      addActivityLog(`Examined <strong>${data.title}</strong>: "${data.text || data.message || ''}"`, 'info', icon, 'lore');
+    });
+
+    // Global Hotkeys for HUD and Activity Feed (BL-92, BL-97)
+    window.addEventListener('keydown', (e) => {
+      // Don't intercept when focusing input fields
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName)) return;
+      if (e.key === 'h' || e.key === 'H') {
+        if (btnHudCollapse) {
+          e.preventDefault();
+          btnHudCollapse.click();
+        }
+      } else if (e.key === 'f' || e.key === 'F') {
+        if (btnHudFeedPill) {
+          e.preventDefault();
+          btnHudFeedPill.click();
+        }
+      }
     });
 
     // Attach audio FX listeners to all interactive buttons and links

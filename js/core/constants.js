@@ -109,6 +109,15 @@ export const PUZZLE_TYPES = Object.freeze({
   CIPHER_DIAL: 'cipher_dial',
 });
 
+export const CELESTIAL_SYMBOLS = Object.freeze([
+  Object.freeze({ id: 0, key: 'sun', icon: '☀️', label: 'Sun', color: '#f59e0b', desc: 'Solar Zenith' }),
+  Object.freeze({ id: 1, key: 'moon', icon: '🌙', label: 'Moon', color: '#38bdf8', desc: 'Lunar Crescent' }),
+  Object.freeze({ id: 2, key: 'horizon', icon: '🌅', label: 'Horizon', color: '#f43f5e', desc: 'Twilight Meridian' }),
+  Object.freeze({ id: 3, key: 'star', icon: '⭐', label: 'Star', color: '#fbbf24', desc: 'Stellar Polaris' }),
+  Object.freeze({ id: 4, key: 'planet', icon: '🪐', label: 'Planet', color: '#a855f7', desc: 'Arcane Orbit' }),
+  Object.freeze({ id: 5, key: 'comet', icon: '☄️', label: 'Comet', color: '#34d399', desc: 'Celestial Wanderer' }),
+]);
+
 export const TELEPORTER_STYLES = Object.freeze([
   { id: 'vortex', icon: '🌀', label: 'Dimensional Vortex', desc: 'Swirling celestial rift that warps across space' },
   { id: 'runic_circle', icon: '🔯', label: 'Runic Teleport Circle', desc: 'Ancient arcane circle glowing on the floor' },
@@ -328,9 +337,11 @@ export const LEVER_STYLES = Object.freeze([
   { id: 'crystal_switch', icon: '🔮', label: 'Resonance Crystal', desc: 'Harmonic crystal switch that hums when active' },
   { id: 'runic_plate', icon: '📜', label: 'Runic Inscription', desc: 'Floor glyph that glows when triggered' },
   { id: 'cog_wheel', icon: '⚙️', label: 'Mechanical Valve', desc: 'Industrial steam valve crank wheel' },
+  { id: 'floor_plate', icon: '🛑', label: 'Floor-Plate Trap', desc: 'Spring-loaded floor plate that auto-triggers once when stepped on' },
 ]);
 
 export const SPAWN_STYLE_PRESETS = Object.freeze([
+  { id: 'wall_doorway', icon: '🚪', label: 'Wall Doorway', desc: 'Arched timber entrance doorway set into an adjacent wall' },
   { id: 'stairs_down', icon: '🪜', label: 'Stairs Down', desc: 'Recessed stone steps descending into the labyrinth' },
   { id: 'portal', icon: '🌀', label: 'Summoning Rift', desc: 'Swirling dimensional portal' },
   { id: 'archway', icon: '🏛️', label: 'Stone Archway', desc: 'Ancient gateway threshold' },
@@ -339,11 +350,20 @@ export const SPAWN_STYLE_PRESETS = Object.freeze([
 ]);
 
 export const EXIT_STYLE_PRESETS = Object.freeze([
+  { id: 'wall_archway', icon: '🏛️', label: 'Wall Archway', desc: 'Grand daylight archway carved into an adjacent wall' },
   { id: 'portal', icon: '🌀', label: 'Cosmic Portal', desc: 'Swirling celestial gateway' },
   { id: 'stairs_up', icon: '🪜', label: 'Daylight Ascent', desc: 'Ascending staircase with golden sunbeams' },
   { id: 'archway', icon: '🏛️', label: 'Exit Archway', desc: 'Luminous sanctuary threshold' },
   { id: 'chest', icon: '🎁', label: 'Treasure Vault', desc: 'Golden reward chest exit' },
   { id: 'shrine', icon: '⛩️', label: 'Sacred Shrine', desc: 'Ancient victory shrine' },
+]);
+
+export const WALL_DIRECTIONS = Object.freeze([
+  { id: 'none', label: 'None (Freestanding)' },
+  { id: 'north', label: 'North Wall (Drop Face)' },
+  { id: 'south', label: 'South Wall' },
+  { id: 'west', label: 'West Wall' },
+  { id: 'east', label: 'East Wall' },
 ]);
 
 export const FOG_STATE = Object.freeze({
@@ -366,6 +386,38 @@ export const OPPOSITE_DIRECTIONS = Object.freeze({
   east: 'west',
 });
 
+export const INTERACT_APPROACHES = Object.freeze([
+  { id: 'north', label: 'North (From Above)' },
+  { id: 'south', label: 'South (From Below)' },
+  { id: 'west', label: 'West (From Left)' },
+  { id: 'east', label: 'East (From Right)' },
+  { id: 'self', label: 'Same Tile (Standing On)' },
+]);
+
+/**
+ * Check if player position relative to entity is among allowed interaction approaches.
+ * @param {number} entityX
+ * @param {number} entityY
+ * @param {number} playerX
+ * @param {number} playerY
+ * @param {Array<string>} [allowedDirections]
+ * @returns {boolean}
+ */
+export function isApproachAllowed(entityX, entityY, playerX, playerY, allowedDirections) {
+  let approach = 'self';
+  if (playerX === entityX && playerY === entityY - 1) approach = 'north';
+  else if (playerX === entityX && playerY === entityY + 1) approach = 'south';
+  else if (playerX === entityX - 1 && playerY === entityY) approach = 'west';
+  else if (playerX === entityX + 1 && playerY === entityY) approach = 'east';
+  else if (playerX === entityX && playerY === entityY) approach = 'self';
+  else return false; // Not adjacent or on tile
+
+  if (!allowedDirections || !Array.isArray(allowedDirections) || allowedDirections.length === 0) {
+    return true; // Default: all directions allowed
+  }
+  return allowedDirections.includes(approach);
+}
+
 export const KEY_CODES = Object.freeze({
   UP: ['ArrowUp', 'KeyW', 'w', 'W', 'Up'],
   DOWN: ['ArrowDown', 'KeyS', 's', 'S', 'Down'],
@@ -378,6 +430,95 @@ export const KEY_CODES = Object.freeze({
   RESTART: ['KeyT', 't', 'T'],
   PAUSE: ['Escape', 'KeyP', 'p', 'P', 'Esc'],
   VIEW_MODE: ['KeyV', 'v', 'V'],
+  ZOOM_IN: ['Equal', 'NumpadAdd', '+', '='],
+  ZOOM_OUT: ['Minus', 'NumpadSubtract', '-', '_'],
+  ZOOM_RESET: ['Digit0', 'Numpad0', '0'],
+  NUMERIC_SELECT: ['Digit1', 'Digit2', 'Digit3', 'Digit4', 'Digit5', 'Digit6', 'Digit7', 'Digit8', 'Digit9',
+                   'Numpad1', 'Numpad2', 'Numpad3', 'Numpad4', 'Numpad5', 'Numpad6', 'Numpad7', 'Numpad8', 'Numpad9',
+                   '1', '2', '3', '4', '5', '6', '7', '8', '9'],
+});
+
+export const KEYBINDING_PRESETS = Object.freeze({
+  WASD_ARROWS: {
+    id: 'wasd_arrows',
+    label: 'WASD & Arrow Keys',
+    up: ['ArrowUp', 'KeyW', 'w', 'W', 'Up'],
+    down: ['ArrowDown', 'KeyS', 's', 'S', 'Down'],
+    left: ['ArrowLeft', 'KeyA', 'a', 'A', 'Left'],
+    right: ['ArrowRight', 'KeyD', 'd', 'D', 'Right'],
+  },
+  ARROWS_ONLY: {
+    id: 'arrows_only',
+    label: 'Arrow Keys Only',
+    up: ['ArrowUp', 'Up'],
+    down: ['ArrowDown', 'Down'],
+    left: ['ArrowLeft', 'Left'],
+    right: ['ArrowRight', 'Right'],
+  },
+  ESDF: {
+    id: 'esdf',
+    label: 'ESDF (Touch Typist)',
+    up: ['KeyE', 'e', 'E'],
+    down: ['KeyD', 'd', 'D'],
+    left: ['KeyS', 's', 'S'],
+    right: ['KeyF', 'f', 'F'],
+  },
+  AZERTY: {
+    id: 'azerty',
+    label: 'AZERTY (ZQSD)',
+    up: ['KeyZ', 'z', 'Z', 'ArrowUp', 'Up'],
+    down: ['KeyS', 's', 'S', 'ArrowDown', 'Down'],
+    left: ['KeyQ', 'q', 'Q', 'ArrowLeft', 'Left'],
+    right: ['KeyD', 'd', 'D', 'ArrowRight', 'Right'],
+  },
+  NUMPAD: {
+    id: 'numpad',
+    label: 'Numpad (8462 / Arrows)',
+    up: ['Numpad8', '8', 'ArrowUp', 'Up'],
+    down: ['Numpad2', '2', 'ArrowDown', 'Down'],
+    left: ['Numpad4', '4', 'ArrowLeft', 'Left'],
+    right: ['Numpad6', '6', 'ArrowRight', 'Right'],
+  },
+});
+
+export const MOUSE_MOVE_MODES = Object.freeze({
+  CLICK_PATH: 'click_path',   // Click/tap corridor floor to pathfind via BFS
+  DRAG_ONLY: 'drag_only',     // Drag/swipe steering only; tapping does not auto-pathfind
+  DISABLED: 'disabled',       // Pointer clicks do not move explorer (keyboard/gamepad only)
+});
+
+/**
+ * Returns directional key codes for the given preset ID
+ * @param {string} [presetId='wasd_arrows']
+ * @returns {{ UP: string[], DOWN: string[], LEFT: string[], RIGHT: string[] }}
+ */
+export function getKeyCodesForPreset(presetId = 'wasd_arrows') {
+  const normalized = (presetId || 'wasd_arrows').toLowerCase();
+  for (const key of Object.keys(KEYBINDING_PRESETS)) {
+    const preset = KEYBINDING_PRESETS[key];
+    if (preset.id === normalized) {
+      return {
+        UP: preset.up,
+        DOWN: preset.down,
+        LEFT: preset.left,
+        RIGHT: preset.right,
+      };
+    }
+  }
+  return {
+    UP: KEYBINDING_PRESETS.WASD_ARROWS.up,
+    DOWN: KEYBINDING_PRESETS.WASD_ARROWS.down,
+    LEFT: KEYBINDING_PRESETS.WASD_ARROWS.left,
+    RIGHT: KEYBINDING_PRESETS.WASD_ARROWS.right,
+  };
+}
+
+export const VIEWPORT_ZOOM = Object.freeze({
+  MIN: 0.5,
+  MAX: 2.0,
+  STEP: 0.1,
+  DEFAULT: 1.0,
+  BASE_TILE_SIZE: 36,
 });
 
 export const KEY_COLORS = Object.freeze({
@@ -389,12 +530,43 @@ export const KEY_COLORS = Object.freeze({
 });
 
 export const KEY_COLOR_PRESETS = Object.freeze([
-  { id: 'gold', name: 'Golden Key', color: '#fbbf24', label: 'Gold' },
-  { id: 'red', name: 'Ruby Key', color: '#f43f5e', label: 'Ruby (Red)' },
-  { id: 'blue', name: 'Sapphire Key', color: '#38bdf8', label: 'Sapphire (Blue)' },
-  { id: 'green', name: 'Emerald Key', color: '#34d399', label: 'Emerald (Green)' },
-  { id: 'purple', name: 'Amethyst Key', color: '#a855f7', label: 'Amethyst (Purple)' },
+  { id: 'gold', name: 'Golden Key', color: '#fbbf24', label: 'Gold', shape: '●', shapeName: 'Circle' },
+  { id: 'red', name: 'Ruby Key', color: '#f43f5e', label: 'Ruby (Red)', shape: '▲', shapeName: 'Triangle' },
+  { id: 'blue', name: 'Sapphire Key', color: '#38bdf8', label: 'Sapphire (Blue)', shape: '◆', shapeName: 'Diamond' },
+  { id: 'green', name: 'Emerald Key', color: '#34d399', label: 'Emerald (Green)', shape: '■', shapeName: 'Square' },
+  { id: 'purple', name: 'Amethyst Key', color: '#a855f7', label: 'Amethyst (Purple)', shape: '★', shapeName: 'Star' },
 ]);
+
+export const COLORBLIND_SHAPES = Object.freeze({
+  CIRCLE: '●',
+  TRIANGLE: '▲',
+  DIAMOND: '◆',
+  SQUARE: '■',
+  STAR: '★',
+});
+
+/**
+ * Returns canonical colorblind geometric shape for a key color or key ID
+ * @param {string} colorOrKeyId
+ * @returns {{ symbol: string, label: string }}
+ */
+export function getKeyColorblindShape(colorOrKeyId) {
+  if (!colorOrKeyId) return { symbol: '●', label: 'Circle' };
+  const str = String(colorOrKeyId).toLowerCase();
+  if (str.includes('red') || str.includes('ruby') || str === '#f43f5e' || str === '#ef4444') {
+    return { symbol: '▲', label: 'Triangle' };
+  }
+  if (str.includes('blue') || str.includes('sapphire') || str === '#38bdf8' || str === '#3b82f6') {
+    return { symbol: '◆', label: 'Diamond' };
+  }
+  if (str.includes('green') || str.includes('emerald') || str === '#34d399' || str === '#10b981') {
+    return { symbol: '■', label: 'Square' };
+  }
+  if (str.includes('purple') || str.includes('amethyst') || str === '#a855f7' || str === '#8b5cf6') {
+    return { symbol: '★', label: 'Star' };
+  }
+  return { symbol: '●', label: 'Circle' };
+}
 
 export const LEVER_TILE_OPTIONS = Object.freeze([
   { value: 0, label: 'Floor (Open / Walkable)' },
@@ -599,6 +771,44 @@ export const THEMES = Object.freeze({
   },
 });
 
+/**
+ * Canonical Biome Asset Families
+ * Unifies similar areas so they share thematic vector assets, wall styles,
+ * and floor surface treatments for a coherent aesthetic. (BL-113, ADR-0022)
+ */
+export const BIOME_FAMILIES = Object.freeze({
+  dungeon: 'dungeon',
+  crypt: 'dungeon',
+  caves: 'dungeon',
+  cave: 'dungeon',
+  blueprint: 'dungeon',
+  jungle: 'jungle',
+  emerald: 'jungle',
+  canopy: 'jungle',
+  magma: 'magma',
+  lava: 'magma',
+  volcano: 'magma',
+  glacial: 'glacial',
+  snow: 'glacial',
+  frost: 'glacial',
+  ice: 'glacial',
+  temple: 'temple',
+  sunset: 'temple',
+  citadel: 'temple',
+  astral: 'temple',
+});
+
+/**
+ * Resolve theme name to its canonical shared asset biome family
+ * @param {string} themeName
+ * @returns {'dungeon'|'jungle'|'magma'|'glacial'|'temple'}
+ */
+export function getBiomeFamily(themeName) {
+  if (!themeName || typeof themeName !== 'string') return 'dungeon';
+  const lower = themeName.toLowerCase().trim();
+  return BIOME_FAMILIES[lower] || 'dungeon';
+}
+
 export const ZONES = Object.freeze({
   tutorial: {
     id: 'tutorial',
@@ -649,3 +859,172 @@ export const ZONES = Object.freeze({
     desc: 'Bioluminescent deep subterranean ruins with multi-tier bridges and intricate key-lever sequences.',
   },
 });
+
+export const EXPLORER_OUTFITS = Object.freeze({
+  classic: {
+    id: 'classic',
+    name: 'Classic Pathfinder',
+    icon: '🧭',
+    desc: 'Traditional crimson flannel shirt, durable denim trousers, and stitched leather satchel.',
+    shirt: '#dc2626',
+    shirtDark: '#991b1b',
+    shirtCheck: '#1e293b',
+    pants: '#2563eb',
+    pantsDark: '#1d4ed8',
+    boots: '#5c2e0b',
+    pack: '#78350f',
+    packDark: '#451a03',
+    packFlap: '#92400e',
+    bedroll: '#d97706',
+    skin: '#fed7aa',
+    hair: '#78350f',
+    cap: '#991b1b',
+  },
+  emerald: {
+    id: 'emerald',
+    name: 'Emerald Ranger',
+    icon: '🌿',
+    desc: 'Camouflaged forest green field jacket, olive tactical trousers, and oiled moss pack.',
+    shirt: '#16a34a',
+    shirtDark: '#15803d',
+    shirtCheck: '#064e3b',
+    pants: '#4d7c0f',
+    pantsDark: '#365314',
+    boots: '#3f2e18',
+    pack: '#365314',
+    packDark: '#1a2e05',
+    packFlap: '#4d7c0f',
+    bedroll: '#84cc16',
+    skin: '#fcd34d',
+    hair: '#451a03',
+    cap: '#15803d',
+  },
+  arctic: {
+    id: 'arctic',
+    name: 'Frost Nomad',
+    icon: '❄️',
+    desc: 'Thermal cerulean parka, slate storm-weather trousers, and frost-resistant knapsack.',
+    shirt: '#0284c7',
+    shirtDark: '#0369a1',
+    shirtCheck: '#0c4a6e',
+    pants: '#475569',
+    pantsDark: '#334155',
+    boots: '#1e293b',
+    pack: '#334155',
+    packDark: '#0f172a',
+    packFlap: '#475569',
+    bedroll: '#38bdf8',
+    skin: '#fef08a',
+    hair: '#e2e8f0',
+    cap: '#0284c7',
+  },
+  desert: {
+    id: 'desert',
+    name: 'Desert Scout',
+    icon: '🏜️',
+    desc: 'Sun-bleached amber linen tunic, sturdy khaki trousers, and desert traveler pack.',
+    shirt: '#d97706',
+    shirtDark: '#b45309',
+    shirtCheck: '#78350f',
+    pants: '#78716c',
+    pantsDark: '#57534e',
+    boots: '#44403c',
+    pack: '#854d0e',
+    packDark: '#5c3a08',
+    packFlap: '#a16207',
+    bedroll: '#f59e0b',
+    skin: '#fed7aa',
+    hair: '#292524',
+    cap: '#b45309',
+  },
+  obsidian: {
+    id: 'obsidian',
+    name: 'Obsidian Rogue',
+    icon: '🌑',
+    desc: 'Stealth charcoal shadow garments, midnight weave pants, and muffled infiltration pack.',
+    shirt: '#475569',
+    shirtDark: '#334155',
+    shirtCheck: '#0f172a',
+    pants: '#1e293b',
+    pantsDark: '#0f172a',
+    boots: '#0a0e17',
+    pack: '#1e293b',
+    packDark: '#090d16',
+    packFlap: '#334155',
+    bedroll: '#64748b',
+    skin: '#fed7aa',
+    hair: '#0f172a',
+    cap: '#334155',
+  },
+  alchemist: {
+    id: 'alchemist',
+    name: 'Arcane Scholar',
+    icon: '🔮',
+    desc: 'Enchanted violet vestments, royal indigo breeches, and sigil-embossed reagent pouch.',
+    shirt: '#9333ea',
+    shirtDark: '#7e22ce',
+    shirtCheck: '#3b0764',
+    pants: '#3730a3',
+    pantsDark: '#312e81',
+    boots: '#2e1065',
+    pack: '#581c87',
+    packDark: '#3b0764',
+    packFlap: '#7e22ce',
+    bedroll: '#c084fc',
+    skin: '#fde047',
+    hair: '#fbbf24',
+    cap: '#7e22ce',
+  },
+});
+
+/**
+ * Explorer Character Visual Customization Options (BL-95, ADR-0014)
+ */
+export const CHARACTER_CUSTOMIZATION = Object.freeze({
+  GENDER: Object.freeze({
+    MALE: 'male',
+    FEMALE: 'female',
+    NEUTRAL: 'neutral',
+  }),
+  GENDER_META: Object.freeze({
+    male: { id: 'male', label: 'Male / Explorer', icon: '🏃‍♂️' },
+    female: { id: 'female', label: 'Female / Explorer', icon: '🏃‍♀️' },
+    neutral: { id: 'neutral', label: 'Androgynous / Scout', icon: '🧑' },
+  }),
+  HAIR_STYLES: Object.freeze({
+    SHORT: 'short',
+    PONYTAIL: 'ponytail',
+    BOB: 'bob',
+    CURLS: 'curls',
+    BALD: 'bald',
+  }),
+  HAIR_STYLE_META: Object.freeze({
+    short: { id: 'short', label: 'Short Adventure Crop', icon: '✂️' },
+    ponytail: { id: 'ponytail', label: 'High Ponytail', icon: '🎀' },
+    bob: { id: 'bob', label: 'Explorer Bob', icon: '💇' },
+    curls: { id: 'curls', label: 'Bouncy Curls', icon: '🌀' },
+    bald: { id: 'bald', label: 'Close Shaved / Cap', icon: '🧢' },
+  }),
+  HAIR_COLORS: Object.freeze({
+    brunette: { id: 'brunette', label: 'Brunette', color: '#78350f' },
+    raven: { id: 'raven', label: 'Raven Black', color: '#1c1917' },
+    blonde: { id: 'blonde', label: 'Golden Blonde', color: '#d97706' },
+    auburn: { id: 'auburn', label: 'Auburn Red', color: '#b91c1c' },
+    silver: { id: 'silver', label: 'Silver Gray', color: '#e2e8f0' },
+    amethyst: { id: 'amethyst', label: 'Amethyst Violet', color: '#a855f7' },
+  }),
+  SKIN_TONES: Object.freeze({
+    fair: { id: 'fair', label: 'Fair Peach', color: '#fed7aa' },
+    warm: { id: 'warm', label: 'Warm Glow', color: '#fcd34d' },
+    olive: { id: 'olive', label: 'Olive Sun', color: '#d97706' },
+    bronze: { id: 'bronze', label: 'Bronze Tanned', color: '#854d0e' },
+    deep: { id: 'deep', label: 'Deep Cocoa', color: '#451a03' },
+  }),
+  DEFAULTS: Object.freeze({
+    gender: 'male',
+    hairStyle: 'short',
+    hairColor: 'brunette',
+    skinTone: 'fair',
+  }),
+});
+

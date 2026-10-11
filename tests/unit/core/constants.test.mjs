@@ -108,4 +108,29 @@ describe('Core > Constants & Registries', () => {
       assert(typeof zone.desc === 'string', `Zone "${key}" has desc`);
     }
   });
+
+  it('defines KEYBINDING_PRESETS and MOUSE_MOVE_MODES (Issue #63, BL-100)', async () => {
+    const { KEYBINDING_PRESETS, MOUSE_MOVE_MODES, getKeyCodesForPreset } = await import('../../../js/core/constants.js');
+    assert(KEYBINDING_PRESETS.WASD_ARROWS !== undefined, 'Has WASD_ARROWS preset');
+    assert(KEYBINDING_PRESETS.ARROWS_ONLY !== undefined, 'Has ARROWS_ONLY preset');
+    assert(KEYBINDING_PRESETS.ESDF !== undefined, 'Has ESDF preset');
+    assert(KEYBINDING_PRESETS.AZERTY !== undefined, 'Has AZERTY preset');
+    assert(KEYBINDING_PRESETS.NUMPAD !== undefined, 'Has NUMPAD preset');
+
+    assertEqual(MOUSE_MOVE_MODES.CLICK_PATH, 'click_path');
+    assertEqual(MOUSE_MOVE_MODES.DRAG_ONLY, 'drag_only');
+    assertEqual(MOUSE_MOVE_MODES.DISABLED, 'disabled');
+
+    const wasdCodes = getKeyCodesForPreset('wasd_arrows');
+    assert(wasdCodes.UP.includes('KeyW') && wasdCodes.UP.includes('ArrowUp'), 'WASD UP contains W and ArrowUp');
+
+    const esdfCodes = getKeyCodesForPreset('esdf');
+    assert(esdfCodes.UP.includes('KeyE'), 'ESDF UP contains KeyE');
+    assert(esdfCodes.DOWN.includes('KeyD'), 'ESDF DOWN contains KeyD');
+
+    const azertyCodes = getKeyCodesForPreset('azerty');
+    assert(azertyCodes.UP.includes('KeyZ'), 'AZERTY UP contains KeyZ');
+    assert(azertyCodes.LEFT.includes('KeyQ'), 'AZERTY LEFT contains KeyQ');
+  });
 });
+

@@ -3,7 +3,7 @@
  * Ties together input, physics/collision, entities, camera, fog, and rendering.
  */
 
-import { TILES, KEY_CODES, ELEVATION, ENTITY_TYPES, SCREEN_TO_WORLD_DELTAS } from '../core/constants.js';
+import { TILES, KEY_CODES, ELEVATION, ENTITY_TYPES, SCREEN_TO_WORLD_DELTAS, isApproachAllowed, MOUSE_MOVE_MODES, getKeyCodesForPreset } from '../core/constants.js';
 import { globalEvents } from '../core/events.js';
 import { CollisionEngine } from './collision.js';
 import { Key } from '../entities/key.js';
@@ -28,6 +28,7 @@ import { DebugLogger } from './debug-logger.js';
 import { PuzzleModal } from '../ui/puzzle-modal.js';
 import { assetLoader } from '../core/asset-loader.js';
 import { audioFX } from '../ui/audio-fx.js';
+import { InputManager, GAME_COMMANDS } from './input-manager.js';
 
 export class GameLoop {
   /**
@@ -57,6 +58,7 @@ export class GameLoop {
 
     this.isRunning = false;
     this.isPaused = false;
+    this.obscuringOverlays = new Set();
     this.isWon = false;
     this.lastTime = 0;
     this.elapsedTime = 0; // in milliseconds
@@ -93,9 +95,13 @@ export class GameLoop {
     }
 
     // Subsystems
-    const tileSize = this.level.config?.tileSize || 32;
+    const tileSize = this.level.config?.tileSize || 36;
     this.tileSize = tileSize;
-    this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize);
+    const savedZoom = StorageManager.getSetting('viewport_zoom', 1.0);
+    this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize, savedZoom);
+    if (typeof document !== 'undefined' && document.documentElement) {
+      document.documentElement.style.setProperty('--camera-zoom', String(this.camera.zoom));
+    }
     this.fog = this.level.config?.fogOfWar
       ? new FogOfWar(this.level.dimensions.width, this.level.dimensions.height)
       : null;
@@ -106,7 +112,11 @@ export class GameLoop {
     const initialPerspective = savedPerspective || this.level.config?.viewPerspective || 'angled';
     this.renderer = new GameRenderer(mainCanvas);
     this.renderer.setPerspective(initialPerspective);
-    this.minimap = new Minimap(minimapCanvas);
+    if (mainCanvas && minimapCanvas === mainCanvas) {
+      console.warn('[MazeGame:GameLoop] minimapCanvas cannot be the same element as mainCanvas; ignoring minimapCanvas.');
+      minimapCanvas = null;
+    }
+    this.minimap = minimapCanvas ? new Minimap(minimapCanvas) : null;
 
     // Asynchronously preload vector assets in browser environment
     if (typeof fetch === 'function' && typeof window !== 'undefined') {
@@ -143,9 +153,25 @@ export class GameLoop {
     }
 
     // Input state
-    this.keysDown = new Set();
+    const savedKeybindingPreset = StorageManager.getSetting('keybinding_preset', 'wasd_arrows');
+    this.mouseMoveMode = StorageManager.getSetting('mouse_move_mode', MOUSE_MOVE_MODES.CLICK_PATH);
+    this.inputManager = new InputManager({
+      hotkeysEnabled: this.areHotkeysEnabled(),
+      keybindingPreset: savedKeybindingPreset,
+    });
+    this.keysDown = this.inputManager.keysDown;
     this.panVelocity = { x: 0, y: 0 };
     this.isDraggingMinimap = false;
+
+    // React to live control settings changes (BL-100)
+    globalEvents.on('settings:controls_changed', ({ keybindingPreset, mouseMoveMode }) => {
+      if (keybindingPreset && this.inputManager) {
+        this.inputManager.setKeybindingPreset(keybindingPreset);
+      }
+      if (mouseMoveMode) {
+        this.mouseMoveMode = mouseMoveMode;
+      }
+    });
 
     // Checkpoint & snapshot state
     this.activeCheckpoint = null;
@@ -168,6 +194,12 @@ export class GameLoop {
     this.secretsFound = 0;
     this.totalSecrets = this.calculateTotalSecrets();
     this.hazardHits = 0;
+
+    // Level Lore Journal state (BL-81)
+    this.levelJournal = [];
+
+    // Multi-target interaction disambiguation state (BL-85, BL-91, ADR-009)
+    this.isDisambiguating = false;
 
     // Initial fog update
     this.updateFog();
@@ -335,6 +367,80 @@ export class GameLoop {
       discreteRotation: this.camera.getDiscreteRotation(),
       heading: this.camera.getCompassHeading(),
     });
+  }
+
+  /**
+   * Set viewport zoom level
+   * @param {number} level
+   * @returns {number}
+   */
+  setZoom(level) {
+    if (!this.camera) return 1.0;
+    const newZoom = this.camera.setZoom(level);
+    this.tileSize = this.camera.tileSize;
+    StorageManager.setSetting('viewport_zoom', newZoom);
+    if (typeof document !== 'undefined' && document.documentElement) {
+      document.documentElement.style.setProperty('--camera-zoom', String(newZoom));
+    }
+    this.notifyUI();
+    globalEvents.emit('camera:zoom_changed', {
+      zoom: newZoom,
+      tileSize: this.camera.tileSize,
+    });
+    return newZoom;
+  }
+
+  /**
+   * Zoom in by step
+   * @param {number} [step=0.1]
+   * @returns {number}
+   */
+  zoomIn(step = 0.1) {
+    if (!this.camera) return 1.0;
+    const newZoom = this.camera.zoomIn(step);
+    this.tileSize = this.camera.tileSize;
+    StorageManager.setSetting('viewport_zoom', newZoom);
+    this.notifyUI();
+    globalEvents.emit('camera:zoom_changed', {
+      zoom: newZoom,
+      tileSize: this.camera.tileSize,
+    });
+    return newZoom;
+  }
+
+  /**
+   * Zoom out by step
+   * @param {number} [step=0.1]
+   * @returns {number}
+   */
+  zoomOut(step = 0.1) {
+    if (!this.camera) return 1.0;
+    const newZoom = this.camera.zoomOut(step);
+    this.tileSize = this.camera.tileSize;
+    StorageManager.setSetting('viewport_zoom', newZoom);
+    this.notifyUI();
+    globalEvents.emit('camera:zoom_changed', {
+      zoom: newZoom,
+      tileSize: this.camera.tileSize,
+    });
+    return newZoom;
+  }
+
+  /**
+   * Reset zoom to default 1.0x
+   * @returns {number}
+   */
+  resetZoom() {
+    if (!this.camera) return 1.0;
+    const newZoom = this.camera.resetZoom();
+    this.tileSize = this.camera.tileSize;
+    StorageManager.setSetting('viewport_zoom', newZoom);
+    this.notifyUI();
+    globalEvents.emit('camera:zoom_changed', {
+      zoom: newZoom,
+      tileSize: this.camera.tileSize,
+    });
+    return newZoom;
   }
 
   /**
@@ -523,6 +629,9 @@ export class GameLoop {
     const val = !!enabled;
     StorageManager.setSetting('hotkeys_enabled', val);
     StorageManager.setSetting('simple_keyboard_mode', !val);
+    if (this.inputManager) {
+      this.inputManager.setHotkeysEnabled(val);
+    }
     globalEvents.emit('hotkeys:toggled', { enabled: val });
     if (typeof this.uiCallbacks.onHotkeysChanged === 'function') {
       this.uiCallbacks.onHotkeysChanged(val);
@@ -530,54 +639,80 @@ export class GameLoop {
   }
 
   /**
-   * Bind keyboard, mouse, and touch events
+   * Bind keyboard, mouse, gamepad, and touch events
    */
   bindInputs() {
-    this.handleKeyDown = (e) => {
-      if (['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space'].includes(e.code) || ['ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', ' '].includes(e.key)) {
-        e.preventDefault();
-      }
-      this.keysDown.add(e.code);
-      if (e.key) this.keysDown.add(e.key);
-
-      // Handle Instant Actions (gated by hotkeys toggle / simple keyboard mode)
-      const hotkeysActive = this.areHotkeysEnabled();
-      const isMap = hotkeysActive && (KEY_CODES.MAP.includes(e.code) || (e.key && KEY_CODES.MAP.includes(e.key)));
-      const isRestart = hotkeysActive && (KEY_CODES.RESTART.includes(e.code) || (e.key && KEY_CODES.RESTART.includes(e.key)));
-      const isInteract = KEY_CODES.INTERACT.includes(e.code) || (e.key && KEY_CODES.INTERACT.includes(e.key));
-      const isViewMode = hotkeysActive && KEY_CODES.VIEW_MODE && (KEY_CODES.VIEW_MODE.includes(e.code) || (e.key && KEY_CODES.VIEW_MODE.includes(e.key)));
-      const isRotateLeft = hotkeysActive && KEY_CODES.ROTATE_LEFT && (KEY_CODES.ROTATE_LEFT.includes(e.code) || (e.key && KEY_CODES.ROTATE_LEFT.includes(e.key)));
-      const isRotateRight = hotkeysActive && KEY_CODES.ROTATE_RIGHT && (KEY_CODES.ROTATE_RIGHT.includes(e.code) || (e.key && KEY_CODES.ROTATE_RIGHT.includes(e.key)));
-
-      if (isMap) {
+    if (this.inputManager) {
+      this.inputManager.on(GAME_COMMANDS.INTERACT, () => {
+        this.triggerInteract();
+      });
+      this.inputManager.on(GAME_COMMANDS.SELECT_OPTION, ({ index }) => {
+        this.handleManualInteract(index);
+      });
+      this.inputManager.on(GAME_COMMANDS.ROTATE_LEFT, () => {
+        this.rotateLeft();
+      });
+      this.inputManager.on(GAME_COMMANDS.ROTATE_RIGHT, () => {
+        this.rotateRight();
+      });
+      this.inputManager.on(GAME_COMMANDS.TOGGLE_VIEW_MODE, () => {
+        this.togglePerspective();
+      });
+      this.inputManager.on(GAME_COMMANDS.ZOOM_IN, () => {
+        this.zoomIn();
+      });
+      this.inputManager.on(GAME_COMMANDS.ZOOM_OUT, () => {
+        this.zoomOut();
+      });
+      this.inputManager.on(GAME_COMMANDS.ZOOM_RESET, () => {
+        this.resetZoom();
+      });
+      this.inputManager.on(GAME_COMMANDS.TOGGLE_MAP, () => {
         this.toggleFreePan();
-      } else if (isRestart) {
+      });
+      this.inputManager.on(GAME_COMMANDS.RESTART, () => {
         if (typeof this.uiCallbacks.onRequestRestart === 'function') {
           this.uiCallbacks.onRequestRestart();
         } else {
           this.restartLevel();
         }
-      } else if (isInteract) {
-        this.handleManualInteract();
-      } else if (isViewMode) {
-        this.togglePerspective();
-      } else if (isRotateLeft) {
-        e.preventDefault();
-        this.rotateLeft();
-      } else if (isRotateRight) {
-        e.preventDefault();
-        this.rotateRight();
+      });
+      this.inputManager.on(GAME_COMMANDS.PAUSE, () => {
+        if (this.isDisambiguating) {
+          this.closeDisambiguation();
+          return;
+        }
+        if (typeof this.uiCallbacks.onTogglePause === 'function') {
+          this.uiCallbacks.onTogglePause();
+        } else {
+          globalEvents.emit('game:pause_toggle');
+        }
+      });
+    }
+
+    // Auto-Pause & Resume synchronization (BL-92, ADR-0010)
+    globalEvents.on('game:paused', () => {
+      this.isPaused = true;
+    });
+    globalEvents.on('game:resumed', () => {
+      this.isPaused = false;
+      this.lastTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    });
+
+    this.handleKeyDown = (e) => {
+      if (this.inputManager) {
+        this.inputManager.handleKeyDown(e);
       }
     };
 
     this.handleKeyUp = (e) => {
-      this.keysDown.delete(e.code);
-      if (e.key) this.keysDown.delete(e.key);
+      if (this.inputManager) {
+        this.inputManager.handleKeyUp(e);
+      }
     };
 
-    if (typeof window !== 'undefined') {
-      window.addEventListener('keydown', this.handleKeyDown);
-      window.addEventListener('keyup', this.handleKeyUp);
+    if (typeof window !== 'undefined' && this.inputManager) {
+      this.inputManager.attach(window);
     }
 
     // Minimap Click & Drag for Free-Pan, Pinch-to-Zoom & Double-Tap (BL-17)
@@ -739,6 +874,14 @@ export class GameLoop {
         }
       }
 
+      // Pointer navigation check (BL-100)
+      if (this.mouseMoveMode === MOUSE_MOVE_MODES.DISABLED) {
+        return; // Movement via pointer is disabled
+      }
+      if (this.mouseMoveMode === MOUSE_MOVE_MODES.DRAG_ONLY) {
+        return; // Click-to-move pathfinding disabled; only drag/steering permitted
+      }
+
       const path = this.findPathTo(targetGridX, targetGridY);
       if (path && path.length > 0) {
         this.autoMovePath = path;
@@ -746,18 +889,49 @@ export class GameLoop {
           x: targetGridX,
           y: targetGridY,
           time: performance.now(),
+          path: path.slice(0, 24),
         };
       }
     };
 
-    // Canvas Touch & Swipe Controls (BL-16)
+    // Main Canvas Mouse Wheel Zoom (BL-87)
+    this.handleCanvasWheel = (e) => {
+      if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      const delta = e.deltaY < 0 ? 0.1 : -0.1;
+      this.setZoom(this.camera.zoom + delta);
+    };
+
+    // Main Canvas Touch & Continuous Drag Steering Controls with 2-finger Pinch Zoom (BL-16, BL-67, BL-87)
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
     let touchHasMoved = false;
+    let touchSteeringActive = false;
+    let touchSteerDirection = null;
+    let touchSteerInterval = null;
+    let canvasPinchDist = 0;
+    let canvasPinchStartZoom = 1.0;
+
+    this.stopTouchSteer = () => {
+      if (touchSteerInterval) {
+        clearInterval(touchSteerInterval);
+        touchSteerInterval = null;
+      }
+      touchSteeringActive = false;
+      touchSteerDirection = null;
+    };
 
     this.handleCanvasTouchStart = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      this.stopTouchSteer();
+      if (e.touches?.length === 2) {
+        // Two-finger pinch to zoom
+        const t1 = e.touches[0];
+        const t2 = e.touches[1];
+        canvasPinchDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        canvasPinchStartZoom = this.camera ? this.camera.zoom : 1.0;
+        return;
+      }
       if (e.touches?.length === 1) {
         touchStartX = e.touches[0].clientX;
         touchStartY = e.touches[0].clientY;
@@ -768,17 +942,55 @@ export class GameLoop {
 
     this.handleCanvasTouchMove = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (e.touches?.length === 2 && canvasPinchDist > 0) {
+        const t1 = e.touches[0];
+        const t2 = e.touches[1];
+        const currentDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const scale = currentDist / (canvasPinchDist || 1);
+        this.setZoom(canvasPinchStartZoom * scale);
+        return;
+      }
       if (e.touches?.length === 1) {
         const dx = e.touches[0].clientX - touchStartX;
         const dy = e.touches[0].clientY - touchStartY;
-        if (Math.hypot(dx, dy) > 10) {
+        const dist = Math.hypot(dx, dy);
+        if (dist > 10) {
           touchHasMoved = true;
+        }
+
+        // Continuous directional drag: deadzone threshold 20px (easier on mobile touch)
+        if (dist >= 20) {
+          const absX = Math.abs(dx);
+          const absY = Math.abs(dy);
+          const direction = absX > absY ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
+
+          if (direction !== touchSteerDirection) {
+            touchSteerDirection = direction;
+            touchSteeringActive = true;
+            this.autoMovePath = null;
+            this.clickTarget = null;
+            this.tryMoveDirection(direction);
+
+            if (touchSteerInterval) clearInterval(touchSteerInterval);
+            touchSteerInterval = setInterval(() => {
+              if (touchSteerDirection) {
+                this.tryMoveDirection(touchSteerDirection);
+              }
+            }, 120);
+          }
         }
       }
     };
 
     this.handleCanvasTouchEnd = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
+      if (canvasPinchDist > 0 && e.touches?.length < 2) {
+        canvasPinchDist = 0;
+        return;
+      }
+      const hadSteering = touchSteeringActive;
+      this.stopTouchSteer();
+
       if (e.changedTouches?.length === 1) {
         const endX = e.changedTouches[0].clientX;
         const endY = e.changedTouches[0].clientY;
@@ -788,8 +1000,13 @@ export class GameLoop {
         const absY = Math.abs(dy);
         const elapsed = performance.now() - touchStartTime;
 
-        // Swipe detected: distance >= 24px within 600ms
-        if (touchHasMoved && (absX >= 24 || absY >= 24) && elapsed < 600) {
+        // If continuous drag steering already executed, finish cleanly
+        if (hadSteering) {
+          return;
+        }
+
+        // Swipe detected: distance >= 20px within 600ms
+        if ((absX >= 20 || absY >= 20) && elapsed < 600) {
           const direction = absX > absY ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
           this.autoMovePath = null;
           this.clickTarget = null;
@@ -797,19 +1014,18 @@ export class GameLoop {
           return;
         }
 
-        // Tap detected: pathfind / interact
-        if (!touchHasMoved || Math.hypot(dx, dy) < 15) {
-          this.handleCanvasPointerDown({
-            clientX: endX,
-            clientY: endY,
-            button: 0,
-          });
-        }
+        // Tap detected: pathfind / interact (no deadzone!)
+        this.handleCanvasPointerDown({
+          clientX: endX,
+          clientY: endY,
+          button: 0,
+        });
       }
     };
 
     if (this.canvas && typeof this.canvas.addEventListener === 'function') {
       this.canvas.addEventListener('pointerdown', this.handleCanvasPointerDown);
+      this.canvas.addEventListener('wheel', this.handleCanvasWheel, { passive: false });
       this.canvas.addEventListener('touchstart', this.handleCanvasTouchStart, { passive: false });
       this.canvas.addEventListener('touchmove', this.handleCanvasTouchMove, { passive: false });
       this.canvas.addEventListener('touchend', this.handleCanvasTouchEnd, { passive: false });
@@ -822,8 +1038,14 @@ export class GameLoop {
    */
   destroy() {
     this.stop();
+    if (typeof this.stopTouchSteer === 'function') {
+      this.stopTouchSteer();
+    }
     if (this.puzzleModal) {
       this.puzzleModal.close();
+    }
+    if (this.inputManager) {
+      this.inputManager.detach();
     }
     if (typeof window !== 'undefined') {
       window.removeEventListener('keydown', this.handleKeyDown);
@@ -841,6 +1063,7 @@ export class GameLoop {
     }
     if (this.canvas && typeof this.canvas.removeEventListener === 'function') {
       this.canvas.removeEventListener('pointerdown', this.handleCanvasPointerDown);
+      this.canvas.removeEventListener('wheel', this.handleCanvasWheel);
       this.canvas.removeEventListener('touchstart', this.handleCanvasTouchStart);
       this.canvas.removeEventListener('touchmove', this.handleCanvasTouchMove);
       this.canvas.removeEventListener('touchend', this.handleCanvasTouchEnd);
@@ -865,6 +1088,7 @@ export class GameLoop {
    * Pan camera to minimap point
    */
   panToMinimapClick(e) {
+    if (!this.minimap) return;
     const { gridX, gridY } = this.minimap.mapClickToGrid(e.clientX, e.clientY, this.level, this.player);
     const tileSize = this.camera.tileSize;
     this.camera.setMode('freepan');
@@ -963,6 +1187,7 @@ export class GameLoop {
     this.revealedSecrets = new Set();
     this.secretsFound = 0;
     this.hazardHits = 0;
+    this.levelJournal = [];
     this.camera.setMode('follow');
 
     // Reset logger for new attempt
@@ -1099,23 +1324,8 @@ export class GameLoop {
       }
     }
 
-    // 8. Check for available contextual interaction (BL-42)
-    if (typeof this.uiCallbacks.onInteractionAvailable === 'function') {
-      const interaction = this.getAvailableInteraction();
-      let playerScreenPos = null;
-      let targetScreenPos = null;
-      if (interaction && this.camera) {
-        playerScreenPos = this.camera.worldToScreen(this.player.worldX, this.player.worldY, true);
-        if (interaction.x !== undefined && interaction.y !== undefined) {
-          const tileTopLeft = this.camera.tileToScreen ? this.camera.tileToScreen(interaction.x, interaction.y) : this.camera.worldToScreen(interaction.x * this.camera.tileSize, interaction.y * this.camera.tileSize, true);
-          targetScreenPos = {
-            x: tileTopLeft.x + this.camera.tileSize / 2,
-            y: tileTopLeft.y + this.camera.tileSize / 2,
-          };
-        }
-      }
-      this.uiCallbacks.onInteractionAvailable(interaction, targetScreenPos || playerScreenPos, targetScreenPos, playerScreenPos);
-    }
+    // 8. Check for available contextual interaction (BL-42, BL-85, BL-91)
+    this.checkContextualInteraction();
   }
 
   /**
@@ -1127,11 +1337,18 @@ export class GameLoop {
     let screenDx = 0;
     let screenDy = 0;
 
-    for (const code of this.keysDown) {
-      if (KEY_CODES.UP.includes(code)) screenDy -= 1;
-      else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
-      else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
-      else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
+    if (this.inputManager) {
+      const poll = this.inputManager.poll();
+      screenDx = poll.dx;
+      screenDy = poll.dy;
+    } else {
+      for (const code of this.keysDown) {
+        if (KEY_CODES.UP.includes(code)) screenDy -= 1;
+        else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
+        else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
+        else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
+      }
+      if (screenDx !== 0) screenDy = 0;
     }
 
     // Cancel auto-move path if player presses directional keys
@@ -1202,36 +1419,24 @@ export class GameLoop {
       return [];
     }
 
-    // Check if target tile can ever be entered from any adjacent direction
-    const isTargetWalkable = [{ dx: 0, dy: -1 }, { dx: 0, dy: 1 }, { dx: -1, dy: 0 }, { dx: 1, dy: 0 }].some(d => {
-      const ax = targetX + d.dx;
-      const ay = targetY + d.dy;
-      if (ax < 0 || ax >= this.level.dimensions.width || ay < 0 || ay >= this.level.dimensions.height) return false;
-      const chk = CollisionEngine.checkMove(ax, ay, targetX, targetY, startElev, this.level, this.entities, this.player.inventory);
-      return chk.allowed;
-    });
-
     const queue = [{ x: startX, y: startY, elevation: startElev, path: [] }];
     const visited = new Set([`${startX},${startY},${startElev}`]);
     let bestAdjacentPath = null;
 
     let iterations = 0;
-    const maxIterations = 2500;
+    const maxIterations = 3500;
 
     while (queue.length > 0 && iterations++ < maxIterations) {
       const curr = queue.shift();
 
-      // If target is directly walkable and we reached it:
-      if (isTargetWalkable && curr.x === targetX && curr.y === targetY) {
+      // If we directly reached target:
+      if (curr.x === targetX && curr.y === targetY) {
         return curr.path;
       }
 
-      // If target is solid and we reached an adjacent cell:
-      if (!isTargetWalkable && Math.abs(curr.x - targetX) + Math.abs(curr.y - targetY) === 1) {
-        if (!bestAdjacentPath || curr.path.length < bestAdjacentPath.length) {
-          bestAdjacentPath = curr.path;
-          return bestAdjacentPath; // First adjacent encountered in BFS is guaranteed shortest
-        }
+      // If target tile itself is adjacent and non-walkable directly (e.g. wall, closed door, lever), record shortest adjacent path
+      if (!bestAdjacentPath && Math.abs(curr.x - targetX) + Math.abs(curr.y - targetY) === 1) {
+        bestAdjacentPath = curr.path;
       }
 
       const neighbors = [
@@ -1280,11 +1485,12 @@ export class GameLoop {
   }
 
   /**
-   * Get interactable entity or tile action available at or adjacent to the player's current location
-   * @returns {{ type: string, label: string, icon: string, keyHint: string, x: number, y: number, canInteract: boolean }|null}
+   * Retrieve all available interaction candidates adjacent to or at player's location (BL-85).
+   * Respects entity directional interaction restrictions (interactDirections) and elevation.
+   * @returns {Array<{ id: string, index: number, type: string, label: string, name: string, icon: string, keyHint: string, x: number, y: number, entity?: object, canInteract: boolean }>}
    */
-  getAvailableInteraction() {
-    if (!this.player || this.isPuzzleOpen || this.isWon || this.camera?.mode === 'freepan') return null;
+  getAllAvailableInteractions() {
+    if (!this.player || this.isPuzzleOpen || this.isWon || this.camera?.mode === 'freepan') return [];
 
     const px = this.player.gridX;
     const py = this.player.gridY;
@@ -1295,109 +1501,245 @@ export class GameLoop {
     const facingX = px + facingDx;
     const facingY = py + facingDy;
 
-    const sortByFacing = (list) => {
-      return [...list].sort((a, b) => {
-        const aFacing = (a.x === facingX && a.y === facingY) ? 0 : ((a.x === px && a.y === py) ? 1 : 2);
-        const bFacing = (b.x === facingX && b.y === facingY) ? 0 : ((b.x === px && b.y === py) ? 1 : 2);
-        return aFacing - bFacing;
-      });
+    const rawCandidates = [];
+
+    // Helper to test if entity can be interacted with
+    const canEntityInteract = (ent) => {
+      if (!ent) return false;
+      if (typeof ent.canInteract === 'function') {
+        return ent.canInteract(px, py, pe);
+      }
+      if ((ent.elevation ?? ent.z ?? ELEVATION.GROUND) !== pe) return false;
+      const dist = Math.abs(ent.x - px) + Math.abs(ent.y - py);
+      if (dist > 1) return false;
+      return isApproachAllowed(ent.x, ent.y, px, py, ent.interactDirections);
     };
 
-    // 1. Check adjacent locked PuzzleGate
-    const adjacentGates = sortByFacing(this.entities.filter(
-      e => e.type === ENTITY_TYPES.PUZZLE_GATE && !e.isUnlocked && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    ));
-    if (adjacentGates.length > 0) {
-      const g = adjacentGates[0];
-      return { type: 'puzzle_gate', label: g.name ? `Solve ${g.name}` : 'Solve Seal', icon: '🧩', keyHint: 'E', x: g.x, y: g.y, canInteract: true };
-    }
-
-    // 2. Check adjacent Pedestal
-    const adjacentPedestals = sortByFacing(this.entities.filter(
-      e => e.type === ENTITY_TYPES.PEDESTAL && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    ));
-    if (adjacentPedestals.length > 0) {
-      const ped = adjacentPedestals[0];
-      const hasCarried = this.player.hasCarriedRiddleItem();
-      if (hasCarried && !ped.slottedItem) {
-        return { type: 'pedestal', label: `Place ${this.player.carriedRiddleItem.name || 'Relic'}`, icon: '📥', keyHint: 'E', x: ped.x, y: ped.y, canInteract: true };
-      } else if (!hasCarried && ped.slottedItem) {
-        return { type: 'pedestal', label: `Take ${ped.slottedItem.name || 'Relic'}`, icon: '📤', keyHint: 'E', x: ped.x, y: ped.y, canInteract: true };
-      } else {
-        return { type: 'pedestal', label: `Inspect ${ped.name || 'Pedestal'}`, icon: '🦅', keyHint: 'E', x: ped.x, y: ped.y, canInteract: true };
+    // 1. Locked PuzzleGate
+    for (const g of this.entities) {
+      if (g.type === ENTITY_TYPES.PUZZLE_GATE && !g.isUnlocked && canEntityInteract(g)) {
+        rawCandidates.push({
+          id: g.id || `puzzle_gate_${g.x}_${g.y}`,
+          type: 'puzzle_gate',
+          label: g.name ? `Solve ${g.name}` : 'Solve Seal',
+          name: g.name || 'Puzzle Seal',
+          icon: '🧩',
+          x: g.x,
+          y: g.y,
+          elevation: g.elevation ?? ELEVATION.GROUND,
+          entity: g,
+          canInteract: true,
+        });
       }
     }
 
-    // 3. Check adjacent Lever
-    const adjacentLevers = sortByFacing(this.entities.filter(
-      e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation || ELEVATION.GROUND) === pe
-    ));
-    if (adjacentLevers.length > 0) {
-      const lever = adjacentLevers[0];
-      return { type: 'lever', label: lever.state ? 'Switch Off' : 'Pull Switch', icon: '🕹️', keyHint: 'E', x: lever.x, y: lever.y, canInteract: true };
+    // 2. Pedestals
+    for (const ped of this.entities) {
+      if (ped.type === ENTITY_TYPES.PEDESTAL && canEntityInteract(ped)) {
+        const hasCarried = this.player.hasCarriedRiddleItem();
+        let label = `Inspect ${ped.name || 'Pedestal'}`;
+        let icon = '🦅';
+        if (hasCarried && !ped.slottedItem) {
+          label = `Place ${this.player.carriedRiddleItem.name || 'Relic'}`;
+          icon = '📥';
+        } else if (!hasCarried && ped.slottedItem) {
+          label = `Take ${ped.slottedItem.name || 'Relic'}`;
+          icon = '📤';
+        }
+        rawCandidates.push({
+          id: ped.id || `pedestal_${ped.x}_${ped.y}`,
+          type: 'pedestal',
+          label,
+          name: ped.name || 'Pedestal',
+          icon,
+          x: ped.x,
+          y: ped.y,
+          elevation: ped.elevation ?? ELEVATION.GROUND,
+          entity: ped,
+          canInteract: true,
+        });
+      }
     }
 
-    // 4. Check adjacent Signpost
-    const adjacentSigns = sortByFacing(this.entities.filter(
-      e => e.type === ENTITY_TYPES.SIGNPOST && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    ));
-    if (adjacentSigns.length > 0) {
-      const s = adjacentSigns[0];
-      return { type: 'signpost', label: s.title ? `Read "${s.title}"` : 'Read Signpost', icon: '📜', keyHint: 'E', x: s.x, y: s.y, canInteract: true };
+    // 3. Levers
+    for (const lever of this.entities) {
+      if ((lever.type === 'lever' || lever.type === ENTITY_TYPES.LEVER) && canEntityInteract(lever)) {
+        rawCandidates.push({
+          id: lever.id || `lever_${lever.x}_${lever.y}`,
+          type: 'lever',
+          label: lever.state ? `Switch Off (${lever.name || 'Switch'})` : `Pull ${lever.name || 'Switch'}`,
+          name: lever.name || 'Switch',
+          icon: '🕹️',
+          x: lever.x,
+          y: lever.y,
+          elevation: lever.elevation ?? ELEVATION.GROUND,
+          entity: lever,
+          canInteract: true,
+        });
+      }
     }
 
-    // 5. Check adjacent WallDecor
-    const adjacentDecor = sortByFacing(this.entities.filter(
-      e => e.type === ENTITY_TYPES.WALL_DECOR && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    ));
-    if (adjacentDecor.length > 0) {
-      const d = adjacentDecor[0];
-      const icon = d.decorType === 'note' ? '📝' : (d.decorType === 'painting' ? '🖼️' : '🏛️');
-      return { type: 'wall_decor', label: d.title ? `Examine "${d.title}"` : 'Examine Lore', icon, keyHint: 'E', x: d.x, y: d.y, canInteract: true };
+    // 4. Signposts
+    for (const s of this.entities) {
+      if (s.type === ENTITY_TYPES.SIGNPOST && canEntityInteract(s)) {
+        rawCandidates.push({
+          id: s.id || `signpost_${s.x}_${s.y}`,
+          type: 'signpost',
+          label: s.title ? `Read "${s.title}"` : 'Read Signpost',
+          name: s.title || 'Signpost',
+          icon: '📜',
+          x: s.x,
+          y: s.y,
+          elevation: s.elevation ?? ELEVATION.GROUND,
+          entity: s,
+          canInteract: true,
+        });
+      }
     }
 
-    // 6. Check floor RiddleItem
-    const floorRiddleItems = this.entities.filter(
-      e => e.type === ENTITY_TYPES.RIDDLE_ITEM && !e.isCarried && !e.isSlotted && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    );
-    if (floorRiddleItems.length > 0 && !this.player.hasCarriedRiddleItem()) {
-      const item = floorRiddleItems[0];
-      return { type: 'riddle_item', label: `Pick Up ${item.name || 'Relic'}`, icon: '🗿', keyHint: 'E', x: item.x, y: item.y, canInteract: true };
+    // 5. WallDecor
+    for (const d of this.entities) {
+      if (d.type === ENTITY_TYPES.WALL_DECOR && canEntityInteract(d)) {
+        const icon = d.decorType === 'note' ? '📝' : (d.decorType === 'painting' ? '🖼️' : '🏛️');
+        rawCandidates.push({
+          id: d.id || `wall_decor_${d.x}_${d.y}`,
+          type: 'wall_decor',
+          label: d.title ? `Examine "${d.title}"` : 'Examine Lore',
+          name: d.title || 'Wall Lore',
+          icon,
+          x: d.x,
+          y: d.y,
+          elevation: d.elevation ?? ELEVATION.GROUND,
+          entity: d,
+          canInteract: true,
+        });
+      }
     }
 
-    // 7. Check adjacent Door
-    const adjacentDoors = sortByFacing(this.entities.filter(
-      e => e.type === ENTITY_TYPES.DOOR && !e.isOpen && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    ));
-    if (adjacentDoors.length > 0) {
-      const d = adjacentDoors[0];
-      const hasKey = this.player.hasKey(d.requiresKey);
-      return {
-        type: 'door',
-        label: hasKey ? `Unlock ${d.name || 'Door'}` : `Locked (${d.name || 'Door'})`,
-        icon: hasKey ? '🗝️' : '🔒',
-        keyHint: 'E',
-        x: d.x,
-        y: d.y,
-        canInteract: hasKey,
-      };
+    // 6. Floor RiddleItems
+    for (const item of this.entities) {
+      if (item.type === ENTITY_TYPES.RIDDLE_ITEM && !item.isCarried && !item.isSlotted && canEntityInteract(item)) {
+        rawCandidates.push({
+          id: item.id || `riddle_item_${item.x}_${item.y}`,
+          type: 'riddle_item',
+          label: this.player.hasCarriedRiddleItem() ? `Swap for ${item.name || 'Relic'}` : `Pick Up ${item.name || 'Relic'}`,
+          name: item.name || 'Relic',
+          icon: '🗿',
+          x: item.x,
+          y: item.y,
+          elevation: item.elevation ?? ELEVATION.GROUND,
+          entity: item,
+          canInteract: true,
+        });
+      }
     }
 
-    // 8. Check on-cell Exit
+    // 7. Doors
+    for (const d of this.entities) {
+      if (d.type === ENTITY_TYPES.DOOR && !d.isOpen && canEntityInteract(d)) {
+        const hasKey = this.player.hasKey(d.requiresKey);
+        rawCandidates.push({
+          id: d.id || `door_${d.x}_${d.y}`,
+          type: 'door',
+          label: hasKey ? `Unlock ${d.name || 'Door'}` : `Locked (${d.name || 'Door'})`,
+          name: d.name || 'Door',
+          icon: hasKey ? '🗝️' : '🔒',
+          x: d.x,
+          y: d.y,
+          elevation: d.elevation ?? ELEVATION.GROUND,
+          entity: d,
+          canInteract: hasKey,
+        });
+      }
+    }
+
+    // 8. Exit
     const exit = this.getMatchingExit(px, py, pe);
     if (exit) {
-      return {
+      rawCandidates.push({
+        id: `exit_${px}_${py}`,
         type: 'exit',
         label: exit.targetRoom ? 'Proceed to Room' : 'Exit Portal',
+        name: exit.targetRoom ? 'Room Portal' : 'Maze Exit',
         icon: '🌀',
-        keyHint: 'E',
         x: px,
         y: py,
+        elevation: pe,
+        exit,
         canInteract: true,
-      };
+      });
     }
 
-    return null;
+    // Sort candidates:
+    // 0: in front of player (facingX, facingY)
+    // 1: on player's tile (px, py)
+    // 2: adjacent on sides or behind
+    rawCandidates.sort((a, b) => {
+      const aFacing = (a.x === facingX && a.y === facingY) ? 0 : ((a.x === px && a.y === py) ? 1 : 2);
+      const bFacing = (b.x === facingX && b.y === facingY) ? 0 : ((b.x === px && b.y === py) ? 1 : 2);
+      if (aFacing !== bFacing) return aFacing - bFacing;
+      const aDist = Math.abs(a.x - px) + Math.abs(a.y - py);
+      const bDist = Math.abs(b.x - px) + Math.abs(b.y - py);
+      return aDist - bDist;
+    });
+
+    // Assign indices (1-based) and keyHints
+    return rawCandidates.map((c, idx) => ({
+      ...c,
+      index: idx + 1,
+      keyHint: rawCandidates.length > 1 ? String(idx + 1) : 'E',
+    }));
+  }
+
+  /**
+   * Get primary interactable entity or tile action available at or adjacent to player's current location (BL-42, BL-85)
+   * @returns {{ type: string, label: string, icon: string, keyHint: string, x: number, y: number, canInteract: boolean, candidates: Array<object> }|null}
+   */
+  getAvailableInteraction() {
+    const candidates = this.getAllAvailableInteractions();
+    if (!candidates || candidates.length === 0) return null;
+    return { ...candidates[0], candidates };
+  }
+
+  /**
+   * Check for available contextual interactions and invoke UI callbacks (BL-42, BL-85, BL-91)
+   */
+  checkContextualInteraction() {
+    if (typeof this.uiCallbacks.onInteractionAvailable !== 'function') return;
+
+    const candidates = this.getAllAvailableInteractions();
+    let interaction = null;
+    let targetScreenPos = null;
+    let playerScreenPos = null;
+    let candidatesWithPos = [];
+
+    if (this.camera && this.player) {
+      playerScreenPos = this.camera.worldToScreen(this.player.worldX, this.player.worldY, true);
+    }
+
+    if (candidates && candidates.length > 0) {
+      candidatesWithPos = candidates.map(c => {
+        let screenPos = null;
+        if (this.camera && c.x !== undefined && c.y !== undefined) {
+          const tileTopLeft = this.camera.tileToScreen ? this.camera.tileToScreen(c.x, c.y) : this.camera.worldToScreen(c.x * this.camera.tileSize, c.y * this.camera.tileSize, true);
+          screenPos = {
+            x: tileTopLeft.x + this.camera.tileSize / 2,
+            y: tileTopLeft.y + this.camera.tileSize / 2,
+          };
+        }
+        return { ...c, screenPos };
+      });
+
+      const primary = candidatesWithPos[0];
+      targetScreenPos = primary.screenPos;
+      interaction = { ...primary, candidates: candidatesWithPos, isDisambiguating: this.isDisambiguating };
+    } else {
+      if (this.isDisambiguating) {
+        this.isDisambiguating = false;
+      }
+    }
+
+    this.uiCallbacks.onInteractionAvailable(interaction, targetScreenPos || playerScreenPos, targetScreenPos, playerScreenPos, candidatesWithPos, this.isDisambiguating);
   }
 
   /**
@@ -1434,6 +1776,9 @@ export class GameLoop {
     });
 
     if (check.allowed) {
+      if (this.isDisambiguating) {
+        this.closeDisambiguation();
+      }
       // If door was unlocked
       if (check.doorToUnlock) {
         check.doorToUnlock.open();
@@ -1459,6 +1804,14 @@ export class GameLoop {
           y: targetY,
         });
         this.notifyUI();
+      }
+
+      if (check.nextElevation !== this.player.elevation) {
+        globalEvents.emit('player:elevation_changed', {
+          from: this.player.elevation,
+          to: check.nextElevation,
+          ascending: check.nextElevation > this.player.elevation,
+        });
       }
 
       this.player.startMove(targetX, targetY, check.nextElevation);
@@ -1501,11 +1854,17 @@ export class GameLoop {
     let screenDx = 0;
     let screenDy = 0;
 
-    for (const code of this.keysDown) {
-      if (KEY_CODES.UP.includes(code)) screenDy -= 1;
-      else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
-      else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
-      else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
+    if (this.inputManager) {
+      const poll = this.inputManager.poll(dt);
+      screenDx = poll.dx;
+      screenDy = poll.dy;
+    } else {
+      for (const code of this.keysDown) {
+        if (KEY_CODES.UP.includes(code)) screenDy -= 1;
+        else if (KEY_CODES.DOWN.includes(code)) screenDy += 1;
+        else if (KEY_CODES.LEFT.includes(code)) screenDx -= 1;
+        else if (KEY_CODES.RIGHT.includes(code)) screenDx += 1;
+      }
     }
 
     if (screenDx !== 0 || screenDy !== 0) {
@@ -1592,47 +1951,61 @@ export class GameLoop {
       this.notifyUI();
     }
 
-    // 2. Check Lever step trigger (must match entity elevation, default 0)
-    const lever = this.entities.find(e => e.type === 'lever' && e.x === px && e.y === py && (e.elevation || ELEVATION.GROUND) === pe);
-    if (lever) {
-      lever.toggle(this.level);
-      const leverColor = lever.state ? '#34d399' : '#f43f5e';
-      const leverStateLabel = lever.state ? 'ON' : 'OFF';
-      const leverActionLabel = lever.state ? 'Mechanism Opened' : 'Mechanism Closed';
+    // 2. Check Step-Triggered Floor Plates / Traps (must match entity elevation, default 0)
+    // Standard levers do NOT auto-toggle on step; only floor plates / step triggers do.
+    const stepPlate = this.entities.find(e =>
+      (e.type === 'lever' || e.type === ENTITY_TYPES.LEVER) &&
+      (e.triggerOnStep || e.style === 'floor_plate') &&
+      (!e.autoTriggerOnce || !e.hasTriggered) &&
+      e.x === px && e.y === py &&
+      (e.elevation || ELEVATION.GROUND) === pe
+    );
+    if (stepPlate) {
+      stepPlate.hasTriggered = true;
+      stepPlate.toggle(this.level);
+      const isPlateTrap = stepPlate.style === 'floor_plate';
+      const plateColor = isPlateTrap ? '#ef4444' : (stepPlate.state ? '#34d399' : '#f43f5e');
+      const plateStateLabel = stepPlate.state ? 'ACTIVE' : 'INACTIVE';
+      const plateActionLabel = stepPlate.state ? 'Mechanism Triggered' : 'Mechanism Reset';
 
-      this.renderer.spawnParticles(this.player.worldX, this.player.worldY, leverColor, 20);
-      this.renderer.spawnShockwave(this.player.worldX, this.player.worldY, leverColor, 36);
-      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY, `⚡ ${lever.name || 'Switch'}: ${leverStateLabel}`, leverColor);
+      this.renderer.spawnParticles(this.player.worldX, this.player.worldY, plateColor, 20);
+      this.renderer.spawnShockwave(this.player.worldX, this.player.worldY, plateColor, 36);
+      this.renderer.spawnFloatingText(
+        this.player.worldX,
+        this.player.worldY,
+        `${isPlateTrap ? '⚠️' : '⚡'} ${stepPlate.name || 'Floor Plate'}: ${plateStateLabel}`,
+        plateColor
+      );
 
       // Trigger effects at all target coordinates
-      if (Array.isArray(lever.targets)) {
-        for (const target of lever.targets) {
+      if (Array.isArray(stepPlate.targets)) {
+        for (const target of stepPlate.targets) {
           if (target.x !== undefined && target.y !== undefined) {
             const targetWx = target.x * this.camera.tileSize + this.camera.tileSize / 2;
             const targetWy = target.y * this.camera.tileSize + this.camera.tileSize / 2;
-            this.renderer.spawnParticles(targetWx, targetWy, leverColor, 15);
-            this.renderer.spawnShockwave(targetWx, targetWy, leverColor, 28);
-            this.renderer.spawnFloatingText(targetWx, targetWy, lever.state ? '🔓 Passage Opened' : '🔒 Passage Closed', leverColor);
+            this.renderer.spawnParticles(targetWx, targetWy, plateColor, 15);
+            this.renderer.spawnShockwave(targetWx, targetWy, plateColor, 28);
+            this.renderer.spawnFloatingText(targetWx, targetWy, stepPlate.state ? '🔓 Mechanism Fired' : '🔒 Mechanism Closed', plateColor);
           }
         }
       }
 
       this.logger.logLeverToggled({
-        leverId: lever.id,
-        state: lever.state,
+        leverId: stepPlate.id,
+        state: stepPlate.state,
         atX: px,
         atY: py,
-        targets: lever.targets,
+        targets: stepPlate.targets,
         elapsedMs: this.elapsedTime,
       });
 
       globalEvents.emit('lever:toggled', {
-        leverId: lever.id,
-        name: lever.name || 'Switch',
-        state: lever.state,
-        stateLabel: leverStateLabel,
-        actionLabel: leverActionLabel,
-        targets: lever.targets,
+        leverId: stepPlate.id,
+        name: stepPlate.name || (isPlateTrap ? 'Floor Plate Trap' : 'Switch'),
+        state: stepPlate.state,
+        stateLabel: plateStateLabel,
+        actionLabel: plateActionLabel,
+        targets: stepPlate.targets,
         x: px,
         y: py,
       });
@@ -1649,17 +2022,14 @@ export class GameLoop {
       this.handleTeleport(teleporter, dest);
     }
 
-    // 4. Check Signpost step trigger
+    // 4. Check Signpost step trigger (BL-81)
+    // Note stepping does not blast modals or toasts; it registers as an active
+    // interaction candidate so only a single prompt [E] appears.
     const signpost = this.entities.find(
       e => e.type === ENTITY_TYPES.SIGNPOST && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
     );
     if (signpost) {
-      const data = signpost.readSign();
-      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
-      globalEvents.emit('signpost:read', data);
-      if (this.uiCallbacks.onSignpostRead) {
-        this.uiCallbacks.onSignpostRead(data);
-      }
+      globalEvents.emit('signpost:stepped', { signpost, x: px, y: py });
     }
 
     // 5. Check Checkpoint step trigger
@@ -1878,126 +2248,92 @@ export class GameLoop {
   }
 
   /**
-   * Handle manual interact button (E / Space / Enter)
+   * Execute an interaction candidate (BL-42, BL-85)
+   * @param {object} candidate
+   * @returns {boolean}
    */
-  handleManualInteract() {
-    const px = this.player.gridX;
-    const py = this.player.gridY;
-    const pe = this.player.elevation;
+  executeInteraction(candidate) {
+    if (!candidate) return false;
+    const entity = candidate.entity;
 
-    const facingDx = this.player.facing === 'east' ? 1 : (this.player.facing === 'west' ? -1 : 0);
-    const facingDy = this.player.facing === 'south' ? 1 : (this.player.facing === 'north' ? -1 : 0);
-    const facingX = px + facingDx;
-    const facingY = py + facingDy;
-
-    const sortByFacing = (list) => {
-      return [...list].sort((a, b) => {
-        const aFacing = (a.x === facingX && a.y === facingY) ? 0 : ((a.x === px && a.y === py) ? 1 : 2);
-        const bFacing = (b.x === facingX && b.y === facingY) ? 0 : ((b.x === px && b.y === py) ? 1 : 2);
-        return aFacing - bFacing;
-      });
-    };
-
-    // Check adjacent locked PuzzleGate
-    const adjacentPuzzleGates = sortByFacing(this.entities.filter(
-      e => e.type === ENTITY_TYPES.PUZZLE_GATE && !e.isUnlocked && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    ));
-    if (adjacentPuzzleGates.length > 0) {
-      this.openPuzzleGateModal(adjacentPuzzleGates[0]);
-      return;
+    if (candidate.type === 'puzzle_gate' || (entity && entity.type === ENTITY_TYPES.PUZZLE_GATE)) {
+      this.openPuzzleGateModal(entity);
+      return true;
     }
 
-    // Check if player is on or adjacent to a Signpost
-    const adjacentSignposts = this.entities.filter(
-      e => e.type === ENTITY_TYPES.SIGNPOST && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    );
-    if (adjacentSignposts.length > 0) {
-      const signpost = adjacentSignposts[0];
-      const data = signpost.readSign();
+    if (candidate.type === 'signpost' || (entity && entity.type === ENTITY_TYPES.SIGNPOST)) {
+      const data = entity.readSign();
+      this.recordJournalEntry(data);
       this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
       globalEvents.emit('signpost:read', data);
       if (this.uiCallbacks.onSignpostRead) {
         this.uiCallbacks.onSignpostRead(data);
       }
-      return;
+      return true;
     }
 
-    // Check if player is adjacent to a WallDecor
-    const adjacentDecor = this.entities.filter(
-      e => e.type === ENTITY_TYPES.WALL_DECOR && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    );
-    if (adjacentDecor.length > 0) {
-      const decor = adjacentDecor[0];
-      const data = decor.inspect();
+    if (candidate.type === 'wall_decor' || (entity && entity.type === ENTITY_TYPES.WALL_DECOR)) {
+      const data = entity.inspect();
+      this.recordJournalEntry(data);
       const decorIcon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : '🏛️'));
       this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `${decorIcon} ${data.title}`, '#fbbf24');
       globalEvents.emit('wall_decor:inspected', data);
       if (this.uiCallbacks.onWallDecorInspected) {
         this.uiCallbacks.onWallDecorInspected(data);
       }
-      return;
+      return true;
     }
 
-    // Check if player is on or adjacent to a lever at matching elevation
-    const adjacentLevers = this.entities.filter(
-      e => e.type === 'lever' && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation || ELEVATION.GROUND) === pe
-    );
-
-    if (adjacentLevers.length > 0) {
-      const lever = adjacentLevers[0];
-      lever.toggle(this.level);
-      const leverColor = lever.state ? '#34d399' : '#f43f5e';
-      const leverStateLabel = lever.state ? 'ON' : 'OFF';
-      const leverActionLabel = lever.state ? 'Mechanism Opened' : 'Mechanism Closed';
-      const leverWx = lever.x * this.camera.tileSize + this.camera.tileSize / 2;
-      const leverWy = lever.y * this.camera.tileSize + this.camera.tileSize / 2;
+    if (candidate.type === 'lever' || (entity && (entity.type === 'lever' || entity.type === ENTITY_TYPES.LEVER))) {
+      entity.toggle(this.level);
+      const leverColor = entity.state ? '#34d399' : '#f43f5e';
+      const leverStateLabel = entity.state ? 'ON' : 'OFF';
+      const leverActionLabel = entity.state ? 'Mechanism Opened' : 'Mechanism Closed';
+      const leverWx = entity.x * this.camera.tileSize + this.camera.tileSize / 2;
+      const leverWy = entity.y * this.camera.tileSize + this.camera.tileSize / 2;
 
       this.renderer.spawnParticles(leverWx, leverWy, leverColor, 20);
       this.renderer.spawnShockwave(leverWx, leverWy, leverColor, 36);
-      this.renderer.spawnFloatingText(leverWx, leverWy, `⚡ ${lever.name || 'Switch'}: ${leverStateLabel}`, leverColor);
+      this.renderer.spawnFloatingText(leverWx, leverWy, `⚡ ${entity.name || 'Switch'}: ${leverStateLabel}`, leverColor);
 
-      if (Array.isArray(lever.targets)) {
-        for (const target of lever.targets) {
+      if (Array.isArray(entity.targets)) {
+        for (const target of entity.targets) {
           if (target.x !== undefined && target.y !== undefined) {
             const targetWx = target.x * this.camera.tileSize + this.camera.tileSize / 2;
             const targetWy = target.y * this.camera.tileSize + this.camera.tileSize / 2;
             this.renderer.spawnParticles(targetWx, targetWy, leverColor, 15);
             this.renderer.spawnShockwave(targetWx, targetWy, leverColor, 28);
-            this.renderer.spawnFloatingText(targetWx, targetWy, lever.state ? '🔓 Passage Opened' : '🔒 Passage Closed', leverColor);
+            this.renderer.spawnFloatingText(targetWx, targetWy, entity.state ? '🔓 Passage Opened' : '🔒 Passage Closed', leverColor);
           }
         }
       }
 
       this.logger.logLeverToggled({
-        leverId: lever.id,
-        state: lever.state,
-        atX: lever.x,
-        atY: lever.y,
-        targets: lever.targets,
+        leverId: entity.id,
+        state: entity.state,
+        atX: entity.x,
+        atY: entity.y,
+        targets: entity.targets,
         elapsedMs: this.elapsedTime,
       });
 
       globalEvents.emit('lever:toggled', {
-        leverId: lever.id,
-        name: lever.name || 'Switch',
-        state: lever.state,
+        leverId: entity.id,
+        name: entity.name || 'Switch',
+        state: entity.state,
         stateLabel: leverStateLabel,
         actionLabel: leverActionLabel,
-        targets: lever.targets,
-        x: lever.x,
-        y: lever.y,
+        targets: entity.targets,
+        x: entity.x,
+        y: entity.y,
       });
 
       this.notifyUI();
-      return;
+      return true;
     }
 
-    // Check if player is on or adjacent to a Pedestal
-    const adjacentPedestals = sortByFacing(this.entities.filter(
-      e => e.type === ENTITY_TYPES.PEDESTAL && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    ));
-    if (adjacentPedestals.length > 0) {
-      const pedestal = adjacentPedestals[0];
+    if (candidate.type === 'pedestal' || (entity && entity.type === ENTITY_TYPES.PEDESTAL)) {
+      const pedestal = entity;
       const hasCarried = this.player.hasCarriedRiddleItem();
 
       if (hasCarried && !pedestal.slottedItem) {
@@ -2032,7 +2368,7 @@ export class GameLoop {
 
         this.evaluateRiddleGroup(pedestal.puzzleGroupId);
         this.notifyUI();
-        return;
+        return true;
       } else if (hasCarried && pedestal.slottedItem) {
         // Swap carried item with pedestal's slotted item
         const oldItem = pedestal.removeItem();
@@ -2058,7 +2394,7 @@ export class GameLoop {
 
         this.evaluateRiddleGroup(pedestal.puzzleGroupId);
         this.notifyUI();
-        return;
+        return true;
       } else if (!hasCarried && pedestal.slottedItem) {
         // Retrieve slotted item from pedestal into hands
         const retrieved = pedestal.removeItem();
@@ -2087,7 +2423,7 @@ export class GameLoop {
 
         this.evaluateRiddleGroup(pedestal.puzzleGroupId);
         this.notifyUI();
-        return;
+        return true;
       } else {
         // Empty pedestal and player has no item: inspect riddle inscription!
         const pedWx = pedestal.x * this.camera.tileSize + this.camera.tileSize / 2;
@@ -2112,16 +2448,12 @@ export class GameLoop {
             acceptedItemId: pedestal.acceptedItemId,
           });
         }
-        return;
+        return true;
       }
     }
 
-    // Check if player is on or adjacent to a RiddleItem on the floor
-    const adjacentRiddleItems = this.entities.filter(
-      e => e.type === ENTITY_TYPES.RIDDLE_ITEM && !e.isCarried && !e.isSlotted && Math.abs(e.x - px) + Math.abs(e.y - py) <= 1 && (e.elevation ?? ELEVATION.GROUND) === pe
-    );
-    if (adjacentRiddleItems.length > 0) {
-      const item = adjacentRiddleItems[0];
+    if (candidate.type === 'riddle_item' || (entity && entity.type === ENTITY_TYPES.RIDDLE_ITEM)) {
+      const item = entity;
       if (!this.player.hasCarriedRiddleItem()) {
         this.player.pickUpRiddleItem(item);
         const iWx = this.player.worldX;
@@ -2142,14 +2474,147 @@ export class GameLoop {
         }
 
         this.notifyUI();
-        return;
+        return true;
       } else {
         // Swap carried item with floor item
         this.player.dropRiddleItem(item.x, item.y, item.elevation);
         this.player.pickUpRiddleItem(item);
         this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY, `🔄 Swapped for ${item.name}`, '#38bdf8');
         this.notifyUI();
-        return;
+        return true;
+      }
+    }
+
+    if (candidate.type === 'door' || (entity && entity.type === ENTITY_TYPES.DOOR)) {
+      if (!entity.isOpen && this.player.hasKey(entity.requiresKey)) {
+        entity.open();
+        const dwx = entity.x * this.camera.tileSize + this.camera.tileSize / 2;
+        const dwy = entity.y * this.camera.tileSize + this.camera.tileSize / 2;
+        this.renderer.spawnParticles(dwx, dwy, entity.color || '#fbbf24', 30);
+        this.renderer.spawnShockwave(dwx, dwy, entity.color || '#fbbf24', 40);
+        this.renderer.spawnFloatingText(dwx, dwy, `🗝️ Unlocked ${entity.name || 'Door'}`, entity.color || '#fbbf24');
+        this.notifyUI();
+        return true;
+      }
+    }
+
+    if (candidate.type === 'exit') {
+      const exit = candidate.exit || this.getMatchingExit(this.player.gridX, this.player.gridY, this.player.elevation);
+      if (exit) {
+        if (exit.targetRoom) {
+          this.transitionToRoom(exit.targetRoom, exit.targetSpawn);
+        } else {
+          this.handleVictory(exit);
+        }
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  /**
+   * Handle manual interact button (E / Space / Enter or numeric key 1..9 or direct target)
+   * @param {number|object} [target=1] 1-based candidate index, or candidate object/entity
+   */
+  handleManualInteract(target = 1) {
+    if (this.isDisambiguating) {
+      this.isDisambiguating = false;
+      if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
+        this.uiCallbacks.onDisambiguationModeChanged(false);
+      }
+    }
+
+    const candidates = this.getAllAvailableInteractions();
+    if (!candidates || candidates.length === 0) return;
+
+    let chosen = null;
+    if (typeof target === 'number') {
+      const idx = target - 1;
+      if (idx >= 0 && idx < candidates.length) {
+        chosen = candidates[idx];
+      }
+    } else if (target && typeof target === 'object') {
+      chosen = candidates.find(c => c.entity === target || c.id === target.id || c === target) || candidates[0];
+    }
+
+    if (!chosen) {
+      chosen = candidates[0];
+    }
+
+    this.executeInteraction(chosen);
+    this.checkContextualInteraction();
+  }
+
+  /**
+   * Trigger interaction with two-stage reveal support for multi-target situations (BL-91, ADR-009)
+   */
+  triggerInteract() {
+    const candidates = this.getAllAvailableInteractions();
+    if (!candidates || candidates.length === 0) return;
+
+    if (candidates.length > 1 && !this.isDisambiguating) {
+      // Stage 1 -> Stage 2: Reveal numbered pills and action drawer
+      this.isDisambiguating = true;
+      if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
+        this.uiCallbacks.onDisambiguationModeChanged(true, candidates);
+      }
+      this.checkContextualInteraction();
+      return;
+    }
+
+    // Either single interaction, or player confirmed primary candidate while disambiguation is active
+    this.handleManualInteract(1);
+  }
+
+  /**
+   * Close multi-target disambiguation mode back to Stage 1 (BL-91, ADR-009)
+   */
+  closeDisambiguation() {
+    if (!this.isDisambiguating) return;
+    this.isDisambiguating = false;
+    if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
+      this.uiCallbacks.onDisambiguationModeChanged(false);
+    }
+    this.checkContextualInteraction();
+  }
+
+  /**
+   * Pause gameplay simulation (timer, entity ticks, movement)
+   */
+  pause() {
+    this.isPaused = true;
+    globalEvents.emit('game:paused');
+  }
+
+  /**
+   * Resume gameplay simulation
+   */
+  resume() {
+    this.isPaused = false;
+    this.lastTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+    globalEvents.emit('game:resumed');
+  }
+
+  /**
+   * Automatically pause or resume gameplay when an obscuring modal or overlay covers the maze view (BL-92, ADR-0010)
+   * @param {boolean} obscured Whether the view is now obscured
+   * @param {string} [overlayId='overlay'] Identifier for the obscuring UI element
+   */
+  setObscured(obscured, overlayId = 'overlay') {
+    if (!this.obscuringOverlays) {
+      this.obscuringOverlays = new Set();
+    }
+    if (obscured) {
+      this.obscuringOverlays.add(overlayId);
+      this.isPaused = true;
+      globalEvents.emit('game:paused', { reason: `obscured:${overlayId}` });
+    } else {
+      this.obscuringOverlays.delete(overlayId);
+      if (this.obscuringOverlays.size === 0) {
+        this.isPaused = false;
+        this.lastTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
+        globalEvents.emit('game:resumed', { reason: `unobscured:${overlayId}` });
       }
     }
   }
@@ -2189,6 +2654,43 @@ export class GameLoop {
         this.uiCallbacks.onRiddleSolved({ groupId, pedestals: groupPedestals });
       }
     }
+  }
+
+  /**
+   * Record a discovered architect note or lore inscription into the level journal (BL-81)
+   * @param {object} entry
+   * @returns {Array<object>} Current level journal entries
+   */
+  recordJournalEntry(entry) {
+    if (!this.levelJournal) {
+      this.levelJournal = [];
+    }
+    const id = entry.id || `${entry.title || 'Note'}_${entry.text || ''}`;
+    const exists = this.levelJournal.some(e => (e.id && e.id === id) || (e.title === entry.title && e.text === entry.text));
+    if (!exists) {
+      const journalItem = {
+        id,
+        title: entry.title || "Architect's Note",
+        author: entry.author || 'The Architect',
+        text: entry.text || entry.message || '',
+        decorType: entry.decorType || 'note',
+        response: entry.response || '',
+        facing: entry.facing || '',
+        discoveredAtSteps: this.player ? this.player.stepsTaken : 0,
+        discoveredAtTime: this.elapsedTime || 0,
+      };
+      this.levelJournal.push(journalItem);
+      globalEvents.emit('journal:entry_added', journalItem);
+    }
+    return this.levelJournal;
+  }
+
+  /**
+   * Get all journal entries discovered in the current level (BL-81)
+   * @returns {Array<object>}
+   */
+  getJournalEntries() {
+    return this.levelJournal || [];
   }
 
   /**
@@ -2300,7 +2802,7 @@ export class GameLoop {
    * @param {string} [customFilename]
    */
   downloadDebugLog(customFilename) {
-    this.logger.download(customFilename);
+    return this.logger.download(customFilename);
   }
 
   /**
@@ -2314,9 +2816,10 @@ export class GameLoop {
   /**
    * Download session replay JSON file to client
    * @param {string} [customFilename]
+   * @returns {string|undefined}
    */
   downloadReplay(customFilename) {
-    this.logger.downloadReplay(customFilename);
+    return this.logger.downloadReplay(customFilename);
   }
 
   /**
@@ -2366,6 +2869,8 @@ export class GameLoop {
       this.revealedSecrets
     );
 
-    this.minimap.render(this.level, this.player, this.fog, dt, this.revealedSecrets);
+    if (this.minimap) {
+      this.minimap.render(this.level, this.player, this.fog, dt, this.revealedSecrets);
+    }
   }
 }

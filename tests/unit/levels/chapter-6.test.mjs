@@ -71,6 +71,11 @@ describe('Levels > Chapter 6 Arcane Minigames & Celestial Seals', () => {
     // Unsolvable without puzzles
     assertEqual(solveLevel(l23, { allowPuzzles: false }), null, 'Level 23 requires solving puzzle gates');
 
+    // Unsolvable without inner cipher ward (cannot bypass cipher gate)
+    const onlyCipherLocked = JSON.parse(JSON.stringify(l23));
+    onlyCipherLocked.entities = onlyCipherLocked.entities.filter(e => e.id !== 'puzzle_gate_23_rune');
+    assertEqual(solveLevel(onlyCipherLocked, { allowPuzzles: false }), null, 'Inner cipher ward strictly blocks access to exit');
+
     // Unsolvable without lever
     assertEqual(solveLevel(l23, { allowLevers: false }), null, 'Level 23 requires toggling conduit lever');
   });

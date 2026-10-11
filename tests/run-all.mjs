@@ -18,12 +18,19 @@ import './unit/core/storage.test.mjs';
 import './unit/core/constants.test.mjs';
 import './unit/core/coordinates-xyz.test.mjs';
 import './unit/core/versioning.test.mjs';
+import './unit/core/storage-migration-and-diagnostics.test.mjs';
+import './unit/core/storage-backup-restore.test.mjs';
+import './unit/core/geometry.test.mjs';
+import './unit/core/maze-generator.test.mjs';
+import './unit/core/storage-metadata-snapshot.test.mjs';
+import './unit/core/explorer-outfits.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
 import './unit/engine/fog.test.mjs';
 import './unit/engine/camera.test.mjs';
 import './unit/engine/camera-rotation.test.mjs';
+import './unit/engine/camera-zoom.test.mjs';
 import './unit/engine/debug-logger.test.mjs';
 import './unit/engine/perspective-renderer.test.mjs';
 import './unit/engine/depth-sorting.test.mjs';
@@ -34,8 +41,16 @@ import './unit/engine/replay-player.test.mjs';
 import './unit/engine/click-to-move-and-hotkeys.test.mjs';
 import './unit/engine/secret-wall.test.mjs';
 import './unit/engine/scoring-medals.test.mjs';
+import './unit/engine/input-manager.test.mjs';
+import './unit/engine/tactical-minimap.test.mjs';
+import './unit/engine/multi-elevation-pathfinding.test.mjs';
+import './unit/engine/canvas-visual-regression.test.mjs';
+import './unit/engine/entrance-exit-visuals.test.mjs';
+import './unit/engine/interact-directions-disambiguation.test.mjs';
+import './unit/engine/fog-expansion.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
+import './unit/entities/base-entity.test.mjs';
 import './unit/entities/player.test.mjs';
 import './unit/entities/entities.test.mjs';
 import './unit/entities/dynamic-activities.test.mjs';
@@ -73,6 +88,12 @@ import './unit/editor/editor-canvas.test.mjs';
 import './unit/editor/editor-buttons-and-functions.test.mjs';
 import './unit/editor/history-stack.test.mjs';
 import './unit/editor/prefabs-and-autofix.test.mjs';
+import './unit/editor/bridge-ramp-guide.test.mjs';
+import './unit/editor/generator-integration.test.mjs';
+import './unit/editor/custom-prefabs.test.mjs';
+import './unit/editor/diagnostic-pins-validation.test.mjs';
+import './unit/editor/entrance-exit-clash.test.mjs';
+import './unit/editor/editor-perspective-and-ui.test.mjs';
 
 // 6. Asset & Vector Pipeline Unit Tests
 import './unit/assets/asset-catalog.test.mjs';
@@ -110,6 +131,32 @@ import './unit/ui/game-menu.test.mjs';
 import './unit/ui/app-header.test.mjs';
 import './unit/ui/touch-controls.test.mjs';
 import './unit/ui/maze-html-bootstrap.test.mjs';
+import './unit/ui/victory-quick-advance.test.mjs';
+import './unit/ui/victory-modal-streamline.test.mjs';
+import './unit/ui/breadcrumbs-navigation.test.mjs';
+import './unit/ui/high-contrast-mode.test.mjs';
+import './unit/ui/mobile-controls.test.mjs';
+import './unit/ui/mobile-movement-and-minimap.test.mjs';
+import './unit/ui/feedback-modal.test.mjs';
+import './unit/ui/guide-modal.test.mjs';
+import './unit/ui/elevation-audio.test.mjs';
+import './unit/ui/hero-ambient-canvas.test.mjs';
+import './unit/ui/lore-journal.test.mjs';
+import './unit/ui/celestial-cipher-dials.test.mjs';
+import './unit/ui/profile-customization.test.mjs';
+import './unit/ui/mobile-feed-and-download.test.mjs';
+import './unit/ui/replay-theater-and-feed.test.mjs';
+
+// 10. Platform Component Audited Unit Test Suites (CMP-01 to CMP-19)
+import './unit/components/cmp-01-app-shell.test.mjs';
+import './unit/components/cmp-05-06-hud-and-action-feedback.test.mjs';
+import './unit/components/cmp-07-pause-and-victory.test.mjs';
+import './unit/components/cmp-08-10-editor-studio.test.mjs';
+import './unit/components/cmp-11-asset-pipeline-and-scoring.test.mjs';
+import './unit/components/cmp-14-profile-and-progression.test.mjs';
+import './unit/components/cmp-15-settings-system.test.mjs';
+import './unit/components/cmp-16-18-guide-and-feedback.test.mjs';
+import './unit/components/cmp-17-diagnostic-lab-theater.test.mjs';
 
 // Run registered suites
 

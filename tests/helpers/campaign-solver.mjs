@@ -208,11 +208,15 @@ export function simulateCampaignLevelPlaythrough(level) {
       assertEqual(targetKey.isCollected, true, `Key at (${step.x}, ${step.y}) marked isCollected`);
     }
 
-    // Verify lever toggle upon arrival
+    // Verify lever interaction upon arrival (manual interact [E] for levers, or step trigger for floor plates)
     const targetLever = gameLoop.entities.find(
       e => e.type === ENTITY_TYPES.LEVER && e.x === step.x && e.y === step.y && (e.elevation || 0) === step.elevation
     );
     if (targetLever) {
+      if (!targetLever.state) {
+        // Levers now require interaction [E] instead of auto-toggling on step
+        gameLoop.handleManualInteract();
+      }
       assertEqual(targetLever.state, true, `Lever at (${step.x}, ${step.y}) toggled to active state`);
       for (const t of targetLever.targets || []) {
         if (t.layer === 'ground') {

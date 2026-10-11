@@ -372,6 +372,42 @@ class SoundFXEngine {
   }
 
   /**
+   * Crisp acoustic click for UI tabs and breadcrumbs (BL-35)
+   */
+  playTabClick() {
+    this._playTone({ freq: 620, freqEnd: 780, type: 'sine', duration: 0.03, gain: 0.05 });
+  }
+
+  /**
+   * Toggle switch tactile click (BL-35)
+   * @param {boolean} [on=true]
+   */
+  playToggle(on = true) {
+    if (on) {
+      this._playTone({ freq: 520, freqEnd: 840, type: 'sine', duration: 0.04, gain: 0.06 });
+    } else {
+      this._playTone({ freq: 840, freqEnd: 480, type: 'sine', duration: 0.04, gain: 0.05 });
+    }
+  }
+
+  /**
+   * Footstep acoustic feedback with subtle pitch jitter (±3%) to eliminate ear fatigue (BL-35)
+   */
+  playFootstep() {
+    const jitter = 1 + (Math.random() * 0.06 - 0.03); // [0.97, 1.03]
+    const baseFreq = 95 * jitter;
+    const endFreq = 45 * jitter;
+    this._playTone({ freq: baseFreq, freqEnd: endFreq, type: 'triangle', duration: 0.045, gain: 0.04 });
+  }
+
+  /**
+   * Alias for player movement footstep
+   */
+  playMove() {
+    this.playFootstep();
+  }
+
+  /**
    * Sparkling key acquisition chime
    */
   playKeyPickup() {
@@ -437,6 +473,30 @@ class SoundFXEngine {
    */
   playHazardHit() {
     this._playTone({ freq: 140, freqEnd: 90, type: 'sawtooth', duration: 0.25, gain: 0.1 });
+  }
+
+  /**
+   * Vertical elevation transition chime (ascending/descending bridge or ramp) (BL-77)
+   * @param {boolean} [ascending=true]
+   */
+  playElevationChange(ascending = true) {
+    if (this._muted) return;
+    if (ascending) {
+      this._playTone({ freq: 320, freqEnd: 540, type: 'triangle', duration: 0.08, gain: 0.07, delay: 0 });
+      this._playTone({ freq: 540, freqEnd: 720, type: 'sine', duration: 0.12, gain: 0.08, delay: 0.05 });
+    } else {
+      this._playTone({ freq: 720, freqEnd: 540, type: 'triangle', duration: 0.08, gain: 0.07, delay: 0 });
+      this._playTone({ freq: 540, freqEnd: 320, type: 'sine', duration: 0.12, gain: 0.08, delay: 0.05 });
+    }
+  }
+
+  /**
+   * Editor diagnostic issue radar jump pip (BL-77)
+   */
+  playDiagnosticJump() {
+    if (this._muted) return;
+    this._playTone({ freq: 880, freqEnd: 1320, type: 'sine', duration: 0.06, gain: 0.08, delay: 0 });
+    this._playTone({ freq: 1320, freqEnd: 1760, type: 'triangle', duration: 0.08, gain: 0.07, delay: 0.03 });
   }
 
   /**
@@ -825,6 +885,7 @@ class SoundFXEngine {
     globalEvents.on('lever:toggled', (e) => this.playLeverToggle(e?.state));
     globalEvents.on('hazard:hit', () => this.playHazardHit());
     globalEvents.on('checkpoint:activated', () => this.playCheckpoint());
+    globalEvents.on('player:elevation_changed', (e) => this.playElevationChange(e?.ascending));
     globalEvents.on('sound:toggled', (e) => this.setMuted(e?.muted));
     globalEvents.on('game:paused', () => this.pauseAmbience());
     globalEvents.on('game:resumed', () => this.resumeAmbience());

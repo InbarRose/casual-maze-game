@@ -26,13 +26,15 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
       "x": 2,
       "y": 2,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 14,
       "y": 12,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 37,
     "parTime": 23,
@@ -690,13 +692,15 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
       "x": 2,
       "y": 2,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 16,
       "y": 12,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 61,
     "parTime": 37,
@@ -1440,13 +1444,15 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
       "x": 2,
       "y": 2,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 15,
       "y": 8,
       "elevation": 0,
-      "style": "portal"
+      "style": "wall_archway",
+      "wallDirection": "north"
     },
     "parSteps": 30,
     "parTime": 18,
@@ -2232,8 +2238,8 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         "id": "wall_note_27",
         "type": "wall_decor",
         "decorType": "carving",
-        "text": "The aerial vortex warps travelers between the clouds and the underground treasury.",
-        "playerDialogue": "The cipher opens the bridge; the bridge leads to the vortex.",
+        "text": "Prismatic alignment of the high bridge: 🌅 Horizon first, ☀️ Sun second, and ⭐ Star third.",
+        "playerDialogue": "Setting the cipher gate to Horizon, Sun, and Star will grant access to the aerial vortex.",
         "x": 2,
         "y": 1,
         "elevation": 0
@@ -2253,7 +2259,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
       "height": 19
     },
     "config": {
-      "fogOfWar": false,
+      "fogOfWar": true,
       "viewRadius": 7,
       "allowFreePan": true,
       "tileSize": 32,
@@ -2263,13 +2269,15 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
       "x": 2,
       "y": 9,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "stairs_down",
+      "wallDirection": "none"
     },
     "exit": {
       "x": 18,
       "y": 9,
       "elevation": 0,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "parSteps": 55,
     "parTime": 33,

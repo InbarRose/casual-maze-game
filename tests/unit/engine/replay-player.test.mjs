@@ -111,4 +111,216 @@ describe('Engine > ReplayPlayer', () => {
 
     player.destroy();
   });
+
+  it('aligns player world coordinates with level tile size (BL-96)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    player.stepForward();
+    const firstAction = replay1.actions[0];
+    const ts = player.gameLoop.tileSize;
+    assert(ts > 0, 'Tile size must be positive');
+    assertEqual(player.gameLoop.player.worldX, firstAction.to.x * ts + ts / 2);
+    assertEqual(player.gameLoop.player.worldY, firstAction.to.y * ts + ts / 2);
+
+    player.destroy();
+  });
+
+  it('preserves mainCanvas dimensions and isolates minimap (BL-108)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    assertEqual(mockCanvas.width, 800, 'Main canvas width must not be mutated to minimap size');
+    assertEqual(mockCanvas.height, 600, 'Main canvas height must not be mutated to minimap size');
+    assertEqual(player.gameLoop.camera.viewportWidth, 800, 'Camera viewport width must match canvas');
+    assertEqual(player.gameLoop.camera.viewportHeight, 600, 'Camera viewport height must match canvas');
+    assertEqual(player.gameLoop.minimap, null, 'GameLoop minimap should be null when not provided');
+
+    player.destroy();
+  });
+
+  it('supports isolated minimapCanvas when provided (BL-108)', () => {
+    const mockCanvas = createMockCanvas();
+    const mockMinimapCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      minimapCanvas: mockMinimapCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    assertEqual(mockCanvas.width, 800, 'Main canvas width remains 800');
+    assertEqual(mockCanvas.height, 600, 'Main canvas height remains 600');
+    assertEqual(mockMinimapCanvas.width, 180, 'Minimap canvas width is 180');
+    assertEqual(mockMinimapCanvas.height, 180, 'Minimap canvas height is 180');
+    assert(player.gameLoop.minimap !== null, 'GameLoop minimap exists when provided');
+
+    player.destroy();
+  });
+
+  it('supports switching and toggling perspective mode (BL-108)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    assertEqual(player.getPerspective(), 'angled');
+
+    const toggled = player.togglePerspective();
+    assertEqual(toggled, 'topdown');
+    assertEqual(player.getPerspective(), 'topdown');
+
+    player.setPerspective('angled');
+    assertEqual(player.getPerspective(), 'angled');
+
+    player.destroy();
+  });
+
+  it('updates player facing direction and snaps camera on step forward (BL-108)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    player.stepForward();
+    const firstAction = replay1.actions[0];
+    if (firstAction.direction && firstAction.direction !== 'none') {
+      assertEqual(player.gameLoop.player.facing, firstAction.direction);
+    }
+
+    assertEqual(player.gameLoop.camera.targetX, player.gameLoop.player.worldX);
+    assertEqual(player.gameLoop.camera.targetY, player.gameLoop.player.worldY);
+
+    player.destroy();
+  });
+
+  it('supports dynamic viewport resize for grand theater presentation (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    player.resize(1280, 720);
+    assertEqual(mockCanvas.width, 1280);
+    assertEqual(mockCanvas.height, 720);
+    assertEqual(player.gameLoop.camera.viewportWidth, 1280);
+    assertEqual(player.gameLoop.camera.viewportHeight, 720);
+
+    player.destroy();
+  });
+
+  it('jumps directly to walkthrough end with jumpToEnd() (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    player.jumpToEnd();
+    assertEqual(player.currentStep, player.totalSteps);
+    assertEqual(player.state, REPLAY_STATES.COMPLETED);
+
+    player.destroy();
+  });
+
+  it('manages loop toggle and continuous playback configuration (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+      isLooping: false,
+    });
+
+    assertEqual(player.isLooping, false);
+    const toggled = player.toggleLoop();
+    assertEqual(toggled, true);
+    assertEqual(player.isLooping, true);
+
+    player.setLooping(false);
+    assertEqual(player.isLooping, false);
+
+    player.destroy();
+  });
+
+  it('toggles camera perspective and 90-degree rotations (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    // Perspective toggle
+    const initialMode = player.gameLoop.renderer?.perspective || 'angled';
+    const newMode = player.togglePerspective();
+    assert(newMode !== initialMode, 'Perspective mode switched');
+    assertEqual(player.gameLoop.renderer.perspective, newMode);
+
+    // Rotation controls
+    const rotBefore = player.gameLoop.camera.targetRotation;
+    player.rotateRight();
+    assert(player.gameLoop.camera.targetRotation !== rotBefore, 'Camera rotated CW');
+    player.rotateLeft();
+    assertEqual(player.gameLoop.camera.targetRotation, rotBefore, 'Camera returned to initial heading CCW');
+
+    player.destroy();
+  });
+
+  it('retrieves level metadata via getLevelInfo() (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    const info = player.getLevelInfo();
+    assert(info !== null, 'Metadata exists');
+    assertEqual(info.id, level1.id);
+    assertEqual(info.title, level1.title);
+    assert(typeof info.theme === 'string', 'Has theme string');
+
+    player.destroy();
+  });
+
+  it('forwards uiCallbacks.onStateUpdate to internal GameLoop (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    let stateDispatched = null;
+
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+      uiCallbacks: {
+        onStateUpdate: (st) => {
+          stateDispatched = st;
+        },
+      },
+    });
+
+    // Notify UI from GameLoop
+    player.gameLoop.notifyUI();
+    assert(stateDispatched !== null, 'onStateUpdate was called');
+    assertEqual(stateDispatched.levelTitle, level1.title);
+    assert(Array.isArray(stateDispatched.inventory), 'Has inventory array');
+
+    player.destroy();
+  });
 });
+

@@ -3,7 +3,7 @@
  * A mystic obstacle barrier that requires solving an interactive minigame (Rune Memory, Cipher Lock) to unlock.
  */
 
-import { ENTITY_TYPES, ELEVATION, formatXYZ } from '../core/constants.js';
+import { ENTITY_TYPES, ELEVATION, formatXYZ, CELESTIAL_SYMBOLS, isApproachAllowed } from '../core/constants.js';
 
 export class PuzzleGate {
   /**
@@ -21,11 +21,17 @@ export class PuzzleGate {
     this.name = config.name || (this.puzzleType === 'cipher_dial' ? 'Cipher Barrier' : 'Rune Memory Gate');
     this.color = config.color || '#a855f7';
     this.isUnlocked = !!config.isUnlocked;
+    this.interactDirections = Array.isArray(config.interactDirections) ? [...config.interactDirections] : null;
+
+    // Symbol vocabulary for dial puzzles (defaulting to CELESTIAL_SYMBOLS for cipher_dial)
+    this.symbols = Array.isArray(config.symbols)
+      ? [...config.symbols]
+      : (this.puzzleType === 'cipher_dial' ? CELESTIAL_SYMBOLS : null);
 
     // Solution definition
     // For rune_memory: array of indices e.g. [0, 2, 1, 3]
-    // For cipher_dial: array of numbers e.g. [3, 7, 2]
-    this.solution = Array.isArray(config.solution) ? [...config.solution] : (this.puzzleType === 'cipher_dial' ? [3, 7, 2] : [0, 2, 1, 3]);
+    // For cipher_dial: array of symbol indices e.g. [0, 1, 2] (Sun, Moon, Horizon)
+    this.solution = Array.isArray(config.solution) ? [...config.solution] : (this.puzzleType === 'cipher_dial' ? [0, 1, 2] : [0, 2, 1, 3]);
     this.clue = config.clue || (this.puzzleType === 'cipher_dial' ? 'Align the three concentric runic dials to match the celestial sequence.' : 'Memorize and repeat the glowing rune sequence.');
 
     // Visual animation
@@ -39,6 +45,20 @@ export class PuzzleGate {
    */
   getCoordString() {
     return formatXYZ(this.x, this.y, this.z);
+  }
+
+  /**
+   * Check if player can interact with this puzzle gate
+   * @param {number} playerX
+   * @param {number} playerY
+   * @param {number} [playerZ=0]
+   * @returns {boolean}
+   */
+  canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
+    if (this.z !== playerZ) return false;
+    const dist = Math.abs(this.x - playerX) + Math.abs(this.y - playerY);
+    if (dist > 1) return false;
+    return isApproachAllowed(this.x, this.y, playerX, playerY, this.interactDirections);
   }
 
   /**

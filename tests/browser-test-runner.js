@@ -18,6 +18,7 @@ import './unit/engine/collision.test.mjs';
 import './unit/engine/fog.test.mjs';
 import './unit/engine/camera.test.mjs';
 import './unit/engine/camera-rotation.test.mjs';
+import './unit/engine/camera-zoom.test.mjs';
 import './unit/engine/debug-logger.test.mjs';
 import './unit/engine/perspective-renderer.test.mjs';
 import './unit/engine/depth-sorting.test.mjs';
@@ -28,6 +29,7 @@ import './unit/engine/replay-player.test.mjs';
 import './unit/engine/click-to-move-and-hotkeys.test.mjs';
 import './unit/engine/secret-wall.test.mjs';
 import './unit/engine/scoring-medals.test.mjs';
+import './unit/engine/entrance-exit-visuals.test.mjs';
 
 // 3. Entity Subsystems
 import './unit/entities/player.test.mjs';
@@ -72,6 +74,7 @@ import './unit/ui/audio-ambience.test.mjs';
 import './unit/ui/game-menu.test.mjs';
 import './unit/ui/app-header.test.mjs';
 import './unit/ui/touch-controls.test.mjs';
+import './unit/ui/lore-journal.test.mjs';
 
 // 7. Modular Campaign Chapter Playthrough Tests (Levels 1–32)
 import './integration/campaign/chapter-1.test.mjs';
@@ -97,6 +100,7 @@ import './integration/journeys/riddle-pedestals.journey.test.mjs';
 import './integration/journeys/storylines-progression.journey.test.mjs';
 import './integration/journeys/camera-rotation.journey.test.mjs';
 import './integration/journeys/multi-room-dungeon.journey.test.mjs';
+import './unit/ui/celestial-cipher-dials.test.mjs';
 
 /**
  * Execute the registered test suites in the browser

@@ -29,12 +29,14 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 7,
       "y": 7,
-      "style": "archway"
+      "style": "wall_archway",
+      "wallDirection": "north"
     },
     "layers": {
       "ground": [
@@ -268,12 +270,14 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 9,
       "y": 9,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "layers": {
       "ground": [
@@ -636,12 +640,14 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "archway"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 9,
       "y": 9,
-      "style": "stairs_up"
+      "style": "stairs_up",
+      "wallDirection": "none"
     },
     "layers": {
       "ground": [
@@ -983,12 +989,14 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "camp"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 11,
       "y": 11,
-      "style": "shrine"
+      "style": "wall_archway",
+      "wallDirection": "north"
     },
     "layers": {
       "ground": [
@@ -1435,12 +1443,14 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 11,
       "y": 11,
-      "style": "portal"
+      "style": "portal",
+      "wallDirection": "none"
     },
     "layers": {
       "ground": [
@@ -1887,12 +1897,14 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "archway"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 15,
       "y": 15,
-      "style": "chest"
+      "style": "wall_archway",
+      "wallDirection": "north"
     },
     "layers": {
       "ground": [

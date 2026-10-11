@@ -94,6 +94,7 @@ class MockCanvasContext2D {
   moveTo() {}
   lineTo() {}
   arc() {}
+  ellipse() {}
   rect() {}
   roundRect() {}
   fill() {}
@@ -107,6 +108,8 @@ class MockCanvasContext2D {
   scale() {}
   setTransform() {}
   resetTransform() {}
+  setLineDash() {}
+  getLineDash() { return []; }
   createLinearGradient() {
     return { addColorStop: () => {} };
   }
@@ -200,64 +203,206 @@ export function setupMocks() {
   if (typeof globalThis.window === 'undefined') {
     globalThis.window = globalThis;
   }
-  if (!globalThis.window.addEventListener) {
-    globalThis.window.addEventListener = () => {};
-  }
-  if (!globalThis.window.removeEventListener) {
-    globalThis.window.removeEventListener = () => {};
-  }
-  if (!globalThis.window.dispatchEvent) {
-    globalThis.window.dispatchEvent = () => true;
-  }
+  const _windowListeners = globalThis._windowListeners || (globalThis._windowListeners = new Map());
+  globalThis.window.addEventListener = (event, handler) => {
+    if (!_windowListeners.has(event)) _windowListeners.set(event, []);
+    _windowListeners.get(event).push(handler);
+  };
+  globalThis.window.removeEventListener = (event, handler) => {
+    if (_windowListeners.has(event)) {
+      const list = _windowListeners.get(event).filter(h => h !== handler);
+      _windowListeners.set(event, list);
+    }
+  };
+  globalThis.window.dispatchEvent = (event) => {
+    const type = event?.type;
+    if (type && _windowListeners.has(type)) {
+      const handlers = [..._windowListeners.get(type)];
+      for (const h of handlers) {
+        try { h(event); } catch (err) { console.error(err); }
+      }
+    }
+    return true;
+  };
 
   if (typeof globalThis.document === 'undefined') {
+    const elementsById = new Map();
     const createMockElement = (tagName) => {
       if (tagName.toLowerCase() === 'canvas') {
         return new MockCanvas();
       }
-      return {
+      let _id = '';
+      let _className = '';
+      const classes = new Set();
+      const children = [];
+      const el = {
         tagName: tagName.toUpperCase(),
+        get id() { return _id; },
+        set id(val) {
+          _id = String(val);
+          elementsById.set(_id, el);
+        },
+        get className() { return _className; },
+        set className(val) {
+          _className = String(val);
+          classes.clear();
+          _className.split(/\s+/).filter(Boolean).forEach(c => classes.add(c));
+        },
         style: {},
         dataset: {},
         classList: {
-          classes: new Set(),
-          add(c) { this.classes.add(c); },
-          remove(c) { this.classes.delete(c); },
+          add(c) { classes.add(c); _className = Array.from(classes).join(' '); },
+          remove(c) { classes.delete(c); _className = Array.from(classes).join(' '); },
           toggle(c, force) {
-            if (force === true) this.classes.add(c);
-            else if (force === false) this.classes.delete(c);
-            else if (this.classes.has(c)) this.classes.delete(c);
-            else this.classes.add(c);
+            if (force === true) classes.add(c);
+            else if (force === false) classes.delete(c);
+            else if (classes.has(c)) classes.delete(c);
+            else classes.add(c);
+            _className = Array.from(classes).join(' ');
+            return classes.has(c);
           },
-          contains(c) { return this.classes.has(c); },
+          contains(c) { return classes.has(c); },
         },
-        innerHTML: '',
+        _html: '',
+        get innerHTML() { return this._html; },
+        set innerHTML(val) {
+          this._html = String(val);
+          if (val === '') {
+            children.length = 0;
+          } else {
+            // Basic regex parsing for elements with id and class attributes
+            const tagRegex = /<([a-zA-Z0-9\-]+)([^>]*)>/g;
+            let match;
+            while ((match = tagRegex.exec(this._html)) !== null) {
+              const tag = match[1];
+              const attrs = match[2];
+              const idMatch = attrs.match(/id=["']([^"']+)["']/);
+              const classMatch = attrs.match(/class=["']([^"']+)["']/);
+              if (idMatch) {
+                const childId = idMatch[1];
+                let child = elementsById.get(childId);
+                if (!child) {
+                  child = createMockElement(tag);
+                  child.id = childId;
+                }
+                if (classMatch) {
+                  child.className = classMatch[1];
+                }
+                if (!children.includes(child)) {
+                  el.appendChild(child);
+                }
+              }
+            }
+          }
+        },
         textContent: '',
         value: '',
-        parentNode: { removeChild: () => {} },
-        setAttribute: () => {},
-        getAttribute: () => null,
-        appendChild: () => {},
-        prepend: () => {},
-        removeChild: () => {},
-        addEventListener: () => {},
-        removeEventListener: () => {},
-        querySelector: () => createMockElement('div'),
-        querySelectorAll: () => [],
-        click: () => {},
+        remove() {
+          if (_id) {
+            elementsById.delete(_id);
+          }
+          if (this.parentNode && this.parentNode.removeChild) {
+            this.parentNode.removeChild(this);
+          }
+        },
+        setAttribute: (k, v) => {
+          if (k === 'id') el.id = v;
+        },
+        getAttribute: (k) => (k === 'id' ? el.id : null),
+        appendChild: (child) => {
+          children.push(child);
+          Object.defineProperty(child, 'parentNode', { value: el, writable: true, configurable: true, enumerable: false });
+          return child;
+        },
+        prepend: (child) => {
+          children.unshift(child);
+          Object.defineProperty(child, 'parentNode', { value: el, writable: true, configurable: true, enumerable: false });
+          return child;
+        },
+        removeChild: (child) => {
+          const idx = children.indexOf(child);
+          if (idx !== -1) children.splice(idx, 1);
+          return child;
+        },
+        addEventListener: (event, handler) => {
+          if (!el._listeners) el._listeners = {};
+          if (!el._listeners[event]) el._listeners[event] = [];
+          el._listeners[event].push(handler);
+        },
+        removeEventListener: (event, handler) => {
+          if (el._listeners?.[event]) {
+            el._listeners[event] = el._listeners[event].filter(h => h !== handler);
+          }
+        },
+        querySelector: (sel) => {
+          if (sel?.startsWith('#')) {
+            const targetId = sel.slice(1);
+            if (elementsById.has(targetId)) {
+              const existing = elementsById.get(targetId);
+              if (!children.includes(existing)) {
+                el.appendChild(existing);
+              }
+              return existing;
+            }
+            const child = createMockElement('div');
+            child.id = targetId;
+            el.appendChild(child);
+            return child;
+          }
+          return el.querySelectorAll(sel)[0] || null;
+        },
+        querySelectorAll: (sel) => {
+          const results = [];
+          const collect = (node) => {
+            if (sel?.startsWith('.')) {
+              const cls = sel.slice(1);
+              if (node.classList?.contains?.(cls)) results.push(node);
+            } else if (sel?.startsWith('#')) {
+              if (node.id === sel.slice(1)) results.push(node);
+            } else if (sel === '*' || (node.tagName && node.tagName.toLowerCase() === sel.toLowerCase())) {
+              results.push(node);
+            }
+            if (Array.isArray(node.children)) {
+              node.children.forEach(collect);
+            }
+          };
+          children.forEach(collect);
+          return results;
+        },
+        click: function() {
+          if (typeof this.onclick === 'function') {
+            this.onclick({ type: 'click', target: this });
+          }
+          if (this._listeners?.click) {
+            for (const h of this._listeners.click) {
+              h({ type: 'click', target: this });
+            }
+          }
+        },
       };
+
+      Object.defineProperty(el, 'children', { value: children, writable: true, configurable: true, enumerable: false });
+      Object.defineProperty(el, 'parentNode', { value: { removeChild: () => {} }, writable: true, configurable: true, enumerable: false });
+
+      return el;
     };
+
+    const mockBody = createMockElement('body');
 
     globalThis.document = {
       createElement: createMockElement,
-      getElementById: (id) => createMockElement('div'),
-      querySelector: () => createMockElement('div'),
-      querySelectorAll: () => [],
-      body: {
-        appendChild: () => {},
-        prepend: () => {},
-        removeChild: () => {},
+      getElementById: (id) => elementsById.get(String(id)) || null,
+      querySelector: (sel) => {
+        if (sel?.startsWith('#')) {
+          const targetId = sel.slice(1);
+          return elementsById.get(targetId) || null;
+        }
+        return createMockElement('div');
       },
+      querySelectorAll: () => [],
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      body: mockBody,
     };
   }
 }

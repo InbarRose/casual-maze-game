@@ -9,9 +9,14 @@ import { ENGINE_VERSION } from '../core/version.js';
 import { StorageManager } from '../core/storage.js';
 import { ProfileModal } from './profile-modal.js';
 import { SettingsModal } from './settings-modal.js';
+import { FeedbackModal, getFeedbackModal } from './feedback-modal.js';
+import { GuideModal, getGuideModal } from './guide-modal.js';
+import { audioFX } from './audio-fx.js';
 
 let profileModalInstance = null;
 let settingsModalInstance = null;
+
+export { getFeedbackModal, getGuideModal };
 
 export function getProfileModal() {
   if (!profileModalInstance && typeof document !== 'undefined') {
@@ -41,10 +46,20 @@ export function initAppHeader(options = {}) {
     activeTab = 'hub',
     headerContainer = null,
     footerContainer = null,
+    breadcrumbs = [],
   } = options;
+
+  // Apply High Contrast Mode if persisted
+  try {
+    if (StorageManager.getSetting('high_contrast', false)) {
+      document.body.classList.add('high-contrast-mode');
+    }
+  } catch (_) {}
 
   const profileModal = getProfileModal();
   const settingsModal = getSettingsModal();
+  const feedbackModal = getFeedbackModal();
+  const guideModal = getGuideModal();
 
   // 1. Mount or Update Header
   let header = document.querySelector('.app-nav-header');
@@ -59,6 +74,31 @@ export function initAppHeader(options = {}) {
   }
 
   const profile = StorageManager.getPlayerProfile();
+
+  let breadcrumbsHtml = '';
+  if (breadcrumbs && breadcrumbs.length > 0) {
+    const crumbItems = breadcrumbs.map((crumb, idx) => {
+      const isLast = idx === breadcrumbs.length - 1 || crumb.active;
+      const icon = crumb.icon ? `<span class="crumb-icon">${crumb.icon}</span>` : '';
+      if (isLast) {
+        return `<span class="crumb-item active" aria-current="page">${icon}<span class="crumb-label">${crumb.label}</span></span>`;
+      }
+      const href = crumb.href || '#';
+      return `<a href="${href}" class="crumb-item crumb-link">${icon}<span class="crumb-label">${crumb.label}</span></a>`;
+    }).join('<span class="crumb-separator" aria-hidden="true">❯</span>');
+
+    breadcrumbsHtml = `
+      <nav class="app-breadcrumbs-bar" aria-label="Breadcrumb Navigation">
+        <div class="breadcrumbs-inner">
+          <a href="index.html" class="crumb-item crumb-link" title="Casual Maze Game Hub">
+            <span class="crumb-icon">🏠</span><span class="crumb-label hide-mobile">Hub</span>
+          </a>
+          <span class="crumb-separator" aria-hidden="true">❯</span>
+          ${crumbItems}
+        </div>
+      </nav>
+    `;
+  }
 
   header.innerHTML = `
     <div class="app-nav-inner">
@@ -99,18 +139,31 @@ export function initAppHeader(options = {}) {
           <span id="app-profile-stars" class="profile-stars-badge">★ ${profile.totalStars}</span>
         </button>
 
+        <!-- Handbook & Guide Button (BL-71) -->
+        <button type="button" id="btn-app-guide" class="app-action-btn icon-btn" title="Open Explorer &amp; Architect Handbook [Controls, Bridges, Secrets]">
+          <span>📖</span>
+        </button>
+
         <!-- Settings Button -->
         <button type="button" id="btn-app-settings" class="app-action-btn icon-btn" title="Open Game Settings [Audio, Video, Controls]">
           <span>⚙️</span>
         </button>
 
-        <!-- GitHub / Issue Report -->
-        <a href="https://github.com/InbarRose/casual-maze-game/issues" target="_blank" rel="noopener" class="app-action-btn icon-btn" title="Report Bug / Feedback on GitHub Issues">
+        <!-- Feedback & Issue Report Button -->
+        <button type="button" id="btn-app-feedback" class="app-action-btn icon-btn" title="Send Feedback / Report Bug [Diagnostic Bundle]">
           <span>🐞</span>
-        </a>
+        </button>
       </div>
     </div>
+    ${breadcrumbsHtml}
   `;
+
+  // Attach tactile audio to header navigation links
+  header.querySelectorAll('.nav-item, .crumb-link, .app-action-btn').forEach(el => {
+    el.addEventListener('click', () => {
+      try { audioFX.playTabClick(); } catch (_) {}
+    });
+  });
 
   // Bind Header Button Events
   const profileBtn = header.querySelector('#btn-app-profile');
@@ -118,9 +171,19 @@ export function initAppHeader(options = {}) {
     profileBtn.onclick = () => profileModal.open();
   }
 
+  const guideBtn = header.querySelector('#btn-app-guide');
+  if (guideBtn) {
+    guideBtn.onclick = () => guideModal.open();
+  }
+
   const settingsBtn = header.querySelector('#btn-app-settings');
   if (settingsBtn) {
     settingsBtn.onclick = () => settingsModal.open();
+  }
+
+  const feedbackBtn = header.querySelector('#btn-app-feedback');
+  if (feedbackBtn) {
+    feedbackBtn.onclick = () => feedbackModal.open({ pageTitle: typeof document !== 'undefined' ? document.title : 'Casual Maze Game' });
   }
 
   // Update profile badges live
@@ -157,15 +220,24 @@ export function initAppHeader(options = {}) {
       </div>
 
       <div class="footer-center shortcuts-hint">
-        <span><kbd>WASD</kbd> Move</span>
-        <span><kbd>Q/E</kbd> Rotate 90°</span>
-        <span><kbd>V</kbd> 2.5D Mode</span>
-        <span><kbd>M</kbd> Minimap</span>
-        <span><kbd>Esc</kbd> Menu</span>
+        <button type="button" id="btn-footer-shortcuts-toggle" class="footer-shortcuts-btn" title="Toggle Controls &amp; Shortcuts Cheat Sheet">
+          ⌨️ <span class="shortcuts-btn-text">Controls</span>
+        </button>
+        <div class="desktop-shortcuts-strip">
+          <span><kbd>WASD</kbd> Move</span>
+          <span><kbd>Q/R</kbd> Rotate 90°</span>
+          <span><kbd>V</kbd> 2.5D Mode</span>
+          <span><kbd>M</kbd> Minimap</span>
+          <span><kbd>Esc</kbd> Menu</span>
+        </div>
       </div>
 
       <div class="footer-right">
-        <a href="test.html?mode=diagnostics" class="footer-link">🐞 Report Issue</a>
+        <button type="button" id="btn-footer-guide" class="footer-link" style="background:none;border:none;padding:0;cursor:pointer;color:inherit;font:inherit;">📖 Handbook</button>
+        <span class="footer-dot">•</span>
+        <button type="button" id="btn-footer-feedback" class="footer-link" style="background:none;border:none;padding:0;cursor:pointer;color:inherit;font:inherit;">🐞 Feedback &amp; Bug Report</button>
+        <span class="footer-dot">•</span>
+        <a href="test.html?mode=diagnostics" class="footer-link">🧪 Diagnostics Lab</a>
         <span class="footer-dot">•</span>
         <a href="test.html?mode=replay" class="footer-link">🎬 Replay Theater</a>
         <span class="footer-dot">•</span>
@@ -174,7 +246,48 @@ export function initAppHeader(options = {}) {
         <a href="https://github.com/InbarRose/casual-maze-game" target="_blank" rel="noopener" class="footer-link">GitHub</a>
       </div>
     </div>
+
+    <!-- Mobile Expandable Controls Drawer (BL-98) -->
+    <div id="footer-shortcuts-drawer" class="footer-shortcuts-drawer hidden" aria-label="Controls and gestures cheat sheet">
+      <div class="shortcuts-drawer-inner">
+        <div class="shortcuts-drawer-section">
+          <strong>🎮 Movement &amp; Touch</strong>
+          <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>Arrows</kbd> / Touch Drag Steering</span>
+          <span>Tap corridor floor: Click-to-Move BFS Pathfinding</span>
+        </div>
+        <div class="shortcuts-drawer-section">
+          <strong>✨ Mechanisms &amp; Camera</strong>
+          <span><kbd>E</kbd> / <kbd>Space</kbd> Interact | <kbd>1</kbd>..<kbd>9</kbd> Disambiguate</span>
+          <span><kbd>Q</kbd>/<kbd>R</kbd> Rotate World | <kbd>+</kbd>/<kbd>−</kbd> Zoom (0.5x..2.0x)</span>
+          <span><kbd>V</kbd> Toggle 2.5D / Top-Down | <kbd>F</kbd> Action Feed | <kbd>H</kbd> HUD Bar</span>
+        </div>
+        <div class="shortcuts-drawer-section">
+          <strong>📜 Journal &amp; System</strong>
+          <span><kbd>J</kbd> Lore Journal | <kbd>M</kbd> Minimap | <kbd>Esc</kbd>/<kbd>P</kbd> Menu</span>
+        </div>
+      </div>
+    </div>
   `;
 
-  return { header, footer, profileModal, settingsModal };
+  const footerGuideBtn = footer.querySelector('#btn-footer-guide');
+  if (footerGuideBtn) {
+    footerGuideBtn.onclick = () => guideModal.open();
+  }
+
+  const footerFeedbackBtn = footer.querySelector('#btn-footer-feedback');
+  if (footerFeedbackBtn) {
+    footerFeedbackBtn.onclick = () => feedbackModal.open({ pageTitle: typeof document !== 'undefined' ? document.title : 'Casual Maze Game' });
+  }
+
+  const shortcutsToggleBtn = footer.querySelector('#btn-footer-shortcuts-toggle');
+  const shortcutsDrawer = footer.querySelector('#footer-shortcuts-drawer');
+  if (shortcutsToggleBtn && shortcutsDrawer) {
+    shortcutsToggleBtn.onclick = () => {
+      const isHidden = shortcutsDrawer.classList.toggle('hidden');
+      shortcutsToggleBtn.classList.toggle('active', !isHidden);
+      try { audioFX.playClick(); } catch (_) {}
+    };
+  }
+
+  return { header, footer, profileModal, settingsModal, feedbackModal, guideModal };
 }

@@ -27,14 +27,16 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 13,
       "y": 13,
       "elevation": 0,
-      "style": "portal",
-      "label": "Needle Sanctum"
+      "style": "wall_archway",
+      "label": "Needle Sanctum",
+      "wallDirection": "north"
     },
     "parSteps": 29,
     "parTime": 18,
@@ -650,14 +652,16 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 13,
       "y": 13,
       "elevation": 0,
-      "style": "portal",
-      "label": "Overpass Gate"
+      "style": "wall_archway",
+      "label": "Overpass Gate",
+      "wallDirection": "north"
     },
     "parSteps": 29,
     "parTime": 18,
@@ -1251,14 +1255,16 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 13,
       "y": 13,
       "elevation": 0,
-      "style": "portal",
-      "label": "Sanctuary of the Four Winds"
+      "style": "wall_archway",
+      "label": "Sanctuary of the Four Winds",
+      "wallDirection": "north"
     },
     "parSteps": 38,
     "parTime": 23,
@@ -1877,7 +1883,8 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "stairs_down"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 15,
@@ -1885,7 +1892,8 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
       "elevation": 0,
       "style": "portal",
       "label": "Crown of the Monolith",
-      "targetLevel": "1"
+      "targetLevel": "1",
+      "wallDirection": "none"
     },
     "exits": [
       {
@@ -1895,7 +1903,8 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "elevation": 0,
         "style": "portal",
         "label": "Crown of the Monolith",
-        "targetLevel": "1"
+        "targetLevel": "1",
+        "wallDirection": "none"
       },
       {
         "id": "exit_spire_citadel_branch",
@@ -1904,7 +1913,8 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "elevation": 0,
         "style": "stairs",
         "label": "Descend to Whispering Citadel",
-        "targetLevel": "story_citadel_1"
+        "targetLevel": "story_citadel_1",
+        "wallDirection": "none"
       }
     ],
     "parSteps": 34,

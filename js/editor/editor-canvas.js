@@ -3,7 +3,7 @@
  */
 
 import { TILES, LAYERS, THEMES, ENTITY_TYPES } from '../core/constants.js';
-import { PREFABS, stampPrefab } from './prefabs.js';
+import { PREFABS, stampPrefab, getCustomPrefab } from './prefabs.js';
 
 export class EditorCanvas {
   /**
@@ -59,9 +59,40 @@ export class EditorCanvas {
     this.lastMousePos = { x: 0, y: 0 };
     this.hoverGridPos = { x: -1, y: -1 };
     this.lastPaintedGridPos = null;
+    this.diagnosticPin = null; // { x, y, z, message, type, timestamp } (BL-75)
+    this.perspective = '2d'; // '2d' | '2.5d' (BL-110)
 
     this.initEvents();
     this.centerInViewport();
+  }
+
+  /**
+   * Set perspective mode ('2d' or '2.5d') (BL-110)
+   * @param {'2d'|'2.5d'} mode
+   */
+  setPerspective(mode) {
+    if (mode === '2d' || mode === '2.5d') {
+      this.perspective = mode;
+      this.render();
+    }
+  }
+
+  /**
+   * Toggle perspective mode between '2d' and '2.5d' (BL-110)
+   * @returns {'2d'|'2.5d'} Active mode after toggling
+   */
+  togglePerspective() {
+    this.perspective = this.perspective === '2.5d' ? '2d' : '2.5d';
+    this.render();
+    return this.perspective;
+  }
+
+  /**
+   * Get current perspective mode ('2d' or '2.5d') (BL-110)
+   * @returns {'2d'|'2.5d'}
+   */
+  getPerspective() {
+    return this.perspective;
   }
 
   /**
@@ -174,6 +205,48 @@ export class EditorCanvas {
     const totalH = this.level.dimensions.height * this.baseTileSize * this.zoom;
     this.panX = (this.canvas.width - totalW) / 2;
     this.panY = (this.canvas.height - totalH) / 2;
+  }
+
+  /**
+   * Center the viewport on a specific grid tile (BL-75)
+   * @param {number} gridX
+   * @param {number} gridY
+   */
+  centerOnTile(gridX, gridY) {
+    const effTile = this.getEffectiveTileSize();
+    this.panX = Math.round((this.canvas.width / 2) - (gridX + 0.5) * effTile);
+    this.panY = Math.round((this.canvas.height / 2) - (gridY + 0.5) * effTile);
+    this.render();
+  }
+
+  /**
+   * Set a temporary diagnostic issue pin to highlight on canvas (BL-75)
+   * @param {{ x: number, y: number, z?: number, message: string, type?: 'error'|'warning'|'info' }} pinData
+   */
+  setDiagnosticPin(pinData) {
+    if (!pinData || typeof pinData.x !== 'number' || typeof pinData.y !== 'number') {
+      this.clearDiagnosticPin();
+      return;
+    }
+    this.diagnosticPin = {
+      x: pinData.x,
+      y: pinData.y,
+      z: pinData.z ?? 0,
+      message: pinData.message || 'Issue detected',
+      type: pinData.type || 'error',
+      timestamp: Date.now(),
+    };
+    this.render();
+  }
+
+  /**
+   * Clear active diagnostic pin (BL-75)
+   */
+  clearDiagnosticPin() {
+    if (this.diagnosticPin) {
+      this.diagnosticPin = null;
+      this.render();
+    }
   }
 
   /**
@@ -421,6 +494,9 @@ export class EditorCanvas {
   }
 
   handleMouseDown(e) {
+    if (this.diagnosticPin) {
+      this.clearDiagnosticPin();
+    }
     const rect = this.canvas.getBoundingClientRect();
     this.lastMousePos = { x: e.clientX, y: e.clientY };
 
@@ -888,6 +964,9 @@ export class EditorCanvas {
       ? (this.layerViewMode === 'solo' ? 0.0 : (this.layerViewMode === 'all' ? 1.0 : this.layerOpacity))
       : 1.0;
 
+    const is25D = this.perspective === '2.5d';
+    const wallH = is25D ? Math.max(3, Math.round(effTile * 0.38)) : Math.round(effTile * 0.22);
+
     for (let y = 0; y < mazeH; y++) {
       for (let x = 0; x < mazeW; x++) {
         const px = x * effTile;
@@ -902,16 +981,58 @@ export class EditorCanvas {
           }
 
           if (gTile === TILES.WALL) {
-            ctx.fillStyle = theme.wall;
-            ctx.fillRect(px, py, effTile, effTile);
-            ctx.fillStyle = theme.wallTop;
-            ctx.fillRect(px, py, effTile, effTile * 0.22);
-            ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
-            ctx.fillRect(px + effTile * 0.1, py + effTile * 0.58, effTile * 0.8, 1.5);
-            ctx.fillRect(px + effTile * 0.5, py + effTile * 0.22, 1.5, effTile * 0.36);
+            if (is25D) {
+              // 2.5D Isometric / Oblique Extruded Wall (BL-110)
+              ctx.fillStyle = theme.wallTop || '#64748b';
+              ctx.fillRect(px, py, effTile, effTile);
+              // Top cap highlight edges
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+              ctx.fillRect(px, py, effTile, Math.max(1, effTile * 0.08));
+              ctx.fillRect(px, py, Math.max(1, effTile * 0.08), effTile);
+              // Top cap inset shadow
+              ctx.fillStyle = 'rgba(0, 0, 0, 0.24)';
+              ctx.fillRect(px + effTile - Math.max(1, effTile * 0.08), py, Math.max(1, effTile * 0.08), effTile);
+              ctx.fillRect(px, py + effTile - Math.max(1, effTile * 0.08), effTile, Math.max(1, effTile * 0.08));
+
+              // Front drop face if south tile is open/floor or off-grid
+              const isSouthOpen = y + 1 >= mazeH || (ground[y + 1]?.[x] !== TILES.WALL);
+              if (isSouthOpen) {
+                ctx.fillStyle = theme.wall || '#334155';
+                ctx.fillRect(px, py + effTile, effTile, wallH);
+                // Masonry courses and vertical brick seams
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+                ctx.fillRect(px, py + effTile + wallH * 0.5, effTile, 1.2);
+                ctx.fillRect(px + effTile * 0.35, py + effTile, 1.2, wallH * 0.5);
+                ctx.fillRect(px + effTile * 0.72, py + effTile + wallH * 0.5, 1.2, wallH * 0.5);
+                // Soft cast drop shadow on floor below
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+                ctx.fillRect(px, py + effTile + wallH, effTile, Math.max(2, Math.round(effTile * 0.12)));
+              }
+            } else {
+              // 2D Technical Schematic Drafting Mode
+              ctx.fillStyle = theme.wall;
+              ctx.fillRect(px, py, effTile, effTile);
+              ctx.fillStyle = theme.wallTop;
+              ctx.fillRect(px, py, effTile, effTile * 0.22);
+              ctx.fillStyle = theme.wallDetail || 'rgba(0, 0, 0, 0.2)';
+              ctx.fillRect(px + effTile * 0.1, py + effTile * 0.58, effTile * 0.8, 1.5);
+              ctx.fillRect(px + effTile * 0.5, py + effTile * 0.22, 1.5, effTile * 0.36);
+            }
           } else {
             ctx.fillStyle = (x + y) % 2 === 0 ? theme.floorAlt : theme.floor;
             ctx.fillRect(px, py, effTile, effTile);
+
+            if (is25D) {
+              // Ambient occlusion shadows on floor adjacent to walls
+              if (y > 0 && ground[y - 1]?.[x] === TILES.WALL) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+                ctx.fillRect(px, py, effTile, Math.max(2, Math.round(effTile * 0.14)));
+              }
+              if (x > 0 && ground[y]?.[x - 1] === TILES.WALL) {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+                ctx.fillRect(px, py, Math.max(1, Math.round(effTile * 0.1)), effTile);
+              }
+            }
 
             // Underpass corridor on ground layer
             if (gTile === TILES.BRIDGE_EW) {
@@ -959,6 +1080,11 @@ export class EditorCanvas {
           if (overheadAlpha < 1.0) {
             ctx.globalAlpha = overheadAlpha;
           }
+          if (is25D) {
+            // Ground underpass shadow cast by overhead bridge
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
+            ctx.fillRect(px + effTile * 0.08, py + effTile * 0.12, effTile * 0.84, effTile * 0.88);
+          }
           if (oTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
             // B_EW Overhead spans North-South
             ctx.fillStyle = theme.bridgeOverhead;
@@ -966,6 +1092,14 @@ export class EditorCanvas {
             ctx.fillStyle = theme.bridgeRailing;
             ctx.fillRect(px + effTile * 0.10, py, effTile * 0.08, effTile);
             ctx.fillRect(px + effTile * 0.82, py, effTile * 0.08, effTile);
+            if (is25D) {
+              // 3D vertical railing posts
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+              ctx.fillRect(px + effTile * 0.10, py + effTile * 0.2, effTile * 0.08, 2);
+              ctx.fillRect(px + effTile * 0.10, py + effTile * 0.8, effTile * 0.08, 2);
+              ctx.fillRect(px + effTile * 0.82, py + effTile * 0.2, effTile * 0.08, 2);
+              ctx.fillRect(px + effTile * 0.82, py + effTile * 0.8, effTile * 0.08, 2);
+            }
           } else if (oTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
             // B_NS Overhead spans East-West
             ctx.fillStyle = theme.bridgeOverhead;
@@ -973,12 +1107,20 @@ export class EditorCanvas {
             ctx.fillStyle = theme.bridgeRailing;
             ctx.fillRect(px, py + effTile * 0.10, effTile, effTile * 0.08);
             ctx.fillRect(px, py + effTile * 0.82, effTile, effTile * 0.08);
+            if (is25D) {
+              // 3D vertical railing posts
+              ctx.fillStyle = 'rgba(255, 255, 255, 0.2)';
+              ctx.fillRect(px + effTile * 0.2, py + effTile * 0.10, 2, effTile * 0.08);
+              ctx.fillRect(px + effTile * 0.8, py + effTile * 0.10, 2, effTile * 0.08);
+              ctx.fillRect(px + effTile * 0.2, py + effTile * 0.82, 2, effTile * 0.08);
+              ctx.fillRect(px + effTile * 0.8, py + effTile * 0.82, 2, effTile * 0.08);
+            }
           }
           ctx.restore();
         }
 
-        // Grid lines
-        ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.06)';
+        // Grid lines (subtle in 2.5D, standard in 2D)
+        ctx.strokeStyle = is25D ? (theme.floorGrid || 'rgba(255, 255, 255, 0.04)') : (theme.floorGrid || 'rgba(255, 255, 255, 0.06)');
         ctx.lineWidth = 1;
         ctx.strokeRect(px, py, effTile, effTile);
       }
@@ -995,6 +1137,12 @@ export class EditorCanvas {
         }
         const spX = this.level.spawn.x * effTile;
         const spY = this.level.spawn.y * effTile;
+        if (is25D) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+          ctx.beginPath();
+          ctx.ellipse(spX + effTile / 2, spY + effTile * 0.65, effTile * 0.32, effTile * 0.12, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.fillStyle = '#34d399';
         ctx.beginPath();
         ctx.arc(spX + effTile / 2, spY + effTile / 2, effTile * 0.36, 0, Math.PI * 2);
@@ -1026,6 +1174,12 @@ export class EditorCanvas {
         }
         const tspX = this.level.testSpawn.x * effTile;
         const tspY = this.level.testSpawn.y * effTile;
+        if (is25D) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+          ctx.beginPath();
+          ctx.ellipse(tspX + effTile / 2, tspY + effTile * 0.65, effTile * 0.32, effTile * 0.12, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
         ctx.fillStyle = '#f43f5e';
         ctx.strokeStyle = '#ffffff';
         ctx.lineWidth = 2;
@@ -1052,6 +1206,12 @@ export class EditorCanvas {
         }
         const exX = this.level.exit.x * effTile;
         const exY = this.level.exit.y * effTile;
+        if (is25D) {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+          ctx.beginPath();
+          ctx.ellipse(exX + effTile / 2, exY + effTile * 0.68, effTile * 0.36, effTile * 0.14, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
         const pOuter = theme.portalOuter || '#0284c7';
         const pInner = theme.portalInner || '#38bdf8';
 
@@ -1095,6 +1255,12 @@ export class EditorCanvas {
       ctx.save();
       if (!isEntityActive && this.layerViewMode !== 'all') {
         ctx.globalAlpha = this.layerOpacity || 0.35;
+      }
+      if (is25D) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.32)';
+        ctx.beginPath();
+        ctx.ellipse(enX + effTile / 2, enY + effTile * 0.65, effTile * 0.28, effTile * 0.1, 0, 0, Math.PI * 2);
+        ctx.fill();
       }
       if (entity.type === ENTITY_TYPES.KEY) {
         ctx.fillStyle = entity.color || '#fbbf24';
@@ -1285,7 +1451,7 @@ export class EditorCanvas {
 
     // Prefab Hover Ghost Preview (BL-20)
     if (this.currentTool === 'prefab' && this.selectedPrefab && hx >= 0 && hy >= 0) {
-      const prefab = PREFABS[this.selectedPrefab];
+      const prefab = PREFABS[this.selectedPrefab] || getCustomPrefab(this.selectedPrefab);
       if (prefab) {
         ctx.save();
         ctx.strokeStyle = '#c084fc';
@@ -1485,10 +1651,196 @@ export class EditorCanvas {
       ctx.restore();
     }
 
+    // 8. Render Diagnostic Issue Pin Overlay (BL-75)
+    if (this.diagnosticPin) {
+      const { x: px, y: py, message, type } = this.diagnosticPin;
+      const sx = px * effTile + effTile / 2;
+      const sy = py * effTile + effTile / 2;
+      const isErr = type === 'error';
+      const pinColor = isErr ? '#f43f5e' : '#f59e0b';
+      const pinBg = isErr ? 'rgba(244, 63, 94, 0.28)' : 'rgba(245, 158, 11, 0.28)';
+
+      ctx.save();
+
+      // Outer pulsing beacon ring
+      ctx.strokeStyle = pinColor;
+      ctx.lineWidth = 3;
+      ctx.shadowColor = pinColor;
+      ctx.shadowBlur = 12;
+      ctx.beginPath();
+      ctx.arc(sx, sy, effTile * 0.75, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Filled target tile box
+      ctx.fillStyle = pinBg;
+      ctx.fillRect(px * effTile, py * effTile, effTile, effTile);
+      ctx.strokeRect(px * effTile, py * effTile, effTile, effTile);
+
+      // Center crosshairs
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(sx - effTile * 0.4, sy); ctx.lineTo(sx + effTile * 0.4, sy);
+      ctx.moveTo(sx, sy - effTile * 0.4); ctx.lineTo(sx, sy + effTile * 0.4);
+      ctx.stroke();
+
+      // Center pin glyph
+      ctx.shadowBlur = 0;
+      ctx.font = `${Math.max(14, effTile * 0.6)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(isErr ? '📍' : '⚠️', sx, sy);
+
+      // Floating issue description tooltip badge above tile
+      const badgeText = `${isErr ? '❌ Error' : '⚠️ Warn'} (${px}, ${py}): ${message}`;
+      ctx.font = 'bold 11px monospace';
+      const textMetrics = ctx.measureText(badgeText);
+      const textW = Math.min(360, textMetrics.width + 16);
+      const textH = 22;
+      const badgeX = sx - textW / 2;
+      const badgeY = py * effTile - 28;
+
+      ctx.fillStyle = 'rgba(15, 23, 42, 0.96)';
+      ctx.strokeStyle = pinColor;
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.roundRect(badgeX, badgeY, textW, textH, 4);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      let displayText = badgeText;
+      if (textMetrics.width > 340) {
+        displayText = badgeText.slice(0, 48) + '...';
+      }
+      ctx.fillText(displayText, sx, badgeY + textH / 2);
+
+      ctx.restore();
+    }
+
     ctx.restore();
   }
 
   isRamp(tile) {
     return tile === TILES.RAMP_N || tile === TILES.RAMP_S || tile === TILES.RAMP_E || tile === TILES.RAMP_W;
+  }
+
+  /**
+   * Render overview radar mini-map into provided HTML canvas (BL-103)
+   * @param {HTMLCanvasElement} miniCanvas
+   */
+  renderMiniMap(miniCanvas) {
+    if (!miniCanvas || !this.level) return;
+    const miniCtx = miniCanvas.getContext('2d');
+    if (!miniCtx) return;
+
+    const { width: mazeW, height: mazeH } = this.level.dimensions;
+    const cw = miniCanvas.width;
+    const ch = miniCanvas.height;
+
+    // Background
+    miniCtx.fillStyle = '#090d13';
+    miniCtx.fillRect(0, 0, cw, ch);
+
+    const pad = 8;
+    const availW = cw - pad * 2;
+    const availH = ch - pad * 2;
+    const scale = Math.min(availW / mazeW, availH / mazeH);
+    const offsetX = pad + (availW - mazeW * scale) / 2;
+    const offsetY = pad + (availH - mazeH * scale) / 2;
+
+    this.miniMapTransform = { scale, offsetX, offsetY, mazeW, mazeH };
+
+    const ground = this.level.layers.ground || [];
+    const overhead = this.level.layers.overhead || [];
+    const isOverhead = this.activeLayer === LAYERS.OVERHEAD;
+
+    // 1. Draw floor base
+    miniCtx.fillStyle = '#161b22';
+    miniCtx.fillRect(offsetX, offsetY, mazeW * scale, mazeH * scale);
+
+    // 2. Draw ground walls
+    miniCtx.fillStyle = '#484f58';
+    for (let y = 0; y < mazeH; y++) {
+      for (let x = 0; x < mazeW; x++) {
+        if (ground[y]?.[x] === TILES.WALL) {
+          miniCtx.fillRect(offsetX + x * scale, offsetY + y * scale, Math.max(1, scale), Math.max(1, scale));
+        }
+      }
+    }
+
+    // 3. Draw overhead bridges / walkways
+    if (overhead.length > 0) {
+      miniCtx.fillStyle = isOverhead ? '#fbbf24' : 'rgba(251, 191, 36, 0.4)';
+      for (let y = 0; y < mazeH; y++) {
+        for (let x = 0; x < mazeW; x++) {
+          if (overhead[y]?.[x] && overhead[y][x] !== 0) {
+            miniCtx.fillRect(offsetX + x * scale, offsetY + y * scale, Math.max(1, scale), Math.max(1, scale));
+          }
+        }
+      }
+    }
+
+    // 4. Draw key entities (Spawn, Exit, Keys, Doors)
+    if (this.level.spawn) {
+      miniCtx.fillStyle = '#34d399';
+      miniCtx.fillRect(offsetX + this.level.spawn.x * scale - 1, offsetY + this.level.spawn.y * scale - 1, Math.max(3, scale), Math.max(3, scale));
+    }
+    if (this.level.exit) {
+      miniCtx.fillStyle = '#38bdf8';
+      miniCtx.fillRect(offsetX + this.level.exit.x * scale - 1, offsetY + this.level.exit.y * scale - 1, Math.max(3, scale), Math.max(3, scale));
+    }
+    for (const ent of (this.level.entities || [])) {
+      if (ent.type === 'key') miniCtx.fillStyle = ent.color || '#fbbf24';
+      else if (ent.type === 'door') miniCtx.fillStyle = ent.color || '#f43f5e';
+      else if (ent.type === 'lever') miniCtx.fillStyle = '#a855f7';
+      else miniCtx.fillStyle = '#e2e8f0';
+      miniCtx.fillRect(offsetX + ent.x * scale, offsetY + ent.y * scale, Math.max(2, scale * 0.8), Math.max(2, scale * 0.8));
+    }
+
+    // 5. Draw active canvas viewport indicator rectangle
+    const effTile = this.getEffectiveTileSize();
+    const vpLeft = -this.panX / effTile;
+    const vpTop = -this.panY / effTile;
+    const vpWidth = this.canvas.width / effTile;
+    const vpHeight = this.canvas.height / effTile;
+
+    const vpRectX = offsetX + vpLeft * scale;
+    const vpRectY = offsetY + vpTop * scale;
+    const vpRectW = vpWidth * scale;
+    const vpRectH = vpHeight * scale;
+
+    miniCtx.save();
+    miniCtx.strokeStyle = '#38bdf8';
+    miniCtx.lineWidth = 1.5;
+    miniCtx.fillStyle = 'rgba(56, 189, 248, 0.12)';
+    miniCtx.fillRect(vpRectX, vpRectY, vpRectW, vpRectH);
+    miniCtx.strokeRect(vpRectX, vpRectY, vpRectW, vpRectH);
+
+    // Glowing border corners
+    miniCtx.strokeStyle = '#ffffff';
+    miniCtx.lineWidth = 2;
+    miniCtx.strokeRect(offsetX, offsetY, mazeW * scale, mazeH * scale);
+    miniCtx.restore();
+  }
+
+  /**
+   * Navigate editor canvas by clicking/dragging on mini-map (BL-103)
+   * @param {number} clientX
+   * @param {number} clientY
+   * @param {HTMLCanvasElement} miniCanvas
+   */
+  handleMiniMapNavigation(clientX, clientY, miniCanvas) {
+    if (!miniCanvas || !this.miniMapTransform) return;
+    const rect = miniCanvas.getBoundingClientRect();
+    const mx = clientX - rect.left;
+    const my = clientY - rect.top;
+
+    const { scale, offsetX, offsetY, mazeW, mazeH } = this.miniMapTransform;
+    const gridX = Math.max(0, Math.min(mazeW - 1, Math.round((mx - offsetX) / scale)));
+    const gridY = Math.max(0, Math.min(mazeH - 1, Math.round((my - offsetY) / scale)));
+
+    this.centerOnTile(gridX, gridY);
   }
 }

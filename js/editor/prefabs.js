@@ -234,18 +234,154 @@ export const PREFABS = {
   },
 };
 
+export const CUSTOM_PREFABS_STORAGE_KEY = 'maze_custom_prefabs';
+
+/**
+ * Retrieve list of user-created custom prefabs from browser storage
+ * @returns {Array<Object>}
+ */
+export function getCustomPrefabs() {
+  if (typeof localStorage === 'undefined') return [];
+  try {
+    const raw = localStorage.getItem(CUSTOM_PREFABS_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : [];
+  } catch (e) {
+    console.warn('[Prefabs] Failed to parse custom prefabs from storage:', e);
+    return [];
+  }
+}
+
+/**
+ * Retrieve a specific custom prefab by ID
+ * @param {string} id
+ * @returns {Object|null}
+ */
+export function getCustomPrefab(id) {
+  const list = getCustomPrefabs();
+  return list.find(p => p.id === id) || null;
+}
+
+/**
+ * Save a custom prefab to browser storage
+ * @param {Object} prefab
+ * @returns {Object} Saved prefab
+ */
+export function saveCustomPrefab(prefab) {
+  if (!prefab || !prefab.name || !prefab.layers) {
+    throw new Error('[Prefabs] Invalid prefab definition: name and layers required.');
+  }
+  const id = prefab.id || `custom_${Date.now().toString(36)}`;
+  const cleanPrefab = {
+    ...prefab,
+    id,
+    isCustom: true,
+    width: prefab.width || (prefab.layers.ground?.[0]?.length ?? 5),
+    height: prefab.height || (prefab.layers.ground?.length ?? 5),
+    entities: Array.isArray(prefab.entities) ? prefab.entities : [],
+  };
+
+  const list = getCustomPrefabs();
+  const existingIdx = list.findIndex(p => p.id === id);
+  if (existingIdx >= 0) {
+    list[existingIdx] = cleanPrefab;
+  } else {
+    list.push(cleanPrefab);
+  }
+
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem(CUSTOM_PREFABS_STORAGE_KEY, JSON.stringify(list));
+  }
+  return cleanPrefab;
+}
+
+/**
+ * Delete a custom prefab by ID
+ * @param {string} id
+ * @returns {boolean}
+ */
+export function deleteCustomPrefab(id) {
+  const list = getCustomPrefabs().filter(p => p.id !== id);
+  if (typeof localStorage !== 'undefined') {
+    localStorage.setItem(CUSTOM_PREFABS_STORAGE_KEY, JSON.stringify(list));
+  }
+  return true;
+}
+
+/**
+ * Clear all custom prefabs
+ */
+export function clearCustomPrefabs() {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem(CUSTOM_PREFABS_STORAGE_KEY);
+  }
+}
+
+/**
+ * Capture an arbitrary bounding box region of a level as a custom reusable prefab (BL-39)
+ * @param {Object} level
+ * @param {string} name
+ * @param {number} startX
+ * @param {number} startY
+ * @param {number} width
+ * @param {number} height
+ * @returns {Object}
+ */
+export function captureLevelRegionAsPrefab(level, name, startX, startY, width, height) {
+  const ground = [];
+  const overhead = [];
+
+  for (let dy = 0; dy < height; dy++) {
+    const gRow = [];
+    const oRow = [];
+    for (let dx = 0; dx < width; dx++) {
+      const gx = startX + dx;
+      const gy = startY + dy;
+      gRow.push(level.layers.ground?.[gy]?.[gx] ?? 0);
+      oRow.push(level.layers.overhead?.[gy]?.[gx] ?? 0);
+    }
+    ground.push(gRow);
+    overhead.push(oRow);
+  }
+
+  // Relative entities inside region
+  const entities = [];
+  for (const ent of level.entities || []) {
+    if (ent.x >= startX && ent.x < startX + width && ent.y >= startY && ent.y < startY + height) {
+      const copy = { ...ent, relX: ent.x - startX, relY: ent.y - startY };
+      delete copy.x;
+      delete copy.y;
+      entities.push(copy);
+    }
+  }
+
+  const prefab = {
+    id: `custom_${Date.now().toString(36)}`,
+    name: name || `Custom Module (${width}x${height})`,
+    description: `User-authored custom module stamped from (${startX}, ${startY})`,
+    width,
+    height,
+    layers: { ground, overhead },
+    entities,
+    isCustom: true,
+  };
+
+  return saveCustomPrefab(prefab);
+}
+
 /**
  * Stamp a prefab onto a level object at specified grid coordinates.
  * Clamps to level boundaries and assigns unique IDs to generated entities.
  *
  * @param {object} level The level data object
- * @param {string} prefabId ID of the prefab from PREFABS
+ * @param {string|object} prefabIdOrObj ID of the prefab from PREFABS/custom or prefab object
  * @param {number} originX Top-left grid X
  * @param {number} originY Top-left grid Y
  * @returns {{ success: boolean, stampedCount: number, entitiesCreated: number }}
  */
-export function stampPrefab(level, prefabId, originX, originY) {
-  const prefab = PREFABS[prefabId];
+export function stampPrefab(level, prefabIdOrObj, originX, originY) {
+  const prefab = typeof prefabIdOrObj === 'string'
+    ? (PREFABS[prefabIdOrObj] || getCustomPrefab(prefabIdOrObj))
+    : prefabIdOrObj;
   if (!prefab || !level || !level.layers) {
     return { success: false, stampedCount: 0, entitiesCreated: 0 };
   }

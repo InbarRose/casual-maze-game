@@ -87,6 +87,8 @@ tests/
 | **Levels > Solvability** | `tests/unit/levels/campaign-levels.test.mjs`<br>`tests/unit/levels/tutorial-levels.test.mjs` | Breadth-First Search (BFS) reachability of exit for all 16 levels | $0$ unsolvable levels |
 | **Editor > Validator** | `tests/unit/editor/level-validator.test.mjs` | Spawn in wall, unreachable exit, missing keys, deadlocks, bypass warnings | $100\%$ detection rate |
 | **Editor > Exporter** | `tests/unit/editor/json-exporter.test.mjs` | JSON import/export, clipboard copy, file reader upload | Format roundtrip parity |
+| **Platform Components** | `tests/unit/components/cmp-*.test.mjs` | 1:1 audited coverage of all 19 platform components (CMP-01 to CMP-19), menus, buttons, modes, phases | $100\%$ pass across all components |
+| **Asset Pipeline & Scoring** | `tests/unit/components/cmp-11-asset-pipeline-and-scoring.test.mjs` | Biome family unification, sub-theme aliasing, par/secret/flawless scoring formulas | Zero asset drift, deterministic scoring |
 
 ---
 

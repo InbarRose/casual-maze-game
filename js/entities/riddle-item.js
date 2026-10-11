@@ -4,7 +4,7 @@
  * carry in hand/backpack, and place onto environmental Pedestals to solve non-automatic riddle puzzles.
  */
 
-import { ENTITY_TYPES, ELEVATION, formatXYZ, RIDDLE_ITEM_STYLES } from '../core/constants.js';
+import { ENTITY_TYPES, ELEVATION, formatXYZ, RIDDLE_ITEM_STYLES, isApproachAllowed } from '../core/constants.js';
 
 export class RiddleItem {
   /**
@@ -27,6 +27,7 @@ export class RiddleItem {
     this.symbol = config.symbol || (preset ? preset.icon : '🗿');
     this.description = config.description || (preset ? preset.desc : 'An enigmatic ancient artifact waiting to be placed.');
     this.color = config.color || (this.itemType === 'statue' ? '#38bdf8' : (this.itemType === 'orb' ? '#f59e0b' : '#a855f7'));
+    this.interactDirections = Array.isArray(config.interactDirections) ? [...config.interactDirections] : null;
 
     this.isCarried = !!config.isCarried;
     this.isSlotted = !!config.isSlotted;
@@ -50,6 +51,20 @@ export class RiddleItem {
    */
   getCoordString() {
     return formatXYZ(this.x, this.y, this.z);
+  }
+
+  /**
+   * Check if player can interact with this floor riddle item
+   * @param {number} playerX
+   * @param {number} playerY
+   * @param {number} [playerZ=0]
+   * @returns {boolean}
+   */
+  canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
+    if (this.z !== playerZ) return false;
+    const dist = Math.abs(this.x - playerX) + Math.abs(this.y - playerY);
+    if (dist > 1) return false;
+    return isApproachAllowed(this.x, this.y, playerX, playerY, this.interactDirections);
   }
 
   /**
