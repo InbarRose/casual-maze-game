@@ -771,6 +771,44 @@ export const THEMES = Object.freeze({
   },
 });
 
+/**
+ * Canonical Biome Asset Families
+ * Unifies similar areas so they share thematic vector assets, wall styles,
+ * and floor surface treatments for a coherent aesthetic. (BL-113, ADR-0022)
+ */
+export const BIOME_FAMILIES = Object.freeze({
+  dungeon: 'dungeon',
+  crypt: 'dungeon',
+  caves: 'dungeon',
+  cave: 'dungeon',
+  blueprint: 'dungeon',
+  jungle: 'jungle',
+  emerald: 'jungle',
+  canopy: 'jungle',
+  magma: 'magma',
+  lava: 'magma',
+  volcano: 'magma',
+  glacial: 'glacial',
+  snow: 'glacial',
+  frost: 'glacial',
+  ice: 'glacial',
+  temple: 'temple',
+  sunset: 'temple',
+  citadel: 'temple',
+  astral: 'temple',
+});
+
+/**
+ * Resolve theme name to its canonical shared asset biome family
+ * @param {string} themeName
+ * @returns {'dungeon'|'jungle'|'magma'|'glacial'|'temple'}
+ */
+export function getBiomeFamily(themeName) {
+  if (!themeName || typeof themeName !== 'string') return 'dungeon';
+  const lower = themeName.toLowerCase().trim();
+  return BIOME_FAMILIES[lower] || 'dungeon';
+}
+
 export const ZONES = Object.freeze({
   tutorial: {
     id: 'tutorial',
