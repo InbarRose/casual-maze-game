@@ -47,4 +47,5 @@ What is the change or solution being adopted?
 * [0018: Interactive Map Editor Mini-Map Overview HUD and Environmental Surface Shaders](0018-editor-minimap-hud-and-environmental-surface-shaders.md) — Floating radar mini-map overview with viewport indicator, accordion tool palette cards, and reflective puddle ripple / molten bubbling shaders.
 * [0019: In-Game Pause Menu Drawer Categorization and Segmented Settings Navigation](0019-settings-and-overlay-consolidation.md) — Responsive 2-column pause command center and categorized tabbed navigation in settings modal.
 * [0020: Replay Theater In-Game Graphics Parity and Minimap Isolation](0020-replay-graphics-parity-and-minimap-isolation.md) — Eradication of canvas resolution corruption, PiP mini radar HUD, perspective switching, and theme asset preload re-render.
+* [0021: Level Victory Screen Streamlining and Collapsible More Drawer](0021-victory-screen-streamlining-and-collapsible-drawer.md) — Elimination of victory button clutter, single-row primary action bar, 1-tap quick icons, collapsible 6-action utility drawer, and compact metric typography.
 

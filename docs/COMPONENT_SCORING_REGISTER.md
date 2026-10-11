@@ -18,7 +18,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.33 | 9.33 | 9.33 | 8.33 | 6.00 | 8.33 | **48.65** (81.1%) | **A- Tier** | Keybinding Schemes, Pointer Toggle, Optical Zoom Clamping, Multi-Elevation & Gamepad (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`, `BL-93`, `BL-100`) |
 | **CMP-05** | **Minimap & Tactical Navigation** | 7.33 | 9.33 | 8.00 | 8.00 | 7.00 | 7.33 | **46.99** (78.3%) | **B+ Tier** | Strategic Fog of War, Multi-Elevation Bridges & Radar (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`) |
 | **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 8.00 | 9.33 | 9.00 | 7.33 | 7.00 | 8.33 | **48.99** (81.7%) | **A- Tier** | Colorblind Shape Badges, Mobile Feed Docking & Lore Journal (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`, `BL-97`, `BL-99`) |
-| **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 8.00 | 9.33 | 8.67 | 7.33 | 7.00 | 8.00 | **48.33** (80.6%) | **A- Tier** | Categorized Command Center, Destructive Confirmations & Exit Safety (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`, `BL-106`) |
+| **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 8.67 | 9.33 | 9.33 | 8.00 | 7.33 | 8.67 | **51.33** (85.6%) | **A- Tier** | Categorized Command Center, Streamlined Victory Bar, Quick Icons & More Drawer (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`, `BL-106`, `BL-109`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 7.33 | 9.67 | 8.33 | 7.67 | 6.00 | 7.00 | **46.00** (76.7%) | **B Tier** | Interactive Radar Mini-Map HUD, 1-Click Pan Navigation & Status Bar Telemetry (`BL-49`, `BL-50`, `BL-73`, `BL-102`, `BL-103`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 7.00 | 9.67 | 8.33 | 7.67 | 6.00 | 7.00 | **45.67** (76.1%) | **B Tier** | Accordion Palette Groups, Custom Prefab Region Saving & Stamping (`BL-18`, `BL-20`, `BL-39`, `BL-102`, `BL-104`) |
 | **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 7.33 | 9.67 | 8.33 | 7.67 | 6.00 | 7.33 | **46.33** (77.2%) | **B Tier** | Interactive Radar Mini-Map Viewport Indicator, Issue Pins & Live Telemetry (`BL-21`, `BL-50`, `BL-75`, `BL-102`, `BL-103`) |
@@ -196,14 +196,15 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/game-menu.js`, `js/engine/game-loop.js`, `css/game.css`, `maze.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **8.00/10** (1.1: 8, 1.2: 8, 1.3: 8)
+  * $C_1$ Juice & Delight: **8.67/10** (1.1: 9, 1.2: 8, 1.3: 9)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
-  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
-  * $C_5$ Progression & Retention: **7.00/10** (5.1: 7, 5.2: 7, 5.3: 7)
-  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
-  * **Master Score**: **48.33 / 60.00 (80.6% — A- Tier)**
+  * $C_3$ UI/UX & Ergonomics: **9.33/10** (3.1: 10, 3.2: 9, 3.3: 9)
+  * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
+  * $C_5$ Progression & Retention: **7.33/10** (5.1: 8, 5.2: 7, 5.3: 7)
+  * $C_6$ Accessibility & DX: **8.67/10** (6.1: 9, 6.2: 8, 6.3: 9)
+  * **Master Score**: **51.33 / 60.00 (85.6% — A- Tier)**
 * **Strengths**:
+  * **Streamlined Victory Screen & Collapsible "More" Drawer (`BL-109`, ADR-0021)**: Replaced 7 sprawling disparate victory footer buttons with an ultra-clean single-row primary action bar (`Next Level →`, `More ▾`), paired with 3 compact 1-tap quick action icons (`🔄 Retry`, `🎬 Replay`, `🐞 Bug`) and an animated 6-utility secondary drawer, while condensing metric typography into clean tokens (`Score`, `Time`, `Steps`, `Secrets`) and reducing screen height by $>50\%$.
   * **Categorized Command Center Drawer (`BL-106`, ADR-0019)**: Eliminated the bulky 14-button vertical stack by organizing the pause menu into semantic groups (`Primary Actions`, `View & Exploration`, `Preferences & System`, `Session Exit`) rendered in a responsive 2-column grid ($\le 540\text{px}$) with prominent resume callout, zero vertical overflow on mobile/laptop displays, and 100% backward-compatible IDs.
   * **Destructive Action Confirmations (`BL-64`, `BL-68`)**: Both "Restart Level" and "Return to Level Select" in the pause menu are shielded behind explicit inline confirmation boxes with distinct Cancel and Confirm actions, preventing accidental progress loss on mobile touchscreens.
   * **Modal Scroll Containment (`BL-64`)**: Clamped modal heights (`85vh`) with fluid touch momentum scrolling and sticky footers, preventing offscreen buttons or popup locks.
