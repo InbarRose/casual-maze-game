@@ -322,5 +322,80 @@ describe('Engine > ReplayPlayer', () => {
 
     player.destroy();
   });
+
+  it('updates character cardinal facing and walking cadence during replay playback (BL-116)', () => {
+    const mockCanvas = createMockCanvas();
+    const customReplay = {
+      levelId: level1.id,
+      actions: [
+        { action: 'move', from: { x: 1, y: 1 }, to: { x: 2, y: 1 }, direction: 'right' },
+        { action: 'move', from: { x: 2, y: 1 }, to: { x: 2, y: 2 }, direction: 'down' },
+        { action: 'move', from: { x: 2, y: 2 }, to: { x: 1, y: 2 }, direction: 'left' },
+        { action: 'move', from: { x: 1, y: 2 }, to: { x: 1, y: 1 }, direction: 'up' },
+        { action: 'move', from: { x: 1, y: 1 }, to: { x: 2, y: 1 } }, // no explicit direction
+      ],
+    };
+
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: customReplay,
+    });
+
+    // Step 1: moving right/east
+    player.stepForward();
+    assertEqual(player.gameLoop.player.facing, 'right');
+    assertEqual(player.gameLoop.player.getScreenFacing(player.gameLoop.player.facing), 'east');
+
+    // Step 2: moving down/south
+    player.stepForward();
+    assertEqual(player.gameLoop.player.facing, 'down');
+    assertEqual(player.gameLoop.player.getScreenFacing(player.gameLoop.player.facing), 'south');
+
+    // Step 3: moving left/west
+    player.stepForward();
+    assertEqual(player.gameLoop.player.facing, 'left');
+    assertEqual(player.gameLoop.player.getScreenFacing(player.gameLoop.player.facing), 'west');
+
+    // Step 4: moving up/north
+    player.stepForward();
+    assertEqual(player.gameLoop.player.facing, 'up');
+    assertEqual(player.gameLoop.player.getScreenFacing(player.gameLoop.player.facing), 'north');
+
+    // Step 5: derived from coordinates when direction is omitted
+    player.stepForward();
+    assertEqual(player.gameLoop.player.facing, 'east');
+    assertEqual(player.gameLoop.player.getScreenFacing(player.gameLoop.player.facing), 'east');
+
+    // Pause clears moving state
+    player.pause();
+    assertEqual(player.gameLoop.player.isMoving, false);
+
+    player.destroy();
+  });
+
+  it('coordinates discrete stepped zoom in ReplayPlayer (BL-116)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    assertEqual(player.zoom, 1.0);
+    assertEqual(player.zoomIn(), 1.25);
+    assertEqual(player.zoom, 1.25);
+    assertEqual(player.zoomIn(), 1.5);
+    assertEqual(player.zoomIn(), 2.0);
+
+    assertEqual(player.zoomOut(), 1.5);
+    assertEqual(player.zoomOut(), 1.25);
+    assertEqual(player.zoomOut(), 1.0);
+
+    assertEqual(player.resetZoom(), 1.0);
+    assertEqual(player.zoom, 1.0);
+
+    player.destroy();
+  });
 });
 

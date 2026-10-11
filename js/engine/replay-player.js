@@ -167,9 +167,75 @@ export class ReplayPlayer {
       clearTimeout(this._loopTimer);
       this._loopTimer = null;
     }
+    if (this.gameLoop?.player) {
+      this.gameLoop.player.isMoving = false;
+      this.gameLoop.player.moveProgress = 0;
+    }
     if (this.state === REPLAY_STATES.PLAYING) {
       this._setState(REPLAY_STATES.PAUSED);
     }
+  }
+
+  /**
+   * Set discrete zoom level in Replay Theatre (BL-116)
+   * @param {number} level
+   * @param {boolean} [snap=false]
+   * @returns {number}
+   */
+  setZoom(level, snap = false) {
+    if (this.gameLoop && typeof this.gameLoop.setZoom === 'function') {
+      const zoom = this.gameLoop.setZoom(level, snap);
+      if (this.gameLoop.render) this.gameLoop.render();
+      return zoom;
+    }
+    return 1.0;
+  }
+
+  /**
+   * Zoom in to next discrete step in Replay Theatre
+   * @returns {number}
+   */
+  zoomIn() {
+    if (this.gameLoop && typeof this.gameLoop.zoomIn === 'function') {
+      const zoom = this.gameLoop.zoomIn();
+      if (this.gameLoop.render) this.gameLoop.render();
+      return zoom;
+    }
+    return 1.0;
+  }
+
+  /**
+   * Zoom out to previous discrete step in Replay Theatre
+   * @returns {number}
+   */
+  zoomOut() {
+    if (this.gameLoop && typeof this.gameLoop.zoomOut === 'function') {
+      const zoom = this.gameLoop.zoomOut();
+      if (this.gameLoop.render) this.gameLoop.render();
+      return zoom;
+    }
+    return 1.0;
+  }
+
+  /**
+   * Reset zoom to default 1.0x in Replay Theatre
+   * @returns {number}
+   */
+  resetZoom() {
+    if (this.gameLoop && typeof this.gameLoop.resetZoom === 'function') {
+      const zoom = this.gameLoop.resetZoom();
+      if (this.gameLoop.render) this.gameLoop.render();
+      return zoom;
+    }
+    return 1.0;
+  }
+
+  /**
+   * Get active viewport zoom level in Replay Theatre
+   * @returns {number}
+   */
+  get zoom() {
+    return this.gameLoop?.camera?.zoom ?? 1.0;
   }
 
   /**
@@ -213,6 +279,33 @@ export class ReplayPlayer {
     if (!this.gameLoop || !action) return;
 
     const ts = this.gameLoop.tileSize || 36;
+
+    // Determine movement direction and cardinal orientation (BL-116)
+    let facing = null;
+    if (action.to && (action.from || this.gameLoop.player.gridX !== undefined)) {
+      const fromX = action.from?.x ?? this.gameLoop.player.gridX;
+      const fromY = action.from?.y ?? this.gameLoop.player.gridY;
+      const dx = action.to.x - fromX;
+      const dy = action.to.y - fromY;
+      if (dx > 0) facing = 'east';
+      else if (dx < 0) facing = 'west';
+      else if (dy > 0) facing = 'south';
+      else if (dy < 0) facing = 'north';
+    }
+    if (!facing && action.direction && action.direction !== 'none') {
+      const map = {
+        up: 'north',
+        down: 'south',
+        left: 'west',
+        right: 'east',
+        north: 'north',
+        south: 'south',
+        east: 'east',
+        west: 'west',
+      };
+      facing = map[String(action.direction).toLowerCase()] || null;
+    }
+
     if (action.action === 'teleport' || action.isWarp) {
       this.gameLoop.player.gridX = action.to.x;
       this.gameLoop.player.gridY = action.to.y;
@@ -220,8 +313,15 @@ export class ReplayPlayer {
       this.gameLoop.player.worldX = action.to.x * ts + ts / 2;
       this.gameLoop.player.worldY = action.to.y * ts + ts / 2;
       this.gameLoop.player.isMoving = false;
+      this.gameLoop.player.moveProgress = 0;
       if (action.direction && action.direction !== 'none') {
         this.gameLoop.player.facing = action.direction;
+      } else if (facing) {
+        if (typeof this.gameLoop.player.setFacing === 'function') {
+          this.gameLoop.player.setFacing(facing);
+        } else {
+          this.gameLoop.player.facing = facing;
+        }
       }
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'move') {
@@ -240,9 +340,18 @@ export class ReplayPlayer {
       this.gameLoop.player.worldX = action.to.x * ts + ts / 2;
       this.gameLoop.player.worldY = action.to.y * ts + ts / 2;
       this.gameLoop.player.isMoving = false;
+      this.gameLoop.player.moveProgress = 0;
       if (action.direction && action.direction !== 'none') {
         this.gameLoop.player.facing = action.direction;
+      } else if (facing) {
+        if (typeof this.gameLoop.player.setFacing === 'function') {
+          this.gameLoop.player.setFacing(facing);
+        } else {
+          this.gameLoop.player.facing = facing;
+        }
       }
+      // Animate walking stride cadence via pulseTimer
+      this.gameLoop.player.pulseTimer = (this.gameLoop.player.pulseTimer || 0) + 0.45;
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'rotate') {
       if (this.gameLoop.camera) {

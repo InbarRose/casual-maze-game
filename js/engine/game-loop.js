@@ -154,7 +154,8 @@ export class GameLoop {
 
     // Input state
     const savedKeybindingPreset = StorageManager.getSetting('keybinding_preset', 'wasd_arrows');
-    this.mouseMoveMode = StorageManager.getSetting('mouse_move_mode', MOUSE_MOVE_MODES.CLICK_PATH);
+    const explicitMode = (optionsOrLevel && typeof optionsOrLevel === 'object' && optionsOrLevel.mainCanvas) ? optionsOrLevel.mouseMoveMode : undefined;
+    this.mouseMoveMode = explicitMode ?? StorageManager.getSetting('mouse_move_mode', MOUSE_MOVE_MODES.CLICK_PATH);
     this.inputManager = new InputManager({
       hotkeysEnabled: this.areHotkeysEnabled(),
       keybindingPreset: savedKeybindingPreset,
@@ -372,12 +373,33 @@ export class GameLoop {
   /**
    * Set viewport zoom level
    * @param {number} level
+   * @param {boolean} [snap=false]
    * @returns {number}
    */
-  setZoom(level) {
+  setZoom(level, snap = false) {
     if (!this.camera) return 1.0;
-    const newZoom = this.camera.setZoom(level);
+    const newZoom = this.camera.setZoom(level, snap);
     this.tileSize = this.camera.tileSize;
+
+    if (this.player && typeof this.player.setTileSize === 'function') {
+      this.player.setTileSize(this.tileSize);
+    }
+    if (this.entities) {
+      for (const ent of this.entities) {
+        if (typeof ent.setTileSize === 'function') {
+          ent.setTileSize(this.tileSize);
+        }
+      }
+    }
+    if (this.camera.mode === 'follow' && this.player && this.level?.dimensions) {
+      this.camera.snapTo(
+        this.player.worldX,
+        this.player.worldY,
+        this.level.dimensions.width,
+        this.level.dimensions.height
+      );
+    }
+
     StorageManager.setSetting('viewport_zoom', newZoom);
     if (typeof document !== 'undefined' && document.documentElement) {
       document.documentElement.style.setProperty('--camera-zoom', String(newZoom));
@@ -391,39 +413,23 @@ export class GameLoop {
   }
 
   /**
-   * Zoom in by step
-   * @param {number} [step=0.1]
+   * Zoom in to next discrete step
    * @returns {number}
    */
-  zoomIn(step = 0.1) {
+  zoomIn() {
     if (!this.camera) return 1.0;
-    const newZoom = this.camera.zoomIn(step);
-    this.tileSize = this.camera.tileSize;
-    StorageManager.setSetting('viewport_zoom', newZoom);
-    this.notifyUI();
-    globalEvents.emit('camera:zoom_changed', {
-      zoom: newZoom,
-      tileSize: this.camera.tileSize,
-    });
-    return newZoom;
+    const newZoom = this.camera.zoomIn();
+    return this.setZoom(newZoom);
   }
 
   /**
-   * Zoom out by step
-   * @param {number} [step=0.1]
+   * Zoom out to previous discrete step
    * @returns {number}
    */
-  zoomOut(step = 0.1) {
+  zoomOut() {
     if (!this.camera) return 1.0;
-    const newZoom = this.camera.zoomOut(step);
-    this.tileSize = this.camera.tileSize;
-    StorageManager.setSetting('viewport_zoom', newZoom);
-    this.notifyUI();
-    globalEvents.emit('camera:zoom_changed', {
-      zoom: newZoom,
-      tileSize: this.camera.tileSize,
-    });
-    return newZoom;
+    const newZoom = this.camera.zoomOut();
+    return this.setZoom(newZoom);
   }
 
   /**
@@ -433,14 +439,24 @@ export class GameLoop {
   resetZoom() {
     if (!this.camera) return 1.0;
     const newZoom = this.camera.resetZoom();
-    this.tileSize = this.camera.tileSize;
-    StorageManager.setSetting('viewport_zoom', newZoom);
-    this.notifyUI();
-    globalEvents.emit('camera:zoom_changed', {
-      zoom: newZoom,
-      tileSize: this.camera.tileSize,
+    return this.setZoom(newZoom);
+  }
+
+  /**
+   * Toggle between Tap to Move (BFS pathfinding) and Hold & Drag to Steer (BL-116)
+   * @returns {string} The new mode ('click_path' | 'drag_only')
+   */
+  toggleTouchNavigationMode() {
+    const nextMode = this.mouseMoveMode === MOUSE_MOVE_MODES.DRAG_ONLY
+      ? MOUSE_MOVE_MODES.CLICK_PATH
+      : MOUSE_MOVE_MODES.DRAG_ONLY;
+    this.mouseMoveMode = nextMode;
+    StorageManager.setSetting('mouse_move_mode', nextMode);
+    globalEvents.emit('settings:controls_changed', {
+      keybindingPreset: this.inputManager?.keybindingPreset || 'wasd_arrows',
+      mouseMoveMode: nextMode,
     });
-    return newZoom;
+    return nextMode;
   }
 
   /**
@@ -834,6 +850,7 @@ export class GameLoop {
 
     // Click / Tap to Move & Interact on Canvas
     this.handleCanvasPointerDown = (e) => {
+      if (e.pointerType === 'touch') return;
       if (this.camera.mode === 'freepan' || (this.camera?.isRotating?.() ?? false)) return;
       if (e.button !== undefined && e.button !== 0) return;
 
@@ -890,18 +907,29 @@ export class GameLoop {
           y: targetGridY,
           time: performance.now(),
           path: path.slice(0, 24),
+          invalid: false,
+        };
+      } else {
+        this.clickTarget = {
+          x: targetGridX,
+          y: targetGridY,
+          time: performance.now(),
+          invalid: true,
         };
       }
     };
 
-    // Main Canvas Mouse Wheel Zoom (BL-87)
+    // Main Canvas Mouse Wheel Zoom (BL-87, BL-116: discrete stepped zoom)
     this.handleCanvasWheel = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
-      const delta = e.deltaY < 0 ? 0.1 : -0.1;
-      this.setZoom(this.camera.zoom + delta);
+      if (e.deltaY < 0) {
+        this.zoomIn();
+      } else {
+        this.zoomOut();
+      }
     };
 
-    // Main Canvas Touch & Continuous Drag Steering Controls with 2-finger Pinch Zoom (BL-16, BL-67, BL-87)
+    // Main Canvas Touch & Continuous Drag Steering Controls with 2-finger Pinch Zoom (BL-16, BL-67, BL-87, BL-116)
     let touchStartX = 0;
     let touchStartY = 0;
     let touchStartTime = 0;
@@ -958,8 +986,8 @@ export class GameLoop {
           touchHasMoved = true;
         }
 
-        // Continuous directional drag: deadzone threshold 20px (easier on mobile touch)
-        if (dist >= 20) {
+        // In both modes, deliberate drag steering engages when distance exceeds 24px (BL-67)
+        if (dist >= 24) {
           const absX = Math.abs(dx);
           const absY = Math.abs(dy);
           const direction = absX > absY ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
@@ -984,8 +1012,9 @@ export class GameLoop {
 
     this.handleCanvasTouchEnd = (e) => {
       if (e.cancelable && typeof e.preventDefault === 'function') e.preventDefault();
-      if (canvasPinchDist > 0 && e.touches?.length < 2) {
+      if (canvasPinchDist > 0) {
         canvasPinchDist = 0;
+        this.setZoom(this.camera ? this.camera.zoom : 1.0, true);
         return;
       }
       const hadSteering = touchSteeringActive;
@@ -1000,13 +1029,13 @@ export class GameLoop {
         const absY = Math.abs(dy);
         const elapsed = performance.now() - touchStartTime;
 
-        // If continuous drag steering already executed, finish cleanly
+        // If continuous drag steering already executed, finish cleanly without initiating a tap move
         if (hadSteering) {
           return;
         }
 
-        // Swipe detected: distance >= 20px within 600ms
-        if ((absX >= 20 || absY >= 20) && elapsed < 600) {
+        // Fast directional flick swipe in DRAG_ONLY mode
+        if (this.mouseMoveMode === MOUSE_MOVE_MODES.DRAG_ONLY && (absX >= 25 || absY >= 25) && elapsed < 400) {
           const direction = absX > absY ? (dx > 0 ? 'RIGHT' : 'LEFT') : (dy > 0 ? 'DOWN' : 'UP');
           this.autoMovePath = null;
           this.clickTarget = null;
@@ -1014,7 +1043,7 @@ export class GameLoop {
           return;
         }
 
-        // Tap detected: pathfind / interact (no deadzone!)
+        // Tap detected: pathfind / interact!
         this.handleCanvasPointerDown({
           clientX: endX,
           clientY: endY,
