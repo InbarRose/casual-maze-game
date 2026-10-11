@@ -143,6 +143,8 @@ import './unit/ui/lore-journal.test.mjs';
 import './unit/ui/celestial-cipher-dials.test.mjs';
 import './unit/ui/profile-customization.test.mjs';
 import './unit/ui/mobile-feed-and-download.test.mjs';
+import './unit/ui/menus-and-buttons.test.mjs';
+import './unit/ui/replay-theater-and-feed.test.mjs';
 
 // Run registered suites
 

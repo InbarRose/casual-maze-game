@@ -46,4 +46,7 @@ What is the change or solution being adopted?
 * [0017: Environmental Visual Fidelity Engine and AAA Map Editor Studio Overhaul](0017-visual-fidelity-and-aaa-editor-studio-overhaul.md) — Procedural floor masonry textures, animated wall torch sconces with warm radial light flares, corner ambient occlusion, and professional dark glassmorphic Map Editor studio suite.
 * [0018: Interactive Map Editor Mini-Map Overview HUD and Environmental Surface Shaders](0018-editor-minimap-hud-and-environmental-surface-shaders.md) — Floating radar mini-map overview with viewport indicator, accordion tool palette cards, and reflective puddle ripple / molten bubbling shaders.
 * [0019: In-Game Pause Menu Drawer Categorization and Segmented Settings Navigation](0019-settings-and-overlay-consolidation.md) — Responsive 2-column pause command center and categorized tabbed navigation in settings modal.
+* [0020: Universal Menu Navigation, Modal Stacking Isolation, and Comprehensive Menu Test Suite](0020-universal-menu-navigation-modal-stacking-and-test-suite.md) — Modal backdrop .active class lifecycle, home hero settings trigger, editor modal namespace isolation, z-index stacking hierarchy, and automated test suite.
+* [0021: Walkthrough Replay Fullscreen Grand Theater & Synchronized Action Activity Feed](0021-walkthrough-replay-fullscreen-theater-and-activity-feed.md) — Expansive responsive viewport, synchronized real-time action activity feed, floating HUD islands, tactical radar minimap, and comprehensive media play menu deck.
+
 

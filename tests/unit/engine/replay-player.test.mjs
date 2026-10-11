@@ -129,4 +129,122 @@ describe('Engine > ReplayPlayer', () => {
 
     player.destroy();
   });
+
+  it('supports dynamic viewport resize for grand theater presentation (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    player.resize(1280, 720);
+    assertEqual(mockCanvas.width, 1280);
+    assertEqual(mockCanvas.height, 720);
+    assertEqual(player.gameLoop.camera.viewportWidth, 1280);
+    assertEqual(player.gameLoop.camera.viewportHeight, 720);
+
+    player.destroy();
+  });
+
+  it('jumps directly to walkthrough end with jumpToEnd() (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    player.jumpToEnd();
+    assertEqual(player.currentStep, player.totalSteps);
+    assertEqual(player.state, REPLAY_STATES.COMPLETED);
+
+    player.destroy();
+  });
+
+  it('manages loop toggle and continuous playback configuration (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+      isLooping: false,
+    });
+
+    assertEqual(player.isLooping, false);
+    const toggled = player.toggleLoop();
+    assertEqual(toggled, true);
+    assertEqual(player.isLooping, true);
+
+    player.setLooping(false);
+    assertEqual(player.isLooping, false);
+
+    player.destroy();
+  });
+
+  it('toggles camera perspective and 90-degree rotations (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    // Perspective toggle
+    const initialMode = player.gameLoop.renderer?.perspective || 'angled';
+    const newMode = player.togglePerspective();
+    assert(newMode !== initialMode, 'Perspective mode switched');
+    assertEqual(player.gameLoop.renderer.perspective, newMode);
+
+    // Rotation controls
+    const rotBefore = player.gameLoop.camera.targetRotation;
+    player.rotateRight();
+    assert(player.gameLoop.camera.targetRotation !== rotBefore, 'Camera rotated CW');
+    player.rotateLeft();
+    assertEqual(player.gameLoop.camera.targetRotation, rotBefore, 'Camera returned to initial heading CCW');
+
+    player.destroy();
+  });
+
+  it('retrieves level metadata via getLevelInfo() (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    const info = player.getLevelInfo();
+    assert(info !== null, 'Metadata exists');
+    assertEqual(info.id, level1.id);
+    assertEqual(info.title, level1.title);
+    assert(typeof info.theme === 'string', 'Has theme string');
+
+    player.destroy();
+  });
+
+  it('forwards uiCallbacks.onStateUpdate to internal GameLoop (BL-112)', () => {
+    const mockCanvas = createMockCanvas();
+    let stateDispatched = null;
+
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+      uiCallbacks: {
+        onStateUpdate: (st) => {
+          stateDispatched = st;
+        },
+      },
+    });
+
+    // Notify UI from GameLoop
+    player.gameLoop.notifyUI();
+    assert(stateDispatched !== null, 'onStateUpdate was called');
+    assertEqual(stateDispatched.levelTitle, level1.title);
+    assert(Array.isArray(stateDispatched.inventory), 'Has inventory array');
+
+    player.destroy();
+  });
 });
+

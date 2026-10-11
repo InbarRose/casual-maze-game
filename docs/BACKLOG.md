@@ -24,7 +24,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33,78,80│ P1 │ Completed│
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72,87│ P1│ Active │
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39,75 │ P1 / P2 │ Completed│
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88,91,92 │ P0/P1 │ Active │
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88,91-100,106-107,111 │ P0/P1 │ Active │
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35,77 │ P2   │ Completed│
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46,79 │ P0/P1│ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -152,6 +152,9 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-105** | **Procedural Surface Shaders & Environmental Fluid Polish** | **P1** | `v1.26.0` | Add reflective water puddle shimmer with animated ripple rings in Caves, Jungles, and Dungeons; molten lava vein pulses and bubbling hotspots in Magma; diamond sparkle glints in Glacial biomes; and gilded fleck inlays in Sunset/Temple. | **Completed** |
 | **BL-106** | **In-Game Pause Menu Drawer Categorization & Visual Ergonomics** | **P1** | `v1.19.0` | Restructure monolithic 14-button pause menu drawer into a sleek 2-column command center (`Primary Actions`, `View & Exploration`, `Preferences & System`, `Session Exit`) preventing vertical scroll on small viewports while maintaining complete button ID and hotkey compatibility. | **Completed** |
 | **BL-107** | **Tabbed / Segmented Settings Modal Modernization** | **P1** | `v1.19.0` | Replace unwieldy 70vh monolithic settings scroll with a clean horizontal categorized tab bar across 5 dedicated panels (`🔊 Audio`, `🎥 Display`, `🎮 Controls`, `💾 Save Data`, `🔬 Support`), supporting direct tab jumping and live persistence. | **Completed** |
+| **BL-111** | **Universal Menu Navigation, Player Profile & Settings Modal Interactivity with Comprehensive Test Suite** | **P0** | `v1.19.0` | Fix unclickable/hidden modal backdrops (ensure `.modal-backdrop.active` toggles `opacity: 1; pointer-events: auto;`), wire `#btn-hero-settings` on Home page, wire `#btn-pause-profile` and `#btn-pause-settings` in pause drawer, eliminate modal ID collision in Map Editor by renaming `#settings-modal` to `#properties-modal`, ensure higher z-index stacking (`z-index: 1100`) for global overlay dialogs, and establish a comprehensive automated test suite (`menus-and-buttons.test.mjs`) for all game menus, action buttons, and preference settings. | **Completed** |
+| **BL-112** | **Walkthrough Replay Fullscreen Grand Theater & Synchronized Action Activity Feed** | **P0** | `v1.19.0` | Replace cramped 4:3 box in Diagnostics Lab (`test.html`) with an expansive responsive theater viewport scaling to any screen aspect ratio; integrate real-time Action Activity Feed overlay with event category filter pills (`All`, `📜 Lore`, `⚙️ Mech`, `🗝️ Items`) and animated cards; add authentic in-game floating HUD islands (Level title, chapter, elevation, carried inventory keys with colorblind geometric shape glyphs, par time, step counters, 2.5D perspective switch, rotation dial, and tactical radar minimap); engineer comprehensive Media Play Menu Deck with scrub timeline, transport buttons, jump-to-end, continuous loop, audio toggle, and fullscreen mode; back with comprehensive automated test suites (`replay-player.test.mjs`, `replay-theater-and-feed.test.mjs`). | **Completed** |
+
 
 ---
 
