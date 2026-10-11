@@ -85,13 +85,20 @@ export class ReplayPlayer {
 
     if (!this.canvas || !this.level) return;
 
-    const minimap = this.minimapCanvas || this.canvas;
+    // Never default minimap to this.canvas! Minimap constructor modifies canvas.width & height to 180,
+    // which mutates the main viewport resolution and overwrites the main render with the radar.
+    const minimap = this.minimapCanvas || null;
     this.gameLoop = new GameLoop({
       mainCanvas: this.canvas,
       minimapCanvas: minimap,
       level: JSON.parse(JSON.stringify(this.level)),
       uiCallbacks: {},
     });
+
+    // Calibrate camera viewport bounds to main canvas size
+    if (this.gameLoop.camera && this.canvas.width && this.canvas.height) {
+      this.gameLoop.camera.resize(this.canvas.width, this.canvas.height);
+    }
 
     // Start renderer and initial paint
     if (typeof requestAnimationFrame !== 'undefined') {
@@ -205,6 +212,9 @@ export class ReplayPlayer {
       this.gameLoop.player.worldX = action.to.x * ts + ts / 2;
       this.gameLoop.player.worldY = action.to.y * ts + ts / 2;
       this.gameLoop.player.isMoving = false;
+      if (action.direction && action.direction !== 'none') {
+        this.gameLoop.player.facing = action.direction;
+      }
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'move') {
       // Auto-unlock puzzle gate if encountering one during playback
@@ -222,6 +232,9 @@ export class ReplayPlayer {
       this.gameLoop.player.worldX = action.to.x * ts + ts / 2;
       this.gameLoop.player.worldY = action.to.y * ts + ts / 2;
       this.gameLoop.player.isMoving = false;
+      if (action.direction && action.direction !== 'none') {
+        this.gameLoop.player.facing = action.direction;
+      }
       this.gameLoop.handleCellArrival();
     } else if (action.action === 'rotate') {
       if (this.gameLoop.camera) {
@@ -245,10 +258,54 @@ export class ReplayPlayer {
       }
     }
 
+    if (this.gameLoop.camera) {
+      this.gameLoop.camera.snapTo(
+        this.gameLoop.player.worldX,
+        this.gameLoop.player.worldY,
+        this.gameLoop.level.dimensions.width,
+        this.gameLoop.level.dimensions.height
+      );
+    }
+
     this.gameLoop.update(0.016);
     if (this.gameLoop.render) {
       this.gameLoop.render();
     }
+  }
+
+  /**
+   * Set perspective mode ('angled' | 'topdown')
+   * @param {'angled'|'topdown'} mode
+   */
+  setPerspective(mode) {
+    if (this.gameLoop?.renderer) {
+      this.gameLoop.renderer.setPerspective(mode);
+      if (this.gameLoop.render) {
+        this.gameLoop.render();
+      }
+    }
+  }
+
+  /**
+   * Toggle between 2.5D angled and top-down blueprint view
+   * @returns {'angled'|'topdown'}
+   */
+  togglePerspective() {
+    if (this.gameLoop?.renderer) {
+      const current = this.gameLoop.renderer.perspective || 'angled';
+      const next = current === 'angled' ? 'topdown' : 'angled';
+      this.setPerspective(next);
+      return next;
+    }
+    return 'angled';
+  }
+
+  /**
+   * Get current perspective mode
+   * @returns {'angled'|'topdown'}
+   */
+  getPerspective() {
+    return this.gameLoop?.renderer?.perspective || 'angled';
   }
 
   /**

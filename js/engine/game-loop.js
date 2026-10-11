@@ -112,7 +112,11 @@ export class GameLoop {
     const initialPerspective = savedPerspective || this.level.config?.viewPerspective || 'angled';
     this.renderer = new GameRenderer(mainCanvas);
     this.renderer.setPerspective(initialPerspective);
-    this.minimap = new Minimap(minimapCanvas);
+    if (mainCanvas && minimapCanvas === mainCanvas) {
+      console.warn('[MazeGame:GameLoop] minimapCanvas cannot be the same element as mainCanvas; ignoring minimapCanvas.');
+      minimapCanvas = null;
+    }
+    this.minimap = minimapCanvas ? new Minimap(minimapCanvas) : null;
 
     // Asynchronously preload vector assets in browser environment
     if (typeof fetch === 'function' && typeof window !== 'undefined') {
@@ -1084,6 +1088,7 @@ export class GameLoop {
    * Pan camera to minimap point
    */
   panToMinimapClick(e) {
+    if (!this.minimap) return;
     const { gridX, gridY } = this.minimap.mapClickToGrid(e.clientX, e.clientY, this.level, this.player);
     const tileSize = this.camera.tileSize;
     this.camera.setMode('freepan');
@@ -2864,6 +2869,8 @@ export class GameLoop {
       this.revealedSecrets
     );
 
-    this.minimap.render(this.level, this.player, this.fog, dt, this.revealedSecrets);
+    if (this.minimap) {
+      this.minimap.render(this.level, this.player, this.fog, dt, this.revealedSecrets);
+    }
   }
 }

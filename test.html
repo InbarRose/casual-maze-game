@@ -347,6 +347,7 @@
           <!-- Canvas Viewport -->
           <div class="viewport-box">
             <canvas id="replay-canvas" width="800" height="600"></canvas>
+            <canvas id="replay-minimap-canvas" width="180" height="180" style="position: absolute; bottom: 1rem; right: 1rem; width: 140px; height: 140px; border-radius: 8px; border: 1px solid rgba(56, 189, 248, 0.4); box-shadow: 0 4px 14px rgba(0,0,0,0.6); pointer-events: none; background: rgba(5,7,10,0.85);"></canvas>
             <div id="replay-status-overlay" style="position: absolute; top: 1rem; left: 1rem; display: flex; gap: 0.5rem;">
               <span class="badge badge-cyan" id="replay-badge-state">PAUSED</span>
               <span class="badge" id="replay-badge-step" style="background: rgba(0,0,0,0.6); color: #fff;">Step 0 / 0</span>
@@ -359,6 +360,8 @@
             <button id="btn-replay-prev" class="btn btn-secondary btn-sm" title="Previous Step [Left]">◀ Prev</button>
             <button id="btn-replay-play" class="btn btn-primary btn-sm" title="Play / Pause [Space]">▶ Play</button>
             <button id="btn-replay-next" class="btn btn-secondary btn-sm" title="Next Step [Right]">Next ▶</button>
+            <button id="btn-replay-perspective" class="btn btn-secondary btn-sm" title="Toggle 2.5D / Blueprint View">📐 2.5D</button>
+            <button id="btn-replay-minimap" class="btn btn-secondary btn-sm active" title="Toggle Picture-in-Picture Radar">🗺 Radar</button>
 
             <input type="range" class="scrub-timeline" id="replay-scrubber" min="0" max="0" value="0" />
 
@@ -564,11 +567,14 @@
     // 1. REPLAY THEATER CONTROLLER
     // -------------------------------------------------------------
     const replayCanvas = document.getElementById('replay-canvas');
+    const replayMinimapCanvas = document.getElementById('replay-minimap-canvas');
     const selectLevel = document.getElementById('select-replay-level');
     const btnPlay = document.getElementById('btn-replay-play');
     const btnReset = document.getElementById('btn-replay-reset');
     const btnPrev = document.getElementById('btn-replay-prev');
     const btnNext = document.getElementById('btn-replay-next');
+    const btnPerspective = document.getElementById('btn-replay-perspective');
+    const btnMinimap = document.getElementById('btn-replay-minimap');
     const scrubber = document.getElementById('replay-scrubber');
     const badgeState = document.getElementById('replay-badge-state');
     const badgeStep = document.getElementById('replay-badge-step');
@@ -595,12 +601,17 @@
 
       // Preload level theme vector SVG assets (BL-96)
       if (level?.config?.theme && typeof fetch === 'function') {
-        assetLoader.preloadTheme(level.config.theme).catch(() => {});
+        assetLoader.preloadTheme(level.config.theme).then(() => {
+          if (replayPlayer?.gameLoop) {
+            replayPlayer.gameLoop.render();
+          }
+        }).catch(() => {});
       }
 
       if (!replayPlayer) {
         replayPlayer = new ReplayPlayer({
           canvas: replayCanvas,
+          minimapCanvas: replayMinimapCanvas,
           level,
           replay,
           onStep: handlePlayerStep,
@@ -608,6 +619,10 @@
         });
       } else {
         replayPlayer.load(level, replay);
+      }
+
+      if (btnPerspective && replayPlayer) {
+        btnPerspective.textContent = replayPlayer.getPerspective() === 'angled' ? '📐 2.5D' : '📐 Blueprint';
       }
 
       scrubber.max = replay.actions.length;
@@ -702,6 +717,24 @@
     btnNext?.addEventListener('click', () => {
       audioFX.playClick();
       replayPlayer?.stepForward();
+    });
+
+    btnPerspective?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (replayPlayer) {
+        const nextMode = replayPlayer.togglePerspective();
+        btnPerspective.textContent = nextMode === 'angled' ? '📐 2.5D' : '📐 Blueprint';
+        showToast(`Perspective switched to ${nextMode === 'angled' ? '2.5D Angled' : 'Blueprint Top-Down'}`, 'info');
+      }
+    });
+
+    btnMinimap?.addEventListener('click', () => {
+      audioFX.playClick();
+      if (replayMinimapCanvas) {
+        const isHidden = replayMinimapCanvas.style.display === 'none';
+        replayMinimapCanvas.style.display = isHidden ? 'block' : 'none';
+        btnMinimap.classList.toggle('active', isHidden);
+      }
     });
 
     scrubber?.addEventListener('input', (e) => {

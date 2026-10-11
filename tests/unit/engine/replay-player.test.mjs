@@ -129,4 +129,80 @@ describe('Engine > ReplayPlayer', () => {
 
     player.destroy();
   });
+
+  it('preserves mainCanvas dimensions and isolates minimap (BL-108)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    assertEqual(mockCanvas.width, 800, 'Main canvas width must not be mutated to minimap size');
+    assertEqual(mockCanvas.height, 600, 'Main canvas height must not be mutated to minimap size');
+    assertEqual(player.gameLoop.camera.viewportWidth, 800, 'Camera viewport width must match canvas');
+    assertEqual(player.gameLoop.camera.viewportHeight, 600, 'Camera viewport height must match canvas');
+    assertEqual(player.gameLoop.minimap, null, 'GameLoop minimap should be null when not provided');
+
+    player.destroy();
+  });
+
+  it('supports isolated minimapCanvas when provided (BL-108)', () => {
+    const mockCanvas = createMockCanvas();
+    const mockMinimapCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      minimapCanvas: mockMinimapCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    assertEqual(mockCanvas.width, 800, 'Main canvas width remains 800');
+    assertEqual(mockCanvas.height, 600, 'Main canvas height remains 600');
+    assertEqual(mockMinimapCanvas.width, 180, 'Minimap canvas width is 180');
+    assertEqual(mockMinimapCanvas.height, 180, 'Minimap canvas height is 180');
+    assert(player.gameLoop.minimap !== null, 'GameLoop minimap exists when provided');
+
+    player.destroy();
+  });
+
+  it('supports switching and toggling perspective mode (BL-108)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    assertEqual(player.getPerspective(), 'angled');
+
+    const toggled = player.togglePerspective();
+    assertEqual(toggled, 'topdown');
+    assertEqual(player.getPerspective(), 'topdown');
+
+    player.setPerspective('angled');
+    assertEqual(player.getPerspective(), 'angled');
+
+    player.destroy();
+  });
+
+  it('updates player facing direction and snaps camera on step forward (BL-108)', () => {
+    const mockCanvas = createMockCanvas();
+    const player = new ReplayPlayer({
+      canvas: mockCanvas,
+      level: level1,
+      replay: replay1,
+    });
+
+    player.stepForward();
+    const firstAction = replay1.actions[0];
+    if (firstAction.direction && firstAction.direction !== 'none') {
+      assertEqual(player.gameLoop.player.facing, firstAction.direction);
+    }
+
+    assertEqual(player.gameLoop.camera.targetX, player.gameLoop.player.worldX);
+    assertEqual(player.gameLoop.camera.targetY, player.gameLoop.player.worldY);
+
+    player.destroy();
+  });
 });

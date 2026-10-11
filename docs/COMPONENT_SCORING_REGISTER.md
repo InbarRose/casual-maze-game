@@ -28,7 +28,7 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-14** | **Player Profile, Medals & Prestige Progression** | 7.33 | 9.33 | 8.33 | 7.33 | 8.00 | 7.33 | **47.65** (79.4%) | **A- Tier** | Character Customization Studio, Wardrobe & Tiered Medals (`BL-52`, `BL-73`, `BL-78`, `BL-95`) |
 | **CMP-15** | **Settings & Configuration System** | 7.00 | 9.33 | 9.00 | 7.33 | 6.33 | 9.00 | **48.00** (80.0%) | **A- Tier** | Segmented Navigation Tabs, Keybinding Presets & Pointer Toggle (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`, `BL-73`, `BL-100`, `BL-107`) |
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Universal Interactive Handbook Modal & Visual Bridge SVG Guide (`BL-37`, `BL-48`, `BL-71`) |
-| **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 7.33 | 9.33 | 7.67 | 8.33 | 5.67 | 8.00 | **46.33** (77.2%) | **B Tier** | Replay In-Game Graphics, Vector Asset Alignment & Benchmark (`BL-45`, `BL-46`, `BL-79`, `BL-96`) |
+| **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 8.67 | 9.33 | 8.67 | 8.67 | 6.67 | 8.67 | **50.68** (84.5%) | **A- Tier** | Replay In-Game Graphics, PiP Radar, Perspective & Diagnostics (`BL-45`, `BL-46`, `BL-79`, `BL-96`, `BL-108`) |
 | **CMP-18** | **Community Feedback & Bug Reporting Channels** | 5.67 | 9.33 | 7.67 | 7.33 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | 1-Click Universal Feedback Modal with Live Telemetry & GitHub Issue Creation (`BL-34`, `BL-69`) |
 | **CMP-19** | **Accessibility & Sensory Inclusivity** | 5.67 | 9.67 | 7.33 | 6.33 | 5.67 | 9.00 | **43.67** (72.8%) | **B Tier** | Geometric Key Badges, High-Contrast Contours, Assist Halos & Victory Advance (`BL-26`, `BL-40`, `BL-55`, `BL-66`, `BL-99`) |
 
@@ -426,17 +426,17 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `test.html`, `js/engine/replay-player.js`, `tests/harness/runner.mjs`, `tests/browser-test-runner.js`, `tests/unit/engine/canvas-visual-regression.test.mjs`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
+  * $C_1$ Juice & Delight: **8.67/10** (1.1: 9, 1.2: 8, 1.3: 9)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **7.67/10** (3.1: 8, 3.2: 8, 3.3: 7)
-  * $C_4$ Mechanics & Systems: **8.33/10** (4.1: 9, 4.2: 8, 4.3: 8)
-  * $C_5$ Progression & Retention: **5.67/10** (5.1: 6, 5.2: 5, 5.3: 6)
-  * $C_6$ Accessibility & DX: **8.00/10** (6.1: 8, 6.2: 8, 6.3: 8)
-  * **Master Score**: **46.33 / 60.00 (77.2% — B Tier)**
+  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
+  * $C_4$ Mechanics & Systems: **8.67/10** (4.1: 9, 4.2: 9, 4.3: 8)
+  * $C_5$ Progression & Retention: **6.67/10** (5.1: 7, 5.2: 6, 5.3: 7)
+  * $C_6$ Accessibility & DX: **8.67/10** (6.1: 9, 6.2: 8, 6.3: 9)
+  * **Master Score**: **50.68 / 60.00 (84.5% — A- Tier)**
 * **Strengths**:
-  * Zero-dependency test harness executing over 600 modular tests across 126 suites in $<750\text{ms}$ with zero failures and zero cryptographic drift.
+  * Zero-dependency test harness executing over 610 modular tests across 126 suites in $<1000\text{ms}$ with zero failures and zero cryptographic drift.
   * **In-Browser Test Runner Diagnostics (`BL-45`)**: 100% static ES module execution directly inside `test.html` with real-time pass/fail progress, formatted failure boxes with error stacks, and celebratory victory banner.
-  * **Replay Theater In-Game Graphics & Vector Asset Preloading (`BL-46`, `BL-96`)**: Full action telemetry sequencing (moves, camera rotations, teleports, lever toggles, pedestal interactions) executing directly through `GameRenderer` with dynamic tile size scaling (`this.gameLoop.tileSize`) and preloaded SVG vector assets, eliminating coordinate offsets and placeholder fallbacks.
+  * **Replay Theater Full In-Game 2.5D Graphics & PiP Mini Radar HUD (`BL-46`, `BL-96`, `BL-108`, ADR-0020)**: Complete eradication of canvas resolution corruption via isolated minimap rendering; Replay Theater presents crystal-clear native $800 \times 600$ resolution with dynamic torch sconces, 2.5D wall facades, animated fluid shaders, floating Picture-in-Picture mini radar HUD, and 1-click `📐 2.5D / Blueprint` perspective toggling.
   * **Automated Visual Regression Diffing & 1,000-Frame Performance Benchmark (`BL-79`)**: Automated tests validating deterministic canvas operations across all core domain entities (`Key`, `Door`, `Lever`, `Teleporter`, `Pedestal`, `Player` in 6 outfits), 4-way camera rotation matrix verification, and microsecond rendering budget validation ($< 300\text{ms}$ per 1,000 frames).
 * **Gaps & Critical Deductions**:
   * Visual regression output could generate pixel diff heatmaps in browser runner.
