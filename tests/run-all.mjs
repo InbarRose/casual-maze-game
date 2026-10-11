@@ -143,8 +143,18 @@ import './unit/ui/lore-journal.test.mjs';
 import './unit/ui/celestial-cipher-dials.test.mjs';
 import './unit/ui/profile-customization.test.mjs';
 import './unit/ui/mobile-feed-and-download.test.mjs';
-import './unit/ui/menus-and-buttons.test.mjs';
 import './unit/ui/replay-theater-and-feed.test.mjs';
+
+// 10. Platform Component Audited Unit Test Suites (CMP-01 to CMP-19)
+import './unit/components/cmp-01-app-shell.test.mjs';
+import './unit/components/cmp-05-06-hud-and-action-feedback.test.mjs';
+import './unit/components/cmp-07-pause-and-victory.test.mjs';
+import './unit/components/cmp-08-10-editor-studio.test.mjs';
+import './unit/components/cmp-11-asset-pipeline-and-scoring.test.mjs';
+import './unit/components/cmp-14-profile-and-progression.test.mjs';
+import './unit/components/cmp-15-settings-system.test.mjs';
+import './unit/components/cmp-16-18-guide-and-feedback.test.mjs';
+import './unit/components/cmp-17-diagnostic-lab-theater.test.mjs';
 
 // Run registered suites
 
