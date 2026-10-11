@@ -44,5 +44,8 @@ jobs:
       - name: Run End-to-End User Journey Tests
         run: npm run test:journeys
 
+      - name: Run Headless UI & Browser E2E Tests (PR Quality Gate)
+        run: npm run test:e2e
+
       - name: Run Full Master Test Suite
         run: npm test
