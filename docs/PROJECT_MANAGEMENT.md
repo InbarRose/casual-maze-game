@@ -172,6 +172,20 @@ This document tracks project milestones, current release status, active developm
   - **In-Game Floating HUD Islands & Tactical Minimap (CMP-05, CMP-17)**: Integrated top HUD cards (Level title, chapter, elevation, carried inventory keys with accessible colorblind geometric glyphs via `getKeyColorblindShape`, live timer, and step progress), perspective toggle (<kbd>V</kbd>), 90° camera rotation dial (<kbd>Q</kbd>/<kbd>R</kbd>), and dedicated tactical radar minimap canvas (`#replay-minimap-canvas`, <kbd>M</kbd>).
   - **Comprehensive Media Play Menu Deck (CMP-17)**: Engineered `#media-play-deck` with timeline scrubber, current/total timestamps, step counter pill, action telemetry badge, transport buttons (Restart, Prev Step, Hero Play/Pause, Next Step, Jump to End), continuous loop toggle, sound toggle, and speed selectors (`0.5x`..`8x`).
   - **Automated QA Coverage**: 128 test suites, 624 tests passing (0 failed, 8,271 assertions, 23/23 zero-drift checks passed) covering `tests/unit/engine/replay-player.test.mjs` and `tests/unit/ui/replay-theater-and-feed.test.mjs`.
+- [x] **Platform Component Audit Test Coverage, Subsystem Quality Scoring & Thematic Asset Unification (BL-113, ADR-0022)**:
+  - **Thematic Biome Asset Unification (`BIOME_FAMILIES`)**: Defined `BIOME_FAMILIES` mapping in `constants.js` and unified asset loading in `AssetLoader.prototype.resolvePath` and `preloadTheme`, aliasing sub-themes (`lava`, `snow`, `cave`, `sunset`, `emerald`) to canonical families (`dungeon`, `jungle`, `magma`, `glacial`, `temple`) so similar areas share high-fidelity vector tiles, walls, and floor shaders with zero missing assets or fallback glitches.
+  - **Platform Component Audited Unit Test Suites (`tests/unit/components/`)**: Implemented dedicated component test suites for all 19 platform components (`CMP-01` to `CMP-19`) verifying every menu, button ID/interaction, mode, and phase:
+    - `cmp-01-app-shell.test.mjs`: Header/footer navigation, hero buttons, chapter cards, ambient canvas lifecycle.
+    - `cmp-05-06-hud-and-action-feedback.test.mjs`: Floating HUD islands, tactical radar minimap, activity feed, disambiguation drawer, note/cipher modals.
+    - `cmp-07-pause-and-victory.test.mjs`: 2-column pause menu, destructive confirmations, victory scoring dialog, auto-pause lifecycle.
+    - `cmp-08-10-editor-studio.test.mjs`: Tool palette accordions, floating mini-map overview HUD, history stack undo/redo, auto-fix repairs.
+    - `cmp-11-asset-pipeline-and-scoring.test.mjs`: Biome family aliasing, in-engine performance scoring formulas, tiered medal awards.
+    - `cmp-14-profile-and-progression.test.mjs`: Codename input, visual customization controls, conquest counters, prestige rank.
+    - `cmp-15-settings-system.test.mjs`: 5 categorized tabs, audio sliders/mutes, contrast/perspective, keybindings, snapshot rollback.
+    - `cmp-16-18-guide-and-feedback.test.mjs`: Guide modal tabs/diagrams, feedback telemetry bundles, GitHub links.
+    - `cmp-17-diagnostic-lab-theater.test.mjs`: Replay Theater deck transport, scrubber, speed pills, browser runner.
+  - **Comprehensive Quality Scoring Documentation**: Audited and scored all 19 application components in `docs/COMPONENT_SCORING_REGISTER.md` and all 42 levels in `docs/LEVEL_SCORING_REGISTER.md`.
+  - **Automated QA Coverage**: Expanded test harness to 136 test suites and 644 tests passing (0 failed, 8,527 assertions, 23/23 zero-drift checks passed).
 
 ### Previous Milestone: `v1.18.0` (Completed & Verified)
 

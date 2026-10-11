@@ -48,5 +48,6 @@ What is the change or solution being adopted?
 * [0019: In-Game Pause Menu Drawer Categorization and Segmented Settings Navigation](0019-settings-and-overlay-consolidation.md) — Responsive 2-column pause command center and categorized tabbed navigation in settings modal.
 * [0020: Universal Menu Navigation, Modal Stacking Isolation, and Comprehensive Menu Test Suite](0020-universal-menu-navigation-modal-stacking-and-test-suite.md) — Modal backdrop .active class lifecycle, home hero settings trigger, editor modal namespace isolation, z-index stacking hierarchy, and automated test suite.
 * [0021: Walkthrough Replay Fullscreen Grand Theater & Synchronized Action Activity Feed](0021-walkthrough-replay-fullscreen-theater-and-activity-feed.md) — Expansive responsive viewport, synchronized real-time action activity feed, floating HUD islands, tactical radar minimap, and comprehensive media play menu deck.
+* [0022: Platform Component Audit Test Coverage, Subsystem Quality Scoring & Thematic Asset Unification](0022-component-coverage-scoring-and-thematic-asset-unification.md) — Dedicated component test suites (CMP-01 to CMP-19), 6-chair scoring registers, and canonical biome family asset unification.
 
 
