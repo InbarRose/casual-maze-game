@@ -794,11 +794,15 @@ export class SettingsModal {
 
   open(targetTab = null) {
     this.ensureDom();
-    this.refresh();
-    if (targetTab) {
-      this.switchTab(targetTab);
-    } else if (this._activeTab) {
-      this.switchTab(this._activeTab);
+    try {
+      this.refresh();
+      if (targetTab) {
+        this.switchTab(targetTab);
+      } else if (this._activeTab) {
+        this.switchTab(this._activeTab);
+      }
+    } catch (err) {
+      console.warn('[MazeGame:SettingsModal] Non-fatal refresh warning on open:', err);
     }
     if (this.modalEl) {
       this.modalEl.style.display = 'flex';
@@ -817,7 +821,10 @@ export class SettingsModal {
       this.modalEl.style.display = 'none';
       this.modalEl.classList.remove('active');
       if (typeof document !== 'undefined') {
-        document.body.classList.remove('modal-open');
+        const remainingActive = document.querySelector('.modal-backdrop.active');
+        if (!remainingActive) {
+          document.body.classList.remove('modal-open');
+        }
       }
       this.isOpen = false;
     }

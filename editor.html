@@ -74,6 +74,8 @@
 
         <div class="toolbar-group">
           <button id="btn-properties" class="btn btn-secondary btn-sm" title="Configure Labyrinth Dimensions & Rules">⚙ Properties</button>
+          <button id="btn-editor-settings" class="btn btn-secondary btn-sm" title="Game Settings [Audio, Video, Controls]">⚙️ Settings</button>
+          <button id="btn-editor-profile" class="btn btn-secondary btn-sm" title="Player Profile &amp; Save Management">👤 Profile</button>
           <button id="btn-guide" class="btn btn-secondary btn-sm" title="Architect Handbook, Guides & Shortcuts [H]">❓ Guide</button>
         </div>
 
@@ -1093,10 +1095,18 @@
 
   <script type="module">
     import { EditorUI } from './js/editor/editor-ui.js';
-    import { initAppHeader } from './js/ui/app-header.js';
+    import { initAppHeader, getSettingsModal, getProfileModal } from './js/ui/app-header.js';
 
     // Initialize Universal App Header
     initAppHeader({ activeTab: 'editor' });
+
+    // Toolbar Settings & Profile triggers (BL-115)
+    document.getElementById('btn-editor-settings')?.addEventListener('click', () => {
+      getSettingsModal().open();
+    });
+    document.getElementById('btn-editor-profile')?.addEventListener('click', () => {
+      getProfileModal().open();
+    });
 
     // Global Error & Promise Rejection Handlers
     window.addEventListener('error', (event) => {
