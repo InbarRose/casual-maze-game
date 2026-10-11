@@ -3,7 +3,7 @@
  * Handles smooth follow lerping, free-panning mode, coordinate projections, and viewport clipping.
  */
 
-import { VIEWPORT_ZOOM } from '../core/constants.js';
+import { VIEWPORT_ZOOM, getNextZoomStep, snapToClosestZoomStep } from '../core/constants.js';
 
 export class Camera {
   /**
@@ -59,31 +59,38 @@ export class Camera {
   /**
    * Set viewport zoom level
    * @param {number} level
+   * @param {boolean} [snap=false] Whether to snap to closest predefined discrete step
    * @returns {number} The clamped zoom level
    */
-  setZoom(level) {
+  setZoom(level, snap = false) {
     if (typeof level !== 'number' || isNaN(level)) return this.zoom;
     const clamped = Math.max(this.minZoom, Math.min(this.maxZoom, level));
-    this.zoom = Math.round(clamped * 100) / 100;
+    this.zoom = snap ? snapToClosestZoomStep(clamped) : Math.round(clamped * 100) / 100;
     return this.zoom;
   }
 
   /**
-   * Zoom in by step
-   * @param {number} [step=0.1]
+   * Zoom in to next discrete step (or custom delta)
+   * @param {number|null} [step=null]
    * @returns {number}
    */
-  zoomIn(step = VIEWPORT_ZOOM.STEP) {
-    return this.setZoom(this.zoom + step);
+  zoomIn(step = null) {
+    if (typeof step === 'number' && !isNaN(step)) {
+      return this.setZoom(this.zoom + step);
+    }
+    return this.setZoom(getNextZoomStep(this.zoom, 1));
   }
 
   /**
-   * Zoom out by step
-   * @param {number} [step=0.1]
+   * Zoom out to previous discrete step (or custom delta)
+   * @param {number|null} [step=null]
    * @returns {number}
    */
-  zoomOut(step = VIEWPORT_ZOOM.STEP) {
-    return this.setZoom(this.zoom - step);
+  zoomOut(step = null) {
+    if (typeof step === 'number' && !isNaN(step)) {
+      return this.setZoom(this.zoom - step);
+    }
+    return this.setZoom(getNextZoomStep(this.zoom, -1));
   }
 
   /**
