@@ -122,3 +122,13 @@ Before any level is merged into the campaign or storyline catalog:
 - [ ] Visual orientation and bridge railings render correctly under camera rotation (0°, 90°, 180°, 270°).
 - [ ] Par steps and par time are calibrated from actual solver data.
 - [ ] Manifest entry and SHA-256 cryptographic hashes are synchronized.
+
+---
+
+## 6. Campaign & Chapter Rework Traceability (BL-01 – BL-08)
+
+The comprehensive campaign level overhaul was executed and verified under the Kishōtenketsu framework across Epics 1 & 7:
+* **BL-01 & BL-02**: Architectural philosophy, 6-axis 60-point quality rubric ([`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md)), and master scoring register ([`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md)).
+* **BL-03 through BL-08**: Redesign of Chapters 1 through 8 (Levels 1–32) ensuring zero-bypass gating, anti-box room rhythm, calibrated par metrics, and multi-elevation integration.
+* **Storylines 1–3**: Unbypassable challenge validation across *The Novice's Initiation*, *Relics of the Four Guardians*, and *The Whispering Citadel*.
+* **Automated Verification**: Guaranteed by dedicated chapter test suites (`tests/unit/campaign/chapter-*.test.mjs` and `tests/unit/levels/story-*-unbypassable.test.mjs`). All levels achieve Release Candidate rating ($\ge 45.00 / 60.00$) with 100% zero-bypass gating integrity.
