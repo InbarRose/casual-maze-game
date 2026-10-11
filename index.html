@@ -253,6 +253,7 @@
           <button id="btn-hero-campaign" class="btn btn-secondary">🏰 Browse Chapters</button>
           <button id="btn-hero-stories" class="btn btn-secondary">📜 Story Sagas</button>
           <button id="btn-hero-architect" class="btn btn-secondary">🛠️ Level Architect</button>
+          <button id="btn-hero-settings" class="btn btn-secondary" title="Configure Audio, Display, Keybindings, and Data">⚙️ Settings</button>
           <button id="btn-hero-save-progress" class="btn btn-secondary" title="Save Game Progress (export JSON save file)">💾 Save Progress</button>
         </div>
       </header>
@@ -808,7 +809,7 @@
   <script type="module">
     import { StorageManager } from './js/core/storage.js';
     import { audioFX } from './js/ui/audio-fx.js';
-    import { initAppHeader } from './js/ui/app-header.js';
+    import { initAppHeader, getSettingsModal } from './js/ui/app-header.js';
     import { HeroAmbientCanvas } from './js/ui/hero-ambient-canvas.js';
 
     // Mount Universal Global App Header and Footer
@@ -1066,6 +1067,11 @@
     document.getElementById('btn-hero-architect')?.addEventListener('click', () => {
       switchMode('architect');
       architectContainer?.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    document.getElementById('btn-hero-settings')?.addEventListener('click', () => {
+      audioFX.playClick();
+      getSettingsModal().open();
     });
 
     // Check initial mode from URL or hash

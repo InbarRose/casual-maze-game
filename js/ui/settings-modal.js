@@ -802,6 +802,10 @@ export class SettingsModal {
     }
     if (this.modalEl) {
       this.modalEl.style.display = 'flex';
+      this.modalEl.classList.add('active');
+      if (typeof document !== 'undefined') {
+        document.body.classList.add('modal-open');
+      }
       this.isOpen = true;
       this._startGamepadPolling();
     }
@@ -811,6 +815,10 @@ export class SettingsModal {
     this._stopGamepadPolling();
     if (this.modalEl) {
       this.modalEl.style.display = 'none';
+      this.modalEl.classList.remove('active');
+      if (typeof document !== 'undefined') {
+        document.body.classList.remove('modal-open');
+      }
       this.isOpen = false;
     }
   }

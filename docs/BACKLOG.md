@@ -24,7 +24,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33,78,80│ P1 │ Completed│
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72,87│ P1│ Active │
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39,75 │ P1 / P2 │ Completed│
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88,91,92 │ P0/P1 │ Active │
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88,91-100,106-107,111 │ P0/P1 │ Active │
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35,77 │ P2   │ Completed│
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46,79 │ P0/P1│ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -155,6 +155,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-108** | **Replay & Solver Theater Full In-Game 2.5D Graphics Parity & Minimap Isolation** | **P1** | `v1.19.1` | Eradicate canvas resolution corruption in `ReplayPlayer` by isolating minimap canvas rendering from main 800x600 canvas; add Picture-in-Picture mini radar HUD overlay, perspective toggle (2.5D Angled vs. Blueprint), camera follow alignment, and theme asset preload re-render. | **Completed** |
 | **BL-109** | **Level Victory Screen Streamlining & Collapsible More Drawer** | **P1** | `v1.19.1` | Streamline bloated victory modal layout into single-row primary action bar (`Next Level`, `More ▾`), 1-tap quick action icons (`🔄 Retry`, `🎬 Replay`, `🐞 Bug`), collapsible 6-utility secondary drawer, and compact metric typography (`Score`, `Time`, `Steps`, `Secrets`). | **Completed** |
 | **BL-110** | **Architect View Streamlining, Minimap De-cluttering & 2D/2.5D Perspective Switching** | **P1** | `v1.19.1` | Streamline Map Editor layout to eliminate HUD collisions between minimap and viewport controls; categorize asset sidebar with filter pills (`All`, `Tools`, `Tiles`, `Prefabs`, `Entities`) and live search; re-architect color palette subgrid to 3 columns; add 2D Blueprint vs. 2.5D Angled perspective switching in `EditorCanvas` with status bar and hotkey (`3`). | **Completed** |
+| **BL-111** | **Universal Menu Navigation, Player Profile & Settings Modal Interactivity with Comprehensive Test Suite** | **P0** | `v1.19.0` | Fix unclickable/hidden modal backdrops (ensure `.modal-backdrop.active` toggles `opacity: 1; pointer-events: auto;`), wire `#btn-hero-settings` on Home page, wire `#btn-pause-profile` and `#btn-pause-settings` in pause drawer, eliminate modal ID collision in Map Editor by renaming `#settings-modal` to `#properties-modal`, ensure higher z-index stacking (`z-index: 1100`) for global overlay dialogs, and establish a comprehensive automated test suite (`menus-and-buttons.test.mjs`) for all game menus, action buttons, and preference settings. | **Completed** |
 
 ---
 

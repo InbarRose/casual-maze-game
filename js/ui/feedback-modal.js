@@ -171,6 +171,7 @@ export class FeedbackModal {
     }
 
     this.modalEl.style.display = 'flex';
+    this.modalEl.classList.add('active');
     document.body.classList.add('modal-open');
 
     if (typeof window !== 'undefined') {
@@ -184,6 +185,7 @@ export class FeedbackModal {
     if (!this.modalEl) return;
     this.isOpen = false;
     this.modalEl.style.display = 'none';
+    this.modalEl.classList.remove('active');
     document.body.classList.remove('modal-open');
 
     if (typeof window !== 'undefined') {
