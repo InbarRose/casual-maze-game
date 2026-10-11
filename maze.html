@@ -2607,9 +2607,14 @@
         }
 
         targetContainer.appendChild(item);
-
-        while (targetContainer.children.length > 5) {
-          targetContainer.removeChild(targetContainer.firstChild);
+        while (targetContainer.children && targetContainer.children.length > 5) {
+          if (typeof targetContainer.removeChild === 'function' && targetContainer.firstChild) {
+            targetContainer.removeChild(targetContainer.firstChild);
+          } else if (targetContainer.firstChild && typeof targetContainer.firstChild.remove === 'function') {
+            targetContainer.firstChild.remove();
+          } else {
+            break;
+          }
         }
 
         setTimeout(() => {
