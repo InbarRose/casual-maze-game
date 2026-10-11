@@ -60,15 +60,17 @@
           <button id="btn-redo" class="btn btn-secondary btn-sm" title="Redo (Ctrl+Y)">↻</button>
         </div>
 
-        <button id="btn-validate" class="btn btn-secondary btn-sm validation-badge" title="Check Solvability & Integrity (V)">
-          <span id="val-badge-icon">✅</span> <span id="val-badge-text">Valid</span>
-        </button>
-        <button id="btn-auto-fix" class="btn btn-secondary btn-sm" title="One-Click Diagnostic Auto-Fixer: Resolve reachability, missing ramps, orphaned doors/keys, and bad coordinates">
-          🪄 Auto-Fix
-        </button>
-        <button id="btn-generate-maze" class="btn btn-secondary btn-sm" title="Procedural Maze Generator: 1-Click Solvable Labyrinth (BL-50)">
-          ⚡ Generate
-        </button>
+        <div class="toolbar-group">
+          <button id="btn-validate" class="btn btn-secondary btn-sm validation-badge" title="Check Solvability & Integrity (V)">
+            <span id="val-badge-icon">✅</span> <span id="val-badge-text">Valid</span>
+          </button>
+          <button id="btn-auto-fix" class="btn btn-secondary btn-sm" title="One-Click Diagnostic Auto-Fixer: Resolve reachability, missing ramps, orphaned doors/keys, and bad coordinates">
+            🪄 Auto-Fix
+          </button>
+          <button id="btn-generate-maze" class="btn btn-secondary btn-sm" title="Procedural Maze Generator: 1-Click Solvable Labyrinth (BL-50)">
+            ⚡ Generate
+          </button>
+        </div>
 
         <div class="toolbar-group">
           <button id="btn-settings" class="btn btn-secondary btn-sm" title="Configure Labyrinth Dimensions & Rules">⚙ Properties</button>
@@ -93,6 +95,22 @@
 
     <!-- Left Sidebar Palette -->
     <aside class="editor-sidebar">
+      <!-- Sidebar Asset Category Navigation (BL-110) -->
+      <nav class="sidebar-category-nav" id="sidebar-category-nav" aria-label="Asset Categories">
+        <button type="button" class="category-pill active" data-category="all" title="Show All Asset Palettes">All</button>
+        <button type="button" class="category-pill" data-category="tools" title="Show Draw Tools & Brush Size">🛠️ Tools</button>
+        <button type="button" class="category-pill" data-category="tiles" title="Show Tiles, Bridges & Elevation Ramps">🧱 Tiles</button>
+        <button type="button" class="category-pill" data-category="prefabs" title="Show Architectural & Custom Prefabs">🏛️ Prefabs</button>
+        <button type="button" class="category-pill" data-category="entities" title="Show Entities, Keys, Doors & Relics">📦 Entities</button>
+      </nav>
+
+      <!-- Live Search / Filter Input -->
+      <div class="sidebar-search-box">
+        <span class="sidebar-search-icon">🔍</span>
+        <input type="text" id="sidebar-asset-search" class="sidebar-search-input" placeholder="Filter assets (e.g. key, ramp)..." title="Filter tools, tiles, prefabs, or entities in real-time" />
+        <button type="button" id="btn-clear-asset-search" class="sidebar-search-clear" title="Clear search" style="display:none;">✕</button>
+      </div>
+
       <!-- Visual Tileset / Theme Selector -->
       <div>
         <div class="sidebar-section-title">Visual Tileset</div>
@@ -191,7 +209,7 @@
       </div>
 
       <!-- Elevation Ramps Accordion -->
-      <div class="sidebar-accordion active" data-accordion="ramps">
+      <div class="sidebar-accordion" data-accordion="ramps">
         <button type="button" class="sidebar-accordion-header" title="Toggle Elevation Ramps Palette">
           <div class="accordion-header-left">
             <span class="accordion-chevron">▼</span>
@@ -218,7 +236,7 @@
       </div>
 
       <!-- Architectural Prefab Palette Accordion (BL-20) -->
-      <div class="sidebar-accordion active" data-accordion="prefabs">
+      <div class="sidebar-accordion" data-accordion="prefabs">
         <button type="button" class="sidebar-accordion-header" title="Toggle Architectural Prefabs Palette">
           <div class="accordion-header-left">
             <span class="accordion-chevron">▼</span>
@@ -251,7 +269,7 @@
       </div>
 
       <!-- Custom Prefab Palette Accordion (BL-39) -->
-      <div class="sidebar-accordion active" data-accordion="custom-prefabs">
+      <div class="sidebar-accordion" data-accordion="custom-prefabs">
         <button type="button" class="sidebar-accordion-header" title="Toggle Custom Prefabs Palette">
           <div class="accordion-header-left">
             <span class="accordion-chevron">▼</span>
@@ -269,7 +287,7 @@
       </div>
 
       <!-- Entities & Markers Accordion -->
-      <div class="sidebar-accordion active" data-accordion="entities">
+      <div class="sidebar-accordion" data-accordion="entities">
         <button type="button" class="sidebar-accordion-header" title="Toggle Entities & Collectibles Palette">
           <div class="accordion-header-left">
             <span class="accordion-chevron">▼</span>
@@ -395,16 +413,18 @@
           <button type="button" class="layer-hud-btn active" id="btn-hud-view-focus" title="Focus Active Layer (Dim Inactive Layer)">Focus</button>
           <button type="button" class="layer-hud-btn" id="btn-hud-view-all" title="Show Both Layers Full Opacity">All</button>
           <button type="button" class="layer-hud-btn" id="btn-hud-view-solo" title="Solo Active Layer (Hide Inactive Layer)">Solo</button>
+          <div class="layer-hud-divider"></div>
+          <button type="button" class="layer-hud-btn" id="btn-hud-perspective" title="Toggle 2D / 2.5D Perspective [3]">📐 2D</button>
         </div>
       </div>
 
       <canvas id="editor-canvas"></canvas>
 
-      <!-- Interactive Mini-Map Overview HUD (BL-103) -->
+      <!-- Interactive Mini-Map Overview HUD (BL-103, BL-110) -->
       <div class="editor-minimap-hud" id="editor-minimap-hud">
         <div class="minimap-hud-header">
           <span class="minimap-hud-title">🗺️ RADAR OVERVIEW</span>
-          <button type="button" class="minimap-toggle-btn" id="btn-toggle-minimap" title="Toggle Mini-Map Overview [_]">_</button>
+          <button type="button" class="minimap-toggle-btn" id="btn-toggle-minimap" title="Toggle Mini-Map Overview [_]">−</button>
         </div>
         <div class="minimap-canvas-container" id="minimap-canvas-container">
           <canvas id="editor-minimap-canvas" width="160" height="160"></canvas>
@@ -412,7 +432,11 @@
         </div>
       </div>
 
-      <div class="viewport-overlay-controls">
+      <div class="viewport-overlay-controls" id="viewport-overlay-controls">
+        <button type="button" id="btn-perspective" class="btn btn-secondary btn-sm" title="Toggle 2D Blueprint / 2.5D Angled View [3]" style="font-size:0.75rem; padding:0.2rem 0.5rem;">
+          <span id="perspective-icon">📐</span> <span id="perspective-label">2D</span>
+        </button>
+        <div class="viewport-control-divider"></div>
         <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In (+)">+</button>
         <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out (-)">-</button>
         <span class="zoom-level-badge" id="zoom-badge">100%</span>
@@ -425,6 +449,7 @@
       <div class="status-bar-left">
         <span class="status-item status-chip" id="status-coord">📍 (X: --, Y: --, Z: 0)</span>
         <span class="status-item status-chip" id="status-layer"><span class="status-pip ground">●</span> Layer: GROUND</span>
+        <span class="status-item status-chip" id="status-perspective">📐 2D Blueprint</span>
         <span class="status-item status-chip" id="status-grid-size">📐 21×21</span>
         <span class="status-item status-chip" id="status-entity-count">📦 0 Entities</span>
       </div>
@@ -891,6 +916,7 @@
                 <tr><td><kbd>[</kbd> / <kbd>]</kbd></td><td>Decrease / Increase Brush Size (1x1 to 5x5)</td></tr>
                 <tr><td><kbd>1</kbd></td><td>Switch to Ground Layer (0)</td></tr>
                 <tr><td><kbd>2</kbd></td><td>Switch to Overhead Layer (1)</td></tr>
+                <tr><td><kbd>3</kbd></td><td>Toggle 2D Blueprint / 2.5D Angled View</td></tr>
                 <tr><td><kbd>V</kbd></td><td>Open Solvability Validation Report</td></tr>
                 <tr><td><kbd>T</kbd></td><td>Open Playtest Options Modal</td></tr>
                 <tr><td><kbd>H</kbd> / <kbd>?</kbd></td><td>Open Architect Handbook &amp; Guide</td></tr>
