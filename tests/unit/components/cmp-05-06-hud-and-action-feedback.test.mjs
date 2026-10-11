@@ -27,8 +27,9 @@ describe('Component Suite > CMP-05 & CMP-06: In-Game HUD, Minimap & Action Feedb
     const path = await import('path');
     const mazeHtml = fs.readFileSync(path.resolve(process.cwd(), 'maze.html'), 'utf-8');
 
-    // Floating HUD Top Islands
-    assert(mazeHtml.includes('class="game-hud-top"'), 'game-hud-top container exists');
+    // Floating HUD Top Islands & Firm Command Bar (BL-117)
+    assert(mazeHtml.includes('game-hud-top'), 'game-hud-top container exists');
+    assert(mazeHtml.includes('id="firm-top-bar"'), '#firm-top-bar exists');
     assert(mazeHtml.includes('id="hud-level-title"'), 'Level title HUD element exists');
     assert(mazeHtml.includes('id="hud-crumb-chapter"'), 'Chapter crumb link exists');
     assert(mazeHtml.includes('id="hud-elevation"'), 'Elevation badge exists');
@@ -49,6 +50,7 @@ describe('Component Suite > CMP-05 & CMP-06: In-Game HUD, Minimap & Action Feedb
     assert(mazeHtml.includes('id="minimap-container"'), '#minimap-container exists');
     assert(mazeHtml.includes('id="minimap-canvas"'), '#minimap-canvas exists');
     assert(mazeHtml.includes('id="btn-minimap-minimize"'), '#btn-minimap-minimize exists');
+    assert(mazeHtml.includes('id="btn-topbar-minimap"'), '#btn-topbar-minimap exists');
 
     // Activity Feed & Action Drawers
     assert(mazeHtml.includes('id="game-activity-feed"'), '#game-activity-feed exists');
