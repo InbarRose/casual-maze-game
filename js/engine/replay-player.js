@@ -30,9 +30,12 @@ export class ReplayPlayer {
   constructor(options = {}) {
     this.canvas = options.canvas || null;
     this.minimapCanvas = options.minimapCanvas || null;
+    this.uiCallbacks = options.uiCallbacks || {};
     this.onStep = options.onStep || (() => {});
     this.onStateChange = options.onStateChange || (() => {});
     this.baseStepDelay = options.baseStepDelay || 280;
+    this.isLooping = options.isLooping || false;
+    this.isSeeking = false;
 
     this.level = null;
     this.replay = null;
@@ -43,6 +46,7 @@ export class ReplayPlayer {
     this.state = REPLAY_STATES.IDLE;
     this.speed = 1.0;
     this._timer = null;
+    this._loopTimer = null;
 
     if (options.level && options.replay) {
       this.load(options.level, options.replay);
@@ -92,7 +96,7 @@ export class ReplayPlayer {
       mainCanvas: this.canvas,
       minimapCanvas: minimap,
       level: JSON.parse(JSON.stringify(this.level)),
-      uiCallbacks: {},
+      uiCallbacks: this.uiCallbacks || {},
     });
 
     // Calibrate camera viewport bounds to main canvas size
@@ -158,6 +162,10 @@ export class ReplayPlayer {
     if (this._timer) {
       clearTimeout(this._timer);
       this._timer = null;
+    }
+    if (this._loopTimer) {
+      clearTimeout(this._loopTimer);
+      this._loopTimer = null;
     }
     if (this.state === REPLAY_STATES.PLAYING) {
       this._setState(REPLAY_STATES.PAUSED);
@@ -325,8 +333,18 @@ export class ReplayPlayer {
     this._notifyStep();
 
     if (this.currentStep >= this.totalSteps) {
-      this.pause();
       this._setState(REPLAY_STATES.COMPLETED);
+      if (this.isLooping) {
+        if (this._loopTimer) clearTimeout(this._loopTimer);
+        this._loopTimer = setTimeout(() => {
+          if (this.isLooping && this.state === REPLAY_STATES.COMPLETED) {
+            this.restart();
+            this.play();
+          }
+        }, 900);
+      } else {
+        this.pause();
+      }
     }
 
     return true;
@@ -348,6 +366,7 @@ export class ReplayPlayer {
     if (!this.replay) return;
 
     this.pause();
+    this.isSeeking = true;
     const clamped = Math.max(0, Math.min(this.totalSteps, Math.round(targetIndex)));
 
     // Re-initialize clean loop and fast-forward actions
@@ -357,8 +376,97 @@ export class ReplayPlayer {
     }
 
     this.currentStep = clamped;
+    this.isSeeking = false;
     this._setState(clamped >= this.totalSteps ? REPLAY_STATES.COMPLETED : REPLAY_STATES.PAUSED);
     this._notifyStep();
+  }
+
+  /**
+   * Jump directly to final step
+   */
+  jumpToEnd() {
+    this.seekTo(this.totalSteps);
+  }
+
+  /**
+   * Set continuous looping
+   * @param {boolean} val
+   */
+  setLooping(val) {
+    this.isLooping = Boolean(val);
+  }
+
+  /**
+   * Toggle continuous looping
+   * @returns {boolean}
+   */
+  toggleLoop() {
+    this.isLooping = !this.isLooping;
+    return this.isLooping;
+  }
+
+  /**
+   * Toggle camera perspective between 2.5D and top-down
+   * @returns {'angled'|'topdown'}
+   */
+  togglePerspective() {
+    if (this.gameLoop) {
+      this.gameLoop.togglePerspective();
+      return this.gameLoop.renderer?.perspective || 'angled';
+    }
+    return 'angled';
+  }
+
+  /**
+   * Rotate camera 90° CCW
+   */
+  rotateLeft() {
+    if (this.gameLoop) {
+      this.gameLoop.rotateLeft();
+    }
+  }
+
+  /**
+   * Rotate camera 90° CW
+   */
+  rotateRight() {
+    if (this.gameLoop) {
+      this.gameLoop.rotateRight();
+    }
+  }
+
+  /**
+   * Resize viewport canvas and camera
+   * @param {number} width
+   * @param {number} height
+   */
+  resize(width, height) {
+    if (this.canvas) {
+      this.canvas.width = width;
+      this.canvas.height = height;
+    }
+    if (this.gameLoop?.camera) {
+      this.gameLoop.camera.resize(width, height);
+    }
+    if (this.gameLoop?.render) {
+      this.gameLoop.render();
+    }
+  }
+
+  /**
+   * Return metadata for current loaded level
+   * @returns {object|null}
+   */
+  getLevelInfo() {
+    if (!this.level) return null;
+    return {
+      id: this.level.id,
+      title: this.level.title || `Level ${this.level.id}`,
+      theme: this.level.config?.theme || 'dungeon',
+      dimensions: this.level.dimensions || { width: 0, height: 0 },
+      parSteps: this.level.parSteps || 0,
+      parTime: this.level.parTime || 0,
+    };
   }
 
   /**
