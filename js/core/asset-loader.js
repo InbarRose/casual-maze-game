@@ -4,6 +4,8 @@
  * Supports zero-dependency pure static execution on GitHub Pages.
  */
 
+import { BIOME_FAMILIES, getBiomeFamily } from './constants.js';
+
 export const CANONICAL_ASSET_PATHS = {
   // Generic Tiles
   'tile_floor_generic': 'assets/tiles/ground/floor.svg',
@@ -181,7 +183,19 @@ export class AssetLoader {
     if (idOrPath.startsWith('assets/') || idOrPath.endsWith('.svg')) {
       return idOrPath;
     }
-    return this.idToPath.get(idOrPath) || null;
+    const direct = this.idToPath.get(idOrPath);
+    if (direct) return direct;
+
+    // Check canonical biome family aliasing so similar areas share assets (BL-113, ADR-0022)
+    for (const [subTheme, family] of Object.entries(BIOME_FAMILIES)) {
+      if (idOrPath.includes(`_${subTheme}`) && subTheme !== family) {
+        const aliasedId = idOrPath.replace(`_${subTheme}`, `_${family}`);
+        const aliasedPath = this.idToPath.get(aliasedId);
+        if (aliasedPath) return aliasedPath;
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -290,21 +304,24 @@ export class AssetLoader {
 
   /**
    * Preload core assets for a given biome theme
+   * Automatically resolves sub-themes to their canonical asset family so similar
+   * areas share assets for a unified, coherent experience. (BL-113, ADR-0022)
    * @param {string} [theme='dungeon']
    * @returns {Promise<void>}
    */
   async preloadTheme(theme = 'dungeon') {
+    const family = getBiomeFamily(theme);
     const keys = [
-      `tile_floor_${theme}`,
-      `tile_floor_${theme}_cracked`,
-      `tile_floor_${theme}_runic`,
-      `tile_wall_${theme}`,
-      `tile_wall_${theme}_torch`,
-      `tile_wall_${theme}_grate`,
-      `tile_bridge_${theme}_ew`,
-      `tile_bridge_${theme}_ns`,
-      `door_${theme}_horizontal`,
-      `door_${theme}_vertical`,
+      `tile_floor_${family}`,
+      `tile_floor_${family}_cracked`,
+      `tile_floor_${family}_runic`,
+      `tile_wall_${family}`,
+      `tile_wall_${family}_torch`,
+      `tile_wall_${family}_grate`,
+      `tile_bridge_${family}_ew`,
+      `tile_bridge_${family}_ns`,
+      `door_${family}_horizontal`,
+      `door_${family}_vertical`,
       'tile_floor_generic',
       'door_classic',
       'key_classic',
@@ -318,6 +335,15 @@ export class AssetLoader {
       return p ? this.loadImage(p).catch(() => null) : Promise.resolve(null);
     });
     await Promise.all(promises);
+  }
+
+  /**
+   * Get canonical biome family for a theme
+   * @param {string} theme
+   * @returns {string}
+   */
+  getBiomeFamily(theme) {
+    return getBiomeFamily(theme);
   }
 
   /**
