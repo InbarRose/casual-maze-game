@@ -158,6 +158,9 @@ import './unit/components/cmp-15-settings-system.test.mjs';
 import './unit/components/cmp-16-18-guide-and-feedback.test.mjs';
 import './unit/components/cmp-17-diagnostic-lab-theater.test.mjs';
 
+// 11. Headless Browser End-to-End User Journey (BL-114, ADR-0026)
+import './e2e/headless-hub-and-gameplay.test.mjs';
+
 // Run registered suites
 
 await run();

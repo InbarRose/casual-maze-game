@@ -15,6 +15,7 @@
     "test:entities": "node tests/suites/entities.mjs",
     "test:journeys": "node tests/suites/journeys.mjs",
     "test:campaign": "node tests/suites/campaign.mjs",
+    "test:e2e": "node tests/suites/e2e.mjs",
     "validate:syntax": "node tests/validate-syntax.mjs",
     "validate:static": "node tests/validate-static.mjs",
     "validate:drift": "node tests/validate-drift.mjs",

@@ -563,6 +563,13 @@ This document tracks project milestones, current release status, active developm
   - Strictly clamp viewport zoom levels between $0.5\times$ and $2.0\times$ across all input modalities (mouse wheel, touch pinch, buttons, hotkeys); decouple HTML menus, sidebars, and modals from canvas zoom; inject `--camera-zoom` CSS variable and dynamically scale in-world overlay indicators (`.hud-tile-indicator`, `.hud-disambig-pill`) with `clamp(0.75, var(--camera-zoom, 1), 1.35)` to prevent visual rate mismatch and distortion (ADR-0013).
 - [x] **Interactive Action Feed History & Companion Drawer (`BL-94`)**:
   - Eradicate activity feed ephemerality by adding an interactive history trigger (📜 / `#btn-feed-history`) and click handler on the feed header/items; open comprehensive Activity History companion modal with categorized chronological events and filter pills (`All`, `Lore`, `Mech`, `Items`, `Warnings`) (ADR-0013).
+- [x] **Resilient Level Loading Watchdog, Hub Navigation & Headless Browser CI Gate (`BL-114`)**:
+  - Refactored `LevelLoader.loadFromParams()` with deterministic chapter routing (`expectedChapter = Math.ceil(levelId / 4)`), eliminating up to 17 sequential remote trial fetches.
+  - Added 1500ms abort signal timeouts on network fetches with immediate in-memory fallback to embedded campaign/tutorial/story levels.
+  - Added fast pre-flight `file://` protocol detection with glassmorphic modal explaining modern browser CORS restrictions and local running commands (`npm start` or `python -m http.server 8000`).
+  - Implemented 4-second initialization watchdog in `maze.html` providing a floating recovery dock with Retry and Return to Hub actions.
+  - Built zero-dependency headless browser E2E test suite (`tests/e2e/headless-hub-and-gameplay.test.mjs` and runner `tests/suites/e2e.mjs`) validating Hub navigation, mode switcher tabs, level selection, and live player movement with zero console errors.
+  - Configured `npm run test:e2e` in GitHub Actions CI workflow (`.github/workflows/ci.yml`) as a mandatory quality gate on all PRs to `main` (ADR-0026).
 
 ### Strategic Architecture Initiative: Modernization & SOLID Refactoring (`v2.0.0` Roadmap)
 *Objective: Transform monolithic "god-classes" and procedural switch blocks into simple, elegant, explainable, highly testable, readable, and robust Object-Oriented modules adhering strictly to SOLID principles and clean architectural separation.*
@@ -585,7 +592,6 @@ This document tracks project milestones, current release status, active developm
 - [ ] **Defensive Guard Clauses & Code Elegance Standards (`BL-62`)**:
   - Publish ADR-007 establishing standards for early return guard clauses, eradication of magical sentinel numbers, maximum file length guidelines ($\le 300$ lines), and consistent error handling paradigms.
 
-
 ---
 
 ## 3. Architecture Decision Records (ADRs)
@@ -604,6 +610,22 @@ All architectural decisions are documented in `docs/adr/`:
 | [0008](adr/0008-lever-interaction-separation-and-floor-plate-traps.md) | Lever Manual Interaction Separation and Floor-Plate Trap Mechanics | Accepted | 2026-10-09 |
 | [0009](adr/0009-translucent-disambiguation-and-two-stage-reveal.md) | Translucent Disambiguation and Two-Stage Interaction Reveal | Accepted | 2026-10-09 |
 | [0010](adr/0010-responsive-hud-collapse-and-menu-auto-pause.md) | Responsive HUD Collapse, Mobile Clutter Elimination, and Obscured Menu Auto-Pause | Accepted | 2026-10-09 |
+| [0011](adr/0011-strategic-fog-of-war-expansion.md) | Strategic Fog of War Expansion and Exploratory Vision Dynamics | Accepted | 2026-10-09 |
+| [0012](adr/0012-macro-labyrinth-and-classical-maze-topologies.md) | Macro-Labyrinth Expansion and Classical Maze Topologies | Accepted | 2026-10-09 |
+| [0013](adr/0013-viewport-zoom-isolation-and-feed-history.md) | Viewport Zoom Isolation and Interactive Action Feed History | Accepted | 2026-10-09 |
+| [0014](adr/0014-character-customization-and-mobile-ux.md) | Character Visual Customization, Replay Theater Graphics, and Mobile UX Polish | Accepted | 2026-10-09 |
+| [0015](adr/0015-mobile-shortcuts-drawer-and-colorblind-inventory-glyphs.md) | Mobile Footer Shortcuts Drawer and Colorblind Inventory Glyphs | Accepted | 2026-10-10 |
+| [0016](adr/0016-keybinding-options-and-mouse-movement-toggle.md) | Keybinding Schemes and Pointer Click-to-Move vs Drag Navigation Toggle | Accepted | 2026-10-10 |
+| [0017](adr/0017-visual-fidelity-and-aaa-editor-studio-overhaul.md) | Environmental Visual Fidelity Engine and AAA Map Editor Studio Overhaul | Accepted | 2026-10-10 |
+| [0018](adr/0018-editor-minimap-hud-and-environmental-surface-shaders.md) | Interactive Map Editor Mini-Map Overview HUD and Environmental Surface Shaders | Accepted | 2026-10-10 |
+| [0019](adr/0019-settings-and-overlay-consolidation.md) | In-Game Pause Menu Drawer Categorization and Segmented Settings Navigation | Accepted | 2026-10-10 |
+| [0020](adr/0020-replay-graphics-parity-and-minimap-isolation.md) | Replay Theater In-Game Graphics Parity and Minimap Isolation | Accepted | 2026-10-10 |
+| [0021](adr/0021-victory-screen-streamlining-and-collapsible-drawer.md) | Level Victory Screen Streamlining and Collapsible More Drawer | Accepted | 2026-10-10 |
+| [0022](adr/0022-architect-view-streamlining-and-perspective-switching.md) | Architect View Menu Streamlining, Minimap De-cluttering & 2D/2.5D Perspective Switching | Accepted | 2026-10-10 |
+| [0023](adr/0023-universal-menu-navigation-modal-stacking-and-test-suite.md) | Universal Menu Navigation, Modal Stacking Isolation, and Comprehensive Menu Test Suite | Accepted | 2026-10-10 |
+| [0024](adr/0024-walkthrough-replay-fullscreen-theater-and-activity-feed.md) | Walkthrough Replay Fullscreen Grand Theater & Synchronized Action Activity Feed | Accepted | 2026-10-11 |
+| [0025](adr/0025-component-coverage-scoring-and-thematic-asset-unification.md) | Platform Component Audit Test Coverage, Subsystem Quality Scoring & Thematic Asset Unification | Accepted | 2026-10-11 |
+| [0026](adr/0026-resilient-level-loader-and-headless-browser-ci.md) | Resilient Level Loader Strategy, Fallback Watchdog, and Headless Browser CI Gating | Accepted | 2026-10-11 |
 
 ---
 

@@ -101,45 +101,34 @@ export class LevelLoader {
     }
 
 
-    // 1. Try fetching JSON file from /levels subdirectories
+    // 1. Try fetching JSON file from /levels subdirectories with deterministic prioritization
     if (typeof fetch === 'function') {
       const chapterParam = params.get('chapter') ?? params.get('ch');
       const fileParam = params.get('file');
+      const numId = parseInt(cleanId, 10);
+      const expectedChapter = !isNaN(numId) && numId >= 1 && numId <= 32 ? Math.ceil(numId / 4) : null;
 
       const fileNames = isTutorialMode
         ? [
             `levels/tutorial/tutorial_${cleanId}.json`,
-            `./levels/tutorial/tutorial_${cleanId}.json`,
             `levels/tutorial_${cleanId}.json`
           ]
         : [
-            ...(fileParam ? [fileParam, `./${fileParam}`] : []),
+            ...(fileParam ? [fileParam] : []),
             ...(chapterParam ? [
               `levels/${chapterParam}/level_${cleanId}.json`,
-              `./levels/${chapterParam}/level_${cleanId}.json`,
               `levels/chapter_${chapterParam.replace(/\D/g, '')}/level_${cleanId}.json`,
-              `./levels/chapter_${chapterParam.replace(/\D/g, '')}/level_${cleanId}.json`,
             ] : []),
-            `levels/chapter_1/level_${cleanId}.json`,
-            `levels/chapter_2/level_${cleanId}.json`,
-            `levels/chapter_3/level_${cleanId}.json`,
-            `levels/chapter_4/level_${cleanId}.json`,
-            `levels/chapter_5/level_${cleanId}.json`,
-            `levels/chapter_6/level_${cleanId}.json`,
-            `levels/chapter_7/level_${cleanId}.json`,
-            `levels/chapter_8/level_${cleanId}.json`,
-            `levels/zone_1/level_${cleanId}.json`,
-            `levels/zone_2/level_${cleanId}.json`,
-            `levels/zone_3/level_${cleanId}.json`,
-            `./levels/zone_1/level_${cleanId}.json`,
-            `./levels/zone_2/level_${cleanId}.json`,
-            `./levels/zone_3/level_${cleanId}.json`,
+            ...(expectedChapter ? [`levels/chapter_${expectedChapter}/level_${cleanId}.json`] : []),
             `levels/level_${cleanId}.json`
           ];
 
       for (const fileName of fileNames) {
         try {
-          const res = await fetch(fileName);
+          const controller = typeof AbortController !== 'undefined' ? new AbortController() : null;
+          const timeoutId = controller ? setTimeout(() => controller.abort(), 1500) : null;
+          const res = await fetch(fileName, controller ? { signal: controller.signal } : undefined);
+          if (timeoutId) clearTimeout(timeoutId);
           if (res.ok) {
             const json = await res.json();
             console.info(`[MazeGame:LevelLoader] Loaded level from remote/disk JSON: "${fileName}"`);

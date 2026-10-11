@@ -620,6 +620,61 @@
     <div class="toast-container" id="toast-container"></div>
   </div>
 
+  <script>
+    // Fast diagnostic check for file:// protocol or unhandled module load failures (BL-114, ADR-0026)
+    if (window.location.protocol === 'file:') {
+      window.addEventListener('DOMContentLoaded', () => {
+        const titleEl = document.getElementById('hud-level-title');
+        if (titleEl) {
+          titleEl.textContent = 'Local Server Required (file://)';
+          titleEl.style.color = 'var(--rose, #f43f5e)';
+        }
+        const warning = document.createElement('div');
+        warning.id = 'file-protocol-dialog';
+        warning.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(15,23,42,0.92);backdrop-filter:blur(8px);z-index:999999;display:flex;align-items:center;justify-content:center;padding:1.5rem;color:#f8fafc;font-family:system-ui,-apple-system,sans-serif;';
+        warning.innerHTML = `
+          <div style="max-width:520px;background:#1e293b;border:1px solid rgba(244,63,94,0.4);border-radius:1rem;padding:2rem;box-shadow:0 25px 50px -12px rgba(0,0,0,0.6);text-align:center;">
+            <div style="font-size:2.8rem;margin-bottom:0.75rem;">🧭</div>
+            <h2 style="font-size:1.35rem;font-weight:700;color:#f87171;margin-bottom:0.5rem;">Local Web Server Required</h2>
+            <p style="font-size:0.92rem;color:#cbd5e1;line-height:1.5;margin-bottom:1.25rem;">
+              Modern browsers block JavaScript ES6 module imports on the <code>file://</code> protocol due to security (CORS) rules.
+            </p>
+            <div style="background:#0f172a;border:1px solid rgba(255,255,255,0.08);border-radius:0.5rem;padding:1rem;font-family:monospace;font-size:0.85rem;color:#38bdf8;margin-bottom:1.25rem;text-align:left;line-height:1.6;">
+              <span style="color:#64748b;"># Run via Node (recommended):</span><br/>
+              <strong style="color:#facc15;">npm start</strong><br/>
+              <span style="color:#64748b;"># Or via Python 3:</span><br/>
+              <strong style="color:#facc15;">python -m http.server 8000</strong>
+            </div>
+            <div style="display:flex;gap:0.75rem;justify-content:center;flex-wrap:wrap;">
+              <a href="https://casual-maze-game.inbarrose.com" style="display:inline-block;background:linear-gradient(135deg,#38bdf8,#0284c7);color:#ffffff;padding:0.6rem 1.25rem;border-radius:0.5rem;font-weight:600;text-decoration:none;font-size:0.9rem;">Play Online on GitHub Pages →</a>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(warning);
+      });
+    } else {
+      // Watchdog: If level hasn't loaded after 4 seconds, offer recovery options
+      setTimeout(() => {
+        const titleEl = document.getElementById('hud-level-title');
+        if (titleEl && (titleEl.textContent === 'Loading...' || !window.gameLoop)) {
+          titleEl.textContent = 'Loading Stalled';
+          titleEl.style.color = 'var(--rose, #f43f5e)';
+          if (!document.getElementById('hud-loading-watchdog')) {
+            const recoveryEl = document.createElement('div');
+            recoveryEl.id = 'hud-loading-watchdog';
+            recoveryEl.style.cssText = 'position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);background:#1e293b;border:1px solid #f43f5e;border-radius:0.75rem;padding:1rem 1.5rem;color:#f8fafc;box-shadow:0 10px 25px rgba(0,0,0,0.5);display:flex;align-items:center;gap:1rem;z-index:99999;font-size:0.9rem;';
+            recoveryEl.innerHTML = `
+              <span>⚠️ Level took longer than expected to start.</span>
+              <button onclick="location.reload()" style="background:#38bdf8;color:#0f172a;border:none;padding:0.4rem 0.8rem;border-radius:0.35rem;font-weight:600;cursor:pointer;">Retry</button>
+              <a href="index.html" style="background:#475569;color:#fff;padding:0.4rem 0.8rem;border-radius:0.35rem;text-decoration:none;font-size:0.85rem;">Return to Hub</a>
+            `;
+            document.body.appendChild(recoveryEl);
+          }
+        }
+      }, 4000);
+    }
+  </script>
+
   <script type="module">
     import { LevelLoader } from './js/levels/level-loader.js';
     import { GameLoop } from './js/engine/game-loop.js';
@@ -707,6 +762,9 @@
     let currentLevel;
     try {
       currentLevel = await LevelLoader.loadFromParams();
+      if (levelTitleEl && currentLevel.title) {
+        levelTitleEl.textContent = currentLevel.title;
+      }
     } catch (err) {
       console.error('[Maze] Failed to load level:', err);
       alert('Failed to load level data: ' + err.message);
