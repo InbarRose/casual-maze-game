@@ -52,6 +52,7 @@ This document records the official baseline quality evaluations, granular expert
 * **Strengths**:
   * Unified glassmorphic header (`.app-nav-header`) and footer (`.app-nav-footer`) mounted consistently across all HTML pages.
   * Live star counter synchronization and modal trigger integration.
+  * **Universal Click-and-Drag Menu Scrolling & Dynamic Paging (`BL-123`, ADR-0033)**: Global navigation links and inner header container equipped with `DragScroller` and `DynamicMenuController`, providing smooth mouse and touch horizontal drag-to-scroll, grab cursors, and responsive pagination on compact viewports.
   * **Campaign-First Onboarding & Resume Routing (`BL-48`)**: Directs new players straight to Chapter 1, while returning explorers get an instant 1-click `Resume Campaign (Level X)` action from the hero banner alongside live conquest counters (`X / 32 Levels Conquered`).
   * **High-Polish Game Aesthetic, Dynamic Hero Canvas Backdrop & Visual Branding (`BL-80`)**: Zero-dependency procedural `HeroAmbientCanvas` featuring wandering explorer, warm torch attenuation, floating particle motes, parallax spring, and auto-pause lifecycle; stylized Guild of Cartographers crest; metallic bevel brand title; feature spotlight cards; biome-themed campaign cards with embedded vector asset badges.
   * **Mobile Shortcuts & Controls Cheatsheet Drawer (`BL-98`)**: Seamless expandable cheatsheet drawer (`#footer-shortcuts-drawer`) toggleable on mobile/tablet viewports displaying touch drag gestures, BFS pathfinding, camera rotation, 2.5D toggle, zoom controls, and system hotkeys with touch-friendly layout.
@@ -125,6 +126,7 @@ This document records the official baseline quality evaluations, granular expert
   * **Master Score**: **48.65 / 60.00 (81.1% — A- Tier)**
 * **Strengths**:
   * Multi-input support for keyboard (`WASD`, arrows, `ESDF`, `AZERTY`, `Numpad`), mouse click-to-move BFS, mobile touch gestures, and virtual D-pad.
+  * **Fluid Mouse & Touch Drag-to-Scroll on Game Command Bars (`BL-123`, ADR-0033)**: `#firm-top-bar` integrates `DynamicMenuController` and `DragScroller`, enabling players on mobile and narrow browser viewports to click and drag horizontally across islands, inventory, and tool clusters with grab cursors and visual edge indicators.
   * **Mobile Virtual Controls 4-Direction + USE + More Drawer (`BL-122`, ADR-0032)**: Redesigned the primary visible virtual pad to display solely 4 cardinal directions and center USE, plus a dedicated `⋮ More` button opening a clean mobile action sheet with camera rotation, zoom, minimap, feed, touch mode, minimal view, lore journal, and pause, giving mobile touch players complete feature parity without keyboard requirements.
   * **Browser-Safe Hotkey Pruning & Universal Button Assurance (`BL-122`, ADR-0032)**: Removed browser-conflicting keys (`KeyR`, `r`, `R`, `BracketLeft`, `[`, `BracketRight`, `]`), protecting native browser reload and ensuring 100% of game actions have visible, accessible on-screen buttons.
   * **Configurable Movement Key Schemes & Mouse Navigation Mode (`BL-100`, Issue #63, ADR-0016)**: Full player freedom with preset key schemes (WASD + Arrows, Arrows Only, ESDF, AZERTY ZQSD, Numpad 8/4/6/2) and configurable pointer movement mode (Click-to-Move Pathfinding, Drag Steering Only, or Pointer Movement Disabled) persisting across sessions with live switching.
@@ -212,6 +214,7 @@ This document records the official baseline quality evaluations, granular expert
   * $C_6$ Accessibility & DX: **9.00/10** (6.1: 9, 6.2: 9, 6.3: 9)
   * **Master Score**: **52.00 / 60.00 (86.7% — A Tier)**
 * **Strengths**:
+  * **Vertical Drag-to-Scroll & Dynamic Overflow Cues in Pause Menus (`BL-123`, ADR-0033)**: `#game-pause-modal .modal-body` and `.mobile-more-actions` feature vertical drag-to-scroll with kinetic glide and subtle top/bottom scroll glow cues, guaranteeing all 4 pause sections and options remain accessible on landscape phones and short viewports.
   * **In-Menu Viewport Zoom Controls (`BL-122`, ADR-0032)**: Dedicated Viewport Zoom row directly within the pause dialog (`#btn-pause-zoom-out`, `#btn-pause-zoom-reset`, `#btn-pause-zoom-in`) reflecting live zoom scale and allowing zoom adjustment or reset without leaving the menu.
   * **Controls Hint Bar Toggle & Compact Dialogs (`BL-121`, ADR-0031)**: Pause menu includes dedicated `#btn-pause-toggle-hints` controlling persistent hints visibility, and pause dialog width was clamped to 480px max-width, preserving clean ergonomic margins.
   * **Overlays & HUD Visibility Command Group (`BL-119`)**: Pause menu includes direct toggle buttons for Radar/Minimap, Action Activity Feed, Virtual Touch Controls, and HUD Bar collapse, updating live status labels upon pause.

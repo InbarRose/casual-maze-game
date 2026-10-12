@@ -4,7 +4,18 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Current Milestone: `v1.25.0` (Completed & Verified)
+### Current Milestone: `v1.26.0` (Completed & Verified)
+
+- [x] **Universal Click-and-Drag Menu Scrolling, Vertical Main Menu Scroll & Dynamic Size Detection (BL-123, ADR-0033)**:
+  - **Universal Mouse & Touch Drag-to-Scroll (`DragScroller`)**: Built `DragScroller` (`js/ui/drag-scroll.js`) enabling fluid mouse and touch click-and-drag scrolling along horizontal (`x`), vertical (`y`), or bidirectional (`both`) axes with grab/grabbing cursor cues and inertial deceleration glide.
+  - **Click vs Drag Discrimination**: Employs a 5px movement threshold (`dragThreshold`) so that stationary button taps and clicks work seamlessly without delay, while pan gestures smoothly scroll containers without accidentally triggering buttons or navigation links.
+  - **Dynamic Size Detection (`DynamicMenuController`)**: Implemented `DynamicMenuController` (`js/ui/dynamic-menu-controller.js`) utilizing `ResizeObserver` (with fallback to window resize) to continuously detect container geometry vs scroll bounds.
+  - **Dynamic Overflow Cues & Paging**: Injects visual edge indicators (`.can-scroll-left`, `.can-scroll-right`, `.can-scroll-up`, `.can-scroll-down`) and optional auto-generated pagination controls (`‹ Page 1/X ›`) for 1-tap menu navigation across compact screens.
+  - **Game HUD Top Bar & In-Game Pause Menu Integration**: Enabled horizontal drag-to-scroll on `#firm-top-bar` and vertical drag-to-scroll on `#game-pause-modal .modal-body`, ensuring all commands and sections remain accessible on narrow and short/landscape viewports.
+  - **Hub, Editor, and Universal App Header Integration**: Enabled drag-scrolling on `#mode-tabs` (`index.html`), `.sidebar-category-nav` (`editor.html`), `.lab-tabs` (`test.html`), and `.app-nav-links` / `.app-nav-inner` (`app-header.js`).
+  - **Automated Test Coverage**: Added `tests/unit/ui/drag-scroll-and-dynamic-menu.test.mjs` verifying drag threshold detection, axis constraints, dynamic overflow detection, pagination, CSS definitions, and platform integration across 145 suites and 698 tests (0 failed).
+
+### Previous Milestone: `v1.25.0` (Completed & Verified)
 
 - [x] **Non-Persistent Default Zoom, In-Menu Zoom, Mobile Virtual Controls More Drawer & Browser-Safe Hotkeys (BL-122, ADR-0032)**:
   - **Non-Persistent Default Zoom Lifecycle**: Viewport zoom resets to default 1.0x (100%) on every page load (`maze.html`, `editor.html`, `test.html`, `index.html`) and upon restarting levels; completely eradicated `localStorage` zoom persistence and pruned legacy stored values.
