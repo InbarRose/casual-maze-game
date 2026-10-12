@@ -4,7 +4,18 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Current Milestone: `v1.24.0` (Completed & Verified)
+### Current Milestone: `v1.25.0` (Completed & Verified)
+
+- [x] **Non-Persistent Default Zoom, In-Menu Zoom, Mobile Virtual Controls More Drawer & Browser-Safe Hotkeys (BL-122, ADR-0032)**:
+  - **Non-Persistent Default Zoom Lifecycle**: Viewport zoom resets to default 1.0x (100%) on every page load (`maze.html`, `editor.html`, `test.html`, `index.html`) and upon restarting levels; completely eradicated `localStorage` zoom persistence and pruned legacy stored values.
+  - **In-Menu Viewport Zoom Controls**: Embedded dedicated Viewport Zoom controls directly in the Pause Menu (`#btn-pause-zoom-out`, `#btn-pause-zoom-reset`, `#btn-pause-zoom-in`) with real-time percentage badge synchronization.
+  - **Mobile Virtual Controls Redesign**: Streamlined primary visible mobile D-pad to display exclusively the 4 cardinal directions (▲, ▼, ◀, ▶) and center USE button (`#vbtn-act`); added `#vbtn-more` (`⋮ More`) trigger opening `#mobile-more-drawer` action sheet.
+  - **Full Mobile Feature Parity**: Mobile action drawer houses camera rotation (`↺ 90°`, `↻ 90°`), zoom controls, minimap toggle, activity feed toggle, touch navigation mode toggle, minimal view toggle, lore journal, and pause menu, providing 1-tap touch access to all actions without a keyboard.
+  - **Browser-Safe Hotkey Pruning**: Removed browser-intercepting keys (`KeyR`, `r`, `R`, `BracketLeft`, `[`, `BracketRight`, `]`), preventing browser reload hijacking.
+  - **100% On-Screen Button Coverage**: Ensured every game mechanic and view toggle has an explicit, visible game button across top bar, pause menu, and mobile controls.
+  - **Automated Test Coverage**: Added `tests/unit/ui/zoom-reset-and-mobile-controls.test.mjs` verifying zoom reset, non-persistence, pause menu zoom, mobile D-pad + drawer, and safe keycodes.
+
+### Previous Milestone: `v1.24.0` (Completed & Verified)
 
 - [x] **Menu Bloat Elimination, 42px Consistent Top Bar & Single-Button Dropdown Menus (BL-121, ADR-0031)**:
   - **Single-Button Dropdown Menus**: Collapsed sprawling multi-button HUD arrays into clean single-button dropdown triggers (`[ 🛠️ Tools ▾ ]` and `[ 🎥 View ▾ ]`) with keyboard accessible escape/outside click dismiss.

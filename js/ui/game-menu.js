@@ -41,10 +41,19 @@ export class GameMenu {
       if (typeof window !== 'undefined') window.location.href = 'index.html';
     });
     this.isOtherModalOpen = options.isOtherModalOpen || (() => false);
+    this.gameLoop = options.gameLoop || (typeof window !== 'undefined' && window.gameLoop ? window.gameLoop : null);
 
     this._isPaused = false;
     this._boundKeyHandler = this._handleKeyDown.bind(this);
     this._attachEventListeners();
+  }
+
+  /**
+   * Set the active GameLoop reference
+   * @param {Object} loop
+   */
+  setGameLoop(loop) {
+    this.gameLoop = loop || null;
   }
 
   /**
@@ -288,6 +297,27 @@ export class GameMenu {
       this.updateOverlayButtons();
     });
 
+    bindClick('#btn-pause-zoom-out', () => {
+      if (this.gameLoop && typeof this.gameLoop.zoomOut === 'function') {
+        this.gameLoop.zoomOut();
+      }
+      this.updateZoomButtonLabel();
+    });
+
+    bindClick('#btn-pause-zoom-reset', () => {
+      if (this.gameLoop && typeof this.gameLoop.resetZoom === 'function') {
+        this.gameLoop.resetZoom();
+      }
+      this.updateZoomButtonLabel();
+    });
+
+    bindClick('#btn-pause-zoom-in', () => {
+      if (this.gameLoop && typeof this.gameLoop.zoomIn === 'function') {
+        this.gameLoop.zoomIn();
+      }
+      this.updateZoomButtonLabel();
+    });
+
     if (typeof document !== 'undefined') {
       const dismissBtn = document.getElementById('btn-dismiss-hints');
       if (dismissBtn) {
@@ -309,10 +339,23 @@ export class GameMenu {
   }
 
   /**
+   * Update viewport zoom button label in pause menu
+   */
+  updateZoomButtonLabel() {
+    if (!this.modalEl) return;
+    const zoomResetBtn = this.modalEl.querySelector('#btn-pause-zoom-reset');
+    if (zoomResetBtn) {
+      const currentZoom = this.gameLoop?.camera?.zoom ?? 1.0;
+      zoomResetBtn.textContent = `${Math.round(currentZoom * 100)}%`;
+    }
+  }
+
+  /**
    * Update visibility labels for overlay toggle buttons in pause menu
    */
   updateOverlayButtons() {
     if (!this.modalEl) return;
+    this.updateZoomButtonLabel();
     const radarLbl = this.modalEl.querySelector('#lbl-pause-radar');
     const feedLbl = this.modalEl.querySelector('#lbl-pause-feed');
     const controlsLbl = this.modalEl.querySelector('#lbl-pause-controls');

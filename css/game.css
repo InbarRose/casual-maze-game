@@ -923,8 +923,141 @@ body.high-contrast-mode .key-shape-badge {
   border-color: rgba(56, 189, 248, 0.35);
   color: var(--accent);
 }
+.dpad-more {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  background: rgba(30, 41, 59, 0.7);
+  border-color: rgba(255, 255, 255, 0.2);
+  color: #cbd5e1;
+}
 .dpad-empty {
   pointer-events: none;
+}
+
+/* Mobile More Actions Drawer (BL-122) */
+.mobile-more-drawer {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  margin-top: 6px;
+  width: 250px;
+  background: rgba(15, 23, 42, 0.95);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.6);
+  padding: 0.75rem;
+  z-index: 120;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  animation: mobileDrawerFadeIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.virtual-controls[data-dock="bottom-left"] .mobile-more-drawer,
+.virtual-controls[data-dock="bottom-right"] .mobile-more-drawer {
+  top: auto;
+  bottom: 100%;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+.virtual-controls[data-dock="top-right"] .mobile-more-drawer,
+.virtual-controls[data-dock="bottom-right"] .mobile-more-drawer {
+  left: auto;
+  right: 0;
+}
+
+.mobile-more-drawer.hidden {
+  display: none !important;
+}
+
+@keyframes mobileDrawerFadeIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.mobile-more-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 0.35rem;
+}
+
+.mobile-more-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #f8fafc;
+  letter-spacing: 0.02em;
+}
+
+.btn-more-close {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.9rem;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.btn-more-close:hover {
+  color: #fff;
+}
+
+.mobile-more-section {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.mobile-more-section-lbl {
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted, #94a3b8);
+}
+
+.mobile-more-row {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.mobile-more-row .btn {
+  flex: 1;
+  padding: 0.35rem 0.4rem;
+  font-size: 0.75rem;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Pause Viewport Zoom Controls (BL-122) */
+.pause-zoom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.6rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.pause-zoom-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #cbd5e1;
+}
+
+.pause-zoom-btns {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 /* Free Pan Banner */

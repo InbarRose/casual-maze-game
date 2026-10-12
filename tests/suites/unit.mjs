@@ -73,6 +73,7 @@ import '../unit/ui/overlay-manager.test.mjs';
 import '../unit/ui/avatar-presets.test.mjs';
 import '../unit/ui/mobile-topbar-and-minimal-exit.test.mjs';
 import '../unit/ui/compact-topbar-and-menus.test.mjs';
+import '../unit/ui/zoom-reset-and-mobile-controls.test.mjs';
 
 const results = await run();
 process.exit(results.failed > 0 ? 1 : 0);

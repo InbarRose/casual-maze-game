@@ -97,8 +97,8 @@ export class GameLoop {
     // Subsystems
     const tileSize = this.level.config?.tileSize || 36;
     this.tileSize = tileSize;
-    const savedZoom = StorageManager.getSetting('viewport_zoom', 1.0);
-    this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize, savedZoom);
+    const initialZoom = 1.0;
+    this.camera = new Camera(mainCanvas.width, mainCanvas.height, tileSize, initialZoom);
     if (typeof document !== 'undefined' && document.documentElement) {
       document.documentElement.style.setProperty('--camera-zoom', String(this.camera.zoom));
     }
@@ -400,7 +400,6 @@ export class GameLoop {
       );
     }
 
-    StorageManager.setSetting('viewport_zoom', newZoom);
     if (typeof document !== 'undefined' && document.documentElement) {
       document.documentElement.style.setProperty('--camera-zoom', String(newZoom));
     }
@@ -1218,6 +1217,7 @@ export class GameLoop {
     this.hazardHits = 0;
     this.levelJournal = [];
     this.camera.setMode('follow');
+    this.resetZoom();
 
     // Reset logger for new attempt
     this.logger = new DebugLogger(this.level);

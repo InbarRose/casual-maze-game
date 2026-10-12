@@ -161,7 +161,7 @@
               <div class="rotation-control-group" id="rotation-control-group">
                 <button id="btn-rotate-left" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CCW [Q]" aria-label="Rotate Left">↺</button>
                 <span id="compass-badge" class="compass-badge" title="Compass Heading">🧭 N</span>
-                <button id="btn-rotate-right" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CW [R]" aria-label="Rotate Right">↻</button>
+                <button id="btn-rotate-right" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CW" aria-label="Rotate Right">↻</button>
               </div>
             </div>
             <div class="hud-dropdown-section">
@@ -280,15 +280,53 @@
         </div>
       </div>
       <div class="dpad-grid" id="dpad-grid">
-        <button type="button" class="dpad-btn dpad-rot-l" id="vbtn-rot-l" aria-label="Rotate CCW" title="Rotate Camera Left [Q]">↺</button>
+        <div class="dpad-empty"></div>
         <button type="button" class="dpad-btn dpad-up" id="vbtn-up" aria-label="Up">▲</button>
-        <button type="button" class="dpad-btn dpad-rot-r" id="vbtn-rot-r" aria-label="Rotate CW" title="Rotate Camera Right [R]">↻</button>
+        <div class="dpad-empty"></div>
         <button type="button" class="dpad-btn dpad-left" id="vbtn-left" aria-label="Left">◀</button>
         <button type="button" class="dpad-btn dpad-center" id="vbtn-act" aria-label="Interact">USE</button>
         <button type="button" class="dpad-btn dpad-right" id="vbtn-right" aria-label="Right">▶</button>
-        <div class="dpad-empty"></div>
+        <button type="button" class="dpad-btn dpad-more" id="vbtn-more" aria-label="More Mobile Controls" title="More Mobile Controls">⋮ More</button>
         <button type="button" class="dpad-btn dpad-down" id="vbtn-down" aria-label="Down">▼</button>
         <div class="dpad-empty"></div>
+      </div>
+
+      <!-- Mobile More Actions Drawer (BL-122) -->
+      <div class="mobile-more-drawer hidden" id="mobile-more-drawer" aria-label="Mobile More Controls">
+        <div class="mobile-more-header">
+          <span class="mobile-more-title">🛠️ Mobile Controls</span>
+          <button type="button" class="btn-more-close" id="btn-close-mobile-more" aria-label="Close More Controls">✕</button>
+        </div>
+        <div class="mobile-more-grid">
+          <div class="mobile-more-section">
+            <span class="mobile-more-section-lbl">Camera Rotation</span>
+            <div class="mobile-more-row">
+              <button type="button" class="btn btn-secondary btn-sm" id="vbtn-rot-l" title="Rotate Camera Left">↺ Left 90°</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="vbtn-rot-r" title="Rotate Camera Right">↻ Right 90°</button>
+            </div>
+          </div>
+          <div class="mobile-more-section">
+            <span class="mobile-more-section-lbl">Viewport Zoom</span>
+            <div class="mobile-more-row">
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-zoom-out" title="Zoom Out">🔍 −</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-zoom-reset" title="Reset Zoom to 100%">100%</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-zoom-in" title="Zoom In">🔍 +</button>
+            </div>
+          </div>
+          <div class="mobile-more-section">
+            <span class="mobile-more-section-lbl">View &amp; Overlays</span>
+            <div class="mobile-more-row">
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-minimap" title="Toggle Radar Minimap">🗺️ Minimap</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-feed" title="Toggle Activity Feed">⚡ Feed</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-touch-mode" title="Toggle Touch Mode">👆 Mode</button>
+            </div>
+            <div class="mobile-more-row" style="margin-top: 0.35rem;">
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-minimal-view" title="Toggle Minimal View">📐 Minimal View</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-journal" title="Open Lore Journal">📜 Journal</button>
+              <button type="button" class="btn btn-secondary btn-sm" id="mbtn-pause" title="Open Pause Menu">⏸️ Pause</button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -363,6 +401,14 @@
                 <button class="btn btn-secondary pause-action-btn" id="btn-pause-log">
                   📜 <span>Activity Log &amp; Telemetry [L]</span>
                 </button>
+              </div>
+              <div class="pause-zoom-row" id="pause-zoom-row">
+                <span class="pause-zoom-label">🔍 Viewport Zoom:</span>
+                <div class="pause-zoom-btns">
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-zoom-out" title="Zoom Out">−</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-zoom-reset" title="Reset Zoom to 100%">100%</button>
+                  <button type="button" class="btn btn-secondary btn-sm" id="btn-pause-zoom-in" title="Zoom In">+</button>
+                </div>
               </div>
             </div>
 
@@ -2228,6 +2274,9 @@
       if (window.gameLoop && window.gameLoop.isRunning) {
         window.gameLoop.stop();
       }
+      if (window.gameLoop) {
+        gameMenu.setGameLoop(window.gameLoop);
+      }
       setViewObscured(true, 'pause_menu');
       gameMenu.pause({
         title: currentLevel.title || 'Labyrinth',
@@ -2454,7 +2503,82 @@
     bindVirtualButton('vbtn-right', 'ArrowRight');
     bindVirtualButton('vbtn-act', 'KeyE');
     bindVirtualButton('vbtn-rot-l', 'KeyQ');
-    bindVirtualButton('vbtn-rot-r', 'KeyR');
+    bindVirtualButton('vbtn-rot-r', 'KeyC');
+
+    // Mobile More Controls Drawer Wiring (BL-122)
+    const mobileMoreDrawer = document.getElementById('mobile-more-drawer');
+    const btnVMore = document.getElementById('vbtn-more');
+    const btnCloseMobileMore = document.getElementById('btn-close-mobile-more');
+
+    function toggleMobileMore(show) {
+      if (!mobileMoreDrawer) return;
+      const shouldShow = typeof show === 'boolean' ? show : mobileMoreDrawer.classList.contains('hidden');
+      mobileMoreDrawer.classList.toggle('hidden', !shouldShow);
+    }
+
+    if (btnVMore) {
+      btnVMore.addEventListener('click', (e) => {
+        if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+        audioFX.playClick();
+        toggleMobileMore();
+      });
+    }
+
+    if (btnCloseMobileMore) {
+      btnCloseMobileMore.addEventListener('click', (e) => {
+        if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+        audioFX.playClick();
+        toggleMobileMore(false);
+      });
+    }
+
+    document.getElementById('mbtn-zoom-out')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      audioFX.playClick();
+      gameLoop?.zoomOut();
+    });
+    document.getElementById('mbtn-zoom-reset')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      audioFX.playClick();
+      gameLoop?.resetZoom();
+    });
+    document.getElementById('mbtn-zoom-in')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      audioFX.playClick();
+      gameLoop?.zoomIn();
+    });
+    document.getElementById('mbtn-minimap')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      document.getElementById('btn-topbar-minimap')?.click();
+    });
+    document.getElementById('mbtn-feed')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      document.getElementById('btn-hud-feed-pill')?.click();
+    });
+    document.getElementById('mbtn-touch-mode')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      document.getElementById('btn-touch-mode-toggle')?.click();
+    });
+    document.getElementById('mbtn-minimal-view')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      document.getElementById('btn-hud-collapse')?.click();
+    });
+    document.getElementById('mbtn-journal')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      document.getElementById('hud-journal-btn')?.click();
+    });
+    document.getElementById('mbtn-pause')?.addEventListener('click', (e) => {
+      if (e && typeof e.stopPropagation === 'function') e.stopPropagation();
+      document.getElementById('btn-open-menu')?.click();
+    });
+
+    document.addEventListener('click', (e) => {
+      if (mobileMoreDrawer && !mobileMoreDrawer.classList.contains('hidden')) {
+        if (!e.target?.closest?.('#mobile-more-drawer') && !e.target?.closest?.('#vbtn-more')) {
+          toggleMobileMore(false);
+        }
+      }
+    });
 
     // Register UI Overlays with OverlayManager (BL-117, ADR-0029)
     const firmTopBarEl = document.getElementById('firm-top-bar');
