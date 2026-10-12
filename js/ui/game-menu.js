@@ -276,6 +276,36 @@ export class GameMenu {
       if (hudCollapseBtn) hudCollapseBtn.click();
       this.updateOverlayButtons();
     });
+
+    bindClick('#btn-pause-toggle-hints', () => {
+      const hintBar = document.getElementById('controls-hint-bar') || document.querySelector('.controls-hint-bar');
+      if (hintBar) {
+        hintBar.classList.toggle('hidden');
+        try {
+          localStorage.setItem('maze_controls_hint_hidden', hintBar.classList.contains('hidden') ? 'true' : 'false');
+        } catch (_) {}
+      }
+      this.updateOverlayButtons();
+    });
+
+    if (typeof document !== 'undefined') {
+      const dismissBtn = document.getElementById('btn-dismiss-hints');
+      if (dismissBtn) {
+        dismissBtn.onclick = (e) => {
+          if (e && typeof e.stopPropagation === 'function') {
+            e.stopPropagation();
+          }
+          const hintBar = document.getElementById('controls-hint-bar') || document.querySelector('.controls-hint-bar');
+          if (hintBar) {
+            hintBar.classList.add('hidden');
+            try {
+              localStorage.setItem('maze_controls_hint_hidden', 'true');
+            } catch (_) {}
+          }
+          this.updateOverlayButtons();
+        };
+      }
+    }
   }
 
   /**
@@ -287,6 +317,7 @@ export class GameMenu {
     const feedLbl = this.modalEl.querySelector('#lbl-pause-feed');
     const controlsLbl = this.modalEl.querySelector('#lbl-pause-controls');
     const hudLbl = this.modalEl.querySelector('#lbl-pause-hud');
+    const hintsLbl = this.modalEl.querySelector('#lbl-pause-hints');
 
     if (radarLbl && typeof document !== 'undefined') {
       const minimap = document.getElementById('minimap-container');
@@ -310,6 +341,12 @@ export class GameMenu {
       const hud = document.querySelector('.game-hud-top');
       const isCollapsed = hud && hud.classList.contains('hud-collapsed');
       hudLbl.textContent = `HUD Bar: ${isCollapsed ? 'COLLAPSED' : 'EXPANDED'}`;
+    }
+
+    if (hintsLbl && typeof document !== 'undefined') {
+      const hintBar = document.getElementById('controls-hint-bar') || document.querySelector('.controls-hint-bar');
+      const isVisible = hintBar && !hintBar.classList.contains('hidden') && hintBar.style.display !== 'none';
+      hintsLbl.textContent = `Controls Hint: ${isVisible ? 'ON' : 'OFF'}`;
     }
   }
 
