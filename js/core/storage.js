@@ -451,7 +451,15 @@ export class StorageManager {
   static loadSettings() {
     try {
       const raw = localStorage.getItem(STORAGE_KEYS.SETTINGS);
-      return raw ? JSON.parse(raw) : {};
+      if (!raw) return {};
+      const settings = JSON.parse(raw);
+      if (settings && 'viewport_zoom' in settings) {
+        delete settings.viewport_zoom;
+        try {
+          localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+        } catch (_) {}
+      }
+      return settings;
     } catch (e) {
       return {};
     }
@@ -464,6 +472,7 @@ export class StorageManager {
    * @returns {*}
    */
   static getSetting(key, defaultValue = null) {
+    if (key === 'viewport_zoom') return 1.0;
     const settings = this.loadSettings();
     return settings[key] !== undefined ? settings[key] : defaultValue;
   }
@@ -475,6 +484,7 @@ export class StorageManager {
    * @returns {*}
    */
   static setSetting(key, value) {
+    if (key === 'viewport_zoom') return value; // Zoom is in-memory only and never persisted (BL-122)
     const settings = this.loadSettings();
     settings[key] = value;
     this.saveSettings(settings);

@@ -248,7 +248,7 @@ export class SettingsModal {
                     <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">LB (Btn 4)</kbd> : Rotate Left [Q]
                   </div>
                   <div id="gp-btn-rb" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
-                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">RB (Btn 5)</kbd> : Rotate Right [R]
+                    <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">RB (Btn 5)</kbd> : Rotate Right [C]
                   </div>
                   <div id="gp-btn-select" class="gp-indicator" style="padding: 4px 6px; border-radius: 4px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08);">
                     <kbd style="font-family: var(--font-mono); font-size: 0.75rem;">Select (Btn 8)</kbd> : Map / Pan [M]
