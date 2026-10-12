@@ -4,9 +4,17 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-## 1. Release & Milestone Status
+### Current Milestone: `v1.24.0` (Completed & Verified)
 
-### Current Milestone: `v1.23.0` (Completed & Verified)
+- [x] **Menu Bloat Elimination, 42px Consistent Top Bar & Single-Button Dropdown Menus (BL-121, ADR-0031)**:
+  - **Single-Button Dropdown Menus**: Collapsed sprawling multi-button HUD arrays into clean single-button dropdown triggers (`[ 🛠️ Tools ▾ ]` and `[ 🎥 View ▾ ]`) with keyboard accessible escape/outside click dismiss.
+  - **Full ID & Shortcut Preservation**: Retained 100% of action button IDs (`#btn-topbar-minimap`, `#btn-hud-feed-pill`, `#hud-journal-btn`, `#hud-btn-bug`, `#btn-zoom-in`, `#btn-zoom-out`, `#btn-rotate-left`, `#btn-rotate-right`, `#btn-touch-mode-toggle`, `#btn-hud-collapse`) and hotkeys ([M], [F], [Q], [R], [+], [-], [P], [H]), updating active indicator pills dynamically.
+  - **Mobile Zoom & Rotation Access**: Provided touch device access to zoom and camera rotation inside the `#hud-view-dropdown-menu` without cluttering the main screen.
+  - **Standardized 42px Top Navigation Bar**: Standardized `--top-bar-height: 42px` across all pages (`index.html`, `maze.html`, `editor.html`, `test.html`, `art-catalog.html`) with uniform dark glass styling, eliminating floating island jitter.
+  - **Toggleable Minimal Overlays & Dismissable Hint Bar**: Added `#btn-dismiss-hints` directly on the controls hint bar and `#btn-pause-toggle-hints` in the pause modal; minimized minimap to 140px and activity feed to 280px.
+  - **Automated Test Coverage**: Added `tests/unit/ui/compact-topbar-and-menus.test.mjs` verifying top bar consistency, dropdown triggers, and hint toggle behavior across 143 test suites and 686 passing tests (0 failed).
+
+### Previous Milestone: `v1.23.0` (Completed & Verified)
 
 - [x] **Fantasy Archetype Avatar Presets & Dual-Color Palette Customization (BL-118, Issue #84, ADR-0030)**:
   - **8 Fantasy Archetypes**: Added Adventurer, Wizard, Knight, Rogue, Cleric, Ranger, Bard, and Nomad archetypes with distinct garments, headgear (pointy wizard hats with stars, knight helms, cowl hoods, cleric sun halos, archer caps, bard berets), and back gear (shields, quivers, lute, relic pouch, backpack) across 2.5D and top-down perspectives.
