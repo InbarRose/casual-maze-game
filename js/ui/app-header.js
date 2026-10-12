@@ -12,6 +12,8 @@ import { SettingsModal } from './settings-modal.js';
 import { FeedbackModal, getFeedbackModal } from './feedback-modal.js';
 import { GuideModal, getGuideModal } from './guide-modal.js';
 import { audioFX } from './audio-fx.js';
+import { DragScroller, autoInitDragScroll } from './drag-scroll.js';
+import { DynamicMenuController } from './dynamic-menu-controller.js';
 
 let profileModalInstance = null;
 let settingsModalInstance = null;
@@ -196,6 +198,29 @@ export function initAppHeader(options = {}) {
     if (starsEl) starsEl.textContent = `★ ${updated.totalStars}`;
     if (avatarEl) avatarEl.textContent = updated.rankIcon;
   });
+
+  // Initialize drag-scroll and dynamic size detection on header navigation (BL-123)
+  const navLinksEl = header.querySelector('.app-nav-links');
+  if (navLinksEl && !header._dynamicMenu) {
+    header._dynamicMenu = new DynamicMenuController(navLinksEl, {
+      axis: 'x',
+      enablePaging: true,
+      enableDragScroll: true,
+    });
+  }
+
+  const navInnerEl = header.querySelector('.app-nav-inner');
+  if (navInnerEl && !header._innerDragScroller) {
+    header._innerDragScroller = new DragScroller(navInnerEl, {
+      axis: 'x',
+      dragThreshold: 6,
+    });
+  }
+
+  // Automatically enable drag-to-scroll on any registered markup in DOM
+  try {
+    autoInitDragScroll();
+  } catch (_) {}
 
   // 2. Mount or Update Footer
   let footer = document.querySelector('.app-nav-footer');

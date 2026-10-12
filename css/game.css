@@ -45,12 +45,22 @@
   pointer-events: auto;
   z-index: 100;
   gap: 0.5rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
   background: rgba(11, 19, 38, 0.94);
   backdrop-filter: blur(16px) saturate(180%);
   -webkit-backdrop-filter: blur(16px) saturate(180%);
   border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
   transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+}
+
+.game-hud-top::-webkit-scrollbar {
+  display: none;
 }
 
 .game-hud-top.hud-collapsed {
@@ -62,6 +72,7 @@
   display: flex;
   align-items: center;
   gap: 0.35rem;
+  flex-shrink: 0;
   pointer-events: auto;
   background: transparent;
   padding: 0;
@@ -2106,12 +2117,21 @@ body.high-contrast-mode .key-shape-badge {
     border-radius: 0 !important;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5) !important;
     display: flex !important;
-    justify-content: space-between !important;
+    justify-content: flex-start !important;
     align-items: center !important;
     flex-wrap: nowrap !important;
-    gap: 0.25rem !important;
+    gap: 0.35rem !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: pan-x !important;
     pointer-events: auto !important;
     z-index: 100 !important;
+  }
+
+  .game-hud-top.firm-top-bar::-webkit-scrollbar {
+    display: none !important;
   }
 
   .game-hud-top.firm-top-bar .hud-island {
@@ -2122,6 +2142,11 @@ body.high-contrast-mode .key-shape-badge {
     backdrop-filter: none !important;
     -webkit-backdrop-filter: none !important;
     gap: 0.25rem !important;
+    flex-shrink: 0 !important;
+  }
+
+  .game-hud-top.firm-top-bar .hud-island-right {
+    margin-left: auto;
   }
 
   .game-hud-top.firm-top-bar .hud-card {
