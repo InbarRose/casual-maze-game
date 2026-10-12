@@ -150,6 +150,7 @@ import './unit/ui/overlay-manager.test.mjs';
 import './unit/ui/avatar-presets.test.mjs';
 import './unit/ui/mobile-topbar-and-minimal-exit.test.mjs';
 import './unit/ui/compact-topbar-and-menus.test.mjs';
+import './unit/ui/zoom-reset-and-mobile-controls.test.mjs';
 
 // 10. Platform Component Audited Unit Test Suites (CMP-01 to CMP-19)
 import './unit/components/cmp-01-app-shell.test.mjs';

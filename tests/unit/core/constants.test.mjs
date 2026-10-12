@@ -61,10 +61,13 @@ describe('Core > Constants & Registries', () => {
     assertDeepEqual(DIRECTIONS.EAST, { x: 1, y: 0, name: 'east' });
   });
 
-  it('defines robust key codes with clean separation of restart (T) and rotation (R)', () => {
+  it('defines robust key codes avoiding browser standard key hijack (BL-122)', () => {
     assert(KEY_CODES.RESTART.includes('KeyT'), 'RESTART includes KeyT');
-    assert(!KEY_CODES.RESTART.includes('KeyR'), 'RESTART does NOT include KeyR (avoid rotation collision)');
-    assert(KEY_CODES.ROTATE_RIGHT.includes('KeyR'), 'ROTATE_RIGHT includes KeyR');
+    assert(!KEY_CODES.RESTART.includes('KeyR'), 'RESTART does NOT include KeyR');
+    assert(!KEY_CODES.ROTATE_RIGHT.includes('KeyR'), 'ROTATE_RIGHT does NOT include KeyR (preserves browser reload)');
+    assert(!KEY_CODES.ROTATE_RIGHT.includes('r'), 'ROTATE_RIGHT does NOT include r');
+    assert(!KEY_CODES.ROTATE_RIGHT.includes('BracketRight'), 'ROTATE_RIGHT does NOT include BracketRight');
+    assert(!KEY_CODES.ROTATE_LEFT.includes('BracketLeft'), 'ROTATE_LEFT does NOT include BracketLeft');
     assert(KEY_CODES.ROTATE_LEFT.includes('KeyQ'), 'ROTATE_LEFT includes KeyQ');
     assert(!KEY_CODES.RIGHT.includes('KeyL'), 'RIGHT does NOT include KeyL (avoid log modal collision)');
     assert(KEY_CODES.RIGHT.includes('KeyD'), 'RIGHT includes KeyD');
