@@ -61,11 +61,11 @@
       <p class="hud-lore-response" id="hud-lore-response"></p>
     </div>
 
-    <!-- Top HUD Overlay — Firm Command Bar (BL-117, ADR-0029) -->
+    <!-- Top HUD Overlay — Firm Command Bar (BL-117, BL-121, ADR-0031) -->
     <header class="game-hud-top firm-top-bar" id="firm-top-bar" role="banner">
       <!-- Left Island: Navigation & Level Info -->
       <div class="hud-island hud-island-left">
-        <a href="index.html" class="btn btn-secondary btn-sm" id="hud-btn-hub" title="Return to Level Select Hub">← Hub</a>
+        <a href="index.html" class="btn btn-secondary btn-sm hud-hub-btn" id="hud-btn-hub" title="Return to Level Select Hub">← Hub</a>
         <a href="editor.html" class="btn btn-secondary btn-sm" id="hud-btn-editor" style="display: none;">🛠️ Editor</a>
         <div class="hud-card" id="hud-level-card">
           <nav class="hud-breadcrumbs" id="hud-breadcrumbs" aria-label="Labyrinth Breadcrumb">
@@ -75,36 +75,23 @@
             <span class="hud-crumb-sep">❯</span>
             <span class="hud-crumb-current" id="hud-crumb-level">Level 1</span>
           </nav>
-          <div style="display: flex; align-items: center; gap: 0.4rem; flex-wrap: wrap;">
+          <div style="display: flex; align-items: center; gap: 0.35rem; flex-wrap: nowrap;">
             <span class="tutorial-badge" id="hud-tutorial-badge" style="display: none;">🎓 Tutorial</span>
             <span class="hud-title" id="hud-level-title">Loading...</span>
             <span class="elevation-badge" id="hud-elevation">Ground Floor</span>
-            <span class="room-badge" id="hud-room-badge" style="display: none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.75rem; padding: 0.15rem 0.5rem; border-radius: 9999px; font-weight: 600;"></span>
+            <span class="room-badge" id="hud-room-badge" style="display: none; background: rgba(56, 189, 248, 0.15); border: 1px solid #38bdf8; color: #38bdf8; font-size: 0.72rem; padding: 0.1rem 0.45rem; border-radius: 9999px; font-weight: 600;"></span>
           </div>
         </div>
       </div>
 
-      <!-- Center Island: Page Context, Quick Icons, Inventory & Held Relics (BL-119, Issue #83) -->
+      <!-- Center Island: Page Context & Compact Inventory (BL-121) -->
       <div class="hud-island hud-island-center">
         <!-- Page Context: In-Game Pause & Menu Button -->
         <button id="btn-open-menu" class="btn btn-primary btn-sm hud-menu-btn" title="Open Game Menu &amp; Options (Esc / P)" aria-label="Game Menu">
           ⏸️ <span class="hide-mobile">Menu [P]</span>
         </button>
 
-        <!-- Quick Access Icons: Radar, Feed, Bug Feedback -->
-        <div class="hud-quick-icons" id="hud-quick-icons">
-          <button id="btn-topbar-minimap" class="btn btn-secondary btn-sm btn-icon hud-minimap-pill active" title="Toggle Tactical Radar [M]" aria-label="Toggle Radar">
-            🗺️
-          </button>
-          <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
-            ⚡ <span class="hide-mobile">Feed</span>
-          </button>
-          <button id="hud-btn-bug" class="btn btn-secondary btn-sm btn-icon" title="Report Bug or Feedback" aria-label="Report Bug">
-            🐛
-          </button>
-        </div>
-
-        <!-- Inventory Keys & Held Items -->
+        <!-- Compact Inventory Keys & Held Items -->
         <div class="hud-card hud-inventory-card" id="hud-inventory-card" title="Player Inventory">
           <span class="inventory-icon">🎒</span>
           <span class="inventory-label hide-mobile">Holding:</span>
@@ -115,28 +102,76 @@
         </div>
 
         <!-- Carried Riddle Item Badge -->
-        <div class="hud-card hud-riddle-item-card" id="hud-riddle-item-card" style="display: none; align-items: center; gap: 0.45rem; border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.08);" title="Carried Riddle Relic">
-          <span id="hud-riddle-item-symbol" style="font-size: 1.15rem;">🦅</span>
+        <div class="hud-card hud-riddle-item-card" id="hud-riddle-item-card" style="display: none; align-items: center; gap: 0.35rem; border-color: rgba(251, 191, 36, 0.4); background: rgba(251, 191, 36, 0.08);" title="Carried Riddle Relic">
+          <span id="hud-riddle-item-symbol" style="font-size: 1.05rem;">🦅</span>
           <div style="display: flex; flex-direction: column;">
-            <span id="hud-riddle-item-name" style="font-weight: 700; font-size: 0.8rem; color: var(--gold);">Falcon Statue</span>
-            <span style="font-size: 0.68rem; color: var(--text-muted);">(E: Place)</span>
+            <span id="hud-riddle-item-name" style="font-weight: 700; font-size: 0.76rem; color: var(--gold);">Falcon Statue</span>
+            <span style="font-size: 0.65rem; color: var(--text-muted);">(E: Place)</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Island: Single-Button Dropdown Menus, Settings, Profile, Stats & Collapse (BL-121) -->
+      <div class="hud-island hud-island-right hud-action-cluster" id="hud-action-cluster">
+        <!-- Single-Button Menu: Overlays & Tools -->
+        <div class="hud-dropdown-wrap" id="hud-tools-dropdown-wrap">
+          <button type="button" id="btn-tools-dropdown" class="btn btn-secondary btn-sm hud-dropdown-trigger" title="Tools &amp; Overlays [Radar, Feed, Journal, Bug]" aria-label="Tools Menu" aria-expanded="false">
+            🛠️ <span class="hide-mobile">Tools ▾</span>
+          </button>
+          <div class="hud-dropdown-menu" id="hud-tools-dropdown-menu" role="menu">
+            <div class="hud-dropdown-header">Overlays &amp; Tools</div>
+            <div class="hud-quick-icons" id="hud-quick-icons">
+              <button id="btn-topbar-minimap" class="btn btn-secondary btn-sm hud-dropdown-item hud-minimap-pill active" title="Toggle Tactical Radar [M]" aria-label="Toggle Radar">
+                🗺️ <span>Tactical Radar [M]</span>
+              </button>
+              <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-dropdown-item hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
+                ⚡ <span>Action Feed [F]</span>
+              </button>
+              <button id="hud-journal-btn" class="btn btn-secondary btn-sm hud-dropdown-item hud-journal-btn" title="Open Level Lore Journal [J]">
+                📜 <span>Journal [J]</span>
+                <span class="hud-journal-badge" id="hud-journal-count">0</span>
+              </button>
+              <button id="btn-hint" class="btn btn-secondary btn-sm hud-dropdown-item" title="Toggle Tutorial Objective &amp; Hint" style="display: none;">
+                💡 <span>Objective Hint</span>
+              </button>
+              <button id="hud-btn-bug" class="btn btn-secondary btn-sm hud-dropdown-item btn-icon" title="Report Bug or Feedback" aria-label="Report Bug">
+                🐛 <span>Report Bug</span>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Level Lore Journal Button (BL-81) -->
-        <button id="hud-journal-btn" class="btn btn-secondary btn-sm hud-journal-btn" title="Open Level Lore Journal [J]">
-          📜 <span class="hide-mobile">Journal</span>
-          <span class="hud-journal-badge" id="hud-journal-count">0</span>
-        </button>
+        <!-- Single-Button Menu: Camera & View -->
+        <div class="hud-dropdown-wrap" id="hud-view-dropdown-wrap">
+          <button type="button" id="btn-view-dropdown" class="btn btn-secondary btn-sm hud-dropdown-trigger" title="Camera &amp; View Controls [Zoom, Rotate, Perspective, Touch]" aria-label="View Menu" aria-expanded="false">
+            🎥 <span class="hide-mobile">View ▾</span>
+          </button>
+          <div class="hud-dropdown-menu" id="hud-view-dropdown-menu" role="menu">
+            <div class="hud-dropdown-header">Camera &amp; Controls</div>
+            <div class="hud-dropdown-section">
+              <span class="hud-dropdown-sublabel">Zoom Viewport</span>
+              <div class="zoom-control-group" id="zoom-control-group">
+                <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out [-]" aria-label="Zoom Out">−</button>
+                <span id="hud-zoom-badge" class="zoom-badge" title="Reset Zoom to 100% [0]">100%</span>
+                <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In [+]" aria-label="Zoom In">+</button>
+              </div>
+            </div>
+            <div class="hud-dropdown-section">
+              <span class="hud-dropdown-sublabel">Camera Heading</span>
+              <div class="rotation-control-group" id="rotation-control-group">
+                <button id="btn-rotate-left" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CCW [Q]" aria-label="Rotate Left">↺</button>
+                <span id="compass-badge" class="compass-badge" title="Compass Heading">🧭 N</span>
+                <button id="btn-rotate-right" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CW [R]" aria-label="Rotate Right">↻</button>
+              </div>
+            </div>
+            <div class="hud-dropdown-section">
+              <button id="btn-touch-mode-toggle" class="btn btn-secondary btn-sm hud-dropdown-item hud-touch-pill" title="Toggle Navigation: Tap to Move (BFS) vs Hold &amp; Drag Steer" aria-label="Toggle Touch Navigation Mode">
+                👆 <span id="touch-mode-label">Tap Move</span>
+              </button>
+            </div>
+          </div>
+        </div>
 
-        <!-- Hint / Objective Button -->
-        <button id="btn-hint" class="btn btn-secondary btn-sm" title="Toggle Tutorial Objective & Hint" style="display: none;">
-          💡 <span class="hide-mobile">Hint</span>
-        </button>
-      </div>
-
-      <!-- Right Island: Settings, Profile, Stats, Controls (BL-119, Issue #83) -->
-      <div class="hud-island hud-island-right">
         <!-- Settings Quick Button (BL-115) -->
         <button id="hud-btn-settings" class="btn btn-secondary btn-sm btn-icon" title="Open Game Settings [Audio, Video, Controls] [O]" aria-label="Settings">
           ⚙️
@@ -147,42 +182,11 @@
           <span id="hud-profile-avatar">🧭</span> <span class="hide-mobile" id="hud-profile-name">Explorer</span>
         </button>
 
-        <!-- Mobile Touch Mode Toggle (BL-116) -->
-        <button id="btn-touch-mode-toggle" class="btn btn-secondary btn-sm hud-touch-pill" title="Toggle Navigation: Tap to Move (BFS) vs Hold &amp; Drag Steer" aria-label="Toggle Touch Navigation Mode">
-          👆 <span class="hide-mobile" id="touch-mode-label">Tap Move</span>
-        </button>
-
-        <!-- Timer, Steps, & Score -->
-        <div class="hud-card" id="hud-stats-card">
+        <!-- Timer, Steps, & Score Stats Pill -->
+        <div class="hud-card hud-stats-pill" id="hud-stats-card">
           <div class="hud-stat">⏱ <strong id="hud-timer">00:00.0</strong></div>
           <div class="hud-stat">👣 <strong id="hud-steps">0</strong></div>
           <div class="hud-stat">⭐ <strong id="hud-score">0</strong></div>
-        </div>
-
-        <!-- Viewport Zoom Control Widget (BL-87) -->
-        <div class="zoom-control-group" id="zoom-control-group">
-          <button id="btn-zoom-out" class="btn btn-secondary btn-sm btn-icon" title="Zoom Out [-]" aria-label="Zoom Out">
-            −
-          </button>
-          <span id="hud-zoom-badge" class="zoom-badge" title="Reset Zoom to 100% [0]">
-            100%
-          </span>
-          <button id="btn-zoom-in" class="btn btn-secondary btn-sm btn-icon" title="Zoom In [+]" aria-label="Zoom In">
-            +
-          </button>
-        </div>
-
-        <!-- World Rotation Compass Widget -->
-        <div class="rotation-control-group" id="rotation-control-group">
-          <button id="btn-rotate-left" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CCW [Q]" aria-label="Rotate Left">
-            ↺
-          </button>
-          <span id="compass-badge" class="compass-badge" title="Compass Heading">
-            🧭 N
-          </span>
-          <button id="btn-rotate-right" class="btn btn-secondary btn-sm btn-icon" title="Rotate Camera 90° CW [R]" aria-label="Rotate Right">
-            ↻
-          </button>
         </div>
 
         <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
@@ -246,23 +250,24 @@
       </div>
     </aside>
 
-    <!-- Bottom Controls Hint Bar -->
-    <div class="controls-hint-bar">
-      <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>Arrows</kbd> Move</span>
+    <!-- Bottom Controls Hint Bar (Minimal & Dismissable, BL-121) -->
+    <div class="controls-hint-bar" id="controls-hint-bar">
+      <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> Move</span>
       <span>•</span>
-      <span><kbd>Q</kbd> / <kbd>R</kbd> Rotate</span>
+      <span><kbd>Q</kbd>/<kbd>R</kbd> Rotate</span>
       <span>•</span>
-      <span><kbd>E</kbd> / <kbd>Space</kbd> Interact</span>
+      <span><kbd>E</kbd>/<kbd>Space</kbd> Interact</span>
       <span>•</span>
-      <span><kbd>+</kbd> / <kbd>-</kbd> Zoom</span>
+      <span><kbd>+</kbd>/<kbd>-</kbd> Zoom</span>
       <span>•</span>
       <span><kbd>V</kbd> View</span>
       <span>•</span>
-      <span><kbd>L</kbd> Activity Log</span>
+      <span><kbd>L</kbd> Log</span>
       <span>•</span>
-      <span><kbd>M</kbd> Free Pan</span>
+      <span><kbd>M</kbd> Pan</span>
       <span>•</span>
       <span><kbd>T</kbd> Restart</span>
+      <button type="button" class="btn-hint-dismiss" id="btn-dismiss-hints" title="Hide Hint Bar [Toggle in Menu]" aria-label="Hide Controls Hint Bar">✕</button>
     </div>
 
     <!-- Mobile Virtual Controls (Top-Docked & Movable) -->
@@ -376,6 +381,9 @@
                 </button>
                 <button class="btn btn-secondary pause-action-btn" id="btn-pause-toggle-hud">
                   📐 <span id="lbl-pause-hud">HUD Bar: EXPANDED</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-toggle-hints">
+                  ⌨️ <span id="lbl-pause-hints">Controls Hint: ON</span>
                 </button>
               </div>
             </div>
@@ -2713,6 +2721,62 @@
         }
       } catch (err) {}
     }
+
+    // Single-Button Menu Dropdowns Manager (BL-121, ADR-0031)
+    function initHudDropdowns() {
+      const dropdownWraps = document.querySelectorAll('.hud-dropdown-wrap');
+      dropdownWraps.forEach(wrap => {
+        const trigger = wrap.querySelector('.hud-dropdown-trigger');
+        const menu = wrap.querySelector('.hud-dropdown-menu');
+        if (!trigger || !menu) return;
+
+        trigger.addEventListener('click', (e) => {
+          e.stopPropagation();
+          const isOpen = menu.classList.contains('active');
+          // Close other active dropdowns
+          document.querySelectorAll('.hud-dropdown-menu.active').forEach(m => {
+            if (m !== menu) {
+              m.classList.remove('active');
+              const t = m.closest('.hud-dropdown-wrap')?.querySelector('.hud-dropdown-trigger');
+              if (t) t.setAttribute('aria-expanded', 'false');
+            }
+          });
+          menu.classList.toggle('active', !isOpen);
+          trigger.setAttribute('aria-expanded', String(!isOpen));
+          audioFX.playClick();
+        });
+      });
+
+      document.addEventListener('click', (e) => {
+        if (!e.target.closest('.hud-dropdown-wrap')) {
+          document.querySelectorAll('.hud-dropdown-menu.active').forEach(m => {
+            m.classList.remove('active');
+            const t = m.closest('.hud-dropdown-wrap')?.querySelector('.hud-dropdown-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+      });
+
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+          document.querySelectorAll('.hud-dropdown-menu.active').forEach(m => {
+            m.classList.remove('active');
+            const t = m.closest('.hud-dropdown-wrap')?.querySelector('.hud-dropdown-trigger');
+            if (t) t.setAttribute('aria-expanded', 'false');
+          });
+        }
+      });
+    }
+
+    initHudDropdowns();
+
+    // Check persisted controls hint visibility
+    try {
+      if (localStorage.getItem('maze_controls_hint_hidden') === 'true') {
+        const hintBar = document.querySelector('.controls-hint-bar');
+        if (hintBar) hintBar.classList.add('hidden');
+      }
+    } catch (_) {}
 
     // Real-Time In-Game Action Activity Feed & Category Filter Controls (BL-81, BL-94)
     const activityFeedEl = document.getElementById('game-activity-feed');
