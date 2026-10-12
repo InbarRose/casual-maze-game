@@ -24,7 +24,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 │ 2. Visual Engine & Vector Rendering  │ BL-09–13,33,78,80│ P1 │ Completed│
 │ 3. Game Feel, Controls & Mobile UX   │ BL-14–17,40,55,63,65,67,70,72,87│ P1│ Active │
 │ 4. Map Editor Studio Overhaul        │ BL-18–22,37,39,75 │ P1 / P2 │ Completed│
-│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88,91-100,106-107,111-121 │ P0/P1 │ Active │
+│ 5. Universal Navigation, HUD & Save  │ BL-23–26,34,36,38,53,54,64,66,68,69,71,73,74,76,81-86,88,91-100,106-107,111-122 │ P0/P1 │ Active │
 │ 6. Audio FX & Ambience Engine        │ BL-27–28,35,77 │ P2   │ Completed│
 │ 7. QA Automation & Test Scale        │ BL-29–32,45,46,79 │ P0/P1│ Completed│
 │ 8. Immediate Gameplay & UX Polish    │ BL-41–44,47–52 │ P0 / P1 │ Ready    │
@@ -166,6 +166,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-119** | **Mobile Screen Menu Readability, Universal Top Bar & Safe Viewport Clamping (Issue #83)** | **P1** | `v1.23.0` | Resolve mobile menu truncation and readability issues across varied screen dimensions: establish universal top bar with Hub link, breadcrumbs, page context button, quick access icons (`🗺️` Minimap, `⚡` Feed, `🐛` Bug, Inventory), settings, profile, touch mode toggle, zoom, rotation, and HUD collapse; clamp modal/menu heights dynamically to available viewport minus safe bottom buffer (`--bottom-safe-buffer`); add visual border around game render area; provide granular overlay toggles in pause menu. | **Completed** |
 | **BL-120** | **Minimal Drag Exploring Mode Floating Exit Button (Issue #82)** | **P1** | `v1.23.0` | Provide an unambiguous, persistent floating exit button (`#btn-exit-minimal-mode` / `👁️ Normal View [H]`) in minimal drag exploring mode on mobile, allowing players to immediately restore standard HUD controls without getting trapped in minimal mode. | **Completed** |
 | **BL-121** | **Menu Bloat Elimination, 42px Consistent Top Bar, Single-Button Dropdown Menus & Toggleable Minimal HUD Overlays** | **P0** | `v1.24.0` | Collapse multi-button HUD clutter into single-button dropdown triggers (`[ 🛠️ Tools ▾ ]`, `[ 🎥 View ▾ ]`), standardize universal firm top bar height to 42px across all pages (`index.html`, `maze.html`, `editor.html`, `test.html`, `art-catalog.html`), slim down dialog and card paddings, minimize floating overlays (140px minimap, 280px activity feed), and provide dismissable and pause-toggleable controls hints (`#btn-dismiss-hints`, `#btn-pause-toggle-hints`), preserving 100% of element IDs and keyboard shortcuts. | **Completed** |
+| **BL-122** | **Non-Persistent Default Zoom, In-Menu Zoom, Mobile Virtual Controls More Drawer & Browser-Safe Hotkeys** | **P0** | `v1.25.0` | Reset viewport zoom to default 1.0x on every page load/level change with zero localStorage persistence; embed viewport zoom controls in Pause Menu; redesign mobile D-pad to 4 cardinal directions + USE + dedicated More button opening action drawer with rotation, zoom, minimap, feed, and toggles; prune browser-conflicting hotkeys (`R`, `[`, `]`) while guaranteeing 100% on-screen button coverage for all game actions. | **Completed** |
 
 ---
 

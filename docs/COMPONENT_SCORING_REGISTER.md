@@ -125,6 +125,8 @@ This document records the official baseline quality evaluations, granular expert
   * **Master Score**: **48.65 / 60.00 (81.1% — A- Tier)**
 * **Strengths**:
   * Multi-input support for keyboard (`WASD`, arrows, `ESDF`, `AZERTY`, `Numpad`), mouse click-to-move BFS, mobile touch gestures, and virtual D-pad.
+  * **Mobile Virtual Controls 4-Direction + USE + More Drawer (`BL-122`, ADR-0032)**: Redesigned the primary visible virtual pad to display solely 4 cardinal directions and center USE, plus a dedicated `⋮ More` button opening a clean mobile action sheet with camera rotation, zoom, minimap, feed, touch mode, minimal view, lore journal, and pause, giving mobile touch players complete feature parity without keyboard requirements.
+  * **Browser-Safe Hotkey Pruning & Universal Button Assurance (`BL-122`, ADR-0032)**: Removed browser-conflicting keys (`KeyR`, `r`, `R`, `BracketLeft`, `[`, `BracketRight`, `]`), protecting native browser reload and ensuring 100% of game actions have visible, accessible on-screen buttons.
   * **Configurable Movement Key Schemes & Mouse Navigation Mode (`BL-100`, Issue #63, ADR-0016)**: Full player freedom with preset key schemes (WASD + Arrows, Arrows Only, ESDF, AZERTY ZQSD, Numpad 8/4/6/2) and configurable pointer movement mode (Click-to-Move Pathfinding, Drag Steering Only, or Pointer Movement Disabled) persisting across sessions with live switching.
   * **Viewport Zoom Optical Clamping & UI Decoupling (`BL-93`)**: Strict zoom bounding between $0.5\times$ and $2.0\times$ across mouse wheel, touch pinch, and HUD buttons (`−`, `100%`, `+`), with `--camera-zoom` CSS custom property scaling in-world indicator elements dynamically while keeping menus, navigation bars, and modals 100% isolated and distortion-free (ADR-0013).
   * **Continuous Touch Drag Steering (`BL-67`)**: Sliding a finger across the canvas automatically steers the explorer in cardinal directions with a rapid 125ms auto-step repeat rate and dynamic mid-drag heading adjustments.
@@ -210,6 +212,7 @@ This document records the official baseline quality evaluations, granular expert
   * $C_6$ Accessibility & DX: **9.00/10** (6.1: 9, 6.2: 9, 6.3: 9)
   * **Master Score**: **52.00 / 60.00 (86.7% — A Tier)**
 * **Strengths**:
+  * **In-Menu Viewport Zoom Controls (`BL-122`, ADR-0032)**: Dedicated Viewport Zoom row directly within the pause dialog (`#btn-pause-zoom-out`, `#btn-pause-zoom-reset`, `#btn-pause-zoom-in`) reflecting live zoom scale and allowing zoom adjustment or reset without leaving the menu.
   * **Controls Hint Bar Toggle & Compact Dialogs (`BL-121`, ADR-0031)**: Pause menu includes dedicated `#btn-pause-toggle-hints` controlling persistent hints visibility, and pause dialog width was clamped to 480px max-width, preserving clean ergonomic margins.
   * **Overlays & HUD Visibility Command Group (`BL-119`)**: Pause menu includes direct toggle buttons for Radar/Minimap, Action Activity Feed, Virtual Touch Controls, and HUD Bar collapse, updating live status labels upon pause.
   * **Mobile Safe Area & Dialog Clamping (`BL-119`)**: Implemented `--bottom-safe-buffer` and clamped dialog dimensions (`max-height: calc(100vh - 52px - var(--bottom-safe-buffer) - 20px)`), completely preventing dialog clipping or collision with mobile home indicators.
@@ -354,7 +357,7 @@ This document records the official baseline quality evaluations, granular expert
   * $C_5$ Progression & Retention: **6.67/10** (5.1: 7, 5.2: 7, 5.3: 6)
   * $C_6$ Accessibility & DX: **6.00/10** (6.1: 6, 6.2: 6, 6.3: 6)
   * **Master Score**: **43.34 / 60.00 (72.2% — B Tier)**
-* **Strengths**:
+  * **Clean Ephemeral Viewport State Architecture (`BL-122`, ADR-0032)**: Clean separation of transient viewport zoom state from persistent game progress settings; legacy `viewport_zoom` automatically pruned on load and zoom maintained strictly in-memory per level/session.
   * Robust `localStorage` abstraction with error handling and fallback.
   * Schema migration runner (`BL-36`) upgrading legacy saves seamlessly.
   * **Save Metadata Previews & Validation (`BL-76`)**: Exported JSON backups carry comprehensive metadata headers (timestamp, player codename, rank, total stars, completed levels, engine version) with interactive pre-restore preview badges.
