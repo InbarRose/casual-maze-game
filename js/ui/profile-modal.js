@@ -55,11 +55,11 @@ export class ProfileModal {
             </div>
           </div>
 
-          <!-- Character Visual Customization & Avatar Preview (BL-95, ADR-0014) -->
+          <!-- Character Visual Customization & Avatar Preview (BL-95, BL-118, Issue #84) -->
           <div class="profile-field-group" style="background: rgba(0, 0, 0, 0.25); padding: 0.8rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass);">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.6rem;">
-              <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">Character Appearance</label>
-              <span id="profile-customization-badge" style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">Male Explorer</span>
+              <label style="font-size: 0.75rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin: 0;">Avatar Archetype & Colors</label>
+              <span id="profile-customization-badge" style="font-size: 0.75rem; color: var(--accent); font-weight: 700;">Adventurer</span>
             </div>
             
             <div style="display: flex; gap: 1rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
@@ -69,38 +69,57 @@ export class ProfileModal {
                 <span style="position: absolute; bottom: 2px; right: 4px; font-size: 0.65rem; color: var(--text-muted); font-weight: 600;">2.5D</span>
               </div>
 
-              <!-- Gender / Presentation Selector -->
-              <div style="flex: 1; min-width: 180px;">
-                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Identity / Silhouette</label>
-                <div id="profile-gender-group" style="display: flex; gap: 0.35rem;">
+              <!-- 8 Preset Avatar Archetypes (Issue #84, BL-118) -->
+              <div style="flex: 1; min-width: 220px;">
+                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Hero Archetype (8 Presets)</label>
+                <div id="profile-archetype-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.35rem;">
                   <!-- Populated dynamically via refresh() -->
                 </div>
               </div>
             </div>
 
-            <!-- Hair Style Selector -->
-            <div style="margin-bottom: 0.6rem;">
-              <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Hair Style</label>
-              <div id="profile-hairstyle-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
-                <!-- Populated dynamically via refresh() -->
+            <!-- Primary and Secondary Palette Color Pickers -->
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem; margin-bottom: 0.5rem;">
+              <div>
+                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Primary Color</label>
+                <div id="profile-primary-color-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
+                  <!-- Populated dynamically via refresh() -->
+                </div>
+              </div>
+              <div>
+                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Secondary Color</label>
+                <div id="profile-secondary-color-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
+                  <!-- Populated dynamically via refresh() -->
+                </div>
               </div>
             </div>
 
-            <!-- Hair Color & Skin Tone Pickers -->
-            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.75rem;">
-              <div>
-                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Hair Color</label>
-                <div id="profile-haircolor-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
-                  <!-- Populated dynamically via refresh() -->
+            <!-- Detailed Features: Silhouette, Hair, Skin (Preserved for compatibility) -->
+            <details style="margin-top: 0.5rem; background: rgba(0, 0, 0, 0.2); border-radius: var(--radius-sm); border: 1px solid rgba(255, 255, 255, 0.08); padding: 0.4rem 0.6rem;">
+              <summary style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; cursor: pointer; user-select: none;">
+                Advanced Appearance Details (Hair & Silhouette)
+              </summary>
+              <div style="display: flex; flex-direction: column; gap: 0.6rem; margin-top: 0.6rem;">
+                <div>
+                  <label style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.2rem;">Silhouette</label>
+                  <div id="profile-gender-group" style="display: flex; gap: 0.35rem;"></div>
+                </div>
+                <div>
+                  <label style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.2rem;">Hair Style</label>
+                  <div id="profile-hairstyle-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap;"></div>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.6rem;">
+                  <div>
+                    <label style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.2rem;">Hair Color</label>
+                    <div id="profile-haircolor-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap;"></div>
+                  </div>
+                  <div>
+                    <label style="font-size: 0.7rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.2rem;">Skin Tone</label>
+                    <div id="profile-skintone-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap;"></div>
+                  </div>
                 </div>
               </div>
-              <div>
-                <label style="font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: block; margin-bottom: 0.25rem;">Skin Tone</label>
-                <div id="profile-skintone-group" style="display: flex; gap: 0.35rem; flex-wrap: wrap; align-items: center;">
-                  <!-- Populated dynamically via refresh() -->
-                </div>
-              </div>
-            </div>
+            </details>
           </div>
 
           <!-- Explorer Wardrobe & Attire (BL-78, CMP-11, CMP-14) -->
@@ -297,7 +316,7 @@ export class ProfileModal {
     if (stepsVal) stepsVal.textContent = profile.totalSteps.toLocaleString();
 
     // -------------------------------------------------------------
-    // Character Visual Customization Controls (BL-95, ADR-0014)
+    // Character Visual Customization Controls (BL-95, BL-118, Issue #84)
     // -------------------------------------------------------------
     const custom = StorageManager.getPlayerCustomization();
     const currentOutfitId = profile.outfit || 'classic';
@@ -306,7 +325,100 @@ export class ProfileModal {
     const customBadge = this.modalEl.querySelector('#profile-customization-badge');
     if (customBadge) {
       const gLabel = CHARACTER_CUSTOMIZATION?.GENDER_META?.[custom.gender]?.label || 'Explorer';
-      customBadge.textContent = gLabel.split(' / ')[0] + ' Explorer';
+      const archMeta = CHARACTER_CUSTOMIZATION?.ARCHETYPE_META?.[custom.archetype] || CHARACTER_CUSTOMIZATION?.ARCHETYPE_META?.adventurer;
+      const archName = archMeta ? ` • ${archMeta.icon} ${archMeta.name}` : '';
+      customBadge.textContent = `${gLabel.split(' / ')[0]} Explorer${archName}`;
+    }
+
+    // 0a. 8 Archetype Presets (Issue #84, BL-118)
+    const archetypeGrid = this.modalEl.querySelector('#profile-archetype-grid');
+    if (archetypeGrid && CHARACTER_CUSTOMIZATION?.ARCHETYPE_META) {
+      archetypeGrid.innerHTML = '';
+      Object.values(CHARACTER_CUSTOMIZATION.ARCHETYPE_META).forEach((meta) => {
+        const isSelected = custom.archetype === meta.id;
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `btn btn-xs archetype-select-btn ${isSelected ? 'btn-primary active' : 'btn-secondary'}`;
+        btn.dataset.archetype = meta.id;
+        btn.style.cssText = `
+          padding: 0.35rem 0.25rem; font-size: 0.72rem; display: flex; flex-direction: column;
+          align-items: center; justify-content: center; gap: 0.15rem; border-radius: 6px;
+          ${isSelected ? 'border: 2px solid var(--gold, #fbbf24); box-shadow: 0 0 6px rgba(251, 191, 36, 0.4);' : ''}
+        `;
+        btn.innerHTML = `<span style="font-size: 1.1rem;">${meta.icon}</span><span style="font-weight: 700; font-size: 0.68rem;">${meta.name}</span>`;
+        btn.title = `${meta.name}: ${meta.title} — ${meta.desc}`;
+        btn.onclick = () => {
+          StorageManager.setPlayerCustomization({
+            archetype: meta.id,
+            primaryColor: meta.defaultPrimary,
+            secondaryColor: meta.defaultSecondary,
+          });
+          try { audioFX.playClick(); } catch (_) {}
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('player:customization_changed', { detail: { archetype: meta.id } }));
+          }
+          this.refresh();
+        };
+        archetypeGrid.appendChild(btn);
+      });
+    }
+
+    // 0b. Primary Color Swatches
+    const primaryGroup = this.modalEl.querySelector('#profile-primary-color-group');
+    if (primaryGroup && CHARACTER_CUSTOMIZATION?.PALETTE_COLORS) {
+      primaryGroup.innerHTML = '';
+      Object.values(CHARACTER_CUSTOMIZATION.PALETTE_COLORS).forEach((swatch) => {
+        const isSelected = (custom.primaryColor || '').toLowerCase() === swatch.color.toLowerCase();
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `primary-swatch-btn ${isSelected ? 'active' : ''}`;
+        btn.dataset.color = swatch.color;
+        btn.title = `Primary: ${swatch.name}`;
+        btn.style.cssText = `
+          width: 20px; height: 20px; border-radius: 50%; background: ${swatch.color};
+          border: 2px solid ${isSelected ? 'var(--gold, #fbbf24)' : 'rgba(255,255,255,0.3)'};
+          cursor: pointer; padding: 0; outline: none; transition: transform 0.15s ease;
+          ${isSelected ? 'transform: scale(1.2); box-shadow: 0 0 6px rgba(251, 191, 36, 0.7);' : ''}
+        `;
+        btn.onclick = () => {
+          StorageManager.setPlayerCustomization({ primaryColor: swatch.color });
+          try { audioFX.playClick(); } catch (_) {}
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('player:customization_changed', { detail: { primaryColor: swatch.color } }));
+          }
+          this.refresh();
+        };
+        primaryGroup.appendChild(btn);
+      });
+    }
+
+    // 0c. Secondary Color Swatches
+    const secondaryGroup = this.modalEl.querySelector('#profile-secondary-color-group');
+    if (secondaryGroup && CHARACTER_CUSTOMIZATION?.PALETTE_COLORS) {
+      secondaryGroup.innerHTML = '';
+      Object.values(CHARACTER_CUSTOMIZATION.PALETTE_COLORS).forEach((swatch) => {
+        const isSelected = (custom.secondaryColor || '').toLowerCase() === swatch.color.toLowerCase();
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = `secondary-swatch-btn ${isSelected ? 'active' : ''}`;
+        btn.dataset.color = swatch.color;
+        btn.title = `Secondary: ${swatch.name}`;
+        btn.style.cssText = `
+          width: 20px; height: 20px; border-radius: 50%; background: ${swatch.color};
+          border: 2px solid ${isSelected ? 'var(--gold, #fbbf24)' : 'rgba(255,255,255,0.3)'};
+          cursor: pointer; padding: 0; outline: none; transition: transform 0.15s ease;
+          ${isSelected ? 'transform: scale(1.2); box-shadow: 0 0 6px rgba(251, 191, 36, 0.7);' : ''}
+        `;
+        btn.onclick = () => {
+          StorageManager.setPlayerCustomization({ secondaryColor: swatch.color });
+          try { audioFX.playClick(); } catch (_) {}
+          if (typeof window !== 'undefined') {
+            window.dispatchEvent(new CustomEvent('player:customization_changed', { detail: { secondaryColor: swatch.color } }));
+          }
+          this.refresh();
+        };
+        secondaryGroup.appendChild(btn);
+      });
     }
 
     // 1. Gender / Silhouette Buttons

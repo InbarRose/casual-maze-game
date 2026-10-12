@@ -68,6 +68,7 @@ export class GameMenu {
     if (typeof window !== 'undefined' && window.gameLoop && typeof window.gameLoop.areHotkeysEnabled === 'function') {
       this.updateHotkeysButtonLabel(window.gameLoop.areHotkeysEnabled());
     }
+    this.updateOverlayButtons();
     globalEvents.emit('game:paused');
   }
 
@@ -248,6 +249,68 @@ export class GameMenu {
       this.hideConfirmationBoxes();
       this.onQuit();
     });
+
+    bindClick('#btn-pause-toggle-radar', () => {
+      const minimapBtn = document.getElementById('btn-topbar-minimap') || document.getElementById('btn-minimap-minimize');
+      if (minimapBtn) minimapBtn.click();
+      this.updateOverlayButtons();
+    });
+
+    bindClick('#btn-pause-toggle-feed', () => {
+      const feedBtn = document.getElementById('btn-hud-feed-pill') || document.getElementById('btn-feed-toggle');
+      if (feedBtn) feedBtn.click();
+      this.updateOverlayButtons();
+    });
+
+    bindClick('#btn-pause-toggle-controls', () => {
+      const vControls = document.getElementById('virtual-controls');
+      if (vControls) {
+        const isHidden = vControls.style.display === 'none';
+        vControls.style.display = isHidden ? 'flex' : 'none';
+      }
+      this.updateOverlayButtons();
+    });
+
+    bindClick('#btn-pause-toggle-hud', () => {
+      const hudCollapseBtn = document.getElementById('btn-hud-collapse');
+      if (hudCollapseBtn) hudCollapseBtn.click();
+      this.updateOverlayButtons();
+    });
+  }
+
+  /**
+   * Update visibility labels for overlay toggle buttons in pause menu
+   */
+  updateOverlayButtons() {
+    if (!this.modalEl) return;
+    const radarLbl = this.modalEl.querySelector('#lbl-pause-radar');
+    const feedLbl = this.modalEl.querySelector('#lbl-pause-feed');
+    const controlsLbl = this.modalEl.querySelector('#lbl-pause-controls');
+    const hudLbl = this.modalEl.querySelector('#lbl-pause-hud');
+
+    if (radarLbl && typeof document !== 'undefined') {
+      const minimap = document.getElementById('minimap-container');
+      const isVisible = minimap && minimap.style.display !== 'none' && !minimap.classList.contains('is-minimized');
+      radarLbl.textContent = `Radar / Minimap: ${isVisible ? 'ON' : 'MIN'}`;
+    }
+
+    if (feedLbl && typeof document !== 'undefined') {
+      const feed = document.getElementById('game-activity-feed');
+      const isVisible = feed && feed.style.display !== 'none' && !feed.classList.contains('is-minimized');
+      feedLbl.textContent = `Activity Feed: ${isVisible ? 'ON' : 'MIN'}`;
+    }
+
+    if (controlsLbl && typeof document !== 'undefined') {
+      const controls = document.getElementById('virtual-controls');
+      const isVisible = controls && controls.style.display !== 'none';
+      controlsLbl.textContent = `Touch Controls: ${isVisible ? 'ON' : 'OFF'}`;
+    }
+
+    if (hudLbl && typeof document !== 'undefined') {
+      const hud = document.querySelector('.game-hud-top');
+      const isCollapsed = hud && hud.classList.contains('hud-collapsed');
+      hudLbl.textContent = `HUD Bar: ${isCollapsed ? 'COLLAPSED' : 'EXPANDED'}`;
+    }
   }
 
   /**

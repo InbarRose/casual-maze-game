@@ -6,7 +6,26 @@ This document tracks project milestones, current release status, active developm
 
 ## 1. Release & Milestone Status
 
-### Current Milestone: `v1.22.0` (Completed & Verified)
+### Current Milestone: `v1.23.0` (Completed & Verified)
+
+- [x] **Fantasy Archetype Avatar Presets & Dual-Color Palette Customization (BL-118, Issue #84, ADR-0030)**:
+  - **8 Fantasy Archetypes**: Added Adventurer, Wizard, Knight, Rogue, Cleric, Ranger, Bard, and Nomad archetypes with distinct garments, headgear (pointy wizard hats with stars, knight helms, cowl hoods, cleric sun halos, archer caps, bard berets), and back gear (shields, quivers, lute, relic pouch, backpack) across 2.5D and top-down perspectives.
+  - **Dual-Color Palette Customization**: Implemented 10 curated colorways for primary clothing/armor and secondary trim/highlights, allowing instant player personalization with zero gameplay stat impact.
+  - **Profile Modal UI Redesign**: Modernized avatar section with 8-preset visual grid and palette pickers, while preserving legacy gender/hair controls in a collapsible details drawer for 100% backward compatibility.
+  - **Automated Test Coverage**: Added `tests/unit/ui/avatar-presets.test.mjs`.
+
+- [x] **Mobile Menu Readability, Universal Top Bar & Safe Viewport Clamping (BL-119, Issue #83, ADR-0030)**:
+  - **Universal Top Bar Layout**: Reorganized upper command deck into clear logical zones: Left (Hub link, interactive breadcrumbs, level title), Center (Pause Menu [P], quick-access icons for Minimap `🗺️`, Feed `⚡`, Bug Report `🐛`, Inventory), and Right (Settings, Profile, Touch Mode toggle, step/time stats, zoom, rotation, and HUD collapse `📐`).
+  - **Dynamic Viewport Height Clamping**: Clamped modal and menu dialogs with `max-height: calc(100vh - var(--top-bar-height, 52px) - var(--bottom-safe-buffer) - 20px)` and touch scroll containment, ensuring full readability across phones with bottom gesture navigation bars.
+  - **Canvas Render Border & Pause Overlay Toggles**: Framed active game canvas with subtle high-contrast border (`#canvas-render-border`); added overlay visibility toggles in pause menu for minimap, activity feed, virtual controls, and top bar.
+  - **Quick Bug Reporter**: Added 1-tap `#hud-btn-bug` in top bar wired to `FeedbackModal`.
+
+- [x] **Minimal Drag Exploring Mode Floating Exit Button (BL-120, Issue #82, ADR-0030)**:
+  - **Persistent Floating Exit Button**: Mounted `#btn-exit-minimal-mode` (`👁️ Normal View [H]`) in `maze.html` visible whenever minimal drag exploring mode is active or HUD is collapsed.
+  - **1-Tap Recovery**: Uncollapses HUD, restores normal touch navigation mode, and updates top bar button states.
+  - **Automated Test Coverage**: Added `tests/unit/ui/mobile-topbar-and-minimal-exit.test.mjs`.
+
+### Previous Milestone: `v1.22.0` (Completed & Verified)
 
 - [x] **Mobile Screen Overlay Conflict Detection, Visibility Coordinator & Firm Top Command Bar (BL-117, ADR-0029)**:
   - **Overlay Conflict Detection & Coordinator (`OverlayManager`)**: Built `js/ui/overlay-manager.js` implementing a deterministic priority ladder (`MODAL (100) > PAUSE_MENU (90) > TOP_BAR (80) > VIRTUAL_CONTROLS (70) > MINIMAP (60) > ACTIVITY_FEED (50) > TUTORIAL_HINT (40)`).

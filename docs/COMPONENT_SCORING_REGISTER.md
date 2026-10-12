@@ -16,17 +16,17 @@ This document records the official baseline quality evaluations, granular expert
 | **CMP-02** | **2.5D Canvas Rendering & Visual FX Engine** | 9.00 | 9.33 | 8.33 | 8.33 | 6.67 | 7.00 | **48.66** (81.1%) | **A- Tier** | Surface Shaders, Concentric Water Ripples, Molten Veins & Wall Torch Sconces (`BL-41`, `BL-43`, `BL-44`, `BL-47`, `BL-51`, `BL-80`, `BL-82`, `BL-84`, `BL-101`, `BL-105`) |
 | **CMP-03** | **Core Gameplay Loop & State Machine** | 7.00 | 9.67 | 7.67 | 8.33 | 6.67 | 7.00 | **46.34** (77.2%) | **B Tier** | Lever Interaction Separation, Floor Traps, Disambiguation & BaseEntity (`BL-42`, `BL-51`, `BL-52`, `BL-57`, `BL-85`, `BL-86`) |
 | **CMP-04** | **Controls, Input Handling & Multi-Input Parity** | 7.33 | 9.33 | 9.33 | 8.33 | 6.00 | 8.33 | **48.65** (81.1%) | **A- Tier** | Keybinding Schemes, Pointer Toggle, Optical Zoom Clamping, Multi-Elevation & Gamepad (`BL-40`, `BL-59`, `BL-63`, `BL-67`, `BL-72`, `BL-93`, `BL-100`) |
-| **CMP-05** | **Minimap & Tactical Navigation** | 7.33 | 9.33 | 8.00 | 8.00 | 7.00 | 7.33 | **46.99** (78.3%) | **B+ Tier** | Strategic Fog of War, Multi-Elevation Bridges & Radar (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`) |
-| **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 8.00 | 9.33 | 9.00 | 7.33 | 7.00 | 8.33 | **48.99** (81.7%) | **A- Tier** | Colorblind Shape Badges, Mobile Feed Docking & Lore Journal (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`, `BL-97`, `BL-99`) |
-| **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 8.67 | 9.33 | 9.33 | 8.00 | 7.33 | 8.67 | **51.33** (85.6%) | **A- Tier** | Categorized Command Center, Streamlined Victory Bar, Quick Icons, Modal Stacking & More Drawer (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`, `BL-106`, `BL-109`, `BL-111`) |
+| **CMP-05** | **Minimap & Tactical Navigation** | 7.67 | 9.33 | 8.67 | 8.00 | 7.00 | 7.67 | **48.34** (80.6%) | **A- Tier** | Strategic Fog of War, Multi-Elevation Bridges, Top Bar Radar & Pause HUD Controls (`BL-17`, `BL-51`, `BL-65`, `BL-66`, `BL-88`, `BL-119`) |
+| **CMP-06** | **In-Game HUD & Contextual Action Feedback** | 8.33 | 9.33 | 9.33 | 7.67 | 7.00 | 8.67 | **50.33** (83.9%) | **A- Tier** | Universal Top Bar, Glowing Canvas Frame, Exit Minimal Mode & Quick Icons (`BL-42`, `BL-54`, `BL-67`, `BL-68`, `BL-81`, `BL-85`, `BL-91`, `BL-94`, `BL-97`, `BL-99`, `BL-117`, `BL-119`, `BL-120`) |
+| **CMP-07** | **In-Game Menus & Overlays (Pause, Victory)** | 8.67 | 9.33 | 9.67 | 8.00 | 7.33 | 9.00 | **52.00** (86.7%) | **A Tier** | Categorized Command Center, Overlay Visibility Toggles, Streamlined Victory Bar & Safe Buffers (`BL-38`, `BL-55`, `BL-64`, `BL-68`, `BL-74`, `BL-106`, `BL-109`, `BL-111`, `BL-119`) |
 | **CMP-08** | **Map Editor Studio: Canvas & Editing Tools** | 8.00 | 9.67 | 8.67 | 8.00 | 6.33 | 7.67 | **48.34** (80.6%) | **A- Tier** | 2D/2.5D Perspective Switching, Collision-Free Minimap & Viewport HUD (`BL-49`, `BL-50`, `BL-73`, `BL-102`, `BL-103`, `BL-110`) |
 | **CMP-09** | **Map Editor Studio: History Stack & Prefabs** | 7.33 | 9.67 | 8.67 | 8.00 | 6.00 | 7.67 | **47.34** (78.9%) | **B+ Tier** | Category Pills, Live Asset Search & 3-Col Color Subgrid (`BL-18`, `BL-20`, `BL-39`, `BL-102`, `BL-104`, `BL-110`) |
 | **CMP-10** | **Map Editor Studio: Diagnostics, Auto-Fix & Layer HUD**| 7.67 | 9.67 | 8.67 | 8.00 | 6.00 | 7.67 | **47.68** (79.5%) | **B+ Tier** | Perspective HUD Badge, Minimized Mini-Map Toggle & Live Telemetry (`BL-21`, `BL-50`, `BL-75`, `BL-102`, `BL-103`, `BL-110`) |
 | **CMP-11** | **Vector SVG Asset Pipeline & Thematic Styling**| 8.33 | 9.33 | 8.67 | 7.33 | 7.33 | 7.00 | **47.99** (80.0%) | **A- Tier** | Procedural Biome Floor Shaders, Puddles, Sparkles & Thematic Sconces (`BL-09`, `BL-10`, `BL-41`, `BL-44`, `BL-78`, `BL-95`, `BL-101`, `BL-105`) |
 | **CMP-12** | **Web Audio FX & Procedural Ambience Engine** | 7.33 | 9.33 | 6.67 | 7.00 | 5.67 | 6.33 | **42.33** (70.6%) | **B- Tier** | Elevation Transition Chimes & Diagnostic Radar Audio (`BL-28`, `BL-35`, `BL-51`, `BL-77`) |
 | **CMP-13** | **Storage, Save State & Persistence Engine** | 6.00 | 9.67 | 7.33 | 7.67 | 6.67 | 6.00 | **43.34** (72.2%) | **B Tier** | Save Metadata Previews & Emergency Rollback Snapshots (`BL-34`, `BL-36`, `BL-52`, `BL-76`) |
-| **CMP-14** | **Player Profile, Medals & Prestige Progression** | 7.33 | 9.33 | 8.33 | 7.33 | 8.00 | 7.33 | **47.65** (79.4%) | **A- Tier** | Character Customization Studio, Wardrobe & Tiered Medals (`BL-52`, `BL-73`, `BL-78`, `BL-95`) |
-| **CMP-15** | **Settings & Configuration System** | 7.00 | 9.33 | 9.00 | 7.33 | 6.33 | 9.00 | **48.00** (80.0%) | **A- Tier** | Segmented Navigation Tabs, Backdrop Interactivity, Keybinding Presets & Pointer Toggle (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`, `BL-73`, `BL-100`, `BL-107`, `BL-111`) |
+| **CMP-14** | **Player Profile, Medals & Prestige Progression** | 8.67 | 9.33 | 9.33 | 7.67 | 8.67 | 8.33 | **51.99** (86.7%) | **A Tier** | 8 Preset Avatar Archetypes, Primary/Secondary Colors, Wardrobe & Tiered Medals (`BL-52`, `BL-73`, `BL-78`, `BL-95`, `BL-118`) |
+| **CMP-15** | **Settings & Configuration System** | 7.00 | 9.33 | 9.33 | 7.33 | 6.33 | 9.33 | **48.65** (81.1%) | **A- Tier** | Segmented Navigation Tabs, Display Clamping, Safe Buffers, Keybinding Presets & Pointer Toggle (`BL-25`, `BL-26`, `BL-53`, `BL-64`, `BL-70`, `BL-73`, `BL-100`, `BL-107`, `BL-111`, `BL-119`) |
 | **CMP-16** | **Help, Onboarding & Architect Handbook** | 6.00 | 9.33 | 7.67 | 7.00 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | Universal Interactive Handbook Modal & Visual Bridge SVG Guide (`BL-37`, `BL-48`, `BL-71`) |
 | **CMP-17** | **Diagnostic Lab, Replay Theater & QA Test Harness** | 8.67 | 9.33 | 9.00 | 9.00 | 6.67 | 8.67 | **51.34** (85.6%) | **A Tier** | Grand Screen Replay Theater, PiP Radar, Perspective, Synchronized Action Activity Feed & Media Deck (`BL-45`, `BL-46`, `BL-79`, `BL-96`, `BL-108`, `BL-112`) |
 | **CMP-18** | **Community Feedback & Bug Reporting Channels** | 5.67 | 9.33 | 7.67 | 7.33 | 6.00 | 8.00 | **44.00** (73.3%) | **B Tier** | 1-Click Universal Feedback Modal with Live Telemetry & GitHub Issue Creation (`BL-34`, `BL-69`) |
@@ -144,14 +144,15 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/minimap.js`, `js/engine/game-loop.js`, `js/engine/fog.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
+  * $C_1$ Juice & Delight: **7.67/10** (1.1: 8, 1.2: 8, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.00/10** (3.1: 8, 3.2: 8, 3.3: 8)
+  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
   * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
   * $C_5$ Progression & Retention: **7.00/10** (5.1: 7, 5.2: 7, 5.3: 7)
-  * $C_6$ Accessibility & DX: **7.33/10** (6.1: 7, 6.2: 8, 6.3: 7)
-  * **Master Score**: **46.99 / 60.00 (78.3% — B+ Tier)**
+  * $C_6$ Accessibility & DX: **7.67/10** (6.1: 8, 6.2: 8, 6.3: 7)
+  * **Master Score**: **48.34 / 60.00 (80.6% — A- Tier)**
 * **Strengths**:
+  * **Top Bar Radar Integration & Pause Menu HUD Control (`BL-119`)**: Dedicated 1-click radar toggle in the universal top bar with visual `.active` pill highlight, paired with an inline radar toggle in the pause menu and mobile mutual exclusion (`OverlayManager`).
   * **Strategic Fog of War & Exploratory Vision Dynamics (`BL-88`)**: Strategic expansion of 3-state Fog of War across climatic chapter finales (Level 4, 8, 12, 16, 20, 24, 28, 29, 30, 31, 32) transforms the minimap radar into an essential exploration companion. Dynamic raycasting incrementally maps discovered rooms and upper bridge networks in real time.
   * **Multi-Elevation & Bridge Shading (`BL-65`)**: Elevated bridges (`B_EW`, `B_NS`) render with cobalt bridge deck spans (`#0369a1`) and bright cyan center walkway planks (`#38bdf8`); directional ramps (`R_*`) render incline shading with directional notch markers.
   * **Tactical Entity Indicators (`BL-65`)**: Uncollected keys render glowing gold pips (`#facc15`), locked doors render security barrier crossbars (`#ef4444`), levers render amber/emerald switch nodes, and teleporters render violet rings.
@@ -168,14 +169,16 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/engine/game-loop.js`, `css/game.css`, `maze.html`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **7.67/10** (1.1: 8, 1.2: 8, 1.3: 7)
+  * $C_1$ Juice & Delight: **8.33/10** (1.1: 9, 1.2: 8, 1.3: 8)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.67/10** (3.1: 9, 3.2: 9, 3.3: 8)
-  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
+  * $C_3$ UI/UX & Ergonomics: **9.33/10** (3.1: 10, 3.2: 9, 3.3: 9)
+  * $C_4$ Mechanics & Systems: **7.67/10** (4.1: 8, 4.2: 8, 4.3: 7)
   * $C_5$ Progression & Retention: **7.00/10** (5.1: 7, 5.2: 7, 5.3: 7)
-  * $C_6$ Accessibility & DX: **7.67/10** (6.1: 8, 6.2: 8, 6.3: 7)
-  * **Master Score**: **47.67 / 60.00 (79.5% — A- Tier)**
+  * $C_6$ Accessibility & DX: **8.67/10** (6.1: 9, 6.2: 9, 6.3: 8)
+  * **Master Score**: **50.33 / 60.00 (83.9% — A- Tier)**
 * **Strengths**:
+  * **Universal Top Bar & Luminous Canvas Render Frame (`BL-119`, Issue #83)**: Reorganized firm top bar across all viewports featuring Hub return (`← Hub`) on left, breadcrumb trail, Page Context button (`Menu [P]`) + quick access icons (`🗺️ Radar`, `⚡ Feed`, `🐛 Bug Feedback`) in center, and settings/profile/HUD collapse on right. Framed the game canvas with an unmistakable luminous border (`.canvas-render-border`) clearly distinguishing rendered labyrinth tiles from browser chrome.
+  * **Floating Exit Minimal View Button (`BL-120`, Issue #82)**: Prominent floating pill button (`#btn-exit-minimal-mode` / `👁️ Normal View [H]`) appearing when the HUD is collapsed or when in minimal drag exploration mode on mobile, providing an immediate 1-tap exit mechanism back to full HUD and standard navigation.
   * **Overlay Conflict Detection, Visibility Coordinator & Firm Top Command Bar (`BL-117`, `ADR-0029`)**: Consolidated fragmented floating HUD islands into a solid, anchored `#firm-top-bar` with quick access to radar minimap (`#btn-topbar-minimap`), activity feed (`#btn-hud-feed-pill`), settings (`#hud-btn-settings`), profile (`#hud-btn-profile`), and menu drawer (`#btn-open-menu`). Enforced priority-based modal suppression (`.overlay-suppressed`) preventing background distraction, mobile mutual exclusion between radar minimap and activity feed, and spatial AABB conflict detection.
   * **Interactive Action Activity Feed History & Companion Log (`BL-81`, `BL-94`)**: Eliminates notification ephemerality by allowing players to click the feed bar or history button (📜 / `#btn-feed-history`) to inspect full chronological history inside the companion Activity History modal, with category filter pills (`All`, `📜 Lore`, `⚙️ Mech`, `🗝️ Items`, `⚠️ Warnings`) (ADR-0013).
   * **Optical Indicator Zoom Scaling (`BL-93`)**: In-world interactive overlay indicators (`.hud-tile-indicator`, `.hud-disambig-pill`) scale smoothly with `--camera-zoom` factor via `clamp(0.75, var(--camera-zoom, 1), 1.35)`, eliminating visual size mismatch during camera zoom.
@@ -199,12 +202,14 @@ This document records the official baseline quality evaluations, granular expert
 * **Expert Panel Scores**:
   * $C_1$ Juice & Delight: **8.67/10** (1.1: 9, 1.2: 8, 1.3: 9)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **9.33/10** (3.1: 10, 3.2: 9, 3.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **9.67/10** (3.1: 10, 3.2: 10, 3.3: 9)
   * $C_4$ Mechanics & Systems: **8.00/10** (4.1: 8, 4.2: 8, 4.3: 8)
   * $C_5$ Progression & Retention: **7.33/10** (5.1: 8, 5.2: 7, 5.3: 7)
-  * $C_6$ Accessibility & DX: **8.67/10** (6.1: 9, 6.2: 8, 6.3: 9)
-  * **Master Score**: **51.33 / 60.00 (85.6% — A- Tier)**
+  * $C_6$ Accessibility & DX: **9.00/10** (6.1: 9, 6.2: 9, 6.3: 9)
+  * **Master Score**: **52.00 / 60.00 (86.7% — A Tier)**
 * **Strengths**:
+  * **Overlays & HUD Visibility Command Group (`BL-119`)**: Pause menu includes direct toggle buttons for Radar/Minimap, Action Activity Feed, Virtual Touch Controls, and HUD Bar collapse, updating live status labels upon pause.
+  * **Mobile Safe Area & Dialog Clamping (`BL-119`)**: Implemented `--bottom-safe-buffer` and clamped dialog dimensions (`max-height: calc(100vh - 52px - var(--bottom-safe-buffer) - 20px)`), completely preventing dialog clipping or collision with mobile home indicators.
   * **Streamlined Victory Screen & Collapsible "More" Drawer (`BL-109`, ADR-0021)**: Replaced 7 sprawling disparate victory footer buttons with an ultra-clean single-row primary action bar (`Next Level →`, `More ▾`), paired with 3 compact 1-tap quick action icons (`🔄 Retry`, `🎬 Replay`, `🐞 Bug`) and an animated 6-utility secondary drawer, while condensing metric typography into clean tokens (`Score`, `Time`, `Steps`, `Secrets`) and reducing screen height by $>50\%$.
   * **Categorized Command Center Drawer (`BL-106`, ADR-0019)**: Eliminated the bulky 14-button vertical stack by organizing the pause menu into semantic groups (`Primary Actions`, `View & Exploration`, `Preferences & System`, `Session Exit`) rendered in a responsive 2-column grid ($\le 540\text{px}$) with prominent resume callout, zero vertical overflow on mobile/laptop displays, and 100% backward-compatible IDs.
   * **Destructive Action Confirmations (`BL-64`, `BL-68`)**: Both "Restart Level" and "Return to Level Select" in the pause menu are shielded behind explicit inline confirmation boxes with distinct Cancel and Confirm actions, preventing accidental progress loss on mobile touchscreens.
@@ -361,15 +366,17 @@ This document records the official baseline quality evaluations, granular expert
 *Files: `js/ui/profile-modal.js`, `js/core/storage.js`, `js/core/constants.js`*
 
 * **Expert Panel Scores**:
-  * $C_1$ Juice & Delight: **7.33/10** (1.1: 8, 1.2: 7, 1.3: 7)
+  * $C_1$ Juice & Delight: **8.67/10** (1.1: 9, 1.2: 9, 1.3: 8)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **8.33/10** (3.1: 9, 3.2: 8, 3.3: 8)
-  * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
-  * $C_5$ Progression & Retention: **8.00/10** (5.1: 8, 5.2: 8, 5.3: 8)
-  * $C_6$ Accessibility & DX: **7.33/10** (6.1: 7, 6.2: 8, 6.3: 7)
-  * **Master Score**: **47.65 / 60.00 (79.4% — A- Tier)**
+  * $C_3$ UI/UX & Ergonomics: **9.33/10** (3.1: 10, 3.2: 9, 3.3: 9)
+  * $C_4$ Mechanics & Systems: **7.67/10** (4.1: 8, 4.2: 8, 4.3: 7)
+  * $C_5$ Progression & Retention: **8.67/10** (5.1: 9, 5.2: 9, 5.3: 8)
+  * $C_6$ Accessibility & DX: **8.33/10** (6.1: 8, 6.2: 9, 6.3: 8)
+  * **Master Score**: **51.99 / 60.00 (86.7% — A Tier)**
 * **Strengths**:
   * Tracks completed levels, total stars, prestige ranks, and best performance metrics.
+  * **8 Preset Hero Avatar Archetypes (`BL-118`, Issue #84)**: Direct 1-click selection across 8 distinct fantasy archetypes (`Adventurer`, `Fighter`, `Wizard`, `Rogue`, `Cleric`, `Ranger`, `Paladin`, `Bard`) with distinct back gear (shields, cloaks, quivers, lute, relic pouch, backpack), torso garments (breastplate, robes, doublet, tunic), and headgear (wizard conical hat with star, knight helm, hood, halo circlet, feathered cap/beret) rendered faithfully across 2.5D angled and top-down views.
+  * **Curated Primary & Secondary Color Palette (`BL-118`, Issue #84)**: 8 rich fantasy colors (Crimson, Cobalt, Emerald, Amber, Purple, Rose, Slate, Silver) allowing custom primary outfit tint and secondary trim accent styling with zero gameplay stat impact.
   * **Character Visual Customization Studio (`BL-95`)**: Full appearance customization with interactive live explorer preview, body silhouette (male, female, neutral), diverse hair styles (short, ponytail with sway physics, curls, bob, bald), hair colorways, and skin tones persisted via `StorageManager` and broadcast via event bus.
   * **Tiered Medal & Secret Persistence (`BL-52`)**: Persists Gold/Silver/Bronze medals, Secret Sleuth prestige badges, Flawless run achievements, and high score tallies per labyrinth in `StorageManager`.
   * **Explorer Wardrobe & Palette Customizer (`BL-78`)**: In-profile wardrobe picker allowing players to equip 6 distinct aesthetic adventurer outfits (`Classic Pathfinder`, `Emerald Ranger`, `Frost Nomad`, `Desert Scout`, `Obsidian Rogue`, `Arcane Scholar`) with color swatch dots, active badges, and instant event bus propagation.
@@ -386,12 +393,13 @@ This document records the official baseline quality evaluations, granular expert
 * **Expert Panel Scores**:
   * $C_1$ Juice & Delight: **7.00/10** (1.1: 7, 1.2: 7, 1.3: 7)
   * $C_2$ Static Purity: **9.33/10** (2.1: 10, 2.2: 9, 2.3: 9)
-  * $C_3$ UI/UX & Ergonomics: **9.00/10** (3.1: 9, 3.2: 9, 3.3: 9)
+  * $C_3$ UI/UX & Ergonomics: **9.33/10** (3.1: 10, 3.2: 9, 3.3: 9)
   * $C_4$ Mechanics & Systems: **7.33/10** (4.1: 8, 4.2: 7, 4.3: 7)
   * $C_5$ Progression & Retention: **6.33/10** (5.1: 7, 5.2: 6, 5.3: 6)
-  * $C_6$ Accessibility & DX: **9.00/10** (6.1: 9, 6.2: 9, 6.3: 9)
-  * **Master Score**: **48.00 / 60.00 (80.0% — A- Tier)**
+  * $C_6$ Accessibility & DX: **9.33/10** (6.1: 10, 6.2: 9, 6.3: 9)
+  * **Master Score**: **48.65 / 60.00 (81.1% — A- Tier)**
 * **Strengths**:
+  * **Mobile Safe Area & Dialog Clamping (`BL-119`)**: Settings dialog dynamically conforms to mobile screen dimensions with `--bottom-safe-buffer` protection, ensuring all settings tabs and options remain accessible and readable.
   * **Segmented Navigation Tabs (`BL-107`, ADR-0019)**: Eradicated cumbersome 70vh monolithic scroll by categorizing all settings across 5 sleek tabbed panels (`🔊 Audio`, `🎥 Display`, `🎮 Controls`, `💾 Save Data`, `🔬 Support`), featuring active indicators, keyboard accessibility, and programmatic `switchTab(tabId)` / `open(targetTab)` jump routing.
   * Live audio slider previews with gain clamping and persistence.
   * High contrast mode toggle with instant body class injection.

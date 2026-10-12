@@ -1026,6 +1026,9 @@ export class StorageManager {
    */
   static getPlayerCustomization() {
     const defaults = CHARACTER_CUSTOMIZATION?.DEFAULTS || {
+      archetype: 'adventurer',
+      primaryColor: '#d97706',
+      secondaryColor: '#78350f',
       gender: 'male',
       hairStyle: 'short',
       hairColor: 'brunette',
@@ -1036,6 +1039,9 @@ export class StorageManager {
       return { ...defaults };
     }
     return {
+      archetype: saved.archetype || defaults.archetype,
+      primaryColor: saved.primaryColor || defaults.primaryColor,
+      secondaryColor: saved.secondaryColor || defaults.secondaryColor,
       gender: saved.gender || defaults.gender,
       hairStyle: saved.hairStyle || defaults.hairStyle,
       hairColor: saved.hairColor || defaults.hairColor,

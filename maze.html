@@ -19,6 +19,9 @@
     <!-- Main 2D Canvas -->
     <canvas id="game-canvas"></canvas>
 
+    <!-- Visual Border Around Render Area (BL-119, Issue #83) -->
+    <div class="canvas-render-border" id="canvas-render-border" aria-hidden="true"></div>
+
     <!-- Subtle In-World Tile [E] Overlay Indicator (BL-42, BL-91) -->
     <button id="hud-tile-indicator" class="hud-tile-indicator hidden" aria-label="Interact [E]" title="Interact [E]">
       <span class="hud-tile-key">E</span>
@@ -81,8 +84,26 @@
         </div>
       </div>
 
-      <!-- Center Island: Inventory & Carried Relics -->
+      <!-- Center Island: Page Context, Quick Icons, Inventory & Held Relics (BL-119, Issue #83) -->
       <div class="hud-island hud-island-center">
+        <!-- Page Context: In-Game Pause & Menu Button -->
+        <button id="btn-open-menu" class="btn btn-primary btn-sm hud-menu-btn" title="Open Game Menu &amp; Options (Esc / P)" aria-label="Game Menu">
+          ⏸️ <span class="hide-mobile">Menu [P]</span>
+        </button>
+
+        <!-- Quick Access Icons: Radar, Feed, Bug Feedback -->
+        <div class="hud-quick-icons" id="hud-quick-icons">
+          <button id="btn-topbar-minimap" class="btn btn-secondary btn-sm btn-icon hud-minimap-pill active" title="Toggle Tactical Radar [M]" aria-label="Toggle Radar">
+            🗺️
+          </button>
+          <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
+            ⚡ <span class="hide-mobile">Feed</span>
+          </button>
+          <button id="hud-btn-bug" class="btn btn-secondary btn-sm btn-icon" title="Report Bug or Feedback" aria-label="Report Bug">
+            🐛
+          </button>
+        </div>
+
         <!-- Inventory Keys & Held Items -->
         <div class="hud-card hud-inventory-card" id="hud-inventory-card" title="Player Inventory">
           <span class="inventory-icon">🎒</span>
@@ -114,8 +135,23 @@
         </button>
       </div>
 
-      <!-- Right Island: Stats, Compass Dial, & Pause Menu -->
+      <!-- Right Island: Settings, Profile, Stats, Controls (BL-119, Issue #83) -->
       <div class="hud-island hud-island-right">
+        <!-- Settings Quick Button (BL-115) -->
+        <button id="hud-btn-settings" class="btn btn-secondary btn-sm btn-icon" title="Open Game Settings [Audio, Video, Controls] [O]" aria-label="Settings">
+          ⚙️
+        </button>
+
+        <!-- Player Profile Quick Button (BL-115) -->
+        <button id="hud-btn-profile" class="btn btn-secondary btn-sm profile-pill-btn" title="Open Player Profile &amp; Save Management" aria-label="Player Profile">
+          <span id="hud-profile-avatar">🧭</span> <span class="hide-mobile" id="hud-profile-name">Explorer</span>
+        </button>
+
+        <!-- Mobile Touch Mode Toggle (BL-116) -->
+        <button id="btn-touch-mode-toggle" class="btn btn-secondary btn-sm hud-touch-pill" title="Toggle Navigation: Tap to Move (BFS) vs Hold &amp; Drag Steer" aria-label="Toggle Touch Navigation Mode">
+          👆 <span class="hide-mobile" id="touch-mode-label">Tap Move</span>
+        </button>
+
         <!-- Timer, Steps, & Score -->
         <div class="hud-card" id="hud-stats-card">
           <div class="hud-stat">⏱ <strong id="hud-timer">00:00.0</strong></div>
@@ -149,45 +185,17 @@
           </button>
         </div>
 
-        <!-- Mobile Touch Mode Toggle (BL-116) -->
-        <button id="btn-touch-mode-toggle" class="btn btn-secondary btn-sm hud-touch-pill" title="Toggle Navigation: Tap to Move (BFS) vs Hold &amp; Drag Steer" aria-label="Toggle Touch Navigation Mode">
-          👆 <span class="hide-mobile" id="touch-mode-label">Tap Move</span>
+        <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
+        <button id="btn-hud-collapse" class="btn btn-secondary btn-sm btn-icon hud-collapse-toggle" title="Collapse / Expand HUD Bar [H]" aria-label="Toggle HUD Visibility">
+          📐
         </button>
-
-        <!-- Streamlined Action Cluster (BL-116, BL-117) -->
-        <div class="hud-action-cluster" id="hud-action-cluster">
-          <!-- Tactical Radar / Minimap Quick Toggle (BL-117) -->
-          <button id="btn-topbar-minimap" class="btn btn-secondary btn-sm btn-icon hud-minimap-pill active" title="Toggle Tactical Radar [M]" aria-label="Toggle Radar">
-            🗺️
-          </button>
-
-          <!-- Responsive Quick Feed Pill (BL-97, BL-117) -->
-          <button id="btn-hud-feed-pill" class="btn btn-secondary btn-sm hud-feed-pill" title="Toggle Action Feed [F]" aria-label="Toggle Activity Feed">
-            ⚡ <span class="hide-mobile">Feed</span>
-          </button>
-
-          <!-- Settings Quick Button (BL-115) -->
-          <button id="hud-btn-settings" class="btn btn-secondary btn-sm btn-icon" title="Open Game Settings [Audio, Video, Controls] [O]" aria-label="Settings">
-            ⚙️
-          </button>
-
-          <!-- Player Profile Quick Button (BL-115) -->
-          <button id="hud-btn-profile" class="btn btn-secondary btn-sm profile-pill-btn" title="Open Player Profile &amp; Save Management" aria-label="Player Profile">
-            <span id="hud-profile-avatar">🧭</span> <span class="hide-mobile" id="hud-profile-name">Explorer</span>
-          </button>
-
-          <!-- Pause / Game Menu Button -->
-          <button id="btn-open-menu" class="btn btn-primary btn-sm" title="Open Game Menu &amp; Options (Esc / P)" aria-label="Game Menu">
-            ⏸️ <span class="hide-mobile">Menu [P]</span>
-          </button>
-
-          <!-- Responsive HUD Collapse Toggle (BL-92, ADR-0010) -->
-          <button id="btn-hud-collapse" class="btn btn-secondary btn-sm btn-icon hud-collapse-toggle" title="Collapse / Expand HUD Bar [H]" aria-label="Toggle HUD Visibility">
-            📐
-          </button>
-        </div>
       </div>
     </header>
+
+    <!-- Floating Exit Minimal View Button (BL-120, Issue #82) -->
+    <button type="button" id="btn-exit-minimal-mode" class="btn-exit-minimal-mode hidden" title="Exit Minimal View and Restore HUD [H]" aria-label="Exit Minimal View">
+      👁️ <span class="exit-minimal-label">Normal View [H]</span>
+    </button>
 
     <!-- Floating Tutorial Objective & Hint Card -->
     <aside class="tutorial-hint-card" id="tutorial-hint-card" style="display: none;">
@@ -349,6 +357,25 @@
                 </button>
                 <button class="btn btn-secondary pause-action-btn" id="btn-pause-log">
                   📜 <span>Activity Log &amp; Telemetry [L]</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Overlays & HUD Visibility Group (BL-119, Issue #83) -->
+            <div class="pause-section-group">
+              <div class="pause-section-header">Overlays &amp; HUD Visibility</div>
+              <div class="pause-action-grid">
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-toggle-radar">
+                  🗺️ <span id="lbl-pause-radar">Radar / Minimap: ON</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-toggle-feed">
+                  ⚡ <span id="lbl-pause-feed">Activity Feed: ON</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-toggle-controls">
+                  🎮 <span id="lbl-pause-controls">Touch Controls: ON</span>
+                </button>
+                <button class="btn btn-secondary pause-action-btn" id="btn-pause-toggle-hud">
+                  📐 <span id="lbl-pause-hud">HUD Bar: EXPANDED</span>
                 </button>
               </div>
             </div>
@@ -707,7 +734,7 @@
     import { audioFX } from './js/ui/audio-fx.js';
     import { GameMenu } from './js/ui/game-menu.js';
     import { getKeyColorblindShape } from './js/core/constants.js';
-    import { getSettingsModal, getProfileModal } from './js/ui/app-header.js';
+    import { getSettingsModal, getProfileModal, getFeedbackModal } from './js/ui/app-header.js';
     import { overlayManager, OVERLAY_CATEGORIES, OVERLAY_PRIORITIES } from './js/ui/overlay-manager.js';
 
     // Migrate storage schema on startup (BL-36)
@@ -2631,13 +2658,28 @@
 
     initDraggableControls();
 
-    // Responsive HUD Collapse Controller (BL-92, ADR-0010)
+    // Responsive HUD Collapse Controller & Minimal Mode Exit (BL-92, BL-120, Issue #82)
     const gameHudTop = document.querySelector('.game-hud-top');
     const btnHudCollapse = document.getElementById('btn-hud-collapse');
+    const btnExitMinimal = document.getElementById('btn-exit-minimal-mode');
+    const hudBtnBug = document.getElementById('hud-btn-bug');
+
+    if (hudBtnBug) {
+      hudBtnBug.addEventListener('click', (e) => {
+        e.stopPropagation();
+        audioFX.playClick();
+        const feedbackModal = getFeedbackModal();
+        if (feedbackModal) feedbackModal.open();
+      });
+    }
+
     if (gameHudTop && btnHudCollapse) {
       function applyHudCollapsed(collapsed) {
         gameHudTop.classList.toggle('hud-collapsed', collapsed);
         btnHudCollapse.title = collapsed ? 'Expand HUD Bar [H]' : 'Collapse HUD Bar [H]';
+        if (btnExitMinimal) {
+          btnExitMinimal.classList.toggle('hidden', !collapsed);
+        }
         try {
           localStorage.setItem('maze_hud_collapsed', collapsed ? 'true' : 'false');
         } catch (err) {}
@@ -2648,6 +2690,22 @@
         audioFX.playClick();
         applyHudCollapsed(!gameHudTop.classList.contains('hud-collapsed'));
       });
+
+      if (btnExitMinimal) {
+        btnExitMinimal.addEventListener('click', (e) => {
+          e.stopPropagation();
+          audioFX.playClick();
+          applyHudCollapsed(false);
+          if (window.gameLoop && window.gameLoop.mouseMoveMode === 'drag_only') {
+            window.gameLoop.mouseMoveMode = 'both';
+            const btnTouch = document.getElementById('btn-touch-mode-toggle');
+            if (btnTouch) {
+              btnTouch.innerHTML = '👆 <span class="hide-mobile" id="touch-mode-label">Tap Move</span>';
+              btnTouch.classList.add('active');
+            }
+          }
+        });
+      }
 
       try {
         if (localStorage.getItem('maze_hud_collapsed') === 'true') {

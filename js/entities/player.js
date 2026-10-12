@@ -576,11 +576,86 @@ export class Player {
     const isWest = screenFacing === 'west';
 
     const p = this.palette || EXPLORER_OUTFITS.classic;
+    const custom = this.customization || {};
+    const archetype = custom.archetype || 'adventurer';
+    const primaryColor = custom.primaryColor || p.shirt;
+    const secondaryColor = custom.secondaryColor || p.shirtDark;
+    const skinColor = CHARACTER_CUSTOMIZATION?.SKIN_TONES?.[custom.skinTone]?.color || p.skin;
+    const hairColor = CHARACTER_CUSTOMIZATION?.HAIR_COLORS?.[custom.hairColor]?.color || p.hair;
+    const hairStyle = custom.hairStyle || 'short';
+    const isFemale = custom.gender === 'female';
 
-    // 3. Explorer Backpack (Drawn behind body when facing south, or on back when facing north/east/west)
+    // 3. Explorer Back Gear (Drawn behind body when facing south, or on back when facing north/east/west)
     const drawBackpack = (x, y, scale = 1, isBackView = false) => {
       ctx.save();
-      // Main pack body
+
+      if (archetype === 'fighter' || archetype === 'paladin') {
+        // Shield strapped to back
+        ctx.fillStyle = secondaryColor;
+        ctx.strokeStyle = '#fbbf24';
+        ctx.lineWidth = 1.5 * s;
+        ctx.beginPath();
+        ctx.ellipse(x, y, 7 * s * scale, 9 * s * scale, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.fillStyle = primaryColor;
+        ctx.beginPath();
+        ctx.arc(x, y, 3 * s * scale, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        return;
+      }
+
+      if (archetype === 'wizard' || archetype === 'rogue') {
+        // Flowing Cloak / Mantle
+        ctx.fillStyle = secondaryColor;
+        ctx.beginPath();
+        ctx.moveTo(x - 6.5 * s * scale, y - 6 * s * scale);
+        ctx.lineTo(x + 6.5 * s * scale, y - 6 * s * scale);
+        ctx.lineTo(x + 8 * s * scale, y + 10 * s * scale);
+        ctx.lineTo(x - 8 * s * scale, y + 10 * s * scale);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+        return;
+      }
+
+      if (archetype === 'ranger') {
+        // Wooden Quiver with Arrow Fletchings
+        ctx.fillStyle = secondaryColor;
+        ctx.fillRect(x - 3 * s * scale, y - 8 * s * scale, 6 * s * scale, 14 * s * scale);
+        ctx.fillStyle = '#f8fafc';
+        ctx.fillRect(x - 2 * s * scale, y - 11 * s * scale, 1.5 * s * scale, 3 * s * scale);
+        ctx.fillRect(x + 0.8 * s * scale, y - 11 * s * scale, 1.5 * s * scale, 3 * s * scale);
+        ctx.restore();
+        return;
+      }
+
+      if (archetype === 'bard') {
+        // Slung Lute Instrument
+        ctx.fillStyle = '#78350f';
+        ctx.beginPath();
+        ctx.ellipse(x, y + 2 * s * scale, 5 * s * scale, 7 * s * scale, -0.2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#b45309';
+        ctx.fillRect(x - 1.5 * s * scale, y - 9 * s * scale, 3 * s * scale, 8 * s * scale);
+        ctx.restore();
+        return;
+      }
+
+      if (archetype === 'cleric') {
+        // Sacred Relic Pouch
+        ctx.fillStyle = secondaryColor;
+        ctx.fillRect(x - 5 * s * scale, y - 5 * s * scale, 10 * s * scale, 11 * s * scale);
+        ctx.fillStyle = '#fbbf24';
+        ctx.beginPath();
+        ctx.arc(x, y + 0.5 * s * scale, 2.5 * s * scale, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+        return;
+      }
+
+      // Classic Adventurer Backpack
       ctx.fillStyle = p.pack;
       ctx.strokeStyle = p.packDark;
       ctx.lineWidth = 1 * s;
@@ -661,63 +736,101 @@ export class Player {
     ctx.fillStyle = '#fbbf24';
     ctx.fillRect(screenX - 1.5 * s, py + 1.2 * s, 3 * s, 1.8 * s);
 
-    // 5. Shirt Torso
+    // 5. Torso Garments (Archetype-specific)
     const torsoW = (isEast || isWest) ? 10 * s : 13 * s;
     const torsoH = 9 * s;
     const torsoX = screenX - torsoW / 2;
     const torsoY = py - 7 * s;
 
-    // Base Shirt
-    ctx.fillStyle = p.shirt;
-    ctx.fillRect(torsoX, torsoY, torsoW, torsoH);
-
-    // Plaid horizontal/vertical check stripes
-    ctx.fillStyle = p.shirtDark;
-    // Horizontal bars
-    ctx.fillRect(torsoX, torsoY + 2 * s, torsoW, 2 * s);
-    ctx.fillRect(torsoX, torsoY + 6 * s, torsoW, 2 * s);
-    // Vertical bars
-    if (isEast || isWest) {
-      ctx.fillRect(torsoX + 3 * s, torsoY, 2 * s, torsoH);
-      ctx.fillRect(torsoX + 7 * s, torsoY, 2 * s, torsoH);
-    } else {
-      ctx.fillRect(torsoX + 2.5 * s, torsoY, 2 * s, torsoH);
-      ctx.fillRect(torsoX + 8.5 * s, torsoY, 2 * s, torsoH);
-    }
-
-    // Intersecting check nodes
-    ctx.fillStyle = p.shirtCheck;
-    if (isEast || isWest) {
-      ctx.fillRect(torsoX + 3 * s, torsoY + 2 * s, 2 * s, 2 * s);
-      ctx.fillRect(torsoX + 3 * s, torsoY + 6 * s, 2 * s, 2 * s);
-      ctx.fillRect(torsoX + 7 * s, torsoY + 2 * s, 2 * s, 2 * s);
-      ctx.fillRect(torsoX + 7 * s, torsoY + 6 * s, 2 * s, 2 * s);
-    } else {
-      ctx.fillRect(torsoX + 2.5 * s, torsoY + 2 * s, 2 * s, 2 * s);
-      ctx.fillRect(torsoX + 2.5 * s, torsoY + 6 * s, 2 * s, 2 * s);
-      ctx.fillRect(torsoX + 8.5 * s, torsoY + 2 * s, 2 * s, 2 * s);
-      ctx.fillRect(torsoX + 8.5 * s, torsoY + 6 * s, 2 * s, 2 * s);
-    }
-
-    // Details for South Facing (Front Placket, Buttons & Leather Straps)
-    if (isSouth) {
-      // Placket
-      ctx.fillStyle = p.shirtDark;
-      ctx.fillRect(screenX - 1.2 * s, torsoY, 2.4 * s, torsoH);
-      // Small brass buttons
-      ctx.fillStyle = '#fef08a';
-      ctx.fillRect(screenX - 0.7 * s, torsoY + 1.5 * s, 1.4 * s, 1.4 * s);
-      ctx.fillRect(screenX - 0.7 * s, torsoY + 4 * s, 1.4 * s, 1.4 * s);
-      ctx.fillRect(screenX - 0.7 * s, torsoY + 6.5 * s, 1.4 * s, 1.4 * s);
-
-      // Backpack shoulder straps over chest
-      ctx.fillStyle = p.packDark;
-      ctx.fillRect(screenX - 5 * s, torsoY, 2 * s, torsoH);
-      ctx.fillRect(screenX + 3 * s, torsoY, 2 * s, torsoH);
-      // Buckles on straps
+    if (archetype === 'fighter' || archetype === 'paladin') {
+      // Plate Armor Breastplate
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(torsoX, torsoY, torsoW, torsoH);
+      ctx.fillStyle = secondaryColor;
+      ctx.fillRect(torsoX, torsoY, torsoW, 2 * s);
+      ctx.fillRect(torsoX, torsoY + torsoH - 2 * s, torsoW, 2 * s);
+      ctx.fillRect(screenX - 1 * s, torsoY, 2 * s, torsoH);
+      // Brass rivets
       ctx.fillStyle = '#fbbf24';
-      ctx.fillRect(screenX - 5.2 * s, torsoY + 4 * s, 2.4 * s, 1.5 * s);
-      ctx.fillRect(screenX + 2.8 * s, torsoY + 4 * s, 2.4 * s, 1.5 * s);
+      ctx.fillRect(torsoX + 1.5 * s, torsoY + 3.5 * s, 1.5 * s, 1.5 * s);
+      ctx.fillRect(torsoX + torsoW - 3 * s, torsoY + 3.5 * s, 1.5 * s, 1.5 * s);
+    } else if (archetype === 'wizard' || archetype === 'cleric') {
+      // Mystic Robes
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(torsoX, torsoY, torsoW, torsoH);
+      ctx.fillStyle = secondaryColor;
+      ctx.fillRect(screenX - 2.5 * s, torsoY, 5 * s, torsoH);
+      // Holy/Mystic medallion
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(screenX, torsoY + 4 * s, 2 * s, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (archetype === 'rogue') {
+      // Leather Jerkin
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(torsoX, torsoY, torsoW, torsoH);
+      ctx.fillStyle = secondaryColor;
+      ctx.fillRect(torsoX, torsoY + 2 * s, torsoW, 2 * s);
+      ctx.fillRect(torsoX + 2 * s, torsoY, 2 * s, torsoH);
+      ctx.fillRect(torsoX + torsoW - 4 * s, torsoY, 2 * s, torsoH);
+    } else if (archetype === 'ranger') {
+      // Huntsman Tunic with diagonal quiver baldric
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(torsoX, torsoY, torsoW, torsoH);
+      ctx.fillStyle = secondaryColor;
+      ctx.fillRect(torsoX + 2 * s, torsoY + 1 * s, torsoW - 4 * s, 2.5 * s);
+      ctx.fillStyle = '#78350f';
+      ctx.beginPath();
+      ctx.moveTo(torsoX, torsoY);
+      ctx.lineTo(torsoX + 3 * s, torsoY);
+      ctx.lineTo(torsoX + torsoW, torsoY + torsoH);
+      ctx.lineTo(torsoX + torsoW - 3 * s, torsoY + torsoH);
+      ctx.closePath();
+      ctx.fill();
+    } else if (archetype === 'bard') {
+      // Doublet with ornate bands
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(torsoX, torsoY, torsoW, torsoH);
+      ctx.fillStyle = secondaryColor;
+      ctx.fillRect(screenX - 2 * s, torsoY, 4 * s, torsoH);
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(screenX - 3.5 * s, torsoY + 2.5 * s, 7 * s, 1.5 * s);
+      ctx.fillRect(screenX - 3.5 * s, torsoY + 5.5 * s, 7 * s, 1.5 * s);
+    } else {
+      // Adventurer Plaid Flannel Shirt
+      ctx.fillStyle = primaryColor;
+      ctx.fillRect(torsoX, torsoY, torsoW, torsoH);
+      ctx.fillStyle = secondaryColor;
+      ctx.fillRect(torsoX, torsoY + 2 * s, torsoW, 2 * s);
+      ctx.fillRect(torsoX, torsoY + 6 * s, torsoW, 2 * s);
+      if (isEast || isWest) {
+        ctx.fillRect(torsoX + 3 * s, torsoY, 2 * s, torsoH);
+        ctx.fillRect(torsoX + 7 * s, torsoY, 2 * s, torsoH);
+      } else {
+        ctx.fillRect(torsoX + 2.5 * s, torsoY, 2 * s, torsoH);
+        ctx.fillRect(torsoX + 8.5 * s, torsoY, 2 * s, torsoH);
+      }
+    }
+
+    // Details for South Facing (Front Buttons & Straps)
+    if (isSouth) {
+      if (archetype === 'adventurer') {
+        // Placket
+        ctx.fillStyle = secondaryColor;
+        ctx.fillRect(screenX - 1.2 * s, torsoY, 2.4 * s, torsoH);
+        // Buttons
+        ctx.fillStyle = '#fef08a';
+        ctx.fillRect(screenX - 0.7 * s, torsoY + 1.5 * s, 1.4 * s, 1.4 * s);
+        ctx.fillRect(screenX - 0.7 * s, torsoY + 4 * s, 1.4 * s, 1.4 * s);
+        ctx.fillRect(screenX - 0.7 * s, torsoY + 6.5 * s, 1.4 * s, 1.4 * s);
+        // Backpack straps
+        ctx.fillStyle = p.packDark;
+        ctx.fillRect(screenX - 5 * s, torsoY, 2 * s, torsoH);
+        ctx.fillRect(screenX + 3 * s, torsoY, 2 * s, torsoH);
+        ctx.fillStyle = '#fbbf24';
+        ctx.fillRect(screenX - 5.2 * s, torsoY + 4 * s, 2.4 * s, 1.5 * s);
+        ctx.fillRect(screenX + 2.8 * s, torsoY + 4 * s, 2.4 * s, 1.5 * s);
+      }
     }
 
     // If facing North: Draw backpack ON TOP of the shirt back!
@@ -737,13 +850,13 @@ export class Player {
 
     // 6. Arms & Sleeves
     const drawArm = (ax, ay, swing) => {
-      ctx.fillStyle = p.shirt;
+      ctx.fillStyle = primaryColor;
       ctx.fillRect(ax - 2 * s, ay, 4 * s, 7 * s);
       // Cuff
-      ctx.fillStyle = p.shirtDark;
+      ctx.fillStyle = secondaryColor;
       ctx.fillRect(ax - 2 * s, ay + 5.5 * s, 4 * s, 1.5 * s);
       // Hand (Skin tone)
-      ctx.fillStyle = p.skin;
+      ctx.fillStyle = skinColor;
       ctx.beginPath();
       ctx.arc(ax, ay + 8 * s + swing * 0.3, 2 * s, 0, Math.PI * 2);
       ctx.fill();
@@ -759,12 +872,6 @@ export class Player {
     }
 
     // 7. Head & Adventure Hair (BL-95 Customization)
-    const custom = this.customization || {};
-    const skinColor = CHARACTER_CUSTOMIZATION?.SKIN_TONES?.[custom.skinTone]?.color || p.skin;
-    const hairColor = CHARACTER_CUSTOMIZATION?.HAIR_COLORS?.[custom.hairColor]?.color || p.hair;
-    const hairStyle = custom.hairStyle || 'short';
-    const isFemale = custom.gender === 'female';
-
     const headY = py - 12.5 * s;
     const headR = isFemale ? 5.2 * s : 5.5 * s;
 
@@ -919,6 +1026,80 @@ export class Player {
       ctx.fillStyle = '#ffffff';
       ctx.beginPath();
       ctx.arc(screenX - 3.8 * s, headY + 1.6 * s, 0.5 * s, 0, Math.PI * 2);
+    }
+
+    // 8. Archetype Headgear & Accents
+    if (archetype === 'wizard') {
+      // Conical Wizard Hat
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.moveTo(screenX - 7 * s, headY - 1.5 * s);
+      ctx.lineTo(screenX + 7 * s, headY - 1.5 * s);
+      ctx.lineTo(screenX, headY - 14 * s);
+      ctx.closePath();
+      ctx.fill();
+      // Hat Brim
+      ctx.fillStyle = secondaryColor;
+      ctx.fillRect(screenX - 8.5 * s, headY - 2.5 * s, 17 * s, 2.5 * s);
+      // Gold Star / Rune
+      ctx.fillStyle = '#fbbf24';
+      ctx.beginPath();
+      ctx.arc(screenX, headY - 7 * s, 1.8 * s, 0, Math.PI * 2);
+      ctx.fill();
+    } else if (archetype === 'fighter') {
+      // Warrior Iron Helm
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.arc(screenX, headY - 1 * s, headR + 1 * s, Math.PI * 1.05, Math.PI * 1.95);
+      ctx.fill();
+      ctx.fillStyle = secondaryColor;
+      ctx.fillRect(screenX - (headR + 1 * s), headY - 2 * s, (headR + 1 * s) * 2, 2.5 * s);
+    } else if (archetype === 'paladin') {
+      // Greathelm with Golden Crest
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.arc(screenX, headY - 1 * s, headR + 1 * s, Math.PI, Math.PI * 2);
+      ctx.fill();
+      // Golden Crown Crest
+      ctx.fillStyle = '#fbbf24';
+      ctx.fillRect(screenX - 2 * s, headY - 9 * s, 4 * s, 5 * s);
+      ctx.fillRect(screenX - 4 * s, headY - 7 * s, 8 * s, 3 * s);
+    } else if (archetype === 'rogue') {
+      // Shadow Cowl Hood
+      ctx.fillStyle = secondaryColor;
+      ctx.beginPath();
+      ctx.arc(screenX, headY - 1.5 * s, headR + 1.2 * s, Math.PI * 0.85, Math.PI * 2.15);
+      ctx.fill();
+    } else if (archetype === 'cleric') {
+      // Radiant Sun Circlet
+      ctx.strokeStyle = '#fbbf24';
+      ctx.lineWidth = 1.6 * s;
+      ctx.beginPath();
+      ctx.ellipse(screenX, headY - 5 * s, 7 * s, 3 * s, 0, 0, Math.PI * 2);
+      ctx.stroke();
+    } else if (archetype === 'ranger') {
+      // Huntsman Cap with Plumage
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.ellipse(screenX, headY - 2 * s, 6.5 * s, 3.5 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+      // Crimson/Gold Feather
+      ctx.fillStyle = '#ef4444';
+      ctx.beginPath();
+      ctx.moveTo(screenX + 3 * s, headY - 2 * s);
+      ctx.lineTo(screenX + 7 * s, headY - 8 * s);
+      ctx.lineTo(screenX + 4.5 * s, headY - 3 * s);
+      ctx.closePath();
+      ctx.fill();
+    } else if (archetype === 'bard') {
+      // Feathered Beret
+      ctx.fillStyle = primaryColor;
+      ctx.beginPath();
+      ctx.ellipse(screenX + 1 * s, headY - 3 * s, 7 * s, 3.5 * s, 0.2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = secondaryColor;
+      ctx.beginPath();
+      ctx.arc(screenX - 2 * s, headY - 3 * s, 2 * s, 0, Math.PI * 2);
       ctx.fill();
     }
 
@@ -959,6 +1140,9 @@ export class Player {
     const py = screenY - stepBob;
     const screenFacing = this.getScreenFacing(this.facing, rotationAngle);
     const p = this.palette || EXPLORER_OUTFITS.classic;
+    const custom = this.customization || {};
+    const primaryColor = custom.primaryColor || p.shirt;
+    const secondaryColor = custom.secondaryColor || p.shirtDark;
 
     // 2. Backpack (offset opposite facing)
     let packX = screenX;
@@ -982,18 +1166,17 @@ export class Player {
     drawRoundRect(ctx, packX - 5 * s, packY - 6.5 * s, 10 * s, 3 * s, 1.5 * s);
     ctx.fill();
 
-    // 3. Shoulders with Shirt Pattern
-    ctx.fillStyle = p.shirt;
+    // 3. Shoulders with Outfit Pattern
+    ctx.fillStyle = primaryColor;
     ctx.beginPath();
     ctx.ellipse(screenX, py, 11 * s, 6.5 * s, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    // Plaid Cross-Hatch
-    ctx.fillStyle = p.shirtDark;
+    // Outfit Secondary Trim / Plaid
+    ctx.fillStyle = secondaryColor;
     ctx.fillRect(screenX - 8 * s, py - 1 * s, 16 * s, 2 * s);
-    ctx.fillStyle = p.shirtCheck;
-    ctx.fillRect(screenX - 5 * s, py - 2 * s, 2 * s, 4 * s);
-    ctx.fillRect(screenX + 3 * s, py - 2 * s, 2 * s, 4 * s);
+    ctx.fillRect(screenX - 4 * s, py - 2 * s, 2 * s, 4 * s);
+    ctx.fillRect(screenX + 2 * s, py - 2 * s, 2 * s, 4 * s);
 
     // 4. Pants Cuffs Peeking (when moving)
     if (this.isMoving) {
@@ -1008,7 +1191,6 @@ export class Player {
     }
 
     // 5. Head with Hair (BL-95 Customization)
-    const custom = this.customization || {};
     const hairColor = CHARACTER_CUSTOMIZATION?.HAIR_COLORS?.[custom.hairColor]?.color || p.hair;
     const hairStyle = custom.hairStyle || 'short';
 
