@@ -553,6 +553,16 @@ kbd {
   align-items: center;
   justify-content: space-between;
   gap: 0.75rem;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+.app-nav-inner::-webkit-scrollbar {
+  display: none;
 }
 
 .app-nav-brand {
@@ -1243,5 +1253,153 @@ body.high-contrast-mode .hud-card {
   height: 28px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.5));
+}
+
+/* ==========================================================================
+   CLICK-AND-DRAG SCROLL & DYNAMIC MENU PAGINATION (BL-123, ADR-0033)
+   ========================================================================== */
+
+.drag-scroll-x {
+  overflow-x: auto !important;
+  cursor: grab;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
+}
+
+.drag-scroll-x::-webkit-scrollbar {
+  display: none;
+}
+
+.drag-scroll-y {
+  overflow-y: auto !important;
+  cursor: grab;
+  scrollbar-width: thin;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+}
+
+.drag-scroll-both {
+  overflow: auto !important;
+  cursor: grab;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.drag-scroll-x.is-dragging,
+.drag-scroll-y.is-dragging,
+.drag-scroll-both.is-dragging {
+  cursor: grabbing !important;
+  user-select: none !important;
+}
+
+.drag-scroll-x.is-dragging *,
+.drag-scroll-y.is-dragging *,
+.drag-scroll-both.is-dragging * {
+  pointer-events: none !important;
+  user-select: none !important;
+}
+
+/* Dynamic Menu Pager Controls */
+.dynamic-menu-pager {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: rgba(11, 19, 38, 0.92);
+  border: 1px solid var(--border-glass-bright, rgba(56, 189, 248, 0.25));
+  border-radius: var(--radius-sm, 6px);
+  padding: 0.15rem 0.35rem;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+  flex-shrink: 0;
+  user-select: none;
+  z-index: 20;
+}
+
+.dynamic-pager-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: var(--text, #fff);
+  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  padding: 0;
+  line-height: 1;
+}
+
+.dynamic-pager-btn:hover:not(:disabled) {
+  background: rgba(56, 189, 248, 0.25);
+  border-color: var(--accent, #38bdf8);
+  color: #fff;
+  transform: scale(1.06);
+}
+
+.dynamic-pager-btn:active:not(:disabled) {
+  transform: scale(0.95);
+}
+
+.dynamic-pager-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.dynamic-pager-indicator {
+  font-family: var(--font-mono, monospace);
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent, #38bdf8);
+  padding: 0 0.3rem;
+  letter-spacing: -0.02em;
+}
+
+/* Edge Overflow Glow Indicators */
+.can-scroll-left {
+  position: relative;
+}
+
+.can-scroll-left::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(11, 19, 38, 0.95) 0%, transparent 100%);
+  z-index: 5;
+}
+
+.can-scroll-right {
+  position: relative;
+}
+
+.can-scroll-right::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 24px;
+  pointer-events: none;
+  background: linear-gradient(270deg, rgba(11, 19, 38, 0.95) 0%, transparent 100%);
+  z-index: 5;
+}
+
+.can-scroll-up {
+  box-shadow: inset 0 8px 8px -6px rgba(56, 189, 248, 0.3);
+}
+
+.can-scroll-down {
+  box-shadow: inset 0 -8px 8px -6px rgba(56, 189, 248, 0.3);
 }
 

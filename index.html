@@ -841,6 +841,7 @@
     import { audioFX } from './js/ui/audio-fx.js';
     import { initAppHeader, getSettingsModal } from './js/ui/app-header.js';
     import { HeroAmbientCanvas } from './js/ui/hero-ambient-canvas.js';
+    import { DynamicMenuController } from './js/ui/dynamic-menu-controller.js';
 
     // Mount Universal Global App Header and Footer
     initAppHeader({ activeTab: 'hub' });
@@ -1083,6 +1084,15 @@
     modeTabs.forEach(tab => {
       tab.addEventListener('click', () => switchMode(tab.dataset.mode));
     });
+
+    const modeTabsNav = document.getElementById('mode-tabs');
+    if (modeTabsNav) {
+      new DynamicMenuController(modeTabsNav, {
+        axis: 'x',
+        enablePaging: true,
+        enableDragScroll: true,
+      });
+    }
 
     document.getElementById('btn-hero-stories')?.addEventListener('click', () => {
       switchMode('stories');

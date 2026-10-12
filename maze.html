@@ -790,6 +790,8 @@
     import { getKeyColorblindShape } from './js/core/constants.js';
     import { getSettingsModal, getProfileModal, getFeedbackModal } from './js/ui/app-header.js';
     import { overlayManager, OVERLAY_CATEGORIES, OVERLAY_PRIORITIES } from './js/ui/overlay-manager.js';
+    import { DynamicMenuController } from './js/ui/dynamic-menu-controller.js';
+    import { DragScroller } from './js/ui/drag-scroll.js';
 
     // Migrate storage schema on startup (BL-36)
     StorageManager.migrateSaveData();
@@ -2592,6 +2594,32 @@
     if (activityFeedElement) overlayManager.register('activityFeed', activityFeedElement, { category: OVERLAY_CATEGORIES.FLOATING, priority: OVERLAY_PRIORITIES.ACTIVITY_FEED });
     if (virtualControlsElement) overlayManager.register('virtualControls', virtualControlsElement, { category: OVERLAY_CATEGORIES.FLOATING, priority: OVERLAY_PRIORITIES.VIRTUAL_CONTROLS });
     if (tutorialHintCardEl) overlayManager.register('tutorialHint', tutorialHintCardEl, { category: OVERLAY_CATEGORIES.FLOATING, priority: OVERLAY_PRIORITIES.TUTORIAL_HINT });
+
+    // Dynamic Size Detection & Drag-to-Scroll on Top Bar and Pause Menu (BL-123, ADR-0033)
+    if (firmTopBarEl) {
+      new DynamicMenuController(firmTopBarEl, {
+        axis: 'x',
+        enablePaging: true,
+        enableDragScroll: true,
+      });
+    }
+
+    const pauseModalBodyEl = document.querySelector('#game-pause-modal .modal-body');
+    if (pauseModalBodyEl) {
+      new DynamicMenuController(pauseModalBodyEl, {
+        axis: 'y',
+        enablePaging: false,
+        enableDragScroll: true,
+      });
+    }
+
+    const mobileMoreActionsEl = document.querySelector('.mobile-more-actions');
+    if (mobileMoreActionsEl) {
+      new DragScroller(mobileMoreActionsEl, {
+        axis: 'y',
+        dragThreshold: 6,
+      });
+    }
 
     // Movable & Dockable Mobile Virtual Controls
     function initDraggableControls() {
