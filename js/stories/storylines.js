@@ -1619,7 +1619,7 @@ const CITADEL_CHAPTER_1 = {
       "targetRoom": "catacombs",
       "targetSpawn": {
         "x": 1,
-        "y": 1,
+        "y": 2,
         "elevation": 0
       },
       "wallDirection": "none"
@@ -1634,7 +1634,7 @@ const CITADEL_CHAPTER_1 = {
       "targetRoom": "high_spire",
       "targetSpawn": {
         "x": 1,
-        "y": 1,
+        "y": 2,
         "elevation": 0
       },
       "wallDirection": "none"
@@ -1667,7 +1667,7 @@ const CITADEL_CHAPTER_1 = {
           "targetRoom": "catacombs",
           "targetSpawn": {
             "x": 1,
-            "y": 1,
+            "y": 2,
             "elevation": 0
           }
         },
@@ -1681,7 +1681,7 @@ const CITADEL_CHAPTER_1 = {
           "targetRoom": "high_spire",
           "targetSpawn": {
             "x": 1,
-            "y": 1,
+            "y": 2,
             "elevation": 0
           }
         }
@@ -2137,7 +2137,7 @@ const CITADEL_CHAPTER_1 = {
       },
       "spawn": {
         "x": 1,
-        "y": 1,
+        "y": 2,
         "elevation": 0,
         "style": "stairs_down"
       },
@@ -3817,7 +3817,7 @@ const CITADEL_CHAPTER_1 = {
       },
       "spawn": {
         "x": 1,
-        "y": 1,
+        "y": 2,
         "elevation": 0,
         "style": "stairs_down"
       },
@@ -3832,7 +3832,7 @@ const CITADEL_CHAPTER_1 = {
           "targetRoom": "courtyard",
           "targetSpawn": {
             "x": 11,
-            "y": 9,
+            "y": 10,
             "elevation": 0
           }
         },
@@ -3942,29 +3942,29 @@ const CITADEL_CHAPTER_1 = {
             0,
             0,
             0,
-            0,
+            1,
             0,
             1
           ],
           [
             1,
-            0,
+            1,
             0,
             "R_E",
-            0,
-            0,
-            0,
-            0,
-            0,
+            1,
+            1,
+            1,
+            1,
+            1,
             "R_W",
             0,
-            0,
+            1,
             1
           ],
           [
             1,
             0,
-            0,
+            1,
             0,
             0,
             0,

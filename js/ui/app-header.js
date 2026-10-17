@@ -250,7 +250,7 @@ export function initAppHeader(options = {}) {
         </button>
         <div class="desktop-shortcuts-strip">
           <span><kbd>WASD</kbd> Move</span>
-          <span><kbd>Q/R</kbd> Rotate 90°</span>
+          <span><kbd>Q/C</kbd> Rotate 90°</span>
           <span><kbd>V</kbd> 2.5D Mode</span>
           <span><kbd>M</kbd> Minimap</span>
           <span><kbd>Esc</kbd> Menu</span>

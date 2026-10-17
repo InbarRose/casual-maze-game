@@ -78,6 +78,7 @@ export class GameLoop {
     this.activeRoomId = null;
     this.currentRoom = null;
     this.lastRoomTransitionTime = -10000;
+    this.lastRoomSpawn = null;
     this.isMultiRoom = Boolean(this.level.rooms && Object.keys(this.level.rooms).length > 0);
 
     let initialRoomDef = null;
@@ -499,6 +500,8 @@ export class GameLoop {
     const spawnX = spawnOverride?.x ?? roomDef.spawn?.x ?? 1;
     const spawnY = spawnOverride?.y ?? roomDef.spawn?.y ?? 1;
     const spawnElev = spawnOverride?.elevation ?? spawnOverride?.z ?? roomDef.spawn?.elevation ?? roomDef.spawn?.z ?? 0;
+
+    this.lastRoomSpawn = { x: spawnX, y: spawnY, elevation: spawnElev };
 
     if (this.player) {
       this.player.teleport(spawnX, spawnY, spawnElev);
@@ -1343,12 +1346,17 @@ export class GameLoop {
 
     // 7. Check Victory Condition or Room Transition (Player must match exit coordinates and elevation)
     if (!this.isWon && !this.player.isMoving) {
-      const matchingExit = this.getMatchingExit(this.player.gridX, this.player.gridY, this.player.elevation);
-      if (matchingExit) {
-        if (matchingExit.targetRoom) {
-          this.transitionToRoom(matchingExit.targetRoom, matchingExit.targetSpawn);
-        } else {
-          this.handleVictory(matchingExit);
+      if (this.lastRoomSpawn && this.player.gridX === this.lastRoomSpawn.x && this.player.gridY === this.lastRoomSpawn.y && this.player.elevation === this.lastRoomSpawn.elevation) {
+        // Player is still standing on the arrival spawn tile; guard against instant teleport loops
+      } else {
+        this.lastRoomSpawn = null;
+        const matchingExit = this.getMatchingExit(this.player.gridX, this.player.gridY, this.player.elevation);
+        if (matchingExit) {
+          if (matchingExit.targetRoom) {
+            this.transitionToRoom(matchingExit.targetRoom, matchingExit.targetSpawn);
+          } else {
+            this.handleVictory(matchingExit);
+          }
         }
       }
     }
@@ -1843,13 +1851,23 @@ export class GameLoop {
         });
       }
 
+      if (this.lastRoomSpawn && (targetX !== this.lastRoomSpawn.x || targetY !== this.lastRoomSpawn.y)) {
+        this.lastRoomSpawn = null;
+      }
+
       this.player.startMove(targetX, targetY, check.nextElevation);
       return true;
     } else if (check.reason === 'door_locked' && check.doorToUnlock) {
       const now = performance.now();
       if (!this.lastLockedDoorFeedback || now - this.lastLockedDoorFeedback > 450) {
         this.lastLockedDoorFeedback = now;
-        const reqKey = this.entities.find(e => e.id === check.doorToUnlock.requiresKey);
+        let reqKey = this.entities.find(e => e.id === check.doorToUnlock.requiresKey);
+        if (!reqKey && this.level.rooms) {
+          for (const room of Object.values(this.level.rooms)) {
+            reqKey = (room.entities || []).find(e => e.id === check.doorToUnlock.requiresKey);
+            if (reqKey) break;
+          }
+        }
         const reqKeyName = reqKey?.name || 'Matching Key';
         const doorWx = targetX * this.camera.tileSize + this.camera.tileSize / 2;
         const doorWy = targetY * this.camera.tileSize + this.camera.tileSize / 2;

@@ -125,11 +125,11 @@ export class SettingsModal {
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.8rem;">
               <div>
                 <div style="font-size: 0.85rem; font-weight: 600;">Smooth Camera Rotation</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted);">Animate world rotation easing [Q/E]</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Animate world rotation easing [Q/C]</div>
               </div>
-              <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+              <label class="switch">
                 <input type="checkbox" id="setting-smooth-rotation" checked />
-                <span class="slider" style="position: absolute; cursor: pointer; inset: 0; background-color: #334155; border-radius: 24px; transition: 0.2s;"></span>
+                <span class="slider"></span>
               </label>
             </div>
 
@@ -139,9 +139,9 @@ export class SettingsModal {
                 <div style="font-size: 0.85rem; font-weight: 600;">High Contrast Grid</div>
                 <div style="font-size: 0.75rem; color: var(--text-muted);">Sharpen maze floor contrast & wall outlines</div>
               </div>
-              <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+              <label class="switch">
                 <input type="checkbox" id="setting-high-contrast" />
-                <span class="slider" style="position: absolute; cursor: pointer; inset: 0; background-color: #334155; border-radius: 24px; transition: 0.2s;"></span>
+                <span class="slider"></span>
               </label>
             </div>
 
@@ -199,18 +199,18 @@ export class SettingsModal {
             <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.85rem; padding-bottom: 0.75rem; border-bottom: 1px solid rgba(255,255,255,0.06);">
               <div>
                 <div style="font-size: 0.85rem; font-weight: 600;">Enable Single-Letter Hotkeys</div>
-                <div style="font-size: 0.75rem; color: var(--text-muted);">Allow Q/R (Rotate), T (Restart), M (Map), V (3D), L (Log)</div>
+                <div style="font-size: 0.75rem; color: var(--text-muted);">Allow Q/C (Rotate), T (Restart), M (Map), V (3D), L (Log)</div>
               </div>
-              <label class="switch" style="position: relative; display: inline-block; width: 44px; height: 24px;">
+              <label class="switch">
                 <input type="checkbox" id="setting-hotkeys-toggle" checked />
-                <span class="slider" style="position: absolute; cursor: pointer; inset: 0; background-color: #334155; border-radius: 24px; transition: 0.2s;"></span>
+                <span class="slider"></span>
               </label>
             </div>
 
             <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; font-size: 0.8rem;">
               <div id="settings-move-keys-label"><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">WASD</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Arrows</kbd> : Move Explorer</div>
               <div id="settings-mouse-mode-label"><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Click / Tap</kbd> : Click to Move &amp; Interact</div>
-              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Q</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">R</kbd> : Rotate Camera 90°</div>
+              <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Q</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">C</kbd> : Rotate Camera 90°</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">E</kbd> / <kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">Space</kbd> : Examine / Interact</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">V</kbd> : Toggle 2.5D / Top-Down</div>
               <div><kbd style="background: #1e293b; padding: 2px 6px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">L</kbd> : Activity Log &amp; Replay</div>
