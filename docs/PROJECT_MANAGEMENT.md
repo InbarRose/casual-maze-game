@@ -4,7 +4,15 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Current Milestone: `v1.26.0` (Completed & Verified)
+### Current Milestone: `v1.27.0` (Completed & Verified)
+
+- [x] **Settings Switch Component Styling, Architect Sidebar Flex Stabilization & Whispering Citadel Gating (BL-124, Issues #89, #90, #91, ADR-0034)**:
+  - **Issue #91 (Settings Toggle Switch & Typography Polish)**: Implemented complete glassmorphic `.switch` toggle component styles in `css/main.css` with 16px sliding circular thumb and glowing accent fill; removed conflicting inline styles from `SettingsModal`; switched `.select-field` from monospaced font to clean inherited UI typography; updated camera rotation shortcut text to `[Q/C]` across settings and footer strips.
+  - **Issue #90 (Architect Mode View Stabilization)**: Enforced `min-height: 0` and `.editor-sidebar > * { flex-shrink: 0; }` in `css/editor.css` to prevent tools, accordions, and palettes from crushing into collapsed ribbons in constrained viewports; added vertical drag scroll (`data-drag-scroll="y"`) to the editor sidebar in `editor.html`.
+  - **Issue #89 (Whispering Citadel Ping-Pong Loop & Bridge Gating)**: Decoupled `targetSpawn` from return exit coordinates across all rooms in `story_citadel_1.json` and `storylines.js` (`courtyard -> catacombs` at `(1, 2)`, `catacombs -> courtyard` at `(1, 10)`, `courtyard -> high_spire` at `(1, 2)`, `high_spire -> courtyard` at `(11, 10)`); added engine-level `lastRoomSpawn` guard in `GameLoop` preventing immediate teleport recursion; divided High Spire ground layer at row 6 with chasm walls requiring elevated `BRIDGE_EW` traversal to reach the Apex Altar; enhanced locked gate floating text to resolve cross-room key names (`"🔒 Needs Spire Keystone"`).
+  - **Automated Test Coverage**: Created `tests/unit/ui/github-issues-89-90-91.test.mjs` verifying toggle switches, dropdown typography, Q/C hotkeys, editor sidebar flex rules, room spawn separation, bridge chasm gating, and engine spawn loop guards across 145 suites and 698 tests passing (0 failed).
+
+### Previous Milestone: `v1.26.0` (Completed & Verified)
 
 - [x] **Universal Click-and-Drag Menu Scrolling, Vertical Main Menu Scroll & Dynamic Size Detection (BL-123, ADR-0033)**:
   - **Universal Mouse & Touch Drag-to-Scroll (`DragScroller`)**: Built `DragScroller` (`js/ui/drag-scroll.js`) enabling fluid mouse and touch click-and-drag scrolling along horizontal (`x`), vertical (`y`), or bidirectional (`both`) axes with grab/grabbing cursor cues and inertial deceleration glide.

@@ -249,6 +249,7 @@ This document records the official baseline quality evaluations, granular expert
   * **AAA Map Editor Studio Overhaul (`BL-102`)**: Dark glassmorphic workspace aesthetic with high-contrast acrylic panels; live telemetry status bar displaying real-time cursor coordinates, active layer pips, maze grid dimensions ($W \times H$), total entity counts, and studio version badges.
   * Bresenham continuous drag-to-paint smoothing (`BL-19`), multi-elevation Z-layer editing, and flood fill.
   * **1-Click Procedural Maze Generator (`BL-50`)**: Built-in `MazeGenerator` integration in editor toolbar allowing architects to generate solvable mazes of arbitrary dimensions with customizable themes, braiding, and key pairs.
+  * **Architect Sidebar Flexbox Stabilization (`BL-124`, Issue #90, ADR-0034)**: Enforced min-height 0 and flex-shrink 0 on editor sidebar and children to prevent accordion and tool button squishing on constrained viewports, with vertical drag-to-scroll support.
   * **Destructive Clear Confirmation Modal (`BL-73`)**: Modal protection safeguarding accidental canvas wipes.
 * **Gaps & Critical Deductions**:
   * Lacks multi-room story authoring; creators are restricted to single-room files (`BL-49`).
@@ -418,6 +419,7 @@ This document records the official baseline quality evaluations, granular expert
   * **Minimalist UI & Scrollable Modal (`BL-64`)**: Modal height clamped to viewport with fluid scrollable body, momentum touch physics, and sticky modal header/footer preventing clipped action buttons.
   * **Interactive Gamepad Controller Visual Guide & Live Input Tester (`BL-70`)**: Real-time polling via Gamepad API displaying hardware connection state, button mappings (A: Interact, B: Menu, X: View, Bumpers: Rotate, D-pad/stick: Move), live button press highlights (`.gp-indicator`), and analog axis stick coordinate monitoring.
   * **In-Settings Feedback & Bug Reporting Trigger (`BL-69`, `BL-70`)**: Dedicated diagnostics link opening the universal feedback and bug reporting telemetry modal with 1 click.
+  * **Toggle Switch Styling & Typographic Polish (`BL-124`, Issue #91, ADR-0034)**: Complete glassmorphic `.switch` and animated `.slider::before` styling with glowing accent indicators, inherited dropdown font family, and synchronized `[Q/C]` camera rotation shortcut cues.
 * **Gaps & Critical Deductions**:
   * Perspective toggle does not differentiate top-down blueprint from 2.5D isometric (`BL-44`).
 * **Directives**: Deliver enhanced tileset preview and custom single-key remapping editor if requested.
