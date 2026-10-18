@@ -121,7 +121,7 @@ export class Minimap {
       return;
     }
 
-    const isBridge = tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS;
+    const isBridge = tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS || tile === TILES.PLATFORM || tile === 'PL' || tile === TILES.WALL_WALK || tile === 'WW';
     const isRamp = tile === TILES.RAMP_N || tile === TILES.RAMP_S || tile === TILES.RAMP_E || tile === TILES.RAMP_W;
 
     if (isBridge) {

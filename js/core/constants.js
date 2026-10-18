@@ -21,6 +21,8 @@ export const TILES = Object.freeze({
   RAMP_S: 'R_S',
   RAMP_E: 'R_E',
   RAMP_W: 'R_W',
+  PLATFORM: 'PLATFORM',
+  WALL_WALK: 'WALL_WALK',
 });
 
 export const ENTITY_TYPES = Object.freeze({
