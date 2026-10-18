@@ -310,6 +310,10 @@ class TestRunner {
         for (const failure of this.results.failures) {
           console.log(`  ${colors.red}✗ [${failure.suite}] ${failure.test}${colors.reset}`);
           console.log(`    ${colors.gray}${failure.error.message}${colors.reset}`);
+          if (failure.error.stack) {
+            const stackLines = failure.error.stack.split('\n').slice(1, 6).map(l => `      ${colors.dim}${l.trim()}${colors.reset}`).join('\n');
+            console.log(stackLines);
+          }
         }
         console.log(`\n${colors.bold}${colors.red}❌ ${this.results.failed} TEST(S) FAILED${colors.reset}\n`);
         process.exit(1);
