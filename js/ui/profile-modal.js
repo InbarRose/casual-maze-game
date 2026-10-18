@@ -8,6 +8,7 @@
 import { StorageManager } from '../core/storage.js';
 import { ENGINE_VERSION } from '../core/version.js';
 import { EXPLORER_OUTFITS, CHARACTER_CUSTOMIZATION } from '../core/constants.js';
+import { CAMPAIGN_LEVELS } from '../levels/default-levels.js';
 import { Player } from '../entities/player.js';
 import { audioFX } from './audio-fx.js';
 
@@ -141,7 +142,7 @@ export class ProfileModal {
             </div>
             <div class="stat-box" style="background: rgba(0, 0, 0, 0.25); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); text-align: center;">
               <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Campaign Clear</div>
-              <div id="profile-campaign-val" style="font-size: 1.6rem; font-weight: 800; color: var(--accent); margin-top: 0.2rem;">0 / 32</div>
+              <div id="profile-campaign-val" style="font-size: 1.6rem; font-weight: 800; color: var(--accent); margin-top: 0.2rem;">0 / ${CAMPAIGN_LEVELS?.length || 40}</div>
             </div>
             <div class="stat-box" style="background: rgba(0, 0, 0, 0.25); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); text-align: center;">
               <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Story Chapters</div>
@@ -311,7 +312,7 @@ export class ProfileModal {
     if (rankTitle) rankTitle.textContent = profile.rankTitle;
     if (nameInput) nameInput.value = profile.name;
     if (starsVal) starsVal.textContent = `★ ${profile.totalStars}`;
-    if (campVal) campVal.textContent = `${profile.campaignLevels} / 32`;
+    if (campVal) campVal.textContent = `${profile.campaignLevels} / ${CAMPAIGN_LEVELS?.length || 40}`;
     if (storiesVal) storiesVal.textContent = String(profile.storyChapters);
     if (stepsVal) stepsVal.textContent = profile.totalSteps.toLocaleString();
 

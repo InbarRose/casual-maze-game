@@ -24,10 +24,10 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Setup Node.js 20 LTS (Fast Pre-Cached Runner)
+      - name: Setup Node.js (LTS Runner)
         uses: actions/setup-node@v4
         with:
-          node-version: 20.x
+          node-version: 22.x
 
       - name: Validate Static Architecture & Assets
         run: npm run validate:static
@@ -61,4 +61,4 @@ jobs:
         run: npm run test:e2e
 
       - name: Run Full Master Test Suite & Assert 100% Pass Rate
-        run: npm test
+        run: node tests/run-all.mjs --skip-e2e

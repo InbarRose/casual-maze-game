@@ -186,4 +186,104 @@ describe('Engine > CollisionEngine', () => {
     assertEqual(res.allowed, false, 'Cannot float into empty overhead void');
     assertEqual(res.reason, 'no_overhead_path');
   });
+
+  it('allows 4-directional 2D movement across elevated PLATFORM tiles (BL-146)', () => {
+    const platformLevel = {
+      dimensions: { width: 5, height: 5 },
+      layers: {
+        ground: [
+          [1, 1, 1, 1, 1],
+          [1, 0, 0, 0, 1],
+          [1, 0, 0, 0, 1],
+          [1, 0, 0, 0, 1],
+          [1, 1, 1, 1, 1],
+        ],
+        overhead: [
+          [0, 0, 0, 0, 0],
+          [0, 'PLATFORM', 'PLATFORM', 'PLATFORM', 0],
+          [0, 'PLATFORM', 'PLATFORM', 'PLATFORM', 0],
+          [0, 'PLATFORM', 'PLATFORM', 'PLATFORM', 0],
+          [0, 0, 0, 0, 0],
+        ],
+      },
+    };
+
+    // North, South, East, West movement on 3x3 platform at elevation 1
+    const moveEast = CollisionEngine.checkMove(2, 2, 3, 2, ELEVATION.OVERHEAD, platformLevel);
+    assertEqual(moveEast.allowed, true, 'Platform movement East allowed');
+    assertEqual(moveEast.nextElevation, ELEVATION.OVERHEAD);
+
+    const moveWest = CollisionEngine.checkMove(2, 2, 1, 2, ELEVATION.OVERHEAD, platformLevel);
+    assertEqual(moveWest.allowed, true, 'Platform movement West allowed');
+
+    const moveNorth = CollisionEngine.checkMove(2, 2, 2, 1, ELEVATION.OVERHEAD, platformLevel);
+    assertEqual(moveNorth.allowed, true, 'Platform movement North allowed');
+
+    const moveSouth = CollisionEngine.checkMove(2, 2, 2, 3, ELEVATION.OVERHEAD, platformLevel);
+    assertEqual(moveSouth.allowed, true, 'Platform movement South allowed');
+
+    // Stepping off the platform edge into open air is blocked
+    const stepOff = CollisionEngine.checkMove(3, 2, 4, 2, ELEVATION.OVERHEAD, platformLevel);
+    assertEqual(stepOff.allowed, false, 'Stepping off platform edge into void is blocked');
+    assertEqual(stepOff.reason, 'no_overhead_path');
+
+    // Walking under the platform on ground level (elevation 0) is allowed
+    const walkUnder = CollisionEngine.checkMove(2, 2, 3, 2, ELEVATION.GROUND, platformLevel);
+    assertEqual(walkUnder.allowed, true, 'Walking under elevated platform on ground allowed');
+    assertEqual(walkUnder.nextElevation, ELEVATION.GROUND);
+  });
+
+  it('supports WALL_WALK to traverse on top of existing maze walls (BL-146)', () => {
+    const wallWalkLevel = {
+      dimensions: { width: 5, height: 5 },
+      layers: {
+        ground: [
+          [1, 1, 1, 1, 1],
+          [1, 0, 1, 0, 1], // (2, 1) is a solid wall on ground
+          [1, 0, 1, 0, 1], // (2, 2) is a solid wall on ground
+          [1, 0, 1, 0, 1],
+          [1, 1, 1, 1, 1],
+        ],
+        overhead: [
+          [0, 0, 0, 0, 0],
+          [0, 0, 'WALL_WALK', 0, 0], // (2, 1) is a wall-top walkway overhead
+          [0, 0, 'WALL_WALK', 0, 0], // (2, 2) is a wall-top walkway overhead
+          [0, 0, 0, 0, 0],
+          [0, 0, 0, 0, 0],
+        ],
+      },
+    };
+
+    // On Ground: walking into (2, 1) is blocked by solid wall
+    const groundHit = CollisionEngine.checkMove(1, 1, 2, 1, ELEVATION.GROUND, wallWalkLevel);
+    assertEqual(groundHit.allowed, false, 'Ground level player cannot walk through wall base');
+    assertEqual(groundHit.reason, 'wall_hit');
+
+    // On Overhead: walking along wall-top from (2, 1) to (2, 2) is allowed
+    const wallWalk = CollisionEngine.checkMove(2, 1, 2, 2, ELEVATION.OVERHEAD, wallWalkLevel);
+    assertEqual(wallWalk.allowed, true, 'Overhead player can walk on top of the wall');
+    assertEqual(wallWalk.nextElevation, ELEVATION.OVERHEAD);
+  });
+
+  it('allows horizontal traversal across chained overhead bridge spans (BL-146)', () => {
+    const bridgeChainLevel = {
+      dimensions: { width: 6, height: 3 },
+      layers: {
+        ground: [
+          [1, 1, 1, 1, 1, 1],
+          [1, 0, 0, 0, 0, 1],
+          [1, 1, 1, 1, 1, 1],
+        ],
+        overhead: [
+          [0, 0, 0, 0, 0, 0],
+          [0, 'B_EW', 'B_EW', 'B_EW', 'B_EW', 0],
+          [0, 0, 0, 0, 0, 0],
+        ],
+      },
+    };
+
+    const crossBridge = CollisionEngine.checkMove(1, 1, 2, 1, ELEVATION.OVERHEAD, bridgeChainLevel);
+    assertEqual(crossBridge.allowed, true, 'Horizontal movement along connected B_EW bridge deck allowed');
+    assertEqual(crossBridge.nextElevation, ELEVATION.OVERHEAD);
+  });
 });

@@ -9,6 +9,7 @@
 import http from 'http';
 import fs from 'fs';
 import path from 'path';
+import os from 'os';
 import { spawn, execSync } from 'child_process';
 import { describe, it, assert, assertEqual } from '../harness/index.mjs';
 
@@ -79,6 +80,7 @@ class HeadlessBrowserSession {
     this.browserProc = null;
     this.debugPort = 9226 + Math.floor(Math.random() * 500);
     this.binary = findBrowserBinary();
+    this.userDataDir = path.join(os.tmpdir(), `cmg-chrome-${Date.now()}-${Math.floor(Math.random() * 10000)}`);
   }
 
   async start() {
@@ -111,20 +113,39 @@ class HeadlessBrowserSession {
       });
     });
 
-    // Launch headless browser
+    // Create unique user data directory for clean isolation
+    try {
+      fs.mkdirSync(this.userDataDir, { recursive: true });
+    } catch {}
+
+    // Launch headless browser with robust isolation flags
     this.browserProc = spawn(this.binary, [
       '--headless=new',
       `--remote-debugging-port=${this.debugPort}`,
+      `--user-data-dir=${this.userDataDir}`,
       '--disable-gpu',
       '--no-sandbox',
       '--disable-dev-shm-usage',
       '--disable-extensions',
+      '--no-first-run',
+      '--no-default-browser-check',
+      '--disable-background-networking',
+      '--disable-background-timer-throttling',
+      '--disable-client-side-phishing-detection',
+      '--disable-default-apps',
+      '--disable-hang-monitor',
+      '--disable-popup-blocking',
+      '--disable-prompt-on-repost',
+      '--disable-sync',
+      '--disable-translate',
+      '--metrics-recording-only',
+      '--safebrowsing-disable-auto-update',
       'about:blank',
     ]);
 
-    // Poll for CDP readiness
+    // Poll for CDP readiness with generous 7.5s allowance for VM runners
     let ready = false;
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 50; i++) {
       try {
         const res = await fetch(`http://127.0.0.1:${this.debugPort}/json/version`);
         if (res.ok) {
@@ -183,6 +204,19 @@ class HeadlessBrowserSession {
         const res = await send('Runtime.evaluate', { expression, returnByValue: true });
         return res.result?.result?.value;
       },
+      waitForFunction: async (fnExpression, timeoutMs = 10000, pollIntervalMs = 50) => {
+        const start = Date.now();
+        while (Date.now() - start < timeoutMs) {
+          try {
+            const res = await send('Runtime.evaluate', { expression: fnExpression, returnByValue: true });
+            const val = res.result?.result?.value;
+            if (val) return val;
+          } catch {}
+          await new Promise(r => setTimeout(r, pollIntervalMs));
+        }
+        const lastErr = exceptions.map(e => e.exception?.description || e.text || JSON.stringify(e)).join('; ');
+        throw new Error(`Timeout after ${timeoutMs}ms waiting for condition: "${fnExpression}". Exceptions: ${lastErr || 'none'}`);
+      },
       close: async () => {
         try {
           await fetch(`http://127.0.0.1:${this.debugPort}/json/close/${tab.id}`);
@@ -194,12 +228,25 @@ class HeadlessBrowserSession {
 
   async stop() {
     if (this.browserProc) {
-      this.browserProc.kill();
+      try {
+        if (process.platform === 'win32') {
+          execSync(`taskkill /pid ${this.browserProc.pid} /T /F 2>nul`);
+        } else {
+          this.browserProc.kill('SIGKILL');
+        }
+      } catch {}
       this.browserProc = null;
     }
     if (this.server) {
-      this.server.close();
+      try {
+        this.server.close();
+      } catch {}
       this.server = null;
+    }
+    if (this.userDataDir && fs.existsSync(this.userDataDir)) {
+      try {
+        fs.rmSync(this.userDataDir, { recursive: true, force: true });
+      } catch {}
     }
   }
 }
@@ -221,7 +268,7 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
   it('navigates Hub (index.html), switches game modes, and audits level rosters', async () => {
     if (!browserAvailable) return;
     const page = await session.openPage('index.html');
-    await new Promise(r => setTimeout(r, 1200));
+    await page.waitForFunction('Boolean(window.__hubReady && document.querySelectorAll(".campaign-levels .level-pill").length >= 32)');
 
     const hubState = await page.evaluate(`({
       title: document.title,
@@ -237,11 +284,11 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
     assert(hubState.hasTabCampaign, 'Campaign tab button exists');
     assert(hubState.hasTabStories, 'Stories tab button exists');
     assert(hubState.hasTabArchitect, 'Architect tab button exists');
-    assert(hubState.campaignCount >= 32, 'All 32 campaign level pills are present');
+    assert(hubState.campaignCount >= 32, 'All 32+ campaign level pills are present');
 
     // Switch to Stories tab
     await page.evaluate(`document.getElementById('tab-stories').click()`);
-    await new Promise(r => setTimeout(r, 200));
+    await page.waitForFunction('document.getElementById("stories-section-container")?.style.display === "block"');
 
     const storiesState = await page.evaluate(`({
       storiesVisible: document.getElementById('stories-section-container')?.style.display === 'block',
@@ -252,19 +299,19 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
 
     // Switch back to Campaign tab
     await page.evaluate(`document.getElementById('tab-campaign').click()`);
-    await new Promise(r => setTimeout(r, 200));
+    await page.waitForFunction('document.getElementById("campaign-section-container")?.style.display === "block"');
 
     const backToCampaign = await page.evaluate(`document.getElementById('campaign-section-container')?.style.display === 'block'`);
     assert(backToCampaign, 'Campaign container restored to visible');
 
-    assertEqual(page.exceptions.length, 0, 'Zero exceptions thrown during hub interactions');
+    assertEqual(page.exceptions.length, 0, `Zero exceptions thrown during hub interactions: ${page.exceptions.map(e => e.exception?.description || e.text).join('; ')}`);
     await page.close();
   });
 
   it('selects Campaign Level 1, starts GameLoop, and transitions from "Loading..."', async () => {
     if (!browserAvailable) return;
     const page = await session.openPage('maze.html?id=1');
-    await new Promise(r => setTimeout(r, 1200));
+    await page.waitForFunction('Boolean(window.gameLoop && window.gameLoop.isRunning && document.getElementById("hud-level-title")?.textContent && document.getElementById("hud-level-title").textContent !== "Loading...")');
 
     const levelState = await page.evaluate(`({
       levelTitle: document.getElementById('hud-level-title')?.textContent,
@@ -284,14 +331,14 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
     assertEqual(levelState.elevation, 'Ground Floor', 'Starting elevation is Ground Floor');
     assert(levelState.playerX > 0 && levelState.playerY > 0, 'Player spawned at valid grid coordinates');
 
-    assertEqual(page.exceptions.length, 0, 'Zero exceptions during Level 1 boot');
+    assertEqual(page.exceptions.length, 0, `Zero exceptions during Level 1 boot: ${page.exceptions.map(e => e.exception?.description || e.text).join('; ')}`);
     await page.close();
   });
 
   it('executes live gameplay movement and verifies step counter and elapsed timer', async () => {
     if (!browserAvailable) return;
     const page = await session.openPage('maze.html?id=1');
-    await new Promise(r => setTimeout(r, 1000));
+    await page.waitForFunction('Boolean(window.gameLoop && window.gameLoop.isRunning && window.gameLoop.player)');
 
     const initialPos = await page.evaluate(`({ x: window.gameLoop.player.gridX, y: window.gameLoop.player.gridY, steps: window.gameLoop.player.stepsTaken })`);
 
@@ -299,8 +346,8 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
     const moved = await page.evaluate(`window.gameLoop.tryMoveDirection('RIGHT')`);
     assert(moved, 'Player move initiated towards East');
 
-    // Wait 400ms for movement interpolation and notifyUI cycle
-    await new Promise(r => setTimeout(r, 400));
+    // Dynamically wait for movement to complete and player to reach destination tile
+    await page.waitForFunction(`Boolean(window.gameLoop && window.gameLoop.player && !window.gameLoop.player.isMoving && window.gameLoop.player.gridX === ${initialPos.x + 1})`);
 
     const moveResult = await page.evaluate(`({
       steps: window.gameLoop.player.stepsTaken,
@@ -323,21 +370,21 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
 
     // 1. Tutorial 1
     const tutPage = await session.openPage('maze.html?tutorial=1');
-    await new Promise(r => setTimeout(r, 1000));
+    await tutPage.waitForFunction('Boolean(window.gameLoop && window.gameLoop.isRunning && document.getElementById("hud-level-title")?.textContent && document.getElementById("hud-level-title").textContent !== "Loading...")');
     const tutTitle = await tutPage.evaluate(`document.getElementById('hud-level-title')?.textContent`);
     assertEqual(tutTitle, 'First Steps', 'Tutorial 1 loaded with correct title');
     await tutPage.close();
 
     // 2. Story Quest: Relics of the Four Guardians Ch. 1
     const storyPage = await session.openPage('maze.html?story=relics_of_the_guardians&chapter=1');
-    await new Promise(r => setTimeout(r, 1000));
+    await storyPage.waitForFunction('Boolean(window.gameLoop && window.gameLoop.isRunning && document.getElementById("hud-level-title")?.textContent && document.getElementById("hud-level-title").textContent !== "Loading...")');
     const storyTitle = await storyPage.evaluate(`document.getElementById('hud-level-title')?.textContent`);
     assertEqual(storyTitle, 'The Whispering Ruins', 'Story Quest Ch 1 loaded with correct title');
     await storyPage.close();
 
     // 3. Campaign Chapter 2 Level 5
     const ch2Page = await session.openPage('maze.html?id=5');
-    await new Promise(r => setTimeout(r, 1000));
+    await ch2Page.waitForFunction('Boolean(window.gameLoop && window.gameLoop.isRunning && document.getElementById("hud-level-title")?.textContent && document.getElementById("hud-level-title").textContent !== "Loading...")');
     const ch2Title = await ch2Page.evaluate(`document.getElementById('hud-level-title')?.textContent`);
     assertEqual(ch2Title, 'The Canopy Bridge', 'Chapter 2 Level 5 loaded with correct title');
     await ch2Page.close();
@@ -348,7 +395,7 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
 
     // 1. Hub (index.html): Header Settings, Hero Settings, and Header Profile
     const hubPage = await session.openPage('index.html');
-    await new Promise(r => setTimeout(r, 1200));
+    await hubPage.waitForFunction('Boolean(window.__hubReady && document.getElementById("btn-hero-settings") && document.getElementById("btn-app-settings"))');
 
     // Test Hero Settings
     const heroSettingsRes = await hubPage.evaluate(`(() => {
@@ -383,7 +430,7 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
 
     // 2. Active Game View (maze.html?id=1): HUD buttons and Pause Drawer buttons
     const gamePage = await session.openPage('maze.html?id=1');
-    await new Promise(r => setTimeout(r, 1200));
+    await gamePage.waitForFunction('Boolean(window.gameLoop && window.gameLoop.isRunning)');
 
     // Test In-Game HUD Settings button
     const hudSettingsRes = await gamePage.evaluate(`(() => {
@@ -430,7 +477,7 @@ describe('Headless E2E > Hub Navigation, Level Selection & Live Gameplay', () =>
 
     // 3. Architect Studio (editor.html): Toolbar Settings and Profile buttons
     const edPage = await session.openPage('editor.html');
-    await new Promise(r => setTimeout(r, 1200));
+    await edPage.waitForFunction('Boolean(window.editorUI && document.getElementById("btn-editor-settings"))');
 
     const edRes = await edPage.evaluate(`(() => {
       document.getElementById('btn-editor-settings')?.click();

@@ -41,21 +41,25 @@ export class CollisionEngine {
     const groundTile = level.layers.ground[toY]?.[toX];
     const overheadTile = level.layers.overhead?.[toY]?.[toX];
     const currentGroundTile = level.layers.ground[fromY]?.[fromX];
+    const currentOverheadTile = level.layers.overhead?.[fromY]?.[fromX];
 
     let targetElevation = currentElevation;
 
     // 2. RAMP TRAVERSAL LOGIC
-    const isOntoRamp = this.isRamp(groundTile);
-    const isFromRamp = this.isRamp(currentGroundTile);
+    // Check ramps on either ground or overhead layer (BL-146)
+    const targetRamp = this.isRamp(groundTile) ? groundTile : (this.isRamp(overheadTile) ? overheadTile : null);
+    const currentRamp = this.isRamp(currentGroundTile) ? currentGroundTile : (this.isRamp(currentOverheadTile) ? currentOverheadTile : null);
+    const isOntoRamp = Boolean(targetRamp);
+    const isFromRamp = Boolean(currentRamp);
 
     if (isOntoRamp) {
-      const rampCheck = this.evaluateRampEntry(groundTile, dx, dy, currentElevation);
+      const rampCheck = this.evaluateRampEntry(targetRamp, dx, dy, currentElevation);
       if (!rampCheck.allowed) {
         return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: rampCheck.reason || 'invalid_ramp_entry' };
       }
       targetElevation = rampCheck.nextElevation;
     } else if (isFromRamp) {
-      const rampExitCheck = this.evaluateRampExit(currentGroundTile, dx, dy, currentElevation);
+      const rampExitCheck = this.evaluateRampExit(currentRamp, dx, dy, currentElevation);
       if (!rampExitCheck.allowed) {
         return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: rampExitCheck.reason || 'invalid_ramp_exit' };
       }
@@ -70,35 +74,45 @@ export class CollisionEngine {
       }
 
       // Check Bridge Constraints on Ground:
-      // B_EW allows E-W only on ground. N-S is blocked on ground.
+      // B_EW allows E-W only on ground underpass. N-S is blocked by abutments.
       if (groundTile === TILES.BRIDGE_EW && !isHorizontal) {
         return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: 'bridge_ground_cross_blocked' };
       }
-      // B_NS allows N-S only on ground. E-W is blocked on ground.
+      // B_NS allows N-S only on ground underpass. E-W is blocked by abutments.
       if (groundTile === TILES.BRIDGE_NS && !isVertical) {
         return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: 'bridge_ground_cross_blocked' };
       }
     } else {
       // Overhead Level checks (Elevation 1):
-      // On overhead, the target tile must be a bridge or a ramp. Empty space (0) is open air / void.
-      const isOverheadBridge =
-        overheadTile === TILES.BRIDGE_EW ||
-        groundTile === TILES.BRIDGE_EW ||
-        overheadTile === TILES.BRIDGE_NS ||
-        groundTile === TILES.BRIDGE_NS;
+      // On overhead, the target tile must be a walkable overhead surface (platform, wall-walk, bridge span, or ramp).
+      // Empty space (0) or missing tile is open air / void.
+      const isTargetOverhead = this.isOverheadWalkable(overheadTile) || this.isOverheadWalkable(groundTile);
 
-      if (!isOverheadBridge && !isOntoRamp) {
+      if (!isTargetOverhead && !isOntoRamp) {
         return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: 'no_overhead_path' };
       }
 
-      // Check Bridge Constraints on Overhead:
-      // B_EW on overhead spans North-South across the East-West tunnel below. E-W is blocked by railings.
-      if ((overheadTile === TILES.BRIDGE_EW || groundTile === TILES.BRIDGE_EW) && !isVertical && !isOntoRamp) {
-        return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: 'bridge_overhead_cross_blocked' };
-      }
-      // B_NS on overhead spans East-West across the North-South tunnel below. N-S is blocked by railings.
-      if ((overheadTile === TILES.BRIDGE_NS || groundTile === TILES.BRIDGE_NS) && !isHorizontal && !isOntoRamp) {
-        return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: 'bridge_overhead_cross_blocked' };
+      // Check Bridge / Platform Constraints on Overhead:
+      const isPlatform =
+        overheadTile === TILES.PLATFORM || overheadTile === 'PL' ||
+        overheadTile === TILES.WALL_WALK || overheadTile === 'WW' ||
+        currentOverheadTile === TILES.PLATFORM || currentOverheadTile === 'PL' ||
+        currentOverheadTile === TILES.WALL_WALK || currentOverheadTile === 'WW';
+
+      if (!isPlatform && !isOntoRamp && !isFromRamp) {
+        // Only block cross-axis movement if not connected along movement axis (e.g., 1-tile isolated cross bridge)
+        if ((overheadTile === TILES.BRIDGE_EW || groundTile === TILES.BRIDGE_EW) && isHorizontal) {
+          const connectsAlongAxis = currentOverheadTile === TILES.BRIDGE_EW || currentGroundTile === TILES.BRIDGE_EW;
+          if (!connectsAlongAxis) {
+            return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: 'bridge_overhead_cross_blocked' };
+          }
+        }
+        if ((overheadTile === TILES.BRIDGE_NS || groundTile === TILES.BRIDGE_NS) && isVertical) {
+          const connectsAlongAxis = currentOverheadTile === TILES.BRIDGE_NS || currentGroundTile === TILES.BRIDGE_NS;
+          if (!connectsAlongAxis) {
+            return { allowed: false, nextElevation: currentElevation, doorToUnlock: null, reason: 'bridge_overhead_cross_blocked' };
+          }
+        }
       }
     }
 
@@ -160,6 +174,23 @@ export class CollisionEngine {
       tile === TILES.RAMP_S ||
       tile === TILES.RAMP_E ||
       tile === TILES.RAMP_W
+    );
+  }
+
+  /**
+   * Helper to check if tile code provides a walkable surface at elevation 1 (BL-146)
+   * @param {*} tile
+   * @returns {boolean}
+   */
+  static isOverheadWalkable(tile) {
+    return (
+      tile === TILES.PLATFORM ||
+      tile === 'PL' ||
+      tile === TILES.WALL_WALK ||
+      tile === 'WW' ||
+      tile === TILES.BRIDGE_EW ||
+      tile === TILES.BRIDGE_NS ||
+      this.isRamp(tile)
     );
   }
 
