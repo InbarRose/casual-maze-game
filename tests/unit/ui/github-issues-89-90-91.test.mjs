@@ -45,7 +45,7 @@ describe('Defect Regression > GitHub Issues #89, #90, and #91', () => {
     const settingsContent = fs.readFileSync(settingsPath, 'utf8');
     assert(settingsContent.includes('[Q/C]'), 'Settings modal mentions [Q/C] camera rotation');
     assert(settingsContent.includes('Allow Q/C (Rotate)'), 'Settings hotkey toggle mentions Q/C');
-    assert(settingsContent.includes('>Q</kbd> / <kbd>C</kbd> : Rotate Camera 90°'), 'Settings table displays Q/C');
+    assert(/Q<\/kbd>\s*\/\s*<kbd[^>]*>C<\/kbd>\s*:\s*Rotate Camera 90°/.test(settingsContent), 'Settings table displays Q/C');
 
     const headerPath = path.resolve('js/ui/app-header.js');
     const headerContent = fs.readFileSync(headerPath, 'utf8');

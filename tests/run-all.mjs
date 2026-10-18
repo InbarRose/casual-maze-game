@@ -24,6 +24,7 @@ import './unit/core/geometry.test.mjs';
 import './unit/core/maze-generator.test.mjs';
 import './unit/core/storage-metadata-snapshot.test.mjs';
 import './unit/core/explorer-outfits.test.mjs';
+import './unit/core/smart-test-runner.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
