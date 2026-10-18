@@ -26,6 +26,17 @@ This document tracks project milestones, current release status, active developm
   - Reintroduced progressive hazards: patrolling sentinels (`patroller_sluice_33`, `patroller_canal_34`, `patroller_basin_35`, `patroller_spillway_36`) and timed water hazards.
   - Calibrated par steps through automated shortest-path simulation solvers and verified with `tests/unit/levels/chapter-9.test.mjs`.
 
+- [ ] **Compounding Mechanics Matrix, Zero Dead Space Standard & Campaign Level Overhauls (BL-149..154, ADR-0039)**:
+  - **Zero Dead Space Standard (`BL-149`, ADR-0039)**: Enforce $\text{DeadSpace}_{\ge 4\times 4} = 0$ across all 40 campaign levels, converting solid voids into winding labyrinth corridors, safe harbors, and secret alcoves (`SW` + gems).
+  - **Compounding Challenge Matrix**: Ensure mechanics carry forward progressively through later chapters (levers, portals, sentinels, timed hazards, cipher puzzles, camera rotation, elevated platforms, and wall walks).
+  - **Phased Redesign Roadmaps (`BL-150..154`)**:
+    - **Phase 1 (BL-150)**: Chapter 10 (Levels 37–40) — Apex of the Prism Mega-Labyrinth Overhaul.
+    - **Phase 2 (BL-151)**: Chapters 1 & 2 (Levels 1–8) — Foundations & Verticality Overhaul.
+    - **Phase 3 (BL-152)**: Chapters 3 & 4 (Levels 9–16) — Clockwork Foundry & Astral Rifts Overhaul.
+    - **Phase 4 (BL-153)**: Chapters 5 & 6 (Levels 17–24) — Molten Gauntlets & Arcane Enigmas Overhaul.
+    - **Phase 5 (BL-154)**: Chapters 7 & 8 (Levels 25–32) — Trials of Ascent & The Monolith Overhaul.
+
+
 - [ ] **Smart Change-Driven Test Runner, Result Caching, CI Domain Splitting, File Modularization & Modular Level Architecture (BL-142, BL-143, BL-144, BL-131..141, ADR-0036, ADR-0037)**:
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
