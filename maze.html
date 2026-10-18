@@ -781,6 +781,7 @@
 
   <script type="module">
     import { LevelLoader } from './js/levels/level-loader.js';
+    import { CAMPAIGN_LEVELS } from './js/levels/default-levels.js';
     import { GameLoop } from './js/engine/game-loop.js';
     import { globalEvents } from './js/core/events.js';
     import { StorageManager } from './js/core/storage.js';
@@ -1737,9 +1738,11 @@
               };
             }
           } else {
-            // Check if there is a next campaign level (Levels 1 to 32 across all 8 chapters)
+            // Check if there is a next campaign level dynamically (BL-145)
             const currentIdNum = parseInt(currentLevel.id, 10);
-            if (!isNaN(currentIdNum) && currentIdNum >= 1 && currentIdNum < 32) {
+            const totalCampaignLevels = CAMPAIGN_LEVELS?.length || 40;
+            const hasNextLevel = !isNaN(currentIdNum) && (currentIdNum >= 1 && currentIdNum < totalCampaignLevels);
+            if (hasNextLevel) {
               btnNextLevel.style.display = 'inline-flex';
               btnNextLevel.textContent = `Level ${currentIdNum + 1} [Space / Enter] →`;
               btnNextLevel.onclick = () => {

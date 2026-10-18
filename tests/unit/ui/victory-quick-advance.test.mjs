@@ -102,4 +102,35 @@ describe('UI > Victory Modal Quick-Advance (BL-55)', () => {
     assertEqual(handleKeydown('ArrowUp'), false);
     assertEqual(getClickedCount(), 0);
   });
+
+  it('dynamically offers next-level button on Level 33 and all campaign levels (BL-145)', async () => {
+    const { CAMPAIGN_LEVELS } = await import('../../../js/levels/default-levels.js');
+    assert(CAMPAIGN_LEVELS.length >= 36, 'Campaign contains at least 36 levels');
+
+    function checkVictoryNextButton(levelId) {
+      const currentIdNum = parseInt(levelId, 10);
+      const totalCampaignLevels = CAMPAIGN_LEVELS?.length || 40;
+      const hasNextLevel = !isNaN(currentIdNum) && (currentIdNum >= 1 && currentIdNum < totalCampaignLevels);
+      return {
+        display: hasNextLevel ? 'inline-flex' : 'none',
+        nextId: hasNextLevel ? currentIdNum + 1 : null,
+      };
+    }
+
+    // Level 33 specifically must offer Level 34
+    const res33 = checkVictoryNextButton('33');
+    assertEqual(res33.display, 'inline-flex', 'Level 33 displays next level button');
+    assertEqual(res33.nextId, 34, 'Level 33 links to Level 34');
+
+    // All levels from 1 to total - 1 offer next level
+    for (let i = 1; i < CAMPAIGN_LEVELS.length; i++) {
+      const res = checkVictoryNextButton(String(i));
+      assertEqual(res.display, 'inline-flex', `Level ${i} offers next level`);
+      assertEqual(res.nextId, i + 1, `Level ${i} targets Level ${i + 1}`);
+    }
+
+    // The final level hides the next level button
+    const finalRes = checkVictoryNextButton(String(CAMPAIGN_LEVELS.length));
+    assertEqual(finalRes.display, 'none', 'Final level hides next button');
+  });
 });
