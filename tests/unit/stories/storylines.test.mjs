@@ -70,7 +70,7 @@ describe('Storylines > Registry & Chapter Structure', () => {
 
   it('flattens all story levels via getAllStoryLevels()', () => {
     const all = getAllStoryLevels();
-    assertEqual(all.length, 6 + 3 + 1, 'Total 10 story levels in registry');
+    assertEqual(all.length, 6 + 3 + 1 + 3, 'Total 13 story levels in registry');
   });
 
   it('registers The Whispering Citadel multi-room dungeon story', () => {

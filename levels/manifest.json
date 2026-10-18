@@ -1026,5 +1026,71 @@
     "entityCount": 4,
     "hasMultiRoom": true,
     "exitCount": 2
+  },
+  {
+    "id": "story_sunken_vaults_1",
+    "category": "story",
+    "zone": "story",
+    "storyId": "sunken_vaults_of_the_deep",
+    "chapter": 1,
+    "title": "The Flooded Siphon",
+    "file": "levels/stories/story_sunken_vaults_1.json",
+    "theme": "aqueduct",
+    "parSteps": 26,
+    "parTime": 15,
+    "version": 1,
+    "hash": "39913be5e4f70cd19db9aff59b30166865a6ebca4cb12fc77cbce3cac5ebd5cd",
+    "size": 6768,
+    "dimensions": {
+      "width": 13,
+      "height": 13
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "story_sunken_vaults_2",
+    "category": "story",
+    "zone": "story",
+    "storyId": "sunken_vaults_of_the_deep",
+    "chapter": 2,
+    "title": "The Pressure Reservoir",
+    "file": "levels/stories/story_sunken_vaults_2.json",
+    "theme": "aqueduct",
+    "parSteps": 30,
+    "parTime": 18,
+    "version": 1,
+    "hash": "b6ee5edadb8cce8de6a777c174e82ddcce40b227bd795b1609a8e9bbd8436274",
+    "size": 8075,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "story_sunken_vaults_3",
+    "category": "story",
+    "zone": "story",
+    "storyId": "sunken_vaults_of_the_deep",
+    "chapter": 3,
+    "title": "The Abyssal Sanctuary",
+    "file": "levels/stories/story_sunken_vaults_3.json",
+    "theme": "aqueduct",
+    "parSteps": 67,
+    "parTime": 40,
+    "version": 1,
+    "hash": "c73a90aa8737d2a14ea3b4834f329ba6f5e1fa970366549224f697aa2055966a",
+    "size": 9966,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 7,
+    "hasMultiRoom": false,
+    "exitCount": 1
   }
 ]

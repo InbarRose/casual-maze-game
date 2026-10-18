@@ -60,7 +60,7 @@ describe('Levels > JSON File Integrity', () => {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const storyEntries = manifest.filter(m => m.category === 'story');
 
-    assertEqual(storyEntries.length, 4, 'Manifest contains 4 story levels');
+    assertEqual(storyEntries.length, 7, 'Manifest contains 7 story levels');
 
     for (const entry of storyEntries) {
       const jsonPath = path.resolve(entry.file);
@@ -87,7 +87,7 @@ describe('Levels > JSON File Integrity', () => {
       manifest.filter(m => m.category === 'story').length +
       manifest.filter(m => m.category === 'campaign' || !m.category).length;
     assertEqual(manifest.length, expectedTotal, `Lists ${manifest.length} total levels (matches categories sum)`);
-    assert(manifest.length >= 50, `Manifest has at least 50 levels (found ${manifest.length})`);
+    assert(manifest.length >= 53, `Manifest has at least 53 levels (found ${manifest.length})`);
 
     for (const entry of manifest) {
       assert(entry.id, `Manifest entry ${entry.id} has ID`);

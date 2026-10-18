@@ -7,6 +7,7 @@
 
 import { TUTORIAL_LEVELS } from '../levels/tutorials.js';
 import { TILES } from '../core/constants.js';
+import { SUNKEN_VAULTS_STORYLINE } from './sunken-vaults.js';
 
 // Story 1: The Novice's Initiation (Chapters 1 to 6)
 const NOVICE_CHAPTER_PROLOGUES = [
@@ -4777,6 +4778,7 @@ export const STORYLINES = Object.freeze([
     totalChapters: 3,
     chapters: [GUARDIANS_CHAPTER_1, GUARDIANS_CHAPTER_2, GUARDIANS_CHAPTER_3],
   },
+  SUNKEN_VAULTS_STORYLINE,
 ]);
 
 /**

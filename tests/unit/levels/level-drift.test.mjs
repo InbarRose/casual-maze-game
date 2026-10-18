@@ -19,7 +19,7 @@ describe('Levels > Cryptographic Integrity & Versioning', () => {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
     assert(Array.isArray(manifest), 'manifest is an array');
-    assert(manifest.length >= 50, `Manifest contains >= 50 levels (found ${manifest.length})`);
+    assert(manifest.length >= 53, `Manifest contains >= 53 levels (found ${manifest.length})`);
 
     for (const entry of manifest) {
       assert(entry.id, `Level ${entry.id} has id`);
