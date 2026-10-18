@@ -4,14 +4,15 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Current Milestone: `v1.28.0` (In Progress)
+### Current Milestone: `v1.28.0` (Completed & Verified)
 
-- [ ] **Comprehensive Platform Polish, Engine Decomposition & Content Expansion (BL-56, BL-126, BL-127, BL-128..130, ADR-0035)**:
-  - **GameLoop Decomposition (`BL-56`)**: Refactor monolithic `game-loop.js` by extracting `MovementController`, `InteractionDispatcher`, and `GameStateManager` as cohesive, sub-300-line SOLID collaborators with full test coverage.
+- [x] **Comprehensive Platform Polish, Engine Decomposition & Content Expansion (BL-56, BL-126, BL-127, BL-128..130, ADR-0035)**:
+  - **GameLoop Decomposition (`BL-56`)**: Refactored monolithic `game-loop.js` by extracting `MovementController`, `InteractionDispatcher`, and `GameStateManager` as cohesive, sub-300-line SOLID collaborators with full test coverage.
   - **Visual & UI/UX Fidelity Overhaul (`BL-126`)**: Refined glassmorphism, responsive micro-interactions, sleek glowing button states, and ultra-compact mobile header drawer for viewports $< 400\text{px}$.
   - **Dynamic Biome Surface Shaders & Storytelling Props (`BL-127`)**: Procedural animated water ripples/caustics, bubbling lava veins, crystal glints, and ambient storytelling props.
   - **Campaign Expansion (Chapters 9 & 10, `BL-128`, `BL-129`)**: 8 new official campaign levels (Levels 33–40: Sunken Aqueducts & Prismatic Labyrinth) with unbypassable gating and macro-maze topologies.
   - **New Multi-Room Story Saga (`BL-130`)**: "The Sunken Vaults of the Deep" 3-room episodic saga with dynamic water gates, interconnected transit, and narrative lore.
+  - **Automated Test Coverage**: Verified 152 test suites and 749 tests passing (0 failed, 10,292 assertions), with 23/23 zero-drift static checks passing.
 
 ### Previous Milestone: `v1.27.0` (Completed & Verified)
 

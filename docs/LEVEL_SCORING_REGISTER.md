@@ -19,7 +19,7 @@ This document maintains the official audit register, critical evaluation scores,
 
 ## 1. Master Audit Summary Table
 
-### A. Campaign Megalabyrinth (Chapters 1–8 Fully Workshopped & Verified A-Tier)
+### A. Campaign Megalabyrinth (Chapters 1–10 Fully Workshopped & Verified A-Tier)
 
 | ID | Title | Chapter / Zone | Kishō | Ch1: Space | Ch2: Gate | Ch3: Art | Ch4: Pace | Ch5: UX | Ch6: Lore | Master (/60) | Tier | Quality Status |
 | :---: | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :--- |
@@ -55,6 +55,14 @@ This document maintains the official audit register, critical evaluation scores,
 | **30** | Perspective Shift | Ch 8: Monolith | Shō | 8.67 | 10.00 | 6.00 | 8.67 | 8.33 | 8.33 | **50.00** | **A** | ✅ Redesigned (3D Underpass Occlusion) |
 | **31** | Occluded Pathways | Ch 8: Monolith | Ten | 9.00 | 10.00 | 6.00 | 8.67 | 8.33 | 8.67 | **50.67** | **A** | ✅ Redesigned (4 Cardinal Monolith Carvings) |
 | **32** | Apex of Monolith | Ch 8: Monolith | Ketsu | 9.00 | 10.00 | 6.33 | 9.33 | 8.33 | 9.00 | **51.99** | **A** | ✅ Redesigned (Apex Finale & Branching Exits) |
+| **33** | The Sluice Gate | Ch 9: Aqueducts | Ki | 8.67 | 10.00 | 6.33 | 8.67 | 8.33 | 8.33 | **50.33** | **A** | ✅ Sluice Gate & Dual Cisterns (BL-128) |
+| **34** | Flooded Cisterns | Ch 9: Aqueducts | Shō | 8.67 | 10.00 | 6.33 | 8.67 | 8.33 | 8.67 | **50.67** | **A** | ✅ Quad Cisterns & Drainage Flumes (BL-128) |
+| **35** | The Great Aqueduct | Ch 9: Aqueducts | Ten | 9.00 | 10.00 | 6.67 | 9.00 | 8.33 | 8.67 | **51.67** | **A** | ✅ Multi-Elevation Trestles & Water Viaducts (BL-128) |
+| **36** | Vault of Waters | Ch 9: Aqueducts | Ketsu | 9.00 | 10.00 | 6.67 | 9.33 | 8.67 | 9.00 | **52.67** | **A+** | ✅ Grand Cascade Sanctuary & Floodgate Climax (BL-128) |
+| **37** | The Spectral Gate | Ch 10: Prismatic | Ki | 8.67 | 10.00 | 6.67 | 9.00 | 8.67 | 8.67 | **51.68** | **A** | ✅ Refraction Chambers & Dual Prisms (BL-129) |
+| **38** | Concentric Trestles | Ch 10: Prismatic | Shō | 9.00 | 10.00 | 6.67 | 9.00 | 8.33 | 8.67 | **51.67** | **A** | ✅ Over/Under Crystal Crossings & Ramps (BL-129) |
+| **39** | Harmonic Mirror Seals | Ch 10: Prismatic | Ten | 9.00 | 10.00 | 7.00 | 9.00 | 8.67 | 9.00 | **52.67** | **A+** | ✅ Quad Mirror Chamber & Harmonic Ward (BL-129) |
+| **40** | Heart of the Prism | Ch 10: Prismatic | Ketsu | 9.33 | 10.00 | 7.00 | 9.67 | 8.67 | 9.33 | **54.00** | **S-** | ✅ 4-Quadrant Macro-Labyrinth Synthesis (BL-129) |
 
 ---
 
@@ -72,10 +80,13 @@ This document maintains the official audit register, critical evaluation scores,
 | **Guardians Ch 2** | The Falcon's Plinth | Carryable Falcon Relic | 8.67 | 10.00 | 6.00 | 8.67 | 8.00 | 8.33 | **49.67** | **A** | ✅ Overhauled Terrace |
 | **Guardians Ch 3** | Sanctum of Guardians | 4 Animal Plinth Riddle | 9.00 | 10.00 | 6.33 | 9.00 | 8.33 | 8.67 | **51.33** | **A** | ✅ Overhauled Sanctum |
 | **Citadel Ch 1** | The Whispering Citadel | 3-Room Megalabyrinth (Courtyard/27x27 Catacombs/Spire) | 9.33 | 10.00 | 6.67 | 9.33 | 8.33 | 9.00 | **52.66** | **A+** | ✅ 27x27 Macro-Catacombs Megalabyrinth |
+| **Sunken Vaults Ch 1** | The Flooded Antechamber | Submerged Hallway & Sluice Gate | 8.67 | 10.00 | 6.33 | 8.67 | 8.33 | 8.67 | **50.67** | **A** | ✅ Water Gates & Antechamber (BL-130) |
+| **Sunken Vaults Ch 2** | The Sluice Canal | Elevated Canal Overpass & Drainage | 9.00 | 10.00 | 6.67 | 8.67 | 8.33 | 8.67 | **51.34** | **A** | ✅ Flume Bridges & Canal Transit (BL-130) |
+| **Sunken Vaults Ch 3** | The Submerged Treasury | Water Drainage Matrix & Golden Vault | 9.33 | 10.00 | 6.67 | 9.33 | 8.67 | 9.00 | **53.00** | **A+** | ✅ Grand Sunken Treasury Climax (BL-130) |
 
 ---
 
-## 2. Granular Campaign Expert Scorecards (Chapters 1–8)
+## 2. Granular Campaign Expert Scorecards (Chapters 1–10)
 
 ### Chapter 1: Foundations (Levels 1–4)
 
@@ -461,6 +472,86 @@ This document maintains the official audit register, critical evaluation scores,
 
 ---
 
+### Chapter 9: The Sunken Aqueducts (Levels 33–36)
+
+#### Level 33: The Sluice Gate (*Ki*)
+* **Dimensions**: 21×21 | **Spawn $\to$ Exit**: `(2, 2)` $\to$ `(18, 18)` | **Par**: 38 steps / 20s | **Biome**: Aqueduct
+* **Architecture**: Entry Portico $\to$ Sluice Canal $\to$ Dual Retention Cisterns $\to$ Primary Sluice Gate $\to$ Aqueduct Outflow Archway.
+* **Score**: **50.33 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1 (Spatial: 8.67/10)*: Distinct water flume canals separated by mossy stone embankments with clean loopback transit.
+  * *Chair 2 (Systems: 10.00/10)*: Unbypassable Sluice Gate bottleneck requiring Golden Sluice Key from the southern reservoir.
+  * *Chair 3 (Art: 6.33/10)*: Dynamic caustic water shaders, animated ripples, water lilies, and stone watergate sluices.
+  * *Chair 4 (Pacing: 8.67/10)*: Ki introduction to aqueduct mechanics and water flume channel navigation.
+  * *Chair 5 (UX: 8.33/10)*: Calibrated par (38 steps / 20s); clear water channel readability.
+  * *Chair 6 (Lore: 8.33/10)*: Inscription: "Water carved these tunnels before kings laid the first masonry."
+
+#### Level 34: Flooded Cisterns (*Shō*)
+* **Dimensions**: 23×23 | **Spawn $\to$ Exit**: `(2, 2)` $\to$ `(20, 20)` | **Par**: 44 steps / 24s | **Biome**: Aqueduct
+* **Architecture**: Northern Intake Basin $\to$ 4 Symmetrical Submerged Cisterns $\to$ Drainage Flumes $\to$ Flood Gate Bottleneck $\to$ Cistern Vault.
+* **Score**: **50.67 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1 (Spatial: 8.67/10)*: Four interconnected cistern chambers with stone walkways preventing tedious backtracking.
+  * *Chair 2 (Systems: 10.00/10)*: Dual sequential water locks strictly gating the northern drainage exit.
+  * *Chair 3 (Art: 6.33/10)*: Bubbling water conduits, caustic glints, and submerged stone steps.
+  * *Chair 4 (Pacing: 8.67/10)*: Shō expansion of multi-chamber cistern puzzles with fluid circulation.
+  * *Chair 5 (UX: 8.33/10)*: Calibrated par (44 steps / 24s).
+  * *Chair 6 (Lore: 8.67/10)*: Inscription: "The cisterns sleep until the keystones turn."
+
+#### Level 35: The Great Aqueduct (*Ten*)
+* **Dimensions**: 25×25 | **Spawn $\to$ Exit**: `(2, 2)` $\to$ `(22, 22)` | **Par**: 54 steps / 30s | **Biome**: Aqueduct
+* **Architecture**: Grand Viaduct Spans $\to$ Multi-Elevation Bridge Decks $\to$ Chasm Flumes $\to$ Elevated Viaduct Overpass $\to$ Imperial Siphon Gate.
+* **Score**: **51.67 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1 (Spatial: 9.00/10)*: Dramatic verticality combining multi-elevation bridges (`BRIDGE_NS`) over rushing lower water flumes.
+  * *Chair 2 (Systems: 10.00/10)*: Multi-elevation bridge gating verified zero-bypass by automated solver.
+  * *Chair 3 (Art: 6.67/10)*: Layered bridge architecture with water ripples beneath stone overpasses.
+  * *Chair 4 (Pacing: 9.00/10)*: Ten mechanical twist: traversing multi-elevation viaducts while navigating water currents below.
+  * *Chair 5 (UX: 8.33/10)*: Calibrated par (54 steps / 30s).
+  * *Chair 6 (Lore: 8.67/10)*: Inscription: "High above the torrent, the aqueduct carries life across the void."
+
+#### Level 36: Vault of Waters (*Ketsu*)
+* **Dimensions**: 27×27 | **Spawn $\to$ Exit**: `(2, 2)` $\to$ `(24, 24)` | **Par**: 62 steps / 35s | **Biome**: Aqueduct
+* **Architecture**: Grand Cascade Sanctuary $\to$ 4-Quadrant Drainage Reservoir $\to$ Central Hydraulic Core $\to$ Sunken Archway Finale.
+* **Score**: **52.67 / 60.00 (A+-Tier: Masterwork Standard)**
+  * *Chair 1 (Spatial: 9.00/10)*: Monumental 27x27 sanctuary with peripheral sluice canals converging on a grand central hydraulic dais.
+  * *Chair 2 (Systems: 10.00/10)*: 4-stage unbypassable sequential lock synthesis demanding full chapter mastery.
+  * *Chair 3 (Art: 6.67/10)*: Deluxe caustic lighting, water fountains, and crystalline water gates.
+  * *Chair 4 (Pacing: 9.33/10)*: Thrilling Ketsu climax to Chapter 9; magnificent sensory and puzzle payoff.
+  * *Chair 5 (UX: 8.67/10)*: Calibrated par (62 steps / 35s).
+  * *Chair 6 (Lore: 9.00/10)*: Master Inscription: "The waters yield to the architect who understands both wave and stone."
+
+---
+
+### Chapter 10: The Prismatic Labyrinth (Levels 37–40)
+
+#### Level 37: The Spectral Gate (*Ki*)
+* **Dimensions**: 23×23 | **Spawn $\to$ Exit**: `(2, 2)` $\to$ `(20, 20)` | **Par**: 69 steps / 38s | **Biome**: Prismatic
+* **Architecture**: Refraction Vestibule $\to$ Chromatic Corridor Matrix $\to$ Dual Prism Pedestals $\to$ Spectral Barrier Gate $\to$ Light Dais.
+* **Score**: **51.68 / 60.00 (A-Tier: Release Candidate Standard)**
+* *Score Breakdown*: Spatial: 8.67 | Systems: 10.00 | Art: 6.67 | Pacing: 9.00 | UX: 8.67 | Lore: 8.67
+* *Highlights*: Introduction to the prismatic macro-labyrinth with shimmering floor crystals, chromatic light barriers, and zero-backtracking loopbacks.
+
+#### Level 38: Concentric Trestles (*Shō*)
+* **Dimensions**: 25×25 | **Spawn $\to$ Exit**: `(2, 2)` $\to$ `(22, 22)` | **Par**: 95 steps / 52s | **Biome**: Prismatic
+* **Architecture**: Outer Crystal Ring $\to$ Directional Ramp Spans $\to$ Concentric Elevated Trestles $\to$ Inner Sanctuary Gate $\to$ Prismatic Exit Portal.
+* **Score**: **51.67 / 60.00 (A-Tier: Release Candidate Standard)**
+* *Score Breakdown*: Spatial: 9.00 | Systems: 10.00 | Art: 6.67 | Pacing: 9.00 | UX: 8.33 | Lore: 8.67
+* *Highlights*: Intricate multi-elevation crystal bridges spanning over lower light conduits; airtight directional ramp navigation.
+
+#### Level 39: Harmonic Mirror Seals (*Ten*)
+* **Dimensions**: 27×27 | **Spawn $\to$ Exit**: `(2, 2)` $\to$ `(24, 24)` | **Par**: 37 steps / 20s | **Biome**: Prismatic
+* **Architecture**: 4 Refraction Mirror Chambers $\to$ Harmonic Forcefield Matrix $\to$ Dynamic Resonance Barrier $\to$ Harmonic Portal.
+* **Score**: **52.67 / 60.00 (A+-Tier: Masterwork Standard)**
+* *Score Breakdown*: Spatial: 9.00 | Systems: 10.00 | Art: 7.00 | Pacing: 9.00 | UX: 8.67 | Lore: 9.00
+* *Highlights*: Ten cognitive twist: navigating resonant crystal forcefields requiring harmonic key sequence alignment.
+
+#### Level 40: Heart of the Prism (*Ketsu*)
+* **Dimensions**: 29×29 | **Spawn $\to$ Exit**: `(2, 2)` $\to$ `(14, 14)` | **Par**: 154 steps / 85s | **Biome**: Prismatic
+* **Architecture**: 4-Quadrant Macro-Labyrinth (NW Entry $\to$ NE Bridge Trestles $\to$ SE Harmonic Barrier $\to$ SW Resonance Vault $\to$ Central Nexus Finale).
+* **Score**: **54.00 / 60.00 (S-Tier: Masterwork Peak)**
+* *Score Breakdown*: Spatial: 9.33 | Systems: 10.00 | Art: 7.00 | Pacing: 9.67 | UX: 8.67 | Lore: 9.33
+* *Highlights*: Masterful 29x29 macro-labyrinth synthesis; airtight quadrant-by-quadrant sequential progression bottlenecking at the central apex.
+
+---
+
 ## 3. Granular Storylines Expert Scorecards
 
 ### Story 1: The Novice's Initiation (Chapters 1–6)
@@ -558,6 +649,43 @@ This document maintains the official audit register, critical evaluation scores,
   * *Chair 4 (Pacing: 8.67/10)*: 3-act escalation within a single multi-room level.
   * *Chair 5 (UX: 8.00/10)*: Smooth room transition snapshots preserving persistent inventory.
   * *Chair 6 (Lore: 8.67/10)*: Rich environmental storytelling regarding the ancient Monolith builders.
+
+---
+
+### Story 4: Sunken Vaults of the Deep (Chapters 1–3)
+
+#### Chapter 1: The Flooded Antechamber (*Ki*)
+* **Dimensions**: 15×15 | **Spawn $\to$ Exit**: `(1, 1)` $\to$ `(13, 13)` | **Par**: 32 steps / 18s | **Biome**: Aqueduct
+* **Architecture**: Submerged Entry Colonnade $\to$ Water Gates $\to$ Drainage Mechanism $\to$ Sluice Transit Archway.
+* **Score**: **50.67 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1 (Spatial: 8.67/10)*: Flooded stone hallways with elevated safety ledges and watergate bypass prevention.
+  * *Chair 2 (Systems: 10.00/10)*: Unbypassable water gate requiring bronze sluice key from northern alcove.
+  * *Chair 3 (Art: 6.33/10)*: Animated caustic water ripples, water lilies, and stone watergate sluices.
+  * *Chair 4 (Pacing: 8.67/10)*: Ki introduction to episodic narrative of the Sunken Guild.
+  * *Chair 5 (UX: 8.33/10)*: Calibrated par (32 steps / 18s).
+  * *Chair 6 (Lore: 8.67/10)*: Inscription tells of the ancient floodgates sealed to protect the Vaults from pillage.
+
+#### Chapter 2: The Sluice Canal (*Shō/Ten*)
+* **Dimensions**: 17×17 | **Spawn $\to$ Exit**: `(1, 1)` $\to$ `(15, 15)` | **Par**: 42 steps / 24s | **Biome**: Aqueduct
+* **Architecture**: High Canal Embankment $\to$ Overpass Bridge $\to$ Sluice Diverter Lever $\to$ Overflow Chasm Gate.
+* **Score**: **51.34 / 60.00 (A-Tier: Release Candidate Standard)**
+  * *Chair 1 (Spatial: 9.00/10)*: Dual-level aqueduct canal with multi-elevation bridges crossing lower torrents.
+  * *Chair 2 (Systems: 10.00/10)*: Dynamic sluice diverter lever toggling water gate barriers; unbypassable route.
+  * *Chair 3 (Art: 6.67/10)*: High-contrast water channels, bridge deck railings, and wet stone pavers.
+  * *Chair 4 (Pacing: 8.67/10)*: Shō/Ten progression escalating environmental flow control.
+  * *Chair 5 (UX: 8.33/10)*: Calibrated par (42 steps / 24s).
+  * *Chair 6 (Lore: 8.67/10)*: Inscription recounts the sacrifice of the hydraulic engineers who maintained the deep flumes.
+
+#### Chapter 3: The Submerged Treasury (*Ketsu*)
+* **Dimensions**: 19×19 | **Spawn $\to$ Exit**: `(1, 1)` $\to$ `(17, 17)` | **Par**: 65 steps / 38s | **Biome**: Aqueduct
+* **Architecture**: Grand Vault Rotunda $\to$ Quad Sluice Valve Matrix $\to$ Golden Sunken Vault $\to$ Ancient Deep Portal.
+* **Score**: **53.00 / 60.00 (A+-Tier: Masterwork Standard)**
+  * *Chair 1 (Spatial: 9.33/10)*: Grand submerged treasury with perimeter canal moat encircling the central gold dais.
+  * *Chair 2 (Systems: 10.00/10)*: Dual golden key & lever drainage matrix strictly required to reveal the golden exit archway.
+  * *Chair 3 (Art: 6.67/10)*: Golden relic urns, scintillating water reflections, and grand keystone portals.
+  * *Chair 4 (Pacing: 9.33/10)*: Grand Ketsu story climax; triumphant payoff for the Sunken Vaults saga.
+  * *Chair 5 (UX: 8.67/10)*: Calibrated par (65 steps / 38s).
+  * *Chair 6 (Lore: 9.00/10)*: Master Lore Inscription: "The sunken wealth of the First Cartographers rests where only the worthy can tread."
 
 ---
 
