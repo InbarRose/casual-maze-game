@@ -5,7 +5,6 @@
 
 import { run } from '../harness/index.mjs';
 
-import '../unit/core/coordinates-xyz.test.mjs';
 import '../unit/engine/collision.test.mjs';
 import '../unit/engine/fog.test.mjs';
 import '../unit/engine/camera.test.mjs';
@@ -28,9 +27,7 @@ import '../unit/engine/canvas-visual-regression.test.mjs';
 import '../unit/engine/entrance-exit-visuals.test.mjs';
 import '../unit/engine/interact-directions-disambiguation.test.mjs';
 import '../unit/engine/fog-expansion.test.mjs';
-import '../unit/ui/touch-controls.test.mjs';
 import '../unit/engine/game-state-manager.test.mjs';
 import '../unit/engine/biome-surface-shaders.test.mjs';
-import '../integration/journeys/camera-rotation.journey.test.mjs';
 
 await run();
