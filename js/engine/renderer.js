@@ -370,7 +370,7 @@ export class GameRenderer {
         const tile = overhead?.[y]?.[x] || ground?.[y]?.[x];
         const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
-        if (tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS) {
+        if (tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS || tile === TILES.PLATFORM || tile === 'PL' || tile === TILES.WALL_WALK || tile === 'WW') {
           ctx.fillStyle = '#1e3a8a';
           ctx.fillRect(screen.x + 2, screen.y + 2, tileSize - 4, tileSize - 4);
 
@@ -826,14 +826,25 @@ export class GameRenderer {
         const gTile = ground?.[y]?.[x];
         const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
-        // Render Ramps connecting ground to elevated deck
-        if (this.isRampTile(gTile)) {
-          const screenRamp = this.getScreenRampTile(gTile, angle);
+        // Render Ramps connecting ground to elevated deck (checks ground and overhead) (BL-146)
+        const rampTile = this.isRampTile(overTile) ? overTile : (this.isRampTile(gTile) ? gTile : null);
+        if (rampTile) {
+          const screenRamp = this.getScreenRampTile(rampTile, angle);
           this.renderAngledRamp(ctx, screenRamp, screen.x, screen.y, tileSize, theme, heightOffset);
         }
 
-        // Render Overhead Bridges
-        if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
+        // Render Platforms & Wall-Top Walkways (BL-146, BL-147)
+        if (overTile === TILES.PLATFORM || overTile === 'PL' || overTile === TILES.WALL_WALK || overTile === 'WW') {
+          const isWallWalk = overTile === TILES.WALL_WALK || overTile === 'WW' || gTile === TILES.WALL;
+          const neighbors = {
+            north: this.isElevatedSurface(level, x, y - 1),
+            south: this.isElevatedSurface(level, x, y + 1),
+            west: this.isElevatedSurface(level, x - 1, y),
+            east: this.isElevatedSurface(level, x + 1, y),
+          };
+          this.renderAngledPlatformSpan(ctx, screen.x, screen.y, tileSize, theme, heightOffset, neighbors, isWallWalk);
+        } else if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
+          // Render Overhead Bridges
           const dir = isRotated90or270 ? 'EW' : 'NS';
           this.renderAngledBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme, heightOffset);
         } else if (overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
@@ -921,6 +932,129 @@ export class GameRenderer {
 
     // 3. Render bridge deck at elevated Y
     this.renderBridgeSpan(ctx, direction, screenX, elevatedY, tileSize, theme);
+
+    ctx.restore();
+  }
+
+  /**
+   * Helper to determine if a tile code at (x, y) represents an elevated overhead surface (BL-146, BL-147)
+   */
+  isElevatedSurface(level, x, y) {
+    if (!level?.layers) return false;
+    const overTile = level.layers.overhead?.[y]?.[x];
+    const gTile = level.layers.ground?.[y]?.[x];
+    return (
+      overTile === TILES.PLATFORM || overTile === 'PL' ||
+      overTile === TILES.WALL_WALK || overTile === 'WW' ||
+      overTile === TILES.BRIDGE_EW || overTile === TILES.BRIDGE_NS ||
+      this.isRampTile(overTile) ||
+      gTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_NS ||
+      this.isRampTile(gTile)
+    );
+  }
+
+  /**
+   * Render elevated 2D platform or wall-top battlement in angled 2.5D mode (BL-147)
+   */
+  renderAngledPlatformSpan(ctx, screenX, screenY, tileSize, theme, heightOffset, neighbors, isWallWalk) {
+    ctx.save();
+    const elevatedY = screenY - heightOffset;
+    const shadowOffsetX = Math.round(tileSize * 0.08);
+    const shadowOffsetY = Math.round(heightOffset * 0.42);
+
+    // 1. Drop shadow onto ground below (only if not built on solid wall foundation)
+    if (!isWallWalk) {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+      ctx.fillRect(screenX + shadowOffsetX, screenY + shadowOffsetY, tileSize, tileSize);
+    }
+
+    // 2. Structural supports / Pillars or Masonry Corbel
+    if (!isWallWalk) {
+      ctx.fillStyle = theme.bridgeGround || '#1e293b';
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
+      ctx.lineWidth = 1;
+      const pillarW = Math.max(3, Math.round(tileSize * 0.12));
+      const pillarH = heightOffset + Math.round(tileSize * 0.15);
+
+      if (!neighbors.west && !neighbors.south) {
+        ctx.fillRect(screenX + 2, elevatedY + tileSize * 0.85, pillarW, pillarH);
+        ctx.strokeRect(screenX + 2, elevatedY + tileSize * 0.85, pillarW, pillarH);
+      }
+      if (!neighbors.east && !neighbors.south) {
+        ctx.fillRect(screenX + tileSize - pillarW - 2, elevatedY + tileSize * 0.85, pillarW, pillarH);
+        ctx.strokeRect(screenX + tileSize - pillarW - 2, elevatedY + tileSize * 0.85, pillarW, pillarH);
+      }
+    } else {
+      // Wall-top corbel rim
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+      ctx.fillRect(screenX, screenY - heightOffset + tileSize * 0.9, tileSize, Math.round(tileSize * 0.1));
+    }
+
+    // 3. Platform Deck Surface at elevated Y
+    this.renderPlatformSpan(ctx, screenX, elevatedY, tileSize, theme, neighbors, isWallWalk);
+
+    ctx.restore();
+  }
+
+  /**
+   * Render platform or wall-walk deck surface with perimeter railings / battlements (BL-147)
+   */
+  renderPlatformSpan(ctx, screenX, screenY, tileSize, theme, neighbors = {}, isWallWalk = false) {
+    ctx.save();
+
+    // Base Deck Surface
+    const deckColor = isWallWalk
+      ? (theme.wall || '#475569')
+      : (theme.bridgeDeck || theme.floor || '#334155');
+    ctx.fillStyle = deckColor;
+    ctx.fillRect(screenX, screenY, tileSize, tileSize);
+
+    // Architectural Texture: Flagstone pavers / boardwalk planks
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+    ctx.lineWidth = 1;
+    const half = tileSize / 2;
+    ctx.strokeRect(screenX + 1, screenY + 1, half - 1, half - 1);
+    ctx.strokeRect(screenX + half, screenY + 1, half - 1, half - 1);
+    ctx.strokeRect(screenX + 1, screenY + half, half - 1, half - 1);
+    ctx.strokeRect(screenX + half, screenY + half, half - 1, half - 1);
+
+    // Subtle Surface Highlight
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.fillRect(screenX + 2, screenY + 2, tileSize - 4, tileSize - 4);
+
+    // Perimeter Railings or Parapets (only on exposed edges where neighbor is open air)
+    const railingColor = isWallWalk ? 'rgba(30, 41, 59, 0.85)' : (theme.bridgeRailing || '#f59e0b');
+    const railThick = Math.max(2, Math.round(tileSize * 0.08));
+
+    ctx.fillStyle = railingColor;
+    if (!neighbors.north) {
+      ctx.fillRect(screenX, screenY, tileSize, railThick);
+    }
+    if (!neighbors.south) {
+      ctx.fillRect(screenX, screenY + tileSize - railThick, tileSize, railThick);
+    }
+    if (!neighbors.west) {
+      ctx.fillRect(screenX, screenY, railThick, tileSize);
+    }
+    if (!neighbors.east) {
+      ctx.fillRect(screenX + tileSize - railThick, screenY, railThick, tileSize);
+    }
+
+    // Corner stud accents
+    ctx.fillStyle = isWallWalk ? '#94a3b8' : '#ffffff';
+    const studSize = Math.max(3, Math.round(tileSize * 0.1));
+    if (!neighbors.north && !neighbors.west) {
+      ctx.fillRect(screenX, screenY, studSize, studSize);
+    }
+    if (!neighbors.north && !neighbors.east) {
+      ctx.fillRect(screenX + tileSize - studSize, screenY, studSize, studSize);
+    }
+    if (!neighbors.south && !neighbors.west) {
+      ctx.fillRect(screenX, screenY + tileSize - studSize, studSize, studSize);
+    }
+    if (!neighbors.south && !neighbors.east) {
+      ctx.fillRect(screenX + tileSize - studSize, screenY + tileSize - studSize, studSize, studSize);
+    }
 
     ctx.restore();
   }
@@ -1163,14 +1297,25 @@ export class GameRenderer {
         const gTile = ground?.[y]?.[x];
         const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
-        // Render Ramps
-        if (this.isRampTile(gTile)) {
-          const screenRamp = this.getScreenRampTile(gTile, angle);
+        // Render Ramps (checks ground and overhead) (BL-146)
+        const rampTile = this.isRampTile(overTile) ? overTile : (this.isRampTile(gTile) ? gTile : null);
+        if (rampTile) {
+          const screenRamp = this.getScreenRampTile(rampTile, angle);
           this.renderRamp(ctx, screenRamp, screen.x, screen.y, tileSize, theme);
         }
 
-        // Render Overhead Bridge
-        if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
+        // Render Platforms & Wall-Top Walkways (BL-146, BL-147)
+        if (overTile === TILES.PLATFORM || overTile === 'PL' || overTile === TILES.WALL_WALK || overTile === 'WW') {
+          const isWallWalk = overTile === TILES.WALL_WALK || overTile === 'WW' || gTile === TILES.WALL;
+          const neighbors = {
+            north: this.isElevatedSurface(level, x, y - 1),
+            south: this.isElevatedSurface(level, x, y + 1),
+            west: this.isElevatedSurface(level, x - 1, y),
+            east: this.isElevatedSurface(level, x + 1, y),
+          };
+          this.renderPlatformSpan(ctx, screen.x, screen.y, tileSize, theme, neighbors, isWallWalk);
+        } else if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
+          // Render Overhead Bridge
           const dir = isRotated90or270 ? 'NS' : 'EW';
           this.renderBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme);
         } else if (overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
