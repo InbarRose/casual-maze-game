@@ -264,7 +264,6 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-153** | **Chapter 5 & 6 Molten Gauntlet & Arcane Enigmas Overhaul (Levels 17–24)** | **P1** | `v1.29.0` | Redesign Levels 17–24 to reclaim dead spaces, compound patrolling sentinels and timed flame/spike hazards with cipher dials, memory seals, elevated bridges, and dynamic levers. | Planned |
 | **BL-154** | **Chapter 7 & 8 Trials of Ascent & The Monolith Overhaul (Levels 25–32)** | **P1** | `v1.29.0` | Redesign Levels 25–32 to reclaim dead spaces (e.g. 42 voids in L27), combine 3D camera rotation underpasses with high-altitude ramparts, patrolling sentinels, timed hazards, and dynamic levers. | Planned |
 
-
 ---
 
 ## 3. Sprint Planning & Delivery Roadmap
