@@ -19,6 +19,7 @@ import '../unit/renderer/particles-lighting.test.mjs';
 import '../unit/engine/solver.test.mjs';
 import '../unit/engine/replay-player.test.mjs';
 import '../unit/ui/touch-controls.test.mjs';
+import '../unit/engine/game-state-manager.test.mjs';
 import '../integration/journeys/camera-rotation.journey.test.mjs';
 
 await run();
