@@ -48,6 +48,8 @@ import './unit/engine/canvas-visual-regression.test.mjs';
 import './unit/engine/entrance-exit-visuals.test.mjs';
 import './unit/engine/interact-directions-disambiguation.test.mjs';
 import './unit/engine/fog-expansion.test.mjs';
+import './unit/engine/game-state-manager.test.mjs';
+import './unit/engine/biome-surface-shaders.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/base-entity.test.mjs';
