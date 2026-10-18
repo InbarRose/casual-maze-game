@@ -32,9 +32,18 @@ levels/
 └── chapter_1/
     ├── level_1/
     │   ├── README.md         # Designer documentation, narrative lore, walkthrough, par notes
-    │   ├── manifest.json     # Metadata, dimensions, theme, camera, spawn/exit styles, par metrics
-    │   ├── layers.json       # Ground and overhead tile matrices (or layers/ground.json, layers/overhead.json)
-    │   └── entities.json     # Interactive entities array (keys, doors, levers, portals, notes)
+    │   ├── manifest.json     # Metadata, dimensions, theme, camera, spawn/exit styles, par metrics, asset references
+    │   ├── layers/           # Modular layer files (or single layers.json)
+    │   │   ├── ground.json   # Ground level (Z=0) tile matrix
+    │   │   ├── overhead.json # Overhead bridge level (Z=1) tile matrix
+    │   │   └── decor.json    # Optional surface/prop layer
+    │   ├── entities/         # Modular entity lists (or single entities.json)
+    │   │   ├── triggers.json # Levers, floor plates, teleporters
+    │   │   ├── locks.json    # Keys, doors, gates
+    │   │   └── lore.json     # Murals, signposts, architect notes
+    │   └── assets/           # Optional level-specific custom assets
+    │       ├── visuals/      # Custom SVG sprites, props, floor textures
+    │       └── audio/        # Custom procedural synth recipes or audio soundscapes
     ├── level_2/
     │   └── ...
     └── manifest.json         # Chapter-level index and level ordering
@@ -46,7 +55,7 @@ levels/
   - Kishōtenketsu breakdown (Introduction, Development, Twist, Resolution)
   - Intended optimal path and par steps / par time deduction
   - Secret wall locations and bonus collectibles
-* **`manifest.json`**: Pure configuration and parameters:
+* **`manifest.json`**: Pure configuration, asset mapping, and parameters:
   - `id`, `chapter`, `zone`, `title`, `author`, `version`
   - `dimensions: { width, height }`
   - `config: { fogOfWar, viewRadius, theme, tileSize, allowFreePan }`
@@ -54,13 +63,30 @@ levels/
   - `exit: { x, y, elevation, style, wallDirection }`
   - `parSteps`, `parTime`
   - `architectNote` (synced from README or referenced)
-* **`layers.json`**: Pure grid spatial data:
+  - `layers`: Manifest paths to layer sub-files or embedded matrices
+  - `entities`: Manifest paths to entity sub-files or embedded arrays
+  - `customAssets`: References to local visual and acoustic assets
+* **`layers/` (or `layers.json`)**: Pure grid spatial data:
   - Decoupled from entity and metadata changes.
+  - Supports splitting into `ground.json`, `overhead.json`, and optional environmental `decor.json`.
   - Can be extended in the future to support lightweight ASCII or Run-Length Encoded (RLE) matrices.
-* **`entities.json`**: Entity graph:
+* **`entities/` (or `entities.json`)**: Entity graph:
+  - Supports splitting into categorized files (e.g. `triggers.json`, `locks.json`, `lore.json`) or unified `entities.json`.
   - Clean array of entity objects with specific IDs, coordinates, types, colors, and target actions.
+* **`assets/` (Visuals & Audio)**:
+  - Level-specific custom SVG vector tiles/props and Web Audio synth parameter recipes, eliminating hardcoded engine couplings for custom community levels.
 
-### 3. Static Compatibility & Build Pipeline
+### 3. Level Packaging, Creation & Import/Export Pipeline (Zip & Universal JSON Bundle)
+To make sharing and authoring seamless across the Map Editor, local play, and community distribution:
+* **Interactive Map Editor Creation**:
+  - When saving or exporting a newly designed level, creators can choose between:
+    1. **`.cmg.zip` Level Package**: A standards-compliant zip archive bundling `manifest.json`, `README.md`, `layers/`, `entities/`, and any attached custom SVG/audio assets for instant download/upload.
+    2. **`.cmg.json` Unified Level Bundle**: A single, self-contained JSON bundle encapsulating all sub-files as embedded string/object payloads (with custom visual SVG/audio data inlined or base64 encoded), ensuring zero-dependency compatibility where browser zip decompression is unavailable.
+* **Level Loader Import / Drag-and-Drop Play**:
+  - The in-game `LevelLoader` and Hub level selector support dragging-and-dropping either `.cmg.zip` or `.cmg.json` directly into the browser.
+  - The level loader unpacks the manifest, compiles layers and entities in-memory, binds custom assets, and immediately boots the game session without requiring server-side upload.
+
+### 4. Static Compatibility & Build Pipeline
 In accordance with **Principle 1A (Zero Backend / Pure Static Compatibility)**:
 - The build script (`scripts/update-manifests.mjs`) compiles level directory packages into the runtime distribution bundle:
   - Compiles package directories into bundled `default-levels.js` / JSON files for immediate browser loading.
