@@ -6,12 +6,33 @@ This document tracks project milestones, current release status, active developm
 
 ### Current Milestone: `v1.29.0` (In Progress)
 
+- [x] **Dynamic Campaign Upper Bound & Victory Progression (BL-145, ADR-0038)**:
+  - Replaced hardcoded level bounds (`< 32`) in `maze.html` and `js/ui/profile-modal.js` with dynamic evaluations against `CAMPAIGN_LEVELS.length`.
+  - Added automated UI regression test in `tests/unit/ui/victory-quick-advance.test.mjs` verifying Level 33 presents the Level 34 button and all campaign levels $1 \le N < \text{total}$ advance seamlessly.
+
+- [x] **Elevated Platforms, Wall-Top Walkways & Multi-Elevation Collision Overhaul (BL-146, ADR-0038)**:
+  - Introduced `TILES.PLATFORM` (`'PLATFORM'`) and `TILES.WALL_WALK` (`'WALL_WALK'`) in `js/core/constants.js`.
+  - Updated `CollisionEngine` with `isOverheadWalkable(tile)` supporting 4-directional movement on elevated decks and ramp approaches on either layer.
+  - Enabled ground underpasses beneath platforms/bridges when ground tile is floor, wall-top walking along ramparts for elevation-1 entities, and seamless chained bridge crossings without false railing hits.
+  - Added collision unit test suite covering underpasses, wall walks, platforms, and chained bridges.
+
+- [x] **3D Overhead Viaducts, Battlement Parapets & Elevation Shading in Renderer (BL-147, ADR-0038)**:
+  - Implemented `renderAngledPlatformSpan` and `renderPlatformSpan` in `js/engine/renderer.js` with ground drop shadows, colonnade support pillars, corbel brackets, stone flagstone paving, and contextual safety railings along exposed edges.
+  - Unified elevated surface detection via `isElevatedSurface(level, x, y)` across 2D, angled top-down, and blueprint view modes.
+
+- [x] **Chapter 9 Labyrinth Redesign & Progressive Hazard Continuity (BL-148, ADR-0038)**:
+  - Overhauled Levels 33, 34, 35, and 36: eliminated all dead space $\ge 5 \times 5$, widened corridors into winding labyrinth wings, added secret rooms (`SW`) with gems.
+  - Re-aligned Level 34 ramp approach corridor along the longitudinal travel axis $(4, 5) \to (5, 5)$, resolving ramp entry blocks.
+  - Reintroduced progressive hazards: patrolling sentinels (`patroller_sluice_33`, `patroller_canal_34`, `patroller_basin_35`, `patroller_spillway_36`) and timed water hazards.
+  - Calibrated par steps through automated shortest-path simulation solvers and verified with `tests/unit/levels/chapter-9.test.mjs`.
+
 - [ ] **Smart Change-Driven Test Runner, Result Caching, CI Domain Splitting, File Modularization & Modular Level Architecture (BL-142, BL-143, BL-144, BL-131..141, ADR-0036, ADR-0037)**:
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
   - **Modular Level Package Architecture (`BL-143`, ADR-0037)**: Architecture decision and plan for organizing levels into dedicated directories (`manifest.json`, `README.md`, `layers/`, `entities/`, `assets/`) compiled for static zero-backend execution.
   - **Level Package Zip & JSON Bundle Import/Export (`BL-144`, ADR-0037)**: Architecture plan for packaging custom levels into `.cmg.zip` or `.cmg.json` bundles directly in the Map Editor and importing via drag-and-drop into `LevelLoader`.
   - **Large File Splitting Roadmaps (`BL-131..141`)**: Modularization plans for large files (`renderer.js`, `editor-canvas.js`, `player.js`, `storage.js`).
+
 
 ### Previous Milestone: `v1.28.0` (Completed & Verified)
 
