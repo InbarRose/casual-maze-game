@@ -122,8 +122,8 @@ describe('Component Suite > CMP-01: Universal App Shell & Global Navigation', ()
     assert(indexHtml.includes('id="btn-hero-architect"'), '#btn-hero-architect exists');
     assert(indexHtml.includes('id="btn-hero-settings"'), '#btn-hero-settings exists');
 
-    // Chapter Cards & Thematic Biome Elements (Chapters 1–8)
-    for (let ch = 1; ch <= 8; ch++) {
+    // Chapter Cards & Thematic Biome Elements (Chapters 1–9)
+    for (let ch = 1; ch <= 9; ch++) {
       assert(indexHtml.includes(`Chapter ${ch}:`), `Chapter ${ch} card exists in markup`);
     }
 

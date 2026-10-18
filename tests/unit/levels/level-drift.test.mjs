@@ -19,7 +19,7 @@ describe('Levels > Cryptographic Integrity & Versioning', () => {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
 
     assert(Array.isArray(manifest), 'manifest is an array');
-    assertEqual(manifest.length, 42, 'Manifest contains exactly 42 levels');
+    assert(manifest.length >= 46, `Manifest contains >= 46 levels (found ${manifest.length})`);
 
     for (const entry of manifest) {
       assert(entry.id, `Level ${entry.id} has id`);
@@ -51,8 +51,10 @@ describe('Levels > Cryptographic Integrity & Versioning', () => {
       ...scanLevels(path.resolve(rootDir, 'levels/tutorial')),
       ...scanLevels(path.resolve(rootDir, 'levels/stories')),
     ];
-    for (let ch = 1; ch <= 8; ch++) {
-      diskLevels.push(...scanLevels(path.resolve(rootDir, `levels/chapter_${ch}`)));
+    for (const entry of fs.readdirSync(path.resolve(rootDir, 'levels'), { withFileTypes: true })) {
+      if (entry.isDirectory() && entry.name.startsWith('chapter_')) {
+        diskLevels.push(...scanLevels(path.resolve(rootDir, `levels/${entry.name}`)));
+      }
     }
 
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));

@@ -295,8 +295,14 @@ export const TUTORIAL_LEVELS = Object.freeze(${JSON.stringify(tutorials, null, 2
 `;
 fs.writeFileSync(path.join(rootDir, 'js/levels/tutorials.js'), tutorialContent, 'utf-8');
 
-// 3b. Campaign Chapters 1 through 8
-for (let ch = 1; ch <= 8; ch++) {
+// 3b. Campaign Chapters (Dynamic Detection)
+const chapterNums = [...new Set(
+  enrichedLevels
+    .filter(m => m.category === 'campaign' && m.chapter?.startsWith('chapter_'))
+    .map(m => parseInt(m.chapter.replace('chapter_', ''), 10))
+)].sort((a, b) => a - b);
+
+for (const ch of chapterNums) {
   const chapterKey = `chapter_${ch}`;
   const chapterFiles = enrichedLevels
     .filter(m => m.category === 'campaign' && m.chapter === chapterKey)
@@ -312,34 +318,23 @@ export const CAMPAIGN_CH${ch}_LEVELS = Object.freeze(${JSON.stringify(chapterLev
   fs.writeFileSync(path.join(rootDir, `js/levels/campaign-ch${ch}.js`), chapterContent, 'utf-8');
 }
 
-// 3c. Combined Aggregator default-levels.js (Chapters 1 to 8 + Storyline helpers)
+// 3c. Combined Aggregator default-levels.js (Dynamic Chapters + Storyline helpers)
+const imports = chapterNums.map(ch => `import { CAMPAIGN_CH${ch}_LEVELS } from './campaign-ch${ch}.js';`).join('\n');
+const spreads = chapterNums.map(ch => `  ...CAMPAIGN_CH${ch}_LEVELS,`).join('\n');
+
 const aggregatorContent = `/**
  * Casual Maze Game - Default Embedded Levels Aggregator
  * Re-exports modular tutorial and chapter datasets with 100% backward compatibility.
  */
 
 import { TUTORIAL_LEVELS } from './tutorials.js';
-import { CAMPAIGN_CH1_LEVELS } from './campaign-ch1.js';
-import { CAMPAIGN_CH2_LEVELS } from './campaign-ch2.js';
-import { CAMPAIGN_CH3_LEVELS } from './campaign-ch3.js';
-import { CAMPAIGN_CH4_LEVELS } from './campaign-ch4.js';
-import { CAMPAIGN_CH5_LEVELS } from './campaign-ch5.js';
-import { CAMPAIGN_CH6_LEVELS } from './campaign-ch6.js';
-import { CAMPAIGN_CH7_LEVELS } from './campaign-ch7.js';
-import { CAMPAIGN_CH8_LEVELS } from './campaign-ch8.js';
+${imports}
 import { getStoryline, getStoryChapter, getAllStoryLevels, STORYLINES } from '../stories/storylines.js';
 
 export { TUTORIAL_LEVELS, getStoryline, getStoryChapter, getAllStoryLevels, STORYLINES };
 
 export const CAMPAIGN_LEVELS = Object.freeze([
-  ...CAMPAIGN_CH1_LEVELS,
-  ...CAMPAIGN_CH2_LEVELS,
-  ...CAMPAIGN_CH3_LEVELS,
-  ...CAMPAIGN_CH4_LEVELS,
-  ...CAMPAIGN_CH5_LEVELS,
-  ...CAMPAIGN_CH6_LEVELS,
-  ...CAMPAIGN_CH7_LEVELS,
-  ...CAMPAIGN_CH8_LEVELS,
+${spreads}
 ]);
 
 export const ALL_LEVELS = Object.freeze([
@@ -350,5 +345,5 @@ export const ALL_LEVELS = Object.freeze([
 `;
 
 fs.writeFileSync(path.join(rootDir, 'js/levels/default-levels.js'), aggregatorContent, 'utf-8');
-console.log('  ✓ Updated js/levels/default-levels.js aggregator with Chapters 1-8');
+console.log(`  ✓ Updated js/levels/default-levels.js aggregator with Chapters ${chapterNums[0]}-${chapterNums[chapterNums.length - 1]}`);
 console.log('\n✨ All manifests, hashes, and default level files successfully synchronized!');
