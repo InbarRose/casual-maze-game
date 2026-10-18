@@ -65,5 +65,7 @@ What is the change or solution being adopted?
 * [0036: Smart Change-Driven Test Runner, Result Caching & CI Domain Splitting](0036-smart-change-driven-testing-and-ci-matrix.md) — Dependency graph register, Git diff inspection, SHA-256 pass result caching, and segmented domain test matrix.
 * [0037: Modular Level Package Architecture (Per-Level Directory Structure)](0037-modular-level-package-architecture.md) — Directory-per-level packaging with manifest.json, README.md, layers.json, and entities.json, compiled for zero-backend static runtime execution.
 * [0038: Elevated Platforms, Wall-Top Walkways, Underpass Traversal, and Progressive Hazard Escalation](0038-elevated-platforms-wall-walkways-and-progressive-hazard-escalation.md) — Dynamic campaign upper bound, 2D walkable overhead platforms, battlement wall walks, multi-elevation underpasses, 3D drop shadow rendering, and Chapter 9 escalation.
+* [0039: Compounding Mechanics Matrix, Zero Dead Space Standard, and Campaign Level Overhaul Framework](0039-compounding-mechanics-matrix-and-campaign-level-overhaul.md) — Rigorous audit, zero dead space standard, compounding mechanics ladder across Chapters 1–10, and phased level overhaul roadmap.
+
 
 
