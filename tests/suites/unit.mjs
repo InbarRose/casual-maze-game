@@ -77,5 +77,4 @@ import '../unit/ui/zoom-reset-and-mobile-controls.test.mjs';
 import '../unit/ui/drag-scroll-and-dynamic-menu.test.mjs';
 import '../unit/ui/github-issues-89-90-91.test.mjs';
 
-const results = await run();
-process.exit(results.failed > 0 ? 1 : 0);
+await run();

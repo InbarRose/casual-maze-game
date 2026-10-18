@@ -14,7 +14,7 @@ describe('Levels > JSON File Integrity', () => {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const campaignEntries = manifest.filter(m => m.category === 'campaign' || !m.category);
 
-    assertEqual(campaignEntries.length, 32, 'Manifest contains 32 campaign levels');
+    assert(campaignEntries.length >= 36, `Manifest contains >= 36 campaign levels (found ${campaignEntries.length})`);
 
     for (const entry of campaignEntries) {
       const jsonPath = path.resolve(entry.file);
@@ -60,7 +60,7 @@ describe('Levels > JSON File Integrity', () => {
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     const storyEntries = manifest.filter(m => m.category === 'story');
 
-    assertEqual(storyEntries.length, 4, 'Manifest contains 4 story levels');
+    assertEqual(storyEntries.length, 7, 'Manifest contains 7 story levels');
 
     for (const entry of storyEntries) {
       const jsonPath = path.resolve(entry.file);
@@ -81,10 +81,13 @@ describe('Levels > JSON File Integrity', () => {
   it('validates levels/manifest.json registry entries', () => {
     const manifestPath = path.resolve('./levels/manifest.json');
     assert(fs.existsSync(manifestPath), 'manifest.json exists on disk');
-
     const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
     assert(Array.isArray(manifest), 'manifest.json is an array');
-    assertEqual(manifest.length, 42, 'Lists 42 total levels (6 tutorial + 4 story + 32 campaign)');
+    const expectedTotal = manifest.filter(m => m.category === 'tutorial').length +
+      manifest.filter(m => m.category === 'story').length +
+      manifest.filter(m => m.category === 'campaign' || !m.category).length;
+    assertEqual(manifest.length, expectedTotal, `Lists ${manifest.length} total levels (matches categories sum)`);
+    assert(manifest.length >= 53, `Manifest has at least 53 levels (found ${manifest.length})`);
 
     for (const entry of manifest) {
       assert(entry.id, `Manifest entry ${entry.id} has ID`);

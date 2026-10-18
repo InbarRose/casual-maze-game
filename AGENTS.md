@@ -21,7 +21,7 @@ This document outlines the standard operating procedures, architectural principl
 * **Design Philosophy**:
   > *"Coding improvement. SOLID coding principles. Smaller files. Better use of libraries. Better use of object oriented coding, objects, classes, etc. Try to minimize hacky solutions and use graceful coding principles. Nothing we are doing is crazy and insane special algorithms, it's just a game, doesn't need the most optimal most beautiful code, it needs simple, elegant, testable, readable, maintainable, explainable, scalable, robust, SOLID code."*
 * **Core Practices**:
-  * **Single Responsibility (SRP)**: Keep files cohesive, modular, and concise (recommended $\le 300$ lines).
+  * **Single Responsibility (SRP)**: Keep files cohesive, modular, and concise (ideal target $\le 500$ lines; acceptable up to $1,000$ lines for complex coordinators; $1,500$ lines is the absolute ceiling requiring refactoring unless explicitly exempted).
   * **Polymorphic Domain Entities (OCP/LSP)**: Extend `BaseEntity` for all interactive elements rather than monolithic `switch/case` branches.
   * **Graceful Code**: Use guard clauses and early returns over nested `if/else` hierarchies; avoid magic strings/numbers; use immutable value objects (`Vec2`, `GridRect`).
 

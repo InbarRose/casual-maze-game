@@ -137,8 +137,6 @@ check('levels/manifest.json exists', fs.existsSync(levelManifestPath));
 
 if (fs.existsSync(levelManifestPath)) {
   const levelManifest = JSON.parse(fs.readFileSync(levelManifestPath, 'utf8'));
-  check('levels/manifest.json is an array of 42 levels', Array.isArray(levelManifest) && levelManifest.length === 42, `got ${levelManifest.length}`);
-
   // Collect all level JSONs on disk
   function scanDiskLevels(dir) {
     let files = [];
@@ -158,9 +156,13 @@ if (fs.existsSync(levelManifestPath)) {
     ...scanDiskLevels(path.join(rootDir, 'levels', 'tutorial')),
     ...scanDiskLevels(path.join(rootDir, 'levels', 'stories')),
   ];
-  for (let ch = 1; ch <= 8; ch++) {
-    diskLevels.push(...scanDiskLevels(path.join(rootDir, 'levels', `chapter_${ch}`)));
+  for (const entry of fs.readdirSync(path.join(rootDir, 'levels'), { withFileTypes: true })) {
+    if (entry.isDirectory() && entry.name.startsWith('chapter_')) {
+      diskLevels.push(...scanDiskLevels(path.join(rootDir, 'levels', entry.name)));
+    }
   }
+
+  check(`levels/manifest.json is an array of ${diskLevels.length} levels`, Array.isArray(levelManifest) && levelManifest.length === diskLevels.length, `got ${levelManifest.length}`);
 
   const manifestMap = new Map();
   for (const entry of levelManifest) {
@@ -208,10 +210,10 @@ if (fs.existsSync(levelManifestPath)) {
     }
   }
 
-  check('All 42 levels match exact SHA-256 cryptographic hashes', levelHashMismatches === 0, `${levelHashMismatches} hash mismatch(es) detected`);
-  check('All 42 levels match exact file sizes', levelSizeMismatches === 0, `${levelSizeMismatches} size mismatch(es) detected`);
-  check('All 42 levels have explicit positive integer version fields', missingVersionCount === 0, `${missingVersionCount} invalid level version(s)`);
-  check('All 42 levels match dimensions recorded in manifest', dimensionMismatches === 0, `${dimensionMismatches} dimension mismatch(es)`);
+  check(`All ${levelManifest.length} levels match exact SHA-256 cryptographic hashes`, levelHashMismatches === 0, `${levelHashMismatches} hash mismatch(es) detected`);
+  check(`All ${levelManifest.length} levels match exact file sizes`, levelSizeMismatches === 0, `${levelSizeMismatches} size mismatch(es) detected`);
+  check(`All ${levelManifest.length} levels have explicit positive integer version fields`, missingVersionCount === 0, `${missingVersionCount} invalid level version(s)`);
+  check(`All ${levelManifest.length} levels match dimensions recorded in manifest`, dimensionMismatches === 0, `${dimensionMismatches} dimension mismatch(es)`);
 }
 
 // -------------------------------------------------------------

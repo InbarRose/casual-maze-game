@@ -24,6 +24,7 @@ import './unit/core/geometry.test.mjs';
 import './unit/core/maze-generator.test.mjs';
 import './unit/core/storage-metadata-snapshot.test.mjs';
 import './unit/core/explorer-outfits.test.mjs';
+import './unit/core/smart-test-runner.test.mjs';
 
 // 2. Engine Subsystem Unit Tests
 import './unit/engine/collision.test.mjs';
@@ -48,6 +49,8 @@ import './unit/engine/canvas-visual-regression.test.mjs';
 import './unit/engine/entrance-exit-visuals.test.mjs';
 import './unit/engine/interact-directions-disambiguation.test.mjs';
 import './unit/engine/fog-expansion.test.mjs';
+import './unit/engine/game-state-manager.test.mjs';
+import './unit/engine/biome-surface-shaders.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/base-entity.test.mjs';
@@ -72,6 +75,7 @@ import './unit/stories/storylines.test.mjs';
 import './unit/levels/story-1-unbypassable.test.mjs';
 import './unit/levels/story-2-unbypassable.test.mjs';
 import './unit/levels/story-3-unbypassable.test.mjs';
+import './unit/stories/story-4-sunken-vaults.test.mjs';
 import './unit/levels/chapter-1.test.mjs';
 import './unit/levels/chapter-2.test.mjs';
 import './unit/levels/chapter-3.test.mjs';
@@ -80,6 +84,8 @@ import './unit/levels/chapter-5.test.mjs';
 import './unit/levels/chapter-6.test.mjs';
 import './unit/levels/chapter-7.test.mjs';
 import './unit/levels/chapter-8.test.mjs';
+import './unit/levels/chapter-9.test.mjs';
+import './unit/levels/chapter-10.test.mjs';
 
 // 5. Editor Subsystem Unit Tests
 import './unit/editor/level-validator.test.mjs';
@@ -108,6 +114,8 @@ import './integration/campaign/chapter-5.test.mjs';
 import './integration/campaign/chapter-6.test.mjs';
 import './integration/campaign/chapter-7.test.mjs';
 import './integration/campaign/chapter-8.test.mjs';
+import './integration/campaign/chapter-9.test.mjs';
+import './integration/campaign/chapter-10.test.mjs';
 
 // 8. End-to-End User Journey Tests
 import './integration/journeys/tutorial-progression.journey.test.mjs';

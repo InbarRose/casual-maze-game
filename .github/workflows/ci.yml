@@ -38,8 +38,21 @@ jobs:
       - name: Validate ES Module & Syntax Integrity
         run: npm run validate:syntax
 
-      - name: Run Subsystem Unit Tests
-        run: npm run test:unit
+      - name: Run Core & Engine Subsystem Tests
+        run: |
+          npm run test:core
+          npm run test:engine
+          npm run test:entities
+
+      - name: Run Editor Studio & UI Component Tests
+        run: |
+          npm run test:editor
+          npm run test:ui
+
+      - name: Run Level Solvers & Campaign Megalabyrinth Tests
+        run: |
+          npm run test:levels
+          npm run test:campaign
 
       - name: Run End-to-End User Journey Tests
         run: npm run test:journeys
@@ -47,5 +60,5 @@ jobs:
       - name: Run Headless UI & Browser E2E Tests (PR Quality Gate)
         run: npm run test:e2e
 
-      - name: Run Full Master Test Suite
+      - name: Run Full Master Test Suite & Assert 100% Pass Rate
         run: npm test

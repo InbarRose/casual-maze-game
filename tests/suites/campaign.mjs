@@ -13,5 +13,7 @@ import '../integration/campaign/chapter-5.test.mjs';
 import '../integration/campaign/chapter-6.test.mjs';
 import '../integration/campaign/chapter-7.test.mjs';
 import '../integration/campaign/chapter-8.test.mjs';
+import '../integration/campaign/chapter-9.test.mjs';
+import '../integration/campaign/chapter-10.test.mjs';
 
 await run();

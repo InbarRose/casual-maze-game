@@ -5,6 +5,7 @@
 
 import { run } from '../harness/index.mjs';
 
+import '../unit/entities/base-entity.test.mjs';
 import '../unit/entities/player.test.mjs';
 import '../unit/entities/entities.test.mjs';
 import '../unit/entities/dynamic-activities.test.mjs';

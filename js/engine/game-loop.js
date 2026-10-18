@@ -29,6 +29,9 @@ import { PuzzleModal } from '../ui/puzzle-modal.js';
 import { assetLoader } from '../core/asset-loader.js';
 import { audioFX } from '../ui/audio-fx.js';
 import { InputManager, GAME_COMMANDS } from './input-manager.js';
+import { GameStateManager } from './game-state-manager.js';
+import { MovementController } from './movement-controller.js';
+import { InteractionDispatcher } from './interaction-dispatcher.js';
 
 export class GameLoop {
   /**
@@ -56,13 +59,6 @@ export class GameLoop {
     this.level = JSON.parse(JSON.stringify(level));
     this.uiCallbacks = uiCallbacks || {};
 
-    this.isRunning = false;
-    this.isPaused = false;
-    this.obscuringOverlays = new Set();
-    this.isWon = false;
-    this.lastTime = 0;
-    this.elapsedTime = 0; // in milliseconds
-
     // Telemetry & Debug Logger
     this.logger = new DebugLogger(this.level);
     this.logger.log('game:start', {
@@ -73,8 +69,24 @@ export class GameLoop {
       },
     }, 0);
 
+    // Sub-controllers adhering to SRP & ADR-0035
+    this.stateManager = new GameStateManager({
+      level: this.level,
+      logger: this.logger,
+      uiCallbacks: this.uiCallbacks,
+    });
+    this.movementController = new MovementController({ gameLoop: this });
+    this.interactionDispatcher = new InteractionDispatcher({ gameLoop: this });
+
+    this.isRunning = false;
+    this.isPaused = false;
+    this.isWon = false;
+    this.lastTime = 0;
+    this.elapsedTime = 0; // in milliseconds
+
     // Multi-Room State Management
     this.roomStates = {};
+
     this.activeRoomId = null;
     this.currentRoom = null;
     this.lastRoomTransitionTime = -10000;
@@ -191,18 +203,6 @@ export class GameLoop {
     this.puzzleModal = new PuzzleModal();
     this.isPuzzleOpen = false;
 
-    // Secret rooms & scoring metrics (BL-51, BL-52)
-    this.revealedSecrets = new Set();
-    this.secretsFound = 0;
-    this.totalSecrets = this.calculateTotalSecrets();
-    this.hazardHits = 0;
-
-    // Level Lore Journal state (BL-81)
-    this.levelJournal = [];
-
-    // Multi-target interaction disambiguation state (BL-85, BL-91, ADR-009)
-    this.isDisambiguating = false;
-
     // Initial fog update
     this.updateFog();
 
@@ -210,6 +210,39 @@ export class GameLoop {
     this.bindInputs();
     this.notifyUI();
   }
+
+  // State delegation accessors for 100% backward compatibility (BL-56, ADR-0035)
+  get isPaused() { return this.stateManager ? this.stateManager.isPaused : false; }
+  set isPaused(v) { if (this.stateManager) this.stateManager.isPaused = v; }
+
+  get obscuringOverlays() { return this.stateManager ? this.stateManager.obscuringOverlays : (this._obscuringOverlays || (this._obscuringOverlays = new Set())); }
+  set obscuringOverlays(v) { if (this.stateManager) this.stateManager.obscuringOverlays = v; else this._obscuringOverlays = v; }
+
+  get isWon() { return this.stateManager ? this.stateManager.isWon : false; }
+  set isWon(v) { if (this.stateManager) this.stateManager.isWon = v; }
+
+  get elapsedTime() { return this.stateManager ? this.stateManager.elapsedTime : 0; }
+  set elapsedTime(v) { if (this.stateManager) this.stateManager.elapsedTime = v; }
+
+  get revealedSecrets() { return this.stateManager ? this.stateManager.revealedSecrets : new Set(); }
+  set revealedSecrets(v) { if (this.stateManager) this.stateManager.revealedSecrets = v; }
+
+  get secretsFound() { return this.stateManager ? this.stateManager.secretsFound : 0; }
+  set secretsFound(v) { if (this.stateManager) this.stateManager.secretsFound = v; }
+
+  get totalSecrets() { return this.stateManager ? this.stateManager.totalSecrets : 0; }
+  set totalSecrets(v) { if (this.stateManager) this.stateManager.totalSecrets = v; }
+
+  get hazardHits() { return this.stateManager ? this.stateManager.hazardHits : 0; }
+  set hazardHits(v) { if (this.stateManager) this.stateManager.hazardHits = v; }
+
+  get levelJournal() { return this.stateManager ? this.stateManager.levelJournal : []; }
+  set levelJournal(v) { if (this.stateManager) this.stateManager.levelJournal = v; }
+
+  get isDisambiguating() { return this.interactionDispatcher ? this.interactionDispatcher.isDisambiguating : false; }
+  set isDisambiguating(v) { if (this.interactionDispatcher) this.interactionDispatcher.isDisambiguating = v; }
+
+
 
   /**
    * Helper to construct entity instances from plain entity definition objects
@@ -300,18 +333,20 @@ export class GameLoop {
    * @returns {number}
    */
   calculatePerformanceScore(stats) {
+    if (this.stateManager) {
+      return this.stateManager.calculatePerformanceScore(stats);
+    }
     const baseScore = 1000;
     const stepPenalty = Math.max(0, (stats.steps || 0) * 10);
     const timePenalty = Math.max(0, Math.floor((stats.time || 0) / 1000) * 5);
     const runScore = Math.max(0, baseScore - stepPenalty - timePenalty);
-
     const secretBonus = (stats.secretsFound || 0) * 300;
     const parStepsBonus = stats.earnedParSteps ? 250 : 0;
     const parTimeBonus = stats.earnedParTime ? 250 : 0;
     const flawlessBonus = stats.flawless ? 200 : 0;
-
     return runScore + secretBonus + parStepsBonus + parTimeBonus + flawlessBonus;
   }
+
 
   /**
    * Toggle perspective between angled 2.5D and flat top-down
@@ -620,6 +655,9 @@ export class GameLoop {
    * @returns {boolean}
    */
   tryMoveDirection(direction) {
+    if (this.movementController) {
+      return this.movementController.tryMoveDirection(direction);
+    }
     if (this.player.isMoving || this.camera.mode === 'freepan' || (this.camera?.isRotating?.() ?? false)) return false;
     const angle = this.camera?.getDiscreteRotation?.() ?? 0;
     const mapping = SCREEN_TO_WORLD_DELTAS[angle] || SCREEN_TO_WORLD_DELTAS[0];
@@ -627,6 +665,7 @@ export class GameLoop {
     if (!delta) return false;
     return this.tryMove(this.player.gridX + delta.dx, this.player.gridY + delta.dy);
   }
+
 
   /**
    * Check whether single-letter shortcut hotkeys (Q, R, T, M, V) are enabled.
@@ -1527,11 +1566,15 @@ export class GameLoop {
    * @returns {Array<{ id: string, index: number, type: string, label: string, name: string, icon: string, keyHint: string, x: number, y: number, entity?: object, canInteract: boolean }>}
    */
   getAllAvailableInteractions() {
+    if (this.interactionDispatcher) {
+      return this.interactionDispatcher.getAllAvailableInteractions();
+    }
     if (!this.player || this.isPuzzleOpen || this.isWon || this.camera?.mode === 'freepan') return [];
 
     const px = this.player.gridX;
     const py = this.player.gridY;
     const pe = this.player.elevation;
+
 
     const facingDx = this.player.facing === 'east' ? 1 : (this.player.facing === 'west' ? -1 : 0);
     const facingDy = this.player.facing === 'south' ? 1 : (this.player.facing === 'north' ? -1 : 0);
@@ -1742,7 +1785,11 @@ export class GameLoop {
    * Check for available contextual interactions and invoke UI callbacks (BL-42, BL-85, BL-91)
    */
   checkContextualInteraction() {
+    if (this.interactionDispatcher) {
+      return this.interactionDispatcher.checkContextualInteraction();
+    }
     if (typeof this.uiCallbacks.onInteractionAvailable !== 'function') return;
+
 
     const candidates = this.getAllAvailableInteractions();
     let interaction = null;
@@ -2565,6 +2612,9 @@ export class GameLoop {
    * @param {number|object} [target=1] 1-based candidate index, or candidate object/entity
    */
   handleManualInteract(target = 1) {
+    if (this.interactionDispatcher) {
+      return this.interactionDispatcher.handleManualInteract(target);
+    }
     if (this.isDisambiguating) {
       this.isDisambiguating = false;
       if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
@@ -2597,11 +2647,13 @@ export class GameLoop {
    * Trigger interaction with two-stage reveal support for multi-target situations (BL-91, ADR-009)
    */
   triggerInteract() {
+    if (this.interactionDispatcher) {
+      return this.interactionDispatcher.triggerInteract();
+    }
     const candidates = this.getAllAvailableInteractions();
     if (!candidates || candidates.length === 0) return;
 
     if (candidates.length > 1 && !this.isDisambiguating) {
-      // Stage 1 -> Stage 2: Reveal numbered pills and action drawer
       this.isDisambiguating = true;
       if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
         this.uiCallbacks.onDisambiguationModeChanged(true, candidates);
@@ -2610,7 +2662,6 @@ export class GameLoop {
       return;
     }
 
-    // Either single interaction, or player confirmed primary candidate while disambiguation is active
     this.handleManualInteract(1);
   }
 
@@ -2618,6 +2669,9 @@ export class GameLoop {
    * Close multi-target disambiguation mode back to Stage 1 (BL-91, ADR-009)
    */
   closeDisambiguation() {
+    if (this.interactionDispatcher) {
+      return this.interactionDispatcher.closeDisambiguation();
+    }
     if (!this.isDisambiguating) return;
     this.isDisambiguating = false;
     if (typeof this.uiCallbacks.onDisambiguationModeChanged === 'function') {
@@ -2630,6 +2684,10 @@ export class GameLoop {
    * Pause gameplay simulation (timer, entity ticks, movement)
    */
   pause() {
+    if (this.stateManager) {
+      this.stateManager.pause();
+      return;
+    }
     this.isPaused = true;
     globalEvents.emit('game:paused');
   }
@@ -2638,6 +2696,10 @@ export class GameLoop {
    * Resume gameplay simulation
    */
   resume() {
+    if (this.stateManager) {
+      this.stateManager.resume();
+      return;
+    }
     this.isPaused = false;
     this.lastTime = (typeof performance !== 'undefined' ? performance.now() : Date.now());
     globalEvents.emit('game:resumed');
@@ -2649,6 +2711,10 @@ export class GameLoop {
    * @param {string} [overlayId='overlay'] Identifier for the obscuring UI element
    */
   setObscured(obscured, overlayId = 'overlay') {
+    if (this.stateManager) {
+      this.stateManager.setObscured(obscured, overlayId);
+      return;
+    }
     if (!this.obscuringOverlays) {
       this.obscuringOverlays = new Set();
     }
@@ -2665,6 +2731,7 @@ export class GameLoop {
       }
     }
   }
+
 
   /**
    * Evaluate a riddle puzzle group to check if all pedestals are satisfied
@@ -2709,6 +2776,9 @@ export class GameLoop {
    * @returns {Array<object>} Current level journal entries
    */
   recordJournalEntry(entry) {
+    if (this.stateManager) {
+      return this.stateManager.recordJournalEntry(entry, this.player ? this.player.stepsTaken : 0);
+    }
     if (!this.levelJournal) {
       this.levelJournal = [];
     }
@@ -2737,6 +2807,9 @@ export class GameLoop {
    * @returns {Array<object>}
    */
   getJournalEntries() {
+    if (this.stateManager) {
+      return this.stateManager.getJournalEntries();
+    }
     return this.levelJournal || [];
   }
 
@@ -2771,11 +2844,18 @@ export class GameLoop {
    * @param {object|null} [exit=null]
    */
   handleVictory(exit = null) {
+    if (this.stateManager) {
+      if (this.renderer && this.player) {
+        this.renderer.spawnParticles(this.player.worldX, this.player.worldY, '#38bdf8', 60);
+      }
+      return this.stateManager.completeLevel(this.player, exit);
+    }
     this.isWon = true;
     try {
       audioFX.stopAmbience();
     } catch {}
     this.renderer.spawnParticles(this.player.worldX, this.player.worldY, '#38bdf8', 60);
+
 
     const earnedParSteps = this.level.parSteps !== undefined ? this.player.stepsTaken <= this.level.parSteps : false;
     const earnedParTime = this.level.parTime !== undefined ? (this.elapsedTime / 1000) <= this.level.parTime : false;

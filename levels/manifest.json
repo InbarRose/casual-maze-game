@@ -780,6 +780,174 @@
     "exitCount": 2
   },
   {
+    "id": "33",
+    "category": "campaign",
+    "chapter": "chapter_9",
+    "zone": "zone_9",
+    "title": "The Sluice Gate",
+    "file": "levels/chapter_9/level_33.json",
+    "theme": "aqueduct",
+    "parSteps": 52,
+    "parTime": 32,
+    "version": 1,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 4,
+    "hasMultiRoom": false,
+    "exitCount": 1,
+    "hash": "d8883f6715df13c6023e77d2164cce0fd57a1969ba5d11b2d3b05e9b9309e63b",
+    "size": 7538
+  },
+  {
+    "id": "34",
+    "category": "campaign",
+    "chapter": "chapter_9",
+    "zone": "zone_9",
+    "title": "Submerged Crossings",
+    "file": "levels/chapter_9/level_34.json",
+    "theme": "aqueduct",
+    "parSteps": 55,
+    "parTime": 33,
+    "version": 1,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 4,
+    "hasMultiRoom": false,
+    "exitCount": 1,
+    "hash": "b20d1d3be3f702152bd6546f0ce1dc59bd74fcbcab9b1dcf6dcf7a1450745fa9",
+    "size": 9044
+  },
+  {
+    "id": "35",
+    "category": "campaign",
+    "chapter": "chapter_9",
+    "zone": "zone_9",
+    "title": "The Pressure Basin",
+    "file": "levels/chapter_9/level_35.json",
+    "theme": "aqueduct",
+    "parSteps": 84,
+    "parTime": 52,
+    "version": 1,
+    "dimensions": {
+      "width": 19,
+      "height": 19
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1,
+    "hash": "f24f38c6fe7bc4812b0bfb7d6ea969814224215cd5a669ea111ff6b91bfcef4e",
+    "size": 10910
+  },
+  {
+    "id": "36",
+    "category": "campaign",
+    "chapter": "chapter_9",
+    "zone": "zone_9",
+    "title": "Grand Aqueduct Reservoir",
+    "file": "levels/chapter_9/level_36.json",
+    "theme": "aqueduct",
+    "parSteps": 94,
+    "parTime": 57,
+    "version": 1,
+    "dimensions": {
+      "width": 21,
+      "height": 21
+    },
+    "entityCount": 7,
+    "hasMultiRoom": false,
+    "exitCount": 1,
+    "hash": "61b620577233954cdc637f5f7419402b0406d6967fc7874fffc73b81510e1dfa",
+    "size": 13189
+  },
+  {
+    "id": "37",
+    "category": "campaign",
+    "chapter": "chapter_10",
+    "zone": "zone_10",
+    "title": "The Spectral Gate",
+    "file": "levels/chapter_10/level_37.json",
+    "theme": "prismatic",
+    "parSteps": 83,
+    "parTime": 49,
+    "version": 1,
+    "hash": "aad2bbe3c05b2ac71724d0da7204f4345b293fdd1fa373d698ba701e6451084d",
+    "size": 15114,
+    "dimensions": {
+      "width": 23,
+      "height": 23
+    },
+    "entityCount": 7,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "38",
+    "category": "campaign",
+    "chapter": "chapter_10",
+    "zone": "zone_10",
+    "title": "Concentric Trestles",
+    "file": "levels/chapter_10/level_38.json",
+    "theme": "prismatic",
+    "parSteps": 113,
+    "parTime": 67,
+    "version": 1,
+    "hash": "e16e0ea77c3593ce669271372d0f948e12bf876bd7b16004b2e7754387251472",
+    "size": 16890,
+    "dimensions": {
+      "width": 25,
+      "height": 25
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "39",
+    "category": "campaign",
+    "chapter": "chapter_10",
+    "zone": "zone_10",
+    "title": "Harmonic Mirror Seals",
+    "file": "levels/chapter_10/level_39.json",
+    "theme": "prismatic",
+    "parSteps": 46,
+    "parTime": 26,
+    "version": 1,
+    "hash": "7b4bc69473278cc093ad6e706cd3034884e53ead3662d9d649c2b059fded6e84",
+    "size": 19248,
+    "dimensions": {
+      "width": 27,
+      "height": 27
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "40",
+    "category": "campaign",
+    "chapter": "chapter_10",
+    "zone": "zone_10",
+    "title": "Heart of the Prism",
+    "file": "levels/chapter_10/level_40.json",
+    "theme": "prismatic",
+    "parSteps": 181,
+    "parTime": 108,
+    "version": 1,
+    "hash": "6f1c9e9f13a20c5feeee234be64a62fd5f34d1bcf7c616e020446e7bda4b47d4",
+    "size": 23016,
+    "dimensions": {
+      "width": 29,
+      "height": 29
+    },
+    "entityCount": 11,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
     "id": "story_guardians_1",
     "category": "story",
     "zone": "story",
@@ -858,5 +1026,71 @@
     "entityCount": 4,
     "hasMultiRoom": true,
     "exitCount": 2
+  },
+  {
+    "id": "story_sunken_vaults_1",
+    "category": "story",
+    "zone": "story",
+    "storyId": "sunken_vaults_of_the_deep",
+    "chapter": 1,
+    "title": "The Flooded Siphon",
+    "file": "levels/stories/story_sunken_vaults_1.json",
+    "theme": "aqueduct",
+    "parSteps": 26,
+    "parTime": 15,
+    "version": 1,
+    "hash": "39913be5e4f70cd19db9aff59b30166865a6ebca4cb12fc77cbce3cac5ebd5cd",
+    "size": 6768,
+    "dimensions": {
+      "width": 13,
+      "height": 13
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "story_sunken_vaults_2",
+    "category": "story",
+    "zone": "story",
+    "storyId": "sunken_vaults_of_the_deep",
+    "chapter": 2,
+    "title": "The Pressure Reservoir",
+    "file": "levels/stories/story_sunken_vaults_2.json",
+    "theme": "aqueduct",
+    "parSteps": 30,
+    "parTime": 18,
+    "version": 1,
+    "hash": "b6ee5edadb8cce8de6a777c174e82ddcce40b227bd795b1609a8e9bbd8436274",
+    "size": 8075,
+    "dimensions": {
+      "width": 15,
+      "height": 15
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "story_sunken_vaults_3",
+    "category": "story",
+    "zone": "story",
+    "storyId": "sunken_vaults_of_the_deep",
+    "chapter": 3,
+    "title": "The Abyssal Sanctuary",
+    "file": "levels/stories/story_sunken_vaults_3.json",
+    "theme": "aqueduct",
+    "parSteps": 67,
+    "parTime": 40,
+    "version": 1,
+    "hash": "c73a90aa8737d2a14ea3b4834f329ba6f5e1fa970366549224f697aa2055966a",
+    "size": 9966,
+    "dimensions": {
+      "width": 17,
+      "height": 17
+    },
+    "entityCount": 7,
+    "hasMultiRoom": false,
+    "exitCount": 1
   }
 ]

@@ -15,6 +15,7 @@ import '../unit/stories/storylines.test.mjs';
 import '../unit/levels/story-1-unbypassable.test.mjs';
 import '../unit/levels/story-2-unbypassable.test.mjs';
 import '../unit/levels/story-3-unbypassable.test.mjs';
+import '../unit/stories/story-4-sunken-vaults.test.mjs';
 import '../unit/levels/chapter-1.test.mjs';
 import '../unit/levels/chapter-2.test.mjs';
 import '../unit/levels/chapter-3.test.mjs';
@@ -23,5 +24,7 @@ import '../unit/levels/chapter-5.test.mjs';
 import '../unit/levels/chapter-6.test.mjs';
 import '../unit/levels/chapter-7.test.mjs';
 import '../unit/levels/chapter-8.test.mjs';
+import '../unit/levels/chapter-9.test.mjs';
+import '../unit/levels/chapter-10.test.mjs';
 
 await run();

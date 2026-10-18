@@ -22,7 +22,11 @@ We adopt the following architectural standards across all client-side JavaScript
   * Input polling and device abstraction belong to `InputManager`, not `GameLoop`.
   * Procedural generation belongs to `MazeGenerator`, not `EditorUI`.
   * Entities maintain domain state and interaction logic; rendering is decoupled in renderer or vector sprite pipelines.
-  * Target file budget: Keep files small and focused (recommended $\le 300$ lines where feasible, breaking large orchestrators into sub-controllers).
+  * Target file budget:
+    * $\le 500$ lines: Ideal target for standard modules (concise, cohesive, readable).
+    * $500$–$1,000$ lines: Acceptable for complex coordination orchestrators and rich view components.
+    * $1,000$–$1,500$ lines: Warning zone; hard ceiling for standard code files (should actively plan extraction).
+    * $> 1,500$ lines: Critical refactoring trigger. No file should exceed 1,500 lines unless covered by an explicit exception (e.g. centralized constant dictionaries or auto-generated static data bundles).
 
 * **O — Open/Closed Principle (OCP)**:
   * Modules are open for extension but closed for modification.

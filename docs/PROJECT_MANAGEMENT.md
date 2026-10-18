@@ -4,13 +4,33 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Current Milestone: `v1.27.0` (Completed & Verified)
+### Current Milestone: `v1.29.0` (In Progress)
+
+- [ ] **Smart Change-Driven Test Runner, Result Caching, CI Domain Splitting, File Modularization & Modular Level Architecture (BL-142, BL-143, BL-144, BL-131..141, ADR-0036, ADR-0037)**:
+  - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
+  - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
+  - **Modular Level Package Architecture (`BL-143`, ADR-0037)**: Architecture decision and plan for organizing levels into dedicated directories (`manifest.json`, `README.md`, `layers/`, `entities/`, `assets/`) compiled for static zero-backend execution.
+  - **Level Package Zip & JSON Bundle Import/Export (`BL-144`, ADR-0037)**: Architecture plan for packaging custom levels into `.cmg.zip` or `.cmg.json` bundles directly in the Map Editor and importing via drag-and-drop into `LevelLoader`.
+  - **Large File Splitting Roadmaps (`BL-131..141`)**: Modularization plans for large files (`renderer.js`, `editor-canvas.js`, `player.js`, `storage.js`).
+
+### Previous Milestone: `v1.28.0` (Completed & Verified)
+
+- [x] **Comprehensive Platform Polish, Engine Decomposition & Content Expansion (BL-56, BL-126, BL-127, BL-128..130, ADR-0035)**:
+  - **GameLoop Decomposition (`BL-56`)**: Refactored monolithic `game-loop.js` by extracting `MovementController`, `InteractionDispatcher`, and `GameStateManager` as cohesive, sub-300-line SOLID collaborators with full test coverage.
+  - **Visual & UI/UX Fidelity Overhaul (`BL-126`)**: Refined glassmorphism, responsive micro-interactions, sleek glowing button states, and ultra-compact mobile header drawer for viewports $< 400\text{px}$.
+  - **Dynamic Biome Surface Shaders & Storytelling Props (`BL-127`)**: Procedural animated water ripples/caustics, bubbling lava veins, crystal glints, and ambient storytelling props.
+  - **Campaign Expansion (Chapters 9 & 10, `BL-128`, `BL-129`)**: 8 new official campaign levels (Levels 33–40: Sunken Aqueducts & Prismatic Labyrinth) with unbypassable gating and macro-maze topologies.
+  - **New Multi-Room Story Saga (`BL-130`)**: "The Sunken Vaults of the Deep" 3-room episodic saga with dynamic water gates, interconnected transit, and narrative lore.
+  - **Automated Test Coverage**: Verified 152 test suites and 749 tests passing (0 failed, 10,292 assertions), with 23/23 zero-drift static checks passing.
+
+### Previous Milestone: `v1.27.0` (Completed & Verified)
 
 - [x] **Settings Switch Component Styling, Architect Sidebar Flex Stabilization & Whispering Citadel Gating (BL-124, Issues #89, #90, #91, ADR-0034)**:
   - **Issue #91 (Settings Toggle Switch & Typography Polish)**: Implemented complete glassmorphic `.switch` toggle component styles in `css/main.css` with 16px sliding circular thumb and glowing accent fill; removed conflicting inline styles from `SettingsModal`; switched `.select-field` from monospaced font to clean inherited UI typography; updated camera rotation shortcut text to `[Q/C]` across settings and footer strips.
   - **Issue #90 (Architect Mode View Stabilization)**: Enforced `min-height: 0` and `.editor-sidebar > * { flex-shrink: 0; }` in `css/editor.css` to prevent tools, accordions, and palettes from crushing into collapsed ribbons in constrained viewports; added vertical drag scroll (`data-drag-scroll="y"`) to the editor sidebar in `editor.html`.
   - **Issue #89 (Whispering Citadel Ping-Pong Loop & Bridge Gating)**: Decoupled `targetSpawn` from return exit coordinates across all rooms in `story_citadel_1.json` and `storylines.js` (`courtyard -> catacombs` at `(1, 2)`, `catacombs -> courtyard` at `(1, 10)`, `courtyard -> high_spire` at `(1, 2)`, `high_spire -> courtyard` at `(11, 10)`); added engine-level `lastRoomSpawn` guard in `GameLoop` preventing immediate teleport recursion; divided High Spire ground layer at row 6 with chasm walls requiring elevated `BRIDGE_EW` traversal to reach the Apex Altar; enhanced locked gate floating text to resolve cross-room key names (`"🔒 Needs Spire Keystone"`).
   - **Automated Test Coverage**: Created `tests/unit/ui/github-issues-89-90-91.test.mjs` verifying toggle switches, dropdown typography, Q/C hotkeys, editor sidebar flex rules, room spawn separation, bridge chasm gating, and engine spawn loop guards across 145 suites and 698 tests passing (0 failed).
+
 
 ### Previous Milestone: `v1.26.0` (Completed & Verified)
 
