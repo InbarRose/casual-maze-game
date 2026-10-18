@@ -46,12 +46,66 @@ describe('Component Suite > CMP-01: Universal App Shell & Global Navigation', ()
     assertEqual(settingsModal.isOpen, true, 'Settings modal opens on click');
     settingsModal.close();
 
-    guideBtn.click();
-    assertEqual(guideModal.isOpen, true, 'Guide modal opens on click');
+    // Mobile Drawer Hamburger Toggle & Drawer Lifecycle Phase (BL-126)
+    const mobileMenuBtn = header.querySelector('#btn-app-mobile-menu');
+    const mobileDrawerEl = header.querySelector('#mobile-nav-drawer');
+    const mobileBackdropEl = header.querySelector('#mobile-nav-backdrop');
+    const closeMobileBtn = header.querySelector('#btn-close-mobile-nav');
+
+    assert(mobileMenuBtn !== null, '#btn-app-mobile-menu button exists');
+    assert(mobileDrawerEl !== null, '#mobile-nav-drawer aside exists');
+    assert(mobileBackdropEl !== null, '#mobile-nav-backdrop backdrop exists');
+    assert(closeMobileBtn !== null, '#btn-close-mobile-nav button exists');
+
+    // Drawer open via hamburger
+    assertEqual(mobileDrawerEl.classList.contains('open'), false, 'Drawer initially closed');
+    mobileMenuBtn.click();
+    assertEqual(mobileDrawerEl.classList.contains('open'), true, 'Drawer opens on hamburger click');
+    assertEqual(mobileBackdropEl.classList.contains('active'), true, 'Backdrop active when drawer open');
+
+    // Drawer close via close button
+    closeMobileBtn.click();
+    assertEqual(mobileDrawerEl.classList.contains('open'), false, 'Drawer closes on close button click');
+
+    // Drawer open and close via backdrop
+    mobileMenuBtn.click();
+    assertEqual(mobileDrawerEl.classList.contains('open'), true, 'Drawer reopens on hamburger click');
+    mobileBackdropEl.click();
+    assertEqual(mobileDrawerEl.classList.contains('open'), false, 'Drawer closes on backdrop click');
+
+    // Drawer shortcut actions
+    const drawerProfileBtn = header.querySelector('#btn-mobile-drawer-profile');
+    const drawerSettingsBtn = header.querySelector('#btn-mobile-drawer-settings');
+    const drawerGuideBtn = header.querySelector('#btn-mobile-drawer-guide');
+    const drawerFeedbackBtn = header.querySelector('#btn-mobile-drawer-feedback');
+
+    assert(drawerProfileBtn !== null, 'Drawer profile button exists');
+    assert(drawerSettingsBtn !== null, 'Drawer settings button exists');
+    assert(drawerGuideBtn !== null, 'Drawer guide button exists');
+    assert(drawerFeedbackBtn !== null, 'Drawer feedback button exists');
+
+    mobileMenuBtn.click();
+    drawerProfileBtn.click();
+    assertEqual(mobileDrawerEl.classList.contains('open'), false, 'Drawer closes when opening profile');
+    assertEqual(profileModal.isOpen, true, 'Profile modal opens from drawer');
+    profileModal.close();
+
+    mobileMenuBtn.click();
+    drawerSettingsBtn.click();
+    assertEqual(mobileDrawerEl.classList.contains('open'), false, 'Drawer closes when opening settings');
+    assertEqual(settingsModal.isOpen, true, 'Settings modal opens from drawer');
+    settingsModal.close();
+
+    mobileMenuBtn.click();
+    drawerGuideBtn.click();
+    assertEqual(mobileDrawerEl.classList.contains('open'), false, 'Drawer closes when opening guide');
+    assertEqual(guideModal.isOpen, true, 'Guide modal opens from drawer');
     guideModal.close();
 
-    feedbackBtn.click();
-    assertEqual(feedbackModal.isOpen, true, 'Feedback modal opens on click');
+    mobileMenuBtn.click();
+    drawerFeedbackBtn.click();
+    assertEqual(mobileDrawerEl.classList.contains('open'), false, 'Drawer closes when opening feedback');
+    assertEqual(feedbackModal.isOpen, true, 'Feedback modal opens from drawer');
     feedbackModal.close();
   });
 

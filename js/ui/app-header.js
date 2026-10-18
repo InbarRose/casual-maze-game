@@ -14,6 +14,7 @@ import { GuideModal, getGuideModal } from './guide-modal.js';
 import { audioFX } from './audio-fx.js';
 import { DragScroller, autoInitDragScroll } from './drag-scroll.js';
 import { DynamicMenuController } from './dynamic-menu-controller.js';
+import { renderMobileNavDrawer, initMobileNavDrawer } from './mobile-nav-drawer.js';
 
 let profileModalInstance = null;
 let settingsModalInstance = null;
@@ -155,9 +156,15 @@ export function initAppHeader(options = {}) {
         <button type="button" id="btn-app-feedback" class="app-action-btn icon-btn" title="Send Feedback / Report Bug [Diagnostic Bundle]">
           <span>🐞</span>
         </button>
+
+        <!-- Mobile Drawer Hamburger Toggle (BL-126) -->
+        <button type="button" id="btn-app-mobile-menu" class="app-action-btn icon-btn mobile-menu-toggle-btn" aria-label="Open Mobile Navigation Menu" title="Open Menu">
+          <span class="hamburger-icon">☰</span>
+        </button>
       </div>
     </div>
     ${breadcrumbsHtml}
+    ${renderMobileNavDrawer(activeTab, profile, ENGINE_VERSION)}
   `;
 
   // Attach tactile audio to header navigation links
@@ -187,6 +194,17 @@ export function initAppHeader(options = {}) {
   if (feedbackBtn) {
     feedbackBtn.onclick = () => feedbackModal.open({ pageTitle: typeof document !== 'undefined' ? document.title : 'Casual Maze Game' });
   }
+
+  // Mobile Navigation Drawer Controller (BL-126)
+  const mobileDrawer = initMobileNavDrawer({
+    rootElement: header,
+    profileModal,
+    settingsModal,
+    guideModal,
+    feedbackModal,
+    audioFX,
+  });
+
 
   // Update profile badges live
   window.addEventListener('player-profile:updated', (e) => {
@@ -314,5 +332,5 @@ export function initAppHeader(options = {}) {
     };
   }
 
-  return { header, footer, profileModal, settingsModal, feedbackModal, guideModal };
+  return { header, footer, profileModal, settingsModal, feedbackModal, guideModal, mobileDrawer };
 }
