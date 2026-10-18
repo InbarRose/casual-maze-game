@@ -4,7 +4,14 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Current Milestone: `v1.28.0` (Completed & Verified)
+### Current Milestone: `v1.29.0` (In Progress)
+
+- [ ] **Smart Change-Driven Test Runner, Result Caching, CI Domain Splitting & Codebase Modularization (BL-142, BL-131..141, ADR-0036)**:
+  - **Smart Test Dependency Register (`BL-142`)**: Intelligent test runner mapping changed files via git diff and transitive dependency graphs to execute only affected test suites locally, caching pass results in `.test-cache.json` for sub-second iteration speed.
+  - **GitHub Actions CI Matrix Splitting (`BL-142`)**: Parallel domain-specific CI jobs (Static/Drift, Core/Engine, UI/Editor, Campaign Solvers, Headless E2E) providing clear segmented test reports.
+  - **Large File Splitting Roadmaps (`BL-131..141`)**: Modularization plans for large files (`renderer.js`, `editor-canvas.js`, `player.js`, `storage.js`, `level-validator.js`) targeting $\le 300$ lines.
+
+### Previous Milestone: `v1.28.0` (Completed & Verified)
 
 - [x] **Comprehensive Platform Polish, Engine Decomposition & Content Expansion (BL-56, BL-126, BL-127, BL-128..130, ADR-0035)**:
   - **GameLoop Decomposition (`BL-56`)**: Refactored monolithic `game-loop.js` by extracting `MovementController`, `InteractionDispatcher`, and `GameStateManager` as cohesive, sub-300-line SOLID collaborators with full test coverage.
