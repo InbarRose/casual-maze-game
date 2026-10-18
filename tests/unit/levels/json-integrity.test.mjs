@@ -87,7 +87,7 @@ describe('Levels > JSON File Integrity', () => {
       manifest.filter(m => m.category === 'story').length +
       manifest.filter(m => m.category === 'campaign' || !m.category).length;
     assertEqual(manifest.length, expectedTotal, `Lists ${manifest.length} total levels (matches categories sum)`);
-    assert(manifest.length >= 46, `Manifest has at least 46 levels (found ${manifest.length})`);
+    assert(manifest.length >= 50, `Manifest has at least 50 levels (found ${manifest.length})`);
 
     for (const entry of manifest) {
       assert(entry.id, `Manifest entry ${entry.id} has ID`);

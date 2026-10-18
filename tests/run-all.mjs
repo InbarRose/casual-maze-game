@@ -83,6 +83,7 @@ import './unit/levels/chapter-6.test.mjs';
 import './unit/levels/chapter-7.test.mjs';
 import './unit/levels/chapter-8.test.mjs';
 import './unit/levels/chapter-9.test.mjs';
+import './unit/levels/chapter-10.test.mjs';
 
 // 5. Editor Subsystem Unit Tests
 import './unit/editor/level-validator.test.mjs';
@@ -112,6 +113,7 @@ import './integration/campaign/chapter-6.test.mjs';
 import './integration/campaign/chapter-7.test.mjs';
 import './integration/campaign/chapter-8.test.mjs';
 import './integration/campaign/chapter-9.test.mjs';
+import './integration/campaign/chapter-10.test.mjs';
 
 // 8. End-to-End User Journey Tests
 import './integration/journeys/tutorial-progression.journey.test.mjs';

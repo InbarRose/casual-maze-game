@@ -864,6 +864,90 @@
     "size": 13189
   },
   {
+    "id": "37",
+    "category": "campaign",
+    "chapter": "chapter_10",
+    "zone": "zone_10",
+    "title": "The Spectral Gate",
+    "file": "levels/chapter_10/level_37.json",
+    "theme": "prismatic",
+    "parSteps": 83,
+    "parTime": 49,
+    "version": 1,
+    "hash": "aad2bbe3c05b2ac71724d0da7204f4345b293fdd1fa373d698ba701e6451084d",
+    "size": 15114,
+    "dimensions": {
+      "width": 23,
+      "height": 23
+    },
+    "entityCount": 7,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "38",
+    "category": "campaign",
+    "chapter": "chapter_10",
+    "zone": "zone_10",
+    "title": "Concentric Trestles",
+    "file": "levels/chapter_10/level_38.json",
+    "theme": "prismatic",
+    "parSteps": 113,
+    "parTime": 67,
+    "version": 1,
+    "hash": "e16e0ea77c3593ce669271372d0f948e12bf876bd7b16004b2e7754387251472",
+    "size": 16890,
+    "dimensions": {
+      "width": 25,
+      "height": 25
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "39",
+    "category": "campaign",
+    "chapter": "chapter_10",
+    "zone": "zone_10",
+    "title": "Harmonic Mirror Seals",
+    "file": "levels/chapter_10/level_39.json",
+    "theme": "prismatic",
+    "parSteps": 46,
+    "parTime": 26,
+    "version": 1,
+    "hash": "7b4bc69473278cc093ad6e706cd3034884e53ead3662d9d649c2b059fded6e84",
+    "size": 19248,
+    "dimensions": {
+      "width": 27,
+      "height": 27
+    },
+    "entityCount": 5,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
+    "id": "40",
+    "category": "campaign",
+    "chapter": "chapter_10",
+    "zone": "zone_10",
+    "title": "Heart of the Prism",
+    "file": "levels/chapter_10/level_40.json",
+    "theme": "prismatic",
+    "parSteps": 181,
+    "parTime": 108,
+    "version": 1,
+    "hash": "6f1c9e9f13a20c5feeee234be64a62fd5f34d1bcf7c616e020446e7bda4b47d4",
+    "size": 23016,
+    "dimensions": {
+      "width": 29,
+      "height": 29
+    },
+    "entityCount": 11,
+    "hasMultiRoom": false,
+    "exitCount": 1
+  },
+  {
     "id": "story_guardians_1",
     "category": "story",
     "zone": "story",
