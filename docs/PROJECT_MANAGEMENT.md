@@ -4,7 +4,7 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Current Milestone: `v1.29.0` (In Progress)
+### Current Milestone: `v1.29.0` (Completed & Verified)
 
 - [x] **Dynamic Campaign Upper Bound & Victory Progression (BL-145, ADR-0038)**:
   - Replaced hardcoded level bounds (`< 32`) in `maze.html` and `js/ui/profile-modal.js` with dynamic evaluations against `CAMPAIGN_LEVELS.length`.
