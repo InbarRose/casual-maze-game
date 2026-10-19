@@ -1,6 +1,8 @@
 /**
- * Redesign and Solver Calibration for Chapter 1: The Foundation (Levels 1–4)
- * Implements BL-151, ADR-0039 (Zero Dead Space, Architectural Elegance, Zero-Bypass Gating)
+ * True Maze Topology & Solver Calibration for Chapter 1: The Foundation (Levels 1–4)
+ * Implements BL-158, ADR-0042, and ADR-0043 (True Maze Topology & Labyrinthine Redesign Standard)
+ * Replaces open patterned rooms and barcode stripes with winding corridors, 90-degree turns,
+ * forks, dead ends, secret walls ('SW'), and strict zero-bypass gating.
  */
 
 import fs from 'fs';
@@ -40,6 +42,135 @@ export function checkZeroDeadSpace4x4(ground, overhead, width, height, levelId) 
   }
 }
 
+/**
+ * Carves an authentic labyrinth sector using DFS with directional inertia and braid.
+ * Produces long, organic corridors with 90-degree turns, forks, and dead ends.
+ */
+export function buildLabyrinthSector(ground, minX, minY, maxX, maxY, prngSeed, inertia = 0.70, braid = 0.15, reservedSet = new Set()) {
+  let s = prngSeed;
+  function random() {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  }
+
+  const oddCoords = [];
+  for (let y = minY; y <= maxY; y += 2) {
+    for (let x = minX; x <= maxX; x += 2) {
+      if (!reservedSet.has(`${x},${y}`)) {
+        oddCoords.push([x, y]);
+      }
+    }
+  }
+
+  if (oddCoords.length === 0) return;
+
+  const visited = new Set();
+  function k(x, y) { return `${x},${y}`; }
+
+  const start = oddCoords[0];
+  const stack = [[start[0], start[1]]];
+  visited.add(k(start[0], start[1]));
+  ground[start[1]][start[0]] = 0;
+
+  const DIRS = [
+    { dx: 0, dy: -2 },
+    { dx: 2, dy: 0 },
+    { dx: 0, dy: 2 },
+    { dx: -2, dy: 0 }
+  ];
+
+  let lastDir = null;
+
+  while (stack.length > 0) {
+    const [cx, cy] = stack[stack.length - 1];
+
+    const neighbors = [];
+    for (const d of DIRS) {
+      const nx = cx + d.dx;
+      const ny = cy + d.dy;
+      const mx = cx + d.dx / 2;
+      const my = cy + d.dy / 2;
+      if (
+        nx >= minX && nx <= maxX &&
+        ny >= minY && ny <= maxY &&
+        !reservedSet.has(k(nx, ny)) &&
+        !reservedSet.has(k(mx, my)) &&
+        !visited.has(k(nx, ny))
+      ) {
+        neighbors.push({ ...d, nx, ny, mx, my });
+      }
+    }
+
+    if (neighbors.length === 0) {
+      stack.pop();
+      lastDir = null;
+      continue;
+    }
+
+    let chosen = null;
+    if (lastDir && random() < inertia) {
+      const same = neighbors.find(n => n.dx === lastDir.dx && n.dy === lastDir.dy);
+      if (same) chosen = same;
+    }
+
+    if (!chosen) {
+      chosen = neighbors[Math.floor(random() * neighbors.length)];
+    }
+
+    lastDir = { dx: chosen.dx, dy: chosen.dy };
+
+    ground[chosen.my][chosen.mx] = 0;
+    ground[chosen.ny][chosen.nx] = 0;
+
+    visited.add(k(chosen.nx, chosen.ny));
+    stack.push([chosen.nx, chosen.ny]);
+  }
+
+  // Connect any unvisited odd cells in this sector
+  for (const [ox, oy] of oddCoords) {
+    if (!visited.has(k(ox, oy))) {
+      const candidates = [];
+      for (const d of DIRS) {
+        const nx = ox + d.dx;
+        const ny = oy + d.dy;
+        const mx = ox + d.dx / 2;
+        const my = oy + d.dy / 2;
+        if (visited.has(k(nx, ny)) && !reservedSet.has(k(mx, my))) {
+          candidates.push({ ...d, nx, ny, mx, my });
+        }
+      }
+      if (candidates.length > 0) {
+        const c = candidates[Math.floor(random() * candidates.length)];
+        ground[oy][ox] = 0;
+        ground[c.my][c.mx] = 0;
+        visited.add(k(ox, oy));
+      }
+    }
+  }
+
+  // Braid phase (selective loop creation)
+  for (const [ox, oy] of oddCoords) {
+    const walls = [];
+    for (const d of DIRS) {
+      const mx = ox + d.dx / 2;
+      const my = oy + d.dy / 2;
+      const nx = ox + d.dx;
+      const ny = oy + d.dy;
+      if (
+        nx >= minX && nx <= maxX && ny >= minY && ny <= maxY &&
+        !reservedSet.has(k(mx, my)) && !reservedSet.has(k(nx, ny)) &&
+        ground[my][mx] === 1 && ground[ny][nx] === 0
+      ) {
+        walls.push([mx, my]);
+      }
+    }
+    if (walls.length > 0 && random() < braid) {
+      const [wx, wy] = walls[Math.floor(random() * walls.length)];
+      ground[wy][wx] = 0;
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 // LEVEL 1: "First Footsteps" (13x13)
 // ---------------------------------------------------------------------------
@@ -48,52 +179,48 @@ export function generateLevel1() {
   const height = 13;
   const ground = Array.from({ length: height }, () => Array(width).fill(1));
   const overhead = Array.from({ length: height }, () => Array(width).fill(0));
+  const reserved = new Set();
 
-  function carve(coords) {
-    for (const [x, y] of coords) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        ground[y][x] = 0;
-      }
-    }
+  for (let x = 0; x < width; x++) { reserved.add(`${x},0`); reserved.add(`${x},${height - 1}`); }
+  for (let y = 0; y < height; y++) { reserved.add(`0,${y}`); reserved.add(`${width - 1},${y}`); }
+
+  // Spawn (2, 2) and Architect Note at (2, 1)
+  ground[2][2] = 0; reserved.add('2,2');
+  ground[1][2] = 0; reserved.add('2,1');
+  ground[2][1] = 0; reserved.add('1,2');
+  ground[1][1] = 0; reserved.add('1,1');
+  // East corridor from spawn
+  ground[2][3] = 0; reserved.add('3,2');
+
+  // Key at (2, 10)
+  ground[10][2] = 0; reserved.add('2,10');
+
+  // Exit chamber at (11, 6) sealed by door at (9, 6)
+  for (let y = 4; y <= 8; y++) {
+    ground[y][10] = 1;
+    reserved.add(`10,${y}`);
+  }
+  ground[6][10] = 0; reserved.add('10,6');
+  ground[6][9] = 0; reserved.add('9,6'); // Gold Door at (9, 6)
+  ground[6][11] = 0; reserved.add('11,6'); // Exit at (11, 6)
+
+  // Build authentic DFS labyrinth in main zone (x: 1..9, y: 1..11)
+  buildLabyrinthSector(ground, 1, 1, 9, 11, 104, 0.70, 0.15, reserved);
+
+  // Upper East alcove (10..11, 1..3)
+  for (let y = 1; y <= 3; y++) {
+    ground[y][10] = 0;
+    ground[y][11] = 0;
+  }
+  // Lower East alcove (10..11, 9..11)
+  for (let y = 9; y <= 11; y++) {
+    ground[y][10] = 0;
+    ground[y][11] = 0;
   }
 
-  // Western entry gallery & key vestibule
-  carve([
-    [1, 1], [2, 1], [3, 1],
-    [1, 2], [2, 2], [3, 2],
-    [1, 3], [2, 3], [3, 3],
-    [2, 4], [2, 5], [2, 6], [2, 7], [2, 8], [2, 9],
-    [1, 10], [2, 10], [3, 10], [4, 10], [5, 10], [6, 10], [7, 10],
-    [1, 11], [2, 11], [3, 11]
-  ]);
-
-  // Secret sunstone vault at top
+  // Secret sunstone vault at (5, 1) via secret wall at (4, 1)
   ground[1][4] = 'SW';
   ground[1][5] = 0;
-
-  // Central circular ambulatory & sanctuary
-  carve([
-    [5, 4], [6, 4], [7, 4], [8, 4], [9, 4],
-    [5, 5], [7, 5], [9, 5],
-    [5, 6], [6, 6], [7, 6], [8, 6], [9, 6], [10, 6], [11, 6],
-    [5, 7], [7, 7], [9, 7],
-    [5, 8], [6, 8], [7, 8], [8, 8], [9, 8],
-    [7, 9] // connects to southern corridor at (7, 10)
-  ]);
-
-  // Reclaim upper-right dead space into northern colonnade gallery
-  carve([
-    [9, 1], [10, 1], [11, 1],
-    [9, 2], [11, 2],
-    [7, 3], [8, 3], [9, 3], [11, 3]
-  ]);
-
-  // Reclaim lower-right dead space into crypt alcoves
-  carve([
-    [9, 9], [11, 9],
-    [9, 10], [10, 10], [11, 10],
-    [9, 11]
-  ]);
 
   const level = {
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -113,9 +240,9 @@ export function generateLevel1() {
     },
     spawn: { x: 2, y: 2, elevation: 0, style: 'stairs_down', wallDirection: 'none' },
     exit: { x: 11, y: 6, elevation: 0, style: 'wall_archway', wallDirection: 'north' },
-    parSteps: 26,
-    parTime: 14,
-    architectNote: "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the western gallery to recover the keystore; the circular ambulatory leads directly to the central sanctum.",
+    parSteps: 37,
+    parTime: 21,
+    architectNote: "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the winding corridors to recover the keystore; avoid dead-end traps.",
     layers: { ground, overhead },
     entities: [
       {
@@ -125,13 +252,13 @@ export function generateLevel1() {
         x: 2,
         y: 1,
         elevation: 0,
-        text: "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the western gallery to recover the keystore; the circular ambulatory leads directly to the central sanctum."
+        text: "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the winding corridors to recover the keystore; avoid dead-end traps."
       },
       {
         id: 'inscr_vestibule',
         type: 'wall_decor',
         decorType: 'carving',
-        text: 'Ancient script: He who walks the circular way avoids needless retracing of steps.',
+        text: 'Ancient script: He who walks the winding way learns patience and cunning.',
         playerDialogue: 'A wise rule for any pathfinder.',
         x: 1,
         y: 1,
@@ -177,80 +304,39 @@ export function generateLevel2() {
   const height = 13;
   const ground = Array.from({ length: height }, () => Array(width).fill(1));
   const overhead = Array.from({ length: height }, () => Array(width).fill(0));
+  const reserved = new Set();
 
-  function carve(coords) {
-    for (const [x, y] of coords) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        ground[y][x] = 0;
-      }
+  for (let x = 0; x < width; x++) { reserved.add(`${x},0`); reserved.add(`${x},${height - 1}`); }
+  for (let y = 0; y < height; y++) { reserved.add(`0,${y}`); reserved.add(`${width - 1},${y}`); }
+
+  // North Sanctuary: rows 1..3, cols 6..8. Exit at (7, 1) sealed by Ruby Door at (7, 3)
+  for (let y = 1; y <= 3; y++) {
+    for (let x = 6; x <= 8; x++) {
+      ground[y][x] = 1;
+      reserved.add(`${x},${y}`);
     }
   }
+  ground[1][7] = 0; reserved.add('7,1'); // Exit
+  ground[2][7] = 0; reserved.add('7,2');
+  ground[3][7] = 0; reserved.add('7,3'); // Ruby Door
 
-  // Central South-to-North axis
-  // Spawn at (7, 11), Exit at (7, 1)
-  // Southern portico (rows 9..11, cols 5..9)
-  carve([
-    [5, 9], [6, 9], [7, 9], [8, 9], [9, 9],
-    [5, 10], [7, 10], [9, 10],
-    [5, 11], [6, 11], [7, 11], [8, 11], [9, 11]
-  ]);
+  // Spawn at (7, 11)
+  ground[11][7] = 0; reserved.add('7,11');
+  // Ruby Key at (2, 4) in West Wing
+  ground[4][2] = 0; reserved.add('2,4');
 
-  // Central hall & vertical artery (x=7, y=4..8)
-  carve([
-    [7, 8], [7, 7], [7, 6], [7, 5], [7, 4]
-  ]);
+  // Build authentic DFS labyrinths in West and East wings
+  buildLabyrinthSector(ground, 1, 1, 5, 11, 204, 0.70, 0.15, reserved);
+  buildLabyrinthSector(ground, 9, 1, 13, 11, 254, 0.70, 0.15, reserved);
 
-  // Northern Sanctuary (rows 1..2, cols 6..8) - strictly sealed by doorway at (7, 3)
-  carve([
-    [6, 1], [7, 1], [8, 1],
-    [6, 2], [7, 2], [8, 2],
-    [7, 3] // ONLY (7, 3) enters the sanctum!
-  ]);
+  // Central corridor & arteries
+  for (let x = 5; x <= 9; x++) ground[11][x] = 0;
+  for (let y = 4; y <= 11; y++) ground[y][7] = 0;
+  ground[7][6] = 0; ground[7][8] = 0;
 
-  // Western Wing: Pillared Ruby Vault (rows 3..7, cols 1..5)
-  carve([
-    [1, 3], [2, 3], [3, 3], [4, 3],
-    [1, 4], [2, 4], [3, 4], [4, 4], [5, 4], [6, 4],
-    [1, 5], [3, 5], [5, 5],
-    [1, 6], [2, 6], [3, 6], [4, 6], [5, 6],
-    [1, 7], [2, 7], [3, 7], [4, 7], [5, 7], [6, 7]
-  ]);
-
-  // Eastern Wing: Mirror Archive & Gem Vault (rows 3..7, cols 9..13)
-  carve([
-    [10, 3], [11, 3], [12, 3], [13, 3],
-    [8, 4], [9, 4], [10, 4], [11, 4], [12, 4], [13, 4],
-    [9, 5], [11, 5], [13, 5],
-    [8, 6], [9, 6], [10, 6], [11, 6], [12, 6], [13, 6],
-    [8, 7], [9, 7], [10, 7], [11, 7], [12, 7], [13, 7]
-  ]);
-
-  // Reclaim NW dead space (rows 1..2, cols 1..4) without connecting to north sanctuary
-  carve([
-    [1, 1], [2, 1], [3, 1],
-    [1, 2], [3, 2]
-  ]);
-
-  // Reclaim NE dead space (rows 1..2, cols 10..13) with secret sunstone chamber
-  carve([
-    [11, 1], [12, 1], [13, 1],
-    [11, 2], [13, 2]
-  ]);
-  ground[2][10] = 'SW'; // Secret wall from (10, 3) area into NE sanctuary
-
-  // Reclaim SW dead space (rows 9..11, cols 1..4)
-  carve([
-    [1, 9], [2, 9], [3, 9],
-    [1, 10], [3, 10],
-    [1, 11], [2, 11], [3, 11], [4, 11]
-  ]);
-
-  // Reclaim SE dead space (rows 9..11, cols 10..13)
-  carve([
-    [11, 9], [12, 9], [13, 9],
-    [11, 10], [13, 10],
-    [10, 11], [11, 11], [12, 11], [13, 11]
-  ]);
+  // Secret Bloodstone Chamber at (12, 1) via secret wall at (10, 2)
+  ground[2][10] = 'SW';
+  ground[1][12] = 0;
 
   const level = {
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -270,9 +356,9 @@ export function generateLevel2() {
     },
     spawn: { x: 7, y: 11, elevation: 0, style: 'stairs_down', wallDirection: 'none' },
     exit: { x: 7, y: 1, elevation: 0, style: 'wall_archway', wallDirection: 'north' },
-    parSteps: 25,
-    parTime: 14,
-    architectNote: "Architect's Journal: The North Sanctuary is sealed by ancient crimson resonance. Retrieve the Ruby Key from the western pillared vault; use the northern shortcut to proceed directly to the sanctum.",
+    parSteps: 31,
+    parTime: 18,
+    architectNote: "Architect's Journal: The North Sanctuary lies sealed by the ancient Ruby Lock. The western labyrinth winds into the deep vault where the Ruby Key is kept. Beware deceptive dead-ends.",
     layers: { ground, overhead },
     entities: [
       {
@@ -280,18 +366,18 @@ export function generateLevel2() {
         type: 'signpost',
         title: "Architect's Note #2",
         x: 7,
-        y: 9,
+        y: 10,
         elevation: 0,
-        text: "Architect's Journal: The North Sanctuary is sealed by ancient crimson resonance. Retrieve the Ruby Key from the western pillared vault; use the northern shortcut to proceed directly to the sanctum."
+        text: "Architect's Journal: The North Sanctuary lies sealed by the ancient Ruby Lock. The western labyrinth winds into the deep vault where the Ruby Key is kept. Beware deceptive dead-ends."
       },
       {
-        id: 'inscr_ruby_vault',
+        id: 'inscr_ruby_altar',
         type: 'wall_decor',
         decorType: 'carving',
-        text: 'The ruby gleams with subterranean fire. A return archway opens toward the north gate.',
-        playerDialogue: 'Convenient archway—no need to backtrack through the south portico.',
-        x: 1,
-        y: 3,
+        text: 'The ruby glow beckons through the winding dark.',
+        playerDialogue: 'West holds the key; North holds the gate.',
+        x: 7,
+        y: 9,
         elevation: 0
       },
       {
@@ -316,8 +402,8 @@ export function generateLevel2() {
         type: 'collectible',
         collectibleType: 'gem',
         scoreValue: 150,
-        x: 12,
-        y: 4,
+        x: 13,
+        y: 5,
         elevation: 0
       },
       {
@@ -343,83 +429,63 @@ export function generateLevel3() {
   const height = 15;
   const ground = Array.from({ length: height }, () => Array(width).fill(1));
   const overhead = Array.from({ length: height }, () => Array(width).fill(0));
+  const reserved = new Set();
 
-  function carve(coords) {
-    for (const [x, y] of coords) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        ground[y][x] = 0;
-      }
+  for (let x = 0; x < width; x++) { reserved.add(`${x},0`); reserved.add(`${x},${height - 1}`); }
+  for (let y = 0; y < height; y++) { reserved.add(`0,${y}`); reserved.add(`${width - 1},${y}`); }
+
+  // Central Dais (Exit at 8, 7; entry ONLY via Purple Door at 9, 6)
+  for (let y = 6; y <= 8; y++) {
+    for (let x = 7; x <= 9; x++) {
+      ground[y][x] = 1;
+      reserved.add(`${x},${y}`);
     }
   }
+  ground[7][8] = 0; reserved.add('8,7'); // Exit
+  ground[6][8] = 0; reserved.add('8,6');
+  ground[6][9] = 0; reserved.add('9,6'); // Purple Door
 
-  // Kishōtenketsu Sequential Chain:
+  // Emerald Wall separating West from East along column 7
+  for (let y = 1; y <= 13; y++) {
+    ground[y][7] = 1;
+    reserved.add(`7,${y}`);
+  }
+  ground[12][7] = 0; reserved.add('7,12'); // Emerald Door
+
+  // Key locations:
+  ground[13][3] = 0; reserved.add('3,13'); // Emerald Key
+  ground[11][13] = 0; reserved.add('13,11'); // Purple Key
   // Spawn at (2, 7)
-  // Southern Cistern has Emerald Key at (3, 13)
-  // Emerald Door at (7, 12) unlocks passage to Eastern Vault holding Purple Key at (13, 11)
-  // Purple Door at (9, 6) unlocks Central Dais Exit at (8, 7)
+  ground[7][2] = 0; reserved.add('2,7');
 
-  // Western starting wing (x=1..3, y=5..9)
-  carve([
-    [1, 5], [2, 5], [3, 5],
-    [1, 6], [2, 6], [3, 6],
-    [1, 7], [2, 7], [3, 7],
-    [1, 8], [2, 8], [3, 8],
-    [2, 9], [2, 10], [2, 11], [2, 12]
-  ]);
+  // Sector 1: West Wing (x: 1..5, y: 1..13)
+  buildLabyrinthSector(ground, 1, 1, 5, 13, 301, 0.70, 0.15, reserved);
+  // Sector 2: East Wing (x: 9..15, y: 1..13)
+  buildLabyrinthSector(ground, 9, 1, 15, 13, 351, 0.70, 0.15, reserved);
 
-  // Southern cistern with emerald key at (3, 13)
-  carve([
-    [1, 12], [2, 12], [3, 12], [4, 12], [5, 12], [6, 12], [7, 12],
-    [2, 13], [3, 13], [4, 13], [5, 13]
-  ]);
+  // Connect West Wing to Emerald Door
+  ground[12][6] = 0; ground[12][5] = 0;
+  // Connect East Wing from Emerald Door
+  ground[12][8] = 0; ground[12][9] = 0;
+  // Connect East Wing to Purple Door approach
+  ground[6][10] = 0;
 
-  // Eastern lower corridor & purple key vault (beyond emerald door at (7, 12))
-  carve([
-    [8, 12], [9, 12], [10, 12], [11, 12], [12, 12], [13, 12], [14, 12], [15, 12],
-    [13, 11], [14, 11], [15, 11],
-    [13, 13], [14, 13], [15, 13],
-    [15, 10], [15, 9], [15, 8], [15, 7], [15, 6], [15, 5], [15, 4]
-  ]);
+  // Connect spawn & keys cleanly
+  ground[7][1] = 0; ground[7][3] = 0;
+  ground[12][3] = 0;
+  ground[11][14] = 0; ground[11][12] = 0;
 
-  // Approach to Purple Door at (9, 6)
-  carve([
-    [14, 4], [13, 4], [12, 4], [11, 4], [10, 4],
-    [10, 5], [10, 6], [9, 6] // Purple Door at (9, 6)
-  ]);
+  // Dead-space avoidance along column 6 and 8
+  for (let y = 1; y <= 11; y += 2) {
+    if (y !== 7) ground[y][6] = 0;
+    if (y !== 5 && y !== 7) ground[y][8] = 0;
+  }
+  // Ensure (8, 5) is solid wall to prevent bypassing Purple Door
+  ground[5][8] = 1;
 
-  // Central Dais Sanctuary (enclosed completely, entry ONLY via (9, 6))
-  carve([
-    [8, 6],
-    [8, 7] // Exit at (8, 7)
-  ]);
-
-  // Reclaim northern rows 1..3 dead spaces into western high galleria (dead end, does NOT connect to eastern wing)
-  carve([
-    [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [8, 1],
-    [2, 2], [4, 2], [6, 2], [8, 2],
-    [2, 3], [3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3]
-  ]);
-  // Connect west wing to northern galleria
-  ground[4][2] = 0;
-
-  // Reclaim northern-east dead spaces (rows 1..3, cols 10..15) as an isolated secret sunstone chamber
-  carve([
-    [11, 1], [12, 1], [13, 1], [14, 1], [15, 1],
-    [11, 2], [13, 2], [15, 2],
-    [11, 3], [12, 3], [13, 3], [14, 3], [15, 3]
-  ]);
-  ground[4][13] = 'SW'; // Secret wall from (13, 4) into northern secret archive
-
-  // Reclaim middle dead spaces (rows 5..8, cols 5..6 and 12..14)
-  carve([
-    [5, 5], [5, 6], [5, 7],
-    [12, 8], [13, 8],
-    // Middle-south alcoves (rows 8..10, cols 4..11) separated at col 7
-    [4, 8], [5, 8], [6, 8],
-    [4, 9], [6, 9],
-    [4, 10], [5, 10], [6, 10],
-    [8, 10], [9, 10], [10, 10], [11, 10]
-  ]);
+  // Secret prismatic shard at (13, 1) via secret wall at (13, 4)
+  ground[4][13] = 'SW';
+  ground[1][13] = 0;
 
   const level = {
     $schema: 'https://casual-maze-game.inbarrose.com/schemas/maze-v1.json',
@@ -440,7 +506,7 @@ export function generateLevel3() {
     spawn: { x: 2, y: 7, elevation: 0, style: 'stairs_down', wallDirection: 'none' },
     exit: { x: 8, y: 7, elevation: 0, style: 'portal', wallDirection: 'none' },
     parSteps: 44,
-    parTime: 24,
+    parTime: 25,
     architectNote: "Architect's Journal: The central dais is locked under royal purple seal. To break it, claim the Emerald Key in the southern cistern, open the eastern passage, and retrieve the Purple Keystone.",
     layers: { ground, overhead },
     entities: [
@@ -520,78 +586,37 @@ export function generateLevel4() {
   const height = 17;
   const ground = Array.from({ length: height }, () => Array(width).fill(1));
   const overhead = Array.from({ length: height }, () => Array(width).fill(0));
+  const reserved = new Set();
 
-  function carve(coords) {
-    for (const [x, y] of coords) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        ground[y][x] = 0;
-      }
-    }
+  for (let x = 0; x < width; x++) { reserved.add(`${x},0`); reserved.add(`${x},${height - 1}`); }
+  for (let y = 0; y < height; y++) { reserved.add(`0,${y}`); reserved.add(`${width - 1},${y}`); }
+
+  // Central crossing at (9, 8)
+  ground[8][9] = 0; reserved.add('9,8');
+  // Arteries from center:
+  ground[7][9] = 0; ground[6][9] = 0; ground[5][9] = 0; // North artery
+  ground[8][8] = 0; ground[8][7] = 0; ground[8][6] = 0; // West artery
+  ground[8][10] = 0; ground[8][11] = 0; ground[8][12] = 0; // East artery
+
+  // South Triune Sanctum (col 9, y: 11..15)
+  for (let y = 11; y <= 15; y++) {
+    ground[y][8] = 1; ground[y][10] = 1;
+    reserved.add(`8,${y}`); reserved.add(`10,${y}`);
+    ground[y][9] = 0; reserved.add(`9,${y}`);
   }
+  ground[9][9] = 0; ground[10][9] = 0;
 
-  // Central crossing and ambulatory (rows 6..10, cols 7..11)
-  // Spawn at (9, 8)
-  carve([
-    [7, 6], [8, 6], [9, 6], [10, 6], [11, 6],
-    [7, 7], [9, 7], [11, 7],
-    [7, 8], [8, 8], [9, 8], [10, 8], [11, 8],
-    [7, 9], [9, 9], [11, 9],
-    [7, 10], [8, 10], [9, 10], [10, 10], [11, 10]
-  ]);
+  // Key locations:
+  ground[8][2] = 0; reserved.add('2,8'); // Ruby Key
+  ground[8][16] = 0; reserved.add('16,8'); // Emerald Key
+  ground[2][8] = 0; reserved.add('8,2'); // Blue Key
 
-  // West Wing (Ruby Key at (2, 8))
-  carve([
-    [1, 6], [2, 6], [3, 6], [4, 6], [5, 6], [6, 6],
-    [1, 7], [2, 7], [3, 7], [5, 7],
-    [1, 8], [2, 8], [3, 8], [4, 8], [5, 8], [6, 8],
-    [1, 9], [2, 9], [3, 9], [5, 9],
-    [1, 10], [2, 10], [3, 10], [4, 10], [5, 10], [6, 10]
-  ]);
+  // Build authentic DFS labyrinths in 3 wings
+  buildLabyrinthSector(ground, 1, 1, 17, 5, 401, 0.70, 0.15, reserved);
+  buildLabyrinthSector(ground, 1, 7, 7, 15, 411, 0.70, 0.15, reserved);
+  buildLabyrinthSector(ground, 11, 7, 17, 15, 421, 0.70, 0.15, reserved);
 
-  // East Wing (Emerald Key at (16, 8))
-  carve([
-    [12, 6], [13, 6], [14, 6], [15, 6], [16, 6], [17, 6],
-    [13, 7], [15, 7], [16, 7], [17, 7],
-    [12, 8], [13, 8], [14, 8], [15, 8], [16, 8], [17, 8],
-    [13, 9], [15, 9], [16, 9], [17, 9],
-    [12, 10], [13, 10], [14, 10], [15, 10], [16, 10], [17, 10]
-  ]);
-
-  // North Wing (Blue Key at (8, 2))
-  carve([
-    [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [8, 1], [9, 1], [10, 1], [11, 1], [12, 1], [13, 1], [14, 1], [15, 1],
-    [3, 2], [7, 2], [8, 2], [9, 2], [10, 2], [11, 2], [15, 2],
-    [3, 3], [4, 3], [5, 3], [6, 3], [7, 3], [8, 3], [9, 3], [10, 3], [11, 3], [12, 3], [13, 3], [14, 3], [15, 3],
-    [3, 4], [9, 4], [15, 4],
-    [3, 5], [9, 5], [15, 5]
-  ]);
-
-  // South Wing: Triune Sanctum
-  // Doors at (9, 11), (9, 12), (9, 13) leading to (9, 14), (9, 15) exit
-  carve([
-    [9, 11], [9, 12], [9, 13], [9, 14],
-    [9, 15]
-  ]);
-
-  // Reclaim lower-left dead spaces (rows 11..15, cols 1..7) - walled off from x=8..10
-  carve([
-    [1, 11], [2, 11], [3, 11], [4, 11], [5, 11], [6, 11],
-    [1, 12], [3, 12], [5, 12],
-    [1, 13], [2, 13], [3, 13], [4, 13], [5, 13], [6, 13],
-    [1, 14], [3, 14], [5, 14],
-    [1, 15], [2, 15], [3, 15], [4, 15], [5, 15], [6, 15]
-  ]);
-
-  // Reclaim lower-right dead spaces (rows 11..15, cols 12..17) - walled off from x=8..10
-  carve([
-    [12, 11], [13, 11], [14, 11], [15, 11], [16, 11], [17, 11],
-    [13, 12], [15, 12], [17, 12],
-    [12, 13], [13, 13], [14, 13], [15, 13], [16, 13], [17, 13],
-    [13, 14], [15, 14], [17, 14],
-    [12, 15], [13, 15], [14, 15], [15, 15], [16, 15], [17, 15]
-  ]);
-
-  // Secret sanctum chamber in lower wing
+  // Secret Wall at (4, 13) leading to Abyssal Sapphire at (4, 14)
   ground[13][4] = 'SW';
   ground[14][4] = 0;
 
@@ -615,7 +640,7 @@ export function generateLevel4() {
     exit: { x: 9, y: 15, elevation: 0, style: 'portal', wallDirection: 'none' },
     parSteps: 65,
     parTime: 36,
-    architectNote: "Architect's Journal: The Triune Sanctum to the south requires all three resonance keys—Ruby, Emerald, and Sapphire. The outer ambulatory connects all three cathedral wings beneath the shrouded mist.",
+    architectNote: "Architect's Journal: The Triune Sanctum to the south requires all three resonance keys—Ruby, Emerald, and Sapphire. The labyrinth wings connect all three cathedral chambers beneath the shrouded mist.",
     layers: { ground, overhead },
     entities: [
       {
@@ -625,14 +650,14 @@ export function generateLevel4() {
         x: 9,
         y: 7,
         elevation: 0,
-        text: "Architect's Journal: The Triune Sanctum to the south requires all three resonance keys—Ruby, Emerald, and Sapphire. The outer ambulatory connects all three cathedral wings beneath the shrouded mist."
+        text: "Architect's Journal: The Triune Sanctum to the south requires all three resonance keys—Ruby, Emerald, and Sapphire. The labyrinth wings connect all three cathedral chambers beneath the shrouded mist."
       },
       {
         id: 'inscr_cathedral',
         type: 'wall_decor',
         decorType: 'carving',
         text: 'The cathedral bells echo through the fog. Seek the three sacred chambers in any order.',
-        playerDialogue: 'The ambulatory ring lets me loop freely between all wings.',
+        playerDialogue: 'The corridors branch into three deep wings.',
         x: 7,
         y: 6,
         elevation: 0
@@ -740,8 +765,11 @@ async function main() {
     const optimalSteps = solution.length - 1;
     console.log(`✓ Level ${num}: Solvable in ${optimalSteps} steps (current parSteps: ${level.parSteps}).`);
 
-    // Calibrate parSteps if needed
-    if (num !== 1) {
+    // Calibrate parSteps
+    if (num === 1) {
+      level.parSteps = 26;
+      level.parTime = 14;
+    } else {
       level.parSteps = Math.ceil(optimalSteps * 1.18);
       level.parTime = Math.ceil(level.parSteps * 0.55);
     }
