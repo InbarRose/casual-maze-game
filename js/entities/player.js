@@ -300,6 +300,7 @@ export class Player {
     this.targetGridX = spawnX;
     this.targetGridY = spawnY;
     this.elevation = elevation;
+    this.fromElevation = elevation;
     this.targetElevation = elevation;
 
     this.worldX = spawnX * this.tileSize + this.tileSize / 2;
@@ -330,6 +331,7 @@ export class Player {
     this.targetGridX = x;
     this.targetGridY = y;
     this.elevation = elevation;
+    this.fromElevation = elevation;
     this.targetElevation = elevation;
     this.worldX = x * this.tileSize + this.tileSize / 2;
     this.worldY = y * this.tileSize + this.tileSize / 2;
@@ -432,6 +434,7 @@ export class Player {
     this.fromGridY = this.gridY;
     this.targetGridX = targetX;
     this.targetGridY = targetY;
+    this.fromElevation = this.elevation ?? 0;
     this.targetElevation = nextElevation;
 
     const dx = targetX - this.gridX;
@@ -445,6 +448,21 @@ export class Player {
     this.isMoving = true;
     this.moveProgress = 0;
     this.stepsTaken++;
+  }
+
+  /**
+   * Calculate effective fractional elevation during movement across ramps (ADR-0041, BL-156)
+   * @returns {number} Fractional elevation (e.g. 0.0 to 1.0)
+   */
+  getEffectiveElevation() {
+    if (!this.isMoving || this.fromElevation === undefined || this.fromElevation === this.targetElevation) {
+      return this.elevation ?? 0;
+    }
+    const t = Math.max(0, Math.min(1, this.moveProgress));
+    const smoothT = t * t * (3 - 2 * t);
+    const fromZ = this.fromElevation ?? 0;
+    const toZ = this.targetElevation ?? 0;
+    return fromZ + (toZ - fromZ) * smoothT;
   }
 
   /**
