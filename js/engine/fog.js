@@ -113,12 +113,20 @@ export class FogOfWar {
     const rayCount = 180; // Dense enough for seamless circular coverage
     const stepSize = 0.2; // Sub-tile precision
 
+    // Check if player is elevated (elevation >= 1 or standing on an elevated surface)
+    const isPlayerElevated = (Number(playerElevation) >= 1) || this.isElevatedSurface(
+      overheadLayer?.[playerY]?.[playerX],
+      groundLayer?.[playerY]?.[playerX]
+    );
+
     for (let i = 0; i < rayCount; i++) {
       const angle = (i / rayCount) * (Math.PI * 2);
       const cos = Math.cos(angle);
       const sin = Math.sin(angle);
 
       let currentDist = 0;
+      let rayElevation = isPlayerElevated ? 1 : 0;
+
       while (currentDist <= viewRadius) {
         currentDist += stepSize;
         const testX = Math.floor(originX + cos * currentDist);
@@ -130,19 +138,68 @@ export class FogOfWar {
 
         this.grid[testY][testX] = FOG_STATE.VISIBLE;
 
-        // Check if tile is an opaque wall that blocks line of sight
         const cellTile = groundLayer[testY]?.[testX];
+        const overTile = overheadLayer?.[testY]?.[testX];
         const isSecretWall = cellTile === TILES.SECRET_WALL;
         const isRevealed = revealedSecrets && (
           (typeof revealedSecrets.has === 'function' && revealedSecrets.has(`${testX},${testY}`)) ||
           (Array.isArray(revealedSecrets) && revealedSecrets.includes(`${testX},${testY}`))
         );
         const isWall = cellTile === TILES.WALL || (isSecretWall && !isRevealed);
-        if (isWall) {
-          // Ray stops after hitting wall
-          break;
+
+        if (rayElevation === 1) {
+          const hasElevatedWalkway = this.isElevatedSurface(overTile, cellTile);
+
+          if (hasElevatedWalkway) {
+            // Ray continues along upper walkway
+            continue;
+          }
+
+          if (isWall) {
+            // Ground wall without walkway stops the ray
+            break;
+          }
+
+          // Ray descends into lower open corridor/room (elevation 0)
+          rayElevation = 0;
+        } else {
+          // At ground elevation: walls block line of sight
+          if (isWall) {
+            break;
+          }
         }
       }
     }
+  }
+
+  /**
+   * Helper to check if a tile code represents an elevated overhead walkable surface (BL-146, BL-147)
+   * @param {*} overTile
+   * @param {*} groundTile
+   * @returns {boolean}
+   */
+  isElevatedSurface(overTile, groundTile) {
+    return (
+      overTile === TILES.PLATFORM || overTile === 'PL' ||
+      overTile === TILES.WALL_WALK || overTile === 'WW' ||
+      overTile === TILES.BRIDGE_EW || overTile === TILES.BRIDGE_NS ||
+      this.isRamp(overTile) ||
+      groundTile === TILES.BRIDGE_EW || groundTile === TILES.BRIDGE_NS ||
+      this.isRamp(groundTile)
+    );
+  }
+
+  /**
+   * Helper to check if tile is a ramp
+   * @param {*} tile
+   * @returns {boolean}
+   */
+  isRamp(tile) {
+    return (
+      tile === TILES.RAMP_N ||
+      tile === TILES.RAMP_S ||
+      tile === TILES.RAMP_E ||
+      tile === TILES.RAMP_W
+    );
   }
 }

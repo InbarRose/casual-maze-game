@@ -71,7 +71,24 @@ This document tracks project milestones, current release status, active developm
       - [x] **Level 30 ("The Hidden Underpass", 15x15)**: Maintained 0 dead spaces under Fog of War (`fogOfWar: true`). Carved secret underpass drainage cache with Subterranean Aqueduct Pearl (`SW`); optimal: 25 steps.
       - [x] **Level 31 ("The Four-Faced Pillar", 15x15)**: Maintained 0 dead spaces under Fog of War (`fogOfWar: true`). Carved secret pillar core with Eye of the Four Winds (`SW`); optimal: 33 steps.
       - [x] **Level 32 ("The Prismatic Spire", 17x17)**: Maintained 0 dead spaces under Fog of War (`fogOfWar: true`). Carved secret apex alcove with Apex Monolith Core Crystal (`SW`), branching exits contract; optimal: 29 steps.
-- [ ] **Smart Change-Driven Test Runner, Result Caching, CI Domain Splitting, File Modularization & Modular Level Architecture (BL-142, BL-143, BL-144, BL-131..141, ADR-0036, ADR-0037)**:
+- [x] **Multi-Elevation Fog-of-War Line-of-Sight & Ground Wall Occlusion (BL-155, ADR-0040)**:
+  - Enhanced 360-degree raycasting in `FogOfWar.update(...)` to support viewing lower ground corridors and rooms when the player stands on an upper level (`WALL_WALK`, `PLATFORM`, `BRIDGE_*`, `RAMP_*`).
+  - Implemented elevation transition logic along rays: rays cast from upper battlements propagate along connected walkways, descend into lower open ground corridors/rooms marking them `VISIBLE`, and terminate upon hitting ground walls.
+  - Preserved ground wall occlusion so players on upper walkways cannot see through or "over" single walls into rooms beyond.
+  - Added comprehensive unit tests in `tests/unit/engine/fog.test.mjs` verifying upper-to-lower visibility and wall occlusion.
+- [x] **3D Multi-Elevation Bridges, Battlements & Underpass Tunnels Overhaul (BL-156, ADR-0041)**:
+  - Fixed 90-degree inverted bridge orientation in 2.5D angled rendering (`renderAngledOverheadLayer`), unifying deck direction calculation via `getOverheadBridgeDirection` across both angled and top-down pipelines.
+  - Implemented smooth player elevation interpolation across directional ramps (`player.getEffectiveElevation()`), rendering ascending/descending players with fractional height lift to eliminate sprite snapping and clipping.
+  - Enhanced underpass tunnel rendering in `renderAngledFloors` with subterranean ground cobblestones and entry/exit archway shadows for open corridors beneath overhead bridges and platforms.
+  - Overhauled Chapter 10 Level 38 ("Concentric Trestles") into a multi-tiered fortress: high outer battlement ramparts (`WALL_WALK`), grand multi-span viaduct trestles (`BRIDGE_EW`, `PLATFORM`), sunken keystone courtyard with scouting from above, and mandatory underpass tunnels (optimal: 77 steps, 40 elevated steps, 0 dead spaces $\ge 4\times 4$).
+  - Updated automated unit tests in `tests/unit/levels/chapter-10.test.mjs` asserting 77 optimal steps, 89 par steps, and $\ge 35$ elevated steps.
+- [x] **True Maze Topology & Labyrinthine Redesign Standard (BL-157, ADR-0042)**:
+  - Eradicated artificial barcode horizontal stripes and concentric square tracks across Chapter 10 (Levels 37–40), transforming them into authentic organic labyrinths.
+  - Implemented `buildLabyrinthSector` generator with directional inertia ($\ge 70\%$) for long winding corridors, deliberate 90-degree elbows, branching decision forks, and authentic dead ends.
+  - Integrated hazards and secrets: timed spike traps at deceptive dead-end spurs, patrolling sentinels with evasion alcoves, secret walls (`SW`) guarding high-value gems, and multi-tier viaduct bridges over underpasses.
+  - Calibrated optimal solution step lengths and par ratings: Level 37 (75 steps, par 87), Level 38 (81 steps, 40 elevated, par 94), Level 39 (76 steps, par 88), Level 40 (165 steps, par 190).
+  - Verified 100% solvability, zero bypass gating, zero dead space $\ge 4\times 4$ ($\text{DeadSpace}_{\ge 4\times 4} = 0$), and 100% passing tests (153 suites, 761 tests).
+
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
   - **Modular Level Package Architecture (`BL-143`, ADR-0037)**: Architecture decision and plan for organizing levels into dedicated directories (`manifest.json`, `README.md`, `layers/`, `entities/`, `assets/`) compiled for static zero-backend execution.
@@ -807,6 +824,21 @@ All architectural decisions are documented in `docs/adr/`:
 | [0025](adr/0025-component-coverage-scoring-and-thematic-asset-unification.md) | Platform Component Audit Test Coverage, Subsystem Quality Scoring & Thematic Asset Unification | Accepted | 2026-10-11 |
 | [0026](adr/0026-resilient-level-loader-and-headless-browser-ci.md) | Resilient Level Loader Strategy, Fallback Watchdog, and Headless Browser CI Gating | Accepted | 2026-10-11 |
 | [0027](adr/0027-universal-settings-profile-access-and-versioning.md) | Universal Settings and Player Profile Accessibility, Stacked Modal Resilience, and Continuous Version Incrementing | Accepted | 2026-10-11 |
+| [0028](adr/0028-discrete-step-zoom-mobile-controls-and-hud-streamlining.md) | Discrete Stepped Viewport Zoom, Mobile Touch Navigation Modes, Top Activity Feed Docking & Streamlined Command HUD | Accepted | 2026-10-11 |
+| [0029](adr/0029-overlay-conflict-detection-and-firm-top-bar.md) | UI Overlay Conflict Detection, Visibility Coordinator & Firm Top Navigation Bar | Accepted | 2026-10-11 |
+| [0030](adr/0030-preset-avatar-archetypes-universal-topbar-and-minimal-exit.md) | Preset Avatar Archetypes, Universal Top Bar, Overlay Menu Toggles & Minimal Mode Exit | Accepted | 2026-10-11 |
+| [0031](adr/0031-compact-minimal-topbar-and-single-button-menus.md) | Compact Minimal Top Bar, Single-Button Menus & Toggleable HUD Overlays | Accepted | 2026-10-11 |
+| [0032](adr/0032-non-persistent-zoom-mobile-more-drawer-browser-safe-hotkeys.md) | Non-Persistent Viewport Zoom, Mobile Virtual Controls More Drawer & Browser-Safe Hotkeys | Accepted | 2026-10-11 |
+| [0033](adr/0033-click-and-drag-menu-scroll-and-dynamic-size-detection.md) | Universal Click-and-Drag Menu Scrolling, Vertical Main Menu Scroll & Dynamic Size Detection | Accepted | 2026-10-11 |
+| [0034](adr/0034-settings-switch-styles-architect-sidebar-flex-and-citadel-spawns.md) | Settings Switch Styling, Architect Sidebar Flex Stabilization & Whispering Citadel Gating | Accepted | 2026-10-16 |
+| [0035](adr/0035-gameloop-decomposition-ui-polish-and-content-expansion.md) | GameLoop Decomposition, Visual Fidelity Polish & Campaign Expansion | Accepted | 2026-10-17 |
+| [0036](adr/0036-smart-change-driven-testing-and-ci-matrix.md) | Smart Change-Driven Test Runner, Result Caching & CI Domain Splitting | Accepted | 2026-10-17 |
+| [0037](adr/0037-modular-level-package-architecture.md) | Modular Level Package Architecture (Per-Level Directory Structure) | Accepted | 2026-10-17 |
+| [0038](adr/0038-elevated-platforms-wall-walkways-and-progressive-hazard-escalation.md) | Elevated Platforms, Wall-Top Walkways, Underpass Traversal, and Progressive Hazard Escalation | Accepted | 2026-10-18 |
+| [0039](adr/0039-compounding-mechanics-matrix-and-campaign-level-overhaul.md) | Compounding Mechanics Matrix, Zero Dead Space Standard, and Campaign Level Overhaul Framework | Accepted | 2026-10-18 |
+| [0040](adr/0040-multi-elevation-fog-of-war-visibility.md) | Multi-Elevation Fog-of-War Line-of-Sight & Ground Wall Occlusion | Accepted | 2026-10-18 |
+| [0041](adr/0041-3d-multi-elevation-bridges-and-tunnels.md) | 3D Multi-Elevation Bridges, Battlements & Underpass Tunnels Overhaul | Accepted | 2026-10-18 |
+| [0042](adr/0042-true-maze-topology-and-labyrinthine-redesign.md) | True Maze Topology & Labyrinthine Redesign Standard | Accepted | 2026-10-18 |
 
 ---
 

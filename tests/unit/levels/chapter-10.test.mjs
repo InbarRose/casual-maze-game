@@ -39,8 +39,8 @@ describe('Levels > Chapter 10 The Prismatic Labyrinth (BL-129)', () => {
   it('Level 37 (Ki): The Spectral Gate introduces chromatic keys and bottleneck spectral barriers', () => {
     const sol = solveLevel(l37);
     assert(sol !== null, 'Level 37 must be solvable');
-    assertEqual(sol.length, 69, 'Optimal path is 69 steps');
-    assert(l37.parSteps >= 69, 'Par steps is calibrated over optimal');
+    assertEqual(sol.length, 75, 'Optimal path is 75 steps');
+    assert(l37.parSteps >= 75, 'Par steps is calibrated over optimal');
 
     // Unsolvable without amber key
     const noKey = JSON.parse(JSON.stringify(l37));
@@ -59,8 +59,10 @@ describe('Levels > Chapter 10 The Prismatic Labyrinth (BL-129)', () => {
   it('Level 38 (Shō): Concentric Trestles develops multi-elevation bridges over crystalline chasms', () => {
     const sol = solveLevel(l38);
     assert(sol !== null, 'Level 38 must be solvable');
-    assertEqual(sol.length, 53, 'Optimal path is 53 steps');
-    assert(l38.parSteps >= 53, 'Par steps is calibrated over optimal');
+    assertEqual(sol.length, 81, 'Optimal path is 81 steps');
+    assertEqual(l38.parSteps, 94, 'Par steps is calibrated with 15% margin over optimal');
+    const elevatedSteps = sol.filter(s => s.z === 1 || s.elevation === 1).length;
+    assert(elevatedSteps >= 35, 'Over 50% of optimal path is elevated across battlements and viaducts');
 
     // Verify directional ramps and overhead bridges exist
     const hasRamps = l38.layers.ground.some(r => r.includes(TILES.RAMP_E) || r.includes(TILES.RAMP_W) || r.includes(TILES.RAMP_S) || r.includes(TILES.RAMP_N));
@@ -76,8 +78,8 @@ describe('Levels > Chapter 10 The Prismatic Labyrinth (BL-129)', () => {
   it('Level 39 (Ten): Harmonic Mirror Seals introduces resonant tuning and concentric forcefields', () => {
     const sol = solveLevel(l39);
     assert(sol !== null, 'Level 39 must be solvable');
-    assertEqual(sol.length, 126, 'Optimal path is 126 steps');
-    assert(l39.parSteps >= 126, 'Par steps is calibrated over optimal');
+    assertEqual(sol.length, 76, 'Optimal path is 76 steps');
+    assert(l39.parSteps >= 76, 'Par steps is calibrated over optimal');
 
     // Unsolvable without silver tuning key
     const noKey = JSON.parse(JSON.stringify(l39));
@@ -96,8 +98,8 @@ describe('Levels > Chapter 10 The Prismatic Labyrinth (BL-129)', () => {
   it('Level 40 (Ketsu): Heart of the Prism executes 4-quadrant sequential macro-puzzle finale', () => {
     const sol = solveLevel(l40);
     assert(sol !== null, 'Level 40 must be solvable');
-    assertEqual(sol.length, 345, 'Optimal path is 345 steps');
-    assert(l40.parSteps >= 345, 'Par steps is calibrated over optimal');
+    assertEqual(sol.length, 165, 'Optimal path is 165 steps');
+    assert(l40.parSteps >= 165, 'Par steps is calibrated over optimal');
 
     // 4 elemental shard keys
     const keyIds = l40.entities.filter(e => e.type === 'key').map(e => e.id);

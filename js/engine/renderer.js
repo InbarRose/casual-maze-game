@@ -466,20 +466,36 @@ export class GameRenderer {
         ctx.lineWidth = 1;
         ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
 
-        // Bridge underpass tunnels
-        if (tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS) {
-          const isHorizUnderpass = (tile === TILES.BRIDGE_EW) ? !isRotated90or270 : isRotated90or270;
-          ctx.fillStyle = theme.bridgeGround;
+        // Bridge underpass tunnels (ground underpass tiles or ground beneath overhead bridges/platforms)
+        const overTile = level.layers.overhead?.[y]?.[x];
+        const isUnderpass = (tile === TILES.BRIDGE_EW || tile === TILES.BRIDGE_NS) ||
+          ((tile === 0 || tile === TILES.FLOOR) && (overTile === TILES.BRIDGE_EW || overTile === TILES.BRIDGE_NS || overTile === TILES.PLATFORM));
+
+        if (isUnderpass) {
+          let isHorizUnderpass = false;
+          if (tile === TILES.BRIDGE_EW) isHorizUnderpass = true;
+          else if (tile === TILES.BRIDGE_NS) isHorizUnderpass = false;
+          else if (overTile === TILES.BRIDGE_NS) isHorizUnderpass = true; // overhead bridge runs NS, so underpass below runs EW
+          else if (overTile === TILES.BRIDGE_EW) isHorizUnderpass = false; // overhead bridge runs EW, so underpass below runs NS
+          else isHorizUnderpass = true; // default platform/viaduct
+
+          if (isRotated90or270) isHorizUnderpass = !isHorizUnderpass;
+
+          ctx.fillStyle = theme.bridgeGround || '#1e293b';
           if (isHorizUnderpass) {
             ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.76);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.1);
-            ctx.fillRect(screen.x, screen.y + tileSize * 0.78, tileSize, tileSize * 0.1);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.fillRect(screen.x, screen.y + tileSize * 0.12, tileSize, tileSize * 0.12);
+            ctx.fillRect(screen.x, screen.y + tileSize * 0.76, tileSize, tileSize * 0.12);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+            ctx.fillRect(screen.x, screen.y + tileSize * 0.24, tileSize, tileSize * 0.52);
           } else {
             ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.76, tileSize);
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-            ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.1, tileSize);
-            ctx.fillRect(screen.x + tileSize * 0.78, screen.y, tileSize * 0.1, tileSize);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+            ctx.fillRect(screen.x + tileSize * 0.12, screen.y, tileSize * 0.12, tileSize);
+            ctx.fillRect(screen.x + tileSize * 0.76, screen.y, tileSize * 0.12, tileSize);
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+            ctx.fillRect(screen.x + tileSize * 0.24, screen.y, tileSize * 0.52, tileSize);
           }
         }
       }
@@ -585,8 +601,9 @@ export class GameRenderer {
       });
     }
 
-    // 3. Include player if on ground elevation
-    if (player.elevation === ELEVATION.GROUND) {
+    // 3. Include player if on ground elevation and not ascending to overhead (BL-156, ADR-0041)
+    const isPlayerGrounded = player.elevation === ELEVATION.GROUND && (player.targetElevation ?? ELEVATION.GROUND) === ELEVATION.GROUND;
+    if (isPlayerGrounded) {
       const screen = camera.worldToScreen(player.worldX, player.worldY, true);
       // Player center is at screen.y; feet baseline is at screen.y + 11 * (tileSize / 32) ~= screen.y + tileSize * 0.344
       const sortY = screen.y + tileSize * 0.344;
@@ -843,12 +860,9 @@ export class GameRenderer {
             east: this.isElevatedSurface(level, x + 1, y),
           };
           this.renderAngledPlatformSpan(ctx, screen.x, screen.y, tileSize, theme, heightOffset, neighbors, isWallWalk);
-        } else if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
-          // Render Overhead Bridges
-          const dir = isRotated90or270 ? 'EW' : 'NS';
-          this.renderAngledBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme, heightOffset);
-        } else if (overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
-          const dir = isRotated90or270 ? 'NS' : 'EW';
+        } else if (overTile === TILES.BRIDGE_EW || overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_NS) {
+          // Render Overhead Bridges (ADR-0041, BL-156)
+          const dir = this.getOverheadBridgeDirection(overTile, gTile, isRotated90or270);
           this.renderAngledBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme, heightOffset);
         }
       }
@@ -934,6 +948,26 @@ export class GameRenderer {
     this.renderBridgeSpan(ctx, direction, screenX, elevatedY, tileSize, theme);
 
     ctx.restore();
+  }
+
+  /**
+   * Determine directional orientation ('EW' or 'NS') of overhead bridge span (BL-156, ADR-0041)
+   * @param {string} overTile
+   * @param {string} gTile
+   * @param {boolean} isRotated90or270
+   * @returns {'EW'|'NS'}
+   */
+  getOverheadBridgeDirection(overTile, gTile, isRotated90or270 = false) {
+    let dir = 'EW';
+    if (overTile === TILES.BRIDGE_NS || (!overTile && gTile === TILES.BRIDGE_EW)) {
+      dir = 'NS';
+    } else if (overTile === TILES.BRIDGE_EW || (!overTile && gTile === TILES.BRIDGE_NS)) {
+      dir = 'EW';
+    }
+    if (isRotated90or270) {
+      dir = dir === 'EW' ? 'NS' : 'EW';
+    }
+    return dir;
   }
 
   /**
@@ -1150,8 +1184,12 @@ export class GameRenderer {
       });
     }
 
-    // Include player if matching elevation
-    if (player.elevation === elevation) {
+    // Include player if matching elevation or transitioning to/from overhead (ADR-0041, BL-156)
+    const isPlayerAtElevation = (elevation === ELEVATION.OVERHEAD)
+      ? (player.elevation === ELEVATION.OVERHEAD || player.targetElevation === ELEVATION.OVERHEAD)
+      : (player.elevation === elevation);
+
+    if (isPlayerAtElevation) {
       drawables.push({
         type: 'player',
         ref: player,
@@ -1171,23 +1209,25 @@ export class GameRenderer {
     for (const item of drawables) {
       if (item.type === 'player') {
         const screen = item.screen;
+        const effectiveZ = typeof player.getEffectiveElevation === 'function' ? player.getEffectiveElevation() : (player.elevation ?? 0);
+        const playerHeightOffset = Math.round(heightOffset * effectiveZ);
         if (player.hasTorch && player.hasTorch()) {
           ctx.save();
           const pulse = Math.sin(this.exitPulseTimer * 1.5) * 0.1 + 0.9;
           const torchRadius = tileSize * 1.5 * pulse;
-          const grad = ctx.createRadialGradient(screen.x, screen.y - heightOffset, tileSize * 0.15, screen.x, screen.y - heightOffset, torchRadius);
+          const grad = ctx.createRadialGradient(screen.x, screen.y - playerHeightOffset, tileSize * 0.15, screen.x, screen.y - playerHeightOffset, torchRadius);
           grad.addColorStop(0, 'rgba(251, 146, 60, 0.4)');
           grad.addColorStop(0.6, 'rgba(249, 115, 22, 0.15)');
           grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
           ctx.fillStyle = grad;
           ctx.beginPath();
-          ctx.arc(screen.x, screen.y - heightOffset, torchRadius, 0, Math.PI * 2);
+          ctx.arc(screen.x, screen.y - playerHeightOffset, torchRadius, 0, Math.PI * 2);
           ctx.fill();
           ctx.restore();
         }
         const angle = camera ? camera.getDiscreteRotation() : 0;
-        player.render(ctx, screen.x, screen.y - heightOffset, tileSize, this.perspective, angle);
-        this.renderPlayerHighContrastHalo(ctx, screen.x, screen.y - heightOffset, tileSize);
+        player.render(ctx, screen.x, screen.y - playerHeightOffset, tileSize, this.perspective, angle);
+        this.renderPlayerHighContrastHalo(ctx, screen.x, screen.y - playerHeightOffset, tileSize);
       } else {
         const entity = item.ref;
         const isContinuous = entity.worldX !== undefined && entity.worldY !== undefined;
@@ -1314,12 +1354,9 @@ export class GameRenderer {
             east: this.isElevatedSurface(level, x + 1, y),
           };
           this.renderPlatformSpan(ctx, screen.x, screen.y, tileSize, theme, neighbors, isWallWalk);
-        } else if (overTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_EW) {
-          // Render Overhead Bridge
-          const dir = isRotated90or270 ? 'NS' : 'EW';
-          this.renderBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme);
-        } else if (overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_NS) {
-          const dir = isRotated90or270 ? 'EW' : 'NS';
+        } else if (overTile === TILES.BRIDGE_EW || overTile === TILES.BRIDGE_NS || gTile === TILES.BRIDGE_EW || gTile === TILES.BRIDGE_NS) {
+          // Render Overhead Bridge (ADR-0041, BL-156)
+          const dir = this.getOverheadBridgeDirection(overTile, gTile, isRotated90or270);
           this.renderBridgeSpan(ctx, dir, screen.x, screen.y, tileSize, theme);
         }
       }
