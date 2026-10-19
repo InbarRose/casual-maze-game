@@ -916,13 +916,13 @@
     "parSteps": 46,
     "parTime": 26,
     "version": 1,
-    "hash": "7b4bc69473278cc093ad6e706cd3034884e53ead3662d9d649c2b059fded6e84",
-    "size": 19248,
+    "hash": "ccffbb60a8b1eb20804ec9fdd702971e54cc231b9ccb1821964a0320dd2c130c",
+    "size": 20805,
     "dimensions": {
       "width": 27,
       "height": 27
     },
-    "entityCount": 5,
+    "entityCount": 10,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -937,13 +937,13 @@
     "parSteps": 181,
     "parTime": 108,
     "version": 1,
-    "hash": "6f1c9e9f13a20c5feeee234be64a62fd5f34d1bcf7c616e020446e7bda4b47d4",
-    "size": 23016,
+    "hash": "dd6db933cab19101bb1d53fc7baab2bf96620c4e016a631210a31053446020df",
+    "size": 23627,
     "dimensions": {
       "width": 29,
       "height": 29
     },
-    "entityCount": 11,
+    "entityCount": 13,
     "hasMultiRoom": false,
     "exitCount": 1
   },
