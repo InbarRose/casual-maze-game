@@ -31,6 +31,10 @@ This document tracks project milestones, current release status, active developm
   - **Compounding Challenge Matrix**: Ensure mechanics carry forward progressively through later chapters (levers, portals, sentinels, timed hazards, cipher puzzles, camera rotation, elevated platforms, and wall walks).
   - **Phased Redesign Roadmaps (`BL-150..154`)**:
     - **Phase 1 (BL-150)**: Chapter 10 (Levels 37–40) — Apex of the Prism Mega-Labyrinth Overhaul.
+      - [x] **Level 37 ("The Spectral Gate", 23x23)**: Reclaimed all 109 dead space blocks ($\text{DeadSpace}_{\ge 4\times 4} = 0$). Added elevated viaduct (`PLATFORM`), refraction focal lever, astral rift portal network, patrolling sentinel, timed spikes, secret room (`SW`), and dual chromatic seals.
+      - [x] **Level 38 ("Concentric Trestles", 25x25)**: Reclaimed all dead space blocks ($\text{DeadSpace}_{\ge 4\times 4} = 0$). Implemented 4 concentric ring galleries with 4 elevated directional trestles (`BRIDGE_NS`, `BRIDGE_EW`) over lower underpasses, wall-top battlement walkway (`WALL_WALK`), battlement focal lever toggling shifting barrier, isolated astral sanctuary with keystone, patroller, timed hazard, and secret chamber.
+      - [ ] **Level 39 ("Harmonic Mirror Seals", 27x27)**: Harmonic mirror seals, resonant cipher tuning, elevated platforms, and zero dead space.
+      - [ ] **Level 40 ("Heart of the Prism", 29x29)**: 4-quadrant sequential macro-puzzle climax with elevated viaducts, sentinels, portals, and apex altar.
     - **Phase 2 (BL-151)**: Chapters 1 & 2 (Levels 1–8) — Foundations & Verticality Overhaul.
     - **Phase 3 (BL-152)**: Chapters 3 & 4 (Levels 9–16) — Clockwork Foundry & Astral Rifts Overhaul.
     - **Phase 4 (BL-153)**: Chapters 5 & 6 (Levels 17–24) — Molten Gauntlets & Arcane Enigmas Overhaul.

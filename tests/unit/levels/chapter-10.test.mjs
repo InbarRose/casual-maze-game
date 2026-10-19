@@ -47,22 +47,30 @@ describe('Levels > Chapter 10 The Prismatic Labyrinth (BL-129)', () => {
     noKey.entities = noKey.entities.filter(e => e.id !== 'key_amber_37');
     assertEqual(solveLevel(noKey), null, 'Level 37 requires amber spectral key');
 
-    // Has secret wall
+    // Has secret wall and compounding mechanics
     const hasSecretWall = l37.layers.ground.some(r => r.includes(TILES.SECRET_WALL));
     assertEqual(hasSecretWall, true, 'Level 37 contains secret wall');
+    const hasPlatforms = l37.layers.overhead.some(r => r.includes(TILES.PLATFORM));
+    assertEqual(hasPlatforms, true, 'Level 37 contains elevated viaduct platforms');
+    const hasTeleporters = l37.entities.some(e => e.type === 'teleporter');
+    assertEqual(hasTeleporters, true, 'Level 37 contains astral rift teleporters');
   });
 
   it('Level 38 (Shō): Concentric Trestles develops multi-elevation bridges over crystalline chasms', () => {
     const sol = solveLevel(l38);
     assert(sol !== null, 'Level 38 must be solvable');
-    assertEqual(sol.length, 95, 'Optimal path is 95 steps');
-    assert(l38.parSteps >= 95, 'Par steps is calibrated over optimal');
+    assertEqual(sol.length, 53, 'Optimal path is 53 steps');
+    assert(l38.parSteps >= 53, 'Par steps is calibrated over optimal');
 
     // Verify directional ramps and overhead bridges exist
-    const hasRamps = l38.layers.ground.some(r => r.includes(TILES.RAMP_E) || r.includes(TILES.RAMP_W));
+    const hasRamps = l38.layers.ground.some(r => r.includes(TILES.RAMP_E) || r.includes(TILES.RAMP_W) || r.includes(TILES.RAMP_S) || r.includes(TILES.RAMP_N));
     assertEqual(hasRamps, true, 'Level 38 contains directional ramps on ground');
-    const hasOverheadBridge = l38.layers.overhead.some(r => r.includes(TILES.BRIDGE_NS));
+    const hasOverheadBridge = l38.layers.overhead.some(r => r.includes(TILES.BRIDGE_NS) || r.includes(TILES.BRIDGE_EW));
     assertEqual(hasOverheadBridge, true, 'Level 38 contains elevated bridge tiles overhead');
+    const hasWallWalk = l38.layers.overhead.some(r => r.includes(TILES.WALL_WALK));
+    assertEqual(hasWallWalk, true, 'Level 38 contains wall-walk battlement tiles');
+    const hasLever = l38.entities.some(e => e.type === 'lever');
+    assertEqual(hasLever, true, 'Level 38 contains battlement focal lever');
   });
 
   it('Level 39 (Ten): Harmonic Mirror Seals introduces resonant tuning and concentric forcefields', () => {
