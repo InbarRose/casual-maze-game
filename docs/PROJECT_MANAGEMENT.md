@@ -95,6 +95,12 @@ This document tracks project milestones, current release status, active developm
   - Phase 3: Chapters 5 & 6 (Levels 17–24) — Molten viaduct bridges over magma fissures/fire vents, basalt ramparts overlooking sentinel patrol loops, and grand library mezzanine wall-walks.
   - Phase 4: Chapters 7, 8 & 9 (Levels 25–36) — High citadel ascent ramparts, 4-way camera perspective overpasses/underpasses, and winding aqueduct canal flumes and reservoir battlements.
   - Phase 5: Campaign-Wide Verification & Zero-Drift Synchronization — 100% passing tests (153 suites, 761 tests passed, 0 failed), 23/23 zero-drift checks passed, $\text{DeadSpace}_{\ge 4\times 4} = 0$ across all 40 levels.
+- [x] **Multi-Target Interaction Mouse Click Selection & DOM Stability (BL-159, ADR-009)**:
+  - Stabilized multi-target interaction disambiguation rendering in `maze.html` by caching `candidatesKey` on floating pill container (`#hud-tile-indicators-container`) and side action drawer (`#hud-disambig-drawer`, `#hud-disambig-list`).
+  - Eliminated 60 FPS DOM button destruction inside `onInteractionAvailable` frame updates: existing pill buttons now update `style.left` and `style.top` in place without recreating elements, allowing uninterrupted pointer click and tap event lifecycles.
+  - Enhanced `handleManualInteract(target)` in both `InteractionDispatcher` and `GameLoop` to support candidate entities, coordinate objects `{ x, y }`, and string identifiers in addition to numeric indices.
+  - Updated canvas pointer click handling (`handleCanvasPointerDown`) to pass the specific adjacent interactable entity `clickedEntity` when clicking directly on adjacent tiles, correctly targeting the clicked element instead of defaulting to candidate 1.
+  - Added automated unit test coverage in `tests/unit/engine/interact-directions-disambiguation.test.mjs`, verifying entity targeting, coordinate targeting, string targeting, and direct canvas pointer down interaction execution.
 
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
