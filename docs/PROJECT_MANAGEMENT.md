@@ -71,7 +71,12 @@ This document tracks project milestones, current release status, active developm
       - [x] **Level 30 ("The Hidden Underpass", 15x15)**: Maintained 0 dead spaces under Fog of War (`fogOfWar: true`). Carved secret underpass drainage cache with Subterranean Aqueduct Pearl (`SW`); optimal: 25 steps.
       - [x] **Level 31 ("The Four-Faced Pillar", 15x15)**: Maintained 0 dead spaces under Fog of War (`fogOfWar: true`). Carved secret pillar core with Eye of the Four Winds (`SW`); optimal: 33 steps.
       - [x] **Level 32 ("The Prismatic Spire", 17x17)**: Maintained 0 dead spaces under Fog of War (`fogOfWar: true`). Carved secret apex alcove with Apex Monolith Core Crystal (`SW`), branching exits contract; optimal: 29 steps.
-- [ ] **Smart Change-Driven Test Runner, Result Caching, CI Domain Splitting, File Modularization & Modular Level Architecture (BL-142, BL-143, BL-144, BL-131..141, ADR-0036, ADR-0037)**:
+- [x] **Multi-Elevation Fog-of-War Line-of-Sight & Ground Wall Occlusion (BL-155, ADR-0040)**:
+  - Enhanced 360-degree raycasting in `FogOfWar.update(...)` to support viewing lower ground corridors and rooms when the player stands on an upper level (`WALL_WALK`, `PLATFORM`, `BRIDGE_*`, `RAMP_*`).
+  - Implemented elevation transition logic along rays: rays cast from upper battlements propagate along connected walkways, descend into lower open ground corridors/rooms marking them `VISIBLE`, and terminate upon hitting ground walls.
+  - Preserved ground wall occlusion so players on upper walkways cannot see through or "over" single walls into rooms beyond.
+  - Added comprehensive unit tests in `tests/unit/engine/fog.test.mjs` verifying upper-to-lower visibility and wall occlusion.
+
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
   - **Modular Level Package Architecture (`BL-143`, ADR-0037)**: Architecture decision and plan for organizing levels into dedicated directories (`manifest.json`, `README.md`, `layers/`, `entities/`, `assets/`) compiled for static zero-backend execution.

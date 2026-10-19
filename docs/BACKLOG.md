@@ -263,6 +263,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-152** | **Chapter 3 & 4 Clockwork Foundry & Astral Rifts Overhaul (Levels 9–16)** | **P1** | `v1.29.0` | Redesign Levels 9–16 to reclaim dead spaces (e.g. 39 voids in L11, 36 in L16), carry forward elevated platforms, wall walks, and underpasses alongside dynamic levers, shifting walls, and astral portals. | **Completed** |
 | **BL-153** | **Chapter 5 & 6 Molten Gauntlet & Arcane Enigmas Overhaul (Levels 17–24)** | **P1** | `v1.29.0` | Redesign Levels 17–24 to reclaim dead spaces, compound patrolling sentinels and timed flame/spike hazards with cipher dials, memory seals, elevated bridges, and dynamic levers. | **Completed** |
 | **BL-154** | **Chapter 7 & 8 Trials of Ascent & The Monolith Overhaul (Levels 25–32)** | **P1** | `v1.29.0` | Redesign Levels 25–32 to reclaim dead spaces (e.g. 42 voids in L27), combine 3D camera rotation underpasses with high-altitude ramparts, patrolling sentinels, timed hazards, and dynamic levers. | **Completed** |
+| **BL-155** | **Multi-Elevation Fog-of-War Line-of-Sight & Ground Wall Occlusion** | **P0** | `v1.29.0` | Enhance `FogOfWar.update(...)` to illuminate adjacent and nearby lower ground rooms/halls when player is on an upper level (elevated battlements `WALL_WALK`, `PLATFORM`, `BRIDGE_*`), stopping rays at facing ground walls without seeing over or through walls into rooms beyond (ADR-0040). | **Completed** |
 
 ---
 

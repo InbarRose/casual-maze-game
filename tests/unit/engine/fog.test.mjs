@@ -79,4 +79,50 @@ describe('Engine > FogOfWar', () => {
       }
     }
   });
+
+  it('illuminates adjacent lower halls from an upper-level battlement without seeing over walls (BL-146, ADR-0038)', () => {
+    // 15x15 map
+    // y=7 is a wall line from x=0 to 14
+    // On that wall line, x=4..10 has overhead WALL_WALK
+    // Lower rooms/halls are on North (y=5, 6) and South (y=8, 9)
+    // An occluding ground wall is at y=4 (blocking further North)
+    const testGround = Array.from({ length: height }, () => Array(width).fill(0));
+    const testOverhead = Array.from({ length: height }, () => Array(width).fill(0));
+
+    // Ground wall at y=7
+    for (let x = 0; x < width; x++) {
+      testGround[7][x] = 1;
+    }
+    // Overhead WALL_WALK at y=7, x=4..10
+    for (let x = 4; x <= 10; x++) {
+      testOverhead[7][x] = 'WALL_WALK';
+    }
+    // Ground wall at y=4 from x=4..10 (occluding wall further North)
+    for (let x = 4; x <= 10; x++) {
+      testGround[4][x] = 1;
+    }
+
+    const fog = new FogOfWar(width, height);
+    // Player is at x=7, y=7 on upper elevation (playerElevation = 1)
+    fog.update(7, 7, 1, testGround, testOverhead, 5);
+
+    // 1. Player tile and walkway tiles along the battlement are VISIBLE
+    assertEqual(fog.getVisibility(7, 7), FOG_STATE.VISIBLE, 'Walkway tile under player is VISIBLE');
+    assertEqual(fog.getVisibility(6, 7), FOG_STATE.VISIBLE, 'Adjacent walkway west is VISIBLE');
+    assertEqual(fog.getVisibility(8, 7), FOG_STATE.VISIBLE, 'Adjacent walkway east is VISIBLE');
+
+    // 2. Adjacent lower halls (y=6 North, y=8 South) are VISIBLE looking down
+    assertEqual(fog.getVisibility(7, 6), FOG_STATE.VISIBLE, 'Adjacent lower hall North (y=6) is VISIBLE');
+    assertEqual(fog.getVisibility(7, 5), FOG_STATE.VISIBLE, 'Lower hall North (y=5) is VISIBLE');
+    assertEqual(fog.getVisibility(7, 8), FOG_STATE.VISIBLE, 'Adjacent lower hall South (y=8) is VISIBLE');
+    assertEqual(fog.getVisibility(7, 9), FOG_STATE.VISIBLE, 'Lower hall South (y=9) is VISIBLE');
+
+    // 3. Occluding ground wall at y=4 is VISIBLE
+    assertEqual(fog.getVisibility(7, 4), FOG_STATE.VISIBLE, 'North ground wall face (y=4) is VISIBLE');
+
+    // 4. Room beyond ground wall at y=3, y=2 must NOT be seen through/over (occluded, UNEXPLORED)
+    assertEqual(fog.getVisibility(7, 3), FOG_STATE.UNEXPLORED, 'Room behind ground wall (y=3) is occluded in shadow');
+    assertEqual(fog.getVisibility(7, 2), FOG_STATE.UNEXPLORED, 'Room further behind ground wall (y=2) is occluded');
+  });
 });
+
