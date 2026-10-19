@@ -208,7 +208,7 @@
       ],
       [
         1,
-        0,
+        7,
         0,
         0,
         0,
@@ -537,6 +537,16 @@
       "playerDialogue": "The vents pulse periodically. I can harbor in the side niches.",
       "x": 2,
       "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "gem_molten_core_17",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Molten Core Shard",
+      "scoreValue": 200,
+      "x": 2,
+      "y": 11,
       "elevation": 0
     }
   ]
