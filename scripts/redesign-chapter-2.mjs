@@ -72,6 +72,13 @@ export function generateLevel5() {
     overhead[y][7] = 'B_EW';
   }
 
+  // Elevated Wall-Walk battlements connecting to the bridge along walls of row 5 & 7
+  // Allows the player to walk off the bridge onto wall ramparts to scout lower canals
+  for (const x of [5, 6, 8, 9]) {
+    overhead[5][x] = 'WW';
+    overhead[7][x] = 'WW';
+  }
+
   // High Key at (7, 6, z=1)
   // North ramp: at (7, 3) sloping UP towards South, so descending North exits to (7, 2)
   ground[3][7] = 'R_S';
@@ -243,6 +250,13 @@ export function generateLevel6() {
   // Overhead bridge deck: x=8, y=4..10
   for (let y = 4; y <= 10; y++) {
     overhead[y][8] = 'B_EW';
+  }
+
+  // Elevated Wall-Walk battlements connecting to the bridge along walls of row 6 & 8
+  // Allows the player to walk off the bridge onto wall ramparts overlooking lower glen
+  for (const x of [6, 7, 9, 10]) {
+    overhead[6][x] = 'WW';
+    overhead[8][x] = 'WW';
   }
 
   // Northern ramp descending North from bridge at (8, 3)
@@ -418,6 +432,12 @@ export function generateLevel7() {
   // Bridge 1: y=5, x=5..11 on overhead (`B_NS`)
   for (let x = 5; x <= 11; x++) {
     overhead[5][x] = 'B_NS';
+  }
+
+  // Elevated Wall-Walk battlements connecting Bridge 1 to canyon walls:
+  for (const y of [4, 6]) {
+    overhead[y][6] = 'WW';
+    overhead[y][10] = 'WW';
   }
 
   // Underpass beneath Bridge 1: North-South canal at x=8, y=1..13 on ground
@@ -617,6 +637,12 @@ export function generateLevel8() {
   // West Bridge overhead deck: x=5, y=5..11 (`B_EW`)
   for (let y = 5; y <= 11; y++) {
     overhead[y][5] = 'B_EW';
+  }
+
+  // Elevated Wall-Walk parapets connecting West Bridge to citadel fortress walls
+  for (const x of [3, 4]) {
+    overhead[6][x] = 'WW';
+    overhead[10][x] = 'WW';
   }
 
   // West Bridge North Ramp at (5, 4) descending North onto ground at (5, 3)
