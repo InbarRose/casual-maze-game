@@ -53,6 +53,16 @@ export function generateLevel9() {
   g[11][5] = 0; g[11][6] = 0; g[11][7] = 0;
   g[9][5] = 'SW';
 
+  // Introduce 3D verticality: elevated foundry catwalk across row 3 overlooking central gear pit
+  // Stairs up at (4, 4) from ground (4, 5) onto wall-walk (4, 3) and catwalk bridge (5..7, 3)
+  g[4][4] = 'R_N';
+  level.layers.overhead[3][4] = 'WW';
+  level.layers.overhead[3][5] = 'PLATFORM';
+  level.layers.overhead[3][6] = 'PLATFORM';
+  level.layers.overhead[3][7] = 'PLATFORM';
+  level.layers.overhead[3][8] = 'WW';
+  g[4][8] = 'R_N'; // Stairs down at (8, 4) to ground (8, 5)
+
   // Add secret collectible
   if (!level.entities.some(e => e.id === 'secret_gear_9')) {
     level.entities.push({
@@ -96,6 +106,13 @@ export function generateLevel10() {
   g[13][13] = 0; g[13][14] = 0;
   g[9][14] = 'SW'; // Secret wall from (14, 8) into east steam vault
 
+  // Introduce 3D verticality: overhead inspection bridge across row 5 overlooking dual valves
+  level.layers.overhead[5][7] = 'WW';
+  level.layers.overhead[5][8] = 'PLATFORM';
+  level.layers.overhead[5][9] = 'WW';
+  g[6][7] = 'R_N';
+  g[6][9] = 'R_N';
+
   // Add secret collectibles
   if (!level.entities.some(e => e.id === 'secret_valve_10')) {
     level.entities.push({
@@ -127,6 +144,15 @@ export function generateLevel11() {
   }
   g[7][4] = 0; g[10][4] = 0; g[13][4] = 0;
   g[6][2] = 'SW'; // Secret wall from (2, 5) into counterweight basement
+
+  // Introduce 3D verticality: overhead counterweight gantry across row 5
+  level.layers.overhead[5][6] = 'WW';
+  level.layers.overhead[5][7] = 'PLATFORM';
+  level.layers.overhead[5][8] = 'PLATFORM';
+  level.layers.overhead[5][9] = 'PLATFORM';
+  level.layers.overhead[5][10] = 'WW';
+  g[6][6] = 'R_N';
+  g[6][10] = 'R_N';
 
   // Add secret collectible
   if (!level.entities.some(e => e.id === 'secret_counterweight_11')) {
@@ -175,6 +201,15 @@ export function generateLevel12() {
   g[14][14] = 0; g[14][16] = 0;
   g[15][14] = 0; g[15][15] = 0; g[15][16] = 0;
   g[12][16] = 'SW';
+
+  // Introduce 3D verticality: elevated dynamo inspection ramparts overlooking turbine
+  level.layers.overhead[6][7] = 'WW';
+  level.layers.overhead[6][8] = 'PLATFORM';
+  level.layers.overhead[6][9] = 'PLATFORM';
+  level.layers.overhead[6][10] = 'PLATFORM';
+  level.layers.overhead[6][11] = 'WW';
+  g[7][7] = 'R_N';
+  g[7][11] = 'R_N';
 
   // Add secret collectible
   if (!level.entities.some(e => e.id === 'secret_dynamo_12')) {
