@@ -169,7 +169,7 @@
         0,
         0,
         1,
-        1,
+        0,
         1,
         0,
         0,
@@ -186,7 +186,7 @@
         0,
         0,
         1,
-        1,
+        7,
         1,
         0,
         0,
@@ -622,6 +622,16 @@
       "x": 6,
       "y": 7,
       "facing": "west",
+      "elevation": 0
+    },
+    {
+      "id": "gem_four_winds_eye_31",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Eye of the Four Winds",
+      "scoreValue": 250,
+      "x": 7,
+      "y": 7,
       "elevation": 0
     }
   ]

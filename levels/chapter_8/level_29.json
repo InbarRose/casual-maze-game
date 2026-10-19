@@ -135,7 +135,7 @@
         1,
         0,
         0,
-        0,
+        7,
         0,
         0,
         1,
@@ -152,7 +152,7 @@
         1,
         0,
         0,
-        1,
+        0,
         0,
         0,
         1,
@@ -619,6 +619,16 @@
       "color": "#38bdf8",
       "x": 13,
       "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "gem_cardinal_compass_29",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Lodestone Cardinal Needle",
+      "scoreValue": 200,
+      "x": 7,
+      "y": 6,
       "elevation": 0
     }
   ]
