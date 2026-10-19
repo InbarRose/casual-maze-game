@@ -88,13 +88,13 @@ This document tracks project milestones, current release status, active developm
   - Integrated hazards and secrets: timed spike traps at deceptive dead-end spurs, patrolling sentinels with evasion alcoves, secret walls (`SW`) guarding high-value gems, and multi-tier viaduct bridges over underpasses.
   - Calibrated optimal solution step lengths and par ratings: Level 37 (75 steps, par 87), Level 38 (81 steps, 40 elevated, par 94), Level 39 (76 steps, par 88), Level 40 (165 steps, par 190).
   - Verified 100% solvability, zero bypass gating, zero dead space $\ge 4\times 4$ ($\text{DeadSpace}_{\ge 4\times 4} = 0$), and 100% passing tests (153 suites, 761 tests).
-- [ ] **Campaign-Wide True Maze Topology & 3D Multi-Elevation Redesign (BL-158, ADR-0043)**:
-  - Extend authentic labyrinth topology and 3D elevation traversal across all 10 chapters (Levels 1–40).
-  - Phase 1: Chapters 1 & 2 (Levels 1–8) — Replace square rooms with organic winding labyrinths, weave wall-walk ramparts and 3D underpass bridges.
-  - Phase 2: Chapters 3 & 4 (Levels 9–16) — Dynamic clockwork levers and vertical astral rifts across labyrinth corridors.
-  - Phase 3: Chapters 5 & 6 (Levels 17–24) — Molten viaducts over magma fissures, timed hazards at dead ends, and library mezzanine wall-walks.
-  - Phase 4: Chapters 7, 8 & 9 (Levels 25–36) — Citadel ascent ramparts, 4-way camera perspective overpasses, and winding aqueduct canals.
-  - Phase 5: Campaign-Wide Verification & Zero-Drift Synchronization.
+- [x] **Campaign-Wide True Maze Topology & 3D Multi-Elevation Redesign (BL-158, ADR-0043)**:
+  - Extended authentic labyrinth topology and 3D elevation traversal across all 10 chapters (Levels 1–40).
+  - Phase 1: Chapters 1 & 2 (Levels 1–8) — Replaced square rooms with organic winding labyrinths, directional inertia ($\ge 70\%$), wall-walk battlements (`WW`), and 3D underpass bridges (`PLATFORM`, `B_EW`, `B_NS`).
+  - Phase 2: Chapters 3 & 4 (Levels 9–16) — Dynamic clockwork inspection catwalks and vertical astral skybridges across winding labyrinth corridors.
+  - Phase 3: Chapters 5 & 6 (Levels 17–24) — Molten viaduct bridges over magma fissures/fire vents, basalt ramparts overlooking sentinel patrol loops, and grand library mezzanine wall-walks.
+  - Phase 4: Chapters 7, 8 & 9 (Levels 25–36) — High citadel ascent ramparts, 4-way camera perspective overpasses/underpasses, and winding aqueduct canal flumes and reservoir battlements.
+  - Phase 5: Campaign-Wide Verification & Zero-Drift Synchronization — 100% passing tests (153 suites, 761 tests passed, 0 failed), 23/23 zero-drift checks passed, $\text{DeadSpace}_{\ge 4\times 4} = 0$ across all 40 levels.
 
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
