@@ -1,6 +1,7 @@
 /**
- * Complete Redesign and Solver Calibration for Chapter 10: Levels 37 & 38
- * Implements BL-150 and ADR-0039 (Zero Dead Space, Compounding Mechanics)
+ * Complete Labyrinth Topology Redesign and Solver Calibration for Chapter 10: Levels 37–40
+ * Implements BL-157 and ADR-0042 (True Maze Topology & Labyrinthine Redesign Standard)
+ * Zero Dead Space >= 4x4, Compounding Mechanics, 3D Multi-Elevation Bridges, Battlements & Tunnels
  */
 
 import fs from 'fs';
@@ -42,6 +43,135 @@ export function checkZeroDeadSpace4x4(ground, overhead, width, height, levelId) 
   }
 }
 
+/**
+ * Carves an authentic labyrinth sector using DFS with directional inertia and braid.
+ * Produces long, organic corridors with 90-degree turns, forks, and dead ends.
+ */
+export function buildLabyrinthSector(ground, minX, minY, maxX, maxY, prngSeed, inertia = 0.70, braid = 0.20, reservedSet = new Set()) {
+  let s = prngSeed;
+  function random() {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  }
+
+  const oddCoords = [];
+  for (let y = minY; y <= maxY; y += 2) {
+    for (let x = minX; x <= maxX; x += 2) {
+      if (!reservedSet.has(`${x},${y}`)) {
+        oddCoords.push([x, y]);
+      }
+    }
+  }
+
+  if (oddCoords.length === 0) return;
+
+  const visited = new Set();
+  function k(x, y) { return `${x},${y}`; }
+
+  const start = oddCoords[0];
+  const stack = [[start[0], start[1]]];
+  visited.add(k(start[0], start[1]));
+  ground[start[1]][start[0]] = 0;
+
+  const DIRS = [
+    { dx: 0, dy: -2 },
+    { dx: 2, dy: 0 },
+    { dx: 0, dy: 2 },
+    { dx: -2, dy: 0 }
+  ];
+
+  let lastDir = null;
+
+  while (stack.length > 0) {
+    const [cx, cy] = stack[stack.length - 1];
+
+    const neighbors = [];
+    for (const d of DIRS) {
+      const nx = cx + d.dx;
+      const ny = cy + d.dy;
+      const mx = cx + d.dx / 2;
+      const my = cy + d.dy / 2;
+      if (
+        nx >= minX && nx <= maxX &&
+        ny >= minY && ny <= maxY &&
+        !reservedSet.has(k(nx, ny)) &&
+        !reservedSet.has(k(mx, my)) &&
+        !visited.has(k(nx, ny))
+      ) {
+        neighbors.push({ ...d, nx, ny, mx, my });
+      }
+    }
+
+    if (neighbors.length === 0) {
+      stack.pop();
+      lastDir = null;
+      continue;
+    }
+
+    let chosen = null;
+    if (lastDir && random() < inertia) {
+      const same = neighbors.find(n => n.dx === lastDir.dx && n.dy === lastDir.dy);
+      if (same) chosen = same;
+    }
+
+    if (!chosen) {
+      chosen = neighbors[Math.floor(random() * neighbors.length)];
+    }
+
+    lastDir = { dx: chosen.dx, dy: chosen.dy };
+
+    ground[chosen.my][chosen.mx] = 0;
+    ground[chosen.ny][chosen.nx] = 0;
+
+    visited.add(k(chosen.nx, chosen.ny));
+    stack.push([chosen.nx, chosen.ny]);
+  }
+
+  // Connect any unvisited odd cells in this sector
+  for (const [ox, oy] of oddCoords) {
+    if (!visited.has(k(ox, oy))) {
+      const candidates = [];
+      for (const d of DIRS) {
+        const nx = ox + d.dx;
+        const ny = oy + d.dy;
+        const mx = ox + d.dx / 2;
+        const my = oy + d.dy / 2;
+        if (visited.has(k(nx, ny)) && !reservedSet.has(k(mx, my))) {
+          candidates.push({ ...d, nx, ny, mx, my });
+        }
+      }
+      if (candidates.length > 0) {
+        const c = candidates[Math.floor(random() * candidates.length)];
+        ground[oy][ox] = 0;
+        ground[c.my][c.mx] = 0;
+        visited.add(k(ox, oy));
+      }
+    }
+  }
+
+  // Braid phase (selective loop creation)
+  for (const [ox, oy] of oddCoords) {
+    const walls = [];
+    for (const d of DIRS) {
+      const mx = ox + d.dx / 2;
+      const my = oy + d.dy / 2;
+      const nx = ox + d.dx;
+      const ny = oy + d.dy;
+      if (
+        nx >= minX && nx <= maxX && ny >= minY && ny <= maxY &&
+        !reservedSet.has(k(mx, my)) && !reservedSet.has(k(nx, ny)) &&
+        ground[my][mx] === 1 && ground[ny][nx] === 0
+      ) {
+        walls.push([mx, my]);
+      }
+    }
+    if (walls.length > 0 && random() < braid) {
+      const [wx, wy] = walls[Math.floor(random() * walls.length)];
+      ground[wy][wx] = 0;
+    }
+  }
+}
+
 // ---------------------------------------------------------------------------
 // LEVEL 37: "The Spectral Gate" (23x23)
 // ---------------------------------------------------------------------------
@@ -51,134 +181,127 @@ export function generateLevel37() {
   const ground = Array.from({ length: height }, () => Array(width).fill(1));
   const overhead = Array.from({ length: height }, () => Array(width).fill(0));
 
-  // Helper to carve paths
-  function carve(coords) {
-    for (const [x, y] of coords) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        ground[y][x] = 0;
-      }
-    }
-  }
+  const reserved = new Set();
+  function reserve(x, y) { reserved.add(`${x},${y}`); }
 
-  // 1. QUADRANT 1 (NW: Spawn & Western Gallery)
-  // Winding corridors to eliminate dead space in x: 1..10, y: 1..10
-  // 1. QUADRANT 1 (NW: Spawn & Amber Key Vault)
-  // Outer boundary x=0, y=0 are walls. Dividing wall at x=11.
-  carve([
-    // Spawn lane
-    [1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1], [7, 1], [8, 1], [9, 1], [10, 1],
-    [1, 2], [5, 2], [10, 2],
-    [1, 3], [2, 3], [3, 3], [5, 3], [6, 3], [7, 3], [8, 3], [10, 3],
-    [3, 4], [8, 4], [10, 4],
-    [1, 5], [2, 5], [3, 5], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5], [10, 5],
-    [1, 6], [5, 6], [10, 6],
-    // Amber key chamber & approach at (3, 7)
-    [1, 7], [2, 7], [3, 7], [5, 7], [6, 7], [7, 7], [8, 7], [9, 7], [10, 7],
-    [1, 8], [5, 8], [8, 8],
-    [1, 9], [2, 9], [3, 9], [4, 9], [5, 9], [6, 9], [7, 9], [8, 9], [9, 9], [10, 9],
-    // Path leading directly to Amber Door at (5, 11)
-    [3, 10], [4, 10], [5, 10]
-  ]);
-
-  // Amber Door at (5, 11) is the ONLY passage through row 11
-  ground[11][5] = 0;
-
-  // 2. QUADRANT 2 (SW: Sentinel Gauntlet, Secret Sanctuary & Rift Portal A)
-  carve([
-    // Entry from Amber Door into SW sector
-    [5, 12], [4, 12], [3, 12], [2, 12], [1, 12],
-    [1, 13], [5, 13], [8, 13],
-    [1, 14], [2, 14], [3, 14], [4, 14], [5, 14], [6, 14], [7, 14], [8, 14], [9, 14], [10, 14],
-    [3, 15], [7, 15], [10, 15],
-    [1, 16], [2, 16], [3, 16], [4, 16], [5, 16], [6, 16], [7, 16], [8, 16], [9, 16], [10, 16],
-    // Patroller track at y = 17
-    [1, 17], [2, 17], [3, 17], [4, 17], [5, 17], [6, 17], [7, 17], [8, 17], [9, 17], [10, 17],
-    [1, 18], [5, 18], [10, 18],
-    [1, 19], [2, 19], [3, 19], [4, 19], [5, 19], [6, 19], [7, 19], [8, 19], [9, 19], [10, 19],
-    [1, 20], [3, 20], [7, 20], [10, 20],
-    [1, 21], [2, 21], [3, 21], [4, 21], [5, 21], [6, 21], [7, 21], [8, 21], [9, 21], [10, 21],
-  ]);
-
-  // Secret Wall at (1, 19) leading to secret room at (1, 20)
-  ground[19][1] = TILES.SECRET_WALL;
-
-  // 3. SE SEALED CRYPT (Reachable ONLY via Portal Alpha -> Beta)
-  // Enclosed in x: 13..21, y: 13..21 (completely surrounded by walls on all sides)
-  carve([
-    [14, 14], [15, 14], [16, 14], [17, 14], [18, 14], [19, 14], [20, 14], [21, 14],
-    [14, 15], [18, 15], [21, 15],
-    [14, 16], [15, 16], [16, 16], [17, 16], [18, 16], [19, 16], [20, 16], [21, 16],
-    [14, 17], [17, 17], [21, 17],
-    [14, 18], [15, 18], [16, 18], [17, 18], [18, 18], [19, 18], [20, 18], [21, 18],
-    [14, 19], [18, 19], [21, 19],
-    [14, 20], [15, 20], [16, 20], [17, 20], [18, 20], [19, 20], [20, 20], [21, 20],
-    [14, 21], [15, 21], [16, 21], [17, 21], [18, 21], [19, 21], [20, 21], [21, 21],
-  ]);
-  // Violet Key is in SE Crypt at (17, 18)
-  // Portal B entrance at (15, 14), Portal B exit at (13, 8)
-
-  // 4. CENTRAL VIADUCT & REFRACTION LEVER
-  // Return portal from SE Crypt drops player at (13, 8)
-  carve([
-    [13, 8], [13, 7],
-    // Ramp up at (14, 7) enters from (13, 7) at elevation 0
-  ]);
-
-  // Elevated Viaduct:
-  // Ramp at (14, 7) RAMP_E enters from (13, 7) at elevation 0, reaches (15, 7) at elevation 1
-  ground[7][14] = TILES.RAMP_E;
-  overhead[7][15] = TILES.PLATFORM;
-  overhead[7][16] = TILES.PLATFORM;
-  // Ramp down at (17, 7) RAMP_W enters from (18, 7) at elevation 0, reaches (16, 7) at elevation 1
-  ground[7][17] = TILES.RAMP_W;
-
-  // 5. NE EXIT WING (Guarded by Shifting Barrier at (18, 6) and Violet Door at (21, 5))
-  carve([
-    // Landing from viaduct ramp at (18, 7)
-    [18, 7],
-    // Path through shifting barrier at (18, 6)
-    [18, 6], [18, 5],
-    // Behind shifting barrier (x >= 18, y <= 5)
-    [19, 5], [20, 5],
-    [18, 4], [19, 4],
-    [18, 3], [19, 3],
-    [18, 2], [19, 2],
-    [18, 1], [19, 1],
-    // Violet door at (21, 5) leading to exit at (21, 1)
-    // NOTE: Column 20 at y: 1..4 is SOLID WALL (1) to prevent bypassing door at (21, 5)!
-    [21, 5], [21, 4], [21, 3], [21, 2], [21, 1],
-    // Side corridors in lower NE wing to eliminate dead space
-    [12, 1], [13, 1], [14, 1], [15, 1], [16, 1],
-    [12, 2], [14, 2], [16, 2],
-    [12, 3], [13, 3], [14, 3], [15, 3], [16, 3],
-    [12, 4], [14, 4], [16, 4],
-    [12, 9], [13, 9], [14, 9], [15, 9], [16, 9], [17, 9], [18, 9], [19, 9], [20, 9], [21, 9],
-    [13, 10], [17, 10], [21, 10],
-    [12, 11], [13, 11], [14, 11], [15, 11], [16, 11], [17, 11], [18, 11], [19, 11], [20, 11], [21, 11],
-    [12, 12], [13, 12], [17, 12], [21, 12],
-    [12, 13], [13, 13], [14, 13], [15, 13], [16, 13], [17, 13], [18, 13], [19, 13], [20, 13], [21, 13],
-  ]);
-
-  // Ensure Column 20 from y=1 to y=4 is solid wall (1)
-  ground[1][20] = 1;
-  ground[2][20] = 1;
-  ground[3][20] = 1;
-  ground[4][20] = 1;
-
-  // Ensure Column 11 is solid wall from y=1 to y=21
+  // Dividing Walls:
+  // Column 11 is solid wall separating West and East
   for (let y = 1; y <= 21; y++) {
     ground[y][11] = 1;
+    reserve(11, y);
   }
-  // Ensure Row 11 is solid wall from x=1 to x=10 except x=5
+  // Row 11 is solid wall separating NW and SW (x: 1..10)
   for (let x = 1; x <= 10; x++) {
-    if (x !== 5) ground[11][x] = 1;
+    ground[11][x] = 1;
+    reserve(x, 11);
+  }
+  // Amber Door at (5, 11) is the ONLY passage through row 11
+  ground[11][5] = 0;
+  reserve(5, 11);
+
+  // SE Crypt (x: 13..21, y: 13..21) is surrounded by solid walls:
+  for (let y = 13; y <= 21; y++) {
+    ground[y][12] = 1; reserve(12, y); // west wall
+  }
+  for (let x = 12; x <= 21; x++) {
+    ground[13][x] = 1; reserve(x, 13); // north wall
   }
 
-  // Initial state of Shifting Barrier at (18, 6): solid wall (1)
-  ground[6][18] = 1;
-  // Ensure (19, 7) and (18, 8) are walls
-  ground[7][19] = 1;
-  ground[8][18] = 1;
+  // Central Viaduct & Refraction Lever
+  // Landing from Astral Rift Beta is at (13, 8)
+  ground[8][13] = 0; reserve(13, 8);
+  ground[7][13] = 0; reserve(13, 7);
+  // Viaduct Ramp East at (14, 7) enters from (13, 7) at elevation 0
+  ground[7][14] = TILES.RAMP_E; reserve(14, 7);
+  overhead[7][15] = TILES.PLATFORM; reserve(15, 7);
+  overhead[7][16] = TILES.PLATFORM; reserve(16, 7);
+  // Ramp West at (17, 7) descends to (18, 7) at elevation 0
+  ground[7][17] = TILES.RAMP_W; reserve(17, 7);
+  ground[7][18] = 0; reserve(18, 7);
+
+  // Shifting Barrier at (18, 6) blocking path to Violet Door
+  ground[6][18] = 1; reserve(18, 6);
+  ground[5][18] = 0; reserve(18, 5);
+  // Block bypass around barrier:
+  ground[7][19] = 1; reserve(19, 7);
+  ground[8][18] = 1; reserve(18, 8);
+  ground[6][19] = 1; reserve(19, 6);
+  // Violet Door at (21, 5) leading to exit at (21, 1)
+  ground[5][21] = 0; reserve(21, 5);
+  // Column 20 wall from y=1 to 4 prevents bypassing Violet Door:
+  for (let y = 1; y <= 4; y++) {
+    ground[y][20] = 1; reserve(20, y);
+  }
+  // Exit lane at (21, 1..4):
+  for (let y = 1; y <= 4; y++) {
+    ground[y][21] = 0; reserve(21, y);
+  }
+
+  // Secret Wall at (1, 19) in SW leading to Gem at (1, 20)
+  ground[19][1] = TILES.SECRET_WALL; reserve(1, 19);
+  ground[20][1] = 0; reserve(1, 20);
+
+  // Key / Portal locations:
+  // Amber Key at (3, 7) in NW
+  ground[7][3] = 0; reserve(3, 7);
+  // Violet Key at (17, 18) in SE Crypt
+  ground[18][17] = 0; reserve(17, 18);
+  // Portal Alpha at (3, 21) in SW
+  ground[21][3] = 0; reserve(3, 21);
+  // Portal Alpha target in SE Crypt at (19, 21)
+  ground[21][19] = 0; reserve(19, 21);
+  // Portal Beta in SE Crypt at (15, 14)
+  ground[14][15] = 0; reserve(15, 14);
+
+  // Carve 5 Organic Labyrinth Sectors:
+  // 1. NW Sector: x: 1..9, y: 1..9
+  buildLabyrinthSector(ground, 1, 1, 9, 9, 103701, 0.70, 0.20, reserved);
+  // 2. SW Sector: x: 1..9, y: 13..21
+  buildLabyrinthSector(ground, 1, 13, 9, 21, 103702, 0.70, 0.20, reserved);
+  // 3. SE Crypt: x: 13..21, y: 15..21
+  buildLabyrinthSector(ground, 13, 15, 21, 21, 103703, 0.70, 0.20, reserved);
+  // 4. Upper NE Sector: x: 13..19, y: 1..5
+  buildLabyrinthSector(ground, 13, 1, 19, 5, 103704, 0.70, 0.20, reserved);
+  // 5. Lower NE Sector: x: 13..21, y: 9..12
+  buildLabyrinthSector(ground, 13, 9, 21, 12, 103705, 0.70, 0.20, reserved);
+
+  // Connect (13, 8) to lower NE sector at (13, 9)
+  ground[9][13] = 0;
+
+  // Connect doors, spawns, and passages cleanly:
+  // Spawn (1, 1) is carved
+  ground[1][1] = 0;
+  // Amber Door at (5, 11): connect from NW (5, 10) and to SW (5, 12)
+  ground[10][5] = 0;
+  ground[12][5] = 0;
+  // Connect (5, 12) to SW labyrinth at (5, 13)
+  ground[13][5] = 0;
+  // Connect (5, 10) to NW labyrinth at (5, 9)
+  ground[9][5] = 0;
+
+  // Connect Amber Key at (3, 7) to NW corridor
+  ground[7][2] = 0;
+  ground[7][4] = 0;
+
+  // Connect Portal Alpha at (3, 21) to SW labyrinth
+  ground[20][3] = 0;
+  // Connect Portal Alpha target at (19, 21) to SE Crypt
+  ground[20][19] = 0;
+  // Connect Portal Beta at (15, 14) to SE Crypt
+  ground[15][15] = 0;
+
+  // Connect Shifting Barrier at (18, 6) to NE labyrinth
+  ground[5][19] = 0;
+  ground[5][20] = 0;
+
+  // Ensure col 10 (even col) has passages to prevent dead space in NW:
+  ground[1][10] = 0;
+  ground[5][10] = 0;
+  ground[9][10] = 0;
+  // In SW col 10:
+  ground[14][10] = 0;
+  ground[18][10] = 0;
+  ground[21][10] = 0;
 
   const entities = [
     {
@@ -232,8 +355,8 @@ export function generateLevel37() {
       elevation: 0,
       speed: 1.0,
       waypoints: [
-        { x: 6, y: 17 },
-        { x: 10, y: 17 }
+        { x: 5, y: 17 },
+        { x: 9, y: 17 }
       ]
     },
     {
@@ -353,17 +476,14 @@ export function generateLevel37() {
       label: "Refraction Chamber",
       wallDirection: "north"
     },
-    parSteps: 80,
-    parTime: 50,
+    parSteps: 87,
+    parTime: 55,
     architectNote: "The refracting crystal prisms cast elusive shadows. Locate the amber key, ascend the viaduct to toggle the refraction barrier, and unseal the spectral gate.",
     help: {
       title: "Level 37: The Spectral Gate",
       message: "The way forward is locked by dual crystal seals and chromatic barriers. Use the elevated viaduct to reach the focal lever."
     },
-    layers: {
-      ground,
-      overhead
-    },
+    layers: { ground, overhead },
     entities
   };
 }
@@ -377,80 +497,53 @@ export function generateLevel38() {
   const ground = Array.from({ length: height }, () => Array(width).fill(1));
   const overhead = Array.from({ length: height }, () => Array(width).fill(0));
 
-  function carve(coords) {
-    for (const [x, y] of coords) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        ground[y][x] = 0;
-      }
-    }
-  }
+  const reserved = new Set();
+  function reserve(x, y) { reserved.add(`${x},${y}`); }
 
-  // 1. Concentric Ring Corridors (r = 1, 3, 5, 7, 9)
-  for (const r of [1, 3, 5, 7, 9]) {
-    const min = r;
-    const max = 24 - r;
-    for (let x = min; x <= max; x++) {
-      ground[min][x] = 0;
-      ground[max][x] = 0;
-    }
-    for (let y = min; y <= max; y++) {
-      ground[y][min] = 0;
-      ground[y][max] = 0;
-    }
-  }
-
-  // Inner Sanctum (x: 11..13, y: 11..13)
-  for (let y = 11; y <= 13; y++) {
-    for (let x = 11; x <= 13; x++) {
-      ground[y][x] = 0;
-    }
-  }
-
-  // Ring cut-throughs (South & East quadrants; NW quadrant closed on ground to make elevated traversal mandatory)
-  carve([
-    [1, 2], [2, 2], [23, 2],
-    [22, 5], [22, 19],
-    [5, 22], [19, 22],
-    [20, 7], [20, 17],
-    [17, 4], [7, 20], [17, 20],
-    [18, 9], [18, 15],
-    [15, 6], [9, 18], [15, 18],
-    [16, 11], [16, 13],
-    [13, 8], [11, 16], [13, 16]
-  ]);
-
-  // Cardinal spokes
-  carve([[12, 1], [12, 2]]);
-  carve([[12, 23], [12, 22], [12, 21]]);
-  carve([[23, 12], [22, 12], [21, 12], [20, 12]]);
-
-  // Inner Sanctum Doorway at (12, 10):
-  ground[10][12] = 0;
-
-  // 2. High Wall-Walk Battlement atop Wall Ring 1 (North wall y=2, x: 4..20)
+  // 1. High Wall-Walk Battlement atop Wall Ring (North wall y=2, x: 4..20)
   // Ascend from (2, 2) on ground via RAMP_E at (3, 2)
+  ground[2][2] = 0; // ground approach
   ground[2][3] = TILES.RAMP_E;
+  reserve(2, 2);
+  reserve(3, 2);
   for (let x = 4; x <= 20; x++) {
-    overhead[2][x] = TILES.WALL_WALK;
+    if (x === 15) {
+      overhead[2][x] = TILES.BRIDGE_EW;
+      ground[2][x] = 0; // underpass tunnel below battlement!
+    } else {
+      overhead[2][x] = TILES.WALL_WALK;
+      ground[2][x] = 1; // solid wall below
+      reserve(x, 2);
+    }
   }
   // Eastern Battlement turning south atop x=20 (y: 3..14)
   for (let y = 3; y <= 14; y++) {
-    overhead[y][20] = TILES.WALL_WALK;
+    if (y === 8) {
+      overhead[y][20] = TILES.BRIDGE_NS;
+      ground[y][20] = 0; // underpass tunnel below battlement!
+    } else {
+      overhead[y][20] = TILES.WALL_WALK;
+      ground[y][20] = 1; // solid wall below
+      reserve(20, y);
+    }
   }
 
-  // 3. Transverse Viaduct Trestle spanning from Eastern Battlement (20, 14) West along y=14
-  // Spans over ground underpass corridors, giving overhead view into the sunken courtyard!
+  // 2. Transverse Viaduct Trestle spanning from Eastern Battlement (20, 14) West along y=14
   for (let x = 15; x <= 19; x++) {
-    if (x === 18 || x === 16) {
+    if (x === 17 || x === 19) {
       overhead[14][x] = TILES.BRIDGE_EW;
       ground[14][x] = 0; // underpass corridor
     } else {
       overhead[14][x] = TILES.PLATFORM;
+      ground[14][x] = 1;
+      reserve(x, 14);
     }
   }
 
   // Viaduct Junction Platform at corner (14, 14)
   overhead[14][14] = TILES.PLATFORM;
+  ground[14][14] = 1;
+  reserve(14, 14);
 
   // Viaduct turns South down x = 14 (y: 15..18)
   for (let y = 15; y <= 18; y++) {
@@ -459,56 +552,138 @@ export function generateLevel38() {
       ground[y][14] = 0; // underpass corridor
     } else {
       overhead[y][14] = TILES.PLATFORM;
+      ground[y][14] = 1;
+      reserve(14, y);
     }
   }
-  // South descending ramp from viaduct at (14, 19) (high side North, low side South)
+  // South descending ramp from viaduct at (14, 19)
   ground[19][14] = TILES.RAMP_N;
-  ground[20][14] = 0; // ground floor landing
+  ground[20][14] = 0; // landing
+  reserve(14, 19);
+  reserve(14, 20);
 
-  // Ground sector barriers: force elevated traversal to leave NW quadrant
-  ground[1][12] = 1; // Blocks outer north corridor east
-  ground[12][1] = 1; // Blocks outer west corridor south
-  ground[3][12] = 1; // Blocks ring 2 north corridor east
-  ground[12][3] = 1; // Blocks ring 2 west corridor south
-  ground[5][12] = 1; // Blocks ring 3 north corridor east
-  ground[12][5] = 1; // Blocks ring 3 west corridor south
-
-  // Additional West Trestle (along y = 12):
+  // 3. West Trestle (along y = 12):
   ground[12][6] = TILES.RAMP_E;
   ground[12][7] = 0; // underpass floor
   overhead[12][7] = TILES.BRIDGE_EW;
   ground[12][8] = TILES.RAMP_W;
+  reserve(6, 12);
+  reserve(7, 12);
+  reserve(8, 12);
 
-  // Additional North Trestle (along x = 12):
+  // 4. North Trestle (along x = 12):
   ground[6][12] = TILES.RAMP_S;
   ground[7][12] = 0; // underpass floor
   overhead[7][12] = TILES.BRIDGE_NS;
   ground[8][12] = TILES.RAMP_N;
+  reserve(12, 6);
+  reserve(12, 7);
+  reserve(12, 8);
 
-  // Sunken Keystone Courtyard at (18, 7) on ground:
+  // 5. Sunken Keystone Courtyard at (18, 7) on ground:
   // Surrounded by walls, visible from overhead battlement at (20, 7),
-  // accessible from ground underpass tunnel at (18, 14) via x=18!
+  // accessible from ground underpass tunnel at (17, 14) via x=18!
   for (let y = 7; y <= 13; y++) {
     ground[y][18] = 0;
+    reserve(18, y);
   }
   ground[7][19] = 0;
   ground[8][19] = 0;
   ground[9][19] = 0;
+  reserve(19, 7);
+  reserve(19, 8);
+  reserve(19, 9);
+  for (let y = 6; y <= 10; y++) {
+    reserve(20, y);
+    reserve(17, y);
+  }
+  reserve(18, 6);
+  reserve(19, 6);
 
-  // Secret Wall at (23, 2) leading to Secret Chamber at (23, 1)
-  ground[2][23] = TILES.SECRET_WALL;
-
-  // 4. Isolated Astral Chamber in SE (x: 21..23, y: 21..23)
-  for (let y = 20; y <= 24; y++) ground[y][20] = 1;
-  for (let x = 20; x <= 24; x++) ground[20][x] = 1;
-  for (let y = 21; y <= 23; y++) {
-    for (let x = 21; x <= 23; x++) {
+  // 6. Inner Sanctum (x: 11..13, y: 11..13)
+  for (let y = 11; y <= 13; y++) {
+    for (let x = 11; x <= 13; x++) {
       ground[y][x] = 0;
+      reserve(x, y);
     }
   }
+  // Enclosing walls around Inner Sanctum
+  for (let y = 10; y <= 14; y++) {
+    ground[y][10] = 1; reserve(10, y);
+    ground[y][14] = 1; reserve(14, y);
+  }
+  for (let x = 10; x <= 14; x++) {
+    ground[14][x] = 1; reserve(x, 14);
+  }
 
-  // Shifting Barrier at (12, 9) blocking passage to Sanctum Gate at (12, 10)
+  // Inner Sanctum Doorway at (12, 10) and entry corridor at (12, 11):
+  ground[10][12] = 0;
+  ground[11][12] = 0;
+  reserve(12, 10);
+  reserve(12, 11);
+  // Shifting Barrier at (12, 9) blocking doorway
   ground[9][12] = 1;
+  reserve(12, 9);
+  // Approach vestibule at (12, 8):
+  ground[8][12] = 0;
+  reserve(12, 8);
+  // Seal flanking walls at (11, 8..10) and (13, 8..10) so vestibule has no E-W ground bypass!
+  for (let y = 8; y <= 10; y++) {
+    ground[y][11] = 1; reserve(11, y);
+    ground[y][13] = 1; reserve(13, y);
+  }
+
+  // 7. Secret Wall at (23, 2) leading to Secret Chamber at (23, 1)
+  ground[2][23] = TILES.SECRET_WALL;
+  ground[1][23] = 0;
+  reserve(23, 2);
+  reserve(23, 1);
+
+  // 8. Ground sector barriers: seal NW quadrant on ground to force elevated traversal
+  // Col 12: walls from y=1 to 5 (leaving y=6 for RAMP_S)
+  for (let y = 1; y <= 5; y++) {
+    ground[y][12] = 1;
+    reserve(12, y);
+  }
+  // Col 11: wall at y=7 to block West entrance into North trestle underpass
+  ground[7][11] = 1;
+  reserve(11, 7);
+  // Row 12: walls from x=1 to 5 (leaving x=6 for RAMP_E)
+  for (let x = 1; x <= 5; x++) {
+    ground[12][x] = 1;
+    reserve(x, 12);
+  }
+  // Row 11: wall at x=7 to block North entrance into West trestle underpass
+  ground[11][7] = 1;
+  reserve(7, 11);
+
+  // Carve 4 Organic Labyrinth Quadrants
+  // NW Quadrant: x: 1..11, y: 1..11
+  buildLabyrinthSector(ground, 1, 1, 11, 11, 103801, 0.70, 0.20, reserved);
+  // NE Quadrant: x: 13..23, y: 1..11
+  buildLabyrinthSector(ground, 13, 1, 23, 11, 103802, 0.70, 0.20, reserved);
+  // SW Quadrant: x: 1..11, y: 13..23
+  buildLabyrinthSector(ground, 1, 13, 11, 23, 103803, 0.70, 0.20, reserved);
+  // SE Quadrant: x: 13..23, y: 13..23
+  buildLabyrinthSector(ground, 13, 13, 23, 23, 103804, 0.70, 0.20, reserved);
+
+  // Ensure approach connections:
+  ground[1][1] = 0;
+  ground[2][1] = 0;
+  ground[2][2] = 0;
+
+  // Connect landing of south viaduct ramp (14, 20) to SE labyrinth
+  ground[20][15] = 0;
+  ground[20][16] = 0;
+
+  // Connect underpass at (17, 14) to SE labyrinth at (17, 15)
+  ground[15][17] = 0;
+
+  // Connect secret wall at (23, 2) to adjacent corridor at (23, 3)
+  ground[3][23] = 0;
+
+  // Connect approach to barrier (12, 9) from north (12, 8)
+  ground[8][12] = 0;
 
   const entities = [
     {
@@ -638,8 +813,8 @@ export function generateLevel38() {
       style: 'pedestal',
       label: 'Apex Altar'
     },
-    parSteps: 60,
-    parTime: 40,
+    parSteps: 94,
+    parTime: 58,
     architectNote: 'Traverse the multi-elevation concentric trestles, toggle the battlement lever, and claim the keystone to enter the Apex Altar.',
     help: {
       title: 'Level 38: Concentric Trestles',
@@ -659,126 +834,245 @@ export function generateLevel39() {
   const ground = Array.from({ length: height }, () => Array(width).fill(1));
   const overhead = Array.from({ length: height }, () => Array(width).fill(0));
 
-  function carve(coords) {
-    for (const [x, y] of coords) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        ground[y][x] = 0;
-      }
+  const reserved = new Set();
+  function reserve(x, y) { reserved.add(`${x},${y}`); }
+  function isReserved(x, y) { return reserved.has(`${x},${y}`); }
+
+  // 1. Reserve Special Chambers
+  // Central Inner Sanctum (x: 11..15, y: 11..15)
+  for (let y = 11; y <= 15; y++) {
+    for (let x = 11; x <= 15; x++) {
+      reserve(x, y);
     }
   }
 
-  // 1. Serpentine Corridors across 4 Quadrants to eliminate ALL dead spaces >= 4x4
-  // NW Quadrant (x: 1..11, y: 1..11)
-  for (let y = 1; y <= 11; y += 2) {
-    for (let x = 1; x <= 11; x++) ground[y][x] = 0;
+  // East Astral Sanctum (x: 22..26, y: 11..15)
+  for (let y = 10; y <= 16; y++) {
+    for (let x = 22; x <= 26; x++) {
+      reserve(x, y);
+    }
   }
-  for (let y = 2; y <= 10; y += 4) ground[y][1] = 0;
-  for (let y = 4; y <= 10; y += 4) ground[y][11] = 0;
 
-  // NE Quadrant (x: 15..25, y: 1..11)
-  for (let y = 1; y <= 11; y += 2) {
-    for (let x = 15; x <= 25; x++) ground[y][x] = 0;
-  }
-  for (let y = 2; y <= 10; y += 4) ground[y][25] = 0;
-  for (let y = 4; y <= 10; y += 4) ground[y][15] = 0;
-
-  // SW Quadrant (x: 1..11, y: 15..25)
-  for (let y = 15; y <= 25; y += 2) {
-    for (let x = 1; x <= 11; x++) ground[y][x] = 0;
-  }
-  for (let y = 16; y <= 24; y += 4) ground[y][1] = 0;
-  for (let y = 18; y <= 24; y += 4) ground[y][11] = 0;
-
-  // SE Quadrant (x: 15..25, y: 15..25)
-  for (let y = 15; y <= 25; y += 2) {
-    for (let x = 15; x <= 25; x++) ground[y][x] = 0;
-  }
-  for (let y = 16; y <= 24; y += 4) ground[y][25] = 0;
-  for (let y = 18; y <= 24; y += 4) ground[y][15] = 0;
-
-  // Central Spokes (x = 13 and y = 13)
-  for (let y = 1; y <= 10; y++) ground[y][13] = 0;
-  for (let y = 16; y <= 25; y++) ground[y][13] = 0;
-  for (let x = 1; x <= 10; x++) ground[13][x] = 0;
-  for (let x = 16; x <= 25; x++) ground[13][x] = 0;
-
-  // Quadrant Connectors to Central Spokes
-  carve([
-    [12, 1], [14, 1],
-    [12, 5], [14, 5],
-    [12, 9], [14, 9],
-    [12, 17], [14, 17],
-    [12, 21], [14, 21],
-    [12, 25], [14, 25],
-    [5, 12], [5, 14],
-    [9, 12], [9, 14],
-    [17, 12], [17, 14],
-    [21, 12], [21, 14]
-  ]);
-
-  // Inner Sanctum (x: 12..14, y: 12..14)
+  // 2. Setup Inner Sanctum floor and door
   for (let y = 12; y <= 14; y++) {
     for (let x = 12; x <= 14; x++) {
       ground[y][x] = 0;
     }
   }
-  // Enclosing walls around Inner Sanctum
-  for (let y = 11; y <= 15; y++) {
-    ground[y][11] = 1;
-    ground[y][15] = 1;
-  }
-  for (let x = 11; x <= 15; x++) {
-    ground[11][x] = 1;
-    ground[15][x] = 1;
-  }
-  // Approach to door at (13, 10), door at (13, 11)
-  ground[10][13] = 0;
-  ground[11][13] = 0; // Door tile
+  ground[10][13] = 0; // Approach to door
+  ground[11][13] = 0; // Door tile (door_silver_39)
 
-  // 2. Elevated Viaduct Platforms and Wall Walks
-  // North Viaduct: along x = 13, crossing over lower East-West corridor at y = 5
-  ground[3][13] = TILES.RAMP_S;
-  overhead[4][13] = TILES.PLATFORM;
-  overhead[5][13] = TILES.BRIDGE_NS; // Bridge over underpass at ground[5][13]
-  overhead[6][13] = TILES.PLATFORM;
-  ground[7][13] = TILES.RAMP_N;
-
-  // South Viaduct: along x = 13, crossing over lower East-West corridor at y = 21
-  ground[19][13] = TILES.RAMP_S;
-  overhead[20][13] = TILES.PLATFORM;
-  overhead[21][13] = TILES.BRIDGE_NS;
-  overhead[22][13] = TILES.PLATFORM;
-  ground[23][13] = TILES.RAMP_N;
-
-  // West Wall Walk on northern battlements
-  ground[2][2] = TILES.RAMP_E;
-  overhead[2][3] = TILES.WALL_WALK;
-  overhead[2][4] = TILES.WALL_WALK;
-  overhead[2][5] = TILES.WALL_WALK;
-  ground[2][6] = TILES.RAMP_W;
-
-  // Secret Wall at (22, 4) guarding Gem at (24, 4)
-  ground[4][22] = TILES.SECRET_WALL;
-  ground[4][23] = 0;
-  ground[4][24] = 0;
-
-  // 3. Isolated East Astral Sanctum for Silver Key
-  // Enclose x: 23..25, y: 11..15
-  for (let y = 10; y <= 16; y++) ground[y][22] = 1;
-  for (let x = 22; x <= 26; x++) {
-    ground[10][x] = 1;
-    ground[16][x] = 1;
-  }
+  // 3. Setup East Astral Sanctum floor and walls
   for (let y = 11; y <= 15; y++) {
     for (let x = 23; x <= 25; x++) {
       ground[y][x] = 0;
     }
   }
 
-  // Shifting Barrier at (13, 25) blocking ONLY passage to Portal A at (14, 25)
-  ground[25][13] = 1; // Initially solid wall!
+  // 4. Setup Central Spokes & Viaducts
+  for (let y = 1; y <= 10; y++) {
+    ground[y][13] = 0;
+  }
+  // North Viaduct: along x = 13, crossing over lower East-West corridor at y = 5
+  ground[3][13] = TILES.RAMP_S;
+  overhead[4][13] = TILES.PLATFORM;
+  overhead[5][13] = TILES.BRIDGE_NS;
+  overhead[6][13] = TILES.PLATFORM;
+  ground[7][13] = TILES.RAMP_N;
+
+  for (let y = 16; y <= 25; y++) {
+    ground[y][13] = 0;
+  }
+  ground[19][13] = TILES.RAMP_S;
+  overhead[20][13] = TILES.PLATFORM;
+  overhead[21][13] = TILES.BRIDGE_NS;
+  overhead[22][13] = TILES.PLATFORM;
+  ground[23][13] = TILES.RAMP_N;
+
+  reserve(13, 3);
+  reserve(13, 4);
+  reserve(13, 6);
+  reserve(13, 7);
+  reserve(13, 19);
+  reserve(13, 20);
+  reserve(13, 22);
+  reserve(13, 23);
+
+  // 5. Setup Shifting Barrier at (13, 25) blocking Portal A at (14, 25)
+  ground[25][13] = 1; // Solid wall initially
+  ground[25][14] = 0; // Portal tile
   ground[25][15] = 1;
   ground[24][14] = 1;
+  reserve(13, 25);
+  reserve(14, 25);
+  reserve(15, 25);
+  reserve(14, 24);
+
+  // 6. Setup West Wall-Walk Battlement atop Wall at y = 2
+  ground[2][2] = TILES.RAMP_E;
+  overhead[2][3] = TILES.WALL_WALK;
+  overhead[2][4] = TILES.WALL_WALK;
+  overhead[2][5] = TILES.WALL_WALK;
+  ground[2][6] = TILES.RAMP_W;
+  reserve(2, 2);
+  reserve(3, 2);
+  reserve(4, 2);
+  reserve(5, 2);
+  reserve(6, 2);
+
+  // 7. Setup Secret Wall at (22, 4) guarding Gem at (24, 4)
+  ground[4][22] = TILES.SECRET_WALL;
+  ground[4][23] = 0;
+  ground[4][24] = 0;
+  reserve(22, 4);
+  reserve(23, 4);
+  reserve(24, 4);
+
+  // 8. Setup Lever position at (3, 25)
+  ground[25][3] = 0;
+  reserve(3, 25);
+
+  // 9. Whole-Grid Organic Labyrinth Carving with Inertia & Braid
+  let s = 98765;
+  function random() {
+    s = (s * 1664525 + 1013904223) % 4294967296;
+    return s / 4294967296;
+  }
+
+  const oddCoords = [];
+  for (let y = 1; y < height - 1; y += 2) {
+    for (let x = 1; x < width - 1; x += 2) {
+      if (!isReserved(x, y)) {
+        oddCoords.push([x, y]);
+      }
+    }
+  }
+
+  const visited = new Set();
+  function k(x, y) { return `${x},${y}`; }
+
+  const startX = 1;
+  const startY = 1;
+  const stack = [[startX, startY]];
+  visited.add(k(startX, startY));
+  ground[startY][startX] = 0;
+
+  const DIRS = [
+    { dx: 0, dy: -2 },
+    { dx: 2, dy: 0 },
+    { dx: 0, dy: 2 },
+    { dx: -2, dy: 0 }
+  ];
+
+  let lastDir = null;
+
+  while (stack.length > 0) {
+    const [cx, cy] = stack[stack.length - 1];
+
+    const neighbors = [];
+    for (const d of DIRS) {
+      const nx = cx + d.dx;
+      const ny = cy + d.dy;
+      if (
+        nx > 0 && nx < width - 1 &&
+        ny > 0 && ny < height - 1 &&
+        !isReserved(nx, ny) &&
+        !isReserved(cx + d.dx / 2, cy + d.dy / 2) &&
+        !visited.has(k(nx, ny))
+      ) {
+        neighbors.push({ ...d, nx, ny });
+      }
+    }
+
+    if (neighbors.length === 0) {
+      stack.pop();
+      lastDir = null;
+      continue;
+    }
+
+    let chosen = null;
+    if (lastDir && random() < 0.70) {
+      const same = neighbors.find(n => n.dx === lastDir.dx && n.dy === lastDir.dy);
+      if (same) chosen = same;
+    }
+
+    if (!chosen) {
+      chosen = neighbors[Math.floor(random() * neighbors.length)];
+    }
+
+    lastDir = { dx: chosen.dx, dy: chosen.dy };
+
+    ground[cy + chosen.dy / 2][cx + chosen.dx / 2] = 0;
+    ground[chosen.ny][chosen.nx] = 0;
+
+    visited.add(k(chosen.nx, chosen.ny));
+    stack.push([chosen.nx, chosen.ny]);
+  }
+
+  // Connect any remaining unvisited odd cells
+  for (const [ox, oy] of oddCoords) {
+    if (!visited.has(k(ox, oy))) {
+      const candidates = [];
+      for (const d of DIRS) {
+        const nx = ox + d.dx;
+        const ny = oy + d.dy;
+        if (visited.has(k(nx, ny)) && !isReserved(ox + d.dx / 2, oy + d.dy / 2)) {
+          candidates.push({ ...d, nx, ny });
+        }
+      }
+      if (candidates.length > 0) {
+        const c = candidates[Math.floor(random() * candidates.length)];
+        ground[oy][ox] = 0;
+        ground[oy + c.dy / 2][ox + c.dx / 2] = 0;
+        visited.add(k(ox, oy));
+      }
+    }
+  }
+
+  // Connect Central Spine (x=13) to adjacent labyrinth corridors at strategic points
+  const spineConnections = [
+    [12, 1], [14, 1],
+    [12, 5], [14, 5],
+    [12, 9], [14, 9],
+    [12, 17], [14, 17],
+    [12, 21], [14, 21]
+  ];
+  for (const [cx, cy] of spineConnections) {
+    ground[cy][cx] = 0;
+  }
+
+  // Underpasses below viaduct bridges:
+  ground[5][13] = 0;
+  ground[21][13] = 0;
+
+  // Lever connection:
+  ground[25][2] = 0;
+  ground[25][1] = 0;
+
+  // Secret wall entrance:
+  ground[4][21] = 0;
+
+  // Braid Phase: add 15% loops
+  for (const [ox, oy] of oddCoords) {
+    let walls = [];
+    for (const d of DIRS) {
+      const mx = ox + d.dx / 2;
+      const my = oy + d.dy / 2;
+      const nx = ox + d.dx;
+      const ny = oy + d.dy;
+      if (
+        nx > 0 && nx < width - 1 && ny > 0 && ny < height - 1 &&
+        !isReserved(mx, my) && !isReserved(nx, ny) &&
+        ground[my][mx] === 1 && ground[ny][nx] === 0
+      ) {
+        walls.push([mx, my]);
+      }
+    }
+    if (walls.length > 0 && random() < 0.15) {
+      const [wx, wy] = walls[Math.floor(random() * walls.length)];
+      ground[wy][wx] = 0;
+    }
+  }
 
   const entities = [
     {
@@ -852,7 +1146,7 @@ export function generateLevel39() {
       speed: 1.0,
       waypoints: [
         { x: 17, y: 17 },
-        { x: 23, y: 17 }
+        { x: 21, y: 17 }
       ]
     },
     {
@@ -919,8 +1213,8 @@ export function generateLevel39() {
       viewPerspective: "angled"
     },
     spawn: {
-      x: 2,
-      y: 2,
+      x: 1,
+      y: 1,
       elevation: 0,
       style: "floor_symbol"
     },
@@ -931,8 +1225,8 @@ export function generateLevel39() {
       style: "pedestal",
       label: "Heart Portal"
     },
-    parSteps: 145,
-    parTime: 85,
+    parSteps: 97,
+    parTime: 60,
     architectNote: "Align the harmonic mirror seals. Retrieve the silver key from the east wing to enter the Inner Sanctum.",
     help: {
       title: "Level 39: Harmonic Mirror Seals",
@@ -952,66 +1246,47 @@ export function generateLevel40() {
   const ground = Array.from({ length: height }, () => Array(width).fill(1));
   const overhead = Array.from({ length: height }, () => Array(width).fill(0));
 
-  function carve(coords) {
-    for (const [x, y] of coords) {
-      if (x >= 0 && x < width && y >= 0 && y < height) {
-        ground[y][x] = 0;
-      }
-    }
-  }
+  const reserved = new Set();
+  function reserve(x, y) { reserved.add(`${x},${y}`); }
 
-  // 1. Serpentine Corridors across 4 Quadrants
-  // NW Quadrant: x: 1..13, y: 1..13
-  for (let y = 1; y <= 13; y += 2) {
-    for (let x = 1; x <= 13; x++) ground[y][x] = 0;
-  }
-  for (let y = 2; y <= 12; y += 4) ground[y][1] = 0;
-  for (let y = 4; y <= 12; y += 4) ground[y][13] = 0;
-
-  // NE Quadrant: x: 15..27, y: 1..13
-  for (let y = 1; y <= 13; y += 2) {
-    for (let x = 15; x <= 27; x++) ground[y][x] = 0;
-  }
-  for (let y = 2; y <= 12; y += 4) ground[y][27] = 0;
-  for (let y = 4; y <= 12; y += 4) ground[y][15] = 0;
-
-  // SE Quadrant: x: 15..27, y: 15..27
-  for (let y = 15; y <= 27; y += 2) {
-    for (let x = 15; x <= 27; x++) ground[y][x] = 0;
-  }
-  for (let y = 16; y <= 26; y += 4) ground[y][27] = 0;
-  for (let y = 18; y <= 26; y += 4) ground[y][15] = 0;
-
-  // SW Quadrant: x: 1..13, y: 15..27
-  for (let y = 15; y <= 27; y += 2) {
-    for (let x = 1; x <= 13; x++) ground[y][x] = 0;
-  }
-  for (let y = 16; y <= 26; y += 4) ground[y][1] = 0;
-  for (let y = 18; y <= 26; y += 4) ground[y][13] = 0;
-
-  // Dividing Walls:
-  // Column 14 separates West and East quadrants
-  // Row 14 separates North and South quadrants
+  // Dividing Walls at Row 14 and Col 14
   // Sequential quadrant gates:
-  // 1. NW to NE gate at (14, 1): Ruby Door
+  // Ruby Door at (14, 1): NW -> NE
   ground[1][14] = 0;
-  // 2. NE to SE gate at (27, 14): Emerald Door
+  reserve(14, 1);
+  // Emerald Door at (27, 14): NE -> SE
   ground[14][27] = 0;
-  // 3. SE to SW gate at (14, 27): Sapphire Door
+  reserve(27, 14);
+  // Sapphire Door at (14, 27): SE -> SW
   ground[27][14] = 0;
+  reserve(14, 27);
 
   // Central Apex Inner Sanctum at (14, 14)
   ground[14][14] = 0;
-  // 4. SW to Center gate at (13, 14): Apex Door
+  reserve(14, 14);
+  // Apex Door at (13, 14): SW -> Center
   ground[14][13] = 0;
+  reserve(13, 14);
 
-  // 2. Multi-Elevation Viaducts and Parapets
+  // Reserve dividing walls so they stay solid (1) except gates
+  for (let i = 0; i < 29; i++) {
+    if (i !== 1 && i !== 27 && i !== 14) {
+      reserve(14, i);
+    }
+    if (i !== 27 && i !== 13 && i !== 14) {
+      reserve(i, 14);
+    }
+  }
+
+  // Viaducts & Battlements in Level 40:
   // NE Viaduct: along y = 5, crossing over lower corridor at (21, 5)
   ground[5][19] = TILES.RAMP_E;
   overhead[5][20] = TILES.PLATFORM;
   overhead[5][21] = TILES.BRIDGE_EW;
+  ground[5][21] = 0; // underpass corridor
   overhead[5][22] = TILES.PLATFORM;
   ground[5][23] = TILES.RAMP_W;
+  for (let x = 19; x <= 23; x++) reserve(x, 5);
 
   // NW Wall-Walk Parapet: along y = 2
   ground[2][3] = TILES.RAMP_E;
@@ -1019,14 +1294,49 @@ export function generateLevel40() {
   overhead[2][5] = TILES.WALL_WALK;
   overhead[2][6] = TILES.WALL_WALK;
   ground[2][7] = TILES.RAMP_W;
+  for (let x = 3; x <= 7; x++) reserve(x, 2);
 
   // Secret Wall at (25, 3) in NE guarding Gem at (27, 3)
   ground[3][25] = TILES.SECRET_WALL;
   ground[3][26] = 0;
   ground[3][27] = 0;
+  reserve(25, 3);
+  reserve(26, 3);
+  reserve(27, 3);
+
+  // Key locations:
+  ground[7][7] = 0;
+  ground[7][21] = 0;
+  ground[21][21] = 0;
+  ground[21][7] = 0;
+
+  // Carve 4 Organic Labyrinth Quadrants
+  // NW: x: 1..13, y: 1..13
+  buildLabyrinthSector(ground, 1, 1, 13, 13, 104001, 0.70, 0.20, reserved);
+  // NE: x: 15..27, y: 1..13
+  buildLabyrinthSector(ground, 15, 1, 27, 13, 104002, 0.70, 0.20, reserved);
+  // SE: x: 15..27, y: 15..27
+  buildLabyrinthSector(ground, 15, 15, 27, 27, 104003, 0.70, 0.20, reserved);
+  // SW: x: 1..13, y: 15..27
+  buildLabyrinthSector(ground, 1, 15, 13, 27, 104004, 0.70, 0.20, reserved);
+
+  // Connect quadrant gates cleanly to adjacent labyrinth corridors:
+  ground[1][13] = 0;
+  ground[1][15] = 0;
+  ground[13][27] = 0;
+  ground[15][27] = 0;
+  ground[27][15] = 0;
+  ground[27][13] = 0;
+  ground[15][13] = 0;
+
+  // Connect secret wall (25, 3) to adjacent corridor at (24, 3)
+  ground[3][24] = 0;
+
+  // Ensure viaduct underpass at (21, 5) connects to north/south corridors
+  ground[4][21] = 0;
+  ground[6][21] = 0;
 
   const entities = [
-    // 4 Elemental Shard Keys & Doors
     {
       id: "key_ruby_40",
       type: "key",
@@ -1103,8 +1413,6 @@ export function generateLevel40() {
       y: 14,
       elevation: 0
     },
-
-    // Compounding Sentinel, Hazard, and Checkpoints
     {
       id: "patroller_apex_40",
       type: "patroller",
@@ -1113,8 +1421,8 @@ export function generateLevel40() {
       elevation: 0,
       speed: 1.0,
       waypoints: [
-        { x: 2, y: 9 },
-        { x: 6, y: 9 }
+        { x: 3, y: 9 },
+        { x: 7, y: 9 }
       ]
     },
     {
@@ -1194,8 +1502,8 @@ export function generateLevel40() {
       style: "pedestal",
       label: "Heart of the Prism"
     },
-    parSteps: 397,
-    parTime: 238,
+    parSteps: 190,
+    parTime: 115,
     architectNote: "The climax macro-labyrinth. Traverse the four elemental quadrant sanctums and claim the Crown of the Prism at the central altar.",
     help: {
       title: "Level 40: Heart of the Prism",
@@ -1232,7 +1540,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   l38.parSteps = Math.ceil(sol38.length * 1.15);
   l38.parTime = Math.ceil(sol38.length * 0.6);
   simulateCampaignLevelPlaythrough(l38);
-  console.log(`Level 38 validated and simulated successfully! Optimal: ${sol38.length}, Par: ${l38.parSteps}`);
+  const elevatedSteps38 = sol38.filter(s => s.z === 1 || s.elevation === 1).length;
+  console.log(`Level 38 validated and simulated successfully! Optimal: ${sol38.length}, Elevated: ${elevatedSteps38}/${sol38.length}, Par: ${l38.parSteps}`);
 
   console.log('Generating Level 39...');
   const l39 = generateLevel39();
@@ -1265,4 +1574,3 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.a
   fs.writeFileSync(path.join(ch10Dir, 'level_40.json'), JSON.stringify(l40, null, 2) + '\n');
   console.log('Wrote level_37.json, level_38.json, level_39.json, level_40.json to levels/chapter_10/');
 }
-
