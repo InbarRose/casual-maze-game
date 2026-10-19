@@ -33,7 +33,7 @@
   },
   "parSteps": 26,
   "parTime": 14,
-  "architectNote": "Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the western gallery to recover the keystore; the circular ambulatory leads directly to the central sanctum.",
+  "architectNote": "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the western gallery to recover the keystore; the circular ambulatory leads directly to the central sanctum.",
   "layers": {
     "ground": [
       [
@@ -61,9 +61,9 @@
         1,
         1,
         1,
-        1,
-        1,
-        1,
+        0,
+        0,
+        0,
         1
       ],
       [
@@ -76,9 +76,9 @@
         1,
         1,
         1,
+        0,
         1,
-        1,
-        1,
+        0,
         1
       ],
       [
@@ -89,41 +89,11 @@
         1,
         1,
         1,
-        1,
-        1,
-        1,
-        1,
-        1,
-        1
-      ],
-      [
-        1,
-        1,
-        0,
-        1,
-        1,
-        0,
-        0,
         0,
         0,
         0,
         1,
-        1,
-        1
-      ],
-      [
-        1,
-        1,
         0,
-        1,
-        1,
-        0,
-        1,
-        0,
-        1,
-        0,
-        1,
-        1,
         1
       ],
       [
@@ -137,8 +107,8 @@
         0,
         0,
         0,
-        0,
-        0,
+        1,
+        1,
         1
       ],
       [
@@ -167,6 +137,36 @@
         0,
         0,
         0,
+        0,
+        0,
+        1
+      ],
+      [
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        1,
+        0,
+        1,
+        0,
+        1,
+        1,
+        1
+      ],
+      [
+        1,
+        1,
+        0,
+        1,
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
         1,
         1,
         1
@@ -181,9 +181,9 @@
         1,
         0,
         1,
+        0,
         1,
-        1,
-        1,
+        0,
         1
       ],
       [
@@ -196,9 +196,9 @@
         0,
         0,
         1,
-        1,
-        1,
-        1,
+        0,
+        0,
+        0,
         1
       ],
       [
@@ -211,7 +211,7 @@
         1,
         1,
         1,
-        1,
+        0,
         1,
         1,
         1

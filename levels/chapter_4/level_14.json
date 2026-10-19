@@ -267,8 +267,8 @@
       [
         1,
         1,
-        1,
-        1,
+        0,
+        "SW",
         0,
         0,
         0,
@@ -286,7 +286,7 @@
       [
         1,
         1,
-        1,
+        0,
         1,
         0,
         0,
@@ -672,6 +672,15 @@
       "playerDialogue": "I need to retrieve the Azure Key from the eastern tower.",
       "x": 2,
       "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "secret_star_14",
+      "type": "collectible",
+      "name": "Twin Star Quartz",
+      "points": 300,
+      "x": 2,
+      "y": 13,
       "elevation": 0
     }
   ]

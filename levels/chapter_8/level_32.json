@@ -221,7 +221,7 @@
         1,
         0,
         0,
-        0,
+        7,
         0,
         "R_E",
         0,
@@ -754,6 +754,16 @@
       "color": "#ffffff",
       "x": 8,
       "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "gem_monolith_apex_core_32",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Apex Monolith Core Crystal",
+      "scoreValue": 300,
+      "x": 2,
+      "y": 8,
       "elevation": 0
     }
   ]

@@ -140,7 +140,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           1,
           0,
           0,
-          0,
+          7,
           0,
           0,
           1,
@@ -157,7 +157,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           1,
           0,
           0,
-          1,
+          0,
           0,
           0,
           1,
@@ -625,6 +625,16 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "x": 13,
         "y": 1,
         "elevation": 0
+      },
+      {
+        "id": "gem_cardinal_compass_29",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Lodestone Cardinal Needle",
+        "scoreValue": 200,
+        "x": 7,
+        "y": 6,
+        "elevation": 0
       }
     ]
   },
@@ -796,7 +806,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
+          7,
           0,
           0,
           "B_EW",
@@ -1228,6 +1238,16 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "x": 7,
         "y": 7,
         "elevation": 1
+      },
+      {
+        "id": "gem_aqueduct_pearl_30",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Subterranean Aqueduct Pearl",
+        "scoreValue": 200,
+        "x": 3,
+        "y": 7,
+        "elevation": 0
       }
     ]
   },
@@ -1402,7 +1422,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           1,
-          1,
+          0,
           1,
           0,
           0,
@@ -1419,7 +1439,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           1,
-          1,
+          7,
           1,
           0,
           0,
@@ -1856,6 +1876,16 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "y": 7,
         "facing": "west",
         "elevation": 0
+      },
+      {
+        "id": "gem_four_winds_eye_31",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Eye of the Four Winds",
+        "scoreValue": 250,
+        "x": 7,
+        "y": 7,
+        "elevation": 0
       }
     ]
   },
@@ -2082,7 +2112,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           1,
           0,
           0,
-          0,
+          7,
           0,
           "R_E",
           0,
@@ -2615,6 +2645,16 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "color": "#ffffff",
         "x": 8,
         "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "gem_monolith_apex_core_32",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Apex Monolith Core Crystal",
+        "scoreValue": 300,
+        "x": 2,
+        "y": 8,
         "elevation": 0
       }
     ]
