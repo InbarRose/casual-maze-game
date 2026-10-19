@@ -895,13 +895,13 @@
     "parSteps": 113,
     "parTime": 67,
     "version": 1,
-    "hash": "67814dfcd3b6ad86479b8ff460df0fd7864cfb5ae744d642b443db13f0637274",
-    "size": 18472,
+    "hash": "f2b139fa40047941c762e3ec6e7d37016ee56ea0d017a4a716c261263e8f2a86",
+    "size": 18269,
     "dimensions": {
       "width": 25,
       "height": 25
     },
-    "entityCount": 10,
+    "entityCount": 8,
     "hasMultiRoom": false,
     "exitCount": 1
   },

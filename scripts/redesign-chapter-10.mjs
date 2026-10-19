@@ -406,91 +406,99 @@ export function generateLevel38() {
     }
   }
 
-  // Cut-through connections between concentric rings:
-  // Ring 1 (r=1) to Ring 2 (r=3): cuts at Wall Ring 1 (r=2)
+  // Ring cut-throughs (South & East quadrants; NW quadrant closed on ground to make elevated traversal mandatory)
   carve([
-    [1, 2], [23, 2], // NW & NE vertical cuts
-    [2, 2],          // Access to wall walk ramp
-    [2, 5], [2, 19], // West cuts
-    [22, 5], [22, 19], // East cuts
-    [5, 22], [19, 22] // South cuts
+    [1, 2], [2, 2], [23, 2],
+    [22, 5], [22, 19],
+    [5, 22], [19, 22],
+    [20, 7], [20, 17],
+    [17, 4], [7, 20], [17, 20],
+    [18, 9], [18, 15],
+    [15, 6], [9, 18], [15, 18],
+    [16, 11], [16, 13],
+    [13, 8], [11, 16], [13, 16]
   ]);
 
-  // Ring 2 (r=3) to Ring 3 (r=5): cuts at Wall Ring 2 (r=4)
-  carve([
-    [4, 7], [4, 17], // West cuts
-    [20, 7], [20, 17], // East cuts
-    [7, 4], [17, 4], // North cuts
-    [7, 20], [17, 20] // South cuts
-  ]);
-
-  // Ring 3 (r=5) to Ring 4 (r=7): cuts at Wall Ring 3 (r=6)
-  carve([
-    [6, 9], [6, 15], // West cuts
-    [18, 9], [18, 15], // East cuts
-    [9, 6], [15, 6], // North cuts
-    [9, 18], [15, 18] // South cuts
-  ]);
-
-  // Ring 4 (r=7) to Ring 5 (r=9): cuts at Wall Ring 4 (r=8)
-  carve([
-    [8, 11], [8, 13], // West cuts
-    [16, 11], [16, 13], // East cuts
-    [11, 8], [13, 8], // North cuts
-    [11, 16], [13, 16] // South cuts
-  ]);
-
-  // Cardinal spokes connections at r=1, 3:
-  // North spoke connects r=1, 2, 3
-  carve([[12, 1], [12, 2], [12, 3], [12, 4]]);
-  // South spoke connects r=1, 2, 3
+  // Cardinal spokes
+  carve([[12, 1], [12, 2]]);
   carve([[12, 23], [12, 22], [12, 21]]);
-  // West spoke connects r=1, 2, 3
-  carve([[1, 12], [2, 12], [3, 12], [4, 12]]);
-  // East spoke connects r=1, 2, 3
   carve([[23, 12], [22, 12], [21, 12], [20, 12]]);
 
   // Inner Sanctum Doorway at (12, 10):
   ground[10][12] = 0;
 
-  // 2. Trestle Bridges over lower r=7 canals
-  // North Trestle (along x = 12):
-  ground[6][12] = TILES.RAMP_S;
-  ground[7][12] = 0; // underpass floor
-  overhead[7][12] = TILES.BRIDGE_NS;
-  ground[8][12] = TILES.RAMP_N;
+  // 2. High Wall-Walk Battlement atop Wall Ring 1 (North wall y=2, x: 4..20)
+  // Ascend from (2, 2) on ground via RAMP_E at (3, 2)
+  ground[2][3] = TILES.RAMP_E;
+  for (let x = 4; x <= 20; x++) {
+    overhead[2][x] = TILES.WALL_WALK;
+  }
+  // Eastern Battlement turning south atop x=20 (y: 3..14)
+  for (let y = 3; y <= 14; y++) {
+    overhead[y][20] = TILES.WALL_WALK;
+  }
 
-  // South Trestle (along x = 12):
-  ground[16][12] = TILES.RAMP_S;
-  ground[17][12] = 0; // underpass floor
-  overhead[17][12] = TILES.BRIDGE_NS;
-  ground[18][12] = TILES.RAMP_N;
+  // 3. Transverse Viaduct Trestle spanning from Eastern Battlement (20, 14) West along y=14
+  // Spans over ground underpass corridors, giving overhead view into the sunken courtyard!
+  for (let x = 15; x <= 19; x++) {
+    if (x === 18 || x === 16) {
+      overhead[14][x] = TILES.BRIDGE_EW;
+      ground[14][x] = 0; // underpass corridor
+    } else {
+      overhead[14][x] = TILES.PLATFORM;
+    }
+  }
 
-  // West Trestle (along y = 12):
+  // Viaduct Junction Platform at corner (14, 14)
+  overhead[14][14] = TILES.PLATFORM;
+
+  // Viaduct turns South down x = 14 (y: 15..18)
+  for (let y = 15; y <= 18; y++) {
+    if (y === 17 || y === 15) {
+      overhead[y][14] = TILES.BRIDGE_NS;
+      ground[y][14] = 0; // underpass corridor
+    } else {
+      overhead[y][14] = TILES.PLATFORM;
+    }
+  }
+  // South descending ramp from viaduct at (14, 19) (high side North, low side South)
+  ground[19][14] = TILES.RAMP_N;
+  ground[20][14] = 0; // ground floor landing
+
+  // Ground sector barriers: force elevated traversal to leave NW quadrant
+  ground[1][12] = 1; // Blocks outer north corridor east
+  ground[12][1] = 1; // Blocks outer west corridor south
+  ground[3][12] = 1; // Blocks ring 2 north corridor east
+  ground[12][3] = 1; // Blocks ring 2 west corridor south
+  ground[5][12] = 1; // Blocks ring 3 north corridor east
+  ground[12][5] = 1; // Blocks ring 3 west corridor south
+
+  // Additional West Trestle (along y = 12):
   ground[12][6] = TILES.RAMP_E;
   ground[12][7] = 0; // underpass floor
   overhead[12][7] = TILES.BRIDGE_EW;
   ground[12][8] = TILES.RAMP_W;
 
-  // East Trestle (along y = 12):
-  ground[12][16] = TILES.RAMP_E;
-  ground[12][17] = 0; // underpass floor
-  overhead[12][17] = TILES.BRIDGE_EW;
-  ground[12][18] = TILES.RAMP_W;
+  // Additional North Trestle (along x = 12):
+  ground[6][12] = TILES.RAMP_S;
+  ground[7][12] = 0; // underpass floor
+  overhead[7][12] = TILES.BRIDGE_NS;
+  ground[8][12] = TILES.RAMP_N;
 
-  // Wall-Walk Battlement on Wall Ring 1 (North, y=2):
-  // Approaches from (2, 2) on ground:
-  ground[2][3] = TILES.RAMP_E;
-  overhead[2][4] = TILES.WALL_WALK;
-  overhead[2][5] = TILES.WALL_WALK;
-  overhead[2][6] = TILES.WALL_WALK;
-  overhead[2][7] = TILES.WALL_WALK;
-  ground[2][8] = TILES.RAMP_W;
+  // Sunken Keystone Courtyard at (18, 7) on ground:
+  // Surrounded by walls, visible from overhead battlement at (20, 7),
+  // accessible from ground underpass tunnel at (18, 14) via x=18!
+  for (let y = 7; y <= 13; y++) {
+    ground[y][18] = 0;
+  }
+  ground[7][19] = 0;
+  ground[8][19] = 0;
+  ground[9][19] = 0;
 
   // Secret Wall at (23, 2) leading to Secret Chamber at (23, 1)
   ground[2][23] = TILES.SECRET_WALL;
 
-  // 3. Isolated Astral Chamber in SE (x: 21..23, y: 21..23)
+  // 4. Isolated Astral Chamber in SE (x: 21..23, y: 21..23)
   for (let y = 20; y <= 24; y++) ground[y][20] = 1;
   for (let x = 20; x <= 24; x++) ground[20][x] = 1;
   for (let y = 21; y <= 23; y++) {
@@ -499,11 +507,8 @@ export function generateLevel38() {
     }
   }
 
-  // Shifting Barrier at (12, 20) blocking passage to Portal A at (12, 21)
-  ground[20][12] = 1;
-  ground[21][11] = 1;
-  ground[21][13] = 1;
-  ground[22][12] = 1;
+  // Shifting Barrier at (12, 9) blocking passage to Sanctum Gate at (12, 10)
+  ground[9][12] = 1;
 
   const entities = [
     {
@@ -511,9 +516,9 @@ export function generateLevel38() {
       type: 'key',
       name: 'Prism Keystone',
       color: '#38bdf8',
-      x: 22,
-      y: 22,
-      elevation: 0
+      x: 18,
+      y: 7,
+      elevation: 0 // In the sunken courtyard below the battlement!
     },
     {
       id: 'door_prism_38',
@@ -532,41 +537,17 @@ export function generateLevel38() {
       color: '#06b6d4',
       x: 5,
       y: 2,
-      elevation: 1, // On the Wall-Walk!
+      elevation: 1, // On the elevated Wall-Walk battlement!
       targets: [
         {
           action: 'toggle_tile',
           layer: 'ground',
           x: 12,
-          y: 20,
+          y: 9,
           stateA: 0,
           stateB: 1
         }
       ]
-    },
-    {
-      id: 'portal_trestle_a',
-      type: 'teleporter',
-      name: 'Concentric Rift Alpha',
-      color: '#8b5cf6',
-      x: 12,
-      y: 21,
-      elevation: 0,
-      targetX: 21,
-      targetY: 22,
-      targetElevation: 0
-    },
-    {
-      id: 'portal_trestle_b',
-      type: 'teleporter',
-      name: 'Concentric Rift Beta',
-      color: '#8b5cf6',
-      x: 23,
-      y: 22,
-      elevation: 0,
-      targetX: 12,
-      targetY: 3,
-      targetElevation: 0
     },
     {
       id: 'patroller_trestle_38',
@@ -596,8 +577,8 @@ export function generateLevel38() {
       type: 'checkpoint',
       style: 'crystal_beacon',
       name: 'Concentric Nexus Beacon',
-      x: 12,
-      y: 3,
+      x: 14,
+      y: 20,
       elevation: 0,
       color: '#38bdf8'
     },
@@ -606,7 +587,7 @@ export function generateLevel38() {
       type: 'wall_decor',
       decorType: 'plaque',
       title: 'Trestle Diagram',
-      text: 'Four elevated viaduct trestles bridge the concentric rings. Traverse the upper platform to bypass the lower canals.',
+      text: 'Ascend the outer battlement ramparts and traverse the grand viaduct to look down into the sunken courts and navigate between tiers.',
       author: 'Master Architect Vane',
       x: 1,
       y: 4,

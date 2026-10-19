@@ -59,8 +59,10 @@ describe('Levels > Chapter 10 The Prismatic Labyrinth (BL-129)', () => {
   it('Level 38 (Shō): Concentric Trestles develops multi-elevation bridges over crystalline chasms', () => {
     const sol = solveLevel(l38);
     assert(sol !== null, 'Level 38 must be solvable');
-    assertEqual(sol.length, 53, 'Optimal path is 53 steps');
-    assert(l38.parSteps >= 53, 'Par steps is calibrated over optimal');
+    assertEqual(sol.length, 77, 'Optimal path is 77 steps');
+    assertEqual(l38.parSteps, 89, 'Par steps is calibrated with 15% margin over optimal');
+    const elevatedSteps = sol.filter(s => s.z === 1 || s.elevation === 1).length;
+    assert(elevatedSteps >= 35, 'Over 50% of optimal path is elevated across battlements and viaducts');
 
     // Verify directional ramps and overhead bridges exist
     const hasRamps = l38.layers.ground.some(r => r.includes(TILES.RAMP_E) || r.includes(TILES.RAMP_W) || r.includes(TILES.RAMP_S) || r.includes(TILES.RAMP_N));

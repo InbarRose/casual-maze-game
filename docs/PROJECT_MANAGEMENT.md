@@ -76,6 +76,12 @@ This document tracks project milestones, current release status, active developm
   - Implemented elevation transition logic along rays: rays cast from upper battlements propagate along connected walkways, descend into lower open ground corridors/rooms marking them `VISIBLE`, and terminate upon hitting ground walls.
   - Preserved ground wall occlusion so players on upper walkways cannot see through or "over" single walls into rooms beyond.
   - Added comprehensive unit tests in `tests/unit/engine/fog.test.mjs` verifying upper-to-lower visibility and wall occlusion.
+- [x] **3D Multi-Elevation Bridges, Battlements & Underpass Tunnels Overhaul (BL-156, ADR-0041)**:
+  - Fixed 90-degree inverted bridge orientation in 2.5D angled rendering (`renderAngledOverheadLayer`), unifying deck direction calculation via `getOverheadBridgeDirection` across both angled and top-down pipelines.
+  - Implemented smooth player elevation interpolation across directional ramps (`player.getEffectiveElevation()`), rendering ascending/descending players with fractional height lift to eliminate sprite snapping and clipping.
+  - Enhanced underpass tunnel rendering in `renderAngledFloors` with subterranean ground cobblestones and entry/exit archway shadows for open corridors beneath overhead bridges and platforms.
+  - Overhauled Chapter 10 Level 38 ("Concentric Trestles") into a multi-tiered fortress: high outer battlement ramparts (`WALL_WALK`), grand multi-span viaduct trestles (`BRIDGE_EW`, `PLATFORM`), sunken keystone courtyard with scouting from above, and mandatory underpass tunnels (optimal: 77 steps, 40 elevated steps, 0 dead spaces $\ge 4\times 4$).
+  - Updated automated unit tests in `tests/unit/levels/chapter-10.test.mjs` asserting 77 optimal steps, 89 par steps, and $\ge 35$ elevated steps.
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
