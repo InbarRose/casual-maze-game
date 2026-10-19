@@ -37,8 +37,8 @@ describe('Campaign > Chapter 10: The Prismatic Labyrinth (Levels 37–40)', () =
     const l38 = chapter10Levels.find(l => l.id === '38');
     assert(l38 !== undefined, 'Level 38 exists');
     assertEqual(l38.title, 'Concentric Trestles');
-    assertEqual(l38.layers.ground[5][5], TILES.RAMP_E, 'Ramp ascends East on ground');
-    assertEqual(l38.layers.overhead[5][8], TILES.BRIDGE_NS, 'Overhead trestle spans East-West');
+    assertEqual(l38.layers.ground[12][6], TILES.RAMP_E, 'Ramp ascends East on ground');
+    assertEqual(l38.layers.overhead[7][12], TILES.BRIDGE_NS, 'Overhead trestle spans North-South');
     assert(l38.entities.some(e => e.id === 'key_prism_38'), 'Has prism key');
     assert(l38.entities.some(e => e.id === 'door_prism_38'), 'Has sanctum door');
   });
