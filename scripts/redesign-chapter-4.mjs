@@ -57,6 +57,15 @@ export function generateLevel13() {
   g[9][6] = 0; g[9][8] = 0;
   g[6][5] = 'SW'; // Secret wall from (4, 6) into central void shrine
 
+  // Introduce 3D verticality: overhead skywalk across row 3 overlooking central astral rift
+  level.layers.overhead[3][5] = 'WW';
+  level.layers.overhead[3][6] = 'PLATFORM';
+  level.layers.overhead[3][7] = 'PLATFORM';
+  level.layers.overhead[3][8] = 'PLATFORM';
+  level.layers.overhead[3][9] = 'WW';
+  g[4][5] = 'R_N';
+  g[4][9] = 'R_N';
+
   // Add secret collectible
   if (!level.entities.some(e => e.id === 'secret_astral_13')) {
     level.entities.push({
@@ -84,6 +93,14 @@ export function generateLevel14() {
   // Carve lower-left dead space (rows 12..13, col 2)
   g[12][2] = 0; g[13][2] = 0;
   g[12][3] = 'SW'; // Secret wall from (3, 12) into hidden star observatory
+
+  // Introduce 3D verticality: overhead spire skybridge across row 4 overlooking twin rifts
+  level.layers.overhead[4][7] = 'WW';
+  level.layers.overhead[4][8] = 'PLATFORM';
+  level.layers.overhead[4][9] = 'PLATFORM';
+  level.layers.overhead[4][10] = 'WW';
+  g[5][7] = 'R_N';
+  g[5][10] = 'R_N';
 
   // Add secret collectible
   if (!level.entities.some(e => e.id === 'secret_star_14')) {
@@ -124,6 +141,12 @@ export function generateLevel15() {
   g[2][7] = 0; g[3][7] = 0;
   g[2][8] = 0; g[3][8] = 0;
   g[2][6] = 'SW';
+
+  // Introduce 3D verticality: wall-walk battlements connecting to the bridge deck
+  level.layers.overhead[6][7] = 'WW';
+  level.layers.overhead[6][8] = 'WW';
+  level.layers.overhead[6][10] = 'WW';
+  level.layers.overhead[6][11] = 'WW';
 
   // Add secret collectible
   if (!level.entities.some(e => e.id === 'secret_warp_15')) {
@@ -180,6 +203,15 @@ export function generateLevel16() {
   }
   g[14][15] = 0; g[17][15] = 0;
   g[12][15] = 'SW';
+
+  // Introduce 3D verticality: celestial nexus viaduct spanning over lower crypt corridors
+  level.layers.overhead[7][7] = 'WW';
+  level.layers.overhead[7][8] = 'PLATFORM';
+  level.layers.overhead[7][9] = 'PLATFORM';
+  level.layers.overhead[7][10] = 'PLATFORM';
+  level.layers.overhead[7][11] = 'WW';
+  g[8][7] = 'R_N';
+  g[8][11] = 'R_N';
 
   // Add secret collectible
   if (!level.entities.some(e => e.id === 'secret_nexus_16')) {
