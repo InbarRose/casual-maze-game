@@ -622,13 +622,13 @@
     "parSteps": 68,
     "parTime": 42,
     "version": 1,
-    "hash": "b21575f9bd02b0246243e7ae7847409fc73b995ca234cbe5850ab03716f8bf10",
-    "size": 8572,
+    "hash": "29ef75dd44cf5e2721fbfdc7e123e529021326da74da325b5bb0a0cfd1ed7d9a",
+    "size": 8806,
     "dimensions": {
       "width": 17,
       "height": 15
     },
-    "entityCount": 6,
+    "entityCount": 7,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -643,13 +643,13 @@
     "parSteps": 78,
     "parTime": 48,
     "version": 1,
-    "hash": "84ca3c9ea5dddb4f1e8ddd498842846ad2bb4f10d7f1e869dc721680ef04db0d",
-    "size": 9951,
+    "hash": "55ec5fb2784205be683d976232748087a06765801b4ccf4e4e847ed2f8164574",
+    "size": 10191,
     "dimensions": {
       "width": 19,
       "height": 15
     },
-    "entityCount": 8,
+    "entityCount": 9,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -664,13 +664,13 @@
     "parSteps": 90,
     "parTime": 56,
     "version": 1,
-    "hash": "0381287efee81bc95cdc0bd207892a2a186c6d1f0b4ce872b15ed8be8ebe2e4a",
-    "size": 10633,
+    "hash": "6af1a237b440704c698d2dd65ffe3fa39093e3d6c7416bb9e42a6368c57b9725",
+    "size": 10872,
     "dimensions": {
       "width": 19,
       "height": 17
     },
-    "entityCount": 8,
+    "entityCount": 9,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -685,13 +685,13 @@
     "parSteps": 110,
     "parTime": 70,
     "version": 1,
-    "hash": "f7f7c907b2e14b4748f884266b7fd9a17ae0865bb0f00cad1d4508793c2c54f7",
-    "size": 13386,
+    "hash": "92a3e1ff471de4aa2db2fae1c963ba06583f7ce29f994c49d511b5abfed030ef",
+    "size": 13646,
     "dimensions": {
       "width": 21,
       "height": 19
     },
-    "entityCount": 12,
+    "entityCount": 13,
     "hasMultiRoom": false,
     "exitCount": 1
   },
