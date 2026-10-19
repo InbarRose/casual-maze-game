@@ -162,6 +162,39 @@ describe('Engine > Click-to-Move & Hotkey Toggles', () => {
     loop.destroy();
   });
 
+  it('initiates click-to-move pathfinding when clicking on collectible keys and points', () => {
+    const levelWithCollectibles = {
+      ...testLevel,
+      entities: [
+        { id: 'key_ruby', type: 'key', x: 1, y: 2, elevation: 0 },
+        { id: 'gem_bonus', type: 'collectible', x: 3, y: 1, elevation: 0 },
+      ],
+    };
+
+    const mainCanvas = createMockCanvas();
+    const minimapCanvas = createMockCanvas(120, 120);
+    const loop = new GameLoop({ mainCanvas, minimapCanvas, level: levelWithCollectibles });
+
+    // Player starts at (1, 1). Key is at (1, 2) which is adjacent.
+    // Screen coordinate for (1, 2):
+    // Maze center is (112, 80). Camera center in 800x600 is (400, 300).
+    // Target world (1*32 + 16, 2*32 + 16) = (48, 80).
+    // Offset is (400 - 112, 300 - 80) = (288, 220).
+    // Screen pos = (48 + 288, 80 + 220) = (336, 300).
+    mainCanvas.trigger('pointerdown', {
+      clientX: 336,
+      clientY: 300,
+      button: 0,
+    });
+
+    assert(loop.autoMovePath !== null, 'Clicking adjacent collectible key initiates autoMovePath');
+    assertDeepEqual(loop.autoMovePath, [{ x: 1, y: 2 }], 'Path moves player onto key tile');
+    assertEqual(loop.clickTarget.x, 1);
+    assertEqual(loop.clickTarget.y, 2);
+
+    loop.destroy();
+  });
+
   it('cancels autoMovePath when user presses manual directional keys', () => {
     const mainCanvas = createMockCanvas();
     const minimapCanvas = createMockCanvas(120, 120);
