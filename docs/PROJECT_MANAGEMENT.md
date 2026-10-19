@@ -88,6 +88,14 @@ This document tracks project milestones, current release status, active developm
   - Integrated hazards and secrets: timed spike traps at deceptive dead-end spurs, patrolling sentinels with evasion alcoves, secret walls (`SW`) guarding high-value gems, and multi-tier viaduct bridges over underpasses.
   - Calibrated optimal solution step lengths and par ratings: Level 37 (75 steps, par 87), Level 38 (81 steps, 40 elevated, par 94), Level 39 (76 steps, par 88), Level 40 (165 steps, par 190).
   - Verified 100% solvability, zero bypass gating, zero dead space $\ge 4\times 4$ ($\text{DeadSpace}_{\ge 4\times 4} = 0$), and 100% passing tests (153 suites, 761 tests).
+- [ ] **Campaign-Wide True Maze Topology & 3D Multi-Elevation Redesign (BL-158, ADR-0043)**:
+  - Extend authentic labyrinth topology and 3D elevation traversal across all 10 chapters (Levels 1–40).
+  - Phase 1: Chapters 1 & 2 (Levels 1–8) — Replace square rooms with organic winding labyrinths, weave wall-walk ramparts and 3D underpass bridges.
+  - Phase 2: Chapters 3 & 4 (Levels 9–16) — Dynamic clockwork levers and vertical astral rifts across labyrinth corridors.
+  - Phase 3: Chapters 5 & 6 (Levels 17–24) — Molten viaducts over magma fissures, timed hazards at dead ends, and library mezzanine wall-walks.
+  - Phase 4: Chapters 7, 8 & 9 (Levels 25–36) — Citadel ascent ramparts, 4-way camera perspective overpasses, and winding aqueduct canals.
+  - Phase 5: Campaign-Wide Verification & Zero-Drift Synchronization.
+
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
