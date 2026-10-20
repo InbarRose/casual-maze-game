@@ -137,7 +137,7 @@ This document tracks project milestones, current release status, active developm
     - Chair 6 (Architecture, Modularity & Testing): **98 / 100**
     - **Composite Platform Score: 98.2 / 100 [A+]** (All 53 platform levels certified).
 
-- [ ] **Level Game Design & Visual Aesthetics Scoring Framework & Scrutiny Register (BL-161, ADR-0045)**:
+- [x] **Level Game Design & Visual Aesthetics Scoring Framework & Scrutiny Register (BL-161, ADR-0045)**:
   - Establish Level Audit Rubric v4.0.0 in [`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md) focused on Game Design, Visuals, 3D Architecture, Kishōtenketsu Pacing, Ergonomics, and Immersion.
   - Create automated empirical level metrics analyzer in `scripts/audit-level-metrics.mjs` verifying dimensions, playable area %, dead space blocks ($\ge 4\times 4$), corridor inertia %, 3D verticality elements, entity counts, and par step ratios.
   - Reconstruct [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) analogous to the comprehensive component scoring register ([`docs/COMPONENT_SCORING_REGISTER.md`](COMPONENT_SCORING_REGISTER.md)), featuring the Master Quality League Table and exhaustive, scrutinized scorecards (with sub-criteria ratings, game design critiques, visual polish analyses, scrutinized gaps & deductions, and enhancement directives) for all 53 platform levels.
