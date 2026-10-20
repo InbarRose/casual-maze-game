@@ -1,0 +1,53 @@
+[
+  {
+    "id": "sign_arch_13",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #13",
+    "text": "The amethyst rift warps reality itself. Step into the glowing circle to traverse the void.",
+    "style": "astral_scroll"
+  },
+  {
+    "id": "tp_13",
+    "type": "teleporter",
+    "name": "Amethyst Astral Rift",
+    "color": "#c084fc",
+    "x": 2,
+    "y": 6,
+    "z": 0,
+    "targetX": 12,
+    "targetY": 6,
+    "targetZ": 0
+  },
+  {
+    "id": "wall_note_13",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Two halves of the cosmos, severed by the void, reconnected by the rift.",
+    "playerDialogue": "The glowing circle will warp me across the chasm.",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "gem_astral_13",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Astral Amethyst",
+    "scoreValue": 150,
+    "x": 12,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "secret_astral_13",
+    "type": "collectible",
+    "name": "Astral Rift Shard",
+    "points": 250,
+    "x": 7,
+    "y": 6,
+    "elevation": 0
+  }
+]

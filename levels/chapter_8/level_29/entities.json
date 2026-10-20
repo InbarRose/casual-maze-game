@@ -1,0 +1,86 @@
+[
+  {
+    "id": "key_gold_29",
+    "type": "key",
+    "color": "#fbbf24",
+    "name": "Golden Needle Key",
+    "x": 1,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "door_gold_29",
+    "type": "door",
+    "color": "#fbbf24",
+    "name": "Needle Sanctum Gate",
+    "requiresKey": "key_gold_29",
+    "x": 12,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "checkpoint_29",
+    "type": "checkpoint",
+    "style": "crystal_beacon",
+    "name": "Central Needle Shrine",
+    "x": 7,
+    "y": 5,
+    "elevation": 0,
+    "color": "#38bdf8"
+  },
+  {
+    "id": "decor_note_north",
+    "type": "wall_decor",
+    "decorType": "note",
+    "title": "Needle Alignment",
+    "text": "Rotating 90 degrees CCW [Q] turns East to facing up. Screen movement always follows your view.",
+    "author": "Guild Cartographer",
+    "x": 7,
+    "y": 1,
+    "facing": "south",
+    "elevation": 0
+  },
+  {
+    "id": "decor_carving_center",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Four Faces of the Monolith",
+    "text": "The monolith casts its shadow according to the observer angle.",
+    "author": "Ancient Stonemason",
+    "x": 7,
+    "y": 9,
+    "facing": "north",
+    "elevation": 0
+  },
+  {
+    "id": "gem_score_29a",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Sapphire Prism",
+    "scoreValue": 150,
+    "color": "#38bdf8",
+    "x": 13,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "gem_cardinal_compass_29",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Lodestone Cardinal Needle",
+    "scoreValue": 200,
+    "x": 7,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "secret_needle_29",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Cardinal Astral Compass Gem",
+    "scoreValue": 300,
+    "x": 13,
+    "y": 1,
+    "elevation": 0
+  }
+]

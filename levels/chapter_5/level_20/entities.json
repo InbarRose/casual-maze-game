@@ -1,0 +1,162 @@
+[
+  {
+    "id": "sign_arch_20",
+    "type": "signpost",
+    "x": 3,
+    "y": 9,
+    "z": 0,
+    "title": "Architect's Note #20",
+    "text": "Here in the heart of Mount Ignis, all trials converge: synchronized fire jets, dual sentinels, and the royal Caldera Key. Prove your mastery.",
+    "style": "stone_tablet"
+  },
+  {
+    "id": "checkpoint_20",
+    "type": "checkpoint",
+    "name": "Heart of the Forge Beacon",
+    "x": 10,
+    "y": 9,
+    "elevation": 0,
+    "z": 0
+  },
+  {
+    "id": "patroller_20_north",
+    "type": "patroller",
+    "name": "North Foundry Sentinel",
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 13,
+        "y": 4,
+        "z": 0
+      },
+      {
+        "x": 7,
+        "y": 4,
+        "z": 0
+      }
+    ]
+  },
+  {
+    "id": "patroller_20_south",
+    "type": "patroller",
+    "name": "South Foundry Sentinel",
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 7,
+        "y": 16,
+        "z": 0
+      },
+      {
+        "x": 13,
+        "y": 16,
+        "z": 0
+      }
+    ]
+  },
+  {
+    "id": "hazard_vent_20_a",
+    "type": "hazard",
+    "style": "fire_jet",
+    "name": "Crucible Jet Alpha",
+    "interval": 3,
+    "activeDuration": 1,
+    "initialOffset": 0,
+    "x": 8,
+    "y": 9,
+    "elevation": 0,
+    "z": 0
+  },
+  {
+    "id": "hazard_vent_20_b",
+    "type": "hazard",
+    "style": "fire_jet",
+    "name": "Crucible Jet Beta",
+    "interval": 3,
+    "activeDuration": 1,
+    "initialOffset": 1.5,
+    "x": 12,
+    "y": 9,
+    "elevation": 0,
+    "z": 0
+  },
+  {
+    "id": "key_ruby_20",
+    "type": "key",
+    "color": "#ef4444",
+    "name": "Caldera Ruby Key",
+    "x": 10,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "door_ruby_20",
+    "type": "door",
+    "requiresKey": "key_ruby_20",
+    "color": "#ef4444",
+    "name": "Apex Crucible Gate",
+    "x": 15,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_20",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The Sovereign Forge—where legendary relics were tempered in primeval dragon fire.",
+    "playerDialogue": "Both sentinels pace the galleries. I must time my ascent to the North Gallery.",
+    "x": 2,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "gem_caldera_core_20",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Caldera Heart Core",
+    "scoreValue": 250,
+    "x": 3,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "gem_volcanic_crown_20",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Volcanic Crown Gem",
+    "scoreValue": 200,
+    "x": 17,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "gem_magma_orb_20",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Magma Siphon Orb",
+    "scoreValue": 200,
+    "x": 3,
+    "y": 15,
+    "elevation": 0
+  },
+  {
+    "id": "gem_dragon_cinder_20",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Dragon Cinder Shard",
+    "scoreValue": 250,
+    "x": 17,
+    "y": 15,
+    "elevation": 0
+  },
+  {
+    "id": "secret_caldera_20",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Primal Pyretic Crown",
+    "scoreValue": 500,
+    "x": 1,
+    "y": 1,
+    "elevation": 0
+  }
+]

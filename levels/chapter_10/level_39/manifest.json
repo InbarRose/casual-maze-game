@@ -1,0 +1,46 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "39",
+  "chapter": "chapter_10",
+  "zone": "zone_10",
+  "title": "Harmonic Mirror Seals",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 27,
+    "height": 27
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "prismatic",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "floor_symbol"
+  },
+  "exit": {
+    "x": 13,
+    "y": 13,
+    "elevation": 0,
+    "style": "pedestal",
+    "label": "Heart Portal"
+  },
+  "parSteps": 88,
+  "parTime": 46,
+  "architectNote": "Align the harmonic mirror seals. Retrieve the silver key from the east wing to enter the Inner Sanctum.",
+  "help": {
+    "title": "Level 39: Harmonic Mirror Seals",
+    "message": "The inner hall is shielded by harmonic forcefields. Explore the resonating corridors to secure the silver tuning key."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

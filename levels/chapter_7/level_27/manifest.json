@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "27",
+  "chapter": "chapter_7",
+  "zone": "zone_7",
+  "title": "The Prismatic Bastion",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 19,
+    "height": 17
+  },
+  "config": {
+    "fogOfWar": false,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "snow"
+  },
+  "spawn": {
+    "x": 2,
+    "y": 2,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 15,
+    "y": 8,
+    "elevation": 0,
+    "style": "wall_archway",
+    "wallDirection": "north"
+  },
+  "parSteps": 30,
+  "parTime": 18,
+  "architectNote": "Align the stellar cipher to reach the high bridge. Step into the aerial vortex to breach the sealed inner vault.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

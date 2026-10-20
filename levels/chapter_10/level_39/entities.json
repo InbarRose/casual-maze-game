@@ -1,0 +1,126 @@
+[
+  {
+    "id": "key_silver_39",
+    "type": "key",
+    "name": "Silver Harmonic Key",
+    "color": "#e2e8f0",
+    "x": 24,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "door_silver_39",
+    "type": "door",
+    "name": "Harmonic Forcefield Gate",
+    "color": "#e2e8f0",
+    "requiresKey": "key_silver_39",
+    "x": 13,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "lever_harmonic_39",
+    "type": "lever",
+    "name": "Harmonic Mirror Lever",
+    "color": "#a855f7",
+    "x": 3,
+    "y": 25,
+    "elevation": 0,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 13,
+        "y": 25,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "portal_harmonic_a",
+    "type": "teleporter",
+    "name": "Harmonic Rift Alpha",
+    "color": "#8b5cf6",
+    "x": 14,
+    "y": 25,
+    "elevation": 0,
+    "targetX": 23,
+    "targetY": 13,
+    "targetElevation": 0
+  },
+  {
+    "id": "portal_harmonic_b",
+    "type": "teleporter",
+    "name": "Harmonic Rift Beta",
+    "color": "#8b5cf6",
+    "x": 25,
+    "y": 13,
+    "elevation": 0,
+    "targetX": 13,
+    "targetY": 3,
+    "targetElevation": 0
+  },
+  {
+    "id": "patroller_harmonic_39",
+    "type": "patroller",
+    "name": "Resonant Mirror Warden",
+    "color": "#ec4899",
+    "elevation": 0,
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 17,
+        "y": 17
+      },
+      {
+        "x": 21,
+        "y": 17
+      }
+    ]
+  },
+  {
+    "id": "hazard_harmonic_39",
+    "type": "timed_hazard",
+    "hazardType": "spikes",
+    "x": 7,
+    "y": 9,
+    "elevation": 0,
+    "activeDuration": 2,
+    "inactiveDuration": 2,
+    "offset": 0
+  },
+  {
+    "id": "checkpoint_39",
+    "type": "checkpoint",
+    "style": "crystal_beacon",
+    "name": "Harmonic Mirror Beacon",
+    "x": 13,
+    "y": 2,
+    "elevation": 0,
+    "color": "#e2e8f0"
+  },
+  {
+    "id": "decor_note_39",
+    "type": "wall_decor",
+    "decorType": "plaque",
+    "title": "Harmonic Mirror Inscription",
+    "text": "The silver tuning key rests in the isolated East Astral Sanctum. Align the southern focal lever to unseal the resonant rift.",
+    "author": "Prism Master Kael",
+    "x": 1,
+    "y": 3,
+    "facing": "east",
+    "elevation": 0
+  },
+  {
+    "id": "gem_secret_39",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Harmonic Moonstone",
+    "scoreValue": 350,
+    "color": "#38bdf8",
+    "x": 24,
+    "y": 4,
+    "elevation": 0
+  }
+]

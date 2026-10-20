@@ -1,0 +1,48 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "29",
+  "chapter": "chapter_8",
+  "zone": "zone_8",
+  "title": "The Cardinal Needle",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 15,
+    "height": 15
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "dungeon",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 13,
+    "y": 13,
+    "elevation": 0,
+    "style": "wall_archway",
+    "label": "Needle Sanctum",
+    "wallDirection": "north"
+  },
+  "parSteps": 29,
+  "parTime": 18,
+  "architectNote": "Rotate the camera [Q / R] to view the cardinal corridors. Seek the golden key in the south-west wing.",
+  "help": {
+    "title": "Level 29: The Cardinal Needle",
+    "message": "Press [Q] and [R] to rotate the view. Screen controls adapt automatically to your camera heading."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

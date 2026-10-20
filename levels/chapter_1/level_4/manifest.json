@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "4",
+  "chapter": "chapter_1",
+  "zone": "zone_1",
+  "title": "The Shrouded Vault",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 19,
+    "height": 17
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "dungeon"
+  },
+  "spawn": {
+    "x": 9,
+    "y": 8,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 9,
+    "y": 15,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 72,
+  "parTime": 40,
+  "architectNote": "Architect's Journal: The Triune Sanctum to the south requires all three resonance keys—Ruby, Emerald, and Sapphire. The labyrinth wings connect all three cathedral chambers beneath the shrouded mist.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

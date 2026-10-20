@@ -1,0 +1,47 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "34",
+  "chapter": "chapter_9",
+  "zone": "zone_9",
+  "title": "Submerged Crossings",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 17,
+    "height": 17
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "aqueduct",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 15,
+    "y": 15,
+    "elevation": 0,
+    "style": "portal",
+    "label": "Lower Reservoir Flume"
+  },
+  "parSteps": 57,
+  "parTime": 30,
+  "architectNote": "Cross the elevated aqueduct bridge, then drop into the flooded channel below to retrieve the pressure key.",
+  "help": {
+    "title": "Level 34: Submerged Crossings",
+    "message": "Navigate multi-elevation bridges. The key lies submerged in the deep canal running beneath the aqueduct trestle."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

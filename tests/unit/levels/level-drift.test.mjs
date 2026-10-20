@@ -39,8 +39,12 @@ describe('Levels > Cryptographic Integrity & Versioning', () => {
       for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
         const full = path.join(dir, item.name);
         if (item.isDirectory()) {
+          // If this is a modular level package directory (contains manifest.json & layers.json), skip internal files
+          if (fs.existsSync(path.join(full, 'manifest.json')) && fs.existsSync(path.join(full, 'layers.json'))) {
+            continue;
+          }
           list.push(...scanLevels(full));
-        } else if (item.name.endsWith('.json') && item.name !== 'manifest.json') {
+        } else if (item.name.endsWith('.json') && item.name !== 'manifest.json' && item.name !== 'layers.json' && item.name !== 'entities.json') {
           list.push(path.relative(rootDir, full).replace(/\\/g, '/'));
         }
       }

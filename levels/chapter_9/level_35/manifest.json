@@ -1,0 +1,47 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "35",
+  "chapter": "chapter_9",
+  "zone": "zone_9",
+  "title": "The Pressure Basin",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 19,
+    "height": 19
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "aqueduct",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 17,
+    "y": 17,
+    "elevation": 0,
+    "style": "portal",
+    "label": "Pressure Basin Outflow"
+  },
+  "parSteps": 48,
+  "parTime": 25,
+  "architectNote": "Timing is everything. Retrieve the pressure key from the northern gallery, then bypass the pulsing geysers to unlock the outflow gate.",
+  "help": {
+    "title": "Level 35: The Pressure Basin",
+    "message": "Timed hazard geysers pulse along the outflow corridor. Find the relief key in the northeast chamber."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

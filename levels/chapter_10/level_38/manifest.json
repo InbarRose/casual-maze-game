@@ -1,0 +1,47 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "38",
+  "chapter": "chapter_10",
+  "zone": "zone_10",
+  "title": "Concentric Trestles",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 25,
+    "height": 25
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "prismatic",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 12,
+    "y": 12,
+    "elevation": 0,
+    "style": "pedestal",
+    "label": "Apex Altar"
+  },
+  "parSteps": 94,
+  "parTime": 49,
+  "architectNote": "Traverse the multi-elevation concentric trestles, toggle the battlement lever, and claim the keystone to enter the Apex Altar.",
+  "help": {
+    "title": "Level 38: Concentric Trestles",
+    "message": "The inner sanctum is surrounded by concentric ring galleries. Cross the elevated trestle bridges to navigate between tiers."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

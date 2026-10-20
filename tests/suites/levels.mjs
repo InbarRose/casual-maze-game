@@ -26,5 +26,6 @@ import '../unit/levels/chapter-7.test.mjs';
 import '../unit/levels/chapter-8.test.mjs';
 import '../unit/levels/chapter-9.test.mjs';
 import '../unit/levels/chapter-10.test.mjs';
+import '../unit/levels/package-architecture.test.mjs';
 
 await run();

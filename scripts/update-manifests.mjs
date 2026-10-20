@@ -9,6 +9,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { computeNormalizedFileHashAndSize } from '../tests/helpers/crypto-utils.mjs';
+import { compileLevelPackage, isLevelPackage } from './level-package-compiler.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -248,12 +249,19 @@ const rawLevelManifest = JSON.parse(fs.readFileSync(levelManifestPath, 'utf8'));
 const enrichedLevels = [];
 for (const entry of rawLevelManifest) {
   const levelFilePath = path.join(rootDir, entry.file);
-  if (!fs.existsSync(levelFilePath)) {
+  const packageDir = levelFilePath.replace(/\.json$/, '');
+
+  let levelData;
+  if (isLevelPackage(packageDir)) {
+    levelData = compileLevelPackage(packageDir);
+    fs.writeFileSync(levelFilePath, JSON.stringify(levelData, null, 2) + '\n', 'utf8');
+  } else if (fs.existsSync(levelFilePath)) {
+    levelData = JSON.parse(fs.readFileSync(levelFilePath, 'utf8'));
+  } else {
     throw new Error(`Level file referenced in manifest does not exist: ${entry.file}`);
   }
 
   const { hash, size } = computeFileHashAndSize(levelFilePath);
-  const levelData = JSON.parse(fs.readFileSync(levelFilePath, 'utf8'));
 
   const dimensions = levelData.dimensions || { width: 0, height: 0 };
   const entityCount = Array.isArray(levelData.entities) ? levelData.entities.length : 0;

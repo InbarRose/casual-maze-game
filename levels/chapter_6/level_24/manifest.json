@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "24",
+  "chapter": "chapter_6",
+  "zone": "zone_6",
+  "title": "The Grand Archive",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 21,
+    "height": 19
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "sunset"
+  },
+  "spawn": {
+    "x": 2,
+    "y": 9,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 18,
+    "y": 9,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 52,
+  "parTime": 32,
+  "architectNote": "The Grand Archive holds the accumulated wisdom of all celestial trials. Decipher the rune script, align the stargazer cipher, and claim the Master Golden Key.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

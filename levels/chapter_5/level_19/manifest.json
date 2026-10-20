@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "19",
+  "chapter": "chapter_5",
+  "zone": "zone_5",
+  "title": "The Crucible Crossing",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 19,
+    "height": 15
+  },
+  "config": {
+    "fogOfWar": false,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "lava"
+  },
+  "spawn": {
+    "x": 2,
+    "y": 7,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 16,
+    "y": 7,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 29,
+  "parTime": 18,
+  "architectNote": "The crucible combines searing flame jets with a vigilant sentinel. Activate the cool crystal beacon midway to secure your footing.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

@@ -1,0 +1,64 @@
+[
+  {
+    "id": "sign_ch1_3",
+    "type": "signpost",
+    "title": "Architect's Note #3",
+    "x": 2,
+    "y": 6,
+    "elevation": 0,
+    "text": "Architect's Journal: The central dais is locked under royal purple seal. To break it, claim the Emerald Key in the southern cistern, open the eastern passage, and retrieve the Purple Keystone."
+  },
+  {
+    "id": "inscr_cistern",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Ancient stone: Resonance flows in cycles. The Emerald unlocks the path to royalty.",
+    "playerDialogue": "The Emerald Gate will open the way forward.",
+    "x": 1,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "key_emerald_3",
+    "type": "key",
+    "color": "green",
+    "x": 3,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "door_emerald_3",
+    "type": "door",
+    "color": "green",
+    "requiresKey": "key_emerald_3",
+    "x": 7,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "key_purple_3",
+    "type": "key",
+    "color": "purple",
+    "x": 13,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "door_purple_3",
+    "type": "door",
+    "color": "purple",
+    "requiresKey": "key_purple_3",
+    "x": 9,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gem_3",
+    "type": "collectible",
+    "name": "Prismatic Shard",
+    "points": 300,
+    "x": 13,
+    "y": 1,
+    "elevation": 0
+  }
+]

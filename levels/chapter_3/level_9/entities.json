@@ -1,0 +1,61 @@
+[
+  {
+    "id": "sign_arch_9",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #9",
+    "text": "The bronze lever awakens the sleeping clockwork. Throw the switch to slide the heavy stone barrier into the floor.",
+    "style": "stone_tablet"
+  },
+  {
+    "id": "lever_9",
+    "type": "lever",
+    "name": "Iron Foundry Lever",
+    "style": "switch_lever",
+    "x": 2,
+    "y": 8,
+    "elevation": 0,
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 10,
+        "y": 5,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "wall_gear_carving_9",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Pistons roar beneath the stone when the iron lever clicks.",
+    "playerDialogue": "The lever on the left must control the eastern barrier.",
+    "x": 2,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "gem_clockwork_9",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Bronze Gear Relic",
+    "scoreValue": 150,
+    "x": 12,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gear_9",
+    "type": "collectible",
+    "name": "Forgemaster Gear",
+    "points": 250,
+    "x": 6,
+    "y": 11,
+    "elevation": 0
+  }
+]

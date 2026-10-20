@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "16",
+  "chapter": "chapter_4",
+  "zone": "zone_4",
+  "title": "The Astral Nexus",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 19,
+    "height": 19
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "cave"
+  },
+  "spawn": {
+    "x": 9,
+    "y": 2,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 9,
+    "y": 17,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 38,
+  "parTime": 23,
+  "architectNote": "Four cosmic realms converge at the Astral Nexus. Journey through the planetary rifts, assemble the colored keystones, and breach the Star Core.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

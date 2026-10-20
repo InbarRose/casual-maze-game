@@ -1,0 +1,73 @@
+[
+  {
+    "id": "sign_arch_25",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #25",
+    "text": "The icy ramparts bridge the frozen abyss. Ascend the wooden incline, traverse the high gallery, and ride the rift to the Azure Sigil.",
+    "style": "astral_scroll"
+  },
+  {
+    "id": "tp_25",
+    "type": "teleporter",
+    "name": "Frost Rift",
+    "color": "#38bdf8",
+    "x": 7,
+    "y": 12,
+    "z": 0,
+    "targetX": 12,
+    "targetY": 3,
+    "targetZ": 0
+  },
+  {
+    "id": "key_azure_25",
+    "type": "key",
+    "color": "#38bdf8",
+    "name": "Citadel Sigil Key",
+    "x": 14,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "door_azure_25",
+    "type": "door",
+    "requiresKey": "key_azure_25",
+    "color": "#38bdf8",
+    "name": "Citadel Sigil Gate",
+    "x": 13,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_25",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The fortress of the sovereign stands above the glaciers, impervious to the howling winds.",
+    "playerDialogue": "Ascending the ramp will carry me across the chasm to the portal.",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "gem_frostfire_diamond_25",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Frostfire Diamond",
+    "scoreValue": 200,
+    "x": 7,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "secret_rampart_25",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Rampart Star Diadem",
+    "scoreValue": 300,
+    "x": 1,
+    "y": 1,
+    "elevation": 0
+  }
+]

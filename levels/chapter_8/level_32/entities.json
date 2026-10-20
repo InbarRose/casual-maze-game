@@ -1,0 +1,62 @@
+[
+  {
+    "id": "key_emerald_32",
+    "type": "key",
+    "color": "#10b981",
+    "name": "Spire Apex Key",
+    "x": 15,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "door_emerald_32",
+    "type": "door",
+    "color": "#10b981",
+    "name": "Crown Barrier",
+    "requiresKey": "key_emerald_32",
+    "x": 15,
+    "y": 14,
+    "elevation": 0
+  },
+  {
+    "id": "checkpoint_32",
+    "type": "checkpoint",
+    "style": "shrine",
+    "name": "Spire Sanctuary Waypoint",
+    "x": 8,
+    "y": 8,
+    "elevation": 1,
+    "color": "#38bdf8"
+  },
+  {
+    "id": "gem_apex_crown",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Diamond of the Monolith",
+    "scoreValue": 500,
+    "color": "#ffffff",
+    "x": 8,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "gem_monolith_apex_core_32",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Apex Monolith Core Crystal",
+    "scoreValue": 300,
+    "x": 2,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "secret_spire_32",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Crown Monolith Prismatic Core",
+    "scoreValue": 500,
+    "x": 15,
+    "y": 1,
+    "elevation": 0
+  }
+]

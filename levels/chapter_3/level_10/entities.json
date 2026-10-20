@@ -1,0 +1,81 @@
+[
+  {
+    "id": "sign_arch_10",
+    "type": "signpost",
+    "x": 4,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #10",
+    "text": "Dual conduits power the hydraulic gates. Engage the western valve to unlock the concourse, then release the eastern master piston.",
+    "style": "stone_tablet"
+  },
+  {
+    "id": "lever_10_west",
+    "type": "lever",
+    "name": "Western Hydraulic Valve",
+    "style": "switch_lever",
+    "x": 2,
+    "y": 7,
+    "elevation": 0,
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 6,
+        "y": 5,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "lever_10_east",
+    "type": "lever",
+    "name": "Eastern Steam Piston",
+    "style": "switch_lever",
+    "x": 14,
+    "y": 7,
+    "elevation": 0,
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 9,
+        "y": 10,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "wall_note_10",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Conduit sequence: West powers Concourse, East unlocks South.",
+    "playerDialogue": "The western valve opens the central chamber.",
+    "x": 3,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "gem_clockwork_10",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Brass Dynamo Core",
+    "scoreValue": 200,
+    "x": 14,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "secret_valve_10",
+    "type": "collectible",
+    "name": "Brass Chronometer",
+    "points": 300,
+    "x": 3,
+    "y": 12,
+    "elevation": 0
+  }
+]

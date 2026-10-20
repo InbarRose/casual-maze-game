@@ -1,0 +1,89 @@
+[
+  {
+    "id": "key_ruby_31",
+    "type": "key",
+    "color": "#f43f5e",
+    "name": "Ruby Monolith Key",
+    "x": 13,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "door_ruby_31",
+    "type": "door",
+    "color": "#f43f5e",
+    "name": "Southern Pillar Gate",
+    "requiresKey": "key_ruby_31",
+    "x": 12,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "decor_north_face",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "North Face of Monolith",
+    "text": "Face of the North Wind: The ruby key sleeps in the eastern vault.",
+    "author": "Ancient Scribe",
+    "x": 7,
+    "y": 6,
+    "facing": "north",
+    "elevation": 0
+  },
+  {
+    "id": "decor_east_face",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "East Face of Monolith",
+    "text": "Face of the Dawn: When the perspective is turned, unseen paths emerge.",
+    "author": "Ancient Scribe",
+    "x": 8,
+    "y": 7,
+    "facing": "east",
+    "elevation": 0
+  },
+  {
+    "id": "decor_south_face",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "South Face of Monolith",
+    "text": "Face of the Zenith: Unlock the southern portal to continue upward.",
+    "author": "Ancient Scribe",
+    "x": 7,
+    "y": 8,
+    "facing": "south",
+    "elevation": 0
+  },
+  {
+    "id": "decor_west_face",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "West Face of Monolith",
+    "text": "Face of the Dusk: Rotate [R] clockwise to survey the courtyard.",
+    "author": "Ancient Scribe",
+    "x": 6,
+    "y": 7,
+    "facing": "west",
+    "elevation": 0
+  },
+  {
+    "id": "gem_four_winds_eye_31",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Eye of the Four Winds",
+    "scoreValue": 250,
+    "x": 7,
+    "y": 7,
+    "elevation": 0
+  },
+  {
+    "id": "secret_pillar_31",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Four Winds Zephyr Core",
+    "scoreValue": 400,
+    "x": 13,
+    "y": 1,
+    "elevation": 0
+  }
+]

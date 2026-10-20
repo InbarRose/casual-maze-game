@@ -1,0 +1,78 @@
+[
+  {
+    "id": "sign_arch_11",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #11",
+    "text": "The master valve is balanced upon a counterweight: as the northern sluice gate lowers into the chasm, the southern passage seals.",
+    "style": "stone_tablet"
+  },
+  {
+    "id": "lever_11",
+    "type": "lever",
+    "name": "Counterweight Sluice Lever",
+    "style": "switch_lever",
+    "x": 2,
+    "y": 4,
+    "elevation": 0,
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 8,
+        "y": 3,
+        "stateA": 0,
+        "stateB": 1
+      },
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 3,
+        "y": 5,
+        "stateA": 1,
+        "stateB": 0
+      }
+    ]
+  },
+  {
+    "id": "key_gold_11",
+    "type": "key",
+    "color": "#fbbf24",
+    "name": "Sluice Key",
+    "x": 14,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "door_gold_11",
+    "type": "door",
+    "requiresKey": "key_gold_11",
+    "color": "#fbbf24",
+    "name": "Gear Crypt Gate",
+    "x": 13,
+    "y": 10,
+    "elevation": 0
+  },
+  {
+    "id": "wall_decor_11",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Lower the northern sluice to claim the gilded key.",
+    "playerDialogue": "The northern gate opened, allowing passage to the eastern vault.",
+    "x": 2,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "secret_counterweight_11",
+    "type": "collectible",
+    "name": "Gilded Flywheel",
+    "points": 300,
+    "x": 6,
+    "y": 12,
+    "elevation": 0
+  }
+]

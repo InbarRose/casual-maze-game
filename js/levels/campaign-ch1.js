@@ -481,7 +481,8 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "y": 1,
         "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_1"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1022,7 +1023,8 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "y": 1,
         "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_2"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1699,7 +1701,8 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "y": 1,
         "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_3"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -2537,6 +2540,7 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "y": 14,
         "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_4"
   }
 ]);

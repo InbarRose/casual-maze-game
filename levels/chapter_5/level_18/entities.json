@@ -1,0 +1,99 @@
+[
+  {
+    "id": "sign_arch_18",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #18",
+    "text": "Obsidian golems patrol the basalt halls in eternal vigilance. Lure them around the central pillars to slip past.",
+    "style": "stone_tablet"
+  },
+  {
+    "id": "patroller_18",
+    "type": "patroller",
+    "name": "Molten Sentinel",
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 6,
+        "y": 5,
+        "z": 0
+      },
+      {
+        "x": 10,
+        "y": 5,
+        "z": 0
+      },
+      {
+        "x": 10,
+        "y": 9,
+        "z": 0
+      },
+      {
+        "x": 6,
+        "y": 9,
+        "z": 0
+      }
+    ]
+  },
+  {
+    "id": "key_bronze_18",
+    "type": "key",
+    "color": "#f97316",
+    "name": "Basalt Foundry Key",
+    "x": 14,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "door_bronze_18",
+    "type": "door",
+    "requiresKey": "key_bronze_18",
+    "color": "#f97316",
+    "name": "Foundry Vault Gate",
+    "x": 13,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_18",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Forged from living magma and black glass, the sentinels follow their endless circuit.",
+    "playerDialogue": "If I circle the central pillar, the sentinel will pace ahead of me.",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "gem_obsidian_eye_18",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Obsidian Sentinel Eye",
+    "scoreValue": 200,
+    "x": 1,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "gem_pyrite_cluster_18",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Pyrite Cluster",
+    "scoreValue": 150,
+    "x": 15,
+    "y": 7,
+    "elevation": 0
+  },
+  {
+    "id": "secret_basalt_18",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Crystalline Basalt Rose",
+    "scoreValue": 350,
+    "x": 1,
+    "y": 13,
+    "elevation": 0
+  }
+]

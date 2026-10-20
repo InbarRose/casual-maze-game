@@ -1,0 +1,48 @@
+[
+  {
+    "id": "sign_arch_7",
+    "type": "signpost",
+    "title": "Architect's Note #7",
+    "x": 3,
+    "y": 5,
+    "elevation": 0,
+    "text": "Architect's Journal: The Sunken Chasm weaves two perpendicular viaducts across the chasm rift. Navigate the lower canals beneath the east-west bridge, then ascend to claim the azure keystone atop the north-south trestle."
+  },
+  {
+    "id": "inscr_chasm_7",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Perpendicular arches intersect above the deep canal. The path of height meets the path of depth.",
+    "playerDialogue": "Both bridges must be traversed to reach the sanctum.",
+    "x": 3,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "key_azure_7",
+    "type": "key",
+    "color": "#06b6d4",
+    "x": 14,
+    "y": 9,
+    "z": 1,
+    "elevation": 1
+  },
+  {
+    "id": "door_azure_7",
+    "type": "door",
+    "color": "#06b6d4",
+    "requiresKey": "key_azure_7",
+    "x": 8,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gem_7",
+    "type": "collectible",
+    "name": "Chasm Aquamarine",
+    "points": 350,
+    "x": 2,
+    "y": 11,
+    "elevation": 0
+  }
+]

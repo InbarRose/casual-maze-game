@@ -1,0 +1,84 @@
+[
+  {
+    "id": "key_basin_35",
+    "type": "key",
+    "color": "#38bdf8",
+    "name": "Pressure Basin Key",
+    "x": 11,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "door_basin_35",
+    "type": "door",
+    "color": "#38bdf8",
+    "name": "Outflow Pressure Gate",
+    "requiresKey": "key_basin_35",
+    "x": 16,
+    "y": 17,
+    "elevation": 0
+  },
+  {
+    "id": "hazard_basin_35a",
+    "type": "timed_hazard",
+    "hazardType": "spikes",
+    "x": 9,
+    "y": 13,
+    "elevation": 0,
+    "activeDuration": 2,
+    "inactiveDuration": 2.5,
+    "offset": 0
+  },
+  {
+    "id": "hazard_basin_35b",
+    "type": "timed_hazard",
+    "hazardType": "spikes",
+    "x": 13,
+    "y": 11,
+    "elevation": 0,
+    "activeDuration": 1.8,
+    "inactiveDuration": 2.2,
+    "offset": 1
+  },
+  {
+    "id": "patroller_basin_35",
+    "type": "patroller",
+    "name": "Pressure Warden",
+    "color": "#0284c7",
+    "elevation": 0,
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 13,
+        "y": 9
+      },
+      {
+        "x": 17,
+        "y": 9
+      }
+    ]
+  },
+  {
+    "id": "decor_carving_35",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Relief Valve Directive",
+    "text": "When basin pressure reaches critical threshold, vent steam via the north valve.",
+    "author": "Basin Overseer",
+    "x": 9,
+    "y": 8,
+    "facing": "south",
+    "elevation": 0
+  },
+  {
+    "id": "gem_secret_35",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Deep Aquamarine",
+    "scoreValue": 200,
+    "color": "#0284c7",
+    "x": 3,
+    "y": 15,
+    "elevation": 0
+  }
+]

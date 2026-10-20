@@ -1,0 +1,47 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "40",
+  "chapter": "chapter_10",
+  "zone": "zone_10",
+  "title": "Heart of the Prism",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 29,
+    "height": 29
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "prismatic",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 14,
+    "y": 14,
+    "elevation": 0,
+    "style": "pedestal",
+    "label": "Heart of the Prism"
+  },
+  "parSteps": 190,
+  "parTime": 99,
+  "architectNote": "The climax macro-labyrinth. Traverse the four elemental quadrant sanctums and claim the Crown of the Prism at the central altar.",
+  "help": {
+    "title": "Level 40: Heart of the Prism",
+    "message": "Four elemental seals guard the heart of the prism. Explore all four quadrants, cross elevated viaducts, and breach the central sanctuary."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

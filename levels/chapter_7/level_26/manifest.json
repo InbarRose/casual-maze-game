@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "26",
+  "chapter": "chapter_7",
+  "zone": "zone_7",
+  "title": "The Frostfire Conduit",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 19,
+    "height": 15
+  },
+  "config": {
+    "fogOfWar": false,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "snow"
+  },
+  "spawn": {
+    "x": 2,
+    "y": 2,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 16,
+    "y": 12,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 61,
+  "parTime": 37,
+  "architectNote": "Overhead bridges pass high above the Frost Sentinel. Traverse the aerial walkway to claim the Ruby Key and throw the dynamo switch.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

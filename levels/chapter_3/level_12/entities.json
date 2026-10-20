@@ -1,0 +1,80 @@
+[
+  {
+    "id": "sign_arch_12",
+    "type": "signpost",
+    "x": 10,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #12",
+    "text": "The entire citadel moves in harmony. Retrieve the Ruby Key from the western furnace, activate the eastern dynamo, and claim the Master Gear.",
+    "style": "stone_tablet"
+  },
+  {
+    "id": "key_ruby_12",
+    "type": "key",
+    "color": "#ef4444",
+    "name": "Furnace Ruby Key",
+    "x": 2,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "lever_12",
+    "type": "lever",
+    "name": "Master Dynamo Lever",
+    "style": "switch_lever",
+    "x": 16,
+    "y": 8,
+    "elevation": 0,
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 9,
+        "y": 12,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "door_ruby_12",
+    "type": "door",
+    "requiresKey": "key_ruby_12",
+    "color": "#ef4444",
+    "name": "Apex Portcullis",
+    "x": 9,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "wall_decor_12",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The Triad of the Machine: West yields the key, East drops the wall, South crowns the Master.",
+    "playerDialogue": "Both the Ruby Key and the Dynamo Switch are required to enter the Apex.",
+    "x": 9,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "gem_clockwork_12",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Master Chronometer",
+    "scoreValue": 300,
+    "x": 9,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "secret_dynamo_12",
+    "type": "collectible",
+    "name": "Dynamo Core Crystal",
+    "points": 400,
+    "x": 3,
+    "y": 14,
+    "elevation": 0
+  }
+]
