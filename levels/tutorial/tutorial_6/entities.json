@@ -1,0 +1,91 @@
+[
+  {
+    "id": "key_green_t6",
+    "type": "key",
+    "x": 3,
+    "y": 3,
+    "color": "#34d399",
+    "name": "Emerald Scarab",
+    "style": "relic",
+    "glowEffect": "vibrant"
+  },
+  {
+    "id": "door_green_t6",
+    "type": "door",
+    "x": 4,
+    "y": 1,
+    "requiresKey": "key_green_t6",
+    "color": "#34d399",
+    "style": "portcullis",
+    "orientation": "vertical"
+  },
+  {
+    "id": "key_blue_t6",
+    "type": "key",
+    "x": 15,
+    "y": 1,
+    "color": "#38bdf8",
+    "name": "Sapphire Orb",
+    "style": "orb",
+    "glowEffect": "pulse"
+  },
+  {
+    "id": "door_blue_t6",
+    "type": "door",
+    "x": 11,
+    "y": 11,
+    "requiresKey": "key_blue_t6",
+    "color": "#38bdf8",
+    "style": "magic_seal",
+    "orientation": "vertical"
+  },
+  {
+    "id": "lever_t6",
+    "type": "lever",
+    "x": 11,
+    "y": 12,
+    "name": "Sanctuary Switch",
+    "style": "pressure_pedestal",
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 2,
+        "y": 14,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "key_red_t6",
+    "type": "key",
+    "x": 1,
+    "y": 15,
+    "color": "#f43f5e",
+    "name": "Ruby Sun Shard",
+    "style": "crystal",
+    "glowEffect": "vibrant"
+  },
+  {
+    "id": "door_red_t6",
+    "type": "door",
+    "x": 14,
+    "y": 15,
+    "requiresKey": "key_red_t6",
+    "color": "#f43f5e",
+    "style": "vault_hatch",
+    "orientation": "vertical"
+  },
+  {
+    "id": "gem_tutorial_sunstone",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Sunstone Relic",
+    "scoreValue": 100,
+    "x": 5,
+    "y": 7,
+    "elevation": 0
+  }
+]

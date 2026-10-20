@@ -1,0 +1,21 @@
+[
+  {
+    "id": "lever_t3_1",
+    "type": "lever",
+    "x": 3,
+    "y": 7,
+    "name": "Sanctuary Lever",
+    "style": "switch_lever",
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 5,
+        "y": 5,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  }
+]

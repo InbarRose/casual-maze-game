@@ -7,8 +7,8 @@
     "file": "levels/tutorial/tutorial_1.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "538b406728dbeb25d904c121a1a9a8b2257b477de4d8a81bb430613bf49448d9",
-    "size": 2949,
+    "hash": "4bf20974ec57c36cdabecf198a882a3bf20d6ad412e00d7ee282f7e8f13548bf",
+    "size": 3146,
     "dimensions": {
       "width": 9,
       "height": 9
@@ -25,8 +25,8 @@
     "file": "levels/tutorial/tutorial_2.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "b381ff26145a9c3c286fd70d9ceed5de02790cad0519716d192ac924c3182721",
-    "size": 4755,
+    "hash": "29336957b4940734838f3ef9906c1fa68163f7860af619bf71bdf0ec32bf1e0c",
+    "size": 4954,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -43,8 +43,8 @@
     "file": "levels/tutorial/tutorial_3.json",
     "theme": "temple",
     "version": 1,
-    "hash": "7d7cc2db671d222d3cc8a2f60abac6d8fc6d82d1697986b47ee10e999c8976ad",
-    "size": 4276,
+    "hash": "06b3c1dd2e2d9fbcf51fa7b80379abed70d18a3321d7d6d3abe90621e797eb33",
+    "size": 4474,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -61,8 +61,8 @@
     "file": "levels/tutorial/tutorial_4.json",
     "theme": "jungle",
     "version": 1,
-    "hash": "22b8c36a59d51d4bafafbd8bc553ec29e6083b0de44350d34de310121538daa8",
-    "size": 5537,
+    "hash": "630cbcf9d0f844521cd8232cb2813aa5795d97036779d4bd5a8447256a9dc180",
+    "size": 5735,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -79,8 +79,8 @@
     "file": "levels/tutorial/tutorial_5.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "decc6d8504b048c0b135226b0296b3460f4b0d3b90889822275e099841fc2fec",
-    "size": 5463,
+    "hash": "4a4a7b7f4841fe4cb0ddf97e20e52705d4dd9995f0776f7c3d4947d134dd8f4b",
+    "size": 5662,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -97,13 +97,13 @@
     "file": "levels/tutorial/tutorial_6.json",
     "theme": "temple",
     "version": 1,
-    "hash": "5401260f762bbd6fb068238de8488701be541d656ec1d27c0ae2eaed57bea86f",
-    "size": 9492,
+    "hash": "df6aec96173e4862c57c9b4e756dde5ee6cde26ba7c2c33320af2350c8b2c817",
+    "size": 9910,
     "dimensions": {
       "width": 17,
       "height": 17
     },
-    "entityCount": 7,
+    "entityCount": 8,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -957,8 +957,8 @@
     "file": "levels/stories/story_guardians_1.json",
     "theme": "temple",
     "version": 1,
-    "hash": "0bb4e71de29c920576df53381e5a02923695af2eab232abd11ddcec9b2f01183",
-    "size": 6143,
+    "hash": "d88af7cb11c3736442f6b823f8a226a3eaa480983e2cd582a5768b08488720bb",
+    "size": 6352,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -977,13 +977,13 @@
     "file": "levels/stories/story_guardians_2.json",
     "theme": "temple",
     "version": 1,
-    "hash": "585c83ce6b95928c413c5fd87b8353842ecc79836a5ae193ba462278991ddb6a",
-    "size": 5898,
+    "hash": "b12f8e3e4cab03bade4336f797dca654c18db5da90b9818a38fcb048595fde16",
+    "size": 6337,
     "dimensions": {
       "width": 11,
       "height": 11
     },
-    "entityCount": 6,
+    "entityCount": 7,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -997,8 +997,8 @@
     "file": "levels/stories/story_guardians_3.json",
     "theme": "temple",
     "version": 1,
-    "hash": "c719440cc8dc41758851888074ee2ca73e5cf26a77912fe7850f76e9286b5370",
-    "size": 10354,
+    "hash": "3af8bf2591d7e8c765fb6ed2e7855f6d9e8a9b552b70bbc57866a2fa0e80dcd1",
+    "size": 10572,
     "dimensions": {
       "width": 15,
       "height": 15
@@ -1017,8 +1017,8 @@
     "file": "levels/stories/story_citadel_1.json",
     "theme": "temple",
     "version": 1,
-    "hash": "35037b0bb1cad8c2a81aa6f1535713224e37ccbadcab3c4ee5609649797d0272",
-    "size": 49650,
+    "hash": "9409e7b8eb2bd9fa72fa385d5f3bbab2e3aae758e414619ac0dca88b9d9177bd",
+    "size": 49960,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -1039,8 +1039,8 @@
     "parSteps": 26,
     "parTime": 15,
     "version": 1,
-    "hash": "39913be5e4f70cd19db9aff59b30166865a6ebca4cb12fc77cbce3cac5ebd5cd",
-    "size": 6768,
+    "hash": "de606ea9745aac52f7b7f7efb437511ea09dc1932d6a6b0b4ec498852d06c03d",
+    "size": 6691,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -1061,8 +1061,8 @@
     "parSteps": 30,
     "parTime": 18,
     "version": 1,
-    "hash": "b6ee5edadb8cce8de6a777c174e82ddcce40b227bd795b1609a8e9bbd8436274",
-    "size": 8075,
+    "hash": "159e6b1fc1a291dca0c7a1bd153bd1c60afaa734e3d746b589046431ea78102c",
+    "size": 8018,
     "dimensions": {
       "width": 15,
       "height": 15
@@ -1083,8 +1083,8 @@
     "parSteps": 67,
     "parTime": 40,
     "version": 1,
-    "hash": "c73a90aa8737d2a14ea3b4834f329ba6f5e1fa970366549224f697aa2055966a",
-    "size": 9966,
+    "hash": "59f038a0bc2547c3c4dd48763632ca0ef971ff93e2687683cc72fc0d3ad54502",
+    "size": 9998,
     "dimensions": {
       "width": 17,
       "height": 17

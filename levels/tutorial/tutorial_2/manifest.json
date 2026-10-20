@@ -1,0 +1,41 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "tutorial_2",
+  "title": "Keys & Colored Gates",
+  "author": "Casual Maze Academy",
+  "version": 1,
+  "dimensions": {
+    "width": 11,
+    "height": 11
+  },
+  "config": {
+    "fogOfWar": false,
+    "mapRevealed": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "dungeon"
+  },
+  "help": {
+    "title": "Color Keys & Gates",
+    "message": "Gates block your path! Collect the Ruby Key in the side corridor to unlock the Red Gate, then find the Sapphire Key to open the Blue Gate to the exit."
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 9,
+    "y": 9,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

@@ -1,0 +1,35 @@
+[
+  {
+    "id": "checkpoint_spire_altar",
+    "type": "checkpoint",
+    "style": "shrine",
+    "name": "Spire Apex Waypoint",
+    "x": 6,
+    "y": 6,
+    "elevation": 1,
+    "color": "#38bdf8"
+  },
+  {
+    "id": "gem_spire_sapphire",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Star of the Monolith",
+    "scoreValue": 500,
+    "color": "#38bdf8",
+    "x": 6,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "wall_decor_spire_revelation",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Apex Revelation",
+    "text": "From the heights of the spire, the entire world bends beneath your perspective. Rotate [Q / R] to survey the horizons.",
+    "author": "High Cartographer",
+    "x": 6,
+    "y": 1,
+    "facing": "south",
+    "elevation": 0
+  }
+]

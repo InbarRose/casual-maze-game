@@ -1,0 +1,44 @@
+[
+  {
+    "id": "signpost_courtyard_guide",
+    "type": "signpost",
+    "title": "Courtyard Inscription",
+    "message": "The High Spire awaits above, but its portal is sealed. Descend into the subterranean Catacombs to recover the Spire Key.",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "door_spire_gate",
+    "type": "door",
+    "color": "#06b6d4",
+    "name": "Spire Barrier Gate",
+    "requiresKey": "key_citadel_spire",
+    "x": 11,
+    "y": 10,
+    "elevation": 0
+  },
+  {
+    "id": "decor_courtyard_statue",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Shrine of the Winds",
+    "text": "Four winds echo through the citadel. Turn your perspective to catch their secrets.",
+    "author": "Ancient Cartographer",
+    "x": 6,
+    "y": 1,
+    "facing": "south",
+    "elevation": 0
+  },
+  {
+    "id": "gem_courtyard_topaz",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Courtyard Topaz",
+    "scoreValue": 150,
+    "color": "#fbbf24",
+    "x": 11,
+    "y": 1,
+    "elevation": 0
+  }
+]

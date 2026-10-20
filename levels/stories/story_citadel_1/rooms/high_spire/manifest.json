@@ -1,0 +1,48 @@
+{
+  "id": "high_spire",
+  "title": "Whispering Spire",
+  "theme": "snow",
+  "dimensions": {
+    "width": 13,
+    "height": 13
+  },
+  "spawn": {
+    "x": 1,
+    "y": 2,
+    "elevation": 0,
+    "style": "stairs_down"
+  },
+  "exits": [
+    {
+      "id": "exit_spire_to_courtyard",
+      "x": 1,
+      "y": 1,
+      "elevation": 0,
+      "style": "stairs",
+      "label": "Descend to Courtyard",
+      "targetRoom": "courtyard",
+      "targetSpawn": {
+        "x": 11,
+        "y": 10,
+        "elevation": 0
+      }
+    },
+    {
+      "id": "exit_spire_citadel_victory",
+      "x": 11,
+      "y": 11,
+      "elevation": 0,
+      "style": "portal",
+      "label": "Apex Altar of the Monolith"
+    },
+    {
+      "id": "exit_spire_secret_monolith",
+      "x": 11,
+      "y": 1,
+      "elevation": 0,
+      "style": "portal",
+      "label": "Secret Monolith Tunnel",
+      "targetLevel": "29"
+    }
+  ]
+}

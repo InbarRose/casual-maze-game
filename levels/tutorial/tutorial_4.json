@@ -33,6 +33,7 @@
     "style": "wall_archway",
     "wallDirection": "north"
   },
+  "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 13 × 13  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: jungle  ",
   "layers": {
     "ground": [
       [
@@ -450,5 +451,6 @@
       "style": "classic",
       "orientation": "vertical"
     }
-  ]
+  ],
+  "packageSource": "tutorial_4"
 }

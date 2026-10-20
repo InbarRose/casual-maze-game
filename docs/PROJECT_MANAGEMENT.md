@@ -117,7 +117,17 @@ This document tracks project milestones, current release status, active developm
   - **Dual Player Drop Shadows**: Contact shadow on the upper deck + detached ground shadow on the Z=0 floor with cyan elevation beacon aura in `renderAngledExplorer`.
   - Full test suite passing: 154 suites, 764 tests passed, 0 failed.
 
-- [x] **6-Chair Expert Panel Scoring & Platform Quality Audit (ADR-0043)**:
+- [x] **Universal Level Package Architecture, Saga Labyrinth Redesign & 3D Elevation (BL-160, ADR-0044)**:
+  - Extended the Modular Level Package Directory Architecture across all remaining 13 levels: 6 Tutorial Academy chapters (`levels/tutorial/tutorial_1/` to `tutorial_6/`) and 7 episodic story saga levels (`levels/stories/story_guardians_1/` to `3/`, `story_citadel_1/` with multi-room support, and `story_sunken_vaults_1/` to `3/`).
+  - Achieved $\text{DeadSpace}_{\ge 4\times 4} = 0$ across the **entire game** (all 53 official levels now feature zero solid 4x4 dead space blocks).
+  - Overhauled Tutorial 6 ("Master's Trial"): reclaimed all 12 dead space blocks, integrated 3D elevated canopy bridge, lever wall toggles, and secret wall (`SW` + Sunstone gem).
+  - Overhauled Guardians 2 ("The Falcon's Plinth"): reclaimed all 4 dead space blocks with secret terrace sanctuary (`SW` + Gilded Feather).
+  - Overhauled Citadel Catacombs (27x27): reclaimed all 48 dead space blocks, created winding crypt corridors with $\ge 70\%$ directional inertia, 3D catwalks, and secret phylactery vault.
+  - Overhauled Sunken Vaults of the Deep (Chapters 1–3): reclaimed 34, 52, and 86 dead space blocks, transforming hollow border halls into true aqueduct labyrinths with elevated stone flume bridges (`PLATFORM`), underpass drainage tunnels, and secret relic vaults.
+  - Enhanced `scripts/level-package-compiler.mjs` with multi-room hierarchy delegation and updated `scripts/update-manifests.mjs` to auto-compile all 53 directory packages into static distribution JSONs and JS datasets (`js/levels/tutorials.js`, `js/stories/storylines.js`, `js/stories/sunken-vaults.js`).
+  - Updated test suites with 100% pass rate: 154 suites, 767 tests passed, 0 failed, 23/23 zero-drift checks passed.
+
+- [x] **6-Chair Expert Panel Scoring & Platform Quality Audit (ADR-0043, ADR-0044)**:
   - Evaluated the campaign levels and game engine across all 6 chairs:
     - Chair 1 (Labyrinth Topology & Geometry): **98 / 100**
     - Chair 2 (3D Mechanics & Spatial Architecture): **98 / 100**

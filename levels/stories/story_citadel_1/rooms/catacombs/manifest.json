@@ -1,0 +1,31 @@
+{
+  "id": "catacombs",
+  "title": "Sunken Catacombs",
+  "theme": "dungeon",
+  "dimensions": {
+    "width": 27,
+    "height": 27
+  },
+  "spawn": {
+    "x": 1,
+    "y": 2,
+    "elevation": 0,
+    "style": "stairs_down"
+  },
+  "exits": [
+    {
+      "id": "exit_catacombs_to_courtyard",
+      "x": 1,
+      "y": 1,
+      "elevation": 0,
+      "style": "stairs",
+      "label": "Return to Courtyard",
+      "targetRoom": "courtyard",
+      "targetSpawn": {
+        "x": 1,
+        "y": 10,
+        "elevation": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "key_reservoir_2",
+    "type": "key",
+    "x": 13,
+    "y": 1,
+    "elevation": 0,
+    "color": "#0284c7",
+    "name": "Reservoir Pressure Key"
+  },
+  {
+    "id": "door_reservoir_2",
+    "type": "door",
+    "x": 13,
+    "y": 12,
+    "elevation": 0,
+    "requiresKey": "key_reservoir_2",
+    "color": "#0284c7",
+    "name": "Pressure Bulkhead Gate"
+  },
+  {
+    "id": "checkpoint_vaults_2",
+    "type": "checkpoint",
+    "x": 7,
+    "y": 3,
+    "elevation": 0,
+    "name": "Reservoir Cistern"
+  },
+  {
+    "id": "decor_note_vaults_2",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Pressure Gauge",
+    "text": "Water pressure holds the bulkhead shut. The pressure key rests in the northeast reservoir tower.",
+    "x": 1,
+    "y": 7,
+    "facing": "east",
+    "elevation": 0
+  },
+  {
+    "id": "gem_secret_vaults_2",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Pressure Pearl",
+    "scoreValue": 300,
+    "x": 5,
+    "y": 9,
+    "elevation": 0
+  }
+]

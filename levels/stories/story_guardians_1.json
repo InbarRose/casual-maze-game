@@ -41,6 +41,7 @@
   },
   "parSteps": 28,
   "parTime": 17,
+  "architectNote": "**Chapter**: The Whispering Ruins  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: 28 | **Par Time**: 17s  \n**Theme**: temple  ",
   "layers": {
     "ground": [
       [
@@ -412,5 +413,6 @@
       "y": 9,
       "elevation": 0
     }
-  ]
+  ],
+  "packageSource": "story_guardians_1"
 }

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "story_guardians_2",
+  "version": 1,
+  "storyId": "relics_of_the_guardians",
+  "chapterNumber": 2,
+  "chapterTitle": "The Falcon's Plinth",
+  "chapterSubtitle": "Carryable Relics & Riddle Sockets",
+  "prologueText": "You stand before the Terrace of the Winds. An empty carved pedestal blocks the gate to the inner sanctuary. You must find the lost Falcon Statue, carry it across the terrace, and seat it on its sacred plinth.",
+  "title": "The Falcon's Plinth",
+  "author": "Ancient Guild of Cartographers",
+  "dimensions": {
+    "width": 11,
+    "height": 11
+  },
+  "config": {
+    "fogOfWar": false,
+    "mapRevealed": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "temple"
+  },
+  "help": {
+    "title": "Chapter 2: The Falcon's Plinth",
+    "message": "Pick up the Falcon Statue [E], carry it through the labyrinth, and place it on the inscribed pedestal to unlock the courtyard gate."
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 9,
+    "y": 9,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 32,
+  "parTime": 19,
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

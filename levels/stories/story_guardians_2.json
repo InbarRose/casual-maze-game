@@ -41,6 +41,7 @@
   },
   "parSteps": 32,
   "parTime": 19,
+  "architectNote": "**Chapter**: The Falcon's Plinth  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: 32 | **Par Time**: 19s  \n**Theme**: temple  ",
   "layers": {
     "ground": [
       [
@@ -123,8 +124,8 @@
       ],
       [
         1,
-        1,
-        1,
+        0,
+        0,
         1,
         1,
         1,
@@ -136,9 +137,9 @@
       ],
       [
         1,
-        1,
-        1,
-        1,
+        0,
+        "SW",
+        0,
         1,
         0,
         0,
@@ -149,9 +150,9 @@
       ],
       [
         1,
+        0,
         1,
-        1,
-        1,
+        0,
         1,
         0,
         0,
@@ -162,9 +163,9 @@
       ],
       [
         1,
-        1,
-        1,
-        1,
+        0,
+        0,
+        0,
         1,
         0,
         0,
@@ -394,6 +395,17 @@
       "x": 4,
       "y": 3,
       "elevation": 0
+    },
+    {
+      "id": "gem_falcon_feather",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Gilded Feather of the Falcon",
+      "scoreValue": 200,
+      "x": 3,
+      "y": 7,
+      "elevation": 0
     }
-  ]
+  ],
+  "packageSource": "story_guardians_2"
 }
