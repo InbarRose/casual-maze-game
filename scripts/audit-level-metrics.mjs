@@ -192,7 +192,8 @@ export function auditLevelMetrics(levelData) {
     optimalSteps,
     parSteps: levelData.parSteps || null,
     parTime: levelData.parTime || null,
-    parRatio
+    parRatio,
+    hasFogOfWar: !!levelData.fogOfWar
   };
 }
 
