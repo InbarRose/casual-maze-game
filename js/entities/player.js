@@ -568,20 +568,39 @@ export class Player {
 
     ctx.save();
 
-    // 1. Drop Shadow on the floor beneath feet
-    const shadowY = screenY + (isOverhead ? 16 * s : 11 * s);
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
-    ctx.beginPath();
-    ctx.ellipse(screenX, shadowY, 9 * s, 4 * s, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // 2. Elevation Indicator Ring (when overhead)
+    // 1. Dual Elevation Drop Shadow (BL-147, ADR-0043)
     if (isOverhead) {
-      ctx.strokeStyle = `rgba(56, 189, 248, ${0.6 * pulse})`;
+      // 1a. Detached ground shadow projected down onto ground floor below (Z=0)
+      const groundShadowY = screenY + 23 * s;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.22)';
+      ctx.beginPath();
+      ctx.ellipse(screenX, groundShadowY, 12 * s, 5.5 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 1b. Crisp contact shadow on elevated bridge / battlement deck (Z=1)
+      const deckShadowY = screenY + 11 * s;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.beginPath();
+      ctx.ellipse(screenX, deckShadowY, 8.5 * s, 3.8 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 1c. Ethereal Elevation Beacon Ring on elevated deck
+      ctx.save();
+      ctx.strokeStyle = `rgba(56, 189, 248, ${0.75 * pulse})`;
+      ctx.shadowColor = '#38bdf8';
+      ctx.shadowBlur = 6;
       ctx.lineWidth = Math.max(1.5, 2 * s);
       ctx.beginPath();
-      ctx.ellipse(screenX, shadowY, 13 * s, 5.5 * s, 0, 0, Math.PI * 2);
+      ctx.ellipse(screenX, deckShadowY, 13 * s, 5.5 * s, 0, 0, Math.PI * 2);
       ctx.stroke();
+      ctx.restore();
+    } else {
+      // Ground floor contact shadow
+      const shadowY = screenY + 11 * s;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.4)';
+      ctx.beginPath();
+      ctx.ellipse(screenX, shadowY, 9 * s, 4 * s, 0, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     const py = screenY - walkBob;

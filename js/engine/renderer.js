@@ -917,31 +917,151 @@ export class GameRenderer {
       );
     }
 
-    // 2. Vertical Support Pillars
-    ctx.fillStyle = theme.bridgeGround || '#1e293b';
+    // 2. Vertical Support Piers & Vaulted Masonry Underpass Arch
+    const pierColor = theme.bridgeGround || theme.wall || '#1e293b';
+    ctx.fillStyle = pierColor;
     ctx.strokeStyle = 'rgba(0, 0, 0, 0.6)';
     ctx.lineWidth = 1;
-    const pillarW = tileSize * 0.12;
-    const pillarH = heightOffset + tileSize * 0.15;
+    const pillarW = Math.max(3, Math.round(tileSize * 0.14));
+    const pillarH = heightOffset + Math.round(tileSize * 0.15);
 
     if (direction === 'NS') {
-      const p1x = screenX + tileSize * 0.12;
-      const p2x = screenX + tileSize * 0.76;
-      const py = elevatedY + tileSize * 0.85;
+      const p1x = screenX + Math.round(tileSize * 0.12);
+      const p2x = screenX + Math.round(tileSize * 0.74);
+      const py = elevatedY + Math.round(tileSize * 0.85);
 
+      // Support Piers
       ctx.fillRect(p1x, py, pillarW, pillarH);
       ctx.strokeRect(p1x, py, pillarW, pillarH);
       ctx.fillRect(p2x, py, pillarW, pillarH);
       ctx.strokeRect(p2x, py, pillarW, pillarH);
-    } else {
-      const p1y = elevatedY + tileSize * 0.12;
-      const p2y = elevatedY + tileSize * 0.76;
-      const px = screenX + tileSize * 0.85;
 
+      // Horizontal masonry joints on piers
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.35)';
+      for (let j = 1; j < 3; j++) {
+        const jy = py + (pillarH / 3) * j;
+        ctx.beginPath();
+        ctx.moveTo(p1x, jy); ctx.lineTo(p1x + pillarW, jy);
+        ctx.moveTo(p2x, jy); ctx.lineTo(p2x + pillarW, jy);
+        ctx.stroke();
+      }
+
+      // Vaulted Arch Tunnel Mouth between piers
+      const archStartX = p1x + pillarW;
+      const archEndX = p2x;
+      const archW = archEndX - archStartX;
+      if (archW > 4) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(archStartX, py + pillarH);
+        ctx.lineTo(archStartX, py + pillarH * 0.35);
+        if (typeof ctx.quadraticCurveTo === 'function') {
+          ctx.quadraticCurveTo(archStartX + archW / 2, py - 4, archEndX, py + pillarH * 0.35);
+        } else {
+          ctx.lineTo(archStartX + archW / 2, py - 4);
+          ctx.lineTo(archEndX, py + pillarH * 0.35);
+        }
+        ctx.lineTo(archEndX, py + pillarH);
+        ctx.closePath();
+
+        // Dark tunnel depth gradient
+        if (typeof ctx.createLinearGradient === 'function') {
+          const tunnelGrad = ctx.createLinearGradient(0, py - 6, 0, py + pillarH);
+          tunnelGrad.addColorStop(0, 'rgba(0, 0, 0, 0.78)');
+          tunnelGrad.addColorStop(1, 'rgba(0, 0, 0, 0.22)');
+          ctx.fillStyle = tunnelGrad;
+        } else {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+        }
+        ctx.fill();
+
+        // Arch voussoir stones & keystone
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(archStartX, py + pillarH * 0.35);
+        if (typeof ctx.quadraticCurveTo === 'function') {
+          ctx.quadraticCurveTo(archStartX + archW / 2, py - 4, archEndX, py + pillarH * 0.35);
+        } else {
+          ctx.lineTo(archStartX + archW / 2, py - 4);
+          ctx.lineTo(archEndX, py + pillarH * 0.35);
+        }
+        ctx.stroke();
+
+        // Keystone at crown of arch
+        const midX = archStartX + archW / 2;
+        ctx.fillStyle = '#f8fafc';
+        ctx.beginPath();
+        ctx.moveTo(midX - 3.5, py);
+        ctx.lineTo(midX + 3.5, py);
+        ctx.lineTo(midX + 2, py + 6);
+        ctx.lineTo(midX - 2, py + 6);
+        ctx.closePath();
+        ctx.fill();
+        ctx.restore();
+      }
+    } else {
+      const p1y = elevatedY + Math.round(tileSize * 0.12);
+      const p2y = elevatedY + Math.round(tileSize * 0.74);
+      const px = screenX + Math.round(tileSize * 0.85);
+
+      // Support Piers
       ctx.fillRect(px, p1y, pillarW, pillarH);
       ctx.strokeRect(px, p1y, pillarW, pillarH);
       ctx.fillRect(px, p2y, pillarW, pillarH);
       ctx.strokeRect(px, p2y, pillarW, pillarH);
+
+      // Horizontal masonry joints on piers
+      ctx.strokeStyle = 'rgba(0, 0, 0, 0.35)';
+      for (let j = 1; j < 3; j++) {
+        const jy = p1y + (pillarH / 3) * j;
+        ctx.beginPath();
+        ctx.moveTo(px, jy); ctx.lineTo(px + pillarW, jy);
+        ctx.moveTo(px, jy + (p2y - p1y)); ctx.lineTo(px + pillarW, jy + (p2y - p1y));
+        ctx.stroke();
+      }
+
+      // Vaulted Arch Tunnel Mouth between piers for EW bridge
+      const archStartY = p1y + pillarW;
+      const archEndY = p2y;
+      const archH = archEndY - archStartY;
+      if (archH > 4) {
+        ctx.save();
+        ctx.beginPath();
+        ctx.moveTo(px + pillarW, archStartY);
+        ctx.lineTo(px, archStartY);
+        if (typeof ctx.quadraticCurveTo === 'function') {
+          ctx.quadraticCurveTo(px - 5, archStartY + archH / 2, px, archEndY);
+        } else {
+          ctx.lineTo(px - 5, archStartY + archH / 2);
+          ctx.lineTo(px, archEndY);
+        }
+        ctx.lineTo(px + pillarW, archEndY);
+        ctx.closePath();
+
+        if (typeof ctx.createLinearGradient === 'function') {
+          const tunnelGrad = ctx.createLinearGradient(px - 8, 0, px + pillarW, 0);
+          tunnelGrad.addColorStop(0, 'rgba(0, 0, 0, 0.78)');
+          tunnelGrad.addColorStop(1, 'rgba(0, 0, 0, 0.22)');
+          ctx.fillStyle = tunnelGrad;
+        } else {
+          ctx.fillStyle = 'rgba(0, 0, 0, 0.6)';
+        }
+        ctx.fill();
+
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(px, archStartY);
+        if (typeof ctx.quadraticCurveTo === 'function') {
+          ctx.quadraticCurveTo(px - 5, archStartY + archH / 2, px, archEndY);
+        } else {
+          ctx.lineTo(px - 5, archStartY + archH / 2);
+          ctx.lineTo(px, archEndY);
+        }
+        ctx.stroke();
+        ctx.restore();
+      }
     }
 
     // 3. Render bridge deck at elevated Y
@@ -1043,51 +1163,130 @@ export class GameRenderer {
     ctx.fillStyle = deckColor;
     ctx.fillRect(screenX, screenY, tileSize, tileSize);
 
-    // Architectural Texture: Flagstone pavers / boardwalk planks
-    ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+    // Architectural Texture: Flagstone pavers / ashlar masonry
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
     ctx.lineWidth = 1;
-    const half = tileSize / 2;
-    ctx.strokeRect(screenX + 1, screenY + 1, half - 1, half - 1);
-    ctx.strokeRect(screenX + half, screenY + 1, half - 1, half - 1);
-    ctx.strokeRect(screenX + 1, screenY + half, half - 1, half - 1);
-    ctx.strokeRect(screenX + half, screenY + half, half - 1, half - 1);
+    const half = Math.round(tileSize / 2);
 
-    // Subtle Surface Highlight
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
-    ctx.fillRect(screenX + 2, screenY + 2, tileSize - 4, tileSize - 4);
+    if (isWallWalk) {
+      // Interlocking fortress flagstones with alternating stagger
+      ctx.strokeRect(screenX + 1, screenY + 1, half - 1, half - 1);
+      ctx.strokeRect(screenX + half, screenY + 1, tileSize - half - 1, half - 1);
+      ctx.strokeRect(screenX + 1, screenY + half, half - 1, tileSize - half - 1);
+      ctx.strokeRect(screenX + half, screenY + half, tileSize - half - 1, tileSize - half - 1);
+
+      // Subtle masonry surface flecks
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.06)';
+      ctx.fillRect(screenX + 2, screenY + 2, tileSize - 4, tileSize - 4);
+    } else {
+      // Wood plank / boardwalk decking
+      ctx.strokeRect(screenX + 1, screenY + 1, half - 1, half - 1);
+      ctx.strokeRect(screenX + half, screenY + 1, half - 1, half - 1);
+      ctx.strokeRect(screenX + 1, screenY + half, half - 1, half - 1);
+      ctx.strokeRect(screenX + half, screenY + half, half - 1, half - 1);
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+      ctx.fillRect(screenX + 2, screenY + 2, tileSize - 4, tileSize - 4);
+    }
 
     // Perimeter Railings or Parapets (only on exposed edges where neighbor is open air)
-    const railingColor = isWallWalk ? 'rgba(30, 41, 59, 0.85)' : (theme.bridgeRailing || '#f59e0b');
-    const railThick = Math.max(2, Math.round(tileSize * 0.08));
+    const railingColor = isWallWalk ? 'rgba(30, 41, 59, 0.95)' : (theme.bridgeRailing || '#f59e0b');
+    const railThick = Math.max(2, Math.round(tileSize * 0.1));
 
-    ctx.fillStyle = railingColor;
-    if (!neighbors.north) {
-      ctx.fillRect(screenX, screenY, tileSize, railThick);
-    }
-    if (!neighbors.south) {
-      ctx.fillRect(screenX, screenY + tileSize - railThick, tileSize, railThick);
-    }
-    if (!neighbors.west) {
-      ctx.fillRect(screenX, screenY, railThick, tileSize);
-    }
-    if (!neighbors.east) {
-      ctx.fillRect(screenX + tileSize - railThick, screenY, railThick, tileSize);
-    }
+    if (isWallWalk) {
+      // CASTELLATED FORTRESS BATTLEMENTS (Merlons, Crenels, Coping Caps, Arrow Slits)
+      const merlonCount = 3;
+      const merlonWidth = tileSize / (merlonCount * 2 - 1);
+      const merlonHeight = Math.max(3, Math.round(railThick * 1.5));
 
-    // Corner stud accents
-    ctx.fillStyle = isWallWalk ? '#94a3b8' : '#ffffff';
-    const studSize = Math.max(3, Math.round(tileSize * 0.1));
-    if (!neighbors.north && !neighbors.west) {
-      ctx.fillRect(screenX, screenY, studSize, studSize);
-    }
-    if (!neighbors.north && !neighbors.east) {
-      ctx.fillRect(screenX + tileSize - studSize, screenY, studSize, studSize);
-    }
-    if (!neighbors.south && !neighbors.west) {
-      ctx.fillRect(screenX, screenY + tileSize - studSize, studSize, studSize);
-    }
-    if (!neighbors.south && !neighbors.east) {
-      ctx.fillRect(screenX + tileSize - studSize, screenY + tileSize - studSize, studSize, studSize);
+      const drawCrenellations = (edge) => {
+        // Base parapet wall
+        ctx.fillStyle = railingColor;
+        if (edge === 'north') ctx.fillRect(screenX, screenY, tileSize, railThick);
+        else if (edge === 'south') ctx.fillRect(screenX, screenY + tileSize - railThick, tileSize, railThick);
+        else if (edge === 'west') ctx.fillRect(screenX, screenY, railThick, tileSize);
+        else if (edge === 'east') ctx.fillRect(screenX + tileSize - railThick, screenY, railThick, tileSize);
+
+        // Merlon teeth along the edge
+        for (let m = 0; m < merlonCount; m++) {
+          const mOffset = m * 2 * merlonWidth;
+          let mx = screenX, my = screenY, mw = merlonWidth, mh = merlonHeight;
+
+          if (edge === 'north') {
+            mx = screenX + mOffset;
+            my = screenY - 2;
+            mw = merlonWidth;
+            mh = merlonHeight;
+          } else if (edge === 'south') {
+            mx = screenX + mOffset;
+            my = screenY + tileSize - railThick + 2;
+            mw = merlonWidth;
+            mh = merlonHeight;
+          } else if (edge === 'west') {
+            mx = screenX - 2;
+            my = screenY + mOffset;
+            mw = merlonHeight;
+            mh = merlonWidth;
+          } else if (edge === 'east') {
+            mx = screenX + tileSize - railThick + 2;
+            my = screenY + mOffset;
+            mw = merlonHeight;
+            mh = merlonWidth;
+          }
+
+          // Merlon body
+          ctx.fillStyle = railingColor;
+          ctx.fillRect(mx, my, mw, mh);
+          ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
+          ctx.lineWidth = 0.8;
+          ctx.strokeRect(mx, my, mw, mh);
+
+          // Stone Coping Cap (Highlight)
+          ctx.fillStyle = 'rgba(255, 255, 255, 0.35)';
+          if (edge === 'north' || edge === 'south') {
+            ctx.fillRect(mx, my, mw, 1.2);
+          } else {
+            ctx.fillRect(mx, my, 1.2, mh);
+          }
+
+          // Center Merlon Arrow Slit
+          if (m === 1) {
+            ctx.fillStyle = '#0f172a';
+            if (edge === 'north' || edge === 'south') {
+              ctx.fillRect(mx + mw / 2 - 0.7, my + 1, 1.4, mh - 2);
+            } else {
+              ctx.fillRect(mx + 1, my + mh / 2 - 0.7, mw - 2, 1.4);
+            }
+          }
+        }
+      };
+
+      if (!neighbors.north) drawCrenellations('north');
+      if (!neighbors.south) drawCrenellations('south');
+      if (!neighbors.west) drawCrenellations('west');
+      if (!neighbors.east) drawCrenellations('east');
+
+      // Corner bastion quoin stones
+      ctx.fillStyle = '#94a3b8';
+      const studSize = Math.max(3, Math.round(tileSize * 0.12));
+      if (!neighbors.north && !neighbors.west) ctx.fillRect(screenX, screenY, studSize, studSize);
+      if (!neighbors.north && !neighbors.east) ctx.fillRect(screenX + tileSize - studSize, screenY, studSize, studSize);
+      if (!neighbors.south && !neighbors.west) ctx.fillRect(screenX, screenY + tileSize - studSize, studSize, studSize);
+      if (!neighbors.south && !neighbors.east) ctx.fillRect(screenX + tileSize - studSize, screenY + tileSize - studSize, studSize, studSize);
+    } else {
+      // TIMBER / STONE PLATFORM BALUSTRADE
+      ctx.fillStyle = railingColor;
+      if (!neighbors.north) ctx.fillRect(screenX, screenY, tileSize, railThick);
+      if (!neighbors.south) ctx.fillRect(screenX, screenY + tileSize - railThick, tileSize, railThick);
+      if (!neighbors.west) ctx.fillRect(screenX, screenY, railThick, tileSize);
+      if (!neighbors.east) ctx.fillRect(screenX + tileSize - railThick, screenY, railThick, tileSize);
+
+      // Balustrade support studs
+      ctx.fillStyle = '#ffffff';
+      const studSize = Math.max(3, Math.round(tileSize * 0.1));
+      if (!neighbors.north && !neighbors.west) ctx.fillRect(screenX, screenY, studSize, studSize);
+      if (!neighbors.north && !neighbors.east) ctx.fillRect(screenX + tileSize - studSize, screenY, studSize, studSize);
+      if (!neighbors.south && !neighbors.west) ctx.fillRect(screenX, screenY + tileSize - studSize, studSize, studSize);
+      if (!neighbors.south && !neighbors.east) ctx.fillRect(screenX + tileSize - studSize, screenY + tileSize - studSize, studSize, studSize);
     }
 
     ctx.restore();
@@ -1545,6 +1744,32 @@ export class GameRenderer {
       ctx.fillRect(screenX, screenY + tileSize * 0.08, tileSize, tileSize * 0.06);
       ctx.fillRect(screenX, screenY + tileSize * 0.86, tileSize, tileSize * 0.06);
     }
+
+    // 3. Central Ascending Energy Glyphs / Chevron Studs (BL-147, ADR-0043)
+    ctx.strokeStyle = 'rgba(56, 189, 248, 0.75)';
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    const cx = screenX + tileSize / 2;
+    const cy = screenY + tileSize / 2;
+    const arrowS = tileSize * 0.15;
+    if (isNorth) {
+      ctx.moveTo(cx - arrowS, cy + arrowS * 0.6);
+      ctx.lineTo(cx, cy - arrowS * 0.6);
+      ctx.lineTo(cx + arrowS, cy + arrowS * 0.6);
+    } else if (isSouth) {
+      ctx.moveTo(cx - arrowS, cy - arrowS * 0.6);
+      ctx.lineTo(cx, cy + arrowS * 0.6);
+      ctx.lineTo(cx + arrowS, cy - arrowS * 0.6);
+    } else if (isEast) {
+      ctx.moveTo(cx - arrowS * 0.6, cy - arrowS);
+      ctx.lineTo(cx + arrowS * 0.6, cy);
+      ctx.lineTo(cx - arrowS * 0.6, cy + arrowS);
+    } else if (isWest) {
+      ctx.moveTo(cx + arrowS * 0.6, cy - arrowS);
+      ctx.lineTo(cx - arrowS * 0.6, cy);
+      ctx.lineTo(cx + arrowS * 0.6, cy + arrowS);
+    }
+    ctx.stroke();
 
     ctx.restore();
   }
