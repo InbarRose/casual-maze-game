@@ -37,8 +37,8 @@ describe('Levels > Chapter 5 Perilous Hazards & Obsidian Sentinels', () => {
   it('Level 17 (Ki): The Fire Vents introduces rhythmic magma vents and safe harbors', () => {
     const sol = solveLevel(l17);
     assert(sol !== null, 'Level 17 must be solvable');
-    assertEqual(sol.length, 19, 'Optimal path is 19 steps');
-    assertEqual(l17.parSteps, Math.ceil(19 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 27, 'Optimal path is 27 nodes (26 steps)');
+    assertEqual(l17.parSteps, Math.ceil(27 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Verify hazard entities present
     const hazards = l17.entities.filter(e => e.type === 'hazard');

@@ -558,5 +558,120 @@ describe('Engine > Directional Proximity & Multi-Target Disambiguation (BL-85)',
 
     gameLoop.stop();
   });
+
+  it('GameLoop supports direct mouse-click selection of disambiguation candidates via entity, coordinates, or canvas click (BL-159)', () => {
+    const mockCanvas = {
+      getContext: () => ({
+        clearRect: () => {},
+        fillRect: () => {},
+        strokeRect: () => {},
+        fillText: () => {},
+        measureText: () => ({ width: 10 }),
+        getImageData: () => ({ data: new Uint8ClampedArray(4) }),
+        putImageData: () => {},
+        createImageData: () => ({ data: new Uint8ClampedArray(4) }),
+        setTransform: () => {},
+        drawImage: () => {},
+        save: () => {},
+        restore: () => {},
+        beginPath: () => {},
+        closePath: () => {},
+        stroke: () => {},
+        fill: () => {},
+        moveTo: () => {},
+        lineTo: () => {},
+        arc: () => {},
+        rect: () => {},
+      }),
+      width: 800,
+      height: 600,
+      getBoundingClientRect: () => ({ left: 0, top: 0, width: 800, height: 600 }),
+    };
+
+    const multiItemLevel = {
+      id: 992,
+      name: 'Click Selection Chamber',
+      dimensions: { width: 10, height: 10 },
+      spawn: { x: 5, y: 5 },
+      exits: [],
+      grid: Array(10).fill(null).map(() => Array(10).fill(0)),
+      layers: {
+        ground: Array(10).fill(null).map(() => Array(10).fill(0)),
+      },
+      entities: [
+        {
+          type: ENTITY_TYPES.SIGNPOST,
+          id: 'sign_mouse',
+          name: 'First Sign',
+          title: 'First Sign',
+          text: 'Notice',
+          x: 5,
+          y: 4, // North
+        },
+        {
+          type: ENTITY_TYPES.LEVER,
+          id: 'lever_mouse',
+          name: 'Target Lever',
+          x: 6,
+          y: 5, // East
+          state: false,
+          targets: [{ action: 'toggle_tile', layer: 'ground', x: 2, y: 2, stateA: 0, stateB: 1 }],
+        },
+      ],
+    };
+
+    let signpostRead = false;
+    const gameLoop = new GameLoop({
+      mainCanvas: mockCanvas,
+      minimapCanvas: mockCanvas,
+      level: multiItemLevel,
+      uiCallbacks: {
+        onSignpostRead: () => { signpostRead = true; },
+      },
+    });
+
+    gameLoop.player.gridX = 5;
+    gameLoop.player.gridY = 5;
+    gameLoop.update(0.016);
+
+    const lever = gameLoop.entities.find(e => e.id === 'lever_mouse');
+    const sign = gameLoop.entities.find(e => e.id === 'sign_mouse');
+
+    // 1. Direct entity object target (e.g. from UI pill/row data binding)
+    assertEqual(lever.state, false, 'Lever initially false');
+    gameLoop.handleManualInteract(lever);
+    assertEqual(lever.state, true, 'Lever toggled directly via entity reference without needing numeric index');
+
+    // Reset lever state
+    lever.state = false;
+
+    // 2. Direct coordinate target { x, y } (e.g. from tile click)
+    gameLoop.handleManualInteract({ x: 6, y: 5 });
+    assertEqual(lever.state, true, 'Lever toggled directly via coordinate target { x: 6, y: 5 }');
+
+    // 3. Coordinate target for signpost at (5, 4)
+    signpostRead = false;
+    gameLoop.handleManualInteract({ x: 5, y: 4 });
+    assert(signpostRead, 'Signpost read directly via coordinate target { x: 5, y: 4 }');
+
+    // 4. String identifier target
+    lever.state = false;
+    gameLoop.handleManualInteract('lever_mouse');
+    assertEqual(lever.state, true, 'Lever toggled directly via string id "lever_mouse"');
+
+    // 5. Canvas pointer down on adjacent tile (6, 5) targets lever specifically
+    lever.state = false;
+    // Set up camera screenToWorld to map canvas coords to world coords (6 * tileSize, 5 * tileSize)
+    gameLoop.camera.screenToWorld = (cx, cy) => ({
+      x: 6 * gameLoop.tileSize + 8,
+      y: 5 * gameLoop.tileSize + 8,
+    });
+    gameLoop.handleCanvasPointerDown({ clientX: 200, clientY: 200, button: 0 });
+    assertEqual(lever.state, true, 'Canvas pointer down on adjacent lever tile executed lever interaction');
+    assertEqual(gameLoop.player.facing, 'east', 'Player turned to face clicked interactable (east)');
+
+    gameLoop.stop();
+  });
 });
+
 

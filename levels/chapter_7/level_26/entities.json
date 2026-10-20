@@ -1,0 +1,109 @@
+[
+  {
+    "id": "sign_arch_26",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #26",
+    "text": "Overhead bridges pass high above the Frost Sentinel. Traverse the aerial walkway to claim the Ruby Key and throw the dynamo switch.",
+    "style": "astral_scroll"
+  },
+  {
+    "id": "patroller_26",
+    "type": "patroller",
+    "name": "Frost Sentinel",
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 7,
+        "y": 7,
+        "z": 0
+      },
+      {
+        "x": 11,
+        "y": 7,
+        "z": 0
+      }
+    ]
+  },
+  {
+    "id": "key_ruby_26",
+    "type": "key",
+    "color": "#ef4444",
+    "name": "Frostfire Ruby Key",
+    "x": 16,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "lever_26",
+    "type": "lever",
+    "name": "Frost Barrier Lever",
+    "style": "switch_lever",
+    "x": 16,
+    "y": 2,
+    "elevation": 0,
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 13,
+        "y": 11,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "door_ruby_26",
+    "type": "door",
+    "requiresKey": "key_ruby_26",
+    "color": "#ef4444",
+    "name": "Frostfire Sanctuary Gate",
+    "x": 14,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_26",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The sentinel patrols the lower frost floor, blind to the travelers walking upon the high bridge.",
+    "playerDialogue": "Walking across the bridge lets me bypass the sentinel completely.",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "gem_glacial_tear_26",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Glacial Conduit Tear",
+    "scoreValue": 200,
+    "x": 5,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "gem_frost_igneous_26",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Frost-Infused Igneous Shard",
+    "scoreValue": 150,
+    "x": 15,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "secret_frostfire_26",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Frostfire Phoenix Feather",
+    "scoreValue": 350,
+    "x": 1,
+    "y": 13,
+    "elevation": 0
+  }
+]

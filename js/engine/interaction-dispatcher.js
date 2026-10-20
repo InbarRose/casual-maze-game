@@ -266,8 +266,23 @@ export class InteractionDispatcher {
       if (idx >= 0 && idx < candidates.length) {
         chosen = candidates[idx];
       }
+    } else if (typeof target === 'string') {
+      const num = parseInt(target, 10);
+      if (!isNaN(num) && String(num) === target.trim()) {
+        const idx = num - 1;
+        if (idx >= 0 && idx < candidates.length) {
+          chosen = candidates[idx];
+        }
+      } else {
+        chosen = candidates.find(c => c.id === target || c.name === target || c.type === target);
+      }
     } else if (target && typeof target === 'object') {
-      chosen = candidates.find(c => c.entity === target || c.id === target.id || c === target) || candidates[0];
+      chosen = candidates.find(c =>
+        c.entity === target ||
+        c.id === target.id ||
+        c === target ||
+        (target.x !== undefined && target.y !== undefined && c.x === target.x && c.y === target.y)
+      ) || candidates[0];
     }
 
     if (!chosen) chosen = candidates[0];

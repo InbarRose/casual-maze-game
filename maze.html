@@ -1781,33 +1781,50 @@
               if (tileIndicator) tileIndicator.classList.add('hidden');
               if (tileCountBadge) tileCountBadge.classList.add('hidden');
 
+              const candidatesKey = candidates.map((cand) => `${cand.index}:${cand.id || cand.entity?.id || cand.name}`).join('|');
+
               if (disambigContainer) {
-                disambigContainer.innerHTML = '';
-                candidates.forEach((cand) => {
-                  if (cand.screenPos) {
-                    const pill = document.createElement('button');
-                    pill.className = 'hud-disambig-pill';
-                    pill.setAttribute('aria-label', `[${cand.index}] ${cand.name || cand.label}`);
-                    pill.title = `[${cand.index}] ${cand.name || cand.label}`;
-                    pill.style.left = `${cand.screenPos.x}px`;
-                    pill.style.top = `${cand.screenPos.y}px`;
-                    pill.innerHTML = `
-                      <span class="hud-disambig-pill-num">${cand.index}</span>
-                      <span class="hud-disambig-pill-icon">${cand.icon || '✨'}</span>
-                      <span class="hud-disambig-pill-label">${cand.name || cand.label}</span>
-                    `;
-                    pill.addEventListener('click', (e) => {
-                      e.preventDefault();
-                      e.stopPropagation();
-                      if (window.gameLoop) {
-                        window.gameLoop.handleManualInteract(cand.index);
-                        audioFX.playClick();
-                      }
-                    });
-                    pill.addEventListener('pointerdown', (e) => e.stopPropagation());
-                    disambigContainer.appendChild(pill);
-                  }
-                });
+                const existingPills = disambigContainer.querySelectorAll('.hud-disambig-pill');
+                if (disambigContainer.dataset.candidatesKey === candidatesKey && existingPills.length === candidates.length) {
+                  // Keep DOM elements intact across animation frames to allow click/touch events, update position only
+                  candidates.forEach((cand, idx) => {
+                    const pill = existingPills[idx];
+                    if (pill && cand.screenPos) {
+                      pill.style.left = `${cand.screenPos.x}px`;
+                      pill.style.top = `${cand.screenPos.y}px`;
+                    }
+                  });
+                } else {
+                  disambigContainer.dataset.candidatesKey = candidatesKey;
+                  disambigContainer.innerHTML = '';
+                  candidates.forEach((cand) => {
+                    if (cand.screenPos) {
+                      const pill = document.createElement('button');
+                      pill.type = 'button';
+                      pill.className = 'hud-disambig-pill';
+                      pill.setAttribute('aria-label', `[${cand.index}] ${cand.name || cand.label}`);
+                      pill.title = `[${cand.index}] ${cand.name || cand.label}`;
+                      pill.style.left = `${cand.screenPos.x}px`;
+                      pill.style.top = `${cand.screenPos.y}px`;
+                      pill.innerHTML = `
+                        <span class="hud-disambig-pill-num">${cand.index}</span>
+                        <span class="hud-disambig-pill-icon">${cand.icon || '✨'}</span>
+                        <span class="hud-disambig-pill-label">${cand.name || cand.label}</span>
+                      `;
+                      const triggerInteract = (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (window.gameLoop) {
+                          window.gameLoop.handleManualInteract(cand.index);
+                          audioFX.playClick();
+                        }
+                      };
+                      pill.addEventListener('click', triggerInteract);
+                      pill.addEventListener('pointerdown', (e) => e.stopPropagation());
+                      disambigContainer.appendChild(pill);
+                    }
+                  });
+                }
                 disambigContainer.classList.remove('hidden');
               }
 
@@ -1820,27 +1837,32 @@
               }
 
               if (disambigDrawer && disambigList) {
-                disambigList.innerHTML = '';
-                candidates.forEach((cand) => {
-                  const row = document.createElement('button');
-                  row.className = 'hud-disambig-row';
-                  row.setAttribute('aria-label', `Select [${cand.index}] ${cand.name || cand.label}`);
-                  row.innerHTML = `
-                    <span class="hud-disambig-row-num">[${cand.index}]</span>
-                    <span class="hud-disambig-row-icon">${cand.icon || '✨'}</span>
-                    <span class="hud-disambig-row-text">${cand.name || cand.label}</span>
-                  `;
-                  row.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    if (window.gameLoop) {
-                      window.gameLoop.handleManualInteract(cand.index);
-                      audioFX.playClick();
-                    }
+                if (disambigList.dataset.candidatesKey !== candidatesKey) {
+                  disambigList.dataset.candidatesKey = candidatesKey;
+                  disambigList.innerHTML = '';
+                  candidates.forEach((cand) => {
+                    const row = document.createElement('button');
+                    row.type = 'button';
+                    row.className = 'hud-disambig-row';
+                    row.setAttribute('aria-label', `Select [${cand.index}] ${cand.name || cand.label}`);
+                    row.innerHTML = `
+                      <span class="hud-disambig-row-num">[${cand.index}]</span>
+                      <span class="hud-disambig-row-icon">${cand.icon || '✨'}</span>
+                      <span class="hud-disambig-row-text">${cand.name || cand.label}</span>
+                    `;
+                    const triggerInteract = (e) => {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      if (window.gameLoop) {
+                        window.gameLoop.handleManualInteract(cand.index);
+                        audioFX.playClick();
+                      }
+                    };
+                    row.addEventListener('click', triggerInteract);
+                    row.addEventListener('pointerdown', (e) => e.stopPropagation());
+                    disambigList.appendChild(row);
                   });
-                  row.addEventListener('pointerdown', (e) => e.stopPropagation());
-                  disambigList.appendChild(row);
-                });
+                }
                 disambigDrawer.classList.remove('hidden');
               }
             } else {
@@ -1848,9 +1870,14 @@
               if (disambigContainer) {
                 disambigContainer.classList.add('hidden');
                 disambigContainer.innerHTML = '';
+                delete disambigContainer.dataset.candidatesKey;
               }
               if (disambigDrawer) {
                 disambigDrawer.classList.add('hidden');
+              }
+              if (disambigList) {
+                disambigList.innerHTML = '';
+                delete disambigList.dataset.candidatesKey;
               }
 
               const indicatorPos = targetScreenPos || targetOrPlayerPos;
@@ -1877,9 +1904,14 @@
             if (disambigContainer) {
               disambigContainer.classList.add('hidden');
               disambigContainer.innerHTML = '';
+              delete disambigContainer.dataset.candidatesKey;
             }
             if (disambigDrawer) {
               disambigDrawer.classList.add('hidden');
+            }
+            if (disambigList) {
+              disambigList.innerHTML = '';
+              delete disambigList.dataset.candidatesKey;
             }
             if (tileCountBadge) {
               tileCountBadge.classList.add('hidden');
@@ -1908,9 +1940,14 @@
             if (disambigContainer) {
               disambigContainer.classList.add('hidden');
               disambigContainer.innerHTML = '';
+              delete disambigContainer.dataset.candidatesKey;
             }
             if (disambigDrawer) {
               disambigDrawer.classList.add('hidden');
+            }
+            if (disambigList) {
+              disambigList.innerHTML = '';
+              delete disambigList.dataset.candidatesKey;
             }
           }
         },

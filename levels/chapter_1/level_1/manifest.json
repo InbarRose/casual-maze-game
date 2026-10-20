@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "1",
+  "chapter": "chapter_1",
+  "zone": "zone_1",
+  "title": "First Footsteps",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 13,
+    "height": 13
+  },
+  "config": {
+    "fogOfWar": false,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "dungeon"
+  },
+  "spawn": {
+    "x": 2,
+    "y": 2,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 11,
+    "y": 6,
+    "elevation": 0,
+    "style": "wall_archway",
+    "wallDirection": "north"
+  },
+  "parSteps": 26,
+  "parTime": 14,
+  "architectNote": "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the winding corridors to recover the keystore; avoid dead-end traps.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "17",
+  "chapter": "chapter_5",
+  "zone": "zone_5",
+  "title": "The Fire Vents",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 15,
+    "height": 13
+  },
+  "config": {
+    "fogOfWar": false,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "lava"
+  },
+  "spawn": {
+    "x": 2,
+    "y": 2,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 12,
+    "y": 10,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 32,
+  "parTime": 14,
+  "architectNote": "Feel the rhythmic pulse of the caldera. Time your movement through the basalt corridors and harbor in the alcoves.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

@@ -1,0 +1,74 @@
+[
+  {
+    "id": "sign_arch_14",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #14",
+    "text": "Twin spires mirror each other across the cosmic divide. Warp into Tower Beta to claim the Azure Key, then return through the mirror rift.",
+    "style": "astral_scroll"
+  },
+  {
+    "id": "tp_14_alpha",
+    "type": "teleporter",
+    "name": "Rift Alpha (Outbound)",
+    "color": "#38bdf8",
+    "x": 2,
+    "y": 9,
+    "z": 0,
+    "targetX": 13,
+    "targetY": 3,
+    "targetZ": 0
+  },
+  {
+    "id": "key_azure_14",
+    "type": "key",
+    "color": "#38bdf8",
+    "name": "Azure Star Key",
+    "x": 13,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "tp_14_beta",
+    "type": "teleporter",
+    "name": "Rift Beta (Inbound)",
+    "color": "#c084fc",
+    "x": 11,
+    "y": 7,
+    "z": 0,
+    "targetX": 2,
+    "targetY": 5,
+    "targetZ": 0
+  },
+  {
+    "id": "door_azure_14",
+    "type": "door",
+    "requiresKey": "key_azure_14",
+    "color": "#38bdf8",
+    "name": "Azure Star Gate",
+    "x": 5,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_14",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The mirror rift returns travelers to the western sanctum.",
+    "playerDialogue": "I need to retrieve the Azure Key from the eastern tower.",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "secret_star_14",
+    "type": "collectible",
+    "name": "Twin Star Quartz",
+    "points": 300,
+    "x": 2,
+    "y": 13,
+    "elevation": 0
+  }
+]

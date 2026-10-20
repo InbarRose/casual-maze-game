@@ -1,0 +1,64 @@
+[
+  {
+    "id": "sign_arch_15",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #15",
+    "text": "A rift does not merely bend space—it ascends height. Warp directly onto the overhead bridge to traverse the high chasm.",
+    "style": "astral_scroll"
+  },
+  {
+    "id": "tp_15_ascent",
+    "type": "teleporter",
+    "name": "Ascension Rift",
+    "color": "#a855f7",
+    "x": 2,
+    "y": 11,
+    "z": 0,
+    "targetX": 9,
+    "targetY": 5,
+    "targetZ": 1,
+    "targetElevation": 1
+  },
+  {
+    "id": "key_gold_15",
+    "type": "key",
+    "color": "#fbbf24",
+    "name": "High Altar Key",
+    "x": 9,
+    "y": 6,
+    "elevation": 1,
+    "z": 1
+  },
+  {
+    "id": "door_gold_15",
+    "type": "door",
+    "requiresKey": "key_gold_15",
+    "color": "#fbbf24",
+    "name": "Sanctum Portal Gate",
+    "x": 16,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_15",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The rift catapults matter into the upper air.",
+    "playerDialogue": "Entering the purple rift will warp me directly onto the bridge overhead.",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "secret_warp_15",
+    "type": "collectible",
+    "name": "Warp Horizon Pearl",
+    "points": 350,
+    "x": 14,
+    "y": 5,
+    "elevation": 0
+  }
+]

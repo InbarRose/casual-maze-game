@@ -1,0 +1,48 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "31",
+  "chapter": "chapter_8",
+  "zone": "zone_8",
+  "title": "The Four-Faced Pillar",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 15,
+    "height": 15
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "temple",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 13,
+    "y": 13,
+    "elevation": 0,
+    "style": "wall_archway",
+    "label": "Sanctuary of the Four Winds",
+    "wallDirection": "north"
+  },
+  "parSteps": 38,
+  "parTime": 23,
+  "architectNote": "Four faces of the monolith tell one story. Walk the perimeter and rotate the view to read each inscription.",
+  "help": {
+    "title": "Level 31: The Four-Faced Pillar",
+    "message": "Rotate the camera to view each side of the central monument. Find the ruby key in the eastern corner."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

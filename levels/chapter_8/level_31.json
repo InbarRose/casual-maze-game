@@ -90,7 +90,7 @@
         0,
         0,
         0,
-        0,
+        "SW",
         1
       ],
       [
@@ -239,9 +239,9 @@
         0,
         0,
         0,
-        0,
+        "R_N",
         1,
-        0,
+        "R_N",
         0,
         0,
         1
@@ -479,9 +479,9 @@
         0,
         0,
         0,
-        0,
-        0,
-        0,
+        "WW",
+        "PLATFORM",
+        "WW",
         0,
         0,
         1
@@ -633,6 +633,17 @@
       "x": 7,
       "y": 7,
       "elevation": 0
+    },
+    {
+      "id": "secret_pillar_31",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Four Winds Zephyr Core",
+      "scoreValue": 400,
+      "x": 13,
+      "y": 1,
+      "elevation": 0
     }
-  ]
+  ],
+  "packageSource": "level_31"
 }

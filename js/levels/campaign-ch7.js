@@ -81,7 +81,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         ],
         [
           1,
-          0,
+          "SW",
           0,
           0,
           0,
@@ -411,26 +411,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           "B_EW",
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          "B_EW",
-          0,
+          "WW",
           0,
           0,
           0,
@@ -449,7 +430,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           "B_EW",
-          0,
+          "WW",
           0,
           0,
           0,
@@ -468,7 +449,26 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           "B_EW",
+          "WW",
           0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          "B_EW",
+          "WW",
           0,
           0,
           0,
@@ -676,8 +676,19 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         "x": 7,
         "y": 4,
         "elevation": 0
+      },
+      {
+        "id": "secret_rampart_25",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Rampart Star Diadem",
+        "scoreValue": 300,
+        "x": 1,
+        "y": 1,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_25"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -971,7 +982,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         ],
         [
           1,
-          1,
+          "SW",
           0,
           0,
           0,
@@ -992,7 +1003,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         ],
         [
           1,
-          1,
+          0,
           0,
           0,
           0,
@@ -1085,9 +1096,9 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
-          0,
-          0,
+          "WW",
+          "WW",
+          "WW",
           0,
           0,
           0,
@@ -1448,8 +1459,19 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         "x": 15,
         "y": 8,
         "elevation": 0
+      },
+      {
+        "id": "secret_frostfire_26",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Frostfire Phoenix Feather",
+        "scoreValue": 350,
+        "x": 1,
+        "y": 13,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_26"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1528,7 +1550,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           0,
-          1,
+          0,
           1
         ],
         [
@@ -1549,7 +1571,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           0,
-          1,
+          "SW",
           1
         ],
         [
@@ -2006,28 +2028,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           "B_EW",
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0
-        ],
-        [
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          "B_EW",
-          0,
+          "WW",
           0,
           0,
           0,
@@ -2048,7 +2049,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           "B_EW",
-          0,
+          "WW",
           0,
           0,
           0,
@@ -2069,7 +2070,28 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           "B_EW",
+          "WW",
           0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          "B_EW",
+          "WW",
           0,
           0,
           0,
@@ -2293,8 +2315,19 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         "x": 4,
         "y": 11,
         "elevation": 0
+      },
+      {
+        "id": "secret_bastion_27",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Prismatic Bastion Aegis",
+        "scoreValue": 400,
+        "x": 17,
+        "y": 1,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_27"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -2359,7 +2392,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         ],
         [
           1,
-          1,
+          0,
           1,
           1,
           1,
@@ -2382,7 +2415,7 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         ],
         [
           1,
-          1,
+          "SW",
           0,
           0,
           0,
@@ -2504,11 +2537,11 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           0,
-          1,
+          "R_S",
           0,
           0,
           0,
-          1,
+          "R_S",
           0,
           0,
           1,
@@ -2527,11 +2560,11 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           0,
+          1,
+          1,
           0,
-          0,
-          0,
-          0,
-          0,
+          1,
+          1,
           0,
           0,
           1,
@@ -2966,11 +2999,11 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
+          "WW",
+          "WW",
+          "PLATFORM",
+          "WW",
+          "WW",
           0,
           0,
           0,
@@ -3353,7 +3386,18 @@ export const CAMPAIGN_CH7_LEVELS = Object.freeze([
         "x": 17,
         "y": 15,
         "elevation": 0
+      },
+      {
+        "id": "secret_sovereign_28",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Sovereign Apex Zenith Star",
+        "scoreValue": 500,
+        "x": 1,
+        "y": 1,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_28"
   }
 ]);

@@ -1,0 +1,146 @@
+[
+  {
+    "id": "key_amber_37",
+    "type": "key",
+    "color": "#f59e0b",
+    "name": "Amber Crystal Key",
+    "x": 3,
+    "y": 7,
+    "elevation": 0
+  },
+  {
+    "id": "door_amber_37",
+    "type": "door",
+    "color": "#f59e0b",
+    "name": "Amber Spectral Barrier",
+    "requiresKey": "key_amber_37",
+    "x": 5,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "portal_spectral_a",
+    "type": "teleporter",
+    "name": "Astral Rift Alpha",
+    "x": 3,
+    "y": 21,
+    "elevation": 0,
+    "targetX": 19,
+    "targetY": 21,
+    "targetElevation": 0,
+    "color": "#a855f7"
+  },
+  {
+    "id": "portal_spectral_b",
+    "type": "teleporter",
+    "name": "Astral Rift Beta",
+    "x": 15,
+    "y": 14,
+    "elevation": 0,
+    "targetX": 13,
+    "targetY": 8,
+    "targetElevation": 0,
+    "color": "#a855f7"
+  },
+  {
+    "id": "patroller_spectral_37",
+    "type": "patroller",
+    "name": "Spectral Prism Warden",
+    "color": "#f43f5e",
+    "elevation": 0,
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 5,
+        "y": 17
+      },
+      {
+        "x": 9,
+        "y": 17
+      }
+    ]
+  },
+  {
+    "id": "hazard_spectral_pulse_37",
+    "type": "timed_hazard",
+    "hazardType": "spikes",
+    "x": 5,
+    "y": 14,
+    "elevation": 0,
+    "activeDuration": 2,
+    "inactiveDuration": 2,
+    "offset": 0
+  },
+  {
+    "id": "key_violet_37",
+    "type": "key",
+    "color": "#8b5cf6",
+    "name": "Violet Crystal Key",
+    "x": 17,
+    "y": 18,
+    "elevation": 0
+  },
+  {
+    "id": "lever_refraction_37",
+    "type": "lever",
+    "name": "Refraction Focal Lever",
+    "x": 15,
+    "y": 7,
+    "elevation": 1,
+    "color": "#eab308",
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 18,
+        "y": 6,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "door_violet_37",
+    "type": "door",
+    "color": "#8b5cf6",
+    "name": "Violet Prismatic Gate",
+    "requiresKey": "key_violet_37",
+    "x": 21,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "checkpoint_37",
+    "type": "checkpoint",
+    "style": "crystal_beacon",
+    "name": "Prism Central Beacon",
+    "x": 5,
+    "y": 12,
+    "elevation": 0,
+    "color": "#a855f7"
+  },
+  {
+    "id": "decor_note_37",
+    "type": "wall_decor",
+    "decorType": "plaque",
+    "title": "Chromatic Inscription",
+    "text": "Light splits into amber and violet vibrations upon striking the primal crystal facade. Ascend the viaduct to align the focal lever.",
+    "author": "Prism Master Kael",
+    "x": 1,
+    "y": 3,
+    "facing": "east",
+    "elevation": 0
+  },
+  {
+    "id": "gem_secret_37",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Prismatic Diamond",
+    "scoreValue": 250,
+    "color": "#06b6d4",
+    "x": 1,
+    "y": 20,
+    "elevation": 0
+  }
+]

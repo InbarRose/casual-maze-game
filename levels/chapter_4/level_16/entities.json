@@ -1,0 +1,105 @@
+[
+  {
+    "id": "sign_arch_16",
+    "type": "signpost",
+    "x": 10,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #16",
+    "text": "Four cosmic realms converge at the Astral Nexus. Journey through the planetary rifts, assemble the colored keystones, and breach the Star Core.",
+    "style": "astral_scroll"
+  },
+  {
+    "id": "tp_16_north",
+    "type": "teleporter",
+    "name": "Nebula Rift (Westbound)",
+    "color": "#ef4444",
+    "x": 9,
+    "y": 4,
+    "z": 0,
+    "targetX": 3,
+    "targetY": 7,
+    "targetZ": 0
+  },
+  {
+    "id": "key_ruby_16",
+    "type": "key",
+    "color": "#ef4444",
+    "name": "Nebula Ruby Key",
+    "x": 3,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "tp_16_west",
+    "type": "teleporter",
+    "name": "Solar Rift (Eastbound)",
+    "color": "#38bdf8",
+    "x": 4,
+    "y": 7,
+    "z": 0,
+    "targetX": 14,
+    "targetY": 7,
+    "targetZ": 0
+  },
+  {
+    "id": "key_sapphire_16",
+    "type": "key",
+    "color": "#38bdf8",
+    "name": "Solar Sapphire Key",
+    "x": 14,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "tp_16_east",
+    "type": "teleporter",
+    "name": "Nexus Rift (Southbound)",
+    "color": "#a855f7",
+    "x": 16,
+    "y": 7,
+    "z": 0,
+    "targetX": 9,
+    "targetY": 11,
+    "targetZ": 0
+  },
+  {
+    "id": "door_ruby_16",
+    "type": "door",
+    "requiresKey": "key_ruby_16",
+    "color": "#ef4444",
+    "name": "Nebula Core Seal",
+    "x": 9,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "door_sapphire_16",
+    "type": "door",
+    "requiresKey": "key_sapphire_16",
+    "color": "#38bdf8",
+    "name": "Solar Core Seal",
+    "x": 9,
+    "y": 15,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_16",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The nexus binds the stars in a circle of light.",
+    "playerDialogue": "I must follow the planetary rifts to gather both seals.",
+    "x": 9,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "secret_nexus_16",
+    "type": "collectible",
+    "name": "Nexus Star Sapphire",
+    "points": 400,
+    "x": 9,
+    "y": 7,
+    "elevation": 0
+  }
+]

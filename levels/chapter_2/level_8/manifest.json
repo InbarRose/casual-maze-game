@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "8",
+  "chapter": "chapter_2",
+  "zone": "zone_2",
+  "title": "Citadel of the Two Horizons",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 19,
+    "height": 17
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "jungle"
+  },
+  "spawn": {
+    "x": 9,
+    "y": 8,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 9,
+    "y": 2,
+    "elevation": 0,
+    "style": "wall_archway",
+    "wallDirection": "north"
+  },
+  "parSteps": 71,
+  "parTime": 40,
+  "architectNote": "Architect's Journal: The Citadel commands twin parallel viaducts crowning the western and eastern horizons. Claim the Ruby Horizon Key from the west ramparts to release the eastern portcullis, then ascend the second horizon to breach the northern high keep.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

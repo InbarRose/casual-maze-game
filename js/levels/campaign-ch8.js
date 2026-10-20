@@ -95,7 +95,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
+          "SW",
           1
         ],
         [
@@ -104,11 +104,11 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
+          "R_S",
           0,
           0,
           0,
-          0,
-          0,
+          "R_S",
           0,
           0,
           0,
@@ -378,11 +378,11 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
+          "WW",
+          "WW",
+          "PLATFORM",
+          "WW",
+          "WW",
           0,
           0,
           0,
@@ -635,8 +635,19 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "x": 7,
         "y": 6,
         "elevation": 0
+      },
+      {
+        "id": "secret_needle_29",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Cardinal Astral Compass Gem",
+        "scoreValue": 300,
+        "x": 13,
+        "y": 1,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_29"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -888,7 +899,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         ],
         [
           1,
-          0,
+          "SW",
           0,
           0,
           0,
@@ -1030,7 +1041,24 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
+          "WW",
           0,
+          "B_NS",
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          0,
+          "WW",
           0,
           "B_NS",
           0,
@@ -1068,24 +1096,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           "B_NS",
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          "B_NS",
-          0,
-          0,
+          "WW",
           0,
           0,
           0,
@@ -1102,7 +1113,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           "B_NS",
           0,
-          0,
+          "WW",
           0,
           0,
           0,
@@ -1248,8 +1259,19 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "x": 3,
         "y": 7,
         "elevation": 0
+      },
+      {
+        "id": "secret_underpass_30",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Occluded Sunstone",
+        "scoreValue": 350,
+        "x": 1,
+        "y": 13,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_30"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1343,7 +1365,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
+          "SW",
           1
         ],
         [
@@ -1492,9 +1514,9 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
+          "R_N",
           1,
-          0,
+          "R_N",
           0,
           0,
           1
@@ -1732,9 +1754,9 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
-          0,
-          0,
+          "WW",
+          "PLATFORM",
+          "WW",
           0,
           0,
           1
@@ -1886,8 +1908,19 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "x": 7,
         "y": 7,
         "elevation": 0
+      },
+      {
+        "id": "secret_pillar_31",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Four Winds Zephyr Core",
+        "scoreValue": 400,
+        "x": 13,
+        "y": 1,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_31"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -2010,7 +2043,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
+          "SW",
           1
         ],
         [
@@ -2419,6 +2452,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
+          "WW",
           0,
           0,
           0,
@@ -2426,27 +2460,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          1
-        ],
-        [
-          1,
-          0,
-          0,
-          0,
-          0,
-          0,
-          "B_EW",
-          "B_EW",
-          "B_EW",
-          "B_EW",
-          "B_EW",
-          0,
-          0,
+          "WW",
           0,
           0,
           0,
@@ -2459,6 +2473,24 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
+          "B_EW",
+          "B_EW",
+          "B_EW",
+          "B_EW",
+          "B_EW",
+          0,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          0,
+          0,
+          "WW",
           0,
           0,
           0,
@@ -2466,6 +2498,7 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
           0,
           0,
           0,
+          "WW",
           0,
           0,
           0,
@@ -2656,7 +2689,18 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "x": 2,
         "y": 8,
         "elevation": 0
+      },
+      {
+        "id": "secret_spire_32",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Crown Monolith Prismatic Core",
+        "scoreValue": 500,
+        "x": 15,
+        "y": 1,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "level_32"
   }
 ]);

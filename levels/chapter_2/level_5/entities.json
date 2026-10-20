@@ -1,0 +1,48 @@
+[
+  {
+    "id": "sign_arch_5",
+    "type": "signpost",
+    "title": "Architect's Note #5",
+    "x": 3,
+    "y": 11,
+    "elevation": 0,
+    "text": "Architect's Journal: Ascend the southern ramp to tread upon the ancient canopy bridge deck. The jungle key is suspended at high elevation; below, the underpass canal flows unimpeded toward the northern gate."
+  },
+  {
+    "id": "inscr_canopy_5",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Two tiers of path weave through the trees: walk below through water, or climb above the mist.",
+    "playerDialogue": "The ramp will carry me directly to the bridge deck.",
+    "x": 2,
+    "y": 10,
+    "elevation": 0
+  },
+  {
+    "id": "key_jungle_5",
+    "type": "key",
+    "color": "#34d399",
+    "x": 7,
+    "y": 6,
+    "z": 1,
+    "elevation": 1
+  },
+  {
+    "id": "door_jungle_5",
+    "type": "door",
+    "color": "#34d399",
+    "requiresKey": "key_jungle_5",
+    "x": 12,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gem_5",
+    "type": "collectible",
+    "name": "Canopy Peridot",
+    "points": 250,
+    "x": 2,
+    "y": 6,
+    "elevation": 0
+  }
+]

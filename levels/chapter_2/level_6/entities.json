@@ -1,0 +1,65 @@
+[
+  {
+    "id": "sign_arch_6",
+    "type": "signpost",
+    "title": "Architect's Note #6",
+    "x": 3,
+    "y": 7,
+    "elevation": 0,
+    "text": "Architect's Journal: Dual traversal is demanded here. First, brave the low underpass tunnel beneath the canopy viaduct to claim the amber key in the lower glen. Only then will the southern ramp unlock, granting access to the high bridge deck."
+  },
+  {
+    "id": "inscr_tunnel_6",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The water tunnel runs low and cold beneath the high bridge. Collect the amber resonance before looking to the sky.",
+    "playerDialogue": "Underpass first, high overpass second.",
+    "x": 3,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "key_amber_6",
+    "type": "key",
+    "color": "#f59e0b",
+    "x": 14,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "door_amber_6",
+    "type": "door",
+    "color": "#f59e0b",
+    "requiresKey": "key_amber_6",
+    "x": 9,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "key_emerald_6",
+    "type": "key",
+    "color": "#34d399",
+    "x": 8,
+    "y": 7,
+    "z": 1,
+    "elevation": 1
+  },
+  {
+    "id": "door_emerald_6",
+    "type": "door",
+    "color": "#34d399",
+    "requiresKey": "key_emerald_6",
+    "x": 14,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gem_6",
+    "type": "collectible",
+    "name": "Sunken Amber Tear",
+    "points": 300,
+    "x": 4,
+    "y": 13,
+    "elevation": 0
+  }
+]

@@ -90,7 +90,7 @@
         0,
         0,
         0,
-        0,
+        "SW",
         1
       ],
       [
@@ -99,11 +99,11 @@
         0,
         0,
         0,
+        "R_S",
         0,
         0,
         0,
-        0,
-        0,
+        "R_S",
         0,
         0,
         0,
@@ -373,11 +373,11 @@
         0,
         0,
         0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        "WW",
+        "WW",
+        "PLATFORM",
+        "WW",
+        "WW",
         0,
         0,
         0,
@@ -630,6 +630,17 @@
       "x": 7,
       "y": 6,
       "elevation": 0
+    },
+    {
+      "id": "secret_needle_29",
+      "type": "collectible",
+      "collectibleType": "gem",
+      "name": "Cardinal Astral Compass Gem",
+      "scoreValue": 300,
+      "x": 13,
+      "y": 1,
+      "elevation": 0
     }
-  ]
+  ],
+  "packageSource": "level_29"
 }

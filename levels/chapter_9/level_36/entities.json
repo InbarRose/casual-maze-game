@@ -1,0 +1,102 @@
+[
+  {
+    "id": "key_cyan_36",
+    "type": "key",
+    "color": "#06b6d4",
+    "name": "Cyan Canal Key",
+    "x": 10,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "door_cyan_36",
+    "type": "door",
+    "color": "#06b6d4",
+    "name": "Terrace Access Gate",
+    "requiresKey": "key_cyan_36",
+    "x": 15,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "key_amethyst_36",
+    "type": "key",
+    "color": "#a855f7",
+    "name": "Amethyst Sluice Key",
+    "x": 7,
+    "y": 19,
+    "elevation": 0
+  },
+  {
+    "id": "door_amethyst_36",
+    "type": "door",
+    "color": "#a855f7",
+    "name": "Grand Spillway Seal",
+    "requiresKey": "key_amethyst_36",
+    "x": 18,
+    "y": 19,
+    "elevation": 0
+  },
+  {
+    "id": "checkpoint_36",
+    "type": "checkpoint",
+    "style": "crystal_beacon",
+    "name": "Grand Reservoir Sanctum",
+    "x": 18,
+    "y": 10,
+    "elevation": 0,
+    "color": "#38bdf8"
+  },
+  {
+    "id": "patroller_spillway_36",
+    "type": "patroller",
+    "name": "Spillway Colossus",
+    "color": "#a855f7",
+    "elevation": 0,
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 1,
+        "y": 17
+      },
+      {
+        "x": 5,
+        "y": 17
+      }
+    ]
+  },
+  {
+    "id": "hazard_spillway_36",
+    "type": "timed_hazard",
+    "hazardType": "spikes",
+    "x": 15,
+    "y": 11,
+    "elevation": 0,
+    "activeDuration": 2,
+    "inactiveDuration": 2,
+    "offset": 0
+  },
+  {
+    "id": "gem_grand_36",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Heart of the Aqueduct",
+    "scoreValue": 300,
+    "color": "#a855f7",
+    "x": 16,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "decor_spillway_36",
+    "type": "wall_decor",
+    "decorType": "plaque",
+    "title": "The Grand Spillway",
+    "text": "Beyond these gates lie the pristine depths of the Sunken Vaults.",
+    "author": "Master Mason Torin",
+    "x": 18,
+    "y": 14,
+    "facing": "west",
+    "elevation": 0
+  }
+]

@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "2",
+  "chapter": "chapter_1",
+  "zone": "zone_1",
+  "title": "The Ruby Lock",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 15,
+    "height": 13
+  },
+  "config": {
+    "fogOfWar": false,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "dungeon"
+  },
+  "spawn": {
+    "x": 7,
+    "y": 11,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 7,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_archway",
+    "wallDirection": "north"
+  },
+  "parSteps": 31,
+  "parTime": 18,
+  "architectNote": "Architect's Journal: The North Sanctuary lies sealed by the ancient Ruby Lock. The western labyrinth winds into the deep vault where the Ruby Key is kept. Beware deceptive dead-ends.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

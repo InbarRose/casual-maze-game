@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "28",
+  "chapter": "chapter_7",
+  "zone": "zone_7",
+  "title": "The Sovereign's Ascent",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 21,
+    "height": 19
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "snow"
+  },
+  "spawn": {
+    "x": 2,
+    "y": 9,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 18,
+    "y": 9,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 55,
+  "parTime": 33,
+  "architectNote": "The apex of the Citadel tests every virtue: scriptural memory, sentry evasion, and the Sovereign's Golden Sigil.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

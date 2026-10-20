@@ -1,0 +1,121 @@
+[
+  {
+    "id": "sign_arch_19",
+    "type": "signpost",
+    "x": 3,
+    "y": 7,
+    "z": 0,
+    "title": "Architect's Note #19",
+    "text": "The crucible combines searing flame jets with a vigilant sentinel. Activate the cool crystal beacon midway to secure your footing.",
+    "style": "stone_tablet"
+  },
+  {
+    "id": "checkpoint_19",
+    "type": "checkpoint",
+    "name": "Glacial Beacon",
+    "x": 9,
+    "y": 7,
+    "elevation": 0,
+    "z": 0
+  },
+  {
+    "id": "hazard_vent_19",
+    "type": "hazard",
+    "style": "fire_jet",
+    "name": "Crucible Vent",
+    "interval": 3.5,
+    "activeDuration": 1,
+    "initialOffset": 0.5,
+    "x": 6,
+    "y": 7,
+    "elevation": 0,
+    "z": 0
+  },
+  {
+    "id": "patroller_19",
+    "type": "patroller",
+    "name": "Crucible Guardian",
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 6,
+        "y": 4,
+        "z": 0
+      },
+      {
+        "x": 12,
+        "y": 4,
+        "z": 0
+      }
+    ]
+  },
+  {
+    "id": "key_silver_19",
+    "type": "key",
+    "color": "#e2e8f0",
+    "name": "Crucible Silver Key",
+    "x": 9,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "door_silver_19",
+    "type": "door",
+    "requiresKey": "key_silver_19",
+    "color": "#e2e8f0",
+    "name": "Sanctum Silver Seal",
+    "x": 14,
+    "y": 7,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_19",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The glacial beacon radiates soothing chill amidst the roaring forge.",
+    "playerDialogue": "Activating the checkpoint will save my position if I stumble.",
+    "x": 2,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "gem_crucible_ember_19",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Crucible Flame Ember",
+    "scoreValue": 200,
+    "x": 9,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "gem_basalt_heart_19",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Heart of Basalt",
+    "scoreValue": 150,
+    "x": 2,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "gem_igneous_tears_19",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Igneous Tear",
+    "scoreValue": 150,
+    "x": 16,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "secret_crucible_19",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Crucible Sunstone",
+    "scoreValue": 400,
+    "x": 17,
+    "y": 1,
+    "elevation": 0
+  }
+]

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "sign_ch1_1",
+    "type": "signpost",
+    "title": "Architect's Note #1",
+    "x": 2,
+    "y": 1,
+    "elevation": 0,
+    "text": "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the winding corridors to recover the keystore; avoid dead-end traps."
+  },
+  {
+    "id": "inscr_vestibule",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Ancient script: He who walks the winding way learns patience and cunning.",
+    "playerDialogue": "A wise rule for any pathfinder.",
+    "x": 1,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "key_gold_1",
+    "type": "key",
+    "color": "gold",
+    "x": 2,
+    "y": 10,
+    "elevation": 0
+  },
+  {
+    "id": "door_gold_1",
+    "type": "door",
+    "color": "gold",
+    "requiresKey": "key_gold_1",
+    "x": 9,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gem_1",
+    "type": "collectible",
+    "name": "Secret Sunstone",
+    "points": 250,
+    "x": 5,
+    "y": 1,
+    "elevation": 0
+  }
+]

@@ -39,7 +39,7 @@ function auditLevel(filePath) {
       if (g === 'B_EW' || g === 'B_NS' || o === 'B_EW' || o === 'B_NS' || g === 'BRIDGE_EW' || g === 'BRIDGE_NS' || o === 'BRIDGE_EW' || o === 'BRIDGE_NS') bridgeCount++;
       if (typeof g === 'string' && g.startsWith('R_')) rampCount++;
       if (typeof o === 'string' && o.startsWith('R_')) rampCount++;
-      if (g === 'PLATFORM' || g === 'WALL_WALK' || o === 'PLATFORM' || o === 'WALL_WALK') platformCount++;
+      if (g === 'PLATFORM' || g === 'WALL_WALK' || o === 'PLATFORM' || o === 'WALL_WALK' || g === 'WW' || o === 'WW' || g === 'PL' || o === 'PL') platformCount++;
     }
   }
 

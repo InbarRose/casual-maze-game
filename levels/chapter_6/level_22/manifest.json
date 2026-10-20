@@ -1,0 +1,42 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "22",
+  "chapter": "chapter_6",
+  "zone": "zone_6",
+  "title": "The Cipher Dials",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 17,
+    "height": 15
+  },
+  "config": {
+    "fogOfWar": false,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "sunset"
+  },
+  "spawn": {
+    "x": 2,
+    "y": 2,
+    "elevation": 0,
+    "style": "stairs_down",
+    "wallDirection": "none"
+  },
+  "exit": {
+    "x": 14,
+    "y": 12,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 38,
+  "parTime": 23,
+  "architectNote": "Align the stellar dials according to the celestial dance: first the Sun, second the Moon, third the Horizon.",
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

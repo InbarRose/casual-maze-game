@@ -1,0 +1,78 @@
+[
+  {
+    "id": "sign_arch_17",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #17",
+    "text": "Feel the rhythmic pulse of the caldera. Time your movement through the basalt corridors and harbor in the alcoves.",
+    "style": "stone_tablet"
+  },
+  {
+    "id": "hazard_vent_17_a",
+    "type": "hazard",
+    "style": "fire_jet",
+    "name": "Magma Vent Alpha",
+    "interval": 3,
+    "activeDuration": 1.2,
+    "initialOffset": 0,
+    "x": 7,
+    "y": 6,
+    "elevation": 0,
+    "z": 0
+  },
+  {
+    "id": "hazard_vent_17_b",
+    "type": "hazard",
+    "style": "fire_jet",
+    "name": "Magma Vent Beta",
+    "interval": 3,
+    "activeDuration": 1.2,
+    "initialOffset": 1.5,
+    "x": 8,
+    "y": 6,
+    "elevation": 0,
+    "z": 0
+  },
+  {
+    "id": "gem_fire_opal_17",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Fire Opal",
+    "scoreValue": 150,
+    "x": 7,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "wall_note_17",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Ancient miners carved niches into the basalt to shelter from flame bursts.",
+    "playerDialogue": "The vents pulse periodically. I can harbor in the side niches.",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "gem_molten_core_17",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Molten Core Shard",
+    "scoreValue": 200,
+    "x": 2,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "secret_molten_17",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Molten Core Geode",
+    "scoreValue": 300,
+    "x": 1,
+    "y": 1,
+    "elevation": 0
+  }
+]

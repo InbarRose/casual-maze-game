@@ -1,0 +1,102 @@
+[
+  {
+    "id": "key_prism_38",
+    "type": "key",
+    "name": "Prism Keystone",
+    "color": "#38bdf8",
+    "x": 18,
+    "y": 7,
+    "elevation": 0
+  },
+  {
+    "id": "door_prism_38",
+    "type": "door",
+    "name": "Inner Sanctum Gate",
+    "color": "#38bdf8",
+    "requiresKey": "key_prism_38",
+    "x": 12,
+    "y": 10,
+    "elevation": 0
+  },
+  {
+    "id": "lever_trestle_38",
+    "type": "lever",
+    "name": "Battlement Focal Lever",
+    "color": "#06b6d4",
+    "x": 5,
+    "y": 2,
+    "elevation": 1,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 12,
+        "y": 9,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "patroller_trestle_38",
+    "type": "patroller",
+    "name": "Apex Trestle Sentinel",
+    "color": "#ef4444",
+    "elevation": 0,
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 3,
+        "y": 9
+      },
+      {
+        "x": 3,
+        "y": 15
+      }
+    ]
+  },
+  {
+    "id": "hazard_trestle_38",
+    "type": "timed_hazard",
+    "hazardType": "spikes",
+    "x": 7,
+    "y": 5,
+    "elevation": 0,
+    "activeDuration": 2,
+    "inactiveDuration": 2,
+    "offset": 0
+  },
+  {
+    "id": "checkpoint_38",
+    "type": "checkpoint",
+    "style": "crystal_beacon",
+    "name": "Concentric Nexus Beacon",
+    "x": 14,
+    "y": 20,
+    "elevation": 0,
+    "color": "#38bdf8"
+  },
+  {
+    "id": "decor_note_38",
+    "type": "wall_decor",
+    "decorType": "plaque",
+    "title": "Trestle Diagram",
+    "text": "Ascend the outer battlement ramparts and traverse the grand viaduct to look down into the sunken courts and navigate between tiers.",
+    "author": "Master Architect Vane",
+    "x": 1,
+    "y": 4,
+    "facing": "east",
+    "elevation": 0
+  },
+  {
+    "id": "gem_secret_38",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Celestial Tourmaline",
+    "scoreValue": 300,
+    "color": "#ec4899",
+    "x": 23,
+    "y": 1,
+    "elevation": 0
+  }
+]

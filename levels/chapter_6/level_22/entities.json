@@ -1,0 +1,95 @@
+[
+  {
+    "id": "sign_arch_22",
+    "type": "signpost",
+    "x": 3,
+    "y": 2,
+    "z": 0,
+    "title": "Architect's Note #22",
+    "text": "Align the stellar dials according to the celestial dance: first the Sun, second the Moon, third the Horizon.",
+    "style": "astral_scroll"
+  },
+  {
+    "id": "puzzle_gate_22",
+    "type": "puzzle_gate",
+    "x": 7,
+    "y": 7,
+    "z": 0,
+    "puzzleType": "cipher_dial",
+    "solution": [
+      0,
+      1,
+      2
+    ],
+    "name": "Stellar Cipher Dial"
+  },
+  {
+    "id": "key_azure_22",
+    "type": "key",
+    "color": "#38bdf8",
+    "name": "Azure Star Key",
+    "x": 14,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "door_azure_22",
+    "type": "door",
+    "requiresKey": "key_azure_22",
+    "color": "#38bdf8",
+    "name": "Azure Astral Gate",
+    "x": 14,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "wall_decor_22_sun",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The Solar Crest shines first at dawn: ☀️ Sun.",
+    "playerDialogue": "The first ring must be turned to the Sun.",
+    "x": 4,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "wall_decor_22_moon",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The Lunar Crescent wanes second at dusk: 🌙 Moon.",
+    "playerDialogue": "The second ring aligns to the Moon.",
+    "x": 5,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "wall_decor_22_horizon",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The Horizon unites heaven and earth at twilight: 🌅 Horizon.",
+    "playerDialogue": "The third ring rests upon the Horizon.",
+    "x": 6,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "gem_astrolabe_shard_22",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Ancient Astrolabe Shard",
+    "scoreValue": 200,
+    "x": 9,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "secret_cipher_22",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Enigmatic Cipher Chronometer",
+    "scoreValue": 350,
+    "x": 1,
+    "y": 13,
+    "elevation": 0
+  }
+]

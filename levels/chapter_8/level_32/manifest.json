@@ -1,0 +1,71 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "32",
+  "chapter": "chapter_8",
+  "zone": "zone_8",
+  "title": "The Prismatic Spire",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 17,
+    "height": 17
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "snow",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 15,
+    "y": 15,
+    "elevation": 0,
+    "style": "portal",
+    "label": "Crown of the Monolith",
+    "targetLevel": "1",
+    "wallDirection": "none"
+  },
+  "exits": [
+    {
+      "id": "exit_spire_primary",
+      "x": 15,
+      "y": 15,
+      "elevation": 0,
+      "style": "portal",
+      "label": "Crown of the Monolith",
+      "targetLevel": "1",
+      "wallDirection": "none"
+    },
+    {
+      "id": "exit_spire_citadel_branch",
+      "x": 1,
+      "y": 15,
+      "elevation": 0,
+      "style": "stairs",
+      "label": "Descend to Whispering Citadel",
+      "targetLevel": "story_citadel_1",
+      "wallDirection": "none"
+    }
+  ],
+  "parSteps": 34,
+  "parTime": 21,
+  "architectNote": "At the apex of the monolith, two distinct routes await: return victorious to the Grand Hub, or branch downward into the Whispering Citadel.",
+  "help": {
+    "title": "Level 32: The Prismatic Spire",
+    "message": "Explore the peak! Multiple exits offer choice: complete the campaign or embark on the Whispering Citadel story quest."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

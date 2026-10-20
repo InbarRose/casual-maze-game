@@ -1,0 +1,73 @@
+[
+  {
+    "id": "key_sluice_33",
+    "type": "key",
+    "color": "#0284c7",
+    "name": "Bronze Sluice Key",
+    "x": 3,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "door_sluice_33",
+    "type": "door",
+    "color": "#0284c7",
+    "name": "Central Sluice Gate",
+    "requiresKey": "key_sluice_33",
+    "x": 14,
+    "y": 15,
+    "elevation": 0
+  },
+  {
+    "id": "patroller_sluice_33",
+    "type": "patroller",
+    "name": "Aqueduct Sentinel",
+    "color": "#38bdf8",
+    "elevation": 0,
+    "speed": 1,
+    "waypoints": [
+      {
+        "x": 3,
+        "y": 11
+      },
+      {
+        "x": 7,
+        "y": 11
+      }
+    ]
+  },
+  {
+    "id": "hazard_sluice_33",
+    "type": "timed_hazard",
+    "hazardType": "spikes",
+    "x": 9,
+    "y": 6,
+    "elevation": 0,
+    "activeDuration": 2,
+    "inactiveDuration": 2,
+    "offset": 0
+  },
+  {
+    "id": "decor_note_33",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Aqueduct Inscription",
+    "text": "Water flows from the high snowcaps down into the grand cisterns. Maintain the sluice gates.",
+    "author": "Aqueduct Architect",
+    "x": 1,
+    "y": 6,
+    "facing": "east",
+    "elevation": 0
+  },
+  {
+    "id": "gem_aqueduct_33",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Aqueduct Sapphire",
+    "scoreValue": 150,
+    "color": "#38bdf8",
+    "x": 3,
+    "y": 15,
+    "elevation": 0
+  }
+]

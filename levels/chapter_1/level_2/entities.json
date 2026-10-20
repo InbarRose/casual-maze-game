@@ -1,0 +1,56 @@
+[
+  {
+    "id": "sign_ch1_2",
+    "type": "signpost",
+    "title": "Architect's Note #2",
+    "x": 7,
+    "y": 10,
+    "elevation": 0,
+    "text": "Architect's Journal: The North Sanctuary lies sealed by the ancient Ruby Lock. The western labyrinth winds into the deep vault where the Ruby Key is kept. Beware deceptive dead-ends."
+  },
+  {
+    "id": "inscr_ruby_altar",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "The ruby glow beckons through the winding dark.",
+    "playerDialogue": "West holds the key; North holds the gate.",
+    "x": 7,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "key_ruby_2",
+    "type": "key",
+    "color": "red",
+    "x": 2,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "door_ruby_2",
+    "type": "door",
+    "color": "red",
+    "requiresKey": "key_ruby_2",
+    "x": 7,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "gem_bonus_2",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "scoreValue": 150,
+    "x": 13,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gem_2",
+    "type": "collectible",
+    "name": "Hidden Bloodstone",
+    "points": 250,
+    "x": 12,
+    "y": 1,
+    "elevation": 0
+  }
+]

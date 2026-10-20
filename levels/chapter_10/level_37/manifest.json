@@ -1,0 +1,48 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "37",
+  "chapter": "chapter_10",
+  "zone": "zone_10",
+  "title": "The Spectral Gate",
+  "author": "Inbar Rose",
+  "version": 1,
+  "dimensions": {
+    "width": 23,
+    "height": 23
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "prismatic",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 21,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_archway",
+    "label": "Refraction Chamber",
+    "wallDirection": "north"
+  },
+  "parSteps": 87,
+  "parTime": 45,
+  "architectNote": "The refracting crystal prisms cast elusive shadows. Locate the amber key, ascend the viaduct to toggle the refraction barrier, and unseal the spectral gate.",
+  "help": {
+    "title": "Level 37: The Spectral Gate",
+    "message": "The way forward is locked by dual crystal seals and chromatic barriers. Use the elevated viaduct to reach the focal lever."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

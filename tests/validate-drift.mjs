@@ -137,15 +137,19 @@ check('levels/manifest.json exists', fs.existsSync(levelManifestPath));
 
 if (fs.existsSync(levelManifestPath)) {
   const levelManifest = JSON.parse(fs.readFileSync(levelManifestPath, 'utf8'));
-  // Collect all level JSONs on disk
+  // Collect all level JSONs on disk (ignoring internal package layers/entities)
   function scanDiskLevels(dir) {
     let files = [];
     if (!fs.existsSync(dir)) return files;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const full = path.join(dir, entry.name);
       if (entry.isDirectory()) {
+        // Skip subdirectories that are level packages (they contain layers.json)
+        if (fs.existsSync(path.join(full, 'manifest.json')) && fs.existsSync(path.join(full, 'layers.json'))) {
+          continue;
+        }
         files.push(...scanDiskLevels(full));
-      } else if (entry.name.endsWith('.json') && entry.name !== 'manifest.json') {
+      } else if (entry.name.endsWith('.json') && entry.name !== 'manifest.json' && entry.name !== 'layers.json' && entry.name !== 'entities.json') {
         files.push(path.relative(rootDir, full).replace(/\\/g, '/'));
       }
     }
