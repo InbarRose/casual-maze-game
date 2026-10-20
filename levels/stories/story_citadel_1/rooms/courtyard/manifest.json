@@ -1,0 +1,45 @@
+{
+  "id": "courtyard",
+  "title": "Grand Courtyard",
+  "theme": "temple",
+  "dimensions": {
+    "width": 13,
+    "height": 13
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "stairs_down"
+  },
+  "exits": [
+    {
+      "id": "exit_courtyard_to_catacombs",
+      "x": 1,
+      "y": 11,
+      "elevation": 0,
+      "style": "stairs",
+      "label": "Descend into Catacombs",
+      "targetRoom": "catacombs",
+      "targetSpawn": {
+        "x": 1,
+        "y": 2,
+        "elevation": 0
+      }
+    },
+    {
+      "id": "exit_courtyard_to_spire",
+      "x": 11,
+      "y": 11,
+      "elevation": 0,
+      "style": "stairs",
+      "label": "Ascend to High Spire",
+      "targetRoom": "high_spire",
+      "targetSpawn": {
+        "x": 1,
+        "y": 2,
+        "elevation": 0
+      }
+    }
+  ]
+}

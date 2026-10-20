@@ -1,0 +1,85 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "story_citadel_1",
+  "storyId": "the_whispering_citadel",
+  "chapterNumber": 1,
+  "chapterTitle": "The Whispering Citadel",
+  "chapterSubtitle": "Interconnected Multi-Room Sanctuary",
+  "prologueText": "Beneath the peaks of the Monolith lies the Whispering Citadel—a three-tier sanctuary connecting an ancient courtyard, subterranean catacombs, and a high spire open to the four winds.",
+  "title": "The Whispering Citadel",
+  "author": "High Cartographer of the Monolith",
+  "version": 1,
+  "dimensions": {
+    "width": 13,
+    "height": 13
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "temple",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 11,
+    "y": 11,
+    "elevation": 0,
+    "style": "portal",
+    "label": "Apex Altar of the Monolith",
+    "wallDirection": "none"
+  },
+  "exits": [
+    {
+      "id": "exit_courtyard_to_catacombs",
+      "x": 1,
+      "y": 11,
+      "elevation": 0,
+      "style": "stairs",
+      "label": "Descend into Catacombs",
+      "targetRoom": "catacombs",
+      "targetSpawn": {
+        "x": 1,
+        "y": 2,
+        "elevation": 0
+      },
+      "wallDirection": "none"
+    },
+    {
+      "id": "exit_courtyard_to_spire",
+      "x": 11,
+      "y": 11,
+      "elevation": 0,
+      "style": "stairs",
+      "label": "Ascend to High Spire",
+      "targetRoom": "high_spire",
+      "targetSpawn": {
+        "x": 1,
+        "y": 2,
+        "elevation": 0
+      },
+      "wallDirection": "none"
+    }
+  ],
+  "initialRoom": "courtyard",
+  "parSteps": 80,
+  "parTime": 60,
+  "architectNote": "A true multi-room dungeon. Descend into the Catacombs to retrieve the Spire Key, return to unlock the Spire Gate, and ascend to the mountain heights.",
+  "help": {
+    "title": "The Whispering Citadel",
+    "message": "Travel between the Courtyard, Catacombs, and High Spire. Your inventory, score, and key state persist between rooms!"
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md",
+    "rooms": "./rooms/"
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "story_guardians_3",
+  "version": 1,
+  "storyId": "relics_of_the_guardians",
+  "chapterNumber": 3,
+  "chapterTitle": "Sanctum of the Four Guardians",
+  "chapterSubtitle": "The Grand Environmental Riddle",
+  "prologueText": "You enter the sacred Grand Sanctum. Four ornate plinths stand before the Golden Gate of Eternity. Four guardian statues—Falcon, Lion, Serpent, and Bear—must each be retrieved from their alcoves and positioned according to the sacred verses to open the gate.",
+  "title": "Sanctum of the Four Guardians",
+  "author": "Ancient Guild of Cartographers",
+  "dimensions": {
+    "width": 15,
+    "height": 15
+  },
+  "config": {
+    "fogOfWar": false,
+    "mapRevealed": true,
+    "viewRadius": 8,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "temple"
+  },
+  "help": {
+    "title": "Chapter 3: Sanctum of the Four Guardians",
+    "message": "Read the riddle inscriptions on the 4 pedestals [E]. Carry and place Falcon, Lion, Serpent, and Bear into their matching plinths to unlock the Grand Sanctum Gate."
+  },
+  "spawn": {
+    "x": 7,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 7,
+    "y": 13,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 54,
+  "parTime": 33,
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

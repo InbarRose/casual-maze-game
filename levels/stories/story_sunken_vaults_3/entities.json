@@ -1,0 +1,72 @@
+[
+  {
+    "id": "key_azure_3",
+    "type": "key",
+    "x": 15,
+    "y": 1,
+    "elevation": 0,
+    "color": "#0284c7",
+    "name": "Azure Hydrolock Key"
+  },
+  {
+    "id": "door_azure_3",
+    "type": "door",
+    "x": 1,
+    "y": 4,
+    "elevation": 0,
+    "requiresKey": "key_azure_3",
+    "color": "#0284c7",
+    "name": "Sanctuary Azure Barrier"
+  },
+  {
+    "id": "key_abyssal_3",
+    "type": "key",
+    "x": 1,
+    "y": 15,
+    "elevation": 0,
+    "color": "#38bdf8",
+    "name": "Abyssal Pearl Key"
+  },
+  {
+    "id": "door_abyssal_3",
+    "type": "door",
+    "x": 13,
+    "y": 15,
+    "elevation": 0,
+    "requiresKey": "key_abyssal_3",
+    "color": "#38bdf8",
+    "name": "Sanctuary Apex Gate"
+  },
+  {
+    "id": "checkpoint_vaults_3",
+    "type": "checkpoint",
+    "x": 8,
+    "y": 7,
+    "elevation": 0,
+    "color": "#38bdf8",
+    "name": "Abyssal Sanctuary Beacon"
+  },
+  {
+    "id": "decor_note_vaults_3",
+    "type": "wall_decor",
+    "decorType": "monolith",
+    "title": "Monolith of the Depths",
+    "text": "Water is life, memory, and path. Those who respect its depths shall never be lost in the labyrinth.",
+    "author": "Primal Hydrologist",
+    "x": 8,
+    "y": 9,
+    "facing": "south",
+    "elevation": 0
+  },
+  {
+    "id": "gem_vaults_3",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Primal Water Core",
+    "scoreValue": 500,
+    "color": "#0284c7",
+    "x": 3,
+    "y": 8,
+    "elevation": 0
+  }
+]

@@ -1,0 +1,73 @@
+[
+  {
+    "id": "statue_falcon",
+    "type": "riddle_item",
+    "name": "Falcon Statue",
+    "itemStyle": "falcon",
+    "symbol": "🦅",
+    "description": "A finely carved marble statue of the mountain falcon.",
+    "x": 1,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "wall_falcon_clue",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Only when the winged sentinel overlooks the winds will the gate open.",
+    "playerDialogue": "The inscription describes the Falcon pedestal!",
+    "x": 3,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "ped_falcon",
+    "type": "pedestal",
+    "name": "Sky Plinth",
+    "pedestalStyle": "plinth",
+    "riddleHint": "Place the Falcon upon this plinth to unlock the terrace gate.",
+    "acceptedItemId": "statue_falcon",
+    "puzzleGroupId": "group_falcon_terrace",
+    "targetDoorId": "door_terrace_gate",
+    "x": 7,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "door_terrace_gate",
+    "type": "door",
+    "color": "#38bdf8",
+    "name": "Terrace Gate",
+    "x": 7,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "gem_terrace",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Sky Sapphire",
+    "scoreValue": 250,
+    "x": 9,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "chk_terrace",
+    "type": "checkpoint",
+    "name": "Terrace Haven",
+    "x": 4,
+    "y": 3,
+    "elevation": 0
+  },
+  {
+    "id": "gem_falcon_feather",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Gilded Feather of the Falcon",
+    "scoreValue": 200,
+    "x": 3,
+    "y": 7,
+    "elevation": 0
+  }
+]

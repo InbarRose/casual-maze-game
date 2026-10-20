@@ -33,6 +33,7 @@
     "style": "portal",
     "wallDirection": "none"
   },
+  "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 13 × 13  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
   "layers": {
     "ground": [
       [
@@ -450,5 +451,6 @@
       "style": "magic_seal",
       "orientation": "auto"
     }
-  ]
+  ],
+  "packageSource": "tutorial_5"
 }

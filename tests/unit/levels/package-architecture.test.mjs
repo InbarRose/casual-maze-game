@@ -59,6 +59,68 @@ describe('Levels > Modular Level Package Architecture (ADR-0037, BL-143)', () =>
     assertEqual(packageCount, 40, 'All 40 campaign levels exist as modular packages');
   });
 
+  it('verifies all 6 tutorial levels exist as self-contained directory packages', () => {
+    let tutorialPackageCount = 0;
+    for (let i = 1; i <= 6; i++) {
+      const pkgDir = path.join(rootDir, 'levels', 'tutorial', `tutorial_${i}`);
+      assert(fs.existsSync(pkgDir), `Tutorial package exists: ${pkgDir}`);
+      assert(isLevelPackage(pkgDir), `isLevelPackage recognizes Tutorial ${i}`);
+
+      const manifest = JSON.parse(fs.readFileSync(path.join(pkgDir, 'manifest.json'), 'utf8'));
+      assertEqual(manifest.id, `tutorial_${i}`, `Tutorial ${i} manifest id matches`);
+      assert(manifest.title, `Tutorial ${i} has title: "${manifest.title}"`);
+
+      const layers = JSON.parse(fs.readFileSync(path.join(pkgDir, 'layers.json'), 'utf8'));
+      assertEqual(layers.ground.length, manifest.dimensions.height);
+      assertEqual(layers.ground[0].length, manifest.dimensions.width);
+
+      const entities = JSON.parse(fs.readFileSync(path.join(pkgDir, 'entities.json'), 'utf8'));
+      assert(Array.isArray(entities));
+
+      const readme = fs.readFileSync(path.join(pkgDir, 'README.md'), 'utf8');
+      assert(readme.includes(manifest.title));
+
+      const compiled = compileLevelPackage(pkgDir);
+      assertEqual(compiled.id, `tutorial_${i}`);
+      tutorialPackageCount++;
+    }
+    assertEqual(tutorialPackageCount, 6, 'All 6 tutorial levels exist as modular packages');
+  });
+
+  it('verifies all 7 story saga levels exist as self-contained directory packages', () => {
+    const storyPkgNames = [
+      'story_guardians_1',
+      'story_guardians_2',
+      'story_guardians_3',
+      'story_citadel_1',
+      'story_sunken_vaults_1',
+      'story_sunken_vaults_2',
+      'story_sunken_vaults_3',
+    ];
+
+    for (const name of storyPkgNames) {
+      const pkgDir = path.join(rootDir, 'levels', 'stories', name);
+      assert(fs.existsSync(pkgDir), `Story package exists: ${pkgDir}`);
+      assert(isLevelPackage(pkgDir), `isLevelPackage recognizes ${name}`);
+
+      const manifest = JSON.parse(fs.readFileSync(path.join(pkgDir, 'manifest.json'), 'utf8'));
+      assertEqual(manifest.id, name, `${name} manifest id matches`);
+
+      const readme = fs.readFileSync(path.join(pkgDir, 'README.md'), 'utf8');
+      assert(readme.length > 20, `${name} README has content`);
+
+      const compiled = compileLevelPackage(pkgDir);
+      assertEqual(compiled.id, name);
+
+      if (name === 'story_citadel_1') {
+        assert(compiled.rooms !== undefined, 'Citadel compiled object has rooms');
+        assert(compiled.rooms.courtyard !== undefined, 'Citadel has courtyard room');
+        assert(compiled.rooms.catacombs !== undefined, 'Citadel has catacombs room');
+        assert(compiled.rooms.high_spire !== undefined, 'Citadel has high_spire room');
+      }
+    }
+  });
+
   it('compiles level directory packages into canonical objects matching bundled datasets', () => {
     for (const bundledLevel of CAMPAIGN_LEVELS) {
       const levelId = parseInt(bundledLevel.id, 10);

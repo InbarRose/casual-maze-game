@@ -1,0 +1,41 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "tutorial_5",
+  "title": "The Shrouded Path",
+  "author": "Casual Maze Academy",
+  "version": 1,
+  "dimensions": {
+    "width": 13,
+    "height": 13
+  },
+  "config": {
+    "fogOfWar": true,
+    "mapRevealed": true,
+    "viewRadius": 4,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "dungeon"
+  },
+  "help": {
+    "title": "Fog of War & Vision Radius",
+    "message": "The maze layout is revealed in memory, but dynamic items (keys, doors, levers) stay hidden in the shadows until you are within 4 tiles of vision!"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 11,
+    "y": 11,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

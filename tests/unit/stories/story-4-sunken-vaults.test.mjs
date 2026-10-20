@@ -41,7 +41,7 @@ describe('Storylines > The Sunken Vaults of the Deep (BL-130)', () => {
     assertEqual(ch1.id, 'story_sunken_vaults_1');
     const sol = solveLevel(ch1);
     assert(sol !== null, 'Chapter 1 must be solvable');
-    assertEqual(sol.length, 21, 'Optimal path is 21 steps');
+    assertEqual(sol.length, 61, 'Optimal path is 61 steps');
 
     // Without key, unsolvable
     const noKey = JSON.parse(JSON.stringify(ch1));
@@ -67,7 +67,7 @@ describe('Storylines > The Sunken Vaults of the Deep (BL-130)', () => {
     assertEqual(ch3.id, 'story_sunken_vaults_3');
     const sol = solveLevel(ch3);
     assert(sol !== null, 'Chapter 3 must be solvable');
-    assertEqual(sol.length, 57, 'Optimal path is 57 steps');
+    assertEqual(sol.length, 99, 'Optimal path is 99 steps');
 
     // Has both keys
     const keyIds = ch3.entities.filter(e => e.type === 'key').map(e => e.id);

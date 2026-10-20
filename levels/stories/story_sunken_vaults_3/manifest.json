@@ -1,0 +1,51 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "story_sunken_vaults_3",
+  "storyId": "sunken_vaults_of_the_deep",
+  "chapterNumber": 3,
+  "chapterTitle": "The Abyssal Sanctuary",
+  "chapterSubtitle": "The Ancient Subterranean Sanctum",
+  "prologueText": "At the very foundation of the sunken realm stands the Abyssal Sanctuary. Here, the Primal Water Core pulses in radiant cerulean luminescence.",
+  "title": "The Abyssal Sanctuary",
+  "author": "Deep Vault Cartographers",
+  "version": 1,
+  "dimensions": {
+    "width": 17,
+    "height": 17
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "aqueduct",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 15,
+    "y": 15,
+    "elevation": 0,
+    "style": "portal",
+    "label": "Vaults Apex",
+    "wallDirection": "none"
+  },
+  "parSteps": 110,
+  "parTime": 60,
+  "architectNote": "The climax of the Sunken Vaults. Recover the Azure Key and Abyssal Pearl to breach the Sanctuary Apex.",
+  "help": {
+    "title": "Chapter 3: The Abyssal Sanctuary",
+    "message": "Both the Azure and Abyssal keys are required to unlock the sanctuary gates and claim the Primal Core."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

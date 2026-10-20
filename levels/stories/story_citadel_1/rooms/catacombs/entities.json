@@ -1,0 +1,87 @@
+[
+  {
+    "id": "key_citadel_spire",
+    "type": "key",
+    "color": "#06b6d4",
+    "name": "Spire Keystone",
+    "x": 23,
+    "y": 23,
+    "elevation": 0
+  },
+  {
+    "id": "hazard_catacomb_fire_1",
+    "type": "hazard",
+    "hazardType": "fire",
+    "cyclePeriod": 3000,
+    "offsetRatio": 0,
+    "x": 13,
+    "y": 19,
+    "elevation": 0
+  },
+  {
+    "id": "hazard_catacomb_fire_2",
+    "type": "hazard",
+    "hazardType": "fire",
+    "cyclePeriod": 3000,
+    "offsetRatio": 0.5,
+    "x": 8,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "wall_decor_catacomb_carving",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Catacomb Epitaph",
+    "text": "Here lie the guardians who sealed the high spire away from the reaching fog.",
+    "author": "Unknown Cryptkeeper",
+    "x": 2,
+    "y": 1,
+    "facing": "south",
+    "elevation": 0
+  },
+  {
+    "id": "wall_decor_catacomb_mural",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Mural of the Four Wings",
+    "text": "West for the guardians, center for the hall of silence, south for the sanctum of the spires.",
+    "author": "Elder Cartographer",
+    "x": 13,
+    "y": 9,
+    "facing": "south",
+    "elevation": 0
+  },
+  {
+    "id": "gem_crypt_amethyst",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Catacomb Amethyst",
+    "scoreValue": 250,
+    "color": "#a855f7",
+    "x": 23,
+    "y": 7,
+    "elevation": 0
+  },
+  {
+    "id": "gem_crypt_emerald",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Deep Crypt Emerald",
+    "scoreValue": 300,
+    "color": "#10b981",
+    "x": 3,
+    "y": 23,
+    "elevation": 0
+  },
+  {
+    "id": "gem_crypt_phylactery",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Ancient Catacomb Phylactery",
+    "scoreValue": 350,
+    "x": 8,
+    "y": 5,
+    "elevation": 0
+  }
+]

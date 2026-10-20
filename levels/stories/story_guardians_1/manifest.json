@@ -1,0 +1,49 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "story_guardians_1",
+  "version": 1,
+  "storyId": "relics_of_the_guardians",
+  "chapterNumber": 1,
+  "chapterTitle": "The Whispering Ruins",
+  "chapterSubtitle": "Inscriptions, Relic Gems & Respawn Beacons",
+  "prologueText": "You arrive at the outer perimeter of the Sunken Sun Temple. Weathered wall carvings whisper forgotten lore, while pulsing respawn beacons promise sanctuary amidst ancient fire traps.",
+  "title": "The Whispering Ruins",
+  "author": "Ancient Guild of Cartographers",
+  "dimensions": {
+    "width": 11,
+    "height": 11
+  },
+  "config": {
+    "fogOfWar": false,
+    "mapRevealed": true,
+    "viewRadius": 7,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "temple"
+  },
+  "help": {
+    "title": "Chapter 1: The Whispering Ruins",
+    "message": "Inspect wall carvings [E], collect bonus sun gems, activate the respawn beacon, and safely bypass the flame vents."
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 9,
+    "y": 9,
+    "elevation": 0,
+    "style": "portal",
+    "wallDirection": "none"
+  },
+  "parSteps": 28,
+  "parTime": 17,
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

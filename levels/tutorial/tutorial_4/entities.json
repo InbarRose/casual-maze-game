@@ -1,0 +1,22 @@
+[
+  {
+    "id": "key_gold_t4",
+    "type": "key",
+    "x": 11,
+    "y": 1,
+    "color": "#fbbf24",
+    "name": "Sun Key",
+    "style": "crystal",
+    "glowEffect": "vibrant"
+  },
+  {
+    "id": "door_gold_t4",
+    "type": "door",
+    "x": 10,
+    "y": 11,
+    "requiresKey": "key_gold_t4",
+    "color": "#fbbf24",
+    "style": "classic",
+    "orientation": "vertical"
+  }
+]

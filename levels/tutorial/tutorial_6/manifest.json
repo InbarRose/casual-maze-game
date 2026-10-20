@@ -1,0 +1,41 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "tutorial_6",
+  "title": "Master's Trial",
+  "author": "Casual Maze Academy",
+  "version": 1,
+  "dimensions": {
+    "width": 17,
+    "height": 17
+  },
+  "config": {
+    "fogOfWar": true,
+    "mapRevealed": false,
+    "viewRadius": 5,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "temple"
+  },
+  "help": {
+    "title": "The Master's Trial",
+    "message": "The final test! Navigate the shrouded darkness, pass under the central bridge to retrieve the sapphire orb, then cross over the bridge deck to trigger mechanisms and claim victory."
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 15,
+    "y": 15,
+    "style": "wall_archway",
+    "wallDirection": "north"
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

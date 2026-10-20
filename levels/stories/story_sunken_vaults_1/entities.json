@@ -1,0 +1,50 @@
+[
+  {
+    "id": "key_siphon_1",
+    "type": "key",
+    "x": 1,
+    "y": 11,
+    "elevation": 0,
+    "color": "#38bdf8",
+    "name": "Siphon Valve Key"
+  },
+  {
+    "id": "door_siphon_1",
+    "type": "door",
+    "x": 9,
+    "y": 11,
+    "elevation": 0,
+    "requiresKey": "key_siphon_1",
+    "color": "#38bdf8",
+    "name": "Outflow Gate"
+  },
+  {
+    "id": "checkpoint_vaults_1",
+    "type": "checkpoint",
+    "x": 7,
+    "y": 7,
+    "elevation": 0,
+    "name": "Siphon Intake Sanctuary"
+  },
+  {
+    "id": "decor_note_vaults_1",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Siphon Instructions",
+    "text": "Depressurize the intake valve before opening the outflow conduit.",
+    "x": 1,
+    "y": 3,
+    "facing": "south",
+    "elevation": 0
+  },
+  {
+    "id": "gem_vaults_1",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Siphon Core Sapphire",
+    "scoreValue": 200,
+    "x": 5,
+    "y": 9,
+    "elevation": 0
+  }
+]

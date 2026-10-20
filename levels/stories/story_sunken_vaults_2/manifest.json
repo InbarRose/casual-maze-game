@@ -1,0 +1,51 @@
+{
+  "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
+  "id": "story_sunken_vaults_2",
+  "storyId": "sunken_vaults_of_the_deep",
+  "chapterNumber": 2,
+  "chapterTitle": "The Pressure Reservoir",
+  "chapterSubtitle": "Thermal Vents & Secret Conduits",
+  "prologueText": "Scalding geysers echo through the cavernous reservoir. The water level fluctuates as steam pulses from the abyssal vents.",
+  "title": "The Pressure Reservoir",
+  "author": "Deep Vault Cartographers",
+  "version": 1,
+  "dimensions": {
+    "width": 15,
+    "height": 15
+  },
+  "config": {
+    "fogOfWar": true,
+    "viewRadius": 6,
+    "allowFreePan": true,
+    "tileSize": 32,
+    "theme": "aqueduct",
+    "viewPerspective": "angled"
+  },
+  "spawn": {
+    "x": 1,
+    "y": 1,
+    "elevation": 0,
+    "style": "wall_doorway",
+    "wallDirection": "north"
+  },
+  "exit": {
+    "x": 13,
+    "y": 13,
+    "elevation": 0,
+    "style": "portal",
+    "label": "Abyssal Shaft",
+    "wallDirection": "none"
+  },
+  "parSteps": 28,
+  "parTime": 16,
+  "architectNote": "Navigate past the pulsing steam vents to retrieve the Reservoir Key in the northeastern valve terrace.",
+  "help": {
+    "title": "Chapter 2: The Pressure Reservoir",
+    "message": "The way to the lower sanctuary is locked. Retrieve the bronze key in the northeast chamber."
+  },
+  "package": {
+    "layers": "./layers.json",
+    "entities": "./entities.json",
+    "documentation": "./README.md"
+  }
+}

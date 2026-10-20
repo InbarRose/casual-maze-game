@@ -38,6 +38,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "style": "wall_archway",
       "wallDirection": "north"
     },
+    "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 9 × 9  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
     "layers": {
       "ground": [
         [
@@ -242,7 +243,8 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ]
       ]
     },
-    "entities": []
+    "entities": [],
+    "packageSource": "tutorial_1"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -279,6 +281,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "style": "portal",
       "wallDirection": "none"
     },
+    "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
     "layers": {
       "ground": [
         [
@@ -612,7 +615,8 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "style": "portcullis",
         "orientation": "horizontal"
       }
-    ]
+    ],
+    "packageSource": "tutorial_2"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -649,6 +653,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "style": "stairs_up",
       "wallDirection": "none"
     },
+    "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: temple  ",
     "layers": {
       "ground": [
         [
@@ -961,7 +966,8 @@ export const TUTORIAL_LEVELS = Object.freeze([
           }
         ]
       }
-    ]
+    ],
+    "packageSource": "tutorial_3"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -998,6 +1004,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "style": "wall_archway",
       "wallDirection": "north"
     },
+    "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 13 × 13  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: jungle  ",
     "layers": {
       "ground": [
         [
@@ -1415,7 +1422,8 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "style": "classic",
         "orientation": "vertical"
       }
-    ]
+    ],
+    "packageSource": "tutorial_4"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1452,6 +1460,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "style": "portal",
       "wallDirection": "none"
     },
+    "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 13 × 13  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
     "layers": {
       "ground": [
         [
@@ -1869,7 +1878,8 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "style": "magic_seal",
         "orientation": "auto"
       }
-    ]
+    ],
+    "packageSource": "tutorial_5"
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1906,6 +1916,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "style": "wall_archway",
       "wallDirection": "north"
     },
+    "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 17 × 17  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: temple  ",
     "layers": {
       "ground": [
         [
@@ -1991,8 +2002,8 @@ export const TUTORIAL_LEVELS = Object.freeze([
           1,
           1,
           0,
-          1,
-          1,
+          0,
+          0,
           1,
           1,
           1,
@@ -2005,48 +2016,48 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ],
         [
           1,
-          1,
-          1,
-          1,
-          1,
-          0,
-          1,
-          1,
-          0,
-          0,
-          0,
           0,
           0,
           0,
           1,
           0,
-          1
-        ],
-        [
-          1,
-          1,
-          1,
           1,
           1,
           0,
-          1,
-          1,
           0,
-          1,
-          1,
-          1,
-          1,
-          1,
+          0,
+          0,
+          0,
+          0,
           1,
           0,
           1
         ],
         [
           1,
+          0,
+          1,
+          0,
+          1,
+          0,
+          1,
+          1,
+          0,
           1,
           1,
           1,
           1,
+          1,
+          1,
+          0,
+          1
+        ],
+        [
+          1,
+          0,
+          1,
+          0,
+          "SW",
           0,
           1,
           1,
@@ -2062,9 +2073,9 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ],
         [
           1,
+          0,
           1,
-          1,
-          1,
+          0,
           1,
           0,
           0,
@@ -2081,11 +2092,11 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ],
         [
           1,
+          0,
           1,
-          1,
-          1,
-          1,
-          1,
+          0,
+          0,
+          0,
           1,
           1,
           "R_N",
@@ -2100,11 +2111,11 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ],
         [
           1,
-          1,
-          1,
-          1,
-          1,
-          1,
+          0,
+          0,
+          0,
+          0,
+          0,
           1,
           1,
           0,
@@ -2164,7 +2175,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           1,
           1,
-          1,
+          0,
           1,
           1,
           0,
@@ -2183,7 +2194,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
           0,
           1,
           1,
-          1,
+          0,
           1,
           1,
           0,
@@ -2637,7 +2648,18 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "color": "#f43f5e",
         "style": "vault_hatch",
         "orientation": "vertical"
+      },
+      {
+        "id": "gem_tutorial_sunstone",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Sunstone Relic",
+        "scoreValue": 100,
+        "x": 5,
+        "y": 7,
+        "elevation": 0
       }
-    ]
+    ],
+    "packageSource": "tutorial_6"
   }
 ]);

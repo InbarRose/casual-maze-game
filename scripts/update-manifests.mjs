@@ -354,4 +354,213 @@ export const ALL_LEVELS = Object.freeze([
 
 fs.writeFileSync(path.join(rootDir, 'js/levels/default-levels.js'), aggregatorContent, 'utf-8');
 console.log(`  ✓ Updated js/levels/default-levels.js aggregator with Chapters ${chapterNums[0]}-${chapterNums[chapterNums.length - 1]}`);
+
+// 3d. Synchronize Sunken Vaults dataset (ADR-0044)
+const sv1 = JSON.parse(fs.readFileSync(path.join(rootDir, 'levels/stories/story_sunken_vaults_1.json'), 'utf8'));
+const sv2 = JSON.parse(fs.readFileSync(path.join(rootDir, 'levels/stories/story_sunken_vaults_2.json'), 'utf8'));
+const sv3 = JSON.parse(fs.readFileSync(path.join(rootDir, 'levels/stories/story_sunken_vaults_3.json'), 'utf8'));
+
+const svContent = `/**
+ * Casual Maze Game — Sunken Vaults of the Deep Storyline Dataset (BL-130, ADR-0035, ADR-0044)
+ */
+
+export const SUNKEN_VAULTS_CHAPTER_1 = Object.freeze(${JSON.stringify(sv1, null, 2)});
+
+export const SUNKEN_VAULTS_CHAPTER_2 = Object.freeze(${JSON.stringify(sv2, null, 2)});
+
+export const SUNKEN_VAULTS_CHAPTER_3 = Object.freeze(${JSON.stringify(sv3, null, 2)});
+
+export const SUNKEN_VAULTS_STORYLINE = Object.freeze({
+  id: 'sunken_vaults_of_the_deep',
+  title: 'The Sunken Vaults of the Deep',
+  tagline: 'Brave the subterranean cisterns, hydraulic siphons, and abyssal waterworks.',
+  description: 'Plunge into the flooded subterranean vaults beneath the Grand Aqueduct. Balance hydraulic siphons, evade thermal steam vents, and decipher the forgotten glyphs of the Deep Architects to recover the Primal Water Core.',
+  badge: 'Aqueduct Saga • 3 Chapters',
+  icon: '🌊',
+  accentColor: '#0284c7',
+  theme: 'aqueduct',
+  difficulty: 'Advanced',
+  totalChapters: 3,
+  chapters: [SUNKEN_VAULTS_CHAPTER_1, SUNKEN_VAULTS_CHAPTER_2, SUNKEN_VAULTS_CHAPTER_3],
+});
+`;
+fs.writeFileSync(path.join(rootDir, 'js/stories/sunken-vaults.js'), svContent, 'utf8');
+console.log('  ✓ Updated js/stories/sunken-vaults.js dataset');
+
+// 3e. Synchronize Storylines (Guardians & Citadel) (ADR-0044)
+const g1 = JSON.parse(fs.readFileSync(path.join(rootDir, 'levels/stories/story_guardians_1.json'), 'utf8'));
+const g2 = JSON.parse(fs.readFileSync(path.join(rootDir, 'levels/stories/story_guardians_2.json'), 'utf8'));
+const g3 = JSON.parse(fs.readFileSync(path.join(rootDir, 'levels/stories/story_guardians_3.json'), 'utf8'));
+const cit1 = JSON.parse(fs.readFileSync(path.join(rootDir, 'levels/stories/story_citadel_1.json'), 'utf8'));
+
+const storylinesContent = `/**
+ * Casual Maze Game — Storylines & Episodic Quests Registry
+ *
+ * Defines first-class narrative story campaigns alongside the mainline megalabyrinths.
+ * Transforms tutorials into "The Novice's Initiation" and introduces thematic quests.
+ */
+
+import { TUTORIAL_LEVELS } from '../levels/tutorials.js';
+import { TILES } from '../core/constants.js';
+import { SUNKEN_VAULTS_STORYLINE } from './sunken-vaults.js';
+
+// Story 1: The Novice's Initiation (Chapters 1 to 6)
+const NOVICE_CHAPTER_PROLOGUES = [
+  {
+    chapter: 1,
+    title: 'The Waking Hall',
+    subtitle: 'Orientation & First Footing',
+    prologue: 'The ancient oak doors seal behind you. The elder cartographers whisper: "Every grand journey begins with a single step. Trust your senses and seek the azure exit portal."',
+    hint: 'Use WASD or Arrow keys to move through the stone hall to the glowing blue portal.',
+  },
+  {
+    chapter: 2,
+    title: 'The Prismatic Gates',
+    subtitle: 'Color Resonance & Sealed Portals',
+    prologue: 'Glimmering keystones radiate faint elemental auras in the damp corridors. Only keys forged in the same hue can break the resonance seals of locked sanctuary doors.',
+    hint: 'Collect the colored keys to unlock matching barriers blocking your path.',
+  },
+  {
+    chapter: 3,
+    title: 'Clockwork Mechanisms',
+    subtitle: 'Dynamic Architecture & Levers',
+    prologue: 'Heavy bronze levers groan under centuries of silence. Throwing a lever engages subterranean clockwork, sliding solid stone walls into the earth.',
+    hint: 'Step onto levers to dynamically lower walls and open alternative corridors.',
+  },
+  {
+    chapter: 4,
+    title: 'The Canopy Crossing',
+    subtitle: 'Multi-Elevation Bridges & Ramps',
+    prologue: 'Wooden ramps ascend into the soaring canopy. At elevation, you can cross high above ground pathways, defying the maze’s 2D constraints.',
+    hint: 'Ascend directional ramps (▲) to cross overhead bridges over lower passages.',
+  },
+  {
+    chapter: 5,
+    title: 'The Shrouded Vaults',
+    subtitle: 'Dynamic Fog of War & Spatial Memory',
+    prologue: 'Deep subterranean darkness envelops the corridors. Keep your wits sharp and trace the labyrinth in your mind as shadows conceal what lies ahead.',
+    hint: 'Navigate through dynamic line-of-sight fog. Use the walls you have seen to navigate.',
+  },
+  {
+    chapter: 6,
+    title: "The Guildmaster's Rite",
+    subtitle: 'The Final Synthesis Trial',
+    prologue: 'All lessons converge in the grand proving grounds. Combine key resonance, mechanical switches, and overhead bridges to claim the title of Journeyman Pathfinder.',
+    hint: 'Synthesize all your skills to solve this master labyrinth and complete your initiation.',
+  },
+];
+
+// Enrich tutorial levels into first-class Story chapters
+const NOVICE_INITIATION_CHAPTERS = TUTORIAL_LEVELS.map((level, idx) => {
+  const meta = NOVICE_CHAPTER_PROLOGUES[idx];
+  return {
+    ...level,
+    storyId: 'novice_initiation',
+    chapterNumber: meta.chapter,
+    chapterTitle: meta.title,
+    chapterSubtitle: meta.subtitle,
+    prologueText: meta.prologue,
+    help: {
+      title: \`Chapter \${meta.chapter}: \${meta.title}\`,
+      message: \`\${meta.prologue}\\n\\nObjective: \${meta.hint}\`,
+    },
+  };
+});
+
+// Story 2: Relics of the Four Guardians (3 Chapters)
+const GUARDIANS_CHAPTER_1 = ${JSON.stringify(g1, null, 2)};
+const GUARDIANS_CHAPTER_2 = ${JSON.stringify(g2, null, 2)};
+const GUARDIANS_CHAPTER_3 = ${JSON.stringify(g3, null, 2)};
+
+// Story 3: The Whispering Citadel (1 Chapter, Multi-Room)
+const CITADEL_CHAPTER_1 = ${JSON.stringify(cit1, null, 2)};
+
+export const STORYLINES = Object.freeze([
+  {
+    id: 'the_whispering_citadel',
+    title: 'The Whispering Citadel',
+    tagline: 'Delve into an interconnected three-tier labyrinth with rotating vantage points.',
+    description: 'Explore the mysterious Citadel beneath the Monolith. Descend into damp catacombs to retrieve the Spire Key, navigate back to the Courtyard to unlock the grand stairwell, and ascend into the Whispering Spire.',
+    badge: 'Dungeon Saga • Multi-Room',
+    icon: '🏛️',
+    accentColor: '#10b981',
+    theme: 'temple',
+    difficulty: 'Advanced',
+    totalChapters: 1,
+    chapters: [CITADEL_CHAPTER_1],
+  },
+  {
+    id: 'novice_initiation',
+    title: "The Novice's Initiation",
+    tagline: 'Master the ancient art of labyrinth navigation and earn your pathfinder badge.',
+    description: 'Follow the rite of passage designed by the ancient Guild of Cartographers. Progress through six structured chambers to learn line-of-sight, colored gates, dynamic levers, overhead canopy bridges, and the shrouded fog of war.',
+    badge: 'Prologue • 6 Chapters',
+    icon: '📜',
+    accentColor: '#38bdf8',
+    theme: 'dungeon',
+    difficulty: 'Introductory',
+    totalChapters: 6,
+    chapters: NOVICE_INITIATION_CHAPTERS,
+  },
+  {
+    id: 'relics_of_the_guardians',
+    title: 'Relics of the Four Guardians',
+    tagline: 'Recover the sacred animal totems and unlock the sealed sanctum.',
+    description: 'Journey into the Sunken Sun Temple. Decipher wall inscriptions, collect sunstone crystals, activate respawn beacons, and place the four sacred guardian statues—Falcon, Lion, Serpent, and Bear—onto their matching riddle plinths.',
+    badge: 'Riddle Quest • 3 Chapters',
+    icon: '🦅',
+    accentColor: '#fbbf24',
+    theme: 'temple',
+    difficulty: 'Intermediate',
+    totalChapters: 3,
+    chapters: [GUARDIANS_CHAPTER_1, GUARDIANS_CHAPTER_2, GUARDIANS_CHAPTER_3],
+  },
+  SUNKEN_VAULTS_STORYLINE,
+]);
+
+export function getStoryline(storyId) {
+  if (!storyId) return null;
+  return STORYLINES.find(s => s.id === storyId) || null;
+}
+
+export function getStoryChapter(storyId, chapterNumber) {
+  const story = getStoryline(storyId);
+  if (!story) return null;
+  const num = parseInt(chapterNumber, 10);
+  if (isNaN(num) || num < 1 || num > story.chapters.length) return null;
+  return story.chapters[num - 1] || null;
+}
+
+export function getNextStoryChapter(storyId, currentChapterNumber) {
+  const story = getStoryline(storyId);
+  if (!story) {
+    return { hasNext: false, isStoryComplete: false };
+  }
+  const curr = parseInt(currentChapterNumber, 10);
+  if (curr < story.totalChapters) {
+    return {
+      hasNext: true,
+      nextChapterNumber: curr + 1,
+      nextChapter: story.chapters[curr],
+      isStoryComplete: false,
+    };
+  }
+  return {
+    hasNext: false,
+    isStoryComplete: true,
+  };
+}
+
+export function getAllStoryLevels() {
+  const all = [];
+  for (const story of STORYLINES) {
+    for (const chapter of story.chapters) {
+      all.push(chapter);
+    }
+  }
+  return all;
+}
+`;
+fs.writeFileSync(path.join(rootDir, 'js/stories/storylines.js'), storylinesContent, 'utf8');
+console.log('  ✓ Updated js/stories/storylines.js dataset');
 console.log('\n✨ All manifests, hashes, and default level files successfully synchronized!');
