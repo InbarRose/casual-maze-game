@@ -916,18 +916,19 @@ export class GameLoop {
         return;
       }
 
-      // If clicking an adjacent interactable: face it and interact
+      // If clicking an adjacent interactable (lever, door, puzzle gate, pedestal, etc.): face it and interact
       const dist = Math.abs(targetGridX - this.player.gridX) + Math.abs(targetGridY - this.player.gridY);
       if (dist === 1) {
-        const clickedEntity = this.entities.find(
-          ent => ent.x === targetGridX && ent.y === targetGridY && (ent.elevation ?? ELEVATION.GROUND) === this.player.elevation
+        const availableInteractions = this.getAllAvailableInteractions();
+        const candidate = availableInteractions.find(
+          c => c.x === targetGridX && c.y === targetGridY && (c.elevation ?? ELEVATION.GROUND) === this.player.elevation
         );
-        if (clickedEntity) {
+        if (candidate) {
           if (targetGridX > this.player.gridX) this.player.facing = 'east';
           else if (targetGridX < this.player.gridX) this.player.facing = 'west';
           else if (targetGridY > this.player.gridY) this.player.facing = 'south';
           else if (targetGridY < this.player.gridY) this.player.facing = 'north';
-          this.handleManualInteract(clickedEntity);
+          this.handleManualInteract(candidate);
           return;
         }
       }
