@@ -153,6 +153,12 @@ This document tracks project milestones, current release status, active developm
   - Expand [`docs/LEVEL_DESIGN_PHILOSOPHY.md`](LEVEL_DESIGN_PHILOSOPHY.md) to **Version 2.0.0**, integrating the 8-Chair criteria into authoritative game design law: eradicating linear key fetch chores, banishing flat static decal placeholders, establishing spatial volume contrast (courtyard plazas vs winding corridors), requiring genuine 3D verticality, and implementing sensory juice.
   - Formulate the **7-Phase Methodical Level Overhaul Master Plan**, establishing clear milestones, technical prerequisites, and target quality benchmarks (elevating from 30–48% prototype status to 60–75%+ commercial indie standard) while preserving the artistic vision and level identity.
 
+- [x] **Phase 1 Engine Overhaul: Dynamic Radial Paver Lighting, Kinetic Screen Punch & Terrain Audio (BL-164, ADR-0047)**:
+  - Implement `BiomeSurfaceShaders.renderDynamicFloorLightingPass` casting warm radial gradients on floor pavers from placed torches, wall sconces, flame hazards, and exit sanctums.
+  - Implement kinetic screen punch shake in `Camera` reacting dynamically to `door:unlocked`, `lever:toggled`, `player:hazard_hit`, and `secret:found` events.
+  - Implement terrain-specific footstep acoustics with pitch jitter in `audioFX` reacting to stone pavers, wooden bridge decks, and shallow water channels.
+  - Verified with new test suite `tests/unit/engine/dynamic-lighting-and-juice.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed).
+
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
