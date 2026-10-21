@@ -56,6 +56,7 @@ export class WallDecor {
    * @returns {boolean}
    */
   canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
+    if (this.decorType === 'torch') return false;
     if (this.z !== playerZ) return false;
     const dist = Math.abs(this.x - playerX) + Math.abs(this.y - playerY);
     if (dist > 1) return false;

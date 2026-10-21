@@ -546,6 +546,38 @@ export const CAMPAIGN_CH3_LEVELS = Object.freeze([
         "x": 6,
         "y": 11,
         "elevation": 0
+      },
+      {
+        "id": "torch_ch3_9_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 4,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_9_lever",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
+        "y": 8,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_9_machinery",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_9_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 11,
+        "y": 8,
+        "elevation": 0
       }
     ],
     "packageSource": "level_9"
@@ -1224,22 +1256,54 @@ export const CAMPAIGN_CH3_LEVELS = Object.freeze([
         "elevation": 0
       },
       {
-        "id": "gem_clockwork_10",
+        "id": "gem_brass_10",
         "type": "collectible",
         "collectibleType": "gem",
-        "name": "Brass Dynamo Core",
+        "name": "Brass Chronometer",
         "scoreValue": 200,
-        "x": 14,
-        "y": 4,
+        "x": 2,
+        "y": 12,
         "elevation": 0
       },
       {
-        "id": "secret_valve_10",
+        "id": "secret_gear_10",
         "type": "collectible",
-        "name": "Brass Chronometer",
+        "name": "Precision Escapement",
         "points": 300,
-        "x": 3,
+        "x": 14,
         "y": 12,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_10_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_10_west",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_10_east",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 15,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_10_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 11,
         "elevation": 0
       }
     ],
@@ -1919,19 +1983,51 @@ export const CAMPAIGN_CH3_LEVELS = Object.freeze([
         "id": "wall_decor_11",
         "type": "wall_decor",
         "decorType": "carving",
-        "text": "Lower the northern sluice to claim the gilded key.",
-        "playerDialogue": "The northern gate opened, allowing passage to the eastern vault.",
-        "x": 2,
+        "text": "Counterweight rule: One descends as one ascends.",
+        "playerDialogue": "Throwing the lever opens the north but closes the south.",
+        "x": 3,
         "y": 3,
         "elevation": 0
       },
       {
-        "id": "secret_counterweight_11",
+        "id": "gem_flywheel_11",
         "type": "collectible",
         "name": "Gilded Flywheel",
-        "points": 300,
-        "x": 6,
-        "y": 12,
+        "points": 350,
+        "x": 2,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_11_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_11_lever",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
+        "y": 4,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_11_sluice",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 11,
+        "y": 4,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_11_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 13,
+        "y": 9,
         "elevation": 0
       }
     ],
@@ -2754,22 +2850,44 @@ export const CAMPAIGN_CH3_LEVELS = Object.freeze([
         "elevation": 0
       },
       {
-        "id": "gem_clockwork_12",
+        "id": "gem_dynamo_12",
         "type": "collectible",
-        "collectibleType": "gem",
-        "name": "Master Chronometer",
-        "scoreValue": 300,
+        "name": "Dynamo Core Crystal",
+        "points": 400,
+        "x": 2,
+        "y": 12,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_12_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
         "x": 9,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_12_west",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
         "y": 8,
         "elevation": 0
       },
       {
-        "id": "secret_dynamo_12",
-        "type": "collectible",
-        "name": "Dynamo Core Crystal",
-        "points": 400,
-        "x": 3,
-        "y": 14,
+        "id": "torch_ch3_12_east",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 17,
+        "y": 8,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch3_12_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 11,
         "elevation": 0
       }
     ],

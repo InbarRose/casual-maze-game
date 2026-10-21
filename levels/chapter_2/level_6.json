@@ -670,8 +670,40 @@
       "type": "collectible",
       "name": "Sunken Amber Tear",
       "points": 300,
-      "x": 4,
+      "x": 5,
       "y": 13,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch2_6_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 2,
+      "y": 6,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch2_6_ramp_north",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 7,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch2_6_ramp_south",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 7,
+      "y": 11,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch2_6_sanctum",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 13,
+      "y": 2,
       "elevation": 0
     }
   ],

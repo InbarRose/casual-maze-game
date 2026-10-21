@@ -672,22 +672,54 @@
       "elevation": 0
     },
     {
-      "id": "gem_clockwork_10",
+      "id": "gem_brass_10",
       "type": "collectible",
       "collectibleType": "gem",
-      "name": "Brass Dynamo Core",
+      "name": "Brass Chronometer",
       "scoreValue": 200,
-      "x": 14,
-      "y": 4,
+      "x": 2,
+      "y": 12,
       "elevation": 0
     },
     {
-      "id": "secret_valve_10",
+      "id": "secret_gear_10",
       "type": "collectible",
-      "name": "Brass Chronometer",
+      "name": "Precision Escapement",
       "points": 300,
-      "x": 3,
+      "x": 14,
       "y": 12,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_10_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 5,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_10_west",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 1,
+      "y": 7,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_10_east",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 15,
+      "y": 7,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_10_exit",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 9,
+      "y": 11,
       "elevation": 0
     }
   ],

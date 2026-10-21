@@ -815,22 +815,44 @@
       "elevation": 0
     },
     {
-      "id": "gem_clockwork_12",
+      "id": "gem_dynamo_12",
       "type": "collectible",
-      "collectibleType": "gem",
-      "name": "Master Chronometer",
-      "scoreValue": 300,
+      "name": "Dynamo Core Crystal",
+      "points": 400,
+      "x": 2,
+      "y": 12,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_12_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
       "x": 9,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_12_west",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 1,
       "y": 8,
       "elevation": 0
     },
     {
-      "id": "secret_dynamo_12",
-      "type": "collectible",
-      "name": "Dynamo Core Crystal",
-      "points": 400,
-      "x": 3,
-      "y": 14,
+      "id": "torch_ch3_12_east",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 17,
+      "y": 8,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_12_exit",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 9,
+      "y": 11,
       "elevation": 0
     }
   ],

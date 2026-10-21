@@ -533,6 +533,38 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "x": 2,
         "y": 6,
         "elevation": 0
+      },
+      {
+        "id": "torch_ch2_5_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
+        "y": 10,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_5_ramp",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_5_bridge",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_5_gate",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 11,
+        "y": 3,
+        "elevation": 0
       }
     ],
     "packageSource": "level_5"
@@ -1209,8 +1241,40 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "type": "collectible",
         "name": "Sunken Amber Tear",
         "points": 300,
-        "x": 4,
+        "x": 5,
         "y": 13,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_6_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 2,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_6_ramp_north",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 3,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_6_ramp_south",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 11,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_6_sanctum",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 13,
+        "y": 2,
         "elevation": 0
       }
     ],
@@ -1873,6 +1937,38 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "points": 350,
         "x": 2,
         "y": 11,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_7_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
+        "y": 5,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_7_chasm",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
+        "y": 5,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_7_east",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 11,
+        "y": 5,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_7_sanctum",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 2,
         "elevation": 0
       }
     ],
@@ -2696,7 +2792,39 @@ export const CAMPAIGN_CH2_LEVELS = Object.freeze([
         "name": "Citadel Horizon Sunstone",
         "points": 400,
         "x": 2,
-        "y": 15,
+        "y": 14,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_8_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_8_west",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 4,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_8_east",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 14,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch2_8_sanctum",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 10,
+        "y": 2,
         "elevation": 0
       }
     ],
