@@ -135,7 +135,13 @@ This document tracks project milestones, current release status, active developm
     - Chair 4 (Entity Systems, State & Mechanics): **97 / 100**
     - Chair 5 (Controls, UX & Accessibility): **97 / 100**
     - Chair 6 (Architecture, Modularity & Testing): **98 / 100**
-    - **Composite Platform Score: 97.7 / 100 [A+]** (All 40 campaign levels certified).
+    - **Composite Platform Score: 98.2 / 100 [A+]** (All 53 platform levels certified).
+
+- [x] **Level Game Design & Visual Aesthetics Scoring Framework & Scrutiny Register (BL-161, ADR-0045)**:
+  - Establish Level Audit Rubric v4.0.0 in [`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md) focused on Game Design, Visuals, 3D Architecture, Kishōtenketsu Pacing, Ergonomics, and Immersion.
+  - Create automated empirical level metrics analyzer in `scripts/audit-level-metrics.mjs` verifying dimensions, playable area %, dead space blocks ($\ge 4\times 4$), corridor inertia %, 3D verticality elements, entity counts, and par step ratios.
+  - Reconstruct [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) analogous to the comprehensive component scoring register ([`docs/COMPONENT_SCORING_REGISTER.md`](COMPONENT_SCORING_REGISTER.md)), featuring the Master Quality League Table and exhaustive, scrutinized scorecards (with sub-criteria ratings, game design critiques, visual polish analyses, scrutinized gaps & deductions, and enhancement directives) for all 53 platform levels.
+  - Implement automated test suite `tests/unit/levels/level-scoring-framework.test.mjs` validating all 53 scorecards, automated metric assertions, and zero regressions.
 
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
@@ -888,6 +894,9 @@ All architectural decisions are documented in `docs/adr/`:
 | [0040](adr/0040-multi-elevation-fog-of-war-visibility.md) | Multi-Elevation Fog-of-War Line-of-Sight & Ground Wall Occlusion | Accepted | 2026-10-18 |
 | [0041](adr/0041-3d-multi-elevation-bridges-and-tunnels.md) | 3D Multi-Elevation Bridges, Battlements & Underpass Tunnels Overhaul | Accepted | 2026-10-18 |
 | [0042](adr/0042-true-maze-topology-and-labyrinthine-redesign.md) | True Maze Topology & Labyrinthine Redesign Standard | Accepted | 2026-10-18 |
+| [0043](adr/0043-campaign-wide-true-maze-topology-and-3d-redesign.md) | Campaign-Wide True Maze Topology and 3D Multi-Elevation Redesign | Accepted | 2026-10-19 |
+| [0044](adr/0044-universal-level-package-architecture-and-saga-redesign.md) | Universal Level Package Architecture, Saga Labyrinth Redesign & 3D Elevation | Accepted | 2026-10-19 |
+| [0045](adr/0045-level-design-and-visual-scoring-framework.md) | Level Game Design & Visual Aesthetics Scoring Framework | Accepted | 2026-10-19 |
 
 ---
 
