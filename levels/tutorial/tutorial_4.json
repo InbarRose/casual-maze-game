@@ -450,6 +450,66 @@
       "color": "#fbbf24",
       "style": "classic",
       "orientation": "vertical"
+    },
+    {
+      "id": "sign_tut_4",
+      "type": "signpost",
+      "title": "Bridges & Verticality",
+      "x": 1,
+      "y": 2,
+      "elevation": 0,
+      "text": "Ramps lead up to elevated bridges. Cross over ground corridors to discover routes hidden in the upper layer."
+    },
+    {
+      "id": "torch_tut_4_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 0,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_4_ramp",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 6,
+      "y": 5,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_4_key",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 0,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_4_exit",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 10,
+      "y": 9,
+      "elevation": 0
+    },
+    {
+      "id": "inscr_tut_4",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "Academy Inscription: Look up! The path above crosses the path below.",
+      "playerDialogue": "A bridge lets me walk above the lower corridor.",
+      "x": 6,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "gem_apprentice_4",
+      "type": "collectible",
+      "name": "Apprentice Sapphire",
+      "points": 250,
+      "x": 1,
+      "y": 11,
+      "elevation": 0
     }
   ],
   "packageSource": "tutorial_4"

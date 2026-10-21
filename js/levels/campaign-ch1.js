@@ -480,6 +480,38 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "x": 5,
         "y": 1,
         "elevation": 0
+      },
+      {
+        "id": "torch_ch1_1_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
+        "y": 0,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_1_foyer",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_1_keystore",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 2,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_1_gate",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 5,
+        "elevation": 0
       }
     ],
     "packageSource": "level_1"
@@ -1021,6 +1053,38 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "points": 250,
         "x": 12,
         "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_2_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 11,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_2_cross",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_2_key",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 2,
+        "y": 3,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_2_gate",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 2,
         "elevation": 0
       }
     ],
@@ -1699,6 +1763,38 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "points": 300,
         "x": 13,
         "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_3_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 2,
+        "y": 5,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_3_cross",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 8,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_3_emerald",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 3,
+        "y": 12,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_3_purple",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 13,
+        "y": 10,
         "elevation": 0
       }
     ],
@@ -2537,6 +2633,46 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
         "name": "Abyssal Sapphire",
         "points": 400,
         "x": 4,
+        "y": 14,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_4_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_4_north",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 8,
+        "y": 3,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_4_west",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 3,
+        "y": 8,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_4_east",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 15,
+        "y": 8,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch1_4_sanctum",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
         "y": 14,
         "elevation": 0
       }

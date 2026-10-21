@@ -366,6 +366,58 @@
       "color": "#38bdf8",
       "style": "portcullis",
       "orientation": "horizontal"
+    },
+    {
+      "id": "sign_tut_2",
+      "type": "signpost",
+      "title": "Colored Portals & Keys",
+      "x": 1,
+      "y": 2,
+      "elevation": 0,
+      "text": "Colored gates require matching keys. Gather the Ruby and Sapphire keystones to unlock your path."
+    },
+    {
+      "id": "torch_tut_2_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 0,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_2_cross",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 5,
+      "y": 4,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_2_exit",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 9,
+      "elevation": 0
+    },
+    {
+      "id": "inscr_tut_2",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "Academy Inscription: Color is key, and harmony opens all locked doors.",
+      "playerDialogue": "Two keys, two gates.",
+      "x": 5,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "gem_apprentice_2",
+      "type": "collectible",
+      "name": "Apprentice Ruby",
+      "points": 150,
+      "x": 9,
+      "y": 1,
+      "elevation": 0
     }
   ],
   "packageSource": "tutorial_2"

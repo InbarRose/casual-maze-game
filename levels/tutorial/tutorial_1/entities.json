@@ -1,1 +1,54 @@
-[]
+[
+  {
+    "id": "sign_tut_1",
+    "type": "signpost",
+    "title": "Welcome Apprentice",
+    "x": 1,
+    "y": 2,
+    "elevation": 0,
+    "text": "Welcome to the Academy of Mazes! Navigate to the exit portal using arrow keys or WASD. Follow the warm glow of torches."
+  },
+  {
+    "id": "torch_tut_1_spawn",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 0,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "torch_tut_1_mid",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 5,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "torch_tut_1_exit",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 6,
+    "y": 7,
+    "elevation": 0
+  },
+  {
+    "id": "inscr_tut_1",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Academy Inscription: The first trial is learning to walk with purpose.",
+    "playerDialogue": "A calm, well-lit hall to start.",
+    "x": 3,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "gem_apprentice_1",
+    "type": "collectible",
+    "name": "Apprentice Topaz",
+    "points": 100,
+    "x": 5,
+    "y": 5,
+    "elevation": 0
+  }
+]
