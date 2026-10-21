@@ -76,7 +76,7 @@ describe('Levels > Ground-Truth Empirical Level Scoring Framework & Rubric v5.0.
     }
   });
 
-  it('verifies all 53 levels adhere to the reality ceiling (< 50% / < 40.00 pts) under Rubric v5.0.0', () => {
+  it('verifies scoring register enforces sub-50% ceiling for unoverhauled levels and B- graduation for Phase 2 overhauled levels', () => {
     const registerPath = path.join(rootDir, 'docs', 'LEVEL_SCORING_REGISTER.md');
     const content = fs.readFileSync(registerPath, 'utf8');
 
@@ -84,8 +84,15 @@ describe('Levels > Ground-Truth Empirical Level Scoring Framework & Rubric v5.0.
     const tableLines = content.split('\n').filter(line => line.startsWith('| **'));
     assertEqual(tableLines.length, 53, 'Master table contains 53 rows');
 
-    let maxScore = 0;
-    let minScore = 80;
+    const phase2Ids = new Set([
+      'tutorial_1', 'tutorial_2', 'tutorial_3', 'tutorial_4', 'tutorial_5', 'tutorial_6',
+      '1', '2', '3', '4'
+    ]);
+
+    let maxOverhauledScore = 0;
+    let minOverhauledScore = 80;
+    let maxUnoverhauledScore = 0;
+    let minUnoverhauledScore = 80;
 
     for (const row of tableLines) {
       const parts = row.split('|').map(p => p.trim());
@@ -96,16 +103,24 @@ describe('Levels > Ground-Truth Empirical Level Scoring Framework & Rubric v5.0.
       const score = parseFloat(scoreMatch[1]);
       const tier = parts[18].replace(/\*\*/g, '');
 
-      if (score > maxScore) maxScore = score;
-      if (score < minScore) minScore = score;
-
-      // Unsparing Reality Constraint: No level should score above 50% (< 40.00 / 80.00)
-      assert(score < 40.00, `Level ${id} score (${score}) is strictly below 50% ceiling (< 40.00 / 80.00)`);
-      assert(score >= 20.00, `Level ${id} score (${score}) meets minimum solvable prototype baseline (>= 20.00 / 80.00)`);
-      assert(['C+', 'C', 'D'].includes(tier), `Level ${id} tier is in honest reality range C+, C, or D (was ${tier})`);
+      if (phase2Ids.has(id)) {
+        // Phase 2 Overhauled levels graduate to B- Tier (>= 40.00 / 80.00, >= 50%)
+        assert(score >= 40.00, `Overhauled level ${id} graduated score (${score}) is >= 40.00 / 80.00 (>= 50%)`);
+        assertEqual(tier, 'B-', `Overhauled level ${id} has B- tier`);
+        if (score > maxOverhauledScore) maxOverhauledScore = score;
+        if (score < minOverhauledScore) minOverhauledScore = score;
+      } else {
+        // Unsparing Reality Constraint: Unoverhauled levels remain strictly below 50% (< 40.00 / 80.00)
+        assert(score < 40.00, `Unoverhauled level ${id} score (${score}) is strictly below 50% ceiling (< 40.00 / 80.00)`);
+        assert(score >= 20.00, `Level ${id} score (${score}) meets minimum solvable prototype baseline (>= 20.00 / 80.00)`);
+        assert(['C+', 'C', 'D'].includes(tier), `Level ${id} tier is in honest reality range C+, C, or D (was ${tier})`);
+        if (score > maxUnoverhauledScore) maxUnoverhauledScore = score;
+        if (score < minUnoverhauledScore) minUnoverhauledScore = score;
+      }
     }
 
-    assert(maxScore < 40.00, `Maximum level score across platform (${maxScore}) is strictly under 50% (< 40.00)`);
-    assert(minScore >= 24.00, `Minimum level score (${minScore}) reflects functional baseline prototype`);
+    assert(maxUnoverhauledScore < 40.00, `Maximum unoverhauled score (${maxUnoverhauledScore}) is strictly under 50% (< 40.00)`);
+    assert(minUnoverhauledScore >= 24.00, `Minimum level score (${minUnoverhauledScore}) reflects functional baseline prototype`);
+    assert(minOverhauledScore >= 40.00, `Minimum overhauled level score (${minOverhauledScore}) reflects B- tier graduation`);
   });
 });

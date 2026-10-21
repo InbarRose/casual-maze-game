@@ -345,6 +345,58 @@
           "stateB": 1
         }
       ]
+    },
+    {
+      "id": "sign_tut_3",
+      "type": "signpost",
+      "title": "Clockwork Levers",
+      "x": 1,
+      "y": 2,
+      "elevation": 0,
+      "text": "Levers shift the very architecture of the maze. Toggle the Sanctuary Lever to lower the blocking stone wall at the crossroads."
+    },
+    {
+      "id": "torch_tut_3_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 0,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_3_switch",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 8,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_3_exit",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 9,
+      "elevation": 0
+    },
+    {
+      "id": "inscr_tut_3",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "Academy Inscription: Heavy gears turn the immovable stone.",
+      "playerDialogue": "A flick of the lever changes the maze topology.",
+      "x": 5,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "gem_apprentice_3",
+      "type": "collectible",
+      "name": "Apprentice Emerald",
+      "points": 200,
+      "x": 1,
+      "y": 8,
+      "elevation": 0
     }
   ],
   "packageSource": "tutorial_3"

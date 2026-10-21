@@ -7,13 +7,13 @@
     "file": "levels/tutorial/tutorial_1.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "4bf20974ec57c36cdabecf198a882a3bf20d6ad412e00d7ee282f7e8f13548bf",
-    "size": 3146,
+    "hash": "b06ac6e7f3e56b0e8d9b101220afaa4fa2fd714cd83eae758c069571436c0dcd",
+    "size": 4358,
     "dimensions": {
       "width": 9,
       "height": 9
     },
-    "entityCount": 0,
+    "entityCount": 6,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -25,13 +25,13 @@
     "file": "levels/tutorial/tutorial_2.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "29336957b4940734838f3ef9906c1fa68163f7860af619bf71bdf0ec32bf1e0c",
-    "size": 4954,
+    "hash": "44767809d3ae3c53b401d613058c4daea7396c992bdfe728a042d60e3b807886",
+    "size": 6135,
     "dimensions": {
       "width": 11,
       "height": 11
     },
-    "entityCount": 4,
+    "entityCount": 10,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -43,13 +43,13 @@
     "file": "levels/tutorial/tutorial_3.json",
     "theme": "temple",
     "version": 1,
-    "hash": "06b3c1dd2e2d9fbcf51fa7b80379abed70d18a3321d7d6d3abe90621e797eb33",
-    "size": 4474,
+    "hash": "3c95835c9cd773d8348aa626e9fea83eb0c12815f5d8a4f112a134cf81be2c94",
+    "size": 5698,
     "dimensions": {
       "width": 11,
       "height": 11
     },
-    "entityCount": 1,
+    "entityCount": 7,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -61,13 +61,13 @@
     "file": "levels/tutorial/tutorial_4.json",
     "theme": "jungle",
     "version": 1,
-    "hash": "630cbcf9d0f844521cd8232cb2813aa5795d97036779d4bd5a8447256a9dc180",
-    "size": 5735,
+    "hash": "1ddd74404ae652ceff6f19637314cfe6495be4ee50213003835d85c5b7548893",
+    "size": 7107,
     "dimensions": {
       "width": 13,
       "height": 13
     },
-    "entityCount": 2,
+    "entityCount": 9,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -79,13 +79,13 @@
     "file": "levels/tutorial/tutorial_5.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "4a4a7b7f4841fe4cb0ddf97e20e52705d4dd9995f0776f7c3d4947d134dd8f4b",
-    "size": 5662,
+    "hash": "066312cfd96492d9d0ff8b2f27f1f6a8c5a9b9c86fe8133589087d3fcc555ad7",
+    "size": 7020,
     "dimensions": {
       "width": 13,
       "height": 13
     },
-    "entityCount": 2,
+    "entityCount": 9,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -97,13 +97,13 @@
     "file": "levels/tutorial/tutorial_6.json",
     "theme": "temple",
     "version": 1,
-    "hash": "df6aec96173e4862c57c9b4e756dde5ee6cde26ba7c2c33320af2350c8b2c817",
-    "size": 9910,
+    "hash": "b533ea9c0791ac87868b45f79a0d30cc8b13a97b366ec5d0b928c454ef05dc42",
+    "size": 11022,
     "dimensions": {
       "width": 17,
       "height": 17
     },
-    "entityCount": 8,
+    "entityCount": 13,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -118,13 +118,13 @@
     "parSteps": 35,
     "parTime": 20,
     "version": 1,
-    "hash": "10720e96380c48a484ce21273222b8a19a717e07d628d613442d753ec0c2a98b",
-    "size": 6282,
+    "hash": "6a57cd7673c808f9633b9487e3d9403ed1b416cd5025e5cc29278ad5d5bc6341",
+    "size": 6888,
     "dimensions": {
       "width": 13,
       "height": 13
     },
-    "entityCount": 5,
+    "entityCount": 9,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -139,13 +139,13 @@
     "parSteps": 38,
     "parTime": 22,
     "version": 1,
-    "hash": "a60a2154facb8705f12b86407e7ce0ade3f661aac387e572aff9eb9ab388ddc6",
-    "size": 6988,
+    "hash": "6afbb0fe07a5ed81abf1dedeac3853f97ef88609a1cbeb33eb53059549585644",
+    "size": 7590,
     "dimensions": {
       "width": 15,
       "height": 13
     },
-    "entityCount": 6,
+    "entityCount": 10,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -160,13 +160,13 @@
     "parSteps": 54,
     "parTime": 32,
     "version": 1,
-    "hash": "fe0dcead2c5a6f6c5cfa5afda0eb3e377867044f820d56e549cd8df920096139",
-    "size": 8574,
+    "hash": "097f1aa8b3167edea8c5d03b95be943182240a9fd5120ba51d8f4f4dec1dcc4a",
+    "size": 9184,
     "dimensions": {
       "width": 17,
       "height": 15
     },
-    "entityCount": 7,
+    "entityCount": 11,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -181,13 +181,13 @@
     "parSteps": 68,
     "parTime": 40,
     "version": 1,
-    "hash": "02d9fc8015b2c45fb30db88ccba12512d10c5be7b46a46b67e3f3db9cad26c98",
-    "size": 10446,
+    "hash": "a4e0163f0476b982e3e1aa8dfab8ff0b1772203548be4a3a38771057a28baa98",
+    "size": 11203,
     "dimensions": {
       "width": 19,
       "height": 17
     },
-    "entityCount": 9,
+    "entityCount": 14,
     "hasMultiRoom": false,
     "exitCount": 1
   },

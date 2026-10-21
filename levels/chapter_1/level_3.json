@@ -672,6 +672,38 @@
       "x": 13,
       "y": 1,
       "elevation": 0
+    },
+    {
+      "id": "torch_ch1_3_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 2,
+      "y": 5,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch1_3_cross",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 6,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch1_3_emerald",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 12,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch1_3_purple",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 13,
+      "y": 10,
+      "elevation": 0
     }
   ],
   "packageSource": "level_3"

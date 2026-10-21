@@ -775,6 +775,49 @@
       "x": 5,
       "y": 7,
       "elevation": 0
+    },
+    {
+      "id": "sign_tut_6",
+      "type": "signpost",
+      "title": "Master's Graduation Trial",
+      "x": 2,
+      "y": 2,
+      "elevation": 0,
+      "text": "The Master's Trial synthesizes all graduation requirements: colored gates, multi-elevation viaducts, clockwork switches, and fog navigation. Claim the Master's Seal!"
+    },
+    {
+      "id": "torch_tut_6_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 0,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_6_bridge",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 4,
+      "elevation": 0
+    },
+    {
+      "id": "torch_tut_6_sanctum",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 14,
+      "y": 13,
+      "elevation": 0
+    },
+    {
+      "id": "inscr_tut_6",
+      "type": "wall_decor",
+      "decorType": "carving",
+      "text": "The Master Architect's Tablet: The greatest labyrinth is the one you navigate with joy.",
+      "playerDialogue": "I am ready for the true campaign.",
+      "x": 8,
+      "y": 8,
+      "elevation": 0
     }
   ],
   "packageSource": "tutorial_6"

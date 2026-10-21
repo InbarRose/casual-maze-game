@@ -243,7 +243,60 @@ export const TUTORIAL_LEVELS = Object.freeze([
         ]
       ]
     },
-    "entities": [],
+    "entities": [
+      {
+        "id": "sign_tut_1",
+        "type": "signpost",
+        "title": "Welcome Apprentice",
+        "x": 1,
+        "y": 2,
+        "elevation": 0,
+        "text": "Welcome to the Academy of Mazes! Navigate to the exit portal using arrow keys or WASD. Follow the warm glow of torches."
+      },
+      {
+        "id": "torch_tut_1_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 0,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_1_mid",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_1_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "inscr_tut_1",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Academy Inscription: The first trial is learning to walk with purpose.",
+        "playerDialogue": "A calm, well-lit hall to start.",
+        "x": 3,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "gem_apprentice_1",
+        "type": "collectible",
+        "name": "Apprentice Topaz",
+        "points": 100,
+        "x": 5,
+        "y": 5,
+        "elevation": 0
+      }
+    ],
     "packageSource": "tutorial_1"
   },
   {
@@ -614,6 +667,58 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "color": "#38bdf8",
         "style": "portcullis",
         "orientation": "horizontal"
+      },
+      {
+        "id": "sign_tut_2",
+        "type": "signpost",
+        "title": "Colored Portals & Keys",
+        "x": 1,
+        "y": 2,
+        "elevation": 0,
+        "text": "Colored gates require matching keys. Gather the Ruby and Sapphire keystones to unlock your path."
+      },
+      {
+        "id": "torch_tut_2_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 0,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_2_cross",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 4,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_2_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 8,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "inscr_tut_2",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Academy Inscription: Color is key, and harmony opens all locked doors.",
+        "playerDialogue": "Two keys, two gates.",
+        "x": 5,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "gem_apprentice_2",
+        "type": "collectible",
+        "name": "Apprentice Ruby",
+        "points": 150,
+        "x": 9,
+        "y": 1,
+        "elevation": 0
       }
     ],
     "packageSource": "tutorial_2"
@@ -965,6 +1070,58 @@ export const TUTORIAL_LEVELS = Object.freeze([
             "stateB": 1
           }
         ]
+      },
+      {
+        "id": "sign_tut_3",
+        "type": "signpost",
+        "title": "Clockwork Levers",
+        "x": 1,
+        "y": 2,
+        "elevation": 0,
+        "text": "Levers shift the very architecture of the maze. Toggle the Sanctuary Lever to lower the blocking stone wall at the crossroads."
+      },
+      {
+        "id": "torch_tut_3_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 0,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_3_switch",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 3,
+        "y": 8,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_3_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 8,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "inscr_tut_3",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Academy Inscription: Heavy gears turn the immovable stone.",
+        "playerDialogue": "A flick of the lever changes the maze topology.",
+        "x": 5,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "gem_apprentice_3",
+        "type": "collectible",
+        "name": "Apprentice Emerald",
+        "points": 200,
+        "x": 1,
+        "y": 8,
+        "elevation": 0
       }
     ],
     "packageSource": "tutorial_3"
@@ -1421,6 +1578,66 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "color": "#fbbf24",
         "style": "classic",
         "orientation": "vertical"
+      },
+      {
+        "id": "sign_tut_4",
+        "type": "signpost",
+        "title": "Bridges & Verticality",
+        "x": 1,
+        "y": 2,
+        "elevation": 0,
+        "text": "Ramps lead up to elevated bridges. Cross over ground corridors to discover routes hidden in the upper layer."
+      },
+      {
+        "id": "torch_tut_4_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 0,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_4_ramp",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
+        "y": 5,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_4_key",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 11,
+        "y": 0,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_4_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 10,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "inscr_tut_4",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Academy Inscription: Look up! The path above crosses the path below.",
+        "playerDialogue": "A bridge lets me walk above the lower corridor.",
+        "x": 6,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "gem_apprentice_4",
+        "type": "collectible",
+        "name": "Apprentice Sapphire",
+        "points": 250,
+        "x": 1,
+        "y": 11,
+        "elevation": 0
       }
     ],
     "packageSource": "tutorial_4"
@@ -1877,6 +2094,66 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "color": "#fbbf24",
         "style": "magic_seal",
         "orientation": "auto"
+      },
+      {
+        "id": "sign_tut_5",
+        "type": "signpost",
+        "title": "The Shrouded Mist",
+        "x": 1,
+        "y": 2,
+        "elevation": 0,
+        "text": "The Fog of War conceals distant rooms. Rely on memory, spatial deduction, and wall sconces to find your way."
+      },
+      {
+        "id": "torch_tut_5_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 0,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_5_foyer",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 5,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_5_key",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_5_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 10,
+        "y": 8,
+        "elevation": 0
+      },
+      {
+        "id": "inscr_tut_5",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "Academy Inscription: Fear not the shroud; trust the map within your mind.",
+        "playerDialogue": "Torchlight pierces the darkness.",
+        "x": 7,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "gem_apprentice_5",
+        "type": "collectible",
+        "name": "Apprentice Amethyst",
+        "points": 300,
+        "x": 1,
+        "y": 11,
+        "elevation": 0
       }
     ],
     "packageSource": "tutorial_5"
@@ -2657,6 +2934,49 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "scoreValue": 100,
         "x": 5,
         "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "sign_tut_6",
+        "type": "signpost",
+        "title": "Master's Graduation Trial",
+        "x": 2,
+        "y": 2,
+        "elevation": 0,
+        "text": "The Master's Trial synthesizes all graduation requirements: colored gates, multi-elevation viaducts, clockwork switches, and fog navigation. Claim the Master's Seal!"
+      },
+      {
+        "id": "torch_tut_6_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 0,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_6_bridge",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 8,
+        "y": 4,
+        "elevation": 0
+      },
+      {
+        "id": "torch_tut_6_sanctum",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 14,
+        "y": 13,
+        "elevation": 0
+      },
+      {
+        "id": "inscr_tut_6",
+        "type": "wall_decor",
+        "decorType": "carving",
+        "text": "The Master Architect's Tablet: The greatest labyrinth is the one you navigate with joy.",
+        "playerDialogue": "I am ready for the true campaign.",
+        "x": 8,
+        "y": 8,
         "elevation": 0
       }
     ],

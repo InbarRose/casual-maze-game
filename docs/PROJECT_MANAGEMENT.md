@@ -157,7 +157,15 @@ This document tracks project milestones, current release status, active developm
   - Implement `BiomeSurfaceShaders.renderDynamicFloorLightingPass` casting warm radial gradients on floor pavers from placed torches, wall sconces, flame hazards, and exit sanctums.
   - Implement kinetic screen punch shake in `Camera` reacting dynamically to `door:unlocked`, `lever:toggled`, `player:hazard_hit`, and `secret:found` events.
   - Implement terrain-specific footstep acoustics with pitch jitter in `audioFX` reacting to stone pavers, wooden bridge decks, and shallow water channels.
-  - Verified with new test suite `tests/unit/engine/dynamic-lighting-and-juice.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed).
+  - Verified with new test suite `tests/unit/engine/dynamic-lighting-and-juice.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed). Merged via [PR #111](https://github.com/InbarRose/casual-maze-game/pull/111).
+
+- [x] **Phase 2 Overhaul: Tutorial Academy & Chapter 1 Foundations Polish (BL-165, ADR-0047)**:
+  - Overhaul all 6 Tutorial Academy levels (`tutorial_1`..`tutorial_6`) and Chapter 1 Levels 1–4 per ADR-0047:
+    - Added placed wall sconces and torches casting dynamic radial paver lighting onto floor tiles across entry foyers, corridors, and sanctums.
+    - Preserved 100% zero-bypass gating solvability and puzzle dependencies.
+    - Integrated ancient lore inscriptions, Academy instructional signposts, and hidden collectible apprentice gems/relics.
+    - Graduated 10 levels out of the sub-50% prototype ceiling to **B- Tier (52.4%–58.1%)**, while strictly maintaining the unoverhauled sub-50% ceiling for Chapters 2–10 and story sagas.
+  - Rebuilt and verified `docs/LEVEL_SCORING_REGISTER.md` and `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed).
 
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
@@ -913,6 +921,8 @@ All architectural decisions are documented in `docs/adr/`:
 | [0043](adr/0043-campaign-wide-true-maze-topology-and-3d-redesign.md) | Campaign-Wide True Maze Topology and 3D Multi-Elevation Redesign | Accepted | 2026-10-19 |
 | [0044](adr/0044-universal-level-package-architecture-and-saga-redesign.md) | Universal Level Package Architecture, Saga Labyrinth Redesign & 3D Elevation | Accepted | 2026-10-19 |
 | [0045](adr/0045-level-design-and-visual-scoring-framework.md) | Level Game Design & Visual Aesthetics Scoring Framework | Accepted | 2026-10-19 |
+| [0046](adr/0046-ground-truth-empirical-level-scoring-rubric.md) | Ground-Truth Empirical Level Scoring Rubric (v5.0.0) & Sub-50% Reality Ceiling | Accepted | 2026-10-20 |
+| [0047](adr/0047-game-design-philosophy-expansion-and-level-overhaul-framework.md) | Master Game Design Philosophy Expansion (v2.0.0) & 7-Phase Methodical Overhaul Framework | Accepted | 2026-10-20 |
 
 ---
 
