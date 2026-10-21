@@ -672,19 +672,51 @@
       "id": "wall_decor_11",
       "type": "wall_decor",
       "decorType": "carving",
-      "text": "Lower the northern sluice to claim the gilded key.",
-      "playerDialogue": "The northern gate opened, allowing passage to the eastern vault.",
-      "x": 2,
+      "text": "Counterweight rule: One descends as one ascends.",
+      "playerDialogue": "Throwing the lever opens the north but closes the south.",
+      "x": 3,
       "y": 3,
       "elevation": 0
     },
     {
-      "id": "secret_counterweight_11",
+      "id": "gem_flywheel_11",
       "type": "collectible",
       "name": "Gilded Flywheel",
-      "points": 300,
-      "x": 6,
-      "y": 12,
+      "points": 350,
+      "x": 2,
+      "y": 6,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_11_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 5,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_11_lever",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 1,
+      "y": 4,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_11_sluice",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 4,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_11_exit",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 13,
+      "y": 9,
       "elevation": 0
     }
   ],

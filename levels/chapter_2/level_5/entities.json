@@ -44,5 +44,37 @@
     "x": 2,
     "y": 6,
     "elevation": 0
+  },
+  {
+    "id": "torch_ch2_5_spawn",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 1,
+    "y": 10,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch2_5_ramp",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 6,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch2_5_bridge",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 6,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch2_5_gate",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 11,
+    "y": 3,
+    "elevation": 0
   }
 ]

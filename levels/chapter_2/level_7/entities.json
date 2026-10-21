@@ -44,5 +44,37 @@
     "x": 2,
     "y": 11,
     "elevation": 0
+  },
+  {
+    "id": "torch_ch2_7_spawn",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 1,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch2_7_chasm",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 6,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch2_7_east",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 11,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch2_7_sanctum",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 7,
+    "y": 2,
+    "elevation": 0
   }
 ]

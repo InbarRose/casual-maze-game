@@ -76,7 +76,7 @@ describe('Levels > Ground-Truth Empirical Level Scoring Framework & Rubric v5.0.
     }
   });
 
-  it('verifies scoring register enforces sub-50% ceiling for unoverhauled levels and B- graduation for Phase 2 overhauled levels', () => {
+  it('verifies scoring register enforces sub-50% ceiling for unoverhauled levels and B- graduation for Phase 2 & 3 overhauled levels', () => {
     const registerPath = path.join(rootDir, 'docs', 'LEVEL_SCORING_REGISTER.md');
     const content = fs.readFileSync(registerPath, 'utf8');
 
@@ -84,9 +84,11 @@ describe('Levels > Ground-Truth Empirical Level Scoring Framework & Rubric v5.0.
     const tableLines = content.split('\n').filter(line => line.startsWith('| **'));
     assertEqual(tableLines.length, 53, 'Master table contains 53 rows');
 
-    const phase2Ids = new Set([
+    const overhauledIds = new Set([
       'tutorial_1', 'tutorial_2', 'tutorial_3', 'tutorial_4', 'tutorial_5', 'tutorial_6',
-      '1', '2', '3', '4'
+      '1', '2', '3', '4',
+      '5', '6', '7', '8',
+      '9', '10', '11', '12'
     ]);
 
     let maxOverhauledScore = 0;
@@ -103,8 +105,8 @@ describe('Levels > Ground-Truth Empirical Level Scoring Framework & Rubric v5.0.
       const score = parseFloat(scoreMatch[1]);
       const tier = parts[18].replace(/\*\*/g, '');
 
-      if (phase2Ids.has(id)) {
-        // Phase 2 Overhauled levels graduate to B- Tier (>= 40.00 / 80.00, >= 50%)
+      if (overhauledIds.has(id)) {
+        // Phases 2 & 3 Overhauled levels graduate to B- Tier (>= 40.00 / 80.00, >= 50%)
         assert(score >= 40.00, `Overhauled level ${id} graduated score (${score}) is >= 40.00 / 80.00 (>= 50%)`);
         assertEqual(tier, 'B-', `Overhauled level ${id} has B- tier`);
         if (score > maxOverhauledScore) maxOverhauledScore = score;

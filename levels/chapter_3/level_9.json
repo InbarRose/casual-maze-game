@@ -541,6 +541,38 @@
       "x": 6,
       "y": 11,
       "elevation": 0
+    },
+    {
+      "id": "torch_ch3_9_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 4,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_9_lever",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 1,
+      "y": 8,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_9_machinery",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 7,
+      "y": 7,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch3_9_exit",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 8,
+      "elevation": 0
     }
   ],
   "packageSource": "level_9"

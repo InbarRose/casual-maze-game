@@ -136,9 +136,9 @@ export class InteractionDispatcher {
       }
     }
 
-    // 5. WallDecor
+    // 5. WallDecor (torches are lighting props, not interactive lore)
     for (const d of this.entities) {
-      if (d.type === ENTITY_TYPES.WALL_DECOR && canEntityInteract(d)) {
+      if (d.type === ENTITY_TYPES.WALL_DECOR && d.decorType !== 'torch' && (d.text || d.title || d.playerDialogue) && canEntityInteract(d)) {
         const icon = d.decorType === 'note' ? '📝' : (d.decorType === 'painting' ? '🖼️' : '🏛️');
         rawCandidates.push({
           id: d.id || `wall_decor_${d.x}_${d.y}`,

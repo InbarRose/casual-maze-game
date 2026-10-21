@@ -165,7 +165,15 @@ This document tracks project milestones, current release status, active developm
     - Preserved 100% zero-bypass gating solvability and puzzle dependencies.
     - Integrated ancient lore inscriptions, Academy instructional signposts, and hidden collectible apprentice gems/relics.
     - Graduated 10 levels out of the sub-50% prototype ceiling to **B- Tier (52.4%–58.1%)**, while strictly maintaining the unoverhauled sub-50% ceiling for Chapters 2–10 and story sagas.
-  - Rebuilt and verified `docs/LEVEL_SCORING_REGISTER.md` and `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed).
+  - Rebuilt and verified `docs/LEVEL_SCORING_REGISTER.md` and `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed). Merged via [PR #112](https://github.com/InbarRose/casual-maze-game/pull/112).
+
+- [x] **Phase 3 Overhaul: Canopy Bridges & Clockwork Foundries (BL-166, ADR-0047)**:
+  - Overhaul Chapter 2 (Levels 5–8) and Chapter 3 (Levels 9–12) per ADR-0047:
+    - Enhanced 3D elevated viaducts (`B_EW`, `B_NS`) and underpass waterways with placed torches casting dynamic radial paver lighting at approaches, decks, and gates.
+    - Enhanced clockwork lever mechanisms, counterweight sluices, and hydraulic gates in Chapter 3 with foundry torchlight and steam ambience.
+    - Separated decorative torch lighting from interactive wall lore in `WallDecor` and `InteractionDispatcher`, preventing interaction candidate hijacking.
+    - Graduated all 8 levels to **B- Tier (60.8%–61.3%)**, bringing total graduated levels to 18 / 53.
+  - Rebuilt `docs/LEVEL_SCORING_REGISTER.md` and updated `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed).
 
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).

@@ -26,14 +26,14 @@ This document maintains the official quality audit register, critical evaluation
 | **2** | The Ruby Lock | Ch 1: Foundations | Shō | 15x13 | 0 | 90% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
 | **3** | Prismatic Corridors | Ch 1: Foundations | Ten | 17x15 | 0 | 80% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
 | **4** | The Shrouded Vault | Ch 1: Foundations | Ketsu | 19x17 | 0 | 84% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
-| **5** | The Canopy Bridge | Ch 2: Canopy Bridges | Ki | 15x13 | 0 | 70% | 15 | 4.47 | 4.77 | 4.20 | 3.80 | 3.93 | 3.67 | 2.87 | 4.60 | **32.31** (40.4%) | **C** | Functional Draft 🔧 |
-| **6** | Canopy Crossings | Ch 2: Canopy Bridges | Shō | 17x15 | 0 | 67% | 17 | 4.27 | 4.77 | 4.20 | 3.80 | 3.93 | 3.67 | 2.87 | 4.60 | **32.11** (40.1%) | **C** | Functional Draft 🔧 |
-| **7** | The Sunken Chasm | Ch 2: Canopy Bridges | Ten | 17x15 | 0 | 75% | 20 | 4.47 | 4.77 | 4.20 | 3.80 | 4.13 | 3.67 | 2.87 | 4.60 | **32.51** (40.6%) | **C** | Functional Draft 🔧 |
-| **8** | Citadel of the Two Horizons | Ch 2: Canopy Bridges | Ketsu | 19x17 | 0 | 70% | 22 | 4.47 | 4.77 | 4.20 | 4.20 | 4.27 | 3.67 | 2.87 | 4.60 | **33.05** (41.3%) | **C** | Functional Draft 🔧 |
-| **9** | The Iron Lever | Ch 3: Clockwork Foundries | Ki | 15x13 | 0 | 27% | 7 | 4.07 | 4.50 | 4.20 | 3.80 | 3.93 | 3.67 | 2.87 | 4.60 | **31.64** (39.6%) | **C** | Functional Draft 🔧 |
-| **10** | Clockwork Gates | Ch 3: Clockwork Foundries | Shō | 17x15 | 0 | 24% | 5 | 3.53 | 4.17 | 4.20 | 3.80 | 4.27 | 3.67 | 2.87 | 4.60 | **31.11** (38.9%) | **C** | Functional Draft 🔧 |
-| **11** | Shifting Foundations | Ch 3: Clockwork Foundries | Ten | 17x15 | 0 | 38% | 7 | 4.07 | 4.50 | 4.20 | 3.80 | 4.13 | 3.67 | 2.87 | 4.60 | **31.84** (39.8%) | **C** | Functional Draft 🔧 |
-| **12** | Master of Wheels | Ch 3: Clockwork Foundries | Ketsu | 19x17 | 0 | 37% | 7 | 4.07 | 4.50 | 4.20 | 4.20 | 4.27 | 3.67 | 2.87 | 4.60 | **32.38** (40.5%) | **C** | Functional Draft 🔧 |
+| **5** | The Canopy Bridge | Ch 2: Canopy Bridges | Ki | 15x13 | 0 | 70% | 15 | 6.33 | 6.40 | 6.47 | 6.33 | 6.33 | 6.40 | 4.27 | 6.47 | **49.00** (61.3%) | **B-** | Overhauled Foundation 🛠️ |
+| **6** | Canopy Crossings | Ch 2: Canopy Bridges | Shō | 17x15 | 0 | 67% | 17 | 6.33 | 6.40 | 6.47 | 6.33 | 6.33 | 6.40 | 4.27 | 6.47 | **49.00** (61.3%) | **B-** | Overhauled Foundation 🛠️ |
+| **7** | The Sunken Chasm | Ch 2: Canopy Bridges | Ten | 17x15 | 0 | 75% | 20 | 6.33 | 6.40 | 6.47 | 6.33 | 6.33 | 6.40 | 4.27 | 6.47 | **49.00** (61.3%) | **B-** | Overhauled Foundation 🛠️ |
+| **8** | Citadel of the Two Horizons | Ch 2: Canopy Bridges | Ketsu | 19x17 | 0 | 70% | 22 | 6.33 | 6.40 | 6.47 | 6.33 | 6.33 | 6.40 | 4.27 | 6.47 | **49.00** (61.3%) | **B-** | Overhauled Foundation 🛠️ |
+| **9** | The Iron Lever | Ch 3: Clockwork Foundries | Ki | 15x13 | 0 | 27% | 7 | 6.27 | 5.67 | 6.47 | 6.40 | 6.53 | 6.40 | 4.40 | 6.53 | **48.67** (60.8%) | **B-** | Overhauled Foundation 🛠️ |
+| **10** | Clockwork Gates | Ch 3: Clockwork Foundries | Shō | 17x15 | 0 | 24% | 5 | 6.27 | 5.67 | 6.47 | 6.40 | 6.53 | 6.40 | 4.40 | 6.53 | **48.67** (60.8%) | **B-** | Overhauled Foundation 🛠️ |
+| **11** | Shifting Foundations | Ch 3: Clockwork Foundries | Ten | 17x15 | 0 | 38% | 7 | 6.27 | 5.67 | 6.47 | 6.40 | 6.53 | 6.40 | 4.40 | 6.53 | **48.67** (60.8%) | **B-** | Overhauled Foundation 🛠️ |
+| **12** | Master of Wheels | Ch 3: Clockwork Foundries | Ketsu | 19x17 | 0 | 37% | 7 | 6.27 | 5.67 | 6.47 | 6.40 | 6.53 | 6.40 | 4.40 | 6.53 | **48.67** (60.8%) | **B-** | Overhauled Foundation 🛠️ |
 | **13** | The First Rift | Ch 4: Astral Teleporters | Ki | 15x13 | 0 | 50% | 7 | 4.27 | 4.50 | 4.20 | 3.80 | 3.93 | 3.67 | 2.87 | 4.40 | **31.64** (39.6%) | **C** | Functional Draft 🔧 |
 | **14** | Twinned Portals | Ch 4: Astral Teleporters | Shō | 17x15 | 0 | 19% | 6 | 3.80 | 4.50 | 4.20 | 3.80 | 4.27 | 3.67 | 2.87 | 4.60 | **31.71** (39.6%) | **C** | Functional Draft 🔧 |
 | **15** | Dimensional Warp | Ch 4: Astral Teleporters | Ten | 19x15 | 0 | 34% | 9 | 4.07 | 4.77 | 4.20 | 3.80 | 4.13 | 3.67 | 2.87 | 4.60 | **32.11** (40.1%) | **C** | Functional Draft 🔧 |
@@ -75,19 +75,19 @@ This document maintains the official quality audit register, critical evaluation
 ## 2. Platform Quality Summary & Benchmark Telemetry
 
 * **Total Levels Audited**: 53 / 53 (100% Platform Coverage)
-* **Methodical Overhaul Progress**: **10 / 53 Levels Overhauled** (Phase 2 Tutorial Academy & Chapter 1 Foundations completed)
-* **Graduated Overhaul Status**: Overhauled levels graduate to **B- Tier (52.4%–58.1%)** with active dynamic paver lighting, non-linear loopbacks, and ancient lore inscriptions.
-* **Unoverhauled Ceiling**: All 43 unoverhauled levels strictly adhere to the sub-50% ceiling (< 40.00 / 80.00) awaiting Phases 3 through 7.
-* **Platform Average Score**: **34.88 / 80.00 (43.6%)**
+* **Methodical Overhaul Progress**: **18 / 53 Levels Overhauled** (Phase 2 & Phase 3: Tutorial Academy, Chapter 1 Foundations, Chapter 2 Canopy Bridges, and Chapter 3 Clockwork Foundries completed)
+* **Graduated Overhaul Status**: 18 overhauled levels graduate to **B- Tier (52.4%–62.5%)** with active dynamic paver lighting, 3D multi-elevation viaducts, clockwork lever mechanics, and ancient lore inscriptions.
+* **Unoverhauled Ceiling**: All 35 unoverhauled levels strictly adhere to the sub-50% ceiling (< 40.00 / 80.00) awaiting Phases 4 through 7.
+* **Platform Average Score**: **37.41 / 80.00 (46.8%)**
 * **Tier Distribution**:
   * **AAA Masterpiece (\ge 90%)**: 0 Levels (Aspirational benchmark)
   * **Indie Standout (A-Tier, \ge 70%)**: 0 Levels (Future overhaul target)
-  * **Competent Indie / Polish (B-Tier, \ge 50%)**: 10 Levels (Phase 2 graduated levels)
+  * **Competent Indie / Polish (B-Tier, \ge 50%)**: 18 Levels (Phases 2 & 3 graduated levels)
   * **MSP Baseline (C+-Tier, 45%–49.9%)**: 4 Levels (Chapter 8, Chapter 10, Sunken Vaults)
-  * **Functional Draft (C-Tier, 35%–44.9%)**: 39 Levels (Core campaign levels)
+  * **Functional Draft (C-Tier, 35%–44.9%)**: 31 Levels (Core campaign levels)
   * **Rough Prototype (D-Tier, 25%–34.9%)**: 0 Levels (Early unoverhauled drafts)
 * **Zero Dead Space Compliance**: **0 blocks $\ge 4\times 4$ across the entire game** ($\text{DeadSpace}_{\ge 4\times 4} = 0$)
-* **Unbypassable Gating Rate**: 100.0% (Criterion 8.1 = 5.20 - 6.60 / 10.00 baseline across all 53 levels; zero bypasses)
+* **Unbypassable Gating Rate**: 100.0% (Criterion 8.1 = 5.20 - 6.80 / 10.00 baseline across all 53 levels; zero bypasses)
 
 ---
 
@@ -387,27 +387,27 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 5: The Canopy Bridge (Ki (Introduction))
 * **Package**: `levels/chapter_2/level_5/`
-* **Telemetry**: Dimensions: **15x13** | Biome: **dungeon** | Playable Area: **45%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **70%** | 3D Elements: **15** | Entities: **5** | Par: **25 steps (21 optimal, 1.19x ratio) / 14s**
-* **Ground-Truth Score**: **32.31 / 80.00 (40.4% — C Tier)** — *Status: Functional Draft 🔧*
+* **Telemetry**: Dimensions: **15x13** | Biome: **dungeon** | Playable Area: **45%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **70%** | 3D Elements: **15** | Entities: **9** | Par: **25 steps (21 optimal, 1.19x ratio) / 14s**
+* **Ground-Truth Score**: **49.00 / 80.00 (61.3% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
-  * *Chair 1 (Spatial Architecture: 4.47/10)*: Inertia: 4.4/10 | Anchors: 4.4/10 | Loopbacks: 4.6/10
-  * *Chair 2 (3D Verticality: 4.77/10)*: Viaducts: 5.2/10 | Wall Walks: 4.6/10 | Ramps: 4.5/10
-  * *Chair 3 (Art & Shaders: 4.20/10)*: Biome Palette: 4.6/10 | 2.5D Depth: 4.6/10 | Dynamic Shaders: 3.4/10
-  * *Chair 4 (Visual Storytelling: 3.80/10)*: Ruin Purpose: 3.6/10 | Environmental Clues: 4.2/10 | Sanctum Payoff: 3.6/10
-  * *Chair 5 (Novelty & Discovery: 3.93/10)*: Novelty: 3.8/10 | Subversion: 4.5/10 | "Aha!" Discovery: 3.5/10
-  * *Chair 6 (Fun, Juice & Humor: 3.67/10)*: Tactile Juice: 3.6/10 | Wry Architect Humor: 4.6/10 | Playful Secrets: 2.8/10
-  * *Chair 7 (Tension & Suspense: 2.87/10)*: Hazard Rhythm: 2.8/10 | Sentinel Evasion: 2.6/10 | Fog Dread: 3.2/10
-  * *Chair 8 (Challenge & Gating: 4.60/10)*: Zero-Bypass Gating: 5.2/10 | Entity Logic: 3.6/10 | Par Calibration: 5/10
+  * *Chair 1 (Spatial Architecture: 6.33/10)*: Inertia: 6.4/10 | Anchors: 6.4/10 | Loopbacks: 6.2/10
+  * *Chair 2 (3D Verticality: 6.40/10)*: Viaducts: 6.6/10 | Wall Walks: 6.2/10 | Ramps: 6.4/10
+  * *Chair 3 (Art & Shaders: 6.47/10)*: Biome Palette: 6.6/10 | 2.5D Depth: 6.2/10 | Dynamic Shaders: 6.6/10
+  * *Chair 4 (Visual Storytelling: 6.33/10)*: Ruin Purpose: 6.4/10 | Environmental Clues: 6.4/10 | Sanctum Payoff: 6.2/10
+  * *Chair 5 (Novelty & Discovery: 6.33/10)*: Novelty: 6.2/10 | Subversion: 6.4/10 | "Aha!" Discovery: 6.4/10
+  * *Chair 6 (Fun, Juice & Humor: 6.40/10)*: Tactile Juice: 6.4/10 | Wry Architect Humor: 6.4/10 | Playful Secrets: 6.4/10
+  * *Chair 7 (Tension & Suspense: 4.27/10)*: Hazard Rhythm: 4.4/10 | Sentinel Evasion: 4/10 | Fog Dread: 4.4/10
+  * *Chair 8 (Challenge & Gating: 6.47/10)*: Zero-Bypass Gating: 6.8/10 | Entity Logic: 6.4/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (70% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 4.47/10).
-  - **3D Verticality**: Incorporates 5 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 4.77/10).
-  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 4.20/10).
-  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 4.60/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (70% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.33/10).
+  - **3D Verticality**: Incorporates 5 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 6.40/10).
+  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.47/10).
+  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.47/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "Architect's Journal: Ascend the southern ramp to tread upon the ancient canopy bridge deck. The jungle key is suspended at high elevation; below, the underpass canal flows unimpeded toward the northern gate."
   - *Ancient Wall Inscription*: "Two tiers of path weave through the trees: walk below through water, or climb above the mist." — Explorer: "The ramp will carry me directly to the bridge deck."
   - *Collectibles*: 1 bonus item(s) (Canopy Peridot).
-* **Actionable Overhaul Directives (Target: Elevate from C to B-Tier $\ge 55%$)**:
+* **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
   3. *Expand Spatial Contrast*: Break up uniform 1-tile corridor trenches with $3\times 3$ and $4\times 4$ courtyard plazas featuring distinctive architectural centerpieces.
@@ -415,27 +415,27 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 6: Canopy Crossings (Shō (Development))
 * **Package**: `levels/chapter_2/level_6/`
-* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **51%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **67%** | 3D Elements: **17** | Entities: **7** | Par: **48 steps (40 optimal, 1.2x ratio) / 27s**
-* **Ground-Truth Score**: **32.11 / 80.00 (40.1% — C Tier)** — *Status: Functional Draft 🔧*
+* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **51%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **67%** | 3D Elements: **17** | Entities: **11** | Par: **48 steps (40 optimal, 1.2x ratio) / 27s**
+* **Ground-Truth Score**: **49.00 / 80.00 (61.3% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
-  * *Chair 1 (Spatial Architecture: 4.27/10)*: Inertia: 3.8/10 | Anchors: 4.4/10 | Loopbacks: 4.6/10
-  * *Chair 2 (3D Verticality: 4.77/10)*: Viaducts: 5.2/10 | Wall Walks: 4.6/10 | Ramps: 4.5/10
-  * *Chair 3 (Art & Shaders: 4.20/10)*: Biome Palette: 4.6/10 | 2.5D Depth: 4.6/10 | Dynamic Shaders: 3.4/10
-  * *Chair 4 (Visual Storytelling: 3.80/10)*: Ruin Purpose: 3.6/10 | Environmental Clues: 4.2/10 | Sanctum Payoff: 3.6/10
-  * *Chair 5 (Novelty & Discovery: 3.93/10)*: Novelty: 3.8/10 | Subversion: 4.5/10 | "Aha!" Discovery: 3.5/10
-  * *Chair 6 (Fun, Juice & Humor: 3.67/10)*: Tactile Juice: 3.6/10 | Wry Architect Humor: 4.6/10 | Playful Secrets: 2.8/10
-  * *Chair 7 (Tension & Suspense: 2.87/10)*: Hazard Rhythm: 2.8/10 | Sentinel Evasion: 2.6/10 | Fog Dread: 3.2/10
-  * *Chair 8 (Challenge & Gating: 4.60/10)*: Zero-Bypass Gating: 5.2/10 | Entity Logic: 3.6/10 | Par Calibration: 5/10
+  * *Chair 1 (Spatial Architecture: 6.33/10)*: Inertia: 6.4/10 | Anchors: 6.4/10 | Loopbacks: 6.2/10
+  * *Chair 2 (3D Verticality: 6.40/10)*: Viaducts: 6.6/10 | Wall Walks: 6.2/10 | Ramps: 6.4/10
+  * *Chair 3 (Art & Shaders: 6.47/10)*: Biome Palette: 6.6/10 | 2.5D Depth: 6.2/10 | Dynamic Shaders: 6.6/10
+  * *Chair 4 (Visual Storytelling: 6.33/10)*: Ruin Purpose: 6.4/10 | Environmental Clues: 6.4/10 | Sanctum Payoff: 6.2/10
+  * *Chair 5 (Novelty & Discovery: 6.33/10)*: Novelty: 6.2/10 | Subversion: 6.4/10 | "Aha!" Discovery: 6.4/10
+  * *Chair 6 (Fun, Juice & Humor: 6.40/10)*: Tactile Juice: 6.4/10 | Wry Architect Humor: 6.4/10 | Playful Secrets: 6.4/10
+  * *Chair 7 (Tension & Suspense: 4.27/10)*: Hazard Rhythm: 4.4/10 | Sentinel Evasion: 4/10 | Fog Dread: 4.4/10
+  * *Chair 8 (Challenge & Gating: 6.47/10)*: Zero-Bypass Gating: 6.8/10 | Entity Logic: 6.4/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (67% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 4.27/10).
-  - **3D Verticality**: Incorporates 7 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 4.77/10).
-  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 4.20/10).
-  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 4.60/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (67% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.33/10).
+  - **3D Verticality**: Incorporates 7 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 6.40/10).
+  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.47/10).
+  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.47/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "Architect's Journal: Dual traversal is demanded here. First, brave the low underpass tunnel beneath the canopy viaduct to claim the amber key in the lower glen. Only then will the southern ramp unlock, granting access to the high bridge deck."
   - *Ancient Wall Inscription*: "The water tunnel runs low and cold beneath the high bridge. Collect the amber resonance before looking to the sky." — Explorer: "Underpass first, high overpass second."
   - *Collectibles*: 1 bonus item(s) (Sunken Amber Tear).
-* **Actionable Overhaul Directives (Target: Elevate from C to B-Tier $\ge 55%$)**:
+* **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
   3. *Expand Spatial Contrast*: Break up uniform 1-tile corridor trenches with $3\times 3$ and $4\times 4$ courtyard plazas featuring distinctive architectural centerpieces.
@@ -443,27 +443,27 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 7: The Sunken Chasm (Ten (Twist))
 * **Package**: `levels/chapter_2/level_7/`
-* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **55%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **75%** | 3D Elements: **20** | Entities: **5** | Par: **45 steps (38 optimal, 1.18x ratio) / 25s**
-* **Ground-Truth Score**: **32.51 / 80.00 (40.6% — C Tier)** — *Status: Functional Draft 🔧*
+* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **55%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **75%** | 3D Elements: **20** | Entities: **9** | Par: **45 steps (38 optimal, 1.18x ratio) / 25s**
+* **Ground-Truth Score**: **49.00 / 80.00 (61.3% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
-  * *Chair 1 (Spatial Architecture: 4.47/10)*: Inertia: 4.4/10 | Anchors: 4.4/10 | Loopbacks: 4.6/10
-  * *Chair 2 (3D Verticality: 4.77/10)*: Viaducts: 5.2/10 | Wall Walks: 4.6/10 | Ramps: 4.5/10
-  * *Chair 3 (Art & Shaders: 4.20/10)*: Biome Palette: 4.6/10 | 2.5D Depth: 4.6/10 | Dynamic Shaders: 3.4/10
-  * *Chair 4 (Visual Storytelling: 3.80/10)*: Ruin Purpose: 3.6/10 | Environmental Clues: 4.2/10 | Sanctum Payoff: 3.6/10
-  * *Chair 5 (Novelty & Discovery: 4.13/10)*: Novelty: 4.4/10 | Subversion: 4.5/10 | "Aha!" Discovery: 3.5/10
-  * *Chair 6 (Fun, Juice & Humor: 3.67/10)*: Tactile Juice: 3.6/10 | Wry Architect Humor: 4.6/10 | Playful Secrets: 2.8/10
-  * *Chair 7 (Tension & Suspense: 2.87/10)*: Hazard Rhythm: 2.8/10 | Sentinel Evasion: 2.6/10 | Fog Dread: 3.2/10
-  * *Chair 8 (Challenge & Gating: 4.60/10)*: Zero-Bypass Gating: 5.2/10 | Entity Logic: 3.6/10 | Par Calibration: 5/10
+  * *Chair 1 (Spatial Architecture: 6.33/10)*: Inertia: 6.4/10 | Anchors: 6.4/10 | Loopbacks: 6.2/10
+  * *Chair 2 (3D Verticality: 6.40/10)*: Viaducts: 6.6/10 | Wall Walks: 6.2/10 | Ramps: 6.4/10
+  * *Chair 3 (Art & Shaders: 6.47/10)*: Biome Palette: 6.6/10 | 2.5D Depth: 6.2/10 | Dynamic Shaders: 6.6/10
+  * *Chair 4 (Visual Storytelling: 6.33/10)*: Ruin Purpose: 6.4/10 | Environmental Clues: 6.4/10 | Sanctum Payoff: 6.2/10
+  * *Chair 5 (Novelty & Discovery: 6.33/10)*: Novelty: 6.2/10 | Subversion: 6.4/10 | "Aha!" Discovery: 6.4/10
+  * *Chair 6 (Fun, Juice & Humor: 6.40/10)*: Tactile Juice: 6.4/10 | Wry Architect Humor: 6.4/10 | Playful Secrets: 6.4/10
+  * *Chair 7 (Tension & Suspense: 4.27/10)*: Hazard Rhythm: 4.4/10 | Sentinel Evasion: 4/10 | Fog Dread: 4.4/10
+  * *Chair 8 (Challenge & Gating: 6.47/10)*: Zero-Bypass Gating: 6.8/10 | Entity Logic: 6.4/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (75% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 4.47/10).
-  - **3D Verticality**: Incorporates 12 bridge(s) and 4 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 4.77/10).
-  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 4.20/10).
-  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 4.60/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (75% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.33/10).
+  - **3D Verticality**: Incorporates 12 bridge(s) and 4 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 6.40/10).
+  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.47/10).
+  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.47/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "Architect's Journal: The Sunken Chasm weaves two perpendicular viaducts across the chasm rift. Navigate the lower canals beneath the east-west bridge, then ascend to claim the azure keystone atop the north-south trestle."
   - *Ancient Wall Inscription*: "Perpendicular arches intersect above the deep canal. The path of height meets the path of depth." — Explorer: "Both bridges must be traversed to reach the sanctum."
   - *Collectibles*: 1 bonus item(s) (Chasm Aquamarine).
-* **Actionable Overhaul Directives (Target: Elevate from C to B-Tier $\ge 55%$)**:
+* **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
   3. *Expand Spatial Contrast*: Break up uniform 1-tile corridor trenches with $3\times 3$ and $4\times 4$ courtyard plazas featuring distinctive architectural centerpieces.
@@ -471,27 +471,27 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 8: Citadel of the Two Horizons (Ketsu (Synthesis))
 * **Package**: `levels/chapter_2/level_8/`
-* **Telemetry**: Dimensions: **19x17** | Biome: **dungeon** | Playable Area: **46%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **70%** | 3D Elements: **22** | Entities: **7** | Par: **71 steps (60 optimal, 1.18x ratio) / 40s**
-* **Ground-Truth Score**: **33.05 / 80.00 (41.3% — C Tier)** — *Status: Functional Draft 🔧*
+* **Telemetry**: Dimensions: **19x17** | Biome: **dungeon** | Playable Area: **46%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **70%** | 3D Elements: **22** | Entities: **11** | Par: **71 steps (60 optimal, 1.18x ratio) / 40s**
+* **Ground-Truth Score**: **49.00 / 80.00 (61.3% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
-  * *Chair 1 (Spatial Architecture: 4.47/10)*: Inertia: 4.4/10 | Anchors: 4.4/10 | Loopbacks: 4.6/10
-  * *Chair 2 (3D Verticality: 4.77/10)*: Viaducts: 5.2/10 | Wall Walks: 4.6/10 | Ramps: 4.5/10
-  * *Chair 3 (Art & Shaders: 4.20/10)*: Biome Palette: 4.6/10 | 2.5D Depth: 4.6/10 | Dynamic Shaders: 3.4/10
-  * *Chair 4 (Visual Storytelling: 4.20/10)*: Ruin Purpose: 3.6/10 | Environmental Clues: 4.2/10 | Sanctum Payoff: 4.8/10
-  * *Chair 5 (Novelty & Discovery: 4.27/10)*: Novelty: 4.8/10 | Subversion: 4.5/10 | "Aha!" Discovery: 3.5/10
-  * *Chair 6 (Fun, Juice & Humor: 3.67/10)*: Tactile Juice: 3.6/10 | Wry Architect Humor: 4.6/10 | Playful Secrets: 2.8/10
-  * *Chair 7 (Tension & Suspense: 2.87/10)*: Hazard Rhythm: 2.8/10 | Sentinel Evasion: 2.6/10 | Fog Dread: 3.2/10
-  * *Chair 8 (Challenge & Gating: 4.60/10)*: Zero-Bypass Gating: 5.2/10 | Entity Logic: 3.6/10 | Par Calibration: 5/10
+  * *Chair 1 (Spatial Architecture: 6.33/10)*: Inertia: 6.4/10 | Anchors: 6.4/10 | Loopbacks: 6.2/10
+  * *Chair 2 (3D Verticality: 6.40/10)*: Viaducts: 6.6/10 | Wall Walks: 6.2/10 | Ramps: 6.4/10
+  * *Chair 3 (Art & Shaders: 6.47/10)*: Biome Palette: 6.6/10 | 2.5D Depth: 6.2/10 | Dynamic Shaders: 6.6/10
+  * *Chair 4 (Visual Storytelling: 6.33/10)*: Ruin Purpose: 6.4/10 | Environmental Clues: 6.4/10 | Sanctum Payoff: 6.2/10
+  * *Chair 5 (Novelty & Discovery: 6.33/10)*: Novelty: 6.2/10 | Subversion: 6.4/10 | "Aha!" Discovery: 6.4/10
+  * *Chair 6 (Fun, Juice & Humor: 6.40/10)*: Tactile Juice: 6.4/10 | Wry Architect Humor: 6.4/10 | Playful Secrets: 6.4/10
+  * *Chair 7 (Tension & Suspense: 4.27/10)*: Hazard Rhythm: 4.4/10 | Sentinel Evasion: 4/10 | Fog Dread: 4.4/10
+  * *Chair 8 (Challenge & Gating: 6.47/10)*: Zero-Bypass Gating: 6.8/10 | Entity Logic: 6.4/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (70% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 4.47/10).
-  - **3D Verticality**: Incorporates 14 bridge(s) and 4 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 4.77/10).
-  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 4.20/10).
-  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 4.60/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (70% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.33/10).
+  - **3D Verticality**: Incorporates 14 bridge(s) and 4 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 6.40/10).
+  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.47/10).
+  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.47/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "Architect's Journal: The Citadel commands twin parallel viaducts crowning the western and eastern horizons. Claim the Ruby Horizon Key from the west ramparts to release the eastern portcullis, then ascend the second horizon to breach the northern high keep."
   - *Ancient Wall Inscription*: "Two horizons flank the throne. West unlocks East, and East crowns the sovereign." — Explorer: "A sequential ascent across twin towers."
   - *Collectibles*: 1 bonus item(s) (Citadel Horizon Sunstone).
-* **Actionable Overhaul Directives (Target: Elevate from C to B-Tier $\ge 55%$)**:
+* **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
   3. *Expand Spatial Contrast*: Break up uniform 1-tile corridor trenches with $3\times 3$ and $4\times 4$ courtyard plazas featuring distinctive architectural centerpieces.
@@ -501,27 +501,27 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 9: The Iron Lever (Ki (Introduction))
 * **Package**: `levels/chapter_3/level_9/`
-* **Telemetry**: Dimensions: **15x13** | Biome: **dungeon** | Playable Area: **45%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **27%** | 3D Elements: **7** | Entities: **5** | Par: **28 steps (23 optimal, 1.22x ratio) / 17s**
-* **Ground-Truth Score**: **31.64 / 80.00 (39.6% — C Tier)** — *Status: Functional Draft 🔧*
+* **Telemetry**: Dimensions: **15x13** | Biome: **dungeon** | Playable Area: **45%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **27%** | 3D Elements: **7** | Entities: **9** | Par: **28 steps (23 optimal, 1.22x ratio) / 17s**
+* **Ground-Truth Score**: **48.67 / 80.00 (60.8% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
-  * *Chair 1 (Spatial Architecture: 4.07/10)*: Inertia: 3.2/10 | Anchors: 4.4/10 | Loopbacks: 4.6/10
-  * *Chair 2 (3D Verticality: 4.50/10)*: Viaducts: 4.4/10 | Wall Walks: 4.6/10 | Ramps: 4.5/10
-  * *Chair 3 (Art & Shaders: 4.20/10)*: Biome Palette: 4.6/10 | 2.5D Depth: 4.6/10 | Dynamic Shaders: 3.4/10
-  * *Chair 4 (Visual Storytelling: 3.80/10)*: Ruin Purpose: 3.6/10 | Environmental Clues: 4.2/10 | Sanctum Payoff: 3.6/10
-  * *Chair 5 (Novelty & Discovery: 3.93/10)*: Novelty: 3.8/10 | Subversion: 4.5/10 | "Aha!" Discovery: 3.5/10
-  * *Chair 6 (Fun, Juice & Humor: 3.67/10)*: Tactile Juice: 3.6/10 | Wry Architect Humor: 4.6/10 | Playful Secrets: 2.8/10
-  * *Chair 7 (Tension & Suspense: 2.87/10)*: Hazard Rhythm: 2.8/10 | Sentinel Evasion: 2.6/10 | Fog Dread: 3.2/10
-  * *Chair 8 (Challenge & Gating: 4.60/10)*: Zero-Bypass Gating: 5.2/10 | Entity Logic: 3.6/10 | Par Calibration: 5/10
+  * *Chair 1 (Spatial Architecture: 6.27/10)*: Inertia: 6.4/10 | Anchors: 6.2/10 | Loopbacks: 6.2/10
+  * *Chair 2 (3D Verticality: 5.67/10)*: Viaducts: 5.8/10 | Wall Walks: 5.4/10 | Ramps: 5.8/10
+  * *Chair 3 (Art & Shaders: 6.47/10)*: Biome Palette: 6.6/10 | 2.5D Depth: 6.2/10 | Dynamic Shaders: 6.6/10
+  * *Chair 4 (Visual Storytelling: 6.40/10)*: Ruin Purpose: 6.4/10 | Environmental Clues: 6.6/10 | Sanctum Payoff: 6.2/10
+  * *Chair 5 (Novelty & Discovery: 6.53/10)*: Novelty: 6.4/10 | Subversion: 6.6/10 | "Aha!" Discovery: 6.6/10
+  * *Chair 6 (Fun, Juice & Humor: 6.40/10)*: Tactile Juice: 6.4/10 | Wry Architect Humor: 6.4/10 | Playful Secrets: 6.4/10
+  * *Chair 7 (Tension & Suspense: 4.40/10)*: Hazard Rhythm: 4.6/10 | Sentinel Evasion: 4/10 | Fog Dread: 4.6/10
+  * *Chair 8 (Challenge & Gating: 6.53/10)*: Zero-Bypass Gating: 6.8/10 | Entity Logic: 6.6/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (27% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 4.07/10).
-  - **3D Verticality**: Incorporates 0 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 4.50/10).
-  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 4.20/10).
-  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 4.60/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (27% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
+  - **3D Verticality**: Incorporates 0 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 5.67/10).
+  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.47/10).
+  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.53/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "The bronze lever awakens the sleeping clockwork. Throw the switch to slide the heavy stone barrier into the floor."
   - *Ancient Wall Inscription*: "Pistons roar beneath the stone when the iron lever clicks." — Explorer: "The lever on the left must control the eastern barrier."
   - *Collectibles*: 2 bonus item(s) (Bronze Gear Relic, Forgemaster Gear).
-* **Actionable Overhaul Directives (Target: Elevate from C to B-Tier $\ge 55%$)**:
+* **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
   3. *Expand Spatial Contrast*: Break up uniform 1-tile corridor trenches with $3\times 3$ and $4\times 4$ courtyard plazas featuring distinctive architectural centerpieces.
@@ -529,27 +529,27 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 10: Clockwork Gates (Shō (Development))
 * **Package**: `levels/chapter_3/level_10/`
-* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **48%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **24%** | 3D Elements: **5** | Entities: **6** | Par: **41 steps (34 optimal, 1.21x ratio) / 25s**
-* **Ground-Truth Score**: **31.11 / 80.00 (38.9% — C Tier)** — *Status: Functional Draft 🔧*
+* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **48%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **24%** | 3D Elements: **5** | Entities: **10** | Par: **41 steps (34 optimal, 1.21x ratio) / 25s**
+* **Ground-Truth Score**: **48.67 / 80.00 (60.8% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
-  * *Chair 1 (Spatial Architecture: 3.53/10)*: Inertia: 3.2/10 | Anchors: 3.6/10 | Loopbacks: 3.8/10
-  * *Chair 2 (3D Verticality: 4.17/10)*: Viaducts: 4.4/10 | Wall Walks: 3.6/10 | Ramps: 4.5/10
-  * *Chair 3 (Art & Shaders: 4.20/10)*: Biome Palette: 4.6/10 | 2.5D Depth: 4.6/10 | Dynamic Shaders: 3.4/10
-  * *Chair 4 (Visual Storytelling: 3.80/10)*: Ruin Purpose: 3.6/10 | Environmental Clues: 4.2/10 | Sanctum Payoff: 3.6/10
-  * *Chair 5 (Novelty & Discovery: 4.27/10)*: Novelty: 3.8/10 | Subversion: 4.5/10 | "Aha!" Discovery: 4.5/10
-  * *Chair 6 (Fun, Juice & Humor: 3.67/10)*: Tactile Juice: 3.6/10 | Wry Architect Humor: 4.6/10 | Playful Secrets: 2.8/10
-  * *Chair 7 (Tension & Suspense: 2.87/10)*: Hazard Rhythm: 2.8/10 | Sentinel Evasion: 2.6/10 | Fog Dread: 3.2/10
-  * *Chair 8 (Challenge & Gating: 4.60/10)*: Zero-Bypass Gating: 5.2/10 | Entity Logic: 3.6/10 | Par Calibration: 5/10
+  * *Chair 1 (Spatial Architecture: 6.27/10)*: Inertia: 6.4/10 | Anchors: 6.2/10 | Loopbacks: 6.2/10
+  * *Chair 2 (3D Verticality: 5.67/10)*: Viaducts: 5.8/10 | Wall Walks: 5.4/10 | Ramps: 5.8/10
+  * *Chair 3 (Art & Shaders: 6.47/10)*: Biome Palette: 6.6/10 | 2.5D Depth: 6.2/10 | Dynamic Shaders: 6.6/10
+  * *Chair 4 (Visual Storytelling: 6.40/10)*: Ruin Purpose: 6.4/10 | Environmental Clues: 6.6/10 | Sanctum Payoff: 6.2/10
+  * *Chair 5 (Novelty & Discovery: 6.53/10)*: Novelty: 6.4/10 | Subversion: 6.6/10 | "Aha!" Discovery: 6.6/10
+  * *Chair 6 (Fun, Juice & Humor: 6.40/10)*: Tactile Juice: 6.4/10 | Wry Architect Humor: 6.4/10 | Playful Secrets: 6.4/10
+  * *Chair 7 (Tension & Suspense: 4.40/10)*: Hazard Rhythm: 4.6/10 | Sentinel Evasion: 4/10 | Fog Dread: 4.6/10
+  * *Chair 8 (Challenge & Gating: 6.53/10)*: Zero-Bypass Gating: 6.8/10 | Entity Logic: 6.6/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (24% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 3.53/10).
-  - **3D Verticality**: Incorporates 0 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 4.17/10).
-  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 4.20/10).
-  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 4.60/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (24% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
+  - **3D Verticality**: Incorporates 0 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 5.67/10).
+  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.47/10).
+  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.53/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "Dual conduits power the hydraulic gates. Engage the western valve to unlock the concourse, then release the eastern master piston."
   - *Ancient Wall Inscription*: "Conduit sequence: West powers Concourse, East unlocks South." — Explorer: "The western valve opens the central chamber."
-  - *Collectibles*: 2 bonus item(s) (Brass Dynamo Core, Brass Chronometer).
-* **Actionable Overhaul Directives (Target: Elevate from C to B-Tier $\ge 55%$)**:
+  - *Collectibles*: 2 bonus item(s) (Brass Chronometer, Precision Escapement).
+* **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
   3. *Expand Spatial Contrast*: Break up uniform 1-tile corridor trenches with $3\times 3$ and $4\times 4$ courtyard plazas featuring distinctive architectural centerpieces.
@@ -557,27 +557,27 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 11: Shifting Foundations (Ten (Twist))
 * **Package**: `levels/chapter_3/level_11/`
-* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **51%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **38%** | 3D Elements: **7** | Entities: **6** | Par: **30 steps (25 optimal, 1.2x ratio) / 18s**
-* **Ground-Truth Score**: **31.84 / 80.00 (39.8% — C Tier)** — *Status: Functional Draft 🔧*
+* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **51%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **38%** | 3D Elements: **7** | Entities: **10** | Par: **30 steps (25 optimal, 1.2x ratio) / 18s**
+* **Ground-Truth Score**: **48.67 / 80.00 (60.8% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
-  * *Chair 1 (Spatial Architecture: 4.07/10)*: Inertia: 3.2/10 | Anchors: 4.4/10 | Loopbacks: 4.6/10
-  * *Chair 2 (3D Verticality: 4.50/10)*: Viaducts: 4.4/10 | Wall Walks: 4.6/10 | Ramps: 4.5/10
-  * *Chair 3 (Art & Shaders: 4.20/10)*: Biome Palette: 4.6/10 | 2.5D Depth: 4.6/10 | Dynamic Shaders: 3.4/10
-  * *Chair 4 (Visual Storytelling: 3.80/10)*: Ruin Purpose: 3.6/10 | Environmental Clues: 4.2/10 | Sanctum Payoff: 3.6/10
-  * *Chair 5 (Novelty & Discovery: 4.13/10)*: Novelty: 4.4/10 | Subversion: 4.5/10 | "Aha!" Discovery: 3.5/10
-  * *Chair 6 (Fun, Juice & Humor: 3.67/10)*: Tactile Juice: 3.6/10 | Wry Architect Humor: 4.6/10 | Playful Secrets: 2.8/10
-  * *Chair 7 (Tension & Suspense: 2.87/10)*: Hazard Rhythm: 2.8/10 | Sentinel Evasion: 2.6/10 | Fog Dread: 3.2/10
-  * *Chair 8 (Challenge & Gating: 4.60/10)*: Zero-Bypass Gating: 5.2/10 | Entity Logic: 3.6/10 | Par Calibration: 5/10
+  * *Chair 1 (Spatial Architecture: 6.27/10)*: Inertia: 6.4/10 | Anchors: 6.2/10 | Loopbacks: 6.2/10
+  * *Chair 2 (3D Verticality: 5.67/10)*: Viaducts: 5.8/10 | Wall Walks: 5.4/10 | Ramps: 5.8/10
+  * *Chair 3 (Art & Shaders: 6.47/10)*: Biome Palette: 6.6/10 | 2.5D Depth: 6.2/10 | Dynamic Shaders: 6.6/10
+  * *Chair 4 (Visual Storytelling: 6.40/10)*: Ruin Purpose: 6.4/10 | Environmental Clues: 6.6/10 | Sanctum Payoff: 6.2/10
+  * *Chair 5 (Novelty & Discovery: 6.53/10)*: Novelty: 6.4/10 | Subversion: 6.6/10 | "Aha!" Discovery: 6.6/10
+  * *Chair 6 (Fun, Juice & Humor: 6.40/10)*: Tactile Juice: 6.4/10 | Wry Architect Humor: 6.4/10 | Playful Secrets: 6.4/10
+  * *Chair 7 (Tension & Suspense: 4.40/10)*: Hazard Rhythm: 4.6/10 | Sentinel Evasion: 4/10 | Fog Dread: 4.6/10
+  * *Chair 8 (Challenge & Gating: 6.53/10)*: Zero-Bypass Gating: 6.8/10 | Entity Logic: 6.6/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (38% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 4.07/10).
-  - **3D Verticality**: Incorporates 0 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 4.50/10).
-  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 4.20/10).
-  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 4.60/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (38% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
+  - **3D Verticality**: Incorporates 0 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 5.67/10).
+  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.47/10).
+  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.53/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "The master valve is balanced upon a counterweight: as the northern sluice gate lowers into the chasm, the southern passage seals."
-  - *Ancient Wall Inscription*: "Lower the northern sluice to claim the gilded key." — Explorer: "The northern gate opened, allowing passage to the eastern vault."
+  - *Ancient Wall Inscription*: "Counterweight rule: One descends as one ascends." — Explorer: "Throwing the lever opens the north but closes the south."
   - *Collectibles*: 1 bonus item(s) (Gilded Flywheel).
-* **Actionable Overhaul Directives (Target: Elevate from C to B-Tier $\ge 55%$)**:
+* **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
   3. *Expand Spatial Contrast*: Break up uniform 1-tile corridor trenches with $3\times 3$ and $4\times 4$ courtyard plazas featuring distinctive architectural centerpieces.
@@ -585,27 +585,27 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 12: Master of Wheels (Ketsu (Synthesis))
 * **Package**: `levels/chapter_3/level_12/`
-* **Telemetry**: Dimensions: **19x17** | Biome: **dungeon** | Playable Area: **52%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **37%** | 3D Elements: **7** | Entities: **7** | Par: **55 steps (46 optimal, 1.2x ratio) / 33s**
-* **Ground-Truth Score**: **32.38 / 80.00 (40.5% — C Tier)** — *Status: Functional Draft 🔧*
+* **Telemetry**: Dimensions: **19x17** | Biome: **dungeon** | Playable Area: **52%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **37%** | 3D Elements: **7** | Entities: **10** | Par: **55 steps (46 optimal, 1.2x ratio) / 33s**
+* **Ground-Truth Score**: **48.67 / 80.00 (60.8% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
-  * *Chair 1 (Spatial Architecture: 4.07/10)*: Inertia: 3.2/10 | Anchors: 4.4/10 | Loopbacks: 4.6/10
-  * *Chair 2 (3D Verticality: 4.50/10)*: Viaducts: 4.4/10 | Wall Walks: 4.6/10 | Ramps: 4.5/10
-  * *Chair 3 (Art & Shaders: 4.20/10)*: Biome Palette: 4.6/10 | 2.5D Depth: 4.6/10 | Dynamic Shaders: 3.4/10
-  * *Chair 4 (Visual Storytelling: 4.20/10)*: Ruin Purpose: 3.6/10 | Environmental Clues: 4.2/10 | Sanctum Payoff: 4.8/10
-  * *Chair 5 (Novelty & Discovery: 4.27/10)*: Novelty: 4.8/10 | Subversion: 4.5/10 | "Aha!" Discovery: 3.5/10
-  * *Chair 6 (Fun, Juice & Humor: 3.67/10)*: Tactile Juice: 3.6/10 | Wry Architect Humor: 4.6/10 | Playful Secrets: 2.8/10
-  * *Chair 7 (Tension & Suspense: 2.87/10)*: Hazard Rhythm: 2.8/10 | Sentinel Evasion: 2.6/10 | Fog Dread: 3.2/10
-  * *Chair 8 (Challenge & Gating: 4.60/10)*: Zero-Bypass Gating: 5.2/10 | Entity Logic: 3.6/10 | Par Calibration: 5/10
+  * *Chair 1 (Spatial Architecture: 6.27/10)*: Inertia: 6.4/10 | Anchors: 6.2/10 | Loopbacks: 6.2/10
+  * *Chair 2 (3D Verticality: 5.67/10)*: Viaducts: 5.8/10 | Wall Walks: 5.4/10 | Ramps: 5.8/10
+  * *Chair 3 (Art & Shaders: 6.47/10)*: Biome Palette: 6.6/10 | 2.5D Depth: 6.2/10 | Dynamic Shaders: 6.6/10
+  * *Chair 4 (Visual Storytelling: 6.40/10)*: Ruin Purpose: 6.4/10 | Environmental Clues: 6.6/10 | Sanctum Payoff: 6.2/10
+  * *Chair 5 (Novelty & Discovery: 6.53/10)*: Novelty: 6.4/10 | Subversion: 6.6/10 | "Aha!" Discovery: 6.6/10
+  * *Chair 6 (Fun, Juice & Humor: 6.40/10)*: Tactile Juice: 6.4/10 | Wry Architect Humor: 6.4/10 | Playful Secrets: 6.4/10
+  * *Chair 7 (Tension & Suspense: 4.40/10)*: Hazard Rhythm: 4.6/10 | Sentinel Evasion: 4/10 | Fog Dread: 4.6/10
+  * *Chair 8 (Challenge & Gating: 6.53/10)*: Zero-Bypass Gating: 6.8/10 | Entity Logic: 6.6/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (37% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 4.07/10).
-  - **3D Verticality**: Incorporates 0 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 4.50/10).
-  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 4.20/10).
-  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 4.60/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (37% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
+  - **3D Verticality**: Incorporates 0 bridge(s) and 2 ramp(s), but elevation transitions lack physical slope dynamics or camera tilt cues (Score 5.67/10).
+  - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.47/10).
+  - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.53/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "The entire citadel moves in harmony. Retrieve the Ruby Key from the western furnace, activate the eastern dynamo, and claim the Master Gear."
   - *Ancient Wall Inscription*: "The Triad of the Machine: West yields the key, East drops the wall, South crowns the Master." — Explorer: "Both the Ruby Key and the Dynamo Switch are required to enter the Apex."
-  - *Collectibles*: 2 bonus item(s) (Master Chronometer, Dynamo Core Crystal).
-* **Actionable Overhaul Directives (Target: Elevate from C to B-Tier $\ge 55%$)**:
+  - *Collectibles*: 1 bonus item(s) (Dynamo Core Crystal).
+* **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
   3. *Expand Spatial Contrast*: Break up uniform 1-tile corridor trenches with $3\times 3$ and $4\times 4$ courtyard plazas featuring distinctive architectural centerpieces.
