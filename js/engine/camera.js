@@ -4,6 +4,7 @@
  */
 
 import { VIEWPORT_ZOOM, getNextZoomStep, snapToClosestZoomStep } from '../core/constants.js';
+import { globalEvents } from '../core/events.js';
 
 export class Camera {
   /**
@@ -36,6 +37,44 @@ export class Camera {
     this.targetRotation = 0;
     this.baseRotation = 0; // Discrete base angle for rigid scene rendering
     this.rotationLerpSpeed = 0.22;
+
+    // Kinetic Screen Shake / Punch (BL-164, ADR-0047)
+    this.shakeDuration = 0;
+    this.shakeTotalDuration = 0;
+    this.shakeIntensity = 0;
+    this.shakeOffsetX = 0;
+    this.shakeOffsetY = 0;
+
+    this._initEventListeners();
+  }
+
+  /**
+   * Register global event listeners for kinetic impact / screen punch
+   * @private
+   */
+  _initEventListeners() {
+    if (typeof globalEvents === 'undefined' || !globalEvents.on) return;
+
+    this._onDoorUnlocked = () => this.shake(4.5, 0.22);
+    this._onLeverToggled = () => this.shake(3.0, 0.16);
+    this._onHazardHit = () => this.shake(7.0, 0.35);
+    this._onSecretFound = () => this.shake(3.5, 0.20);
+
+    globalEvents.on('door:unlocked', this._onDoorUnlocked);
+    globalEvents.on('lever:toggled', this._onLeverToggled);
+    globalEvents.on('player:hazard_hit', this._onHazardHit);
+    globalEvents.on('secret:found', this._onSecretFound);
+  }
+
+  /**
+   * Trigger kinetic screen shake / punch (BL-164, ADR-0047)
+   * @param {number} [intensity=4] Max pixel displacement
+   * @param {number} [duration=0.2] Duration in seconds
+   */
+  shake(intensity = 4, duration = 0.2) {
+    this.shakeIntensity = intensity;
+    this.shakeDuration = duration;
+    this.shakeTotalDuration = duration;
   }
 
   /**
@@ -231,6 +270,20 @@ export class Camera {
       this.baseRotation = this.targetRotation;
     }
 
+    // Update kinetic screen shake (BL-164)
+    if (this.shakeDuration > 0) {
+      this.shakeDuration -= dt;
+      if (this.shakeDuration <= 0) {
+        this.shakeDuration = 0;
+        this.shakeOffsetX = 0;
+        this.shakeOffsetY = 0;
+      } else {
+        const progress = this.shakeDuration / (this.shakeTotalDuration || 0.2);
+        this.shakeOffsetX = (Math.random() * 2 - 1) * this.shakeIntensity * progress;
+        this.shakeOffsetY = (Math.random() * 2 - 1) * this.shakeIntensity * progress;
+      }
+    }
+
     this.clampToBounds(mazeWidth, mazeHeight);
   }
 
@@ -293,8 +346,8 @@ export class Camera {
 
     if (angleDeg === 0) {
       return {
-        x: Math.round(dx + this.viewportWidth / 2),
-        y: Math.round(dy + this.viewportHeight / 2),
+        x: Math.round(dx + this.viewportWidth / 2 + this.shakeOffsetX),
+        y: Math.round(dy + this.viewportHeight / 2 + this.shakeOffsetY),
       };
     }
 
@@ -307,8 +360,8 @@ export class Camera {
     const ry = -dx * sin + dy * cos;
 
     return {
-      x: Math.round(rx + this.viewportWidth / 2),
-      y: Math.round(ry + this.viewportHeight / 2),
+      x: Math.round(rx + this.viewportWidth / 2 + this.shakeOffsetX),
+      y: Math.round(ry + this.viewportHeight / 2 + this.shakeOffsetY),
     };
   }
 

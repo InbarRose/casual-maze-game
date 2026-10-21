@@ -405,6 +405,9 @@ export class GameRenderer {
     // 2. Ground Floors
     this.renderAngledFloors(ctx, level, bounds, camera, theme);
 
+    // 2b. Dynamic Radial Floor Lighting & Paver Glow Pass (BL-164, ADR-0047)
+    BiomeSurfaceShaders.renderDynamicFloorLightingPass(ctx, level, bounds, camera, theme, entities, player, tileSize, this.exitPulseTimer || 0);
+
     // 3. Spawn Entrance & Exit Markers
     if (level.spawn) this.renderSpawnEntrance(ctx, level, camera, theme, fog);
     if (level.exit) this.renderExit(ctx, level, camera, theme, fog);
