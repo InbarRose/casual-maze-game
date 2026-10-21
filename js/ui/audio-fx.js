@@ -391,20 +391,35 @@ class SoundFXEngine {
   }
 
   /**
-   * Footstep acoustic feedback with subtle pitch jitter (±3%) to eliminate ear fatigue (BL-35)
+   * Footstep acoustic feedback with terrain timbre and pitch jitter (BL-35, BL-164)
+   * @param {string} [terrain='stone'] Floor type ('stone', 'wood', 'water', 'carpet')
    */
-  playFootstep() {
-    const jitter = 1 + (Math.random() * 0.06 - 0.03); // [0.97, 1.03]
-    const baseFreq = 95 * jitter;
-    const endFreq = 45 * jitter;
-    this._playTone({ freq: baseFreq, freqEnd: endFreq, type: 'triangle', duration: 0.045, gain: 0.04 });
+  playFootstep(terrain = 'stone') {
+    const jitter = 1 + (Math.random() * 0.08 - 0.04);
+    if (terrain === 'wood' || terrain === 'bridge') {
+      // Hollow resonant wood tap
+      const baseFreq = 135 * jitter;
+      const endFreq = 65 * jitter;
+      this._playTone({ freq: baseFreq, freqEnd: endFreq, type: 'triangle', duration: 0.04, gain: 0.045 });
+    } else if (terrain === 'water' || terrain === 'flume') {
+      // Gentle wet splash transient
+      const baseFreq = 260 * jitter;
+      const endFreq = 110 * jitter;
+      this._playTone({ freq: baseFreq, freqEnd: endFreq, type: 'sine', duration: 0.048, gain: 0.038 });
+    } else {
+      // Crisp stone transient
+      const baseFreq = 95 * jitter;
+      const endFreq = 45 * jitter;
+      this._playTone({ freq: baseFreq, freqEnd: endFreq, type: 'triangle', duration: 0.045, gain: 0.04 });
+    }
   }
 
   /**
    * Alias for player movement footstep
+   * @param {string} [terrain='stone']
    */
-  playMove() {
-    this.playFootstep();
+  playMove(terrain = 'stone') {
+    this.playFootstep(terrain);
   }
 
   /**
@@ -884,6 +899,7 @@ class SoundFXEngine {
     globalEvents.on('door:unlocked', () => this.playDoorUnlock());
     globalEvents.on('lever:toggled', (e) => this.playLeverToggle(e?.state));
     globalEvents.on('hazard:hit', () => this.playHazardHit());
+    globalEvents.on('player:step', (e) => this.playFootstep(e?.terrain || 'stone'));
     globalEvents.on('checkpoint:activated', () => this.playCheckpoint());
     globalEvents.on('player:elevation_changed', (e) => this.playElevationChange(e?.ascending));
     globalEvents.on('sound:toggled', (e) => this.setMuted(e?.muted));

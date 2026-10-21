@@ -402,4 +402,137 @@ export class BiomeSurfaceShaders {
     ctx.fillRect(ux - tileSize * 0.06, uy - tileSize * 0.15, tileSize * 0.12, tileSize * 0.04);
     ctx.restore();
   }
+
+  /**
+   * Render dynamic radial lighting falloff, torch glows, and surface reflections
+   * directly onto ground floor pavers (BL-164, ADR-0047).
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {object} level
+   * @param {object} bounds
+   * @param {object} camera
+   * @param {object} theme
+   * @param {Array<object>} entities
+   * @param {object|null} player
+   * @param {number} tileSize
+   * @param {number} exitPulseTimer
+   */
+  static renderDynamicFloorLightingPass(ctx, level, bounds, camera, theme, entities = [], player = null, tileSize = 32, exitPulseTimer = 0) {
+    if (!ctx || !level || !camera) return;
+    if (typeof ctx.createRadialGradient !== 'function') return;
+
+    ctx.save();
+
+    // 1. Placed Wall Torches, Lanterns & Fire Hazards
+    if (entities && entities.length > 0) {
+      for (const ent of entities) {
+        const isTorch = (ent.type === 'wall_decor' && (ent.decorType === 'torch' || ent.decorType === 'lantern')) ||
+                        (ent.type === 'collectible' && ent.itemId === 'torch') ||
+                        (ent.type === 'fire' || ent.type === 'flame_vent' || ent.type === 'timed_hazard');
+        if (!isTorch) continue;
+
+        const ex = Math.round(ent.x);
+        const ey = Math.round(ent.y);
+        if (bounds && (ex < bounds.startCol - 2 || ex > bounds.endCol + 2 || ey < bounds.startRow - 2 || ey > bounds.endRow + 2)) continue;
+
+        const screen = camera.worldToScreen(ent.x * tileSize + tileSize / 2, ent.y * tileSize + tileSize / 2, true);
+        const seed = (ex * 19 + ey * 37);
+        const flicker = 0.92 + Math.sin(exitPulseTimer * 3.5 + seed) * 0.08;
+        const radius = tileSize * 2.6 * flicker;
+
+        const grad = ctx.createRadialGradient(screen.x, screen.y, tileSize * 0.15, screen.x, screen.y, radius);
+        if (ent.type === 'flame_vent' || ent.type === 'fire') {
+          grad.addColorStop(0, 'rgba(239, 68, 68, 0.40)');
+          grad.addColorStop(0.4, 'rgba(249, 115, 22, 0.18)');
+          grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+        } else {
+          grad.addColorStop(0, 'rgba(254, 215, 170, 0.38)');
+          grad.addColorStop(0.35, 'rgba(251, 146, 60, 0.20)');
+          grad.addColorStop(0.75, 'rgba(249, 115, 22, 0.06)');
+          grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+        }
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(screen.x, screen.y, radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    // 2. Wall Sconces on Ground Wall Faces
+    if (level.layers && level.layers.ground && bounds) {
+      const ground = level.layers.ground;
+      for (let y = bounds.startRow; y <= bounds.endRow; y++) {
+        for (let x = bounds.startCol; x <= bounds.endCol; x++) {
+          if (ground[y]?.[x] !== TILES.WALL) continue;
+          const isSconce = ((x * 19 + y * 29) % 23 === 0);
+          if (!isSconce) continue;
+
+          // Check if there is walkable floor adjacent to receive light
+          const hasFloorNearby = ground[y + 1]?.[x] !== TILES.WALL || ground[y - 1]?.[x] !== TILES.WALL;
+          if (!hasFloorNearby) continue;
+
+          const screen = camera.worldToScreen(x * tileSize + tileSize / 2, (y + 0.6) * tileSize, true);
+          const flicker = 0.91 + Math.sin(exitPulseTimer * 2.8 + x + y) * 0.09;
+          const radius = tileSize * 2.1 * flicker;
+
+          const grad = ctx.createRadialGradient(screen.x, screen.y, tileSize * 0.1, screen.x, screen.y, radius);
+          grad.addColorStop(0, 'rgba(254, 215, 170, 0.30)');
+          grad.addColorStop(0.4, 'rgba(251, 146, 60, 0.14)');
+          grad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+
+          ctx.fillStyle = grad;
+          ctx.beginPath();
+          ctx.arc(screen.x, screen.y, radius, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+    }
+
+    // 3. Explorer Footprint Ambient Illumination
+    if (player && typeof player.worldX === 'number' && typeof player.worldY === 'number') {
+      const playerScreen = camera.worldToScreen(player.worldX, player.worldY, true);
+      const hasTorch = typeof player.hasTorch === 'function' && player.hasTorch();
+      const radius = hasTorch ? tileSize * 3.4 : tileSize * 2.2;
+      const flicker = 0.95 + Math.sin(exitPulseTimer * 2.6) * 0.05;
+
+      const pGrad = ctx.createRadialGradient(playerScreen.x, playerScreen.y, tileSize * 0.15, playerScreen.x, playerScreen.y, radius * flicker);
+      if (hasTorch) {
+        pGrad.addColorStop(0, 'rgba(254, 215, 170, 0.42)');
+        pGrad.addColorStop(0.4, 'rgba(251, 146, 60, 0.20)');
+        pGrad.addColorStop(1, 'rgba(249, 115, 22, 0)');
+      } else {
+        pGrad.addColorStop(0, 'rgba(254, 240, 138, 0.24)');
+        pGrad.addColorStop(0.5, 'rgba(254, 240, 138, 0.08)');
+        pGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+      }
+
+      ctx.fillStyle = pGrad;
+      ctx.beginPath();
+      ctx.arc(playerScreen.x, playerScreen.y, radius * flicker, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 4. Sanctum Exit Daylight Glow
+    if (level.exit && bounds) {
+      const ex = level.exit.x;
+      const ey = level.exit.y;
+      if (ex >= bounds.startCol - 2 && ex <= bounds.endCol + 2 && ey >= bounds.startRow - 2 && ey <= bounds.endRow + 2) {
+        const exitScreen = camera.worldToScreen(ex * tileSize + tileSize / 2, ey * tileSize + tileSize / 2, true);
+        const pulse = 0.92 + Math.sin(exitPulseTimer * 2.0) * 0.08;
+        const eRadius = tileSize * 2.8 * pulse;
+
+        const exitGrad = ctx.createRadialGradient(exitScreen.x, exitScreen.y, tileSize * 0.2, exitScreen.x, exitScreen.y, eRadius);
+        exitGrad.addColorStop(0, 'rgba(254, 240, 138, 0.38)');
+        exitGrad.addColorStop(0.45, 'rgba(251, 191, 36, 0.18)');
+        exitGrad.addColorStop(1, 'rgba(251, 191, 36, 0)');
+
+        ctx.fillStyle = exitGrad;
+        ctx.beginPath();
+        ctx.arc(exitScreen.x, exitScreen.y, eRadius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    ctx.restore();
+  }
 }

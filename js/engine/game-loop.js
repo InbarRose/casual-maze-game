@@ -1904,6 +1904,18 @@ export class GameLoop {
       }
 
       this.player.startMove(targetX, targetY, check.nextElevation);
+
+      // Terrain-aware footstep audio event (BL-164, ADR-0047)
+      let terrain = 'stone';
+      const groundTile = this.level?.layers?.ground?.[targetY]?.[targetX];
+      const overheadTile = this.level?.layers?.overhead?.[targetY]?.[targetX];
+      if (check.nextElevation > 0 || groundTile === TILES.BRIDGE_EW || groundTile === TILES.BRIDGE_NS || overheadTile === TILES.BRIDGE_EW || overheadTile === TILES.BRIDGE_NS || overheadTile === TILES.PLATFORM) {
+        terrain = 'wood';
+      } else if (this.level?.config?.theme === 'aqueduct') {
+        terrain = 'water';
+      }
+      globalEvents.emit('player:step', { x: targetX, y: targetY, elevation: check.nextElevation, terrain });
+
       return true;
     } else if (check.reason === 'door_locked' && check.doorToUnlock) {
       const now = performance.now();
