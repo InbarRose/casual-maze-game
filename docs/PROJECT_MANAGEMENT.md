@@ -143,6 +143,16 @@ This document tracks project milestones, current release status, active developm
   - Reconstruct [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) analogous to the comprehensive component scoring register ([`docs/COMPONENT_SCORING_REGISTER.md`](COMPONENT_SCORING_REGISTER.md)), featuring the Master Quality League Table and exhaustive, scrutinized scorecards (with sub-criteria ratings, game design critiques, visual polish analyses, scrutinized gaps & deductions, and enhancement directives) for all 53 platform levels.
   - Implement automated test suite `tests/unit/levels/level-scoring-framework.test.mjs` validating all 53 scorecards, automated metric assertions, and zero regressions.
 
+- [x] **Ground-Truth Empirical Level Scoring Rubric & Sub-50% Reality Recalibration (BL-162, ADR-0046)**:
+  - Overhaul [`docs/LEVEL_AUDIT_RUBRIC.md`](LEVEL_AUDIT_RUBRIC.md) to **Rubric v5.0.0**, replacing coarse grade bands with explicit, concrete behavioral descriptions for every score column 1 through 10 across all 24 criteria under the 8 Expert Chairs.
+  - Anchor the scale objectively: **Column 5 = Minimum Shippable Product (MSP)** (functional web game, zero crashes, but basic, linear chore, flat decals); **Column 10 = AAA Best-In-Class Benchmark** (Portal 2, Zelda dungeons, Monument Valley); current platform reality = **Columns 3–5** with a few notable areas reaching 6.
+  - Recalibrate all 53 scorecards in [`docs/LEVEL_SCORING_REGISTER.md`](LEVEL_SCORING_REGISTER.md) to judge actual gameplay experience in practice (penalizing linear keyhole fetch chores and flat decal boxes) rather than theoretical JSON attributes.
+  - Enforce an unsparing **sub-50% reality ceiling** across all levels (scores averaging 25–45 / 80 pts, 31%–49%), producing clear, prioritized, actionable gap directives for genuine game design and visual overhauls.
+
+- [x] **Master Game Design Philosophy Expansion (v2.0.0) & 7-Phase Methodical Overhaul Framework (BL-163, ADR-0047)**:
+  - Expand [`docs/LEVEL_DESIGN_PHILOSOPHY.md`](LEVEL_DESIGN_PHILOSOPHY.md) to **Version 2.0.0**, integrating the 8-Chair criteria into authoritative game design law: eradicating linear key fetch chores, banishing flat static decal placeholders, establishing spatial volume contrast (courtyard plazas vs winding corridors), requiring genuine 3D verticality, and implementing sensory juice.
+  - Formulate the **7-Phase Methodical Level Overhaul Master Plan**, establishing clear milestones, technical prerequisites, and target quality benchmarks (elevating from 30–48% prototype status to 60–75%+ commercial indie standard) while preserving the artistic vision and level identity.
+
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).
