@@ -4,7 +4,26 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Current Milestone: `v1.29.0` (Completed & Verified)
+### Active Milestone: `v1.30.0` — Architect's Codex, Diegetic Wall Art & Visual Diversity (Active Development)
+
+- [ ] **The Architect's Codex & Collectible Journal System (BL-176, ADR-0050)**:
+  - Overhaul signposts into diegetic collectable folios resting on carved stone pedestals, reading lecterns, or wall niches.
+  - Implement pick-up and collection behavior: particle flourish, chime, and coordinate logging `(X, Y, Z)`.
+  - Extend `StorageManager` with persistent codex schema (`casual_maze_architect_codex`) tracking all discovered folios with coordinates, timestamp, and step counts.
+  - Construct `ArchitectCodexModal` (accessible via hotkey `J`, topbar 📖, and Profile Modal) with illuminated parchment book layout.
+  - Implement Chapter Archivist achievements and profile badges in `ProfileModal`.
+
+- [ ] **Separation of Clues into Diegetic Wall Inscriptions & Bas-Relief Art (BL-177, ADR-0051)**:
+  - Convert all mechanical puzzle clues, directional signs, and secret wall hints across levels into wall-mounted art (`wall_decor`: stone bas-reliefs, frescoes, tapestries, bronze rune plates).
+  - Enhance wall decor inspection prompts, visual glyphs, and Activity Feed integration.
+
+- [ ] **Visual Diversity & Multi-Variant Biome Art Overhaul (BL-178, ADR-0052)**:
+  - Implement 3–4 distinct floor paving styles per biome (cobblestones, flagstone mosaics, cracked slabs, geometric medallions).
+  - Implement relief wall variants with deterministic spatial hashing.
+
+---
+
+### Previous Milestone: `v1.29.0` (Completed & Verified)
 
 - [x] **Dynamic Campaign Upper Bound & Victory Progression (BL-145, ADR-0038)**:
   - Replaced hardcoded level bounds (`< 32`) in `maze.html` and `js/ui/profile-modal.js` with dynamic evaluations against `CAMPAIGN_LEVELS.length`.
