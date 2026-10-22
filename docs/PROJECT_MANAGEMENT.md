@@ -36,8 +36,10 @@ This document tracks project milestones, current release status, active developm
   - Stone lecterns with coordinate tracking `(X, Y, Z)` and diegetic wall carvings/runic plates for hints and secret rooms.
   - Verified 100% zero-bypass gating solvability and calibrated par budgets across all 4 stages.
 
-- [ ] **Chapter 4 Rigor & Astral Teleporters Overhaul (Levels 13–16) (BL-181, ADR-0055)**:
-  - Redesign Levels 13–16 ("The First Rift", "Twinned Portals", "Dimensional Warp", "The Astral Nexus"): 1-tile winding astral labyrinths, $\ge 70\%$ corridor inertia, 0 dead spaces $\ge 4\times 4$, spatial teleporter networks, non-Euclidean shortcuts, anti-loop gating, North wall portals, and lectern folios.
+- [x] **Chapter 4 Rigor & Astral Teleporters Overhaul (Levels 13–16) (BL-181, ADR-0055)**:
+  - Redesign Levels 13–16 ("The First Rift", "Twinned Portals", "Dimensional Warp", "The Astral Nexus"): 1-tile winding astral labyrinths, $\ge 70\%$ corridor inertia (79%–84%), 0 dead spaces $\ge 4\times 4$, spatial teleporter networks, non-Euclidean shortcuts, anti-loop gating, North wall portals, and lectern folios. ([PR #125](https://github.com/InbarRose/casual-maze-game/pull/125))
+
+- [ ] **Chapter 5 Rigor & Molten Gauntlet Overhaul (Levels 17–20) (BL-182, ADR-0056)**:
 
 ---
 

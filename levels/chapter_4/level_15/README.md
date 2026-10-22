@@ -3,11 +3,11 @@
 **Chapter**: Chapter 4  
 **Zone**: zone_4  
 **Dimensions**: 19 × 15  
-**Par Steps**: 30 | **Par Time**: 18s  
-**Theme**: cave  
+**Par Steps**: 65 | **Par Time**: 39s  
+**Theme**: temple  
 
 ## Narrative Lore & Overview
-A rift does not merely bend space—it ascends height. Warp directly onto the overhead bridge to traverse the high chasm.
+Architect's Journal: Dimensional warps can shift vertical planes as well as horizontal coordinates. Warping onto the upper astral walkway allows access to the Golden Horizon Key, opening the sanctum seal.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

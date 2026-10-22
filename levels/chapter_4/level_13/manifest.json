@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "cave"
+    "theme": "temple"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 12,
-    "y": 10,
+    "x": 13,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 17,
-  "parTime": 11,
-  "architectNote": "The amethyst rift warps reality itself. Step into the glowing circle to traverse the void.",
+  "parSteps": 51,
+  "parTime": 31,
+  "architectNote": "Architect's Journal: The astral rift folds physical coordinates, bridging disconnected sanctuaries instantly. Walk through the shimmering gate to cross the cosmic abyss.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
