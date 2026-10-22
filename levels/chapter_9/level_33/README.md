@@ -2,12 +2,12 @@
 
 **Chapter**: Chapter 9  
 **Zone**: zone_9  
-**Dimensions**: 17 × 17  
-**Par Steps**: 68 | **Par Time**: 36s  
+**Dimensions**: 19 × 17  
+**Par Steps**: 61 | **Par Time**: 37s  
 **Theme**: aqueduct  
 
 ## Narrative Lore & Overview
-Seek the bronze sluice key in the southern overflow flume while timing the pressure jets to unlock the central watergate.
+The great watergate seals the upper cisterns. Seek the bronze sluice key in the southern overflow flume while timing the pressure jets.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

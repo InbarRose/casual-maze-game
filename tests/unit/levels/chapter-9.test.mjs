@@ -39,8 +39,8 @@ describe('Levels > Chapter 9 The Sunken Aqueducts (BL-128)', () => {
   it('Level 33 (Ki): The Sluice Gate introduces aqueduct flumes and central watergate', () => {
     const sol = solveLevel(l33);
     assert(sol !== null, 'Level 33 must be solvable');
-    assertEqual(sol.length, 59, 'Optimal path is 59 steps');
-    assertEqual(l33.parSteps, Math.ceil(59 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 53, 'Optimal path is 53 steps');
+    assertEqual(l33.parSteps, Math.ceil(53 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without key
     const noKey = JSON.parse(JSON.stringify(l33));
@@ -54,8 +54,8 @@ describe('Levels > Chapter 9 The Sunken Aqueducts (BL-128)', () => {
   it('Level 34 (Shō): Submerged Crossings develops multi-elevation bridges over flooded canals', () => {
     const sol = solveLevel(l34);
     assert(sol !== null, 'Level 34 must be solvable');
-    assertEqual(sol.length, 49, 'Optimal path is 49 steps');
-    assertEqual(l34.parSteps, Math.ceil(49 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 63, 'Optimal path is 63 steps');
+    assertEqual(l34.parSteps, Math.ceil(63 * 1.15), 'Par steps calibrated with 15% margin');
 
     // 3D Bridge & Canal underpass tiles
     assertEqual(l34.layers.ground[5][8], TILES.BRIDGE_NS, 'Ground layer has BRIDGE_NS canal underpass');
@@ -74,8 +74,8 @@ describe('Levels > Chapter 9 The Sunken Aqueducts (BL-128)', () => {
   it('Level 35 (Ten): The Pressure Basin introduces timed hazards and secret chambers', () => {
     const sol = solveLevel(l35);
     assert(sol !== null, 'Level 35 must be solvable');
-    assertEqual(sol.length, 41, 'Optimal path is 41 steps');
-    assertEqual(l35.parSteps, Math.ceil(41 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 79, 'Optimal path is 79 steps');
+    assertEqual(l35.parSteps, Math.ceil(79 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Secret wall presence
     assertEqual(l35.layers.ground[15][1], TILES.SECRET_WALL, 'Ground layer has SECRET_WALL concealing relic');
@@ -93,8 +93,8 @@ describe('Levels > Chapter 9 The Sunken Aqueducts (BL-128)', () => {
   it('Level 36 (Ketsu): Grand Aqueduct Reservoir culimates in dual-key multi-layer progression', () => {
     const sol = solveLevel(l36);
     assert(sol !== null, 'Level 36 must be solvable');
-    assertEqual(sol.length, 57, 'Optimal path is 57 steps');
-    assertEqual(l36.parSteps, Math.ceil(57 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 107, 'Optimal path is 107 steps');
+    assertEqual(l36.parSteps, Math.ceil(107 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Requires both keys (cyan and amethyst)
     const noCyan = JSON.parse(JSON.stringify(l36));

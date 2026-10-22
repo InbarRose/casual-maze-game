@@ -19,25 +19,26 @@
     "viewPerspective": "angled"
   },
   "spawn": {
-    "x": 1,
+    "x": 3,
     "y": 1,
     "elevation": 0,
     "style": "wall_doorway",
     "wallDirection": "north"
   },
   "exit": {
-    "x": 19,
-    "y": 19,
+    "x": 17,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "label": "Grand Spillway"
+    "style": "wall_archway",
+    "label": "Grand Spillway",
+    "wallDirection": "north"
   },
-  "parSteps": 66,
-  "parTime": 35,
-  "architectNote": "The grand culmination of the Sunken Aqueducts. Coordinate keys across flooded canals and elevated piers to breach the Grand Spillway.",
+  "parSteps": 124,
+  "parTime": 75,
+  "architectNote": "The grand reservoir requires dual authorization. Claim the cyan terrace key first, then delve into the lower cisterns for the amethyst seal.",
   "help": {
     "title": "Level 36: Grand Aqueduct Reservoir",
-    "message": "Two ancient gates lock the Spillway. Traverse both the submerged canals and high bridges to gather the required keys."
+    "message": "Unlock the cyan terrace gate to access the lower cisterns, then locate the amethyst key to open the grand spillway."
   },
   "package": {
     "layers": "./layers.json",
