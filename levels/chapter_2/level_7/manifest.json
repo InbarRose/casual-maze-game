@@ -18,22 +18,22 @@
     "theme": "jungle"
   },
   "spawn": {
-    "x": 2,
-    "y": 5,
+    "x": 1,
+    "y": 1,
     "elevation": 0,
     "style": "wall_doorway",
     "wallDirection": "north"
   },
   "exit": {
-    "x": 8,
+    "x": 15,
     "y": 1,
     "elevation": 0,
     "style": "wall_archway",
     "wallDirection": "north"
   },
-  "parSteps": 45,
-  "parTime": 25,
-  "architectNote": "Architect's Journal: The Sunken Chasm weaves two perpendicular viaducts across the chasm rift. Navigate the lower canals beneath the east-west bridge, then ascend to claim the azure keystone atop the north-south trestle.",
+  "parSteps": 59,
+  "parTime": 36,
+  "architectNote": "Architect's Journal: The chasm deepens with every league. Here, ancient engineers elevated the stone viaduct over subterranean water conduits. Tread high to grasp the emerald sigil.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

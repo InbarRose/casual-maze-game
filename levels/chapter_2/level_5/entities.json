@@ -3,25 +3,43 @@
     "id": "sign_arch_5",
     "type": "signpost",
     "title": "Architect's Note #5",
-    "x": 3,
+    "style": "lectern_stone",
+    "chapter": "chapter_2",
+    "levelId": "5",
+    "x": 1,
     "y": 11,
+    "z": 0,
     "elevation": 0,
+    "coordString": "(1, 11, 0)",
     "text": "Architect's Journal: Ascend the southern ramp to tread upon the ancient canopy bridge deck. The jungle key is suspended at high elevation; below, the underpass canal flows unimpeded toward the northern gate."
   },
   {
     "id": "inscr_canopy_5",
     "type": "wall_decor",
     "decorType": "carving",
+    "facing": "west",
     "text": "Two tiers of path weave through the trees: walk below through water, or climb above the mist.",
-    "playerDialogue": "The ramp will carry me directly to the bridge deck.",
+    "playerDialogue": "The southern ramp will carry me directly onto the high canopy deck.",
     "x": 2,
-    "y": 10,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "inscr_secret_5",
+    "type": "wall_decor",
+    "decorType": "runic_plate",
+    "facing": "north",
+    "text": "ᚲᛁᛈᚺ Behind moss-choked mortar lies the emerald tears of the first grove.",
+    "playerDialogue": "A hollow wall resonates nearby to the east.",
+    "x": 2,
+    "y": 11,
     "elevation": 0
   },
   {
     "id": "key_jungle_5",
     "type": "key",
     "color": "#34d399",
+    "keyId": "key_jungle_5",
     "x": 7,
     "y": 6,
     "z": 1,
@@ -32,49 +50,37 @@
     "type": "door",
     "color": "#34d399",
     "requiresKey": "key_jungle_5",
-    "x": 12,
+    "x": 13,
     "y": 3,
     "elevation": 0
   },
   {
     "id": "secret_gem_5",
     "type": "collectible",
+    "itemId": "gem_peridot",
     "name": "Canopy Peridot",
     "points": 250,
-    "x": 2,
-    "y": 6,
+    "x": 4,
+    "y": 11,
+    "z": 0,
     "elevation": 0
   },
   {
     "id": "torch_ch2_5_spawn",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 1,
-    "y": 10,
+    "facing": "north",
+    "x": 0,
+    "y": 1,
     "elevation": 0
   },
   {
-    "id": "torch_ch2_5_ramp",
+    "id": "torch_ch2_5_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 6,
-    "y": 9,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch2_5_bridge",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 6,
-    "y": 6,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch2_5_gate",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 11,
-    "y": 3,
+    "facing": "north",
+    "x": 14,
+    "y": 1,
     "elevation": 0
   }
 ]

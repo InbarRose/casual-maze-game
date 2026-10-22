@@ -18,22 +18,22 @@
     "theme": "jungle"
   },
   "spawn": {
-    "x": 2,
-    "y": 7,
+    "x": 1,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 15,
-    "y": 2,
+    "y": 1,
     "elevation": 0,
     "style": "wall_archway",
     "wallDirection": "north"
   },
-  "parSteps": 48,
-  "parTime": 27,
-  "architectNote": "Architect's Journal: Dual traversal is demanded here. First, brave the low underpass tunnel beneath the canopy viaduct to claim the amber key in the lower glen. Only then will the southern ramp unlock, granting access to the high bridge deck.",
+  "parSteps": 50,
+  "parTime": 30,
+  "architectNote": "Architect's Journal: Twin trestles span the emerald mist. The lower underpass canal unlocks the western mechanism, whilst the upper eastern crossing delivers the key to the sanctuary door.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
