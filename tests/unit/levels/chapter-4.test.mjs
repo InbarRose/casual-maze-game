@@ -37,8 +37,8 @@ describe('Levels > Chapter 4 Astral Rifts & Teleporters', () => {
   it('Level 13 (Ki): The First Rift introduces spatial warping between disconnected halls', () => {
     const sol = solveLevel(l13);
     assert(sol !== null, 'Level 13 must be solvable');
-    assertEqual(sol.length, 14, 'Optimal path is 14 steps');
-    assertEqual(l13.parSteps, Math.ceil(14 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 44, 'Optimal path is 44 steps');
+    assertEqual(l13.parSteps, Math.ceil(44 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without teleporter
     const bypass = solveLevel(l13, { allowTeleporters: false });
@@ -48,8 +48,8 @@ describe('Levels > Chapter 4 Astral Rifts & Teleporters', () => {
   it('Level 14 (Shō): Twinned Portals develops paired Alpha/Beta spires with return loop', () => {
     const sol = solveLevel(l14);
     assert(sol !== null, 'Level 14 must be solvable');
-    assertEqual(sol.length, 37, 'Optimal path is 37 steps');
-    assertEqual(l14.parSteps, Math.ceil(37 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 60, 'Optimal path is 60 steps');
+    assertEqual(l14.parSteps, Math.ceil(60 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without teleporters
     assertEqual(solveLevel(l14, { allowTeleporters: false }), null, 'Level 14 requires teleporters to cross spires');
@@ -66,8 +66,8 @@ describe('Levels > Chapter 4 Astral Rifts & Teleporters', () => {
   it('Level 15 (Ten): Dimensional Warp twists mechanics with elevation-shifting rifts', () => {
     const sol = solveLevel(l15);
     assert(sol !== null, 'Level 15 must be solvable');
-    assertEqual(sol.length, 26, 'Optimal path is 26 steps');
-    assertEqual(l15.parSteps, Math.ceil(26 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 56, 'Optimal path is 56 steps');
+    assertEqual(l15.parSteps, Math.ceil(56 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without teleporter
     assertEqual(solveLevel(l15, { allowTeleporters: false }), null, 'Level 15 requires elevation warp');
@@ -79,8 +79,8 @@ describe('Levels > Chapter 4 Astral Rifts & Teleporters', () => {
   it('Level 16 (Ketsu): The Astral Nexus synthesizes multi-realm rifts and sequential seals', () => {
     const sol = solveLevel(l16);
     assert(sol !== null, 'Level 16 must be solvable');
-    assertEqual(sol.length, 33, 'Optimal path is 33 steps');
-    assertEqual(l16.parSteps, Math.ceil(33 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 46, 'Optimal path is 46 steps');
+    assertEqual(l16.parSteps, Math.ceil(46 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without teleporters
     assertEqual(solveLevel(l16, { allowTeleporters: false }), null, 'Level 16 requires teleporters');

@@ -3,11 +3,11 @@
 **Chapter**: Chapter 4  
 **Zone**: zone_4  
 **Dimensions**: 15 × 13  
-**Par Steps**: 17 | **Par Time**: 11s  
-**Theme**: cave  
+**Par Steps**: 51 | **Par Time**: 31s  
+**Theme**: temple  
 
 ## Narrative Lore & Overview
-The amethyst rift warps reality itself. Step into the glowing circle to traverse the void.
+Architect's Journal: The astral rift folds physical coordinates, bridging disconnected sanctuaries instantly. Walk through the shimmering gate to cross the cosmic abyss.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

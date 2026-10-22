@@ -3,11 +3,11 @@
 **Chapter**: Chapter 4  
 **Zone**: zone_4  
 **Dimensions**: 19 × 19  
-**Par Steps**: 38 | **Par Time**: 23s  
-**Theme**: cave  
+**Par Steps**: 53 | **Par Time**: 32s  
+**Theme**: temple  
 
 ## Narrative Lore & Overview
-Four cosmic realms converge at the Astral Nexus. Journey through the planetary rifts, assemble the colored keystones, and breach the Star Core.
+Architect's Journal: At the core of the cosmos lies the Astral Nexus. Its threefold rifts lead into opposing celestial observatories; only with both the Ruby and Sapphire astral keys can the northern apex gates be unsealed.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

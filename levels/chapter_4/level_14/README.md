@@ -3,11 +3,11 @@
 **Chapter**: Chapter 4  
 **Zone**: zone_4  
 **Dimensions**: 17 × 15  
-**Par Steps**: 43 | **Par Time**: 26s  
-**Theme**: cave  
+**Par Steps**: 69 | **Par Time**: 42s  
+**Theme**: temple  
 
 ## Narrative Lore & Overview
-Twin spires mirror each other across the cosmic divide. Warp into Tower Beta to claim the Azure Key, then return through the mirror rift.
+Architect's Journal: Dual astral gateways form an interlocking relay. The Alpha gate leads deep into the high star observatory where the Azure Key is kept, while the Beta gate drops down into the exit bastion.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

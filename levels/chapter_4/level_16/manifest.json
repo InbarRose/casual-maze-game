@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "cave"
+    "theme": "temple"
   },
   "spawn": {
-    "x": 9,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 9,
-    "y": 17,
+    "x": 15,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 38,
-  "parTime": 23,
-  "architectNote": "Four cosmic realms converge at the Astral Nexus. Journey through the planetary rifts, assemble the colored keystones, and breach the Star Core.",
+  "parSteps": 53,
+  "parTime": 32,
+  "architectNote": "Architect's Journal: At the core of the cosmos lies the Astral Nexus. Its threefold rifts lead into opposing celestial observatories; only with both the Ruby and Sapphire astral keys can the northern apex gates be unsealed.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
