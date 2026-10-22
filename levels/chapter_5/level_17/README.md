@@ -3,11 +3,11 @@
 **Chapter**: Chapter 5  
 **Zone**: zone_5  
 **Dimensions**: 15 × 13  
-**Par Steps**: 32 | **Par Time**: 14s  
-**Theme**: lava  
+**Par Steps**: 36 | **Par Time**: 22s  
+**Theme**: volcano  
 
 ## Narrative Lore & Overview
-Feel the rhythmic pulse of the caldera. Time your movement through the basalt corridors and harbor in the alcoves.
+Architect's Journal: Periodic geysers of flame erupt from the caldera floor. Patience and spatial awareness reveal the safe pauses between molten bursts.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

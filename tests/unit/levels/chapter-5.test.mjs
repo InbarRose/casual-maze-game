@@ -37,8 +37,8 @@ describe('Levels > Chapter 5 Perilous Hazards & Obsidian Sentinels', () => {
   it('Level 17 (Ki): The Fire Vents introduces rhythmic magma vents and safe harbors', () => {
     const sol = solveLevel(l17);
     assert(sol !== null, 'Level 17 must be solvable');
-    assertEqual(sol.length, 27, 'Optimal path is 27 nodes (26 steps)');
-    assertEqual(l17.parSteps, Math.ceil(27 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 31, 'Optimal path is 31 steps');
+    assertEqual(l17.parSteps, Math.ceil(31 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Verify hazard entities present
     const hazards = l17.entities.filter(e => e.type === 'hazard');
@@ -48,8 +48,8 @@ describe('Levels > Chapter 5 Perilous Hazards & Obsidian Sentinels', () => {
   it('Level 18 (Shō): The Molten Sentinels develops moving sentinels and evasion loops', () => {
     const sol = solveLevel(l18);
     assert(sol !== null, 'Level 18 must be solvable');
-    assertEqual(sol.length, 30, 'Optimal path is 30 steps');
-    assertEqual(l18.parSteps, Math.ceil(30 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 71, 'Optimal path is 71 steps');
+    assertEqual(l18.parSteps, Math.ceil(71 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without door
     assertEqual(solveLevel(l18, { allowDoors: false }), null, 'Level 18 requires unlocking foundry gate');
@@ -67,8 +67,8 @@ describe('Levels > Chapter 5 Perilous Hazards & Obsidian Sentinels', () => {
   it('Level 19 (Ten): The Crucible Crossing twists mechanics with combined hazards and checkpoint', () => {
     const sol = solveLevel(l19);
     assert(sol !== null, 'Level 19 must be solvable');
-    assertEqual(sol.length, 25, 'Optimal path is 25 steps');
-    assertEqual(l19.parSteps, Math.ceil(25 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 75, 'Optimal path is 75 steps');
+    assertEqual(l19.parSteps, Math.ceil(75 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without door
     assertEqual(solveLevel(l19, { allowDoors: false }), null, 'Level 19 requires unlocking silver seal');
@@ -86,8 +86,8 @@ describe('Levels > Chapter 5 Perilous Hazards & Obsidian Sentinels', () => {
   it('Level 20 (Ketsu): The Caldera Gauntlet synthesizes dual sentinels, vents, and ruby gate', () => {
     const sol = solveLevel(l20);
     assert(sol !== null, 'Level 20 must be solvable');
-    assertEqual(sol.length, 31, 'Optimal path is 31 steps');
-    assertEqual(l20.parSteps, Math.ceil(31 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 67, 'Optimal path is 67 steps');
+    assertEqual(l20.parSteps, Math.ceil(67 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without ruby door
     assertEqual(solveLevel(l20, { allowDoors: false }), null, 'Level 20 requires unlocking apex crucible gate');

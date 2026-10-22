@@ -3,11 +3,11 @@
 **Chapter**: Chapter 5  
 **Zone**: zone_5  
 **Dimensions**: 17 × 15  
-**Par Steps**: 35 | **Par Time**: 21s  
-**Theme**: lava  
+**Par Steps**: 82 | **Par Time**: 50s  
+**Theme**: volcano  
 
 ## Narrative Lore & Overview
-Obsidian golems patrol the basalt halls in eternal vigilance. Lure them around the central pillars to slip past.
+Architect's Journal: Molten sentinels forged of obsidian walk steady patrols through the lower corridors. Evade their gaze using the side recesses, claim the Bronze Key, and unseal the foundry portcullis.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

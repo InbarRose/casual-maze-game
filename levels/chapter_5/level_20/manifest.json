@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "lava"
+    "theme": "volcano"
   },
   "spawn": {
-    "x": 2,
-    "y": 9,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 18,
-    "y": 9,
+    "x": 17,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 36,
-  "parTime": 22,
-  "architectNote": "Here in the heart of Mount Ignis, all trials converge: synchronized fire jets, dual sentinels, and the royal Caldera Key. Prove your mastery.",
+  "parSteps": 78,
+  "parTime": 47,
+  "architectNote": "Architect's Journal: At the heart of the volcano, the caldera gauntlet synthesizes all trials. Dual obsidian sentinels prowl the upper and lower terraces, while periodic flame jets roar across the central checkpoint hub. Claim the Ruby Key from the deepest trench to unseal the apex crucible.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

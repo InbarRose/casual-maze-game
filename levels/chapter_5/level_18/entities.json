@@ -2,12 +2,16 @@
   {
     "id": "sign_arch_18",
     "type": "signpost",
-    "x": 3,
-    "y": 2,
-    "z": 0,
     "title": "Architect's Note #18",
-    "text": "Obsidian golems patrol the basalt halls in eternal vigilance. Lure them around the central pillars to slip past.",
-    "style": "stone_tablet"
+    "style": "lectern_stone",
+    "chapter": "chapter_5",
+    "levelId": "18",
+    "x": 8,
+    "y": 7,
+    "z": 0,
+    "elevation": 0,
+    "coordString": "(8, 7, 0)",
+    "text": "Architect's Journal: Molten sentinels forged of obsidian walk steady patrols through the lower corridors. Evade their gaze using the side recesses, claim the Bronze Key, and unseal the foundry portcullis."
   },
   {
     "id": "patroller_18",
@@ -16,23 +20,13 @@
     "speed": 1,
     "waypoints": [
       {
-        "x": 6,
+        "x": 11,
+        "y": 2,
+        "z": 0
+      },
+      {
+        "x": 11,
         "y": 5,
-        "z": 0
-      },
-      {
-        "x": 10,
-        "y": 5,
-        "z": 0
-      },
-      {
-        "x": 10,
-        "y": 9,
-        "z": 0
-      },
-      {
-        "x": 6,
-        "y": 9,
         "z": 0
       }
     ]
@@ -40,10 +34,12 @@
   {
     "id": "key_bronze_18",
     "type": "key",
+    "keyId": "key_bronze_18",
     "color": "#f97316",
     "name": "Basalt Foundry Key",
-    "x": 14,
-    "y": 2,
+    "x": 8,
+    "y": 4,
+    "z": 0,
     "elevation": 0
   },
   {
@@ -51,69 +47,62 @@
     "type": "door",
     "requiresKey": "key_bronze_18",
     "color": "#f97316",
+    "doorColor": "bronze",
     "name": "Foundry Vault Gate",
-    "x": 13,
-    "y": 11,
+    "x": 15,
+    "y": 3,
+    "z": 0,
     "elevation": 0
   },
   {
-    "id": "wall_note_18",
+    "id": "inscr_sentinel_18",
     "type": "wall_decor",
     "decorType": "carving",
-    "text": "The sentinel traces a clockwise ring around the foundry pillars.",
-    "playerDialogue": "I need to slip behind the molten sentry to claim the bronze key.",
-    "x": 2,
-    "y": 1,
-    "elevation": 0
-  },
-  {
-    "id": "gem_obsidian_eye_18",
-    "type": "collectible",
-    "name": "Obsidian Sentinel Eye",
-    "points": 300,
-    "x": 1,
-    "y": 12,
-    "elevation": 0
-  },
-  {
-    "id": "secret_pyrite_18",
-    "type": "collectible",
-    "name": "Pyrite Cluster",
-    "points": 350,
-    "x": 14,
-    "y": 6,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch5_18_north_w",
-    "type": "wall_decor",
-    "decorType": "torch",
+    "facing": "north",
+    "text": "The obsidian guardian turns blind to those who wait in the shadows of the alcoves.",
+    "playerDialogue": "A carved relief showing an automaton sentinel pacing between glowing basalt pillars.",
     "x": 5,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "inscr_secret_18",
+    "type": "wall_decor",
+    "decorType": "runic_plate",
+    "facing": "north",
+    "text": "ᛟᛒᛋᛁᛞ Beneath the eastern trench lies the Obsidian Eye Quartz.",
+    "playerDialogue": "Runic inscription pointing toward a hidden treasure chamber along the eastern canal.",
+    "x": 11,
+    "y": 13,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gem_18",
+    "type": "collectible",
+    "itemId": "gem_obsidian_eye",
+    "name": "Obsidian Eye Quartz",
+    "points": 350,
+    "x": 11,
+    "y": 9,
+    "z": 0,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_18_spawn",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "facing": "north",
+    "x": 4,
     "y": 1,
     "elevation": 0
   },
   {
-    "id": "torch_ch5_18_north_e",
+    "id": "torch_ch5_18_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 13,
+    "facing": "north",
+    "x": 14,
     "y": 1,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch5_18_west",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 1,
-    "y": 7,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch5_18_pillar",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 9,
-    "y": 7,
     "elevation": 0
   }
 ]

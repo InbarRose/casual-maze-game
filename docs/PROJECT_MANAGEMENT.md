@@ -39,7 +39,10 @@ This document tracks project milestones, current release status, active developm
 - [x] **Chapter 4 Rigor & Astral Teleporters Overhaul (Levels 13–16) (BL-181, ADR-0055)**:
   - Redesign Levels 13–16 ("The First Rift", "Twinned Portals", "Dimensional Warp", "The Astral Nexus"): 1-tile winding astral labyrinths, $\ge 70\%$ corridor inertia (79%–84%), 0 dead spaces $\ge 4\times 4$, spatial teleporter networks, non-Euclidean shortcuts, anti-loop gating, North wall portals, and lectern folios. ([PR #125](https://github.com/InbarRose/casual-maze-game/pull/125))
 
-- [ ] **Chapter 5 Rigor & Molten Gauntlet Overhaul (Levels 17–20) (BL-182, ADR-0056)**:
+- [x] **Chapter 5 Rigor & Molten Gauntlet Overhaul (Levels 17–20) (BL-182, ADR-0056)**:
+  - Redesign Levels 17–20 ("The Fire Vents", "The Molten Sentinels", "The Crucible Crossing", "The Caldera Gauntlet"): 1-tile winding basalt caldera labyrinths, $\ge 70\%$ corridor inertia (81%–89%), 0 dead spaces $\ge 4\times 4$, rhythmic flame vents, obsidian patroller sentinels, mid-run checkpoint monoliths, North wall portals, and lectern folios. ([PR #126](https://github.com/InbarRose/casual-maze-game/pull/126))
+
+- [ ] **Chapter 6 Rigor & Arcane Enigmas Overhaul (Levels 21–24) (BL-183, ADR-0057)**:
 
 ---
 

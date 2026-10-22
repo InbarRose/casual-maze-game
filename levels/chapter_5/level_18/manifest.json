@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "lava"
+    "theme": "volcano"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 15,
-    "y": 12,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 35,
-  "parTime": 21,
-  "architectNote": "Obsidian golems patrol the basalt halls in eternal vigilance. Lure them around the central pillars to slip past.",
+  "parSteps": 82,
+  "parTime": 50,
+  "architectNote": "Architect's Journal: Molten sentinels forged of obsidian walk steady patrols through the lower corridors. Evade their gaze using the side recesses, claim the Bronze Key, and unseal the foundry portcullis.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

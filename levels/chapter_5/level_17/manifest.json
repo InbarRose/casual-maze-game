@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "lava"
+    "theme": "volcano"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 12,
-    "y": 10,
+    "x": 13,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 32,
-  "parTime": 14,
-  "architectNote": "Feel the rhythmic pulse of the caldera. Time your movement through the basalt corridors and harbor in the alcoves.",
+  "parSteps": 36,
+  "parTime": 22,
+  "architectNote": "Architect's Journal: Periodic geysers of flame erupt from the caldera floor. Patience and spatial awareness reveal the safe pauses between molten bursts.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
