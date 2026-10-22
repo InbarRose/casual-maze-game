@@ -866,6 +866,6 @@ export function runChapter4Tests() {
   console.log('\n✨ ALL Chapter 4 levels passed 100% of rigor and unit test assertions!');
 }
 
-if (import.meta.url === `file://${process.argv[1]}` || process.argv[1].endsWith('test-ch4-full-rigor.mjs')) {
+if (import.meta.url === `file://${process.argv[1]}` || (process.argv[1] && process.argv[1].endsWith('test-ch4-full-rigor.mjs'))) {
   runChapter4Tests();
 }

@@ -2,12 +2,16 @@
   {
     "id": "sign_arch_19",
     "type": "signpost",
-    "x": 3,
+    "title": "Architect's Note #19",
+    "style": "lectern_stone",
+    "chapter": "chapter_5",
+    "levelId": "19",
+    "x": 1,
     "y": 7,
     "z": 0,
-    "title": "Architect's Note #19",
-    "text": "The crucible combines searing flame jets with a vigilant sentinel. Activate the cool crystal beacon midway to secure your footing.",
-    "style": "stone_tablet"
+    "elevation": 0,
+    "coordString": "(1, 7, 0)",
+    "text": "Architect's Journal: A glowing beacon anchors the central crossing island. Align your stride with the guardian's rhythm, claim the Silver Key, and bypass the magma chutes."
   },
   {
     "id": "checkpoint_19",
@@ -26,8 +30,8 @@
     "interval": 3.5,
     "activeDuration": 1,
     "initialOffset": 0.5,
-    "x": 6,
-    "y": 7,
+    "x": 7,
+    "y": 5,
     "elevation": 0,
     "z": 0
   },
@@ -38,13 +42,13 @@
     "speed": 1,
     "waypoints": [
       {
-        "x": 6,
-        "y": 4,
+        "x": 11,
+        "y": 2,
         "z": 0
       },
       {
-        "x": 12,
-        "y": 4,
+        "x": 11,
+        "y": 5,
         "z": 0
       }
     ]
@@ -52,10 +56,12 @@
   {
     "id": "key_silver_19",
     "type": "key",
+    "keyId": "key_silver_19",
     "color": "#e2e8f0",
     "name": "Crucible Silver Key",
     "x": 9,
-    "y": 2,
+    "y": 3,
+    "z": 0,
     "elevation": 0
   },
   {
@@ -63,78 +69,62 @@
     "type": "door",
     "requiresKey": "key_silver_19",
     "color": "#e2e8f0",
+    "doorColor": "silver",
     "name": "Crucible Exit Gate",
-    "x": 16,
-    "y": 7,
+    "x": 17,
+    "y": 3,
+    "z": 0,
     "elevation": 0
   },
   {
-    "id": "wall_note_19",
+    "id": "inscr_crucible_19",
     "type": "wall_decor",
     "decorType": "carving",
-    "text": "The Glacial Beacon anchors weary travelers against the caldera heat.",
-    "playerDialogue": "Touching the beacon will save my progress through the gauntlet.",
-    "x": 8,
-    "y": 7,
+    "facing": "north",
+    "text": "The silver key rests above the flame chute. Rest at the beacon before braving the guardian's trench.",
+    "playerDialogue": "A carved relief illustrating safe harbor at the central monolith.",
+    "x": 5,
+    "y": 5,
     "elevation": 0
   },
   {
-    "id": "gem_crucible_ember_19",
-    "type": "collectible",
-    "name": "Crucible Flame Ember",
-    "points": 300,
-    "x": 2,
-    "y": 12,
-    "elevation": 0
-  },
-  {
-    "id": "gem_heart_basalt_19",
-    "type": "collectible",
-    "name": "Heart of Basalt",
-    "points": 350,
-    "x": 17,
-    "y": 2,
+    "id": "inscr_secret_19",
+    "type": "wall_decor",
+    "decorType": "runic_plate",
+    "facing": "north",
+    "text": "ᛏᛖᚨᚱ In the eastern lava alcove shines the Igneous Tear Gem.",
+    "playerDialogue": "Ancient runes pointing toward a hidden treasure chamber behind the eastern basalt wall.",
+    "x": 13,
+    "y": 13,
     "elevation": 0
   },
   {
     "id": "secret_igneous_tear_19",
     "type": "collectible",
-    "name": "Igneous Tear",
+    "itemId": "gem_igneous_tear",
+    "name": "Igneous Tear Gem",
     "points": 400,
-    "x": 9,
-    "y": 12,
+    "x": 13,
+    "y": 9,
+    "z": 0,
     "elevation": 0
   },
   {
-    "id": "torch_ch5_19_nw",
+    "id": "torch_ch5_19_spawn",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 1,
+    "facing": "north",
+    "x": 4,
     "y": 1,
     "elevation": 0
   },
   {
-    "id": "torch_ch5_19_ne",
+    "id": "torch_ch5_19_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 14,
+    "facing": "north",
+    "x": 16,
     "y": 1,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch5_19_mid_s",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 9,
-    "y": 8,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch5_19_se",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 14,
-    "y": 8,
     "elevation": 0
   }
 ]

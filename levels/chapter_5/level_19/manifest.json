@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "lava"
+    "theme": "volcano"
   },
   "spawn": {
-    "x": 2,
-    "y": 7,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 16,
-    "y": 7,
+    "x": 17,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 29,
-  "parTime": 18,
-  "architectNote": "The crucible combines searing flame jets with a vigilant sentinel. Activate the cool crystal beacon midway to secure your footing.",
+  "parSteps": 87,
+  "parTime": 53,
+  "architectNote": "Architect's Journal: A glowing beacon anchors the central crossing island. Align your stride with the guardian's rhythm, claim the Silver Key, and bypass the magma chutes.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

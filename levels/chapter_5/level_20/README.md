@@ -3,11 +3,11 @@
 **Chapter**: Chapter 5  
 **Zone**: zone_5  
 **Dimensions**: 21 × 19  
-**Par Steps**: 36 | **Par Time**: 22s  
-**Theme**: lava  
+**Par Steps**: 78 | **Par Time**: 47s  
+**Theme**: volcano  
 
 ## Narrative Lore & Overview
-Here in the heart of Mount Ignis, all trials converge: synchronized fire jets, dual sentinels, and the royal Caldera Key. Prove your mastery.
+Architect's Journal: At the heart of the volcano, the caldera gauntlet synthesizes all trials. Dual obsidian sentinels prowl the upper and lower terraces, while periodic flame jets roar across the central checkpoint hub. Claim the Ruby Key from the deepest trench to unseal the apex crucible.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.
