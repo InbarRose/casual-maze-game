@@ -76,7 +76,7 @@ describe('Levels > Ground-Truth Empirical Level Scoring Framework & Rubric v5.0.
     }
   });
 
-  it('verifies scoring register enforces sub-50% ceiling for unoverhauled levels and B-/B graduation for Phase 2, 3, 4 & 5 overhauled levels', () => {
+  it('verifies scoring register enforces sub-50% ceiling for unoverhauled levels and B-/B graduation for Phase 2, 3, 4, 5 & 6 overhauled levels', () => {
     const registerPath = path.join(rootDir, 'docs', 'LEVEL_SCORING_REGISTER.md');
     const content = fs.readFileSync(registerPath, 'utf8');
 
@@ -92,7 +92,9 @@ describe('Levels > Ground-Truth Empirical Level Scoring Framework & Rubric v5.0.
       '13', '14', '15', '16',
       '17', '18', '19', '20',
       '21', '22', '23', '24',
-      '25', '26', '27', '28'
+      '25', '26', '27', '28',
+      '29', '30', '31', '32',
+      '37', '38', '39', '40'
     ]);
 
     let maxOverhauledScore = 0;

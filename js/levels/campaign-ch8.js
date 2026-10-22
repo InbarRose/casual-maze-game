@@ -645,6 +645,38 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "x": 13,
         "y": 1,
         "elevation": 0
+      },
+      {
+        "id": "torch_29_nw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 4,
+        "y": 4,
+        "elevation": 0
+      },
+      {
+        "id": "torch_29_ne",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 10,
+        "y": 4,
+        "elevation": 0
+      },
+      {
+        "id": "torch_29_sw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 4,
+        "y": 10,
+        "elevation": 0
+      },
+      {
+        "id": "torch_29_se",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 10,
+        "y": 10,
+        "elevation": 0
       }
     ],
     "packageSource": "level_29"
@@ -1268,6 +1300,38 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "scoreValue": 350,
         "x": 1,
         "y": 13,
+        "elevation": 0
+      },
+      {
+        "id": "torch_30_nw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 3,
+        "elevation": 0
+      },
+      {
+        "id": "torch_30_ne",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 3,
+        "elevation": 0
+      },
+      {
+        "id": "torch_30_sw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "torch_30_se",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 11,
         "elevation": 0
       }
     ],
@@ -1917,6 +1981,38 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "scoreValue": 400,
         "x": 13,
         "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_31_entry",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 4,
+        "y": 3,
+        "elevation": 0
+      },
+      {
+        "id": "torch_31_nw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_31_ne",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 8,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_31_se",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 10,
+        "y": 11,
         "elevation": 0
       }
     ],
@@ -2698,6 +2794,38 @@ export const CAMPAIGN_CH8_LEVELS = Object.freeze([
         "scoreValue": 500,
         "x": 15,
         "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_32_nw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 4,
+        "y": 4,
+        "elevation": 0
+      },
+      {
+        "id": "torch_32_ne",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 12,
+        "y": 4,
+        "elevation": 0
+      },
+      {
+        "id": "torch_32_sw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 4,
+        "y": 12,
+        "elevation": 0
+      },
+      {
+        "id": "torch_32_se",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 12,
+        "y": 12,
         "elevation": 0
       }
     ],

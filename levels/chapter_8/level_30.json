@@ -618,6 +618,38 @@
       "x": 1,
       "y": 13,
       "elevation": 0
+    },
+    {
+      "id": "torch_30_nw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 5,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_30_ne",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 9,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_30_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 5,
+      "y": 9,
+      "elevation": 0
+    },
+    {
+      "id": "torch_30_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 9,
+      "y": 11,
+      "elevation": 0
     }
   ],
   "packageSource": "level_30"

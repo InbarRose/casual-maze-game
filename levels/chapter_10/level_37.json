@@ -1340,6 +1340,38 @@
       "x": 1,
       "y": 20,
       "elevation": 0
+    },
+    {
+      "id": "torch_37_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 1,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_37_nw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 6,
+      "y": 4,
+      "elevation": 0
+    },
+    {
+      "id": "torch_37_mid",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 14,
+      "y": 8,
+      "elevation": 0
+    },
+    {
+      "id": "torch_37_sanctum",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 20,
+      "y": 4,
+      "elevation": 0
     }
   ],
   "packageSource": "level_37"
