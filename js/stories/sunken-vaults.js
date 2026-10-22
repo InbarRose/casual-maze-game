@@ -491,6 +491,38 @@ export const SUNKEN_VAULTS_CHAPTER_1 = Object.freeze({
       "x": 5,
       "y": 9,
       "elevation": 0
+    },
+    {
+      "id": "torch_sv1_nw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 4,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv1_ne",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv1_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 2,
+      "y": 10,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv1_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 10,
+      "y": 10,
+      "elevation": 0
     }
   ],
   "packageSource": "story_sunken_vaults_1"
@@ -1104,6 +1136,38 @@ export const SUNKEN_VAULTS_CHAPTER_2 = Object.freeze({
       "scoreValue": 300,
       "x": 5,
       "y": 9,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv2_nw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv2_ne",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv2_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 12,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv2_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 12,
       "elevation": 0
     }
   ],
@@ -1876,6 +1940,38 @@ export const SUNKEN_VAULTS_CHAPTER_3 = Object.freeze({
       "color": "#0284c7",
       "x": 3,
       "y": 8,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv3_nw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv3_ne",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 13,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv3_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 14,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv3_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 13,
+      "y": 14,
       "elevation": 0
     }
   ],

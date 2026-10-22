@@ -487,6 +487,38 @@ const GUARDIANS_CHAPTER_1 = {
       "x": 7,
       "y": 9,
       "elevation": 0
+    },
+    {
+      "id": "torch_g1_w",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 2,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g1_e",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g1_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 8,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g1_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 7,
+      "y": 8,
+      "elevation": 0
     }
   ],
   "packageSource": "story_guardians_1"
@@ -897,6 +929,38 @@ const GUARDIANS_CHAPTER_2 = {
       "scoreValue": 200,
       "x": 3,
       "y": 7,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g2_w",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 2,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g2_e",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g2_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 4,
+      "y": 7,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g2_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 7,
+      "y": 8,
       "elevation": 0
     }
   ],
@@ -1585,6 +1649,38 @@ const GUARDIANS_CHAPTER_3 = {
       "x": 7,
       "y": 3,
       "elevation": 0
+    },
+    {
+      "id": "torch_g3_nw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g3_ne",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g3_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 13,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g3_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 13,
+      "elevation": 0
     }
   ],
   "packageSource": "story_guardians_3"
@@ -2106,6 +2202,38 @@ const CITADEL_CHAPTER_1 = {
       "color": "#fbbf24",
       "x": 11,
       "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "torch_citadel_w",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 5,
+      "elevation": 0
+    },
+    {
+      "id": "torch_citadel_e",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 9,
+      "y": 5,
+      "elevation": 0
+    },
+    {
+      "id": "torch_citadel_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 5,
+      "y": 5,
+      "elevation": 0
+    },
+    {
+      "id": "torch_citadel_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 7,
+      "y": 5,
       "elevation": 0
     }
   ],

@@ -487,6 +487,38 @@
       "x": 5,
       "y": 9,
       "elevation": 0
+    },
+    {
+      "id": "torch_sv1_nw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 4,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv1_ne",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv1_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 2,
+      "y": 10,
+      "elevation": 0
+    },
+    {
+      "id": "torch_sv1_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 10,
+      "y": 10,
+      "elevation": 0
     }
   ],
   "packageSource": "story_sunken_vaults_1"

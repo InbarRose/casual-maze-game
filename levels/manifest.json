@@ -794,11 +794,11 @@
       "width": 17,
       "height": 17
     },
-    "entityCount": 6,
+    "entityCount": 10,
     "hasMultiRoom": false,
     "exitCount": 1,
-    "hash": "6667ac446c1603f39b93731288f85df1bbe43e9bf57eb19d6198cd01a86abd0c",
-    "size": 9652
+    "hash": "2cb773e5ca01be32e20d6bee89365bdc5220736d3ae83b37e50f7a3d5cf333ab",
+    "size": 10236
   },
   {
     "id": "34",
@@ -815,11 +815,11 @@
       "width": 17,
       "height": 17
     },
-    "entityCount": 6,
+    "entityCount": 10,
     "hasMultiRoom": false,
     "exitCount": 1,
-    "hash": "3eec5df71834d230e20dd56d8487864b7375911c9e35a60ddf199b4f5770d044",
-    "size": 9603
+    "hash": "6f620d8087e237dc4d940a3c335cf62c25366581753eebd5f4fbc4461be58aef",
+    "size": 10187
   },
   {
     "id": "35",
@@ -836,11 +836,11 @@
       "width": 19,
       "height": 19
     },
-    "entityCount": 7,
+    "entityCount": 11,
     "hasMultiRoom": false,
     "exitCount": 1,
-    "hash": "803150ea20dc36639124653dfe5bd30dbeaabea03535398f6974c15139f7d9cf",
-    "size": 11547
+    "hash": "4397f655e5a60aa2a683749f304870ab3b7ac3aaff3d19a015d00e9ec177c26b",
+    "size": 12131
   },
   {
     "id": "36",
@@ -857,11 +857,11 @@
       "width": 21,
       "height": 21
     },
-    "entityCount": 9,
+    "entityCount": 13,
     "hasMultiRoom": false,
     "exitCount": 1,
-    "hash": "8d47093491bd82bf848bc319b2921a292e461a38dcf988aaf30563c3b3824ed1",
-    "size": 13761
+    "hash": "1d2a8c568756510921dd22a92a010377c9eb3e6445a49b3a611adfeac67eaf80",
+    "size": 14345
   },
   {
     "id": "37",
@@ -957,13 +957,13 @@
     "file": "levels/stories/story_guardians_1.json",
     "theme": "temple",
     "version": 1,
-    "hash": "d88af7cb11c3736442f6b823f8a226a3eaa480983e2cd582a5768b08488720bb",
-    "size": 6352,
+    "hash": "0b2910e0fb05f612d50357638dfd9d2bbaa9a30427fcffed2ee0da37792f4e44",
+    "size": 6930,
     "dimensions": {
       "width": 11,
       "height": 11
     },
-    "entityCount": 8,
+    "entityCount": 12,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -977,13 +977,13 @@
     "file": "levels/stories/story_guardians_2.json",
     "theme": "temple",
     "version": 1,
-    "hash": "b12f8e3e4cab03bade4336f797dca654c18db5da90b9818a38fcb048595fde16",
-    "size": 6337,
+    "hash": "7bb8bbaf86a53d1066cf195b5ee865e3a3d88aa47a5d6e76414ad4f44fc52bdb",
+    "size": 6915,
     "dimensions": {
       "width": 11,
       "height": 11
     },
-    "entityCount": 7,
+    "entityCount": 11,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -997,13 +997,13 @@
     "file": "levels/stories/story_guardians_3.json",
     "theme": "temple",
     "version": 1,
-    "hash": "3af8bf2591d7e8c765fb6ed2e7855f6d9e8a9b552b70bbc57866a2fa0e80dcd1",
-    "size": 10572,
+    "hash": "441f4be9847d809e532c03c2ef717ee844ed638b8eadf7c958068db6772d1004",
+    "size": 11156,
     "dimensions": {
       "width": 15,
       "height": 15
     },
-    "entityCount": 11,
+    "entityCount": 15,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -1017,13 +1017,13 @@
     "file": "levels/stories/story_citadel_1.json",
     "theme": "temple",
     "version": 1,
-    "hash": "9409e7b8eb2bd9fa72fa385d5f3bbab2e3aae758e414619ac0dca88b9d9177bd",
-    "size": 49960,
+    "hash": "7c48e2d545e70c959e5c947ac32b6d19d578a429f4e7c9c9e308d1d5b895ddc1",
+    "size": 50558,
     "dimensions": {
       "width": 13,
       "height": 13
     },
-    "entityCount": 4,
+    "entityCount": 8,
     "hasMultiRoom": true,
     "exitCount": 2
   },
@@ -1039,13 +1039,13 @@
     "parSteps": 26,
     "parTime": 15,
     "version": 1,
-    "hash": "de606ea9745aac52f7b7f7efb437511ea09dc1932d6a6b0b4ec498852d06c03d",
-    "size": 6691,
+    "hash": "1b6795fc1859015d81e8dda340747f5309ece1ef4d6fc9ef837afe9ac27f41d0",
+    "size": 7278,
     "dimensions": {
       "width": 13,
       "height": 13
     },
-    "entityCount": 5,
+    "entityCount": 9,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -1061,13 +1061,13 @@
     "parSteps": 30,
     "parTime": 18,
     "version": 1,
-    "hash": "159e6b1fc1a291dca0c7a1bd153bd1c60afaa734e3d746b589046431ea78102c",
-    "size": 8018,
+    "hash": "9d08f206c440ed954089235f9361ad854772e7a951ced7d948a33f4ce7b24cff",
+    "size": 8606,
     "dimensions": {
       "width": 15,
       "height": 15
     },
-    "entityCount": 5,
+    "entityCount": 9,
     "hasMultiRoom": false,
     "exitCount": 1
   },
@@ -1083,13 +1083,13 @@
     "parSteps": 67,
     "parTime": 40,
     "version": 1,
-    "hash": "59f038a0bc2547c3c4dd48763632ca0ef971ff93e2687683cc72fc0d3ad54502",
-    "size": 9998,
+    "hash": "52145de800afcbdb25a4db324ab6f2def48b596fe9f9b518644809f8c0ab789e",
+    "size": 10586,
     "dimensions": {
       "width": 17,
       "height": 17
     },
-    "entityCount": 7,
+    "entityCount": 11,
     "hasMultiRoom": false,
     "exitCount": 1
   }
