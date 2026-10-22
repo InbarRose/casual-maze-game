@@ -3,7 +3,7 @@
 **Chapter**: Chapter 10  
 **Zone**: zone_10  
 **Dimensions**: 25 × 25  
-**Par Steps**: 94 | **Par Time**: 49s  
+**Par Steps**: 94 | **Par Time**: 57s  
 **Theme**: prismatic  
 
 ## Narrative Lore & Overview

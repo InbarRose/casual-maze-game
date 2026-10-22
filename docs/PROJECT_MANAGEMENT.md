@@ -54,7 +54,8 @@ This document tracks project milestones, current release status, active developm
 - [x] **Chapter 9 Rigor & Grand Aqueduct Overhaul (Levels 33–36) (BL-186, ADR-0060)**:
   - Redesign Levels 33–36 ("The Sluice Gate", "Submerged Crossings", "The Pressure Basin", "Grand Aqueduct Reservoir"): 1-tile winding aqueduct labyrinths, $\ge 70\%$ corridor inertia (78%–81%), 0 dead spaces $\ge 4\times 4$, 3D multi-elevation bridges over flooded canals, timed water hazards, dual-key progression, North wall portals, and stone lecterns with coordinate tracking.
 
-- [ ] **Chapter 10 Rigor & Prismatic Apex Overhaul (Levels 37–40) (BL-186, ADR-0061)**:
+- [x] **Chapter 10 Rigor & Prismatic Apex Overhaul (Levels 37–40) (BL-186, ADR-0061)**:
+  - Redesign and solidify Levels 37–40 ("The Spectral Gate", "Concentric Trestles", "Harmonic Mirror Seals", "Heart of the Prism"): 1-tile winding prismatic labyrinths, $\ge 70\%$ corridor inertia (80%–90%), 0 dead spaces $\ge 4\times 4$, multi-elevation crystal trestles with $\ge 35$ elevated steps at $Z=1$, resonant harmonic mirror levers, 4-quadrant chromatic key progression (Ruby, Emerald, Sapphire, Apex), North wall doorway entrances, stone folio lecterns with coordinates $(X, Y, Z)$, and 100% zero-bypass gating solvability.
 
 ---
 

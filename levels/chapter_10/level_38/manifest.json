@@ -33,12 +33,13 @@
     "label": "Apex Altar"
   },
   "parSteps": 94,
-  "parTime": 49,
+  "parTime": 57,
   "architectNote": "Traverse the multi-elevation concentric trestles, toggle the battlement lever, and claim the keystone to enter the Apex Altar.",
   "help": {
     "title": "Level 38: Concentric Trestles",
     "message": "The inner sanctum is surrounded by concentric ring galleries. Cross the elevated trestle bridges to navigate between tiers."
   },
+  "packageSource": "level_38",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

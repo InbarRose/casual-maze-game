@@ -120,4 +120,14 @@ describe('Levels > Chapter 10 The Prismatic Labyrinth (BL-129)', () => {
     assertEqual(l40.dimensions.width, 29, 'Macro-maze width is 29');
     assertEqual(l40.dimensions.height, 29, 'Macro-maze height is 29');
   });
+
+  it('validates each Chapter 10 level contains an Architect Folio stone lectern with coordinate tracking (BL-176, BL-186)', () => {
+    for (const lvl of [l37, l38, l39, l40]) {
+      const sign = (lvl.entities || []).find(e => e.type === 'signpost' || e.type === 'architect_note');
+      assert(sign !== undefined, `Level ${lvl.id} contains an Architect Folio signpost`);
+      assertEqual(sign.style, 'lectern_stone', `Level ${lvl.id} folio uses lectern_stone style`);
+      assert(typeof sign.coordString === 'string' && sign.coordString.length > 0, `Level ${lvl.id} folio records coordinate string`);
+      assert(typeof (sign.text || sign.message) === 'string' && (sign.text || sign.message).length > 20, `Level ${lvl.id} folio has substantive lore`);
+    }
+  });
 });

@@ -34,12 +34,13 @@
     "wallDirection": "north"
   },
   "parSteps": 87,
-  "parTime": 45,
+  "parTime": 53,
   "architectNote": "The refracting crystal prisms cast elusive shadows. Locate the amber key, ascend the viaduct to toggle the refraction barrier, and unseal the spectral gate.",
   "help": {
     "title": "Level 37: The Spectral Gate",
     "message": "The way forward is locked by dual crystal seals and chromatic barriers. Use the elevated viaduct to reach the focal lever."
   },
+  "packageSource": "level_37",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
