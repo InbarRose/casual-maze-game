@@ -7,8 +7,8 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 17,
-    "height": 15
+    "width": 19,
+    "height": 17
   },
   "config": {
     "fogOfWar": false,
@@ -18,22 +18,22 @@
     "theme": "snow"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 14,
-    "y": 12,
+    "x": 17,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 37,
-  "parTime": 23,
-  "architectNote": "The icy ramparts bridge the frozen abyss. Ascend the wooden incline, traverse the high gallery, and ride the rift to the Azure Sigil.",
+  "parSteps": 74,
+  "parTime": 45,
+  "architectNote": "Architect's Journal: The icy ramparts bridge the frozen abyss. Ascend the wooden incline, traverse the high gallery, and ride the rift to the Azure Sigil.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

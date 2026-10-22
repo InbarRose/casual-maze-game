@@ -7,8 +7,8 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 19,
-    "height": 17
+    "width": 21,
+    "height": 19
   },
   "config": {
     "fogOfWar": false,
@@ -18,22 +18,22 @@
     "theme": "snow"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 15,
-    "y": 8,
+    "x": 19,
+    "y": 1,
     "elevation": 0,
     "style": "wall_archway",
     "wallDirection": "north"
   },
-  "parSteps": 30,
-  "parTime": 18,
-  "architectNote": "Align the stellar cipher to reach the high bridge. Step into the aerial vortex to breach the sealed inner vault.",
+  "parSteps": 164,
+  "parTime": 99,
+  "architectNote": "Architect's Journal: Beyond the cipher dial lies the aerial vortex. Ride the crystalline updraft across the frozen abyss to seize the Golden Citadel Key.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
