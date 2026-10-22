@@ -758,6 +758,7 @@
     {
       "id": "sign_ch1_4",
       "type": "signpost",
+      "style": "lectern_stone",
       "title": "Architect's Note #4",
       "x": 8,
       "y": 8,

@@ -11,6 +11,7 @@ import { EXPLORER_OUTFITS, CHARACTER_CUSTOMIZATION } from '../core/constants.js'
 import { CAMPAIGN_LEVELS } from '../levels/default-levels.js';
 import { Player } from '../entities/player.js';
 import { audioFX } from './audio-fx.js';
+import { architectCodexModal } from './architect-codex-modal.js';
 
 export class ProfileModal {
   constructor() {
@@ -149,9 +150,18 @@ export class ProfileModal {
               <div id="profile-stories-val" style="font-size: 1.6rem; font-weight: 800; color: var(--purple); margin-top: 0.2rem;">0</div>
             </div>
             <div class="stat-box" style="background: rgba(0, 0, 0, 0.25); padding: 0.75rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border-glass); text-align: center;">
-              <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Total Steps</div>
-              <div id="profile-steps-val" style="font-size: 1.6rem; font-weight: 800; color: var(--emerald); margin-top: 0.2rem;">0</div>
+              <div style="font-size: 0.75rem; color: var(--text-muted); font-weight: 600;">Architect Folios</div>
+              <div id="profile-folios-val" style="font-size: 1.6rem; font-weight: 800; color: #fbbf24; margin-top: 0.2rem;">0 / 40</div>
             </div>
+          </div>
+
+          <!-- Architect Codex Quick Link (BL-176) -->
+          <div style="background: rgba(251, 191, 36, 0.08); border: 1px solid rgba(251, 191, 36, 0.35); border-radius: var(--radius-md); padding: 0.75rem 1rem; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <div style="font-size: 0.85rem; font-weight: 700; color: #fbbf24;">The Architect's Lost Codex</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">Recovered field letters, discovery coordinates &amp; archivist achievements</div>
+            </div>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-profile-open-codex" style="background: #d97706; border-color: #f59e0b;">📖 Open Codex [J]</button>
           </div>
 
           <!-- Save Data Management -->
@@ -250,6 +260,14 @@ export class ProfileModal {
       };
     }
 
+    const codexBtn = this.modalEl.querySelector('#btn-profile-open-codex');
+    if (codexBtn) {
+      codexBtn.onclick = () => {
+        this.close();
+        architectCodexModal.open();
+      };
+    }
+
     const resetBtn = this.modalEl.querySelector('#btn-profile-reset');
     const resetBox = this.modalEl.querySelector('#profile-reset-confirm-box');
     const cancelResetBtn = this.modalEl.querySelector('#btn-profile-cancel-reset');
@@ -307,6 +325,7 @@ export class ProfileModal {
     const campVal = this.modalEl.querySelector('#profile-campaign-val');
     const storiesVal = this.modalEl.querySelector('#profile-stories-val');
     const stepsVal = this.modalEl.querySelector('#profile-steps-val');
+    const foliosVal = this.modalEl.querySelector('#profile-folios-val');
 
     if (rankIcon) rankIcon.textContent = profile.rankIcon;
     if (rankTitle) rankTitle.textContent = profile.rankTitle;
@@ -315,6 +334,7 @@ export class ProfileModal {
     if (campVal) campVal.textContent = `${profile.campaignLevels} / ${CAMPAIGN_LEVELS?.length || 40}`;
     if (storiesVal) storiesVal.textContent = String(profile.storyChapters);
     if (stepsVal) stepsVal.textContent = profile.totalSteps.toLocaleString();
+    if (foliosVal) foliosVal.textContent = `${profile.totalFolios || 0} / 40`;
 
     // -------------------------------------------------------------
     // Character Visual Customization Controls (BL-95, BL-118, Issue #84)

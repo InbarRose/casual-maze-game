@@ -2,6 +2,7 @@
   {
     "id": "sign_ch1_1",
     "type": "signpost",
+    "style": "lectern_stone",
     "title": "Architect's Note #1",
     "x": 1,
     "y": 2,

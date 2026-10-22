@@ -15,11 +15,20 @@ import { audioFX } from './audio-fx.js';
 import { DragScroller, autoInitDragScroll } from './drag-scroll.js';
 import { DynamicMenuController } from './dynamic-menu-controller.js';
 import { renderMobileNavDrawer, initMobileNavDrawer } from './mobile-nav-drawer.js';
+import { ArchitectCodexModal, architectCodexModal } from './architect-codex-modal.js';
 
 let profileModalInstance = null;
 let settingsModalInstance = null;
+let codexModalInstance = null;
 
 export { getFeedbackModal, getGuideModal };
+
+export function getArchitectCodexModal() {
+  if (!codexModalInstance && typeof document !== 'undefined') {
+    codexModalInstance = architectCodexModal || new ArchitectCodexModal();
+  }
+  return codexModalInstance;
+}
 
 export function getProfileModal() {
   if (!profileModalInstance && typeof document !== 'undefined') {
