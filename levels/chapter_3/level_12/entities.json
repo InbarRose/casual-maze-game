@@ -2,101 +2,105 @@
   {
     "id": "sign_arch_12",
     "type": "signpost",
-    "x": 10,
-    "y": 2,
-    "z": 0,
     "title": "Architect's Note #12",
-    "text": "The entire citadel moves in harmony. Retrieve the Ruby Key from the western furnace, activate the eastern dynamo, and claim the Master Gear.",
-    "style": "stone_tablet"
+    "style": "lectern_stone",
+    "chapter": "chapter_3",
+    "levelId": "12",
+    "x": 9,
+    "y": 15,
+    "z": 0,
+    "elevation": 0,
+    "coordString": "(9, 15, 0)",
+    "text": "Architect's Journal: At the heart of the clockwork citadel stands the Master Dynamo. Sealed by ancient crimson wards and steam pressure gates, only those who synthesize key and lever shall pass into the astral depths."
+  },
+  {
+    "id": "inscr_dynamo_12",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "facing": "north",
+    "text": "The Grand Dynamo commands the citadel. The crimson seal guards the power switch; the switch releases the apex archway.",
+    "playerDialogue": "A sprawling blueprint cut into iron showing the ruby lock securing the dynamo circuit.",
+    "x": 9,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "inscr_secret_12",
+    "type": "wall_decor",
+    "decorType": "runic_plate",
+    "facing": "north",
+    "text": "ᚲᛁᛈᚺ The Dynamo Core Crystal gleams in the southwest crucible recess.",
+    "playerDialogue": "Bronze runes expose a secret hollow in the southwest furnace wall.",
+    "x": 2,
+    "y": 15,
+    "elevation": 0
   },
   {
     "id": "key_ruby_12",
     "type": "key",
     "color": "#ef4444",
-    "name": "Furnace Ruby Key",
-    "x": 2,
-    "y": 8,
+    "keyId": "key_ruby_12",
+    "x": 1,
+    "y": 15,
+    "z": 0,
     "elevation": 0
   },
   {
-    "id": "lever_12",
+    "id": "door_ruby_12",
+    "type": "door",
+    "color": "#ef4444",
+    "requiresKey": "key_ruby_12",
+    "x": 17,
+    "y": 7,
+    "z": 0,
+    "elevation": 0
+  },
+  {
+    "id": "lever_12_dynamo",
     "type": "lever",
-    "name": "Master Dynamo Lever",
-    "style": "switch_lever",
-    "x": 16,
-    "y": 8,
+    "label": "Master Dynamo Lever",
+    "x": 17,
+    "y": 15,
+    "z": 0,
     "elevation": 0,
-    "state": false,
     "targets": [
       {
         "action": "toggle_tile",
         "layer": "ground",
-        "x": 9,
-        "y": 12,
+        "x": 17,
+        "y": 2,
         "stateA": 0,
         "stateB": 1
       }
     ]
   },
   {
-    "id": "door_ruby_12",
-    "type": "door",
-    "requiresKey": "key_ruby_12",
-    "color": "#ef4444",
-    "name": "Apex Portcullis",
-    "x": 9,
-    "y": 13,
-    "elevation": 0
-  },
-  {
-    "id": "wall_decor_12",
-    "type": "wall_decor",
-    "decorType": "carving",
-    "text": "The Triad of the Machine: West yields the key, East drops the wall, South crowns the Master.",
-    "playerDialogue": "Both the Ruby Key and the Dynamo Switch are required to enter the Apex.",
-    "x": 9,
-    "y": 6,
-    "elevation": 0
-  },
-  {
-    "id": "gem_dynamo_12",
+    "id": "secret_gem_12",
     "type": "collectible",
+    "itemId": "gem_dynamo",
     "name": "Dynamo Core Crystal",
-    "points": 400,
-    "x": 2,
-    "y": 12,
+    "points": 500,
+    "x": 5,
+    "y": 15,
+    "z": 0,
     "elevation": 0
   },
   {
     "id": "torch_ch3_12_spawn",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 9,
+    "facing": "north",
+    "x": 8,
     "y": 1,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch3_12_west",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 1,
-    "y": 8,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch3_12_east",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 17,
-    "y": 8,
     "elevation": 0
   },
   {
     "id": "torch_ch3_12_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 9,
-    "y": 11,
+    "facing": "north",
+    "x": 18,
+    "y": 1,
     "elevation": 0
   }
 ]

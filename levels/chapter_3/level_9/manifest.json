@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "temple"
+    "theme": "dungeon"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 12,
-    "y": 9,
+    "x": 13,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 28,
+  "parSteps": 27,
   "parTime": 17,
-  "architectNote": "The bronze lever awakens the sleeping clockwork. Throw the switch to slide the heavy stone barrier into the floor.",
+  "architectNote": "Architect's Journal: Deep within the iron foundry, heavy portcullis barriers respond not to keys, but to counterweighted mechanical levers. Flip the southern lever to lower the northern gate.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

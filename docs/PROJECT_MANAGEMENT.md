@@ -29,8 +29,15 @@ This document tracks project milestones, current release status, active developm
   - Stone lecterns with coordinate tracking `(X, Y, Z)` and diegetic wall carvings/runic plates for hints and secret rooms.
   - Verified 100% zero-bypass gating solvability and calibrated par budgets across all 4 stages.
 
-- [ ] **Chapter 3 Rigor & Clockwork Foundry Overhaul (Levels 9–12) (BL-180, ADR-0054)**:
-  - Redesign Levels 9–12 ("The Iron Lever", "Clockwork Gates", "Shifting Foundations", "Master of Wheels"): 1-tile winding foundry labyrinths, $\ge 70\%$ corridor inertia, 0 dead spaces $\ge 4\times 4$, clockwork levers, dynamic shifting barrier gates, North wall portals, and lectern folios.
+- [x] **Chapter 3 Rigor & Clockwork Foundry Overhaul (Levels 9–12) (BL-180, ADR-0054)**:
+  - Redesigned Levels 9–12 ("The Iron Lever", "Clockwork Gates", "Shifting Foundations", "Master of Wheels"): 1-tile winding foundry labyrinths elevating corridor inertia from 24%–38% to 70%–78%, 0 dead spaces $\ge 4\times 4$.
+  - Dynamic clockwork levers, shifting barrier gates, hydraulic valves, and sequential multi-switch mechanics.
+  - Architectural North wall drop-face entrance doorways (`wall_doorway`, `north`) and subterranean archway exits (`wall_archway`, `north`).
+  - Stone lecterns with coordinate tracking `(X, Y, Z)` and diegetic wall carvings/runic plates for hints and secret rooms.
+  - Verified 100% zero-bypass gating solvability and calibrated par budgets across all 4 stages.
+
+- [ ] **Chapter 4 Rigor & Astral Teleporters Overhaul (Levels 13–16) (BL-181, ADR-0055)**:
+  - Redesign Levels 13–16 ("The First Rift", "Twinned Portals", "Dimensional Warp", "The Astral Nexus"): 1-tile winding astral labyrinths, $\ge 70\%$ corridor inertia, 0 dead spaces $\ge 4\times 4$, spatial teleporter networks, non-Euclidean shortcuts, anti-loop gating, North wall portals, and lectern folios.
 
 ---
 

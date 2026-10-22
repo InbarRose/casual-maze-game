@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "temple"
+    "theme": "dungeon"
   },
   "spawn": {
     "x": 3,
-    "y": 2,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 9,
-    "y": 12,
+    "x": 15,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 41,
-  "parTime": 25,
-  "architectNote": "Dual conduits power the hydraulic gates. Engage the western valve to unlock the concourse, then release the eastern master piston.",
+  "parSteps": 66,
+  "parTime": 40,
+  "architectNote": "Architect's Journal: Twin mechanical valves control the hydraulic floodgates. The western boiler lever unlocks passage across the central dividing bulkhead, granting access to the eastern piston switch.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

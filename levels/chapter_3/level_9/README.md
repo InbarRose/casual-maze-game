@@ -3,11 +3,11 @@
 **Chapter**: Chapter 3  
 **Zone**: zone_3  
 **Dimensions**: 15 × 13  
-**Par Steps**: 28 | **Par Time**: 17s  
-**Theme**: temple  
+**Par Steps**: 27 | **Par Time**: 17s  
+**Theme**: dungeon  
 
 ## Narrative Lore & Overview
-The bronze lever awakens the sleeping clockwork. Throw the switch to slide the heavy stone barrier into the floor.
+Architect's Journal: Deep within the iron foundry, heavy portcullis barriers respond not to keys, but to counterweighted mechanical levers. Flip the southern lever to lower the northern gate.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

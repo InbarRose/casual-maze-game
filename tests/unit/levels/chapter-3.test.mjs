@@ -37,8 +37,8 @@ describe('Levels > Chapter 3 Clockwork Mechanisms & Architecture', () => {
   it('Level 9 (Ki): The Iron Lever introduces dynamic levers with zero backtracking', () => {
     const sol = solveLevel(l9);
     assert(sol !== null, 'Level 9 must be solvable');
-    assertEqual(sol.length, 24, 'Optimal path is 24 steps');
-    assertEqual(l9.parSteps, Math.ceil(24 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 23, 'Optimal path is 23 steps');
+    assertEqual(l9.parSteps, Math.ceil(23 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without flipping the iron lever
     const noLever = JSON.parse(JSON.stringify(l9));
@@ -50,8 +50,8 @@ describe('Levels > Chapter 3 Clockwork Mechanisms & Architecture', () => {
   it('Level 10 (Shō): Clockwork Gates develops dual sequential valves', () => {
     const sol = solveLevel(l10);
     assert(sol !== null, 'Level 10 must be solvable');
-    assertEqual(sol.length, 35, 'Optimal path is 35 steps');
-    assertEqual(l10.parSteps, Math.ceil(35 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 57, 'Optimal path is 57 steps');
+    assertEqual(l10.parSteps, Math.ceil(57 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without western valve
     const noWest = JSON.parse(JSON.stringify(l10));
@@ -67,8 +67,8 @@ describe('Levels > Chapter 3 Clockwork Mechanisms & Architecture', () => {
   it('Level 11 (Ten): Shifting Foundations twists mechanics with toggling counterweights', () => {
     const sol = solveLevel(l11);
     assert(sol !== null, 'Level 11 must be solvable');
-    assertEqual(sol.length, 26, 'Optimal path is 26 steps');
-    assertEqual(l11.parSteps, Math.ceil(26 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 79, 'Optimal path is 79 steps');
+    assertEqual(l11.parSteps, Math.ceil(79 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without counterweight lever
     const noLever = JSON.parse(JSON.stringify(l11));
@@ -84,8 +84,8 @@ describe('Levels > Chapter 3 Clockwork Mechanisms & Architecture', () => {
   it('Level 12 (Ketsu): Master of Wheels synthesizes keys, levers, and pillared plazas', () => {
     const sol = solveLevel(l12);
     assert(sol !== null, 'Level 12 must be solvable');
-    assertEqual(sol.length, 47, 'Optimal path is 47 steps');
-    assertEqual(l12.parSteps, Math.ceil(47 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 98, 'Optimal path is 98 steps');
+    assertEqual(l12.parSteps, Math.ceil(98 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without furnace ruby key
     const noRuby = JSON.parse(JSON.stringify(l12));
