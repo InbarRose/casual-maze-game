@@ -78,5 +78,18 @@
     "x": 11,
     "y": 12,
     "elevation": 0
+  },
+  {
+    "id": "sign_sunken_2",
+    "type": "signpost",
+    "x": 3,
+    "y": 1,
+    "elevation": 0,
+    "style": "lectern_stone",
+    "title": "Architect's Folio #52",
+    "chapter": "sunken_vaults_of_the_deep",
+    "levelId": "story_sunken_vaults_2",
+    "coordString": "(3, 1, 0)",
+    "text": "Architect's Folio #52: The Pressure Reservoir stores immense hydrodynamic power. Balance the reservoir valves and avoid thermal surges to reach the abyssal shaft."
   }
 ]

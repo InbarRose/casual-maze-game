@@ -41,6 +41,8 @@
   },
   "parSteps": 54,
   "parTime": 33,
+  "architectNote": "**Chapter**: Sanctum of the Four Guardians  \n**Zone**: Default  \n**Dimensions**: 15 × 15  \n**Par Steps**: 54 | **Par Time**: 33s  \n**Theme**: temple  ",
+  "packageSource": "story_guardians_3",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

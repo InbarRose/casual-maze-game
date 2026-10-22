@@ -43,6 +43,7 @@
     "title": "Chapter 2: The Pressure Reservoir",
     "message": "The way to the lower sanctuary is locked. Retrieve the bronze key in the northeast chamber."
   },
+  "packageSource": "story_sunken_vaults_2",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

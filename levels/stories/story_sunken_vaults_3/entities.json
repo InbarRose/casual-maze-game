@@ -100,5 +100,18 @@
     "x": 13,
     "y": 14,
     "elevation": 0
+  },
+  {
+    "id": "sign_sunken_3",
+    "type": "signpost",
+    "x": 3,
+    "y": 1,
+    "elevation": 0,
+    "style": "lectern_stone",
+    "title": "Architect's Folio #53",
+    "chapter": "sunken_vaults_of_the_deep",
+    "levelId": "story_sunken_vaults_3",
+    "coordString": "(3, 1, 0)",
+    "text": "Architect's Folio #53: At the Abyssal Sanctuary, the deepest secret of the realm lies slumbering. Decipher the final glyph of the Deep Architects to recover the Primal Water Core."
   }
 ]

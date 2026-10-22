@@ -117,6 +117,7 @@ const GUARDIANS_CHAPTER_1 = {
   "parSteps": 28,
   "parTime": 17,
   "architectNote": "**Chapter**: The Whispering Ruins  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: 28 | **Par Time**: 17s  \n**Theme**: temple  ",
+  "packageSource": "story_guardians_1",
   "layers": {
     "ground": [
       [
@@ -519,9 +520,21 @@ const GUARDIANS_CHAPTER_1 = {
       "x": 7,
       "y": 8,
       "elevation": 0
+    },
+    {
+      "id": "sign_guardians_1",
+      "type": "signpost",
+      "x": 3,
+      "y": 1,
+      "elevation": 0,
+      "style": "lectern_stone",
+      "title": "Architect's Folio #47",
+      "chapter": "relics_of_the_guardians",
+      "levelId": "story_guardians_1",
+      "coordString": "(3, 1, 0)",
+      "text": "Architect's Folio #47: Journey into the Whispering Ruins. Four sacred totems guard the Sun Temple: Falcon, Lion, Serpent, and Bear. Decipher the wall carvings to navigate the sanctum."
     }
-  ],
-  "packageSource": "story_guardians_1"
+  ]
 };
 const GUARDIANS_CHAPTER_2 = {
   "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -567,6 +580,7 @@ const GUARDIANS_CHAPTER_2 = {
   "parSteps": 32,
   "parTime": 19,
   "architectNote": "**Chapter**: The Falcon's Plinth  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: 32 | **Par Time**: 19s  \n**Theme**: temple  ",
+  "packageSource": "story_guardians_2",
   "layers": {
     "ground": [
       [
@@ -962,9 +976,21 @@ const GUARDIANS_CHAPTER_2 = {
       "x": 7,
       "y": 8,
       "elevation": 0
+    },
+    {
+      "id": "sign_guardians_2",
+      "type": "signpost",
+      "x": 2,
+      "y": 2,
+      "elevation": 0,
+      "style": "lectern_stone",
+      "title": "Architect's Folio #48",
+      "chapter": "relics_of_the_guardians",
+      "levelId": "story_guardians_2",
+      "coordString": "(2, 2, 0)",
+      "text": "Architect's Folio #48: The Falcon's Plinth demands high vantage. Seek out the winged totem perched above the sunlit courtyard and match it to its ancestral riddle pedestal."
     }
-  ],
-  "packageSource": "story_guardians_2"
+  ]
 };
 const GUARDIANS_CHAPTER_3 = {
   "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1010,6 +1036,7 @@ const GUARDIANS_CHAPTER_3 = {
   "parSteps": 54,
   "parTime": 33,
   "architectNote": "**Chapter**: Sanctum of the Four Guardians  \n**Zone**: Default  \n**Dimensions**: 15 × 15  \n**Par Steps**: 54 | **Par Time**: 33s  \n**Theme**: temple  ",
+  "packageSource": "story_guardians_3",
   "layers": {
     "ground": [
       [
@@ -1681,9 +1708,21 @@ const GUARDIANS_CHAPTER_3 = {
       "x": 11,
       "y": 13,
       "elevation": 0
+    },
+    {
+      "id": "sign_guardians_3",
+      "type": "signpost",
+      "x": 8,
+      "y": 2,
+      "elevation": 0,
+      "style": "lectern_stone",
+      "title": "Architect's Folio #49",
+      "chapter": "relics_of_the_guardians",
+      "levelId": "story_guardians_3",
+      "coordString": "(8, 2, 0)",
+      "text": "Architect's Folio #49: Sanctum of the Four Guardians. When all four totems rest upon their designated pedestals, the central sunburst portal awakens to grant eternal passage."
     }
-  ],
-  "packageSource": "story_guardians_3"
+  ]
 };
 
 // Story 3: The Whispering Citadel (1 Chapter, Multi-Room)
@@ -1765,6 +1804,7 @@ const CITADEL_CHAPTER_1 = {
     "title": "The Whispering Citadel",
     "message": "Travel between the Courtyard, Catacombs, and High Spire. Your inventory, score, and key state persist between rooms!"
   },
+  "packageSource": "story_citadel_1",
   "layers": {
     "ground": [
       [
@@ -2165,11 +2205,16 @@ const CITADEL_CHAPTER_1 = {
     {
       "id": "signpost_courtyard_guide",
       "type": "signpost",
-      "title": "Courtyard Inscription",
+      "title": "Architect's Folio #50",
       "message": "The High Spire awaits above, but its portal is sealed. Descend into the subterranean Catacombs to recover the Spire Key.",
       "x": 2,
       "y": 1,
-      "elevation": 0
+      "elevation": 0,
+      "style": "lectern_stone",
+      "chapter": "the_whispering_citadel",
+      "levelId": "story_citadel_1",
+      "coordString": "(2, 1, 0)",
+      "text": "Architect's Folio #50: The Whispering Citadel unites the Courtyard, Catacombs, and High Spire. Retrieve the Spire Key from the subterranean depths to unlock the ascent."
     },
     {
       "id": "door_spire_gate",
@@ -2237,7 +2282,6 @@ const CITADEL_CHAPTER_1 = {
       "elevation": 0
     }
   ],
-  "packageSource": "story_citadel_1",
   "rooms": {
     "catacombs": {
       "id": "catacombs",

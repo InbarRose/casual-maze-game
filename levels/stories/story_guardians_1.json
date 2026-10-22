@@ -42,6 +42,7 @@
   "parSteps": 28,
   "parTime": 17,
   "architectNote": "**Chapter**: The Whispering Ruins  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: 28 | **Par Time**: 17s  \n**Theme**: temple  ",
+  "packageSource": "story_guardians_1",
   "layers": {
     "ground": [
       [
@@ -444,7 +445,19 @@
       "x": 7,
       "y": 8,
       "elevation": 0
+    },
+    {
+      "id": "sign_guardians_1",
+      "type": "signpost",
+      "x": 3,
+      "y": 1,
+      "elevation": 0,
+      "style": "lectern_stone",
+      "title": "Architect's Folio #47",
+      "chapter": "relics_of_the_guardians",
+      "levelId": "story_guardians_1",
+      "coordString": "(3, 1, 0)",
+      "text": "Architect's Folio #47: Journey into the Whispering Ruins. Four sacred totems guard the Sun Temple: Falcon, Lion, Serpent, and Bear. Decipher the wall carvings to navigate the sanctum."
     }
-  ],
-  "packageSource": "story_guardians_1"
+  ]
 }

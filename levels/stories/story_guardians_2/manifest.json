@@ -41,6 +41,8 @@
   },
   "parSteps": 32,
   "parTime": 19,
+  "architectNote": "**Chapter**: The Falcon's Plinth  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: 32 | **Par Time**: 19s  \n**Theme**: temple  ",
+  "packageSource": "story_guardians_2",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

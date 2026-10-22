@@ -43,6 +43,7 @@
     "title": "Chapter 1: The Flooded Siphon",
     "message": "The outflow gate is sealed by water pressure. Scour the south intake channel for the Siphon Key."
   },
+  "packageSource": "story_sunken_vaults_1",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
