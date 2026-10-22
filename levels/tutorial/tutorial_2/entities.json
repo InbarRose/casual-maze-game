@@ -42,11 +42,15 @@
   {
     "id": "sign_tut_2",
     "type": "signpost",
-    "title": "Colored Portals & Keys",
+    "title": "Architect's Folio #42",
     "x": 1,
     "y": 2,
     "elevation": 0,
-    "text": "Colored gates require matching keys. Gather the Ruby and Sapphire keystones to unlock your path."
+    "text": "Architect's Folio #42: Colored gates require matching keys. Gather the Ruby and Sapphire keystones to unlock your path through the academy.",
+    "style": "lectern_stone",
+    "chapter": "tutorial",
+    "levelId": "tutorial_2",
+    "coordString": "(1, 2, 0)"
   },
   {
     "id": "torch_tut_2_spawn",

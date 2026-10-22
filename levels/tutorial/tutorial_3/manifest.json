@@ -33,6 +33,8 @@
     "style": "stairs_up",
     "wallDirection": "none"
   },
+  "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: temple  ",
+  "packageSource": "tutorial_3",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

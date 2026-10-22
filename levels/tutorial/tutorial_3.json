@@ -34,6 +34,7 @@
     "wallDirection": "none"
   },
   "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: temple  ",
+  "packageSource": "tutorial_3",
   "layers": {
     "ground": [
       [
@@ -349,11 +350,15 @@
     {
       "id": "sign_tut_3",
       "type": "signpost",
-      "title": "Clockwork Levers",
+      "title": "Architect's Folio #43",
       "x": 1,
       "y": 2,
       "elevation": 0,
-      "text": "Levers shift the very architecture of the maze. Toggle the Sanctuary Lever to lower the blocking stone wall at the crossroads."
+      "text": "Architect's Folio #43: Levers shift the very architecture of the maze. Toggle the Sanctuary Lever to lower the blocking stone wall at the crossroads.",
+      "style": "lectern_stone",
+      "chapter": "tutorial",
+      "levelId": "tutorial_3",
+      "coordString": "(1, 2, 0)"
     },
     {
       "id": "torch_tut_3_spawn",
@@ -398,6 +403,5 @@
       "y": 8,
       "elevation": 0
     }
-  ],
-  "packageSource": "tutorial_3"
+  ]
 }

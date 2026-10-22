@@ -21,11 +21,15 @@
   {
     "id": "sign_tut_3",
     "type": "signpost",
-    "title": "Clockwork Levers",
+    "title": "Architect's Folio #43",
     "x": 1,
     "y": 2,
     "elevation": 0,
-    "text": "Levers shift the very architecture of the maze. Toggle the Sanctuary Lever to lower the blocking stone wall at the crossroads."
+    "text": "Architect's Folio #43: Levers shift the very architecture of the maze. Toggle the Sanctuary Lever to lower the blocking stone wall at the crossroads.",
+    "style": "lectern_stone",
+    "chapter": "tutorial",
+    "levelId": "tutorial_3",
+    "coordString": "(1, 2, 0)"
   },
   {
     "id": "torch_tut_3_spawn",

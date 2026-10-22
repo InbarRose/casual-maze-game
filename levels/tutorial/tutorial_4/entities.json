@@ -22,11 +22,15 @@
   {
     "id": "sign_tut_4",
     "type": "signpost",
-    "title": "Bridges & Verticality",
+    "title": "Architect's Folio #44",
     "x": 1,
     "y": 2,
     "elevation": 0,
-    "text": "Ramps lead up to elevated bridges. Cross over ground corridors to discover routes hidden in the upper layer."
+    "text": "Architect's Folio #44: Ramps lead up to elevated bridges. Cross over ground corridors to discover routes hidden in the upper canopy layer.",
+    "style": "lectern_stone",
+    "chapter": "tutorial",
+    "levelId": "tutorial_4",
+    "coordString": "(1, 2, 0)"
   },
   {
     "id": "torch_tut_4_spawn",

@@ -34,6 +34,7 @@
     "wallDirection": "none"
   },
   "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 13 × 13  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
+  "packageSource": "tutorial_5",
   "layers": {
     "ground": [
       [
@@ -454,11 +455,15 @@
     {
       "id": "sign_tut_5",
       "type": "signpost",
-      "title": "The Shrouded Mist",
+      "title": "Architect's Folio #45",
       "x": 1,
       "y": 2,
       "elevation": 0,
-      "text": "The Fog of War conceals distant rooms. Rely on memory, spatial deduction, and wall sconces to find your way."
+      "text": "Architect's Folio #45: The Fog of War conceals distant rooms. Rely on memory, spatial deduction, and wall sconces to find your way.",
+      "style": "lectern_stone",
+      "chapter": "tutorial",
+      "levelId": "tutorial_5",
+      "coordString": "(1, 2, 0)"
     },
     {
       "id": "torch_tut_5_spawn",
@@ -511,6 +516,5 @@
       "y": 11,
       "elevation": 0
     }
-  ],
-  "packageSource": "tutorial_5"
+  ]
 }

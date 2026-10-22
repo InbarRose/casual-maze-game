@@ -7,7 +7,11 @@
 **Theme**: temple  
 
 ## Narrative Lore & Overview
-Architectural exploration of winding labyrinth corridors and vertical bridge elevations.
+**Chapter**: Campaign / Saga  
+**Zone**: Default  
+**Dimensions**: 17 × 17  
+**Par Steps**: N/A | **Par Time**: N/A  
+**Theme**: temple  
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

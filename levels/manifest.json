@@ -7,8 +7,8 @@
     "file": "levels/tutorial/tutorial_1.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "b06ac6e7f3e56b0e8d9b101220afaa4fa2fd714cd83eae758c069571436c0dcd",
-    "size": 4358,
+    "hash": "62451aba6b715556f015e64c1123630701ec8947fe722ea1438c7311fbf7a2e5",
+    "size": 4510,
     "dimensions": {
       "width": 9,
       "height": 9
@@ -25,8 +25,8 @@
     "file": "levels/tutorial/tutorial_2.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "44767809d3ae3c53b401d613058c4daea7396c992bdfe728a042d60e3b807886",
-    "size": 6135,
+    "hash": "47161e61f4f9090c75013cb9584d6809c7a5280f532ea431129d661a87fe84ee",
+    "size": 6303,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -43,8 +43,8 @@
     "file": "levels/tutorial/tutorial_3.json",
     "theme": "temple",
     "version": 1,
-    "hash": "3c95835c9cd773d8348aa626e9fea83eb0c12815f5d8a4f112a134cf81be2c94",
-    "size": 5698,
+    "hash": "0d7ef14a5119caddbe08739575b5fbae783e5b25130689e782f4919cb2a0f90e",
+    "size": 5852,
     "dimensions": {
       "width": 11,
       "height": 11
@@ -61,8 +61,8 @@
     "file": "levels/tutorial/tutorial_4.json",
     "theme": "jungle",
     "version": 1,
-    "hash": "1ddd74404ae652ceff6f19637314cfe6495be4ee50213003835d85c5b7548893",
-    "size": 7107,
+    "hash": "72aa34b8f09a5670f5bc08401fb546a603b1a68452e721a13c564eb9cc4d5080",
+    "size": 7263,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -79,8 +79,8 @@
     "file": "levels/tutorial/tutorial_5.json",
     "theme": "dungeon",
     "version": 1,
-    "hash": "066312cfd96492d9d0ff8b2f27f1f6a8c5a9b9c86fe8133589087d3fcc555ad7",
-    "size": 7020,
+    "hash": "42e60e3e5a5e550fc0932f3bcd8f174f4eb3bd3906e504f448f1c9b4b45a599a",
+    "size": 7173,
     "dimensions": {
       "width": 13,
       "height": 13
@@ -97,8 +97,8 @@
     "file": "levels/tutorial/tutorial_6.json",
     "theme": "temple",
     "version": 1,
-    "hash": "b533ea9c0791ac87868b45f79a0d30cc8b13a97b366ec5d0b928c454ef05dc42",
-    "size": 11022,
+    "hash": "625a6e6f29f0c7a20f19b7a08e221c34b7ac25158a1940f1c61ff69f1e145f0e",
+    "size": 11142,
     "dimensions": {
       "width": 17,
       "height": 17

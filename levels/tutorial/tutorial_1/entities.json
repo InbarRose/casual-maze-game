@@ -2,11 +2,15 @@
   {
     "id": "sign_tut_1",
     "type": "signpost",
-    "title": "Welcome Apprentice",
+    "title": "Architect's Folio #41",
     "x": 1,
     "y": 2,
     "elevation": 0,
-    "text": "Welcome to the Academy of Mazes! Navigate to the exit portal using arrow keys or WASD. Follow the warm glow of torches."
+    "text": "Architect's Folio #41: Welcome to the Academy of Mazes! Navigate to the exit portal using arrow keys or WASD. Follow the warm glow of torches.",
+    "style": "lectern_stone",
+    "chapter": "tutorial",
+    "levelId": "tutorial_1",
+    "coordString": "(1, 2, 0)"
   },
   {
     "id": "torch_tut_1_spawn",

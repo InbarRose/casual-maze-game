@@ -91,11 +91,15 @@
   {
     "id": "sign_tut_6",
     "type": "signpost",
-    "title": "Master's Graduation Trial",
+    "title": "Architect's Folio #46",
     "x": 2,
     "y": 2,
     "elevation": 0,
-    "text": "The Master's Trial synthesizes all graduation requirements: colored gates, multi-elevation viaducts, clockwork switches, and fog navigation. Claim the Master's Seal!"
+    "text": "Architect's Folio #46: The Master's Trial synthesizes all graduation requirements: colored gates, multi-elevation viaducts, clockwork switches, and fog navigation.",
+    "style": "lectern_stone",
+    "chapter": "tutorial",
+    "levelId": "tutorial_6",
+    "coordString": "(2, 2, 0)"
   },
   {
     "id": "torch_tut_6_spawn",

@@ -34,6 +34,7 @@
     "wallDirection": "north"
   },
   "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 9 × 9  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
+  "packageSource": "tutorial_1",
   "layers": {
     "ground": [
       [
@@ -242,11 +243,15 @@
     {
       "id": "sign_tut_1",
       "type": "signpost",
-      "title": "Welcome Apprentice",
+      "title": "Architect's Folio #41",
       "x": 1,
       "y": 2,
       "elevation": 0,
-      "text": "Welcome to the Academy of Mazes! Navigate to the exit portal using arrow keys or WASD. Follow the warm glow of torches."
+      "text": "Architect's Folio #41: Welcome to the Academy of Mazes! Navigate to the exit portal using arrow keys or WASD. Follow the warm glow of torches.",
+      "style": "lectern_stone",
+      "chapter": "tutorial",
+      "levelId": "tutorial_1",
+      "coordString": "(1, 2, 0)"
     },
     {
       "id": "torch_tut_1_spawn",
@@ -291,6 +296,5 @@
       "y": 5,
       "elevation": 0
     }
-  ],
-  "packageSource": "tutorial_1"
+  ]
 }

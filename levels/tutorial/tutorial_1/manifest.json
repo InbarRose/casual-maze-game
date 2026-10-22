@@ -33,6 +33,8 @@
     "style": "wall_archway",
     "wallDirection": "north"
   },
+  "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 9 × 9  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
+  "packageSource": "tutorial_1",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
