@@ -51,4 +51,17 @@ describe('Levels > Story 2 Unbypassable Challenges & Gate Routing', () => {
     const bypass = solveLevel(g3, { allowPuzzles: false });
     assertEqual(bypass, null, 'Golden Sanctum Gate is a mandatory bottleneck; cannot be bypassed');
   });
+
+  it('validates all Guardians chapters contain Architect Folio stone lecterns with coordinate tracking (BL-176, BL-187)', () => {
+    const chapters = [g1, g2, g3];
+    for (let i = 0; i < chapters.length; i++) {
+      const ch = chapters[i];
+      const sign = (ch.entities || []).find(e => e.type === 'signpost' || e.type === 'architect_note');
+      assert(sign !== undefined, `Guardians Chapter ${i + 1} contains an Architect Folio signpost`);
+      assertEqual(sign.style, 'lectern_stone', `Guardians Chapter ${i + 1} uses lectern_stone style`);
+      assertEqual(sign.title, `Architect's Folio #${47 + i}`, `Guardians Chapter ${i + 1} matches Folio #${47 + i}`);
+      assert(typeof sign.coordString === 'string' && sign.coordString.length > 0, `Guardians Chapter ${i + 1} records coordinates`);
+      assert(typeof (sign.text || sign.message) === 'string' && (sign.text || sign.message).length > 20, `Guardians Chapter ${i + 1} has substantive lore`);
+    }
+  });
 });

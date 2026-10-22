@@ -2,11 +2,16 @@
   {
     "id": "signpost_courtyard_guide",
     "type": "signpost",
-    "title": "Courtyard Inscription",
+    "title": "Architect's Folio #50",
     "message": "The High Spire awaits above, but its portal is sealed. Descend into the subterranean Catacombs to recover the Spire Key.",
     "x": 2,
     "y": 1,
-    "elevation": 0
+    "elevation": 0,
+    "style": "lectern_stone",
+    "chapter": "the_whispering_citadel",
+    "levelId": "story_citadel_1",
+    "coordString": "(2, 1, 0)",
+    "text": "Architect's Folio #50: The Whispering Citadel unites the Courtyard, Catacombs, and High Spire. Retrieve the Spire Key from the subterranean depths to unlock the ascent."
   },
   {
     "id": "door_spire_gate",

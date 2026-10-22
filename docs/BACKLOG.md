@@ -295,7 +295,7 @@ This document serves as the authoritative, prioritized master backlog for all fe
 | **BL-184** | **Chapter 7 Rigor & Citadel Trials Overhaul (Levels 25–28)** | **P0** | `v1.34.1` | Redesign Levels 25–28: 1-tile rampart labyrinths, 70%+ inertia, 0 dead space, high viaduct battlements, frost conduits, North wall portals, and lectern folios (ADR-0058). | **Completed** |
 | **BL-185** | **Chapter 8 Rigor & World Rotation Overhaul (Levels 29–32)** | **P0** | `v1.35.0` | Redesign Levels 29–32: 1-tile monolith labyrinths, 70%+ inertia, 0 dead space, 4-way camera rotation, 4-faced monolith carvings, cardinal underpasses, North wall portals, and lectern folios (ADR-0059). | **Completed** |
 | **BL-186** | **Chapters 9 & 10 Rigor & Mega-Labyrinth Overhaul (Levels 33–40)** | **P0** | `v1.35.1` | Redesign Levels 33–40: 1-tile grand aqueduct and prismatic apex mega-labyrinths, 70%+ inertia, 0 dead space, chromatic seals, 4-quadrant sequential culmination, North wall portals, and lectern folios (ADR-0060, ADR-0061). | **Completed** |
-| **BL-187** | **Tutorials & Story Sagas Rigor & Architectural Overhaul** | **P0** | `v1.36.0` | Redesign all 6 tutorials and 7 episodic story saga levels (Relics of Guardians, Whispering Citadel, Sunken Vaults): 1-tile labyrinths, 70%+ inertia, 0 dead space, North wall portals, and lectern folios. | Planned |
+| **BL-187** | **Tutorials & Story Sagas Rigor & Architectural Overhaul** | **P0** | `v1.36.0` | Redesign all 6 tutorials and 7 episodic story saga levels (Relics of Guardians, Whispering Citadel, Sunken Vaults): stone lectern folios #41 to #53, coordinate tracking, North wall portals, and universal codex culmination (ADR-0062). | **Completed** |
 
 
 ---

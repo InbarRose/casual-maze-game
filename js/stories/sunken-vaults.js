@@ -47,6 +47,7 @@ export const SUNKEN_VAULTS_CHAPTER_1 = Object.freeze({
     "title": "Chapter 1: The Flooded Siphon",
     "message": "The outflow gate is sealed by water pressure. Scour the south intake channel for the Siphon Key."
   },
+  "packageSource": "story_sunken_vaults_1",
   "layers": {
     "ground": [
       [
@@ -523,9 +524,21 @@ export const SUNKEN_VAULTS_CHAPTER_1 = Object.freeze({
       "x": 10,
       "y": 10,
       "elevation": 0
+    },
+    {
+      "id": "sign_sunken_1",
+      "type": "signpost",
+      "x": 2,
+      "y": 1,
+      "elevation": 0,
+      "style": "lectern_stone",
+      "title": "Architect's Folio #51",
+      "chapter": "sunken_vaults_of_the_deep",
+      "levelId": "story_sunken_vaults_1",
+      "coordString": "(2, 1, 0)",
+      "text": "Architect's Folio #51: Plunge into the Flooded Siphon. Submerged flumes and thermal water vents regulate the ancient water pressure of the abyssal vaults."
     }
-  ],
-  "packageSource": "story_sunken_vaults_1"
+  ]
 });
 
 export const SUNKEN_VAULTS_CHAPTER_2 = Object.freeze({
@@ -573,6 +586,7 @@ export const SUNKEN_VAULTS_CHAPTER_2 = Object.freeze({
     "title": "Chapter 2: The Pressure Reservoir",
     "message": "The way to the lower sanctuary is locked. Retrieve the bronze key in the northeast chamber."
   },
+  "packageSource": "story_sunken_vaults_2",
   "layers": {
     "ground": [
       [
@@ -1169,9 +1183,21 @@ export const SUNKEN_VAULTS_CHAPTER_2 = Object.freeze({
       "x": 11,
       "y": 12,
       "elevation": 0
+    },
+    {
+      "id": "sign_sunken_2",
+      "type": "signpost",
+      "x": 3,
+      "y": 1,
+      "elevation": 0,
+      "style": "lectern_stone",
+      "title": "Architect's Folio #52",
+      "chapter": "sunken_vaults_of_the_deep",
+      "levelId": "story_sunken_vaults_2",
+      "coordString": "(3, 1, 0)",
+      "text": "Architect's Folio #52: The Pressure Reservoir stores immense hydrodynamic power. Balance the reservoir valves and avoid thermal surges to reach the abyssal shaft."
     }
-  ],
-  "packageSource": "story_sunken_vaults_2"
+  ]
 });
 
 export const SUNKEN_VAULTS_CHAPTER_3 = Object.freeze({
@@ -1219,6 +1245,7 @@ export const SUNKEN_VAULTS_CHAPTER_3 = Object.freeze({
     "title": "Chapter 3: The Abyssal Sanctuary",
     "message": "Both the Azure and Abyssal keys are required to unlock the sanctuary gates and claim the Primal Core."
   },
+  "packageSource": "story_sunken_vaults_3",
   "layers": {
     "ground": [
       [
@@ -1973,9 +2000,21 @@ export const SUNKEN_VAULTS_CHAPTER_3 = Object.freeze({
       "x": 13,
       "y": 14,
       "elevation": 0
+    },
+    {
+      "id": "sign_sunken_3",
+      "type": "signpost",
+      "x": 3,
+      "y": 1,
+      "elevation": 0,
+      "style": "lectern_stone",
+      "title": "Architect's Folio #53",
+      "chapter": "sunken_vaults_of_the_deep",
+      "levelId": "story_sunken_vaults_3",
+      "coordString": "(3, 1, 0)",
+      "text": "Architect's Folio #53: At the Abyssal Sanctuary, the deepest secret of the realm lies slumbering. Decipher the final glyph of the Deep Architects to recover the Primal Water Core."
     }
-  ],
-  "packageSource": "story_sunken_vaults_3"
+  ]
 });
 
 export const SUNKEN_VAULTS_STORYLINE = Object.freeze({

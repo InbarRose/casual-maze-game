@@ -43,6 +43,7 @@
     "title": "Chapter 3: The Abyssal Sanctuary",
     "message": "Both the Azure and Abyssal keys are required to unlock the sanctuary gates and claim the Primal Core."
   },
+  "packageSource": "story_sunken_vaults_3",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

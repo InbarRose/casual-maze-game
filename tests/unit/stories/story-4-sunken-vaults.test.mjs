@@ -90,4 +90,16 @@ describe('Storylines > The Sunken Vaults of the Deep (BL-130)', () => {
     assertEqual(s3.hasNext, false);
     assertEqual(s3.isStoryComplete, true);
   });
+
+  it('validates each Sunken Vaults chapter contains an Architect Folio stone lectern with coordinate tracking (BL-176, BL-187)', () => {
+    for (let i = 1; i <= 3; i++) {
+      const ch = getStoryChapter('sunken_vaults_of_the_deep', i);
+      const sign = (ch.entities || []).find(e => e.type === 'signpost' || e.type === 'architect_note');
+      assert(sign !== undefined, `Sunken Vaults Chapter ${i} contains an Architect Folio signpost`);
+      assertEqual(sign.style, 'lectern_stone', `Sunken Vaults Chapter ${i} uses lectern_stone style`);
+      assertEqual(sign.title, `Architect's Folio #${50 + i}`, `Sunken Vaults Chapter ${i} matches Folio #${50 + i}`);
+      assert(typeof sign.coordString === 'string' && sign.coordString.length > 0, `Sunken Vaults Chapter ${i} records coordinates`);
+      assert(typeof (sign.text || sign.message) === 'string' && (sign.text || sign.message).length > 20, `Sunken Vaults Chapter ${i} has substantive lore`);
+    }
+  });
 });

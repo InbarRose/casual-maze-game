@@ -101,5 +101,18 @@
     "x": 7,
     "y": 8,
     "elevation": 0
+  },
+  {
+    "id": "sign_guardians_2",
+    "type": "signpost",
+    "x": 2,
+    "y": 2,
+    "elevation": 0,
+    "style": "lectern_stone",
+    "title": "Architect's Folio #48",
+    "chapter": "relics_of_the_guardians",
+    "levelId": "story_guardians_2",
+    "coordString": "(2, 2, 0)",
+    "text": "Architect's Folio #48: The Falcon's Plinth demands high vantage. Seek out the winged totem perched above the sunlit courtyard and match it to its ancestral riddle pedestal."
   }
 ]

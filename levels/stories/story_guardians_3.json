@@ -42,6 +42,7 @@
   "parSteps": 54,
   "parTime": 33,
   "architectNote": "**Chapter**: Sanctum of the Four Guardians  \n**Zone**: Default  \n**Dimensions**: 15 × 15  \n**Par Steps**: 54 | **Par Time**: 33s  \n**Theme**: temple  ",
+  "packageSource": "story_guardians_3",
   "layers": {
     "ground": [
       [
@@ -713,7 +714,19 @@
       "x": 11,
       "y": 13,
       "elevation": 0
+    },
+    {
+      "id": "sign_guardians_3",
+      "type": "signpost",
+      "x": 8,
+      "y": 2,
+      "elevation": 0,
+      "style": "lectern_stone",
+      "title": "Architect's Folio #49",
+      "chapter": "relics_of_the_guardians",
+      "levelId": "story_guardians_3",
+      "coordString": "(8, 2, 0)",
+      "text": "Architect's Folio #49: Sanctum of the Four Guardians. When all four totems rest upon their designated pedestals, the central sunburst portal awakens to grant eternal passage."
     }
-  ],
-  "packageSource": "story_guardians_3"
+  ]
 }

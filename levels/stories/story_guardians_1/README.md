@@ -7,7 +7,11 @@
 **Theme**: temple  
 
 ## Narrative Lore & Overview
-You arrive at the outer perimeter of the Sunken Sun Temple. Weathered wall carvings whisper forgotten lore, while pulsing respawn beacons promise sanctuary amidst ancient fire traps.
+**Chapter**: The Whispering Ruins  
+**Zone**: Default  
+**Dimensions**: 11 × 11  
+**Par Steps**: 28 | **Par Time**: 17s  
+**Theme**: temple  
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

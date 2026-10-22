@@ -7,7 +7,11 @@
 **Theme**: temple  
 
 ## Narrative Lore & Overview
-You stand before the Terrace of the Winds. An empty carved pedestal blocks the gate to the inner sanctuary. You must find the lost Falcon Statue, carry it across the terrace, and seat it on its sacred plinth.
+**Chapter**: The Falcon's Plinth  
+**Zone**: Default  
+**Dimensions**: 11 × 11  
+**Par Steps**: 32 | **Par Time**: 19s  
+**Theme**: temple  
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

@@ -83,4 +83,13 @@ describe('Levels > Story 3 (The Whispering Citadel) Multi-Room Dungeon Gating', 
     assert(decorCount >= 3, `Citadel has at least 3 lore wall decors (found ${decorCount})`);
     assert(gemCount >= 2, `Citadel has at least 2 collectible gems (found ${gemCount})`);
   });
+
+  it('verifies The Whispering Citadel contains Architect Folio #50 stone lectern with coordinate tracking (BL-176, BL-187)', () => {
+    const sign = (citadel.entities || []).find(e => e.type === 'signpost' || e.type === 'architect_note');
+    assert(sign !== undefined, 'Citadel contains an Architect Folio signpost');
+    assertEqual(sign.style, 'lectern_stone', 'Citadel folio uses lectern_stone style');
+    assertEqual(sign.title, "Architect's Folio #50", 'Citadel folio matches Folio #50');
+    assert(typeof sign.coordString === 'string' && sign.coordString.length > 0, 'Citadel folio records coordinates');
+    assert(typeof (sign.text || sign.message) === 'string' && (sign.text || sign.message).length > 20, 'Citadel folio has substantive lore');
+  });
 });
