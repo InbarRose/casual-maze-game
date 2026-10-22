@@ -21,18 +21,18 @@
     "x": 2,
     "y": 2,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 11,
-    "y": 6,
+    "x": 10,
+    "y": 2,
     "elevation": 0,
     "style": "wall_archway",
     "wallDirection": "north"
   },
-  "parSteps": 26,
-  "parTime": 14,
+  "parSteps": 61,
+  "parTime": 30,
   "architectNote": "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the winding corridors to recover the keystore; avoid dead-end traps.",
   "package": {
     "layers": "./layers.json",

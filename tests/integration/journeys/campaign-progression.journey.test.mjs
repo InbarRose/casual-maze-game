@@ -27,14 +27,14 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
 
     assertEqual(level1.id, '1');
     assertEqual(level1.chapter, 'chapter_1');
-    assertEqual(level1.parSteps, 26);
-    assertEqual(level1.parTime, 14);
+    assertEqual(level1.parSteps, 61);
+    assertEqual(level1.parTime, 30);
 
     // Verify Signpost exists in level definition
     const signpostEntity = level1.entities.find(e => e.type === 'signpost');
     assert(signpostEntity, 'Signpost entity exists in Level 1');
-    assertEqual(signpostEntity.x, 2);
-    assertEqual(signpostEntity.y, 1);
+    assertEqual(signpostEntity.x, 1);
+    assertEqual(signpostEntity.y, 2);
 
     // 3. Set up GameLoop
     const eventsRecorded = [];
@@ -88,12 +88,12 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
       },
     });
 
-    // 4. Explorer steps onto the adjacent Signpost at (2, 1)
-    gameLoop.player.gridX = 2;
-    gameLoop.player.gridY = 1;
+    // 4. Explorer steps onto the adjacent Signpost at (1, 2)
+    gameLoop.player.gridX = 1;
+    gameLoop.player.gridY = 2;
     gameLoop.player.elevation = 0;
-    gameLoop.player.worldX = 2 * 32 + 16;
-    gameLoop.player.worldY = 1 * 32 + 16;
+    gameLoop.player.worldX = 1 * 32 + 16;
+    gameLoop.player.worldY = 2 * 32 + 16;
     gameLoop.handleCellArrival();
 
     // Verify interaction prompt is available without auto-modal spam (BL-81)
@@ -112,10 +112,10 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
     assert(signReadEvent.data.text.includes('Every grand labyrinth begins with a single step'));
     assertEqual(gameLoop.getJournalEntries().length, 1, 'Journal recorded Architect Note');
 
-    // 5. Explorer moves to Key location at (2, 10)
-    gameLoop.player.gridX = 2;
+    // 5. Explorer moves to Key location at (11, 10)
+    gameLoop.player.gridX = 11;
     gameLoop.player.gridY = 10;
-    gameLoop.player.worldX = 2 * 32 + 16;
+    gameLoop.player.worldX = 11 * 32 + 16;
     gameLoop.player.worldY = 10 * 32 + 16;
     gameLoop.handleCellArrival();
 
@@ -123,24 +123,24 @@ describe('User Journey > Progressive Campaign & Mechanical Escalation', () => {
     assert(keyEvent, 'key:collected event emitted upon stepping on key');
     assert(gameLoop.player.hasKey('key_gold_1'), 'Player holds Dungeon Master Key');
 
-    // 6. Explorer unlocks door at (9, 6)
+    // 6. Explorer unlocks door at (9, 2)
     const door = level1.entities.find(e => e.id === 'door_gold_1');
     assert(door, 'Gold door exists in level');
 
     // Simulate stepping through door
     gameLoop.player.gridX = 9;
-    gameLoop.player.gridY = 6;
+    gameLoop.player.gridY = 2;
     gameLoop.player.worldX = 9 * 32 + 16;
-    gameLoop.player.worldY = 6 * 32 + 16;
+    gameLoop.player.worldY = 2 * 32 + 16;
     gameLoop.handleCellArrival();
 
-    // 7. Explorer steps to exit portal at (11, 6) within par thresholds
-    gameLoop.player.gridX = 11;
-    gameLoop.player.gridY = 6;
-    gameLoop.player.worldX = 11 * 32 + 16;
-    gameLoop.player.worldY = 6 * 32 + 16;
-    gameLoop.player.stepsTaken = 22; // Less than parSteps: 26
-    gameLoop.elapsedTime = 10000;    // 10.0s, less than parTime: 14s
+    // 7. Explorer steps to exit portal at (10, 2) within par thresholds
+    gameLoop.player.gridX = 10;
+    gameLoop.player.gridY = 2;
+    gameLoop.player.worldX = 10 * 32 + 16;
+    gameLoop.player.worldY = 2 * 32 + 16;
+    gameLoop.player.stepsTaken = 53; // Optimal: 53, parSteps: 61
+    gameLoop.elapsedTime = 20000;    // 20.0s, less than parTime: 30s
 
     gameLoop.handleVictory();
     assert(victoryAchieved, 'Level victory achieved upon reaching exit');

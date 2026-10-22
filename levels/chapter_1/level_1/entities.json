@@ -3,8 +3,8 @@
     "id": "sign_ch1_1",
     "type": "signpost",
     "title": "Architect's Note #1",
-    "x": 2,
-    "y": 1,
+    "x": 1,
+    "y": 2,
     "elevation": 0,
     "text": "Architect's Note #1: Every grand labyrinth begins with a single step. Beyond this entry vestibule lies the Golden Gate. Follow the winding corridors to recover the keystore; avoid dead-end traps."
   },
@@ -19,10 +19,20 @@
     "elevation": 0
   },
   {
+    "id": "inscr_secret_hint",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Carved runes: The dead-end wall whispers of hollow stone... seek the fissure where the mortar crumbles.",
+    "playerDialogue": "This dead end feels drafty. Something is concealed behind this wall.",
+    "x": 1,
+    "y": 5,
+    "elevation": 0
+  },
+  {
     "id": "key_gold_1",
     "type": "key",
     "color": "gold",
-    "x": 2,
+    "x": 11,
     "y": 10,
     "elevation": 0
   },
@@ -32,7 +42,7 @@
     "color": "gold",
     "requiresKey": "key_gold_1",
     "x": 9,
-    "y": 6,
+    "y": 2,
     "elevation": 0
   },
   {
@@ -40,23 +50,15 @@
     "type": "collectible",
     "name": "Secret Sunstone",
     "points": 250,
-    "x": 5,
-    "y": 1,
+    "x": 1,
+    "y": 7,
     "elevation": 0
   },
   {
     "id": "torch_ch1_1_spawn",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 1,
-    "y": 0,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch1_1_foyer",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 7,
+    "x": 3,
     "y": 1,
     "elevation": 0
   },
@@ -64,7 +66,7 @@
     "id": "torch_ch1_1_keystore",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 2,
+    "x": 11,
     "y": 9,
     "elevation": 0
   },
@@ -73,7 +75,7 @@
     "type": "wall_decor",
     "decorType": "torch",
     "x": 9,
-    "y": 5,
+    "y": 1,
     "elevation": 0
   }
 ]
