@@ -191,6 +191,14 @@ This document tracks project milestones, current release status, active developm
     - Graduated Levels 21–24 to **B- Tier (60.8%–61.3%)** and Levels 25–28 to **B Tier (65.2%–65.6%)**, bringing total graduated levels to 34 / 53.
   - Rebuilt `docs/LEVEL_SCORING_REGISTER.md` and updated `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed). Merged via [PR #115](https://github.com/InbarRose/casual-maze-game/pull/115).
 
+- [x] **Phase 6 Overhaul: Monolith Spire & Apex of the Prism (BL-169, ADR-0047)**:
+  - Overhaul Chapter 8 (Levels 29–32) and Chapter 10 (Levels 37–40) per ADR-0047:
+    - Enhanced Chapter 8 Monolith Spire: 4-way camera perspective rotation, 3D occluded underpass bridges, 4-faced cardinal monument carvings, branching victory exits contract, and monolith torch sconces.
+    - Enhanced Chapter 10 Apex of the Prism: flagship mega-labyrinths ($23\times 23$ to $29\times 29$), concentric viaduct trestles, battlement walkways, harmonic mirror forcefields, apex colossus sentinels, 4-elemental chromatic key chain, and prismatic torch sconces.
+    - Maintained 100% zero-bypass gating solvability and solid-wall placement for all 32 placed torches.
+    - Graduated Levels 29–32 to **B Tier (62.7%)** and Levels 37–40 to **B Tier (67.8%)**, bringing total graduated levels to 42 / 53.
+  - Rebuilt `docs/LEVEL_SCORING_REGISTER.md` and updated `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed). Merged via [PR #116](https://github.com/InbarRose/casual-maze-game/pull/116).
+
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).

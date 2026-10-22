@@ -145,11 +145,24 @@ const PHASE5_OVERHAULED_IDS = new Set([
   '25', '26', '27', '28'
 ]);
 
+/**
+ * Levels that have undergone Phase 6 Overhaul per ADR-0047 (BL-169):
+ * Monolith Spire & Apex of the Prism (Levels 29–32, 37–40):
+ * 4-way camera perspective rotation, cardinal carvings, 3D underpasses,
+ * apex colossus sentinels, harmonic mirror forcefields, chromatic gates,
+ * and dynamic paver torch lighting.
+ */
+const PHASE6_OVERHAULED_IDS = new Set([
+  '29', '30', '31', '32',
+  '37', '38', '39', '40'
+]);
+
 const ALL_OVERHAULED_IDS = new Set([
   ...PHASE2_OVERHAULED_IDS,
   ...PHASE3_OVERHAULED_IDS,
   ...PHASE4_OVERHAULED_IDS,
-  ...PHASE5_OVERHAULED_IDS
+  ...PHASE5_OVERHAULED_IDS,
+  ...PHASE6_OVERHAULED_IDS
 ]);
 
 /**
@@ -172,6 +185,7 @@ function computeScores(levelMetric) {
   const isPhase3 = PHASE3_OVERHAULED_IDS.has(id);
   const isPhase4 = PHASE4_OVERHAULED_IDS.has(id);
   const isPhase5 = PHASE5_OVERHAULED_IDS.has(id);
+  const isPhase6 = PHASE6_OVERHAULED_IDS.has(id);
 
   // Chair 1: Spatial Architecture & Labyrinth Topology (Baseline 3.0 - 5.0)
   // Uniform 1-tile corridors heavily penalized.
@@ -336,6 +350,29 @@ function computeScores(levelMetric) {
         c6_1 = 6.6; c6_2 = 6.4; c6_3 = 6.6; // Apex beacon chimes, frostfire relics
         c7_1 = 6.0; c7_2 = 6.4; c7_3 = hasFogOfWar ? 6.0 : 5.2; // Patrolling sentinels, sovereign golem
         c8_1 = 7.0; c8_2 = 6.8; c8_3 = 6.4;
+      }
+    } else if (isPhase6) {
+      // Phase 6 Overhaul: Monolith Spire (29-32) & Apex of the Prism (37-40)
+      const isMonolith = ['29', '30', '31', '32'].includes(id);
+      if (isMonolith) {
+        c1_1 = 6.4; c1_2 = 6.4; c1_3 = 6.2; // Monolith courtyards, cardinal ambulatories
+        c2_1 = 6.4; c2_2 = 6.0; c2_3 = 6.2; // 3D underpasses occluded by overhead bridges
+        c3_1 = 6.6; c3_2 = 6.4; c3_3 = 6.6; // Monolith stone pavers with warm torchlight
+        c4_1 = 6.6; c4_2 = 6.6; c4_3 = 6.6; // Cardinal inscriptions, 4-faced pillar lore
+        c5_1 = 6.8; c5_2 = 6.8; c5_3 = 6.8; // 4-way camera perspective rotation puzzles
+        c6_1 = 6.4; c6_2 = 6.4; c6_3 = 6.4; // Screen punch, cardinal compass relics
+        c7_1 = 4.8; c7_2 = 4.4; c7_3 = hasFogOfWar ? 5.8 : 4.8; // Fog of war spatial disorientation
+        c8_1 = 6.8; c8_2 = 6.6; c8_3 = 6.4; // Branching victory exits contract
+      } else {
+        // Apex of the Prism Mega-Labyrinths (37-40): Chromatic barriers, apex colossus, viaduct trestles
+        c1_1 = 6.8; c1_2 = 6.8; c1_3 = 6.6; // Monumental macro-labyrinths (23x23 to 29x29)
+        c2_1 = 7.0; c2_2 = 6.8; c2_3 = 6.8; // Multi-elevation bridges, battlement parapets, trestles
+        c3_1 = 7.0; c3_2 = 6.8; c3_3 = 7.0; // Prismatic refraction shaders, live radial torch lighting
+        c4_1 = 6.8; c4_2 = 6.8; c4_3 = 6.8; // Apex codex, chromatic sanctuary lore
+        c5_1 = 6.8; c5_2 = 6.8; c5_3 = 6.8; // Harmonic mirror seals, astral rifts, 4-quadrant chromatic key chain
+        c6_1 = 6.8; c6_2 = 6.6; c6_3 = 6.8; // Apex beacon chimes, diamond secrets
+        c7_1 = 6.6; c7_2 = 6.8; c7_3 = hasFogOfWar ? 6.4 : 5.8; // Apex colossus patroller, timed hazards
+        c8_1 = 7.2; c8_2 = 7.0; c8_3 = 6.8; // 4-elemental sequential apex gate
       }
     } else {
       // Chapter 1 Foundations Overhaul: Foyer lighting, shortcut loopback winches, ancient lore, hidden relics
