@@ -7,7 +7,7 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 19,
+    "width": 21,
     "height": 19
   },
   "config": {
@@ -19,7 +19,7 @@
     "viewPerspective": "angled"
   },
   "spawn": {
-    "x": 1,
+    "x": 3,
     "y": 1,
     "elevation": 0,
     "style": "wall_doorway",
@@ -27,17 +27,18 @@
   },
   "exit": {
     "x": 17,
-    "y": 17,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "label": "Pressure Basin Outflow"
+    "style": "wall_archway",
+    "label": "Pressure Basin Outflow",
+    "wallDirection": "north"
   },
-  "parSteps": 48,
-  "parTime": 25,
-  "architectNote": "Timing is everything. Retrieve the pressure key from the northern gallery, then bypass the pulsing geysers to unlock the outflow gate.",
+  "parSteps": 91,
+  "parTime": 55,
+  "architectNote": "High pressure steam jets vent in rhythmic sequence. Dash past between bursts and retrieve the basin key from the eastern valve chamber.",
   "help": {
     "title": "Level 35: The Pressure Basin",
-    "message": "Timed hazard geysers pulse along the outflow corridor. Find the relief key in the northeast chamber."
+    "message": "Time your moves carefully between pressure jet bursts. Retrieve the basin key in the eastern conduit."
   },
   "package": {
     "layers": "./layers.json",

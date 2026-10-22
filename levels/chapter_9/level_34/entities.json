@@ -1,5 +1,16 @@
 [
   {
+    "id": "note_34",
+    "type": "architect_note",
+    "title": "Architect's Folio #34",
+    "text": "The high trestles span deep flooded flumes. Traverse the elevated viaduct at Z=1 to reach the eastern pump stations.",
+    "author": "The Grand Architect",
+    "x": 1,
+    "y": 3,
+    "elevation": 0,
+    "style": "lectern_stone"
+  },
+  {
     "id": "key_canal_34",
     "type": "key",
     "color": "#06b6d4",
@@ -14,9 +25,19 @@
     "color": "#06b6d4",
     "name": "Submerged Flume Gate",
     "requiresKey": "key_canal_34",
-    "x": 14,
-    "y": 15,
+    "x": 17,
+    "y": 3,
     "elevation": 0
+  },
+  {
+    "id": "checkpoint_34",
+    "type": "checkpoint",
+    "style": "crystal_beacon",
+    "name": "Aqueduct Pier Beacon",
+    "x": 12,
+    "y": 7,
+    "elevation": 0,
+    "color": "#38bdf8"
   },
   {
     "id": "patroller_canal_34",
@@ -27,78 +48,77 @@
     "speed": 1,
     "waypoints": [
       {
-        "x": 8,
-        "y": 8
+        "x": 6,
+        "y": 1
       },
       {
-        "x": 8,
-        "y": 12
+        "x": 6,
+        "y": 3
       }
     ]
   },
   {
-    "id": "checkpoint_34",
-    "type": "checkpoint",
-    "style": "crystal_beacon",
-    "name": "Aqueduct Pier Beacon",
-    "x": 13,
-    "y": 7,
-    "elevation": 0,
-    "color": "#38bdf8"
-  },
-  {
-    "id": "decor_note_34",
+    "id": "plate_trestle_clue",
     "type": "wall_decor",
-    "decorType": "plaque",
-    "title": "Trestle Engineering",
-    "text": "Elevated flumes transport pure glacial melt above the marsh runoff.",
+    "decorType": "runic_plate",
+    "title": "Trestle Engineering Plate",
+    "text": "Elevated flumes transport glacial runoff. The canal pressure key rests in the southern drain.",
     "author": "Chief Engineer Valen",
-    "x": 4,
-    "y": 4,
-    "facing": "south",
-    "elevation": 0
+    "x": 12,
+    "y": 5,
+    "elevation": 0,
+    "facing": "north"
   },
   {
-    "id": "gem_canal_34",
+    "id": "carving_secret_canal",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "title": "Canal Wall Bas-Relief",
+    "text": "Submerged beneath the southwest floor lies the forgotten sunstone.",
+    "author": "Canal Mason",
+    "x": 3,
+    "y": 15,
+    "elevation": 0,
+    "facing": "west"
+  },
+  {
+    "id": "secret_gem_34",
     "type": "collectible",
     "collectibleType": "gem",
-    "name": "Canal Emerald",
+    "name": "Submerged Sunstone",
+    "scoreValue": 450,
+    "color": "#f59e0b",
+    "x": 1,
+    "y": 15,
+    "elevation": 0
+  },
+  {
+    "id": "gem_canal_topaz",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Aqueduct Topaz",
     "scoreValue": 180,
-    "color": "#10b981",
-    "x": 15,
+    "color": "#fbbf24",
+    "x": 8,
+    "y": 5,
+    "elevation": 1
+  },
+  {
+    "id": "torch_34_entry",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 3,
     "y": 2,
-    "elevation": 0
+    "elevation": 0,
+    "facing": "west"
   },
   {
-    "id": "torch_34_nw",
+    "id": "torch_34_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 2,
+    "x": 17,
     "y": 2,
-    "elevation": 0
-  },
-  {
-    "id": "torch_34_ne",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 14,
-    "y": 2,
-    "elevation": 0
-  },
-  {
-    "id": "torch_34_sw",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 2,
-    "y": 14,
-    "elevation": 0
-  },
-  {
-    "id": "torch_34_se",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 14,
-    "y": 14,
-    "elevation": 0
+    "elevation": 0,
+    "facing": "east"
   }
 ]

@@ -3,11 +3,11 @@
 **Chapter**: Chapter 9  
 **Zone**: zone_9  
 **Dimensions**: 21 × 21  
-**Par Steps**: 66 | **Par Time**: 35s  
+**Par Steps**: 124 | **Par Time**: 75s  
 **Theme**: aqueduct  
 
 ## Narrative Lore & Overview
-The grand culmination of the Sunken Aqueducts. Coordinate keys across flooded canals and elevated piers to breach the Grand Spillway.
+The grand reservoir requires dual authorization. Claim the cyan terrace key first, then delve into the lower cisterns for the amethyst seal.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

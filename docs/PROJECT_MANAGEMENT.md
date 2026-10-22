@@ -49,7 +49,12 @@ This document tracks project milestones, current release status, active developm
   - Redesign Levels 25–28 ("The Sovereign Rampart", "The Frostfire Conduit", "The Prismatic Bastion", "The Sovereign's Ascent"): 1-tile winding citadel rampart labyrinths, $\ge 70\%$ corridor inertia (77%–82%), 0 dead spaces $\ge 4\times 4$, high viaduct ramparts at $Z=1$, patrolling sentinels in moats, frostfire conduit levers, aerial vortex warps, North wall portals, and stone lecterns with coordinate tracking. ([PR #128](https://github.com/InbarRose/casual-maze-game/pull/128))
 
 - [x] **Chapter 8 Rigor & World Rotation Overhaul (Levels 29–32) (BL-185, ADR-0059)**:
-  - Redesign Levels 29–32 ("The Cardinal Needle", "The Hidden Underpass", "The Four-Faced Pillar", "The Prismatic Spire"): 1-tile winding monolith labyrinths, $\ge 70\%$ corridor inertia (81%–85%), 0 dead spaces $\ge 4\times 4$, 4-way camera rotation (`allowRotation: true`), 3D occluded underpass bridge at (7, 7), 4-faced cardinal monolith carvings, branching exits contract on Level 32, North wall portals, and stone lecterns with coordinate tracking.
+  - Redesign Levels 29–32 ("The Cardinal Needle", "The Hidden Underpass", "The Four-Faced Pillar", "The Prismatic Spire"): 1-tile winding monolith labyrinths, $\ge 70\%$ corridor inertia (81%–85%), 0 dead spaces $\ge 4\times 4$, 4-way camera rotation (`allowRotation: true`), 3D occluded underpass bridge at (7, 7), 4-faced cardinal monolith carvings, branching exits contract on Level 32, North wall portals, and stone lecterns with coordinate tracking. ([PR #129](https://github.com/InbarRose/casual-maze-game/pull/129))
+
+- [x] **Chapter 9 Rigor & Grand Aqueduct Overhaul (Levels 33–36) (BL-186, ADR-0060)**:
+  - Redesign Levels 33–36 ("The Sluice Gate", "Submerged Crossings", "The Pressure Basin", "Grand Aqueduct Reservoir"): 1-tile winding aqueduct labyrinths, $\ge 70\%$ corridor inertia (78%–81%), 0 dead spaces $\ge 4\times 4$, 3D multi-elevation bridges over flooded canals, timed water hazards, dual-key progression, North wall portals, and stone lecterns with coordinate tracking.
+
+- [ ] **Chapter 10 Rigor & Prismatic Apex Overhaul (Levels 37–40) (BL-186, ADR-0061)**:
 
 ---
 
@@ -1040,6 +1045,7 @@ All architectural decisions are documented in `docs/adr/`:
 | [0057](adr/0057-chapter-6-arcane-enigmas-rigor-and-puzzle-gates.md) | Chapter 6 Arcane Enigmas Rigor, Puzzle Gates, Cipher Dials & Scriptorium Labyrinth Topology | Accepted | 2026-10-22 |
 | [0058](adr/0058-chapter-7-citadel-trials-rigor-and-rampart-synthesis.md) | Chapter 7 Citadel Trials Rigor, High Viaduct Ramparts, Frostfire Conduits & Grand Synthesis Labyrinth Topology | Accepted | 2026-10-22 |
 | [0059](adr/0059-chapter-8-world-rotation-rigor-and-monolith-synthesis.md) | Chapter 8 World Rotation Rigor, 3D Occluded Underpasses, Cardinal Monoliths & Spire Bifurcation Labyrinth Topology | Accepted | 2026-10-22 |
+| [0060](adr/0060-chapter-9-grand-aqueduct-rigor-and-hydraulic-synthesis.md) | Chapter 9 Grand Aqueduct Rigor, Sluice Gates, Flume Bridges & Hydrodynamic Labyrinth Topology | Accepted | 2026-10-22 |
 
 ---
 

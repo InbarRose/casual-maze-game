@@ -2,12 +2,12 @@
 
 **Chapter**: Chapter 9  
 **Zone**: zone_9  
-**Dimensions**: 19 × 19  
-**Par Steps**: 48 | **Par Time**: 25s  
+**Dimensions**: 21 × 19  
+**Par Steps**: 91 | **Par Time**: 55s  
 **Theme**: aqueduct  
 
 ## Narrative Lore & Overview
-Timing is everything. Retrieve the pressure key from the northern gallery, then bypass the pulsing geysers to unlock the outflow gate.
+High pressure steam jets vent in rhythmic sequence. Dash past between bursts and retrieve the basin key from the eastern valve chamber.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

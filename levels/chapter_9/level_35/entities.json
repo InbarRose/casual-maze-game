@@ -1,11 +1,22 @@
 [
   {
+    "id": "note_35",
+    "type": "architect_note",
+    "title": "Architect's Folio #35",
+    "text": "The pressure basin gathers steam and overflow. When the rhythmic valves release, the daring slip past.",
+    "author": "The Grand Architect",
+    "x": 1,
+    "y": 3,
+    "elevation": 0,
+    "style": "lectern_stone"
+  },
+  {
     "id": "key_basin_35",
     "type": "key",
     "color": "#38bdf8",
     "name": "Pressure Basin Key",
-    "x": 11,
-    "y": 3,
+    "x": 19,
+    "y": 15,
     "elevation": 0
   },
   {
@@ -14,8 +25,8 @@
     "color": "#38bdf8",
     "name": "Outflow Pressure Gate",
     "requiresKey": "key_basin_35",
-    "x": 16,
-    "y": 17,
+    "x": 17,
+    "y": 3,
     "elevation": 0
   },
   {
@@ -23,10 +34,10 @@
     "type": "timed_hazard",
     "hazardType": "spikes",
     "x": 9,
-    "y": 13,
+    "y": 3,
     "elevation": 0,
     "activeDuration": 2,
-    "inactiveDuration": 2.5,
+    "inactiveDuration": 2,
     "offset": 0
   },
   {
@@ -34,10 +45,10 @@
     "type": "timed_hazard",
     "hazardType": "spikes",
     "x": 13,
-    "y": 11,
+    "y": 7,
     "elevation": 0,
-    "activeDuration": 1.8,
-    "inactiveDuration": 2.2,
+    "activeDuration": 2,
+    "inactiveDuration": 2,
     "offset": 1
   },
   {
@@ -49,68 +60,77 @@
     "speed": 1,
     "waypoints": [
       {
-        "x": 13,
-        "y": 9
+        "x": 7,
+        "y": 1
       },
       {
-        "x": 17,
-        "y": 9
+        "x": 7,
+        "y": 3
       }
     ]
   },
   {
-    "id": "decor_carving_35",
+    "id": "plate_valve_directive",
+    "type": "wall_decor",
+    "decorType": "runic_plate",
+    "title": "Relief Valve Directive",
+    "text": "When basin pressure reaches critical threshold, steam vents in alternating pulses. Observe the cadence.",
+    "author": "Basin Overseer",
+    "x": 7,
+    "y": 9,
+    "elevation": 0,
+    "facing": "north"
+  },
+  {
+    "id": "carving_secret_basin",
     "type": "wall_decor",
     "decorType": "carving",
-    "title": "Relief Valve Directive",
-    "text": "When basin pressure reaches critical threshold, vent steam via the north valve.",
-    "author": "Basin Overseer",
-    "x": 9,
-    "y": 8,
-    "facing": "south",
-    "elevation": 0
+    "title": "Subterranean Basin Relief",
+    "text": "The southwest conduit wall hides the ancient basin relic.",
+    "author": "Basin Mason",
+    "x": 1,
+    "y": 13,
+    "elevation": 0,
+    "facing": "west"
   },
   {
     "id": "gem_secret_35",
     "type": "collectible",
     "collectibleType": "gem",
-    "name": "Deep Aquamarine",
-    "scoreValue": 200,
+    "name": "Deep Aquamarine Relic",
+    "scoreValue": 500,
     "color": "#0284c7",
     "x": 3,
     "y": 15,
     "elevation": 0
   },
   {
-    "id": "torch_35_nw",
+    "id": "gem_basin_amethyst",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Pressure Amethyst",
+    "scoreValue": 200,
+    "color": "#a855f7",
+    "x": 11,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "torch_35_entry",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 2,
+    "x": 3,
     "y": 2,
-    "elevation": 0
+    "elevation": 0,
+    "facing": "west"
   },
   {
-    "id": "torch_35_ne",
+    "id": "torch_35_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 16,
+    "x": 17,
     "y": 2,
-    "elevation": 0
-  },
-  {
-    "id": "torch_35_sw",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 2,
-    "y": 14,
-    "elevation": 0
-  },
-  {
-    "id": "torch_35_se",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 16,
-    "y": 16,
-    "elevation": 0
+    "elevation": 0,
+    "facing": "east"
   }
 ]

@@ -7,7 +7,7 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 17,
+    "width": 19,
     "height": 17
   },
   "config": {
@@ -19,7 +19,7 @@
     "viewPerspective": "angled"
   },
   "spawn": {
-    "x": 1,
+    "x": 3,
     "y": 1,
     "elevation": 0,
     "style": "wall_doorway",
@@ -27,14 +27,15 @@
   },
   "exit": {
     "x": 15,
-    "y": 15,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "label": "Aqueduct Conduit"
+    "style": "wall_archway",
+    "label": "Aqueduct Conduit",
+    "wallDirection": "north"
   },
-  "parSteps": 68,
-  "parTime": 36,
-  "architectNote": "Seek the bronze sluice key in the southern overflow flume while timing the pressure jets to unlock the central watergate.",
+  "parSteps": 61,
+  "parTime": 37,
+  "architectNote": "The great watergate seals the upper cisterns. Seek the bronze sluice key in the southern overflow flume while timing the pressure jets.",
   "help": {
     "title": "Level 33: The Sluice Gate",
     "message": "The central waterway is blocked by an ancient bronze sluice gate. Locate the key in the southern basin past the sentinel."

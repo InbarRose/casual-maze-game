@@ -7,7 +7,7 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 17,
+    "width": 19,
     "height": 17
   },
   "config": {
@@ -19,21 +19,22 @@
     "viewPerspective": "angled"
   },
   "spawn": {
-    "x": 1,
+    "x": 3,
     "y": 1,
     "elevation": 0,
     "style": "wall_doorway",
     "wallDirection": "north"
   },
   "exit": {
-    "x": 15,
-    "y": 15,
+    "x": 17,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "label": "Lower Reservoir Flume"
+    "style": "wall_archway",
+    "label": "Lower Reservoir Flume",
+    "wallDirection": "north"
   },
-  "parSteps": 57,
-  "parTime": 30,
+  "parSteps": 73,
+  "parTime": 44,
   "architectNote": "Cross the elevated aqueduct bridge, then drop into the flooded channel below to retrieve the pressure key.",
   "help": {
     "title": "Level 34: Submerged Crossings",
