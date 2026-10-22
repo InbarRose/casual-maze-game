@@ -2,12 +2,12 @@
 
 **Chapter**: Chapter 7  
 **Zone**: zone_7  
-**Dimensions**: 19 × 15  
-**Par Steps**: 61 | **Par Time**: 37s  
+**Dimensions**: 21 × 17  
+**Par Steps**: 121 | **Par Time**: 73s  
 **Theme**: snow  
 
 ## Narrative Lore & Overview
-Overhead bridges pass high above the Frost Sentinel. Traverse the aerial walkway to claim the Ruby Key and throw the dynamo switch.
+Architect's Journal: Frostfire conduits regulate the moat portcullises. Shifting the dynamo fulcrum lowers the frozen barrier, permitting entry into the inner fortress.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

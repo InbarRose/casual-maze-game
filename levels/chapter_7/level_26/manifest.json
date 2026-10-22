@@ -7,8 +7,8 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 19,
-    "height": 15
+    "width": 21,
+    "height": 17
   },
   "config": {
     "fogOfWar": false,
@@ -18,22 +18,22 @@
     "theme": "snow"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 16,
-    "y": 12,
+    "x": 19,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 61,
-  "parTime": 37,
-  "architectNote": "Overhead bridges pass high above the Frost Sentinel. Traverse the aerial walkway to claim the Ruby Key and throw the dynamo switch.",
+  "parSteps": 121,
+  "parTime": 73,
+  "architectNote": "Architect's Journal: Frostfire conduits regulate the moat portcullises. Shifting the dynamo fulcrum lowers the frozen barrier, permitting entry into the inner fortress.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

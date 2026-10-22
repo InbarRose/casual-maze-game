@@ -2,12 +2,12 @@
 
 **Chapter**: Chapter 7  
 **Zone**: zone_7  
-**Dimensions**: 17 × 15  
-**Par Steps**: 37 | **Par Time**: 23s  
+**Dimensions**: 19 × 17  
+**Par Steps**: 74 | **Par Time**: 45s  
 **Theme**: snow  
 
 ## Narrative Lore & Overview
-The icy ramparts bridge the frozen abyss. Ascend the wooden incline, traverse the high gallery, and ride the rift to the Azure Sigil.
+Architect's Journal: The icy ramparts bridge the frozen abyss. Ascend the wooden incline, traverse the high gallery, and ride the rift to the Azure Sigil.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

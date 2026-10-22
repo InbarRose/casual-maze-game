@@ -2,12 +2,12 @@
 
 **Chapter**: Chapter 7  
 **Zone**: zone_7  
-**Dimensions**: 21 × 19  
-**Par Steps**: 55 | **Par Time**: 33s  
+**Dimensions**: 23 × 21  
+**Par Steps**: 135 | **Par Time**: 81s  
 **Theme**: snow  
 
 ## Narrative Lore & Overview
-The apex of the Citadel tests every virtue: scriptural memory, sentry evasion, and the Sovereign's Golden Sigil.
+Architect's Journal: The summit rampart is the crucible of the northern realm. Conquer the rune seal, traverse the high bridge over the sentinel moat, and throw the dynamo switch to open the Golden Apex.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

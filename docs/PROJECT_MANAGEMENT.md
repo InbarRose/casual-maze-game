@@ -43,7 +43,12 @@ This document tracks project milestones, current release status, active developm
   - Redesign Levels 17–20 ("The Fire Vents", "The Molten Sentinels", "The Crucible Crossing", "The Caldera Gauntlet"): 1-tile winding basalt caldera labyrinths, $\ge 70\%$ corridor inertia (81%–89%), 0 dead spaces $\ge 4\times 4$, rhythmic flame vents, obsidian patroller sentinels, mid-run checkpoint monoliths, North wall portals, and lectern folios. ([PR #126](https://github.com/InbarRose/casual-maze-game/pull/126))
 
 - [x] **Chapter 6 Rigor & Arcane Enigmas Overhaul (Levels 21–24) (BL-183, ADR-0057)**:
-  - Redesign Levels 21–24 ("The Rune Lock", "The Cipher Dials", "The Entangled Wards", "The Grand Archive"): 1-tile winding arcane archive labyrinths, $\ge 70\%$ corridor inertia (82%–84%), 0 dead spaces $\ge 4\times 4$, 4-glyph rune memory puzzle gates, 3-ring concentric celestial cipher dials, conduit dynamo levers with barrier walls, Gold sanctum keys and gates, North wall portals, and stone lecterns with coordinate tracking.
+  - Redesign Levels 21–24 ("The Rune Lock", "The Cipher Dials", "The Entangled Wards", "The Grand Archive"): 1-tile winding arcane archive labyrinths, $\ge 70\%$ corridor inertia (82%–84%), 0 dead spaces $\ge 4\times 4$, 4-glyph rune memory puzzle gates, 3-ring concentric celestial cipher dials, conduit dynamo levers with barrier walls, Gold sanctum keys and gates, North wall portals, and stone lecterns with coordinate tracking. ([PR #127](https://github.com/InbarRose/casual-maze-game/pull/127))
+
+- [x] **Chapter 7 Rigor & Citadel Trials Overhaul (Levels 25–28) (BL-184, ADR-0058)**:
+  - Redesign Levels 25–28 ("The Sovereign Rampart", "The Frostfire Conduit", "The Prismatic Bastion", "The Sovereign's Ascent"): 1-tile winding citadel rampart labyrinths, $\ge 70\%$ corridor inertia (77%–82%), 0 dead spaces $\ge 4\times 4$, high viaduct ramparts at $Z=1$, patrolling sentinels in moats, frostfire conduit levers, aerial vortex warps, North wall portals, and stone lecterns with coordinate tracking.
+
+- [ ] **Chapter 8 Rigor & World Rotation Overhaul (Levels 29–32) (BL-185, ADR-0059)**:
 
 ---
 

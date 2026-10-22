@@ -37,8 +37,8 @@ describe('Levels > Chapter 7 Grand Synthesis & Citadel Trials', () => {
   it('Level 25 (Ki): The Sovereign Rampart introduces high bridge decks and frost rifts', () => {
     const sol = solveLevel(l25);
     assert(sol !== null, 'Level 25 must be solvable');
-    assertEqual(sol.length, 32, 'Optimal path is 32 steps');
-    assertEqual(l25.parSteps, Math.ceil(32 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 64, 'Optimal path is 64 steps');
+    assertEqual(l25.parSteps, Math.ceil(64 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without teleporter
     assertEqual(solveLevel(l25, { allowTeleporters: false }), null, 'Level 25 requires traversing frost rift');
@@ -55,8 +55,8 @@ describe('Levels > Chapter 7 Grand Synthesis & Citadel Trials', () => {
   it('Level 26 (Shō): The Frostfire Conduit develops bridge traversal over sentinels with barrier levers', () => {
     const sol = solveLevel(l26);
     assert(sol !== null, 'Level 26 must be solvable');
-    assertEqual(sol.length, 53, 'Optimal path is 53 steps');
-    assertEqual(l26.parSteps, Math.ceil(53 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 105, 'Optimal path is 105 steps');
+    assertEqual(l26.parSteps, Math.ceil(105 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without barrier lever
     assertEqual(solveLevel(l26, { allowLevers: false }), null, 'Level 26 requires toggling frost barrier lever');
@@ -73,8 +73,8 @@ describe('Levels > Chapter 7 Grand Synthesis & Citadel Trials', () => {
   it('Level 27 (Ten): The Prismatic Bastion twists mechanics with cipher gates and aerial vortex warp', () => {
     const sol = solveLevel(l27);
     assert(sol !== null, 'Level 27 must be solvable');
-    assertEqual(sol.length, 26, 'Optimal path is 26 steps');
-    assertEqual(l27.parSteps, Math.ceil(26 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 142, 'Optimal path is 142 steps');
+    assertEqual(l27.parSteps, Math.ceil(142 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without cipher gate
     assertEqual(solveLevel(l27, { allowPuzzles: false }), null, 'Level 27 requires solving cipher gate');
@@ -89,8 +89,8 @@ describe('Levels > Chapter 7 Grand Synthesis & Citadel Trials', () => {
   it("Level 28 (Ketsu): The Sovereign's Ascent synthesizes ramparts, sentinels, rune seals, and checkpoint", () => {
     const sol = solveLevel(l28);
     assert(sol !== null, 'Level 28 must be solvable');
-    assertEqual(sol.length, 47, 'Optimal path is 47 steps');
-    assertEqual(l28.parSteps, Math.ceil(47 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 117, 'Optimal path is 117 steps');
+    assertEqual(l28.parSteps, Math.ceil(117 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without rune gate
     assertEqual(solveLevel(l28, { allowPuzzles: false }), null, 'Level 28 requires solving sovereign rune seal');

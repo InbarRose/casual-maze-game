@@ -2,28 +2,24 @@
   {
     "id": "sign_arch_28",
     "type": "signpost",
-    "x": 3,
-    "y": 9,
-    "z": 0,
     "title": "Architect's Note #28",
-    "text": "The apex of the Citadel tests every virtue: scriptural memory, sentry evasion, and the Sovereign's Golden Sigil.",
-    "style": "astral_scroll"
-  },
-  {
-    "id": "checkpoint_28",
-    "type": "checkpoint",
-    "name": "Citadel Apex Beacon",
-    "x": 10,
-    "y": 9,
-    "elevation": 0,
-    "z": 0
-  },
-  {
-    "id": "puzzle_gate_28",
-    "type": "puzzle_gate",
-    "x": 10,
-    "y": 4,
+    "style": "lectern_stone",
+    "chapter": "chapter_7",
+    "levelId": "28",
+    "x": 1,
+    "y": 3,
     "z": 0,
+    "elevation": 0,
+    "coordString": "(1, 3, 0)",
+    "text": "Architect's Journal: The summit rampart is the crucible of the northern realm. Conquer the rune seal, traverse the high bridge over the sentinel moat, and throw the dynamo switch to open the Golden Apex."
+  },
+  {
+    "id": "puzzle_gate_28_rune",
+    "type": "puzzle_gate",
+    "x": 9,
+    "y": 15,
+    "z": 0,
+    "elevation": 0,
     "puzzleType": "rune_memory",
     "solution": [
       1,
@@ -34,152 +30,133 @@
     "name": "Sovereign Rune Seal"
   },
   {
-    "id": "key_gold_28",
-    "type": "key",
-    "color": "#fbbf24",
-    "name": "Sovereign Golden Key",
-    "x": 10,
-    "y": 2,
+    "id": "checkpoint_28",
+    "type": "checkpoint",
+    "name": "Summit Redoubt Checkpoint",
+    "x": 11,
+    "y": 11,
+    "z": 0,
     "elevation": 0
   },
   {
     "id": "patroller_28",
     "type": "patroller",
-    "name": "Crypt Sovereign Golem",
-    "speed": 1,
-    "waypoints": [
+    "x": 15,
+    "y": 13,
+    "z": 0,
+    "elevation": 0,
+    "patrolPath": [
       {
-        "x": 12,
-        "y": 16,
-        "z": 0
+        "x": 15,
+        "y": 13
       },
       {
-        "x": 8,
-        "y": 16,
-        "z": 0
+        "x": 15,
+        "y": 19
+      },
+      {
+        "x": 13,
+        "y": 19
+      },
+      {
+        "x": 13,
+        "y": 15
       }
-    ]
+    ],
+    "speed": 1,
+    "name": "Summit Sentinel"
   },
   {
-    "id": "lever_28",
+    "id": "lever_28_summit",
     "type": "lever",
-    "name": "Sovereign Crypt Dynamo Lever",
-    "style": "switch_lever",
-    "x": 10,
-    "y": 17,
+    "label": "Summit Portcullis Dynamo",
+    "x": 11,
+    "y": 19,
+    "z": 0,
     "elevation": 0,
-    "state": false,
     "targets": [
       {
         "action": "toggle_tile",
         "layer": "ground",
-        "x": 16,
-        "y": 9,
+        "x": 15,
+        "y": 7,
         "stateA": 0,
         "stateB": 1
       }
     ]
   },
   {
+    "id": "key_gold_28",
+    "type": "key",
+    "keyId": "key_gold_28",
+    "color": "gold",
+    "name": "Golden Apex Key",
+    "x": 21,
+    "y": 19,
+    "z": 0,
+    "elevation": 0
+  },
+  {
     "id": "door_gold_28",
     "type": "door",
     "requiresKey": "key_gold_28",
-    "color": "#fbbf24",
-    "name": "Sovereign Apex Portal Gate",
-    "x": 15,
-    "y": 9,
+    "color": "gold",
+    "doorColor": "gold",
+    "name": "Golden Apex Portal",
+    "x": 21,
+    "y": 3,
+    "z": 0,
     "elevation": 0
   },
   {
-    "id": "wall_note_28",
+    "id": "secret_gem_28",
+    "type": "collectible",
+    "itemId": "gem_sovereign_crown",
+    "name": "Sovereign Crown Jewel",
+    "points": 600,
+    "x": 13,
+    "y": 1,
+    "z": 0,
+    "elevation": 0
+  },
+  {
+    "id": "inscr_ascent_28",
     "type": "wall_decor",
     "decorType": "carving",
-    "text": "Here the Sovereign stood upon the snowy peak, holding the threads of space, time, and spirit.",
-    "playerDialogue": "I will unlock the north rune seal for the key, and brave the crypt for the barrier switch.",
-    "x": 2,
-    "y": 8,
-    "elevation": 0
-  },
-  {
-    "id": "gem_sovereign_orb_28",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Sovereign Royal Orb",
-    "scoreValue": 250,
-    "x": 3,
+    "facing": "north",
+    "text": "Only those who master the ancient runes may tread the high rampart of kings.",
+    "playerDialogue": "Wall relief depicting the majestic mountain citadel.",
+    "x": 7,
     "y": 3,
     "elevation": 0
   },
   {
-    "id": "gem_citadel_aegis_28",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Aegis of the High Citadel",
-    "scoreValue": 250,
-    "x": 17,
+    "id": "inscr_secret_28",
+    "type": "wall_decor",
+    "decorType": "runic_plate",
+    "facing": "north",
+    "text": "ᚲᚱᛟ In the zenith vault rests the Sovereign Crown Jewel.",
+    "playerDialogue": "Gilded frost plate pointing to the northern vault.",
+    "x": 13,
     "y": 3,
     "elevation": 0
   },
   {
-    "id": "gem_frostfire_scepter_28",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Frostfire Scepter Gem",
-    "scoreValue": 200,
-    "x": 3,
-    "y": 15,
-    "elevation": 0
-  },
-  {
-    "id": "gem_zenith_crest_28",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Zenith Sun Crest",
-    "scoreValue": 250,
-    "x": 17,
-    "y": 15,
-    "elevation": 0
-  },
-  {
-    "id": "secret_sovereign_28",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Sovereign Apex Zenith Star",
-    "scoreValue": 500,
-    "x": 1,
+    "id": "torch_ch7_28_spawn",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "facing": "north",
+    "x": 4,
     "y": 1,
     "elevation": 0
   },
   {
-    "id": "torch_28_nw",
+    "id": "torch_ch7_28_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 5,
-    "y": 5,
-    "elevation": 0
-  },
-  {
-    "id": "torch_28_ne",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 15,
-    "y": 5,
-    "elevation": 0
-  },
-  {
-    "id": "torch_28_sw",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 5,
-    "y": 13,
-    "elevation": 0
-  },
-  {
-    "id": "torch_28_se",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 15,
-    "y": 13,
+    "facing": "north",
+    "x": 20,
+    "y": 1,
     "elevation": 0
   }
 ]

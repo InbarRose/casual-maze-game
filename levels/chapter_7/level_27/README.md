@@ -2,12 +2,12 @@
 
 **Chapter**: Chapter 7  
 **Zone**: zone_7  
-**Dimensions**: 19 × 17  
-**Par Steps**: 30 | **Par Time**: 18s  
+**Dimensions**: 21 × 19  
+**Par Steps**: 164 | **Par Time**: 99s  
 **Theme**: snow  
 
 ## Narrative Lore & Overview
-Align the stellar cipher to reach the high bridge. Step into the aerial vortex to breach the sealed inner vault.
+Architect's Journal: Beyond the cipher dial lies the aerial vortex. Ride the crystalline updraft across the frozen abyss to seize the Golden Citadel Key.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

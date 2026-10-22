@@ -7,8 +7,8 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 21,
-    "height": 19
+    "width": 23,
+    "height": 21
   },
   "config": {
     "fogOfWar": true,
@@ -18,22 +18,22 @@
     "theme": "snow"
   },
   "spawn": {
-    "x": 2,
-    "y": 9,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 18,
-    "y": 9,
+    "x": 21,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 55,
-  "parTime": 33,
-  "architectNote": "The apex of the Citadel tests every virtue: scriptural memory, sentry evasion, and the Sovereign's Golden Sigil.",
+  "parSteps": 135,
+  "parTime": 81,
+  "architectNote": "Architect's Journal: The summit rampart is the crucible of the northern realm. Conquer the rune seal, traverse the high bridge over the sentinel moat, and throw the dynamo switch to open the Golden Apex.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
