@@ -36,20 +36,43 @@ export class BiomeSurfaceShaders {
    */
   static renderFloorDetails(ctx, x, y, sx, sy, tileSize, themeKey, seed, exitPulseTimer = 0) {
     const hash = this.getDecorHash(x, y, seed + 101);
+    const key = (themeKey === 'emerald' ? 'jungle' : (themeKey === 'magma' ? 'lava' : (themeKey === 'glacial' ? 'snow' : themeKey)));
 
-    if (themeKey === 'dungeon') {
-      if (hash < 0.35) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.035)';
-        ctx.fillRect(sx + 2, sy + 2, tileSize * 0.42, tileSize * 0.42);
-        ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-        ctx.fillRect(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.45, tileSize * 0.45);
-      } else if (hash >= 0.75 && hash < 0.88) {
-        ctx.strokeStyle = 'rgba(0, 0, 0, 0.25)';
+    if (key === 'dungeon') {
+      if (hash < 0.25) {
+        // Ashlar flagstone sub-pavers with fine mortar seam
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.04)';
+        ctx.fillRect(sx + 2, sy + 2, tileSize * 0.45, tileSize * 0.45);
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+        ctx.fillRect(sx + tileSize * 0.52, sy + tileSize * 0.52, tileSize * 0.44, tileSize * 0.44);
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.22)';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(sx + tileSize * 0.5, sy + 2); ctx.lineTo(sx + tileSize * 0.5, sy + tileSize - 2);
+        ctx.stroke();
+      } else if (hash >= 0.25 && hash < 0.45) {
+        // Lichen & moss growth in crevices
+        ctx.fillStyle = 'rgba(74, 222, 128, 0.12)';
+        ctx.beginPath();
+        ctx.ellipse(sx + tileSize * 0.28, sy + tileSize * 0.72, tileSize * 0.18, tileSize * 0.10, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.09)';
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.32, sy + tileSize * 0.76, tileSize * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (hash >= 0.70 && hash < 0.85) {
+        // Carved architectural rosette / compass ring
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.24)';
         ctx.lineWidth = 1;
         ctx.beginPath();
-        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.14, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.16, 0, Math.PI * 2);
         ctx.stroke();
-      } else if (hash >= 0.88 && hash < 0.95) {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.06, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (hash >= 0.85 && hash < 0.96) {
+        // Damp puddle reflection shimmer
         const shimmer = Math.sin(exitPulseTimer * 2 + hash * 10) * 0.05 + 0.12;
         ctx.fillStyle = `rgba(56, 189, 248, ${shimmer})`;
         ctx.beginPath();
@@ -61,36 +84,64 @@ export class BiomeSurfaceShaders {
         ctx.ellipse(sx + tileSize * 0.45, sy + tileSize * 0.52, tileSize * 0.12, tileSize * 0.07, 0.2, 0, Math.PI * 2);
         ctx.stroke();
       }
-    } else if (themeKey === 'jungle') {
-      if (hash < 0.30) {
-        ctx.fillStyle = 'rgba(34, 197, 94, 0.12)';
+    } else if (key === 'jungle') {
+      if (hash < 0.28) {
+        // Creeping verdant moss
+        ctx.fillStyle = 'rgba(34, 197, 94, 0.16)';
         ctx.beginPath();
-        ctx.ellipse(sx + tileSize * 0.35, sy + tileSize * 0.4, tileSize * 0.15, tileSize * 0.08, 0.4, 0, Math.PI * 2);
+        ctx.ellipse(sx + tileSize * 0.35, sy + tileSize * 0.4, tileSize * 0.18, tileSize * 0.10, 0.4, 0, Math.PI * 2);
         ctx.fill();
-      } else if (hash >= 0.70 && hash < 0.85) {
-        ctx.fillStyle = 'rgba(234, 179, 8, 0.2)';
+        ctx.fillStyle = 'rgba(22, 101, 52, 0.12)';
         ctx.beginPath();
-        ctx.arc(sx + tileSize * 0.65, sy + tileSize * 0.6, 2, 0, Math.PI * 2);
-        ctx.arc(sx + tileSize * 0.72, sy + tileSize * 0.68, 1.5, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize * 0.4, sy + tileSize * 0.38, tileSize * 0.06, 0, Math.PI * 2);
         ctx.fill();
-      } else if (hash >= 0.85 && hash < 0.93) {
+      } else if (hash >= 0.28 && hash < 0.48) {
+        // River pebbles & gravel insets
+        ctx.fillStyle = 'rgba(202, 138, 4, 0.22)';
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.65, sy + tileSize * 0.6, 2.5, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize * 0.74, sy + tileSize * 0.68, 1.8, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize * 0.58, sy + tileSize * 0.74, 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (hash >= 0.68 && hash < 0.82) {
+        // Surface root crossing
+        ctx.strokeStyle = 'rgba(120, 53, 15, 0.35)';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(sx + tileSize * 0.15, sy + tileSize * 0.8);
+        ctx.lineTo(sx + tileSize * 0.5, sy + tileSize * 0.45);
+        ctx.lineTo(sx + tileSize * 0.85, sy + tileSize * 0.3);
+        ctx.stroke();
+      } else if (hash >= 0.82 && hash < 0.95) {
+        // Rain ripple pool
         const ripple = Math.sin(exitPulseTimer * 2.5 + hash * 12) * 0.04 + 0.14;
         ctx.fillStyle = `rgba(34, 197, 94, ${ripple})`;
         ctx.beginPath();
         ctx.ellipse(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.24, tileSize * 0.15, -0.3, 0, Math.PI * 2);
         ctx.fill();
       }
-    } else if (themeKey === 'lava') {
-      if (hash < 0.28) {
+    } else if (key === 'lava') {
+      if (hash < 0.30) {
+        // Jagged heat fissure with warm amber pulse
         const glowPulse = Math.sin(exitPulseTimer * 3 + hash * 8) * 0.15 + 0.35;
         ctx.strokeStyle = `rgba(249, 115, 22, ${glowPulse})`;
-        ctx.lineWidth = 1.3;
+        ctx.lineWidth = 1.4;
         ctx.beginPath();
-        ctx.moveTo(sx + tileSize * 0.2, sy + tileSize * 0.3);
-        ctx.lineTo(sx + tileSize * 0.5, sy + tileSize * 0.55);
-        ctx.lineTo(sx + tileSize * 0.8, sy + tileSize * 0.7);
+        ctx.moveTo(sx + tileSize * 0.18, sy + tileSize * 0.28);
+        ctx.lineTo(sx + tileSize * 0.48, sy + tileSize * 0.52);
+        ctx.lineTo(sx + tileSize * 0.82, sy + tileSize * 0.72);
         ctx.stroke();
-      } else if (hash >= 0.78 && hash < 0.88) {
+      } else if (hash >= 0.30 && hash < 0.50) {
+        // Hexagonal basalt contraction border
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.45)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(sx + tileSize * 0.2, sy + tileSize * 0.5);
+        ctx.lineTo(sx + tileSize * 0.5, sy + tileSize * 0.2);
+        ctx.lineTo(sx + tileSize * 0.8, sy + tileSize * 0.5);
+        ctx.stroke();
+      } else if (hash >= 0.72 && hash < 0.86) {
+        // Molten bubble / hotspot
         const bubble = Math.sin(exitPulseTimer * 4 + hash * 15) * 0.2 + 0.3;
         ctx.fillStyle = `rgba(239, 68, 68, ${bubble})`;
         ctx.beginPath();
@@ -100,15 +151,33 @@ export class BiomeSurfaceShaders {
         ctx.beginPath();
         ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.05, 0, Math.PI * 2);
         ctx.fill();
+      } else if (hash >= 0.86 && hash < 0.96) {
+        // Specular obsidian sheen highlight
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+        ctx.fillRect(sx + tileSize * 0.35, sy + tileSize * 0.35, tileSize * 0.3, tileSize * 0.12);
       }
-    } else if (themeKey === 'snow') {
-      if (hash < 0.35) {
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.16)';
+    } else if (key === 'snow') {
+      if (hash < 0.32) {
+        // Frost rime borders and powder drift
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.20)';
         ctx.beginPath();
-        ctx.arc(sx + tileSize * 0.4, sy + tileSize * 0.35, tileSize * 0.12, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize * 0.38, sy + tileSize * 0.35, tileSize * 0.14, 0, Math.PI * 2);
         ctx.fill();
-      } else if (hash >= 0.80 && hash < 0.90) {
-        const glint = Math.max(0, Math.sin(exitPulseTimer * 3.5 + hash * 20)) * 0.4;
+        ctx.fillStyle = 'rgba(186, 230, 253, 0.18)';
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.44, sy + tileSize * 0.40, tileSize * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (hash >= 0.32 && hash < 0.52) {
+        // Permafrost fracture line
+        ctx.strokeStyle = 'rgba(125, 211, 252, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(sx + tileSize * 0.2, sy + tileSize * 0.7);
+        ctx.lineTo(sx + tileSize * 0.6, sy + tileSize * 0.3);
+        ctx.stroke();
+      } else if (hash >= 0.74 && hash < 0.88) {
+        // Crystalline glint sparkle
+        const glint = Math.max(0, Math.sin(exitPulseTimer * 3.5 + hash * 20)) * 0.45;
         if (glint > 0.05) {
           ctx.strokeStyle = `rgba(255, 255, 255, ${glint})`;
           ctx.lineWidth = 1;
@@ -119,32 +188,80 @@ export class BiomeSurfaceShaders {
           ctx.moveTo(cx, cy - 3); ctx.lineTo(cx, cy + 3);
           ctx.stroke();
         }
+      } else if (hash >= 0.88 && hash < 0.96) {
+        // Cerulean deep-ice translucent patch
+        ctx.fillStyle = 'rgba(14, 165, 233, 0.15)';
+        ctx.beginPath();
+        ctx.ellipse(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.22, tileSize * 0.14, 0.1, 0, Math.PI * 2);
+        ctx.fill();
       }
-    } else if (themeKey === 'cave') {
-      if (hash < 0.22) {
+    } else if (key === 'cave') {
+      if (hash < 0.30) {
+        // Rough bedrock stratification lines
+        ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(sx + 2, sy + tileSize * 0.38); ctx.lineTo(sx + tileSize - 2, sy + tileSize * 0.38);
+        ctx.moveTo(sx + 2, sy + tileSize * 0.68); ctx.lineTo(sx + tileSize - 2, sy + tileSize * 0.68);
+        ctx.stroke();
+      } else if (hash >= 0.30 && hash < 0.50) {
+        // Subterranean amethyst / quartz cluster with purple pulse
         const pulse = Math.sin(exitPulseTimer * 2.2 + hash * 14) * 0.15 + 0.35;
         ctx.fillStyle = `rgba(192, 132, 252, ${pulse})`;
         ctx.beginPath();
-        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, 2, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, 2.5, 0, Math.PI * 2);
+        ctx.arc(sx + tileSize * 0.58, sy + tileSize * 0.46, 1.8, 0, Math.PI * 2);
         ctx.fill();
-      } else if (hash >= 0.78 && hash < 0.89) {
+      } else if (hash >= 0.72 && hash < 0.86) {
+        // Stalagmite mineral ring
+        ctx.strokeStyle = 'rgba(168, 85, 247, 0.25)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.45, sy + tileSize * 0.55, tileSize * 0.12, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (hash >= 0.86 && hash < 0.96) {
+        // Bioluminescent damp spore pool
         const damp = Math.sin(exitPulseTimer * 1.8 + hash * 9) * 0.06 + 0.15;
         ctx.fillStyle = `rgba(168, 85, 247, ${damp})`;
         ctx.beginPath();
         ctx.ellipse(sx + tileSize * 0.48, sy + tileSize * 0.54, tileSize * 0.2, tileSize * 0.12, 0.1, 0, Math.PI * 2);
         ctx.fill();
       }
-    } else if (themeKey === 'sunset' || themeKey === 'temple') {
-      if (hash < 0.32) {
-        ctx.strokeStyle = 'rgba(251, 191, 36, 0.18)';
+    } else if (key === 'sunset' || key === 'temple') {
+      if (hash < 0.30) {
+        // Gilded geometric border / terracotta trim
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.22)';
         ctx.lineWidth = 1;
-        ctx.strokeRect(sx + tileSize * 0.2, sy + tileSize * 0.2, tileSize * 0.6, tileSize * 0.6);
-      } else if (hash >= 0.82 && hash < 0.92) {
-        const goldShine = Math.sin(exitPulseTimer * 2.8 + hash * 16) * 0.15 + 0.25;
+        ctx.strokeRect(sx + tileSize * 0.18, sy + tileSize * 0.18, tileSize * 0.64, tileSize * 0.64);
+      } else if (hash >= 0.30 && hash < 0.50) {
+        // Engraved sunburst glyph
+        ctx.fillStyle = 'rgba(217, 119, 6, 0.2)';
+        ctx.beginPath();
+        ctx.arc(sx + tileSize * 0.5, sy + tileSize * 0.5, tileSize * 0.1, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.3)';
+        ctx.lineWidth = 0.8;
+        ctx.beginPath();
+        ctx.moveTo(sx + tileSize * 0.5, sy + tileSize * 0.3); ctx.lineTo(sx + tileSize * 0.5, sy + tileSize * 0.7);
+        ctx.moveTo(sx + tileSize * 0.3, sy + tileSize * 0.5); ctx.lineTo(sx + tileSize * 0.7, sy + tileSize * 0.5);
+        ctx.stroke();
+      } else if (hash >= 0.74 && hash < 0.88) {
+        // Inlaid golden lozenge
+        const goldShine = Math.sin(exitPulseTimer * 2.8 + hash * 16) * 0.15 + 0.28;
         ctx.fillStyle = `rgba(251, 191, 36, ${goldShine})`;
-        ctx.fillRect(sx + tileSize * 0.45, sy + tileSize * 0.45, tileSize * 0.1, tileSize * 0.1);
+        ctx.beginPath();
+        ctx.moveTo(sx + tileSize * 0.5, sy + tileSize * 0.38);
+        ctx.lineTo(sx + tileSize * 0.62, sy + tileSize * 0.5);
+        ctx.lineTo(sx + tileSize * 0.5, sy + tileSize * 0.62);
+        ctx.lineTo(sx + tileSize * 0.38, sy + tileSize * 0.5);
+        ctx.closePath();
+        ctx.fill();
+      } else if (hash >= 0.88 && hash < 0.96) {
+        // Desert sand drift in joints
+        ctx.fillStyle = 'rgba(245, 158, 11, 0.14)';
+        ctx.fillRect(sx + tileSize * 0.1, sy + tileSize * 0.8, tileSize * 0.8, tileSize * 0.14);
       }
-    } else if (themeKey === 'aqueduct') {
+    } else if (key === 'aqueduct') {
       // Animated water channel caustics and stepping ripples (BL-127)
       if (hash < 0.32) {
         const caustic = Math.sin(exitPulseTimer * 2.4 + hash * 10) * 0.08 + 0.18;
@@ -401,6 +518,171 @@ export class BiomeSurfaceShaders {
     ctx.fillStyle = '#92400e';
     ctx.fillRect(ux - tileSize * 0.06, uy - tileSize * 0.15, tileSize * 0.12, tileSize * 0.04);
     ctx.restore();
+  }
+
+  /**
+   * Render architectural wall face details (relief carvings, ivy drapes, heat vents, icicles)
+   * on the vertical front face of corridor walls (BL-178, ADR-0052).
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {number} screenX
+   * @param {number} screenY Top of base tile (front face starts at screenY - wallH + tileSize)
+   * @param {number} tileSize
+   * @param {number} wallH Height of wall face in pixels
+   * @param {string} themeKey Active biome theme ID
+   * @param {number} seed Level seed
+   * @param {number} x Grid X
+   * @param {number} y Grid Y
+   * @param {number} exitPulseTimer
+   */
+  static renderWallFaceDetails(ctx, screenX, screenY, tileSize, wallH, themeKey, seed, x, y, exitPulseTimer = 0) {
+    const faceY = screenY - wallH + tileSize;
+    const wHash = this.getDecorHash(x, y, seed + 409);
+    const key = (themeKey === 'emerald' ? 'jungle' : (themeKey === 'magma' ? 'lava' : (themeKey === 'glacial' ? 'snow' : themeKey)));
+
+    if (key === 'dungeon') {
+      if (wHash < 0.20) {
+        // Carved stone relief panel / recessed tablet niche
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.28)';
+        ctx.fillRect(screenX + tileSize * 0.2, faceY + wallH * 0.15, tileSize * 0.6, wallH * 0.7);
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.10)';
+        ctx.lineWidth = 0.8;
+        ctx.strokeRect(screenX + tileSize * 0.2, faceY + wallH * 0.15, tileSize * 0.6, wallH * 0.7);
+      } else if (wHash >= 0.76 && wHash < 0.88) {
+        // Hanging iron wall ring / shackle
+        ctx.strokeStyle = '#475569';
+        ctx.lineWidth = 1.2;
+        ctx.strokeRect(screenX + tileSize * 0.46, faceY + wallH * 0.2, tileSize * 0.08, wallH * 0.2);
+        ctx.beginPath();
+        ctx.arc(screenX + tileSize * 0.5, faceY + wallH * 0.55, tileSize * 0.07, 0, Math.PI * 2);
+        ctx.stroke();
+      } else if (wHash >= 0.88 && wHash < 0.96) {
+        // Creeping wall moss stain
+        ctx.fillStyle = 'rgba(74, 222, 128, 0.15)';
+        ctx.beginPath();
+        ctx.ellipse(screenX + tileSize * 0.5, faceY + wallH * 0.6, tileSize * 0.25, wallH * 0.35, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (key === 'jungle') {
+      if (wHash < 0.25) {
+        // Creeping ivy vine tendril hanging from wall top
+        ctx.strokeStyle = '#15803d';
+        ctx.lineWidth = 1.4;
+        ctx.beginPath();
+        ctx.moveTo(screenX + tileSize * 0.3, faceY);
+        if (typeof ctx.bezierCurveTo === 'function') {
+          ctx.bezierCurveTo(screenX + tileSize * 0.45, faceY + wallH * 0.4, screenX + tileSize * 0.25, faceY + wallH * 0.7, screenX + tileSize * 0.4, faceY + wallH * 0.95);
+        } else {
+          ctx.lineTo(screenX + tileSize * 0.4, faceY + wallH * 0.95);
+        }
+        ctx.stroke();
+        ctx.fillStyle = '#22c55e';
+        ctx.beginPath();
+        ctx.arc(screenX + tileSize * 0.4, faceY + wallH * 0.95, 2, 0, Math.PI * 2);
+        ctx.fill();
+      } else if (wHash >= 0.75 && wHash < 0.90) {
+        // Verdant moss wash across lower masonry course
+        ctx.fillStyle = 'rgba(22, 101, 52, 0.25)';
+        ctx.fillRect(screenX, faceY + wallH * 0.5, tileSize, wallH * 0.5);
+      }
+    } else if (key === 'lava') {
+      if (wHash < 0.22) {
+        // Glowing heat fissure in mortar
+        const glow = Math.sin(exitPulseTimer * 3.5 + wHash * 10) * 0.15 + 0.35;
+        ctx.strokeStyle = `rgba(249, 115, 22, ${glow})`;
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.moveTo(screenX + tileSize * 0.2, faceY + wallH * 0.2);
+        ctx.lineTo(screenX + tileSize * 0.5, faceY + wallH * 0.5);
+        ctx.lineTo(screenX + tileSize * 0.8, faceY + wallH * 0.8);
+        ctx.stroke();
+      } else if (wHash >= 0.78 && wHash < 0.90) {
+        // Soot scorch mark
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+        ctx.beginPath();
+        ctx.ellipse(screenX + tileSize * 0.5, faceY + wallH * 0.6, tileSize * 0.18, wallH * 0.35, 0, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (key === 'snow') {
+      if (wHash < 0.24) {
+        // Icicle fringe along bottom seam
+        ctx.fillStyle = 'rgba(224, 242, 254, 0.45)';
+        ctx.beginPath();
+        ctx.moveTo(screenX + tileSize * 0.2, faceY + wallH);
+        ctx.lineTo(screenX + tileSize * 0.25, faceY + wallH - 4);
+        ctx.lineTo(screenX + tileSize * 0.3, faceY + wallH);
+        ctx.lineTo(screenX + tileSize * 0.5, faceY + wallH - 5);
+        ctx.lineTo(screenX + tileSize * 0.7, faceY + wallH);
+        ctx.closePath();
+        ctx.fill();
+      } else if (wHash >= 0.76 && wHash < 0.90) {
+        // Pale glacial glaze
+        ctx.fillStyle = 'rgba(186, 230, 253, 0.16)';
+        ctx.fillRect(screenX, faceY, tileSize, wallH);
+      }
+    } else if (key === 'sunset' || key === 'temple') {
+      if (wHash < 0.22) {
+        // Gilded bas-relief trim
+        ctx.strokeStyle = 'rgba(251, 191, 36, 0.35)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(screenX, faceY + wallH * 0.3); ctx.lineTo(screenX + tileSize, faceY + wallH * 0.3);
+        ctx.moveTo(screenX, faceY + wallH * 0.7); ctx.lineTo(screenX + tileSize, faceY + wallH * 0.7);
+        ctx.stroke();
+      } else if (wHash >= 0.78 && wHash < 0.90) {
+        // Sun disc carving in wall
+        ctx.fillStyle = 'rgba(217, 119, 6, 0.3)';
+        ctx.beginPath();
+        ctx.arc(screenX + tileSize * 0.5, faceY + wallH * 0.5, wallH * 0.25, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    } else if (key === 'aqueduct') {
+      if (wHash < 0.24) {
+        // Wet algae seepage stain
+        ctx.fillStyle = 'rgba(15, 118, 110, 0.3)';
+        ctx.fillRect(screenX + tileSize * 0.3, faceY + wallH * 0.3, tileSize * 0.4, wallH * 0.7);
+      }
+    } else if (key === 'prismatic') {
+      if (wHash < 0.22) {
+        // Embedded glowing crystal shard
+        const pGlow = Math.sin(exitPulseTimer * 3 + wHash * 15) * 0.2 + 0.4;
+        ctx.fillStyle = `rgba(232, 121, 249, ${pGlow})`;
+        ctx.beginPath();
+        ctx.moveTo(screenX + tileSize * 0.5, faceY + wallH * 0.2);
+        ctx.lineTo(screenX + tileSize * 0.56, faceY + wallH * 0.5);
+        ctx.lineTo(screenX + tileSize * 0.5, faceY + wallH * 0.8);
+        ctx.lineTo(screenX + tileSize * 0.44, faceY + wallH * 0.5);
+        ctx.closePath();
+        ctx.fill();
+      }
+    }
+  }
+
+  /**
+   * Render architectural wall top cap details (stone joints, bevel border) (BL-178, ADR-0052).
+   * @param {CanvasRenderingContext2D} ctx
+   * @param {number} screenX
+   * @param {number} screenY
+   * @param {number} tileSize
+   * @param {number} wallH
+   * @param {string} themeKey
+   * @param {number} seed
+   * @param {number} x
+   * @param {number} y
+   */
+  static renderWallTopDetails(ctx, screenX, screenY, tileSize, wallH, themeKey, seed, x, y) {
+    const topY = screenY - wallH;
+    const capHash = this.getDecorHash(x, y, seed + 823);
+
+    // Subtle stone slab mortar divide
+    if (capHash < 0.60) {
+      const split = capHash < 0.30 ? 0.38 : 0.68;
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.18)';
+      ctx.fillRect(screenX + tileSize * split, topY, 1, tileSize);
+    }
+
+    // Top rim highlight line
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.08)';
+    ctx.fillRect(screenX, topY, tileSize, 1);
   }
 
   /**

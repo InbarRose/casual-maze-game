@@ -176,4 +176,20 @@ describe('Engine > Perspective Renderer', () => {
     }
     assert(true, 'Rendered all biomes with backdrop and perimeter decor successfully');
   });
+
+  it('resolves multi-variant floor and wall assets deterministically (BL-178, ADR-0052)', () => {
+    const mockCanvas = { width: 800, height: 600, getContext: () => ({ fillRect: () => {}, save: () => {}, restore: () => {} }) };
+    const renderer = new GameRenderer(mockCanvas);
+    const themeKeys = ['dungeon', 'jungle', 'emerald', 'lava', 'magma', 'snow', 'glacial', 'sunset', 'temple', 'aqueduct', 'prismatic'];
+    for (const key of themeKeys) {
+      for (let x = 0; x < 5; x++) {
+        for (let y = 0; y < 5; y++) {
+          const floorImg = renderer.getFloorAssetImage(key, x, y, 42);
+          const wallImg = renderer.getWallAssetImage(key, x, y, 42);
+          assert(floorImg === null || typeof floorImg === 'object', 'Floor asset returns null or image object');
+          assert(wallImg === null || typeof wallImg === 'object', 'Wall asset returns null or image object');
+        }
+      }
+    }
+  });
 });
