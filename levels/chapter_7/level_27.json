@@ -850,6 +850,38 @@
       "x": 17,
       "y": 1,
       "elevation": 0
+    },
+    {
+      "id": "torch_27_spawn",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 5,
+      "y": 2,
+      "elevation": 0
+    },
+    {
+      "id": "torch_27_north",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 9,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_27_east",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 13,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_27_bastion",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 12,
+      "y": 10,
+      "elevation": 0
     }
   ],
   "packageSource": "level_27"

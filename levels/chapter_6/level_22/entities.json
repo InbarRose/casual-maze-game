@@ -91,5 +91,37 @@
     "x": 1,
     "y": 13,
     "elevation": 0
+  },
+  {
+    "id": "torch_22_west",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 3,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "torch_22_dial",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 7,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "torch_22_south",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 3,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "torch_22_sanctum",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 12,
+    "y": 10,
+    "elevation": 0
   }
 ]

@@ -69,5 +69,37 @@
     "x": 1,
     "y": 1,
     "elevation": 0
+  },
+  {
+    "id": "torch_25_north",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 6,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "torch_25_rampart",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 3,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "torch_25_lower",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 3,
+    "y": 9,
+    "elevation": 0
+  },
+  {
+    "id": "torch_25_sanctum",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 11,
+    "y": 8,
+    "elevation": 0
   }
 ]

@@ -105,5 +105,37 @@
     "x": 1,
     "y": 13,
     "elevation": 0
+  },
+  {
+    "id": "torch_26_entry",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 6,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "torch_26_mid",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 6,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "torch_26_lever",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 13,
+    "y": 4,
+    "elevation": 0
+  },
+  {
+    "id": "torch_26_sanctum",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 13,
+    "y": 10,
+    "elevation": 0
   }
 ]
