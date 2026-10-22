@@ -547,6 +547,38 @@
       "x": 1,
       "y": 1,
       "elevation": 0
+    },
+    {
+      "id": "torch_21_west",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 4,
+      "elevation": 0
+    },
+    {
+      "id": "torch_21_gate",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 6,
+      "y": 4,
+      "elevation": 0
+    },
+    {
+      "id": "torch_21_south",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 6,
+      "y": 8,
+      "elevation": 0
+    },
+    {
+      "id": "torch_21_sanctum",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 10,
+      "y": 8,
+      "elevation": 0
     }
   ],
   "packageSource": "level_21"

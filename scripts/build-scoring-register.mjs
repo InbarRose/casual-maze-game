@@ -134,10 +134,22 @@ const PHASE4_OVERHAULED_IDS = new Set([
   '17', '18', '19', '20'
 ]);
 
+/**
+ * Levels that have undergone Phase 5 Overhaul per ADR-0047 (BL-168):
+ * Arcane Scriptoriums & Trials of Ascent (Levels 21–28):
+ * Rune memory seals, cipher dials, dynamic torch paver lighting,
+ * high ramparts, aerial vortexes, patrolling golem evasion, and ancient scholarship lore.
+ */
+const PHASE5_OVERHAULED_IDS = new Set([
+  '21', '22', '23', '24',
+  '25', '26', '27', '28'
+]);
+
 const ALL_OVERHAULED_IDS = new Set([
   ...PHASE2_OVERHAULED_IDS,
   ...PHASE3_OVERHAULED_IDS,
-  ...PHASE4_OVERHAULED_IDS
+  ...PHASE4_OVERHAULED_IDS,
+  ...PHASE5_OVERHAULED_IDS
 ]);
 
 /**
@@ -159,6 +171,7 @@ function computeScores(levelMetric) {
   const isOverhauled = ALL_OVERHAULED_IDS.has(id);
   const isPhase3 = PHASE3_OVERHAULED_IDS.has(id);
   const isPhase4 = PHASE4_OVERHAULED_IDS.has(id);
+  const isPhase5 = PHASE5_OVERHAULED_IDS.has(id);
 
   // Chair 1: Spatial Architecture & Labyrinth Topology (Baseline 3.0 - 5.0)
   // Uniform 1-tile corridors heavily penalized.
@@ -300,6 +313,29 @@ function computeScores(levelMetric) {
         c6_1 = 6.4; c6_2 = 6.4; c6_3 = 6.4; // Beacon chimes, flame burst punch, caldera gems
         c7_1 = 6.6; c7_2 = 6.4; c7_3 = hasFogOfWar ? 5.8 : 5.0; // Rhythmic hazard timing, molten sentinels
         c8_1 = 6.8; c8_2 = 6.6; c8_3 = 6.2;
+      }
+    } else if (isPhase5) {
+      // Phase 5 Overhaul: Arcane Scriptoriums (21-24) & Trials of Ascent (25-28)
+      const isScriptorium = ['21', '22', '23', '24'].includes(id);
+      if (isScriptorium) {
+        c1_1 = 6.4; c1_2 = 6.4; c1_3 = 6.2; // Scriptorium halls, rotunda courtyards
+        c2_1 = 5.6; c2_2 = 5.2; c2_3 = 5.6; // Multi-tier scriptoria
+        c3_1 = 6.6; c3_2 = 6.4; c3_3 = 6.6; // Sunset glow, live radial torch lighting
+        c4_1 = 6.6; c4_2 = 6.6; c4_3 = 6.4; // Astral codex, scholar inscriptions, celestial dials
+        c5_1 = 6.6; c5_2 = 6.6; c5_3 = 6.6; // Rune memory, cipher dials, dual entangled wards
+        c6_1 = 6.4; c6_2 = 6.4; c6_3 = 6.4; // Screen punch on rune unlock, scholar gems
+        c7_1 = 4.4; c7_2 = 4.0; c7_3 = hasFogOfWar ? 5.4 : 4.4;
+        c8_1 = 6.8; c8_2 = 6.6; c8_3 = 6.2;
+      } else {
+        // Trials of Ascent (25-28): Glacial ramparts, frost sentinels, aerial vortexes, sovereign apex
+        c1_1 = 6.6; c1_2 = 6.6; c1_3 = 6.4; // Citadel ramparts, high mountain vistas
+        c2_1 = 6.8; c2_2 = 6.4; c2_3 = 6.6; // High bridge decks over sentinels, 3D aerial vortexes
+        c3_1 = 6.8; c3_2 = 6.6; c3_3 = 6.8; // Frosty snow palette with warm torchlight contrast
+        c4_1 = 6.6; c4_2 = 6.6; c4_3 = 6.6; // Sovereign apex lore, mountain cairns
+        c5_1 = 6.6; c5_2 = 6.6; c5_3 = 6.6; // Aerial vortex shortcuts, multi-tier bridge scouting
+        c6_1 = 6.6; c6_2 = 6.4; c6_3 = 6.6; // Apex beacon chimes, frostfire relics
+        c7_1 = 6.0; c7_2 = 6.4; c7_3 = hasFogOfWar ? 6.0 : 5.2; // Patrolling sentinels, sovereign golem
+        c8_1 = 7.0; c8_2 = 6.8; c8_3 = 6.4;
       }
     } else {
       // Chapter 1 Foundations Overhaul: Foyer lighting, shortcut loopback winches, ancient lore, hidden relics
