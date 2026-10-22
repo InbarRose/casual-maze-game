@@ -538,6 +538,38 @@ export const CAMPAIGN_CH4_LEVELS = Object.freeze([
         "x": 7,
         "y": 6,
         "elevation": 0
+      },
+      {
+        "id": "torch_ch4_13_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_13_east",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_13_rift_w",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_13_exit",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 6,
+        "elevation": 0
       }
     ],
     "packageSource": "level_13"
@@ -1219,12 +1251,54 @@ export const CAMPAIGN_CH4_LEVELS = Object.freeze([
         "elevation": 0
       },
       {
+        "id": "gem_starlight_14",
+        "type": "collectible",
+        "collectibleType": "gem",
+        "name": "Starlight Diamond",
+        "scoreValue": 200,
+        "x": 2,
+        "y": 13,
+        "elevation": 0
+      },
+      {
         "id": "secret_star_14",
         "type": "collectible",
         "name": "Twin Star Quartz",
         "points": 300,
-        "x": 2,
-        "y": 13,
+        "x": 4,
+        "y": 12,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_14_spawn",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_14_east",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_14_alpha",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 3,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_14_beta",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 7,
         "elevation": 0
       }
     ],
@@ -1963,6 +2037,38 @@ export const CAMPAIGN_CH4_LEVELS = Object.freeze([
         "points": 350,
         "x": 14,
         "y": 5,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_15_foyer",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_15_east",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 11,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_15_ascent",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
+        "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_15_sanctum",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 11,
+        "y": 7,
         "elevation": 0
       }
     ],
@@ -2910,6 +3016,38 @@ export const CAMPAIGN_CH4_LEVELS = Object.freeze([
         "points": 400,
         "x": 9,
         "y": 7,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_16_nw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_16_ne",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 12,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_16_sw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 3,
+        "y": 9,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch4_16_se",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 15,
+        "y": 15,
         "elevation": 0
       }
     ],

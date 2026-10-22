@@ -158,5 +158,37 @@
     "x": 1,
     "y": 1,
     "elevation": 0
+  },
+  {
+    "id": "torch_ch5_20_nw",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 2,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_20_ne",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 15,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_20_sw",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 1,
+    "y": 12,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_20_se",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 15,
+    "y": 10,
+    "elevation": 0
   }
 ]

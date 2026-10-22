@@ -58,21 +58,42 @@
   {
     "id": "gem_molten_core_17",
     "type": "collectible",
-    "collectibleType": "gem",
     "name": "Molten Core Shard",
-    "scoreValue": 200,
-    "x": 2,
-    "y": 11,
+    "points": 250,
+    "x": 1,
+    "y": 2,
     "elevation": 0
   },
   {
-    "id": "secret_molten_17",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Molten Core Geode",
-    "scoreValue": 300,
-    "x": 1,
+    "id": "torch_ch5_17_north_w",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 6,
     "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_17_north_e",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 7,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_17_vent_w",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 5,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_17_vent_e",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 9,
+    "y": 6,
     "elevation": 0
   }
 ]

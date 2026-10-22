@@ -547,21 +547,42 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
       {
         "id": "gem_molten_core_17",
         "type": "collectible",
-        "collectibleType": "gem",
         "name": "Molten Core Shard",
-        "scoreValue": 200,
-        "x": 2,
-        "y": 11,
+        "points": 250,
+        "x": 1,
+        "y": 2,
         "elevation": 0
       },
       {
-        "id": "secret_molten_17",
-        "type": "collectible",
-        "collectibleType": "gem",
-        "name": "Molten Core Geode",
-        "scoreValue": 300,
-        "x": 1,
+        "id": "torch_ch5_17_north_w",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 6,
         "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_17_north_e",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 7,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_17_vent_w",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_17_vent_e",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 6,
         "elevation": 0
       }
     ],
@@ -1241,8 +1262,8 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
         "id": "wall_note_18",
         "type": "wall_decor",
         "decorType": "carving",
-        "text": "Forged from living magma and black glass, the sentinels follow their endless circuit.",
-        "playerDialogue": "If I circle the central pillar, the sentinel will pace ahead of me.",
+        "text": "The sentinel traces a clockwise ring around the foundry pillars.",
+        "playerDialogue": "I need to slip behind the molten sentry to claim the bronze key.",
         "x": 2,
         "y": 1,
         "elevation": 0
@@ -1250,31 +1271,51 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
       {
         "id": "gem_obsidian_eye_18",
         "type": "collectible",
-        "collectibleType": "gem",
         "name": "Obsidian Sentinel Eye",
-        "scoreValue": 200,
+        "points": 300,
         "x": 1,
-        "y": 9,
+        "y": 12,
         "elevation": 0
       },
       {
-        "id": "gem_pyrite_cluster_18",
+        "id": "secret_pyrite_18",
         "type": "collectible",
-        "collectibleType": "gem",
         "name": "Pyrite Cluster",
-        "scoreValue": 150,
-        "x": 15,
+        "points": 350,
+        "x": 14,
+        "y": 6,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_18_north_w",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 5,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_18_north_e",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 13,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_18_west",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
         "y": 7,
         "elevation": 0
       },
       {
-        "id": "secret_basalt_18",
-        "type": "collectible",
-        "collectibleType": "gem",
-        "name": "Crystalline Basalt Rose",
-        "scoreValue": 350,
-        "x": 1,
-        "y": 13,
+        "id": "torch_ch5_18_pillar",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 7,
         "elevation": 0
       }
     ],
@@ -2017,8 +2058,8 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
         "type": "door",
         "requiresKey": "key_silver_19",
         "color": "#e2e8f0",
-        "name": "Sanctum Silver Seal",
-        "x": 14,
+        "name": "Crucible Exit Gate",
+        "x": 16,
         "y": 7,
         "elevation": 0
       },
@@ -2026,50 +2067,69 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
         "id": "wall_note_19",
         "type": "wall_decor",
         "decorType": "carving",
-        "text": "The glacial beacon radiates soothing chill amidst the roaring forge.",
-        "playerDialogue": "Activating the checkpoint will save my position if I stumble.",
-        "x": 2,
-        "y": 6,
+        "text": "The Glacial Beacon anchors weary travelers against the caldera heat.",
+        "playerDialogue": "Touching the beacon will save my progress through the gauntlet.",
+        "x": 8,
+        "y": 7,
         "elevation": 0
       },
       {
         "id": "gem_crucible_ember_19",
         "type": "collectible",
-        "collectibleType": "gem",
         "name": "Crucible Flame Ember",
-        "scoreValue": 200,
-        "x": 9,
-        "y": 13,
-        "elevation": 0
-      },
-      {
-        "id": "gem_basalt_heart_19",
-        "type": "collectible",
-        "collectibleType": "gem",
-        "name": "Heart of Basalt",
-        "scoreValue": 150,
+        "points": 300,
         "x": 2,
-        "y": 2,
+        "y": 12,
         "elevation": 0
       },
       {
-        "id": "gem_igneous_tears_19",
+        "id": "gem_heart_basalt_19",
         "type": "collectible",
-        "collectibleType": "gem",
-        "name": "Igneous Tear",
-        "scoreValue": 150,
-        "x": 16,
-        "y": 2,
-        "elevation": 0
-      },
-      {
-        "id": "secret_crucible_19",
-        "type": "collectible",
-        "collectibleType": "gem",
-        "name": "Crucible Sunstone",
-        "scoreValue": 400,
+        "name": "Heart of Basalt",
+        "points": 350,
         "x": 17,
+        "y": 2,
+        "elevation": 0
+      },
+      {
+        "id": "secret_igneous_tear_19",
+        "type": "collectible",
+        "name": "Igneous Tear",
+        "points": 400,
+        "x": 9,
+        "y": 12,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_19_nw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
         "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_19_ne",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 14,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_19_mid_s",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 9,
+        "y": 8,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_19_se",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 14,
+        "y": 8,
         "elevation": 0
       }
     ],
@@ -3150,6 +3210,38 @@ export const CAMPAIGN_CH5_LEVELS = Object.freeze([
         "scoreValue": 500,
         "x": 1,
         "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_20_nw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 2,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_20_ne",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 15,
+        "y": 1,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_20_sw",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 1,
+        "y": 12,
+        "elevation": 0
+      },
+      {
+        "id": "torch_ch5_20_se",
+        "type": "wall_decor",
+        "decorType": "torch",
+        "x": 15,
+        "y": 10,
         "elevation": 0
       }
     ],
