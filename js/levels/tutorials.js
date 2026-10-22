@@ -39,6 +39,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "wallDirection": "north"
     },
     "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 9 × 9  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
+    "packageSource": "tutorial_1",
     "layers": {
       "ground": [
         [
@@ -247,11 +248,15 @@ export const TUTORIAL_LEVELS = Object.freeze([
       {
         "id": "sign_tut_1",
         "type": "signpost",
-        "title": "Welcome Apprentice",
+        "title": "Architect's Folio #41",
         "x": 1,
         "y": 2,
         "elevation": 0,
-        "text": "Welcome to the Academy of Mazes! Navigate to the exit portal using arrow keys or WASD. Follow the warm glow of torches."
+        "text": "Architect's Folio #41: Welcome to the Academy of Mazes! Navigate to the exit portal using arrow keys or WASD. Follow the warm glow of torches.",
+        "style": "lectern_stone",
+        "chapter": "tutorial",
+        "levelId": "tutorial_1",
+        "coordString": "(1, 2, 0)"
       },
       {
         "id": "torch_tut_1_spawn",
@@ -296,8 +301,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "y": 5,
         "elevation": 0
       }
-    ],
-    "packageSource": "tutorial_1"
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -335,6 +339,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "wallDirection": "none"
     },
     "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
+    "packageSource": "tutorial_2",
     "layers": {
       "ground": [
         [
@@ -671,11 +676,15 @@ export const TUTORIAL_LEVELS = Object.freeze([
       {
         "id": "sign_tut_2",
         "type": "signpost",
-        "title": "Colored Portals & Keys",
+        "title": "Architect's Folio #42",
         "x": 1,
         "y": 2,
         "elevation": 0,
-        "text": "Colored gates require matching keys. Gather the Ruby and Sapphire keystones to unlock your path."
+        "text": "Architect's Folio #42: Colored gates require matching keys. Gather the Ruby and Sapphire keystones to unlock your path through the academy.",
+        "style": "lectern_stone",
+        "chapter": "tutorial",
+        "levelId": "tutorial_2",
+        "coordString": "(1, 2, 0)"
       },
       {
         "id": "torch_tut_2_spawn",
@@ -720,8 +729,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "y": 1,
         "elevation": 0
       }
-    ],
-    "packageSource": "tutorial_2"
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -759,6 +767,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "wallDirection": "none"
     },
     "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 11 × 11  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: temple  ",
+    "packageSource": "tutorial_3",
     "layers": {
       "ground": [
         [
@@ -1074,11 +1083,15 @@ export const TUTORIAL_LEVELS = Object.freeze([
       {
         "id": "sign_tut_3",
         "type": "signpost",
-        "title": "Clockwork Levers",
+        "title": "Architect's Folio #43",
         "x": 1,
         "y": 2,
         "elevation": 0,
-        "text": "Levers shift the very architecture of the maze. Toggle the Sanctuary Lever to lower the blocking stone wall at the crossroads."
+        "text": "Architect's Folio #43: Levers shift the very architecture of the maze. Toggle the Sanctuary Lever to lower the blocking stone wall at the crossroads.",
+        "style": "lectern_stone",
+        "chapter": "tutorial",
+        "levelId": "tutorial_3",
+        "coordString": "(1, 2, 0)"
       },
       {
         "id": "torch_tut_3_spawn",
@@ -1123,8 +1136,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "y": 8,
         "elevation": 0
       }
-    ],
-    "packageSource": "tutorial_3"
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1162,6 +1174,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "wallDirection": "north"
     },
     "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 13 × 13  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: jungle  ",
+    "packageSource": "tutorial_4",
     "layers": {
       "ground": [
         [
@@ -1582,11 +1595,15 @@ export const TUTORIAL_LEVELS = Object.freeze([
       {
         "id": "sign_tut_4",
         "type": "signpost",
-        "title": "Bridges & Verticality",
+        "title": "Architect's Folio #44",
         "x": 1,
         "y": 2,
         "elevation": 0,
-        "text": "Ramps lead up to elevated bridges. Cross over ground corridors to discover routes hidden in the upper layer."
+        "text": "Architect's Folio #44: Ramps lead up to elevated bridges. Cross over ground corridors to discover routes hidden in the upper canopy layer.",
+        "style": "lectern_stone",
+        "chapter": "tutorial",
+        "levelId": "tutorial_4",
+        "coordString": "(1, 2, 0)"
       },
       {
         "id": "torch_tut_4_spawn",
@@ -1639,8 +1656,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "y": 11,
         "elevation": 0
       }
-    ],
-    "packageSource": "tutorial_4"
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1678,6 +1694,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "wallDirection": "none"
     },
     "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 13 × 13  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: dungeon  ",
+    "packageSource": "tutorial_5",
     "layers": {
       "ground": [
         [
@@ -2098,11 +2115,15 @@ export const TUTORIAL_LEVELS = Object.freeze([
       {
         "id": "sign_tut_5",
         "type": "signpost",
-        "title": "The Shrouded Mist",
+        "title": "Architect's Folio #45",
         "x": 1,
         "y": 2,
         "elevation": 0,
-        "text": "The Fog of War conceals distant rooms. Rely on memory, spatial deduction, and wall sconces to find your way."
+        "text": "Architect's Folio #45: The Fog of War conceals distant rooms. Rely on memory, spatial deduction, and wall sconces to find your way.",
+        "style": "lectern_stone",
+        "chapter": "tutorial",
+        "levelId": "tutorial_5",
+        "coordString": "(1, 2, 0)"
       },
       {
         "id": "torch_tut_5_spawn",
@@ -2155,8 +2176,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "y": 11,
         "elevation": 0
       }
-    ],
-    "packageSource": "tutorial_5"
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -2194,6 +2214,7 @@ export const TUTORIAL_LEVELS = Object.freeze([
       "wallDirection": "north"
     },
     "architectNote": "**Chapter**: Campaign / Saga  \n**Zone**: Default  \n**Dimensions**: 17 × 17  \n**Par Steps**: N/A | **Par Time**: N/A  \n**Theme**: temple  ",
+    "packageSource": "tutorial_6",
     "layers": {
       "ground": [
         [
@@ -2939,11 +2960,15 @@ export const TUTORIAL_LEVELS = Object.freeze([
       {
         "id": "sign_tut_6",
         "type": "signpost",
-        "title": "Master's Graduation Trial",
+        "title": "Architect's Folio #46",
         "x": 2,
         "y": 2,
         "elevation": 0,
-        "text": "The Master's Trial synthesizes all graduation requirements: colored gates, multi-elevation viaducts, clockwork switches, and fog navigation. Claim the Master's Seal!"
+        "text": "Architect's Folio #46: The Master's Trial synthesizes all graduation requirements: colored gates, multi-elevation viaducts, clockwork switches, and fog navigation.",
+        "style": "lectern_stone",
+        "chapter": "tutorial",
+        "levelId": "tutorial_6",
+        "coordString": "(2, 2, 0)"
       },
       {
         "id": "torch_tut_6_spawn",
@@ -2979,7 +3004,6 @@ export const TUTORIAL_LEVELS = Object.freeze([
         "y": 8,
         "elevation": 0
       }
-    ],
-    "packageSource": "tutorial_6"
+    ]
   }
 ]);

@@ -127,4 +127,16 @@ describe('Levels > Story 1 Unbypassable Challenges & Gate Routing', () => {
     ch6NoLever.entities = ch6NoLever.entities.filter(e => e.id !== 'lever_t6');
     assertEqual(solveLevel(ch6NoLever), null, 'Story 1 Chapter 6 must require lever');
   });
+
+  it('validates each Tutorial Academy level contains an Architect Folio stone lectern with coordinate tracking (BL-176, BL-187)', () => {
+    for (let i = 0; i < TUTORIAL_LEVELS.length; i++) {
+      const lvl = TUTORIAL_LEVELS[i];
+      const sign = (lvl.entities || []).find(e => e.type === 'signpost' || e.type === 'architect_note');
+      assert(sign !== undefined, `Tutorial ${lvl.id} contains an Architect Folio signpost`);
+      assertEqual(sign.style, 'lectern_stone', `Tutorial ${lvl.id} folio uses lectern_stone style`);
+      assertEqual(sign.title, `Architect's Folio #${41 + i}`, `Tutorial ${lvl.id} matches sequential Folio #${41 + i}`);
+      assert(typeof sign.coordString === 'string' && sign.coordString.length > 0, `Tutorial ${lvl.id} folio records coordinate string`);
+      assert(typeof (sign.text || sign.message) === 'string' && (sign.text || sign.message).length > 20, `Tutorial ${lvl.id} folio has substantive lore`);
+    }
+  });
 });
