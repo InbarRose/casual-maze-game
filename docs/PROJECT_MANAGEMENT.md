@@ -199,6 +199,16 @@ This document tracks project milestones, current release status, active developm
     - Graduated Levels 29–32 to **B Tier (62.7%)** and Levels 37–40 to **B Tier (67.8%)**, bringing total graduated levels to 42 / 53.
   - Rebuilt `docs/LEVEL_SCORING_REGISTER.md` and updated `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed). Merged via [PR #116](https://github.com/InbarRose/casual-maze-game/pull/116).
 
+- [x] **Phase 7 Overhaul: Sunken Aqueducts & Episodic Sagas (BL-170, ADR-0047)**:
+  - Overhaul Chapter 9 (Levels 33–36) and all 7 episodic story saga levels (Relics of the Guardians 1–3, The Whispering Citadel, Sunken Vaults of the Deep 1–3) per ADR-0047:
+    - Enhanced Chapter 9 Sunken Aqueducts: canal flumes, sluice gate drainage, elevated viaduct bridges over flooded waterways, spillway colossus sentinels, and aqueduct torch sconces.
+    - Enhanced Relics of the Guardians: temple plinth riddle verses, 4-guardian statue placement altars, and ancient torch sconces.
+    - Enhanced The Whispering Citadel: 3-tier multi-room dungeon odyssey (Courtyard -> Catacombs -> High Spire), cross-room inventory persistence, dual branching exits, and citadel torch sconces.
+    - Enhanced Sunken Vaults of the Deep: subterranean cisterns, flooded bulkheads, hydrolock key sequences, and deep aquatic torch sconces.
+    - Maintained 100% zero-bypass gating solvability and solid-wall placement for all 44 placed torches.
+    - Graduated all remaining 11 levels to **B- / B Tier (65.3%–69.3%)**, completing the 7-Phase Master Overhaul and graduating **100% of platform levels (53 / 53)**!
+  - Rebuilt `docs/LEVEL_SCORING_REGISTER.md` and updated `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed). Merged via [PR #117](https://github.com/InbarRose/casual-maze-game/pull/117).
+
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
   - **Pragmatic File Line Threshold Policy (ADR-007)**: Recalibrated file budget standards to $\le 500$ lines ideal, $1,000$ lines acceptable for complex coordinators, $1,500$ lines absolute ceiling triggering refactoring (`renderer.js`, `editor-canvas.js`).

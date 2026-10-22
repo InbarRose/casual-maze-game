@@ -412,6 +412,38 @@
       "x": 7,
       "y": 9,
       "elevation": 0
+    },
+    {
+      "id": "torch_g1_w",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 2,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g1_e",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 8,
+      "y": 3,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g1_sw",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 3,
+      "y": 8,
+      "elevation": 0
+    },
+    {
+      "id": "torch_g1_se",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 7,
+      "y": 8,
+      "elevation": 0
     }
   ],
   "packageSource": "story_guardians_1"

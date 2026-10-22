@@ -157,12 +157,26 @@ const PHASE6_OVERHAULED_IDS = new Set([
   '37', '38', '39', '40'
 ]);
 
+/**
+ * Levels that have undergone Phase 7 Overhaul per ADR-0047 (BL-170):
+ * Sunken Aqueducts & Episodic Sagas (Levels 33–36, story_guardians_1..3, story_citadel_1, story_sunken_vaults_1..3):
+ * Water flumes, sluice gate mechanics, multi-room citadel, guardian plinths,
+ * pressure bulkheads, and live dynamic torch paver lighting.
+ */
+const PHASE7_OVERHAULED_IDS = new Set([
+  '33', '34', '35', '36',
+  'story_guardians_1', 'story_guardians_2', 'story_guardians_3',
+  'story_citadel_1',
+  'story_sunken_vaults_1', 'story_sunken_vaults_2', 'story_sunken_vaults_3'
+]);
+
 const ALL_OVERHAULED_IDS = new Set([
   ...PHASE2_OVERHAULED_IDS,
   ...PHASE3_OVERHAULED_IDS,
   ...PHASE4_OVERHAULED_IDS,
   ...PHASE5_OVERHAULED_IDS,
-  ...PHASE6_OVERHAULED_IDS
+  ...PHASE6_OVERHAULED_IDS,
+  ...PHASE7_OVERHAULED_IDS
 ]);
 
 /**
@@ -186,6 +200,7 @@ function computeScores(levelMetric) {
   const isPhase4 = PHASE4_OVERHAULED_IDS.has(id);
   const isPhase5 = PHASE5_OVERHAULED_IDS.has(id);
   const isPhase6 = PHASE6_OVERHAULED_IDS.has(id);
+  const isPhase7 = PHASE7_OVERHAULED_IDS.has(id);
 
   // Chair 1: Spatial Architecture & Labyrinth Topology (Baseline 3.0 - 5.0)
   // Uniform 1-tile corridors heavily penalized.
@@ -373,6 +388,51 @@ function computeScores(levelMetric) {
         c6_1 = 6.8; c6_2 = 6.6; c6_3 = 6.8; // Apex beacon chimes, diamond secrets
         c7_1 = 6.6; c7_2 = 6.8; c7_3 = hasFogOfWar ? 6.4 : 5.8; // Apex colossus patroller, timed hazards
         c8_1 = 7.2; c8_2 = 7.0; c8_3 = 6.8; // 4-elemental sequential apex gate
+      }
+    } else if (isPhase7) {
+      // Phase 7 Overhaul: Sunken Aqueducts (33-36) & Episodic Sagas (Guardians, Citadel, Sunken Vaults)
+      const isAqueduct = ['33', '34', '35', '36'].includes(id);
+      const isGuardians = id.startsWith('story_guardians_');
+      const isCitadel = id === 'story_citadel_1';
+      if (isAqueduct) {
+        c1_1 = 6.6; c1_2 = 6.6; c1_3 = 6.4; // Canal flumes, reservoir basins
+        c2_1 = 6.6; c2_2 = 6.4; c2_3 = 6.6; // Multi-elevation bridges over flooded waterways
+        c3_1 = 6.8; c3_2 = 6.6; c3_3 = 6.8; // Live water shader, dynamic radial torch paver lighting
+        c4_1 = 6.6; c4_2 = 6.6; c4_3 = 6.6; // Aqueduct directives, sluice masonry lore
+        c5_1 = 6.6; c5_2 = 6.6; c5_3 = 6.6; // Sluice gate drainage, elevated flumes
+        c6_1 = 6.6; c6_2 = 6.4; c6_3 = 6.6; // Splash footsteps, screen punch on sluice unlock
+        c7_1 = 6.2; c7_2 = 6.4; c7_3 = hasFogOfWar ? 6.2 : 5.4; // Spillway colossus, timed spikes
+        c8_1 = 7.0; c8_2 = 6.8; c8_3 = 6.4;
+      } else if (isCitadel) {
+        // Multi-Room Citadel Odyssey
+        c1_1 = 7.0; c1_2 = 7.0; c1_3 = 6.8; // 3-tier interconnected multi-room dungeon
+        c2_1 = 7.0; c2_2 = 6.8; c2_3 = 7.0; // Catacomb descents, high spire ascents
+        c3_1 = 7.0; c3_2 = 6.8; c3_3 = 7.0; // Citadel shaders, dynamic torch sconces
+        c4_1 = 7.2; c4_2 = 7.2; c4_3 = 7.2; // Diegetic lore notes, shrine of the winds
+        c5_1 = 7.0; c5_2 = 7.0; c5_3 = 7.0; // Cross-room inventory, dual branching exits
+        c6_1 = 6.8; c6_2 = 6.8; c6_3 = 6.8; // Spire portal chimes, courtyard topaz
+        c7_1 = 6.4; c7_2 = 6.6; c7_3 = 6.4; // Subterranean dread, sentinels
+        c8_1 = 7.2; c8_2 = 7.0; c8_3 = 6.8; // Multi-act progression
+      } else if (isGuardians) {
+        // Relics of the Guardians
+        c1_1 = 6.4; c1_2 = 6.4; c1_3 = 6.2; // Temple halls, plinth sanctuaries
+        c2_1 = 5.8; c2_2 = 5.4; c2_3 = 5.8;
+        c3_1 = 6.8; c3_2 = 6.6; c3_3 = 6.8; // Temple masonry with warm torchlight
+        c4_1 = 7.0; c4_2 = 7.0; c4_3 = 7.0; // Guardian riddle verses, ancient lore
+        c5_1 = 6.8; c5_2 = 6.8; c5_3 = 6.8; // 4 guardian statue placement puzzles
+        c6_1 = 6.6; c6_2 = 6.6; c6_3 = 6.6; // Plinth locking chimes, sunstone secrets
+        c7_1 = 5.4; c7_2 = 5.0; c7_3 = 5.2; // Flame vents, temple tension
+        c8_1 = 7.0; c8_2 = 6.8; c8_3 = 6.6; // 4-way pedestal logic
+      } else {
+        // Sunken Vaults of the Deep (1-3)
+        c1_1 = 6.8; c1_2 = 6.8; c1_3 = 6.6; // Subterranean cisterns, flooded bulkheads
+        c2_1 = 6.8; c2_2 = 6.6; c2_3 = 6.8; // Multi-tier drainage galleries
+        c3_1 = 7.0; c3_2 = 6.8; c3_3 = 7.0; // Aquatic lighting, dynamic paver torchlight
+        c4_1 = 7.0; c4_2 = 7.0; c4_3 = 7.0; // Primal hydrologist monoliths, pressure directives
+        c5_1 = 6.8; c5_2 = 6.8; c5_3 = 6.8; // Hydrolock key sequences, pressure pearls
+        c6_1 = 6.8; c6_2 = 6.6; c6_3 = 6.8; // Sanctuary beacon chimes, abyssal pearl secrets
+        c7_1 = 6.2; c7_2 = 6.4; c7_3 = 6.0; // Pressure hazard timing, deep dread
+        c8_1 = 7.0; c8_2 = 6.8; c8_3 = 6.6;
       }
     } else {
       // Chapter 1 Foundations Overhaul: Foyer lighting, shortcut loopback winches, ancient lore, hidden relics

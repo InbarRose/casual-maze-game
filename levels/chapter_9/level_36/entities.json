@@ -98,5 +98,37 @@
     "y": 14,
     "facing": "west",
     "elevation": 0
+  },
+  {
+    "id": "torch_36_nw",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 2,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "torch_36_ne",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 18,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "torch_36_sw",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 2,
+    "y": 18,
+    "elevation": 0
+  },
+  {
+    "id": "torch_36_se",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 18,
+    "y": 18,
+    "elevation": 0
   }
 ]
