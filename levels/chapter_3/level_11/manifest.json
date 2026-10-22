@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "temple"
+    "theme": "dungeon"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 13,
-    "y": 12,
+    "x": 15,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 30,
-  "parTime": 18,
-  "architectNote": "The master valve is balanced upon a counterweight: as the northern sluice gate lowers into the chasm, the southern passage seals.",
+  "parSteps": 91,
+  "parTime": 55,
+  "architectNote": "Architect's Journal: Shifting counterweight machinery reconfigures the lower foundation walls. Flip the central mechanism to open the southern sluice tunnel and retrieve the golden key.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

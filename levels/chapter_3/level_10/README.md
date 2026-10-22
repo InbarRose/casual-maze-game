@@ -3,11 +3,11 @@
 **Chapter**: Chapter 3  
 **Zone**: zone_3  
 **Dimensions**: 17 × 15  
-**Par Steps**: 41 | **Par Time**: 25s  
-**Theme**: temple  
+**Par Steps**: 66 | **Par Time**: 40s  
+**Theme**: dungeon  
 
 ## Narrative Lore & Overview
-Dual conduits power the hydraulic gates. Engage the western valve to unlock the concourse, then release the eastern master piston.
+Architect's Journal: Twin mechanical valves control the hydraulic floodgates. The western boiler lever unlocks passage across the central dividing bulkhead, granting access to the eastern piston switch.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

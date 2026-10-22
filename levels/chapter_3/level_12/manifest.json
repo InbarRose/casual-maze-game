@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "temple"
+    "theme": "dungeon"
   },
   "spawn": {
     "x": 9,
     "y": 2,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 9,
-    "y": 14,
+    "x": 17,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 55,
-  "parTime": 33,
-  "architectNote": "The entire citadel moves in harmony. Retrieve the Ruby Key from the western furnace, activate the eastern dynamo, and claim the Master Gear.",
+  "parSteps": 113,
+  "parTime": 68,
+  "architectNote": "Architect's Journal: At the heart of the clockwork citadel stands the Master Dynamo. Sealed by ancient crimson wards and steam pressure gates, only those who synthesize key and lever shall pass into the astral depths.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

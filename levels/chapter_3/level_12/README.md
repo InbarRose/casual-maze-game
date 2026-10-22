@@ -3,11 +3,11 @@
 **Chapter**: Chapter 3  
 **Zone**: zone_3  
 **Dimensions**: 19 × 17  
-**Par Steps**: 55 | **Par Time**: 33s  
-**Theme**: temple  
+**Par Steps**: 113 | **Par Time**: 68s  
+**Theme**: dungeon  
 
 ## Narrative Lore & Overview
-The entire citadel moves in harmony. Retrieve the Ruby Key from the western furnace, activate the eastern dynamo, and claim the Master Gear.
+Architect's Journal: At the heart of the clockwork citadel stands the Master Dynamo. Sealed by ancient crimson wards and steam pressure gates, only those who synthesize key and lever shall pass into the astral depths.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

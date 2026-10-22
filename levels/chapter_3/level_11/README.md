@@ -3,11 +3,11 @@
 **Chapter**: Chapter 3  
 **Zone**: zone_3  
 **Dimensions**: 17 × 15  
-**Par Steps**: 30 | **Par Time**: 18s  
-**Theme**: temple  
+**Par Steps**: 91 | **Par Time**: 55s  
+**Theme**: dungeon  
 
 ## Narrative Lore & Overview
-The master valve is balanced upon a counterweight: as the northern sluice gate lowers into the chasm, the southern passage seals.
+Architect's Journal: Shifting counterweight machinery reconfigures the lower foundation walls. Flip the central mechanism to open the southern sluice tunnel and retrieve the golden key.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.
