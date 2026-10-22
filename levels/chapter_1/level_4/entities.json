@@ -3,8 +3,8 @@
     "id": "sign_ch1_4",
     "type": "signpost",
     "title": "Architect's Note #4",
-    "x": 9,
-    "y": 7,
+    "x": 8,
+    "y": 8,
     "elevation": 0,
     "text": "Architect's Journal: The Triune Sanctum to the south requires all three resonance keys—Ruby, Emerald, and Sapphire. The labyrinth wings connect all three cathedral chambers beneath the shrouded mist."
   },
@@ -14,31 +14,41 @@
     "decorType": "carving",
     "text": "The cathedral bells echo through the fog. Seek the three sacred chambers in any order.",
     "playerDialogue": "The corridors branch into three deep wings.",
-    "x": 7,
-    "y": 6,
+    "x": 10,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "inscr_secret_hint_4",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Carved runes: In the northeast dead end, the mortar yields. A cathedral starstone waits in darkness.",
+    "playerDialogue": "A secret alcove in the northeast branch.",
+    "x": 17,
+    "y": 4,
     "elevation": 0
   },
   {
     "id": "key_ruby_4",
     "type": "key",
     "color": "red",
-    "x": 2,
-    "y": 8,
+    "x": 1,
+    "y": 11,
     "elevation": 0
   },
   {
     "id": "key_emerald_4",
     "type": "key",
     "color": "green",
-    "x": 16,
-    "y": 8,
+    "x": 17,
+    "y": 11,
     "elevation": 0
   },
   {
     "id": "key_blue_4",
     "type": "key",
     "color": "blue",
-    "x": 8,
+    "x": 9,
     "y": 2,
     "elevation": 0
   },
@@ -72,9 +82,18 @@
   {
     "id": "secret_gem_4",
     "type": "collectible",
-    "name": "Abyssal Sapphire",
-    "points": 400,
-    "x": 4,
+    "name": "Cathedral Starstone",
+    "points": 350,
+    "x": 17,
+    "y": 2,
+    "elevation": 0
+  },
+  {
+    "id": "gem_bonus_4",
+    "type": "collectible",
+    "name": "Sanctum Ruby",
+    "points": 150,
+    "x": 1,
     "y": 14,
     "elevation": 0
   },
@@ -82,40 +101,32 @@
     "id": "torch_ch1_4_spawn",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 9,
-    "y": 6,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch1_4_north",
-    "type": "wall_decor",
-    "decorType": "torch",
     "x": 8,
-    "y": 3,
+    "y": 7,
     "elevation": 0
   },
   {
-    "id": "torch_ch1_4_west",
+    "id": "torch_ch1_4_gate",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 3,
-    "y": 8,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch1_4_east",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 15,
-    "y": 8,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch1_4_sanctum",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 9,
+    "x": 11,
     "y": 14,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch1_4_ruby",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 1,
+    "y": 10,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch1_4_emerald",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 17,
+    "y": 10,
     "elevation": 0
   }
 ]
