@@ -1,21 +1,32 @@
 [
   {
+    "id": "note_31",
+    "type": "architect_note",
+    "title": "Architect's Folio #31",
+    "text": "The Four-Faced Pillar stands immutable at the world's axis. As you circle and turn the camera [Q / R], four sacred truths align.",
+    "author": "The Grand Architect",
+    "x": 1,
+    "y": 3,
+    "elevation": 0,
+    "style": "lectern_stone"
+  },
+  {
     "id": "key_ruby_31",
     "type": "key",
-    "color": "#f43f5e",
-    "name": "Ruby Monolith Key",
-    "x": 13,
-    "y": 2,
+    "color": "#ef4444",
+    "name": "Ruby Winds Key",
+    "x": 19,
+    "y": 9,
     "elevation": 0
   },
   {
     "id": "door_ruby_31",
     "type": "door",
-    "color": "#f43f5e",
-    "name": "Southern Pillar Gate",
+    "color": "#ef4444",
+    "name": "Four Winds Sanctuary Gate",
     "requiresKey": "key_ruby_31",
-    "x": 12,
-    "y": 13,
+    "x": 17,
+    "y": 3,
     "elevation": 0
   },
   {
@@ -72,6 +83,7 @@
     "collectibleType": "gem",
     "name": "Eye of the Four Winds",
     "scoreValue": 250,
+    "color": "#fbbf24",
     "x": 7,
     "y": 7,
     "elevation": 0
@@ -81,41 +93,40 @@
     "type": "collectible",
     "collectibleType": "gem",
     "name": "Four Winds Zephyr Core",
-    "scoreValue": 400,
+    "scoreValue": 450,
+    "color": "#38bdf8",
+    "x": 1,
+    "y": 17,
+    "elevation": 0
+  },
+  {
+    "id": "plate_monolith_wisdom",
+    "type": "wall_decor",
+    "decorType": "runic_plate",
+    "title": "Zephyr Stele Inscription",
+    "text": "The compass reveals what static eyes overlook. Rotate clockwise to view dawn, counter-clockwise for dusk.",
+    "author": "Temple Chronicler",
     "x": 13,
-    "y": 1,
+    "y": 7,
+    "facing": "north",
     "elevation": 0
   },
   {
     "id": "torch_31_entry",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 4,
-    "y": 3,
-    "elevation": 0
+    "x": 3,
+    "y": 2,
+    "elevation": 0,
+    "facing": "west"
   },
   {
-    "id": "torch_31_nw",
+    "id": "torch_31_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 6,
-    "y": 6,
-    "elevation": 0
-  },
-  {
-    "id": "torch_31_ne",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 8,
-    "y": 6,
-    "elevation": 0
-  },
-  {
-    "id": "torch_31_se",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 10,
-    "y": 11,
-    "elevation": 0
+    "x": 17,
+    "y": 2,
+    "elevation": 0,
+    "facing": "east"
   }
 ]

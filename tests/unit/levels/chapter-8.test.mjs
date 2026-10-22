@@ -38,8 +38,8 @@ describe('Levels > Chapter 8 The Shifting Monolith & World Rotation', () => {
   it('Level 29 (Ki): The Cardinal Needle introduces camera rotation and cardinal corridors', () => {
     const sol = solveLevel(l29);
     assert(sol !== null, 'Level 29 must be solvable');
-    assertEqual(sol.length, 25, 'Optimal path is 25 steps');
-    assertEqual(l29.parSteps, Math.ceil(25 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 53, 'Optimal path is 53 steps');
+    assertEqual(l29.parSteps, Math.ceil(53 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Help text teaches Q/R rotation controls
     assert(l29.help.message.includes('[Q] and [R]'), 'Help message teaches Q and R rotation keys');
@@ -56,8 +56,8 @@ describe('Levels > Chapter 8 The Shifting Monolith & World Rotation', () => {
   it('Level 30 (Shō): The Hidden Underpass develops 3D underpasses occluded by overhead bridges', () => {
     const sol = solveLevel(l30);
     assert(sol !== null, 'Level 30 must be solvable');
-    assertEqual(sol.length, 25, 'Optimal path is 25 steps');
-    assertEqual(l30.parSteps, Math.ceil(25 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 63, 'Optimal path is 63 steps');
+    assertEqual(l30.parSteps, Math.ceil(63 * 1.15), 'Par steps calibrated with 15% margin');
 
     // 3D Underpass tile layout
     assertEqual(l30.layers.ground[7][7], TILES.BRIDGE_EW, 'Ground layer has BRIDGE_EW underpass tunnel');
@@ -72,8 +72,8 @@ describe('Levels > Chapter 8 The Shifting Monolith & World Rotation', () => {
   it('Level 31 (Ten): The Four-Faced Pillar twists mechanics with 4 cardinal monolith carvings', () => {
     const sol = solveLevel(l31);
     assert(sol !== null, 'Level 31 must be solvable');
-    assertEqual(sol.length, 33, 'Optimal path is 33 steps');
-    assertEqual(l31.parSteps, Math.ceil(33 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 59, 'Optimal path is 59 steps');
+    assertEqual(l31.parSteps, Math.ceil(59 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Cardinal carvings around the central monument
     const carvings = l31.entities.filter(e => e.type === 'wall_decor' && e.decorType === 'carving');
@@ -88,8 +88,8 @@ describe('Levels > Chapter 8 The Shifting Monolith & World Rotation', () => {
   it('Level 32 (Ketsu): The Prismatic Spire synthesizes full campaign with branching exits contract', () => {
     const sol = solveLevel(l32);
     assert(sol !== null, 'Level 32 must be solvable');
-    assertEqual(sol.length, 29, 'Optimal path is 29 steps');
-    assertEqual(l32.parSteps, Math.ceil(29 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 115, 'Optimal path is 115 steps');
+    assertEqual(l32.parSteps, Math.ceil(115 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Branching exits contract
     assert(Array.isArray(l32.exits), 'Level 32 has exits array');
@@ -101,5 +101,15 @@ describe('Levels > Chapter 8 The Shifting Monolith & World Rotation', () => {
 
     // Unsolvable without crown door
     assertEqual(solveLevel(l32, { allowDoors: false }), null, 'Level 32 requires crown gate');
+
+    // Unsolvable without golden key
+    const noKey = JSON.parse(JSON.stringify(l32));
+    noKey.entities = noKey.entities.filter(e => e.type !== 'key');
+    assertEqual(solveLevel(noKey), null, 'Level 32 requires golden apex key');
+
+    // Unsolvable without spire lever
+    const noLever = JSON.parse(JSON.stringify(l32));
+    noLever.entities = noLever.entities.filter(e => e.type !== 'lever');
+    assertEqual(solveLevel(noLever), null, 'Level 32 requires spire dynamo lever');
   });
 });

@@ -2,8 +2,8 @@
 
 **Chapter**: Chapter 8  
 **Zone**: zone_8  
-**Dimensions**: 15 × 15  
-**Par Steps**: 29 | **Par Time**: 18s  
+**Dimensions**: 21 × 19  
+**Par Steps**: 73 | **Par Time**: 44s  
 **Theme**: dungeon  
 
 ## Narrative Lore & Overview

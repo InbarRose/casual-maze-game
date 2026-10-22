@@ -2,12 +2,12 @@
 
 **Chapter**: Chapter 8  
 **Zone**: zone_8  
-**Dimensions**: 17 × 17  
-**Par Steps**: 34 | **Par Time**: 21s  
+**Dimensions**: 23 × 21  
+**Par Steps**: 133 | **Par Time**: 80s  
 **Theme**: snow  
 
 ## Narrative Lore & Overview
-At the apex of the monolith, two distinct routes await: return victorious to the Grand Hub, or branch downward into the Whispering Citadel.
+At the summit of the shifting monolith, four compass headings merge. One portal crowns the ascent; the other descends into citadel deeps.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

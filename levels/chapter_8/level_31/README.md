@@ -2,8 +2,8 @@
 
 **Chapter**: Chapter 8  
 **Zone**: zone_8  
-**Dimensions**: 15 × 15  
-**Par Steps**: 38 | **Par Time**: 23s  
+**Dimensions**: 21 × 19  
+**Par Steps**: 68 | **Par Time**: 41s  
 **Theme**: temple  
 
 ## Narrative Lore & Overview

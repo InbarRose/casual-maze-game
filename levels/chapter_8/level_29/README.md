@@ -2,12 +2,12 @@
 
 **Chapter**: Chapter 8  
 **Zone**: zone_8  
-**Dimensions**: 15 × 15  
-**Par Steps**: 29 | **Par Time**: 18s  
+**Dimensions**: 19 × 17  
+**Par Steps**: 61 | **Par Time**: 37s  
 **Theme**: dungeon  
 
 ## Narrative Lore & Overview
-Rotate the camera [Q / R] to view the cardinal corridors. Seek the golden key in the south-west wing.
+Rotate the camera [Q / R] to view the cardinal corridors. Screen controls adapt automatically to your camera heading.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

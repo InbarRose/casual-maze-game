@@ -7,10 +7,11 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 17,
-    "height": 17
+    "width": 23,
+    "height": 21
   },
   "config": {
+    "allowRotation": true,
     "fogOfWar": true,
     "viewRadius": 7,
     "allowFreePan": true,
@@ -19,49 +20,49 @@
     "viewPerspective": "angled"
   },
   "spawn": {
-    "x": 1,
+    "x": 3,
     "y": 1,
     "elevation": 0,
     "style": "wall_doorway",
     "wallDirection": "north"
   },
   "exit": {
-    "x": 15,
-    "y": 15,
+    "x": 21,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
+    "style": "wall_archway",
     "label": "Crown of the Monolith",
     "targetLevel": "1",
-    "wallDirection": "none"
+    "wallDirection": "north"
   },
   "exits": [
     {
       "id": "exit_spire_primary",
-      "x": 15,
-      "y": 15,
+      "x": 21,
+      "y": 1,
       "elevation": 0,
-      "style": "portal",
+      "style": "wall_archway",
       "label": "Crown of the Monolith",
       "targetLevel": "1",
-      "wallDirection": "none"
+      "wallDirection": "north"
     },
     {
       "id": "exit_spire_citadel_branch",
-      "x": 1,
-      "y": 15,
+      "x": 11,
+      "y": 1,
       "elevation": 0,
-      "style": "stairs",
+      "style": "wall_doorway",
       "label": "Descend to Whispering Citadel",
       "targetLevel": "story_citadel_1",
-      "wallDirection": "none"
+      "wallDirection": "north"
     }
   ],
-  "parSteps": 34,
-  "parTime": 21,
-  "architectNote": "At the apex of the monolith, two distinct routes await: return victorious to the Grand Hub, or branch downward into the Whispering Citadel.",
+  "parSteps": 133,
+  "parTime": 80,
+  "architectNote": "At the summit of the shifting monolith, four compass headings merge. One portal crowns the ascent; the other descends into citadel deeps.",
   "help": {
     "title": "Level 32: The Prismatic Spire",
-    "message": "Explore the peak! Multiple exits offer choice: complete the campaign or embark on the Whispering Citadel story quest."
+    "message": "Rotate the view [Q / R] to navigate the mountain ramparts. Lower the barrier lever to claim the golden key, then choose your exit."
   },
   "package": {
     "layers": "./layers.json",

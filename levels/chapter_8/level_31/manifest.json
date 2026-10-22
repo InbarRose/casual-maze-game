@@ -7,10 +7,11 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 15,
-    "height": 15
+    "width": 21,
+    "height": 19
   },
   "config": {
+    "allowRotation": true,
     "fogOfWar": true,
     "viewRadius": 6,
     "allowFreePan": true,
@@ -19,22 +20,22 @@
     "viewPerspective": "angled"
   },
   "spawn": {
-    "x": 1,
+    "x": 3,
     "y": 1,
     "elevation": 0,
     "style": "wall_doorway",
     "wallDirection": "north"
   },
   "exit": {
-    "x": 13,
-    "y": 13,
+    "x": 17,
+    "y": 1,
     "elevation": 0,
     "style": "wall_archway",
     "label": "Sanctuary of the Four Winds",
     "wallDirection": "north"
   },
-  "parSteps": 38,
-  "parTime": 23,
+  "parSteps": 68,
+  "parTime": 41,
   "architectNote": "Four faces of the monolith tell one story. Walk the perimeter and rotate the view to read each inscription.",
   "help": {
     "title": "Level 31: The Four-Faced Pillar",
