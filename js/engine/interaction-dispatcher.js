@@ -118,15 +118,16 @@ export class InteractionDispatcher {
       }
     }
 
-    // 4. Signposts
+    // 4. Signposts / Architect's Folios (BL-176)
     for (const s of this.entities) {
       if (s.type === ENTITY_TYPES.SIGNPOST && canEntityInteract(s)) {
+        const isCollected = s.collected || s.read;
         rawCandidates.push({
           id: s.id || `signpost_${s.x}_${s.y}`,
           type: 'signpost',
-          label: s.title ? `Read "${s.title}"` : 'Read Signpost',
-          name: s.title || 'Signpost',
-          icon: '📜',
+          label: s.title ? (isCollected ? `Read "${s.title}"` : `Collect "${s.title}"`) : (isCollected ? 'Read Journal' : 'Collect Folio'),
+          name: s.title || "Architect's Folio",
+          icon: isCollected ? '📖' : '📜',
           x: s.x,
           y: s.y,
           elevation: s.elevation ?? ELEVATION.GROUND,
@@ -136,14 +137,14 @@ export class InteractionDispatcher {
       }
     }
 
-    // 5. WallDecor (torches are lighting props, not interactive lore)
+    // 5. WallDecor (torches are lighting props, not interactive lore) (BL-177)
     for (const d of this.entities) {
       if (d.type === ENTITY_TYPES.WALL_DECOR && d.decorType !== 'torch' && (d.text || d.title || d.playerDialogue) && canEntityInteract(d)) {
-        const icon = d.decorType === 'note' ? '📝' : (d.decorType === 'painting' ? '🖼️' : '🏛️');
+        const icon = d.decorType === 'note' ? '📝' : (d.decorType === 'painting' ? '🖼️' : (d.decorType === 'tapestry' ? '🚩' : (d.decorType === 'runic_plate' ? '🪙' : '🗿')));
         rawCandidates.push({
           id: d.id || `wall_decor_${d.x}_${d.y}`,
           type: 'wall_decor',
-          label: d.title ? `Examine "${d.title}"` : 'Examine Lore',
+          label: d.title ? `Examine "${d.title}"` : 'Examine Wall Inscription',
           name: d.title || 'Wall Lore',
           icon,
           x: d.x,

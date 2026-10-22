@@ -140,17 +140,39 @@ export const PUZZLE_GATE_STYLES = Object.freeze([
 ]);
 
 export const SIGNPOST_STYLES = Object.freeze([
+  { id: 'lectern_stone', icon: '📖', label: 'Stone Lectern', desc: "Carved stone plinth supporting the Architect's illuminated field journal" },
+  { id: 'lectern_wood', icon: '📚', label: 'Oak Lectern', desc: "Ornate carved wooden reading stand holding an open philosophical folio" },
+  { id: 'wall_niche', icon: '🏛️', label: 'Wall Niche', desc: "Recessed stone alcove with an illuminated codex page" },
+  { id: 'floating_folio', icon: '✨', label: 'Astral Folio', desc: "Hovering enchanted letter glowing with celestial motes" },
   { id: 'stone_tablet', icon: '🪨', label: 'Stone Tablet', desc: 'Carved obsidian tablet bearing ancient inscriptions' },
   { id: 'wooden_sign', icon: '🪵', label: 'Wooden Signpost', desc: 'Charming weathered wooden marker left by a previous explorer' },
   { id: 'astral_scroll', icon: '📜', label: 'Arcane Scroll', desc: "Illuminated parchment glowing with the Architect's notes" },
 ]);
 
 export const WALL_DECOR_TYPES = Object.freeze([
-  { id: 'note', icon: '📝', label: 'Scrawled Note', desc: 'Pinned parchment note with handwritten clues or warnings' },
-  { id: 'painting', icon: '🖼️', label: 'Framed Painting', desc: 'Ornate framed oil canvas depicting atmospheric landscapes' },
-  { id: 'fresco', icon: '🏛️', label: 'Ancient Fresco', desc: 'Vibrant mural painted directly onto stone plaster' },
   { id: 'carving', icon: '🗿', label: 'Stone Bas-Relief', desc: 'Chiseled masonry relief carved into the labyrinth wall' },
+  { id: 'runic_plate', icon: '🪙', label: 'Runic Inscription Plate', desc: 'Cast bronze plaque inscribed with ancient runic glyphs' },
+  { id: 'fresco', icon: '🏛️', label: 'Ancient Fresco', desc: 'Vibrant mural painted directly onto stone plaster' },
+  { id: 'painting', icon: '🖼️', label: 'Framed Painting', desc: 'Ornate framed oil canvas depicting atmospheric landscapes' },
   { id: 'tapestry', icon: '🚩', label: 'Royal Tapestry', desc: 'Weathered woven banner hanging from wall sconces' },
+  { id: 'note', icon: '📝', label: 'Scrawled Note', desc: 'Pinned parchment note with handwritten clues or warnings' },
+]);
+
+export const ARCHITECT_NOTEBOOK_ACHIEVEMENTS = Object.freeze([
+  { id: 'ch1_archivist', label: 'Foundation Archivist', icon: '📜', desc: 'Recover all 4 Architect Folios in Chapter 1', target: 4, chapter: 'chapter_1' },
+  { id: 'ch2_archivist', label: 'Canopy Chronicler', icon: '🌿', desc: 'Recover all 4 Architect Folios in Chapter 2', target: 4, chapter: 'chapter_2' },
+  { id: 'ch3_archivist', label: 'Clockwork Scribe', icon: '⚙️', desc: 'Recover all 4 Architect Folios in Chapter 3', target: 4, chapter: 'chapter_3' },
+  { id: 'ch4_archivist', label: 'Astral Scholar', icon: '✨', desc: 'Recover all 4 Architect Folios in Chapter 4', target: 4, chapter: 'chapter_4' },
+  { id: 'ch5_archivist', label: 'Caldera Sage', icon: '🔥', desc: 'Recover all 4 Architect Folios in Chapter 5', target: 4, chapter: 'chapter_5' },
+  { id: 'ch6_archivist', label: 'Archive Master', icon: '🔮', desc: 'Recover all 4 Architect Folios in Chapter 6', target: 4, chapter: 'chapter_6' },
+  { id: 'ch7_archivist', label: 'Citadel Keeper', icon: '🏰', desc: 'Recover all 4 Architect Folios in Chapter 7', target: 4, chapter: 'chapter_7' },
+  { id: 'ch8_archivist', label: 'Monolith Seeker', icon: '🧭', desc: 'Recover all 4 Architect Folios in Chapter 8', target: 4, chapter: 'chapter_8' },
+  { id: 'ch9_archivist', label: 'Aqueduct Chronicler', icon: '💧', desc: 'Recover all 4 Architect Folios in Chapter 9', target: 4, chapter: 'chapter_9' },
+  { id: 'ch10_archivist', label: 'Prism Cartographer', icon: '💎', desc: 'Recover all 4 Architect Folios in Chapter 10', target: 4, chapter: 'chapter_10' },
+  { id: 'apprentice_archivist', label: 'Apprentice Archivist', icon: '📖', desc: 'Collect 5 Architect Folios across the realm', target: 5 },
+  { id: 'journeyman_archivist', label: 'Journeyman Archivist', icon: '📚', desc: 'Collect 15 Architect Folios across the realm', target: 15 },
+  { id: 'master_archivist', label: 'Master Campaign Archivist', icon: '🏆', desc: 'Collect all 40 Architect Folios across the 10 Campaign Chapters', target: 40 },
+  { id: 'grand_chronicler', label: 'Grand Universal Chronicler', icon: '👑', desc: 'Collect all 53 Architect Folios across the realm (Campaign, Tutorials & Sagas)', target: 53 },
 ]);
 
 export const CHECKPOINT_STYLES = Object.freeze([

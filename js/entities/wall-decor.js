@@ -241,6 +241,44 @@ export class WallDecor {
       ctx.beginPath();
       ctx.arc(cx, cy - th * 0.05, 3, 0, Math.PI * 2);
       ctx.fill();
+    } else if (this.decorType === 'runic_plate') {
+      // Cast Bronze Runic Inscription Plate (BL-177)
+      const pw = tileSize * 0.6;
+      const ph = tileSize * 0.46;
+
+      // Drop shadow
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.45)';
+      ctx.fillRect(cx - pw / 2 + 1, cy - ph / 2 + 1, pw, ph);
+
+      // Bronze plate gradient
+      const bronzeGrad = ctx.createLinearGradient(cx - pw / 2, cy - ph / 2, cx + pw / 2, cy + ph / 2);
+      bronzeGrad.addColorStop(0, '#d97706');
+      bronzeGrad.addColorStop(0.5, '#b45309');
+      bronzeGrad.addColorStop(1, '#78350f');
+      ctx.fillStyle = bronzeGrad;
+      ctx.strokeStyle = '#fde047';
+      ctx.lineWidth = 1.2;
+      ctx.beginPath();
+      ctx.roundRect(cx - pw / 2, cy - ph / 2, pw, ph, 2);
+      ctx.fill();
+      ctx.stroke();
+
+      // Corner rivets
+      ctx.fillStyle = '#451a03';
+      for (const rx of [-pw * 0.4, pw * 0.4]) {
+        for (const ry of [-ph * 0.35, ph * 0.35]) {
+          ctx.beginPath();
+          ctx.arc(cx + rx, cy + ry, 1.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Glowing inscribed runes
+      ctx.fillStyle = this.inspected ? '#fef08a' : '#38bdf8';
+      ctx.font = `bold ${Math.round(tileSize * 0.22)}px monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('ᚲᛁᛈᚺ', cx, cy);
     } else {
       // Stone Bas-Relief Carving
       const cw = tileSize * 0.58;

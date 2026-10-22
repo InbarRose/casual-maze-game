@@ -439,6 +439,7 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
       {
         "id": "sign_ch1_1",
         "type": "signpost",
+        "style": "lectern_stone",
         "title": "Architect's Note #1",
         "x": 1,
         "y": 2,
@@ -1006,6 +1007,7 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
       {
         "id": "sign_ch1_2",
         "type": "signpost",
+        "style": "lectern_stone",
         "title": "Architect's Note #2",
         "x": 6,
         "y": 11,
@@ -1711,6 +1713,7 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
       {
         "id": "sign_ch1_3",
         "type": "signpost",
+        "style": "lectern_stone",
         "title": "Architect's Note #3",
         "x": 1,
         "y": 2,
@@ -2567,6 +2570,7 @@ export const CAMPAIGN_CH1_LEVELS = Object.freeze([
       {
         "id": "sign_ch1_4",
         "type": "signpost",
+        "style": "lectern_stone",
         "title": "Architect's Note #4",
         "x": 8,
         "y": 8,

@@ -250,6 +250,13 @@ export class GameStateManager {
         decorType: entry.decorType || 'note',
         response: entry.response || '',
         facing: entry.facing || '',
+        x: entry.x,
+        y: entry.y,
+        z: entry.z ?? 0,
+        coordString: entry.coordString || (entry.x !== undefined ? `(${entry.x}, ${entry.y}, ${entry.z ?? 0})` : 'N/A'),
+        levelId: entry.levelId || '',
+        levelTitle: entry.levelTitle || '',
+        chapter: entry.chapter || '',
         discoveredAtSteps: steps,
         discoveredAtTime: this.elapsedTime || 0,
       };

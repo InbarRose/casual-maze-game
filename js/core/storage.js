@@ -1,5 +1,5 @@
 import { ENGINE_VERSION, SAVE_PROFILE_SCHEMA_VERSION } from './version.js';
-import { CHARACTER_CUSTOMIZATION } from './constants.js';
+import { CHARACTER_CUSTOMIZATION, ARCHITECT_NOTEBOOK_ACHIEVEMENTS } from './constants.js';
 
 const STORAGE_KEYS = {
   CUSTOM_MAZE: 'casual_maze_custom_data',
@@ -10,6 +10,7 @@ const STORAGE_KEYS = {
   EDITOR_AUTOSAVE: 'casual_maze_editor_autosave',
   SAVED_PROJECTS: 'casual_maze_saved_projects',
   VERSION: 'casual_maze_save_version',
+  ARCHITECT_CODEX: 'casual_maze_architect_codex',
 };
 
 export class StorageManager {
@@ -492,6 +493,121 @@ export class StorageManager {
   }
 
   /* =========================================================
+   * THE ARCHITECT'S CODEX & COLLECTIBLE FOLIOS (BL-176, ADR-0050)
+   * ========================================================= */
+
+  /**
+   * Load the persistent Architect Codex containing all collected folios
+   * @returns {Record<string, object>} Map of folio ID to folio metadata
+   */
+  static loadArchitectCodex() {
+    try {
+      if (typeof localStorage === 'undefined') return {};
+      const raw = localStorage.getItem(STORAGE_KEYS.ARCHITECT_CODEX);
+      return raw ? JSON.parse(raw) : {};
+    } catch (e) {
+      console.error('[MazeGame:Storage] Failed to parse Architect Codex from localStorage:', e);
+      return {};
+    }
+  }
+
+  /**
+   * Save a newly discovered or collected Architect folio
+   * @param {object} folio Folio payload with level & coordinate metadata
+   * @returns {boolean} True if successfully saved
+   */
+  static saveArchitectFolio(folio) {
+    if (!folio || !folio.id) return false;
+    try {
+      if (typeof localStorage === 'undefined') return false;
+      const codex = this.loadArchitectCodex();
+      const idKey = String(folio.id);
+      const existing = codex[idKey] || {};
+
+      codex[idKey] = {
+        id: idKey,
+        title: folio.title || "Architect's Field Journal",
+        author: folio.author || "The Architect",
+        text: folio.text || folio.message || "",
+        style: folio.style || "lectern_stone",
+        x: Number(folio.x) || 0,
+        y: Number(folio.y) || 0,
+        z: Number(folio.z ?? folio.elevation ?? 0),
+        coordString: folio.coordString || `(${folio.x}, ${folio.y}, ${folio.z ?? 0})`,
+        levelId: String(folio.levelId || existing.levelId || ''),
+        levelTitle: folio.levelTitle || existing.levelTitle || '',
+        chapter: folio.chapter || existing.chapter || 'chapter_1',
+        zone: folio.zone || existing.zone || 'zone_1',
+        discoveredAtDate: existing.discoveredAtDate || folio.discoveredAtDate || new Date().toISOString(),
+        discoveredAtSteps: folio.discoveredAtSteps ?? existing.discoveredAtSteps ?? 0,
+      };
+
+      localStorage.setItem(STORAGE_KEYS.ARCHITECT_CODEX, JSON.stringify(codex));
+      console.info(`[MazeGame:Storage] Saved Architect Folio "${codex[idKey].title}" at ${codex[idKey].coordString}`);
+      return true;
+    } catch (e) {
+      console.error('[MazeGame:Storage] Failed to save Architect Folio to localStorage:', e);
+      return false;
+    }
+  }
+
+  /**
+   * Check if a specific folio has been discovered
+   * @param {string} id Folio ID
+   * @returns {boolean}
+   */
+  static hasArchitectFolio(id) {
+    if (!id) return false;
+    const codex = this.loadArchitectCodex();
+    return !!codex[String(id)];
+  }
+
+  /**
+   * Get all discovered folios as an array
+   * @returns {Array<object>}
+   */
+  static getArchitectFolios() {
+    return Object.values(this.loadArchitectCodex());
+  }
+
+  /**
+   * Compute comprehensive Codex statistics and unlocked achievements
+   * @returns {{ totalCollected: number, byChapter: Record<string, number>, achievements: Array<object> }}
+   */
+  static getCodexStats() {
+    const codex = this.loadArchitectCodex();
+    const folios = Object.values(codex);
+    const totalCollected = folios.length;
+
+    const byChapter = {};
+    for (const f of folios) {
+      const ch = f.chapter || 'chapter_1';
+      byChapter[ch] = (byChapter[ch] || 0) + 1;
+    }
+
+    const achievements = (ARCHITECT_NOTEBOOK_ACHIEVEMENTS || []).map((ach) => {
+      let current = 0;
+      if (ach.chapter) {
+        current = byChapter[ach.chapter] || 0;
+      } else {
+        current = totalCollected;
+      }
+      return {
+        ...ach,
+        current,
+        unlocked: current >= ach.target,
+        progressPercent: Math.min(100, Math.round((current / ach.target) * 100)),
+      };
+    });
+
+    return {
+      totalCollected,
+      byChapter,
+      achievements,
+    };
+  }
+
+  /* =========================================================
    * FULL GAME PROGRESS EXPORT & IMPORT (JSON BACKUP)
    * ========================================================= */
 
@@ -533,6 +649,7 @@ export class StorageManager {
         totalProjects: Object.keys(projects).length,
       },
       profile,
+      architectCodex: this.loadArchitectCodex(),
       progress: {
         campaign,
         tutorial,
@@ -561,6 +678,7 @@ export class StorageManager {
           campaign: this.loadCampaignProgress(),
           tutorial: this.loadTutorialProgress(),
           stories: this.loadStoryProgress(),
+          codex: this.loadArchitectCodex(),
           projects: this.getSavedProjectsMap(),
           settings: this.loadSettings(),
           profile: this.getPlayerProfile(),
@@ -662,6 +780,12 @@ export class StorageManager {
       const settings = data.settings || {};
       if (typeof settings === 'object') {
         localStorage.setItem(STORAGE_KEYS.SETTINGS, JSON.stringify(settings));
+      }
+
+      // Restore Architect Codex (BL-176)
+      const codex = data.architectCodex || data.progress?.architectCodex || data.codex || {};
+      if (typeof codex === 'object') {
+        localStorage.setItem(STORAGE_KEYS.ARCHITECT_CODEX, JSON.stringify(codex));
       }
 
       // Restore Player Identity (Codename)
@@ -998,6 +1122,9 @@ export class StorageManager {
     const outfit = this.getPlayerOutfit();
     const customization = this.getPlayerCustomization();
 
+    const codex = this.loadArchitectCodex();
+    const totalFolios = Object.keys(codex).length;
+
     return {
       name,
       outfit,
@@ -1006,6 +1133,7 @@ export class StorageManager {
       campaignLevels,
       storyChapters,
       totalSteps,
+      totalFolios,
       rankTitle,
       rankIcon,
     };
@@ -1093,6 +1221,7 @@ export class StorageManager {
         localStorage.removeItem(STORAGE_KEYS.PROGRESS);
         localStorage.removeItem(STORAGE_KEYS.TUTORIAL_PROGRESS);
         localStorage.removeItem(STORAGE_KEYS.STORY_PROGRESS);
+        localStorage.removeItem(STORAGE_KEYS.ARCHITECT_CODEX);
       }
       console.info('[MazeGame:Storage] Reset all campaign, tutorial, and story progress.');
       return true;

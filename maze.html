@@ -172,6 +172,11 @@
           </div>
         </div>
 
+        <!-- Architect's Codex Quick Button (BL-176) -->
+        <button id="hud-btn-codex" class="btn btn-secondary btn-sm btn-icon" title="Open The Architect's Lost Codex [J]" aria-label="Architect's Codex">
+          📖
+        </button>
+
         <!-- Settings Quick Button (BL-115) -->
         <button id="hud-btn-settings" class="btn btn-secondary btn-sm btn-icon" title="Open Game Settings [Audio, Video, Controls] [O]" aria-label="Settings">
           ⚙️
@@ -789,7 +794,7 @@
     import { audioFX } from './js/ui/audio-fx.js';
     import { GameMenu } from './js/ui/game-menu.js';
     import { getKeyColorblindShape } from './js/core/constants.js';
-    import { getSettingsModal, getProfileModal, getFeedbackModal } from './js/ui/app-header.js';
+    import { getSettingsModal, getProfileModal, getFeedbackModal, getArchitectCodexModal } from './js/ui/app-header.js';
     import { overlayManager, OVERLAY_CATEGORIES, OVERLAY_PRIORITIES } from './js/ui/overlay-manager.js';
     import { DynamicMenuController } from './js/ui/dynamic-menu-controller.js';
     import { DragScroller } from './js/ui/drag-scroll.js';
@@ -2364,7 +2369,8 @@
       });
     }
 
-    // Direct HUD Access: Settings & Player Profile (BL-115)
+    // Direct HUD Access: Settings, Profile & Architect's Codex (BL-115, BL-176)
+    const hudBtnCodex = document.getElementById('hud-btn-codex');
     const hudBtnSettings = document.getElementById('hud-btn-settings');
     const hudBtnProfile = document.getElementById('hud-btn-profile');
     const hudProfileAvatar = document.getElementById('hud-profile-avatar');
@@ -2380,6 +2386,15 @@
     window.addEventListener('player-profile:updated', (e) => {
       updateHudProfile(e.detail);
     });
+
+    if (hudBtnCodex) {
+      hudBtnCodex.addEventListener('click', () => {
+        audioFX.playModalOpen();
+        setViewObscured(true, 'codex_modal');
+        const modal = getArchitectCodexModal();
+        modal.open();
+      });
+    }
 
     if (hudBtnSettings) {
       hudBtnSettings.addEventListener('click', () => {
@@ -3344,16 +3359,28 @@
       addActivityLog(`Read <strong>${data.title}</strong>: "${data.text}" <em>— ${data.author}</em>`, 'info', '📜', 'lore');
     });
 
+    globalEvents.on('folio:collected', (data) => {
+      audioFX.playVictory();
+      showToast(`Collected Architect's Folio: ${data.title}!`, 'success');
+      addActivityLog(`Collected <strong>${data.title}</strong> at <code>${data.coordString}</code>! Added to Codex.`, 'success', '📖', 'lore');
+    });
+
     globalEvents.on('wall_decor:inspected', (data) => {
-      const icon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : '🏛️'));
+      const icon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : (data.decorType === 'runic_plate' ? '🪙' : '🗿')));
       addActivityLog(`Examined <strong>${data.title}</strong>: "${data.text || data.message || ''}"`, 'info', icon, 'lore');
     });
 
-    // Global Hotkeys for HUD, Minimap, and Activity Feed (BL-92, BL-97, BL-117)
+    // Global Hotkeys for HUD, Minimap, Activity Feed & Architect Codex (BL-92, BL-97, BL-117, BL-176)
     window.addEventListener('keydown', (e) => {
       // Don't intercept when focusing input fields
       if (['INPUT', 'TEXTAREA', 'SELECT'].includes(e.target?.tagName)) return;
-      if (e.key === 'h' || e.key === 'H') {
+      if (e.key === 'j' || e.key === 'J') {
+        const btnCodex = document.getElementById('hud-btn-codex');
+        if (btnCodex) {
+          e.preventDefault();
+          btnCodex.click();
+        }
+      } else if (e.key === 'h' || e.key === 'H') {
         if (btnHudCollapse) {
           e.preventDefault();
           btnHudCollapse.click();

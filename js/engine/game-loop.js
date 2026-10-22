@@ -2370,9 +2370,22 @@ export class GameLoop {
 
     if (candidate.type === 'signpost' || (entity && entity.type === ENTITY_TYPES.SIGNPOST)) {
       const data = entity.readSign();
+      data.levelId = this.level?.id || '';
+      data.levelTitle = this.level?.title || '';
+      data.chapter = this.level?.chapter || '';
+      data.zone = this.level?.zone || '';
+      data.coordString = entity.getCoordString ? entity.getCoordString() : `(${entity.x}, ${entity.y}, ${entity.z ?? 0})`;
+      
+      // Save permanently to the Architect's Codex (BL-176)
+      StorageManager.saveArchitectFolio(data);
+
       this.recordJournalEntry(data);
-      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 ${data.title}`, '#38bdf8');
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 Collected: ${data.title}`, '#fbbf24');
+      this.renderer.spawnParticles(entity.x * this.camera.tileSize + this.camera.tileSize / 2, entity.y * this.camera.tileSize + this.camera.tileSize / 2, '#fbbf24', 20);
+      this.renderer.spawnShockwave(entity.x * this.camera.tileSize + this.camera.tileSize / 2, entity.y * this.camera.tileSize + this.camera.tileSize / 2, '#fbbf24', 24);
+      
       globalEvents.emit('signpost:read', data);
+      globalEvents.emit('folio:collected', data);
       if (this.uiCallbacks.onSignpostRead) {
         this.uiCallbacks.onSignpostRead(data);
       }
@@ -2381,9 +2394,13 @@ export class GameLoop {
 
     if (candidate.type === 'wall_decor' || (entity && entity.type === ENTITY_TYPES.WALL_DECOR)) {
       const data = entity.inspect();
+      data.levelId = this.level?.id || '';
+      data.levelTitle = this.level?.title || '';
+      data.chapter = this.level?.chapter || '';
+      data.coordString = entity.getCoordString ? entity.getCoordString() : `(${entity.x}, ${entity.y}, ${entity.z ?? 0})`;
       this.recordJournalEntry(data);
-      const decorIcon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : '🏛️'));
-      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `${decorIcon} ${data.title}`, '#fbbf24');
+      const decorIcon = data.decorType === 'note' ? '📝' : (data.decorType === 'painting' ? '🖼️' : (data.decorType === 'tapestry' ? '🚩' : (data.decorType === 'runic_plate' ? '🪙' : '🗿')));
+      this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `${decorIcon} ${data.title}`, '#38bdf8');
       globalEvents.emit('wall_decor:inspected', data);
       if (this.uiCallbacks.onWallDecorInspected) {
         this.uiCallbacks.onWallDecorInspected(data);
