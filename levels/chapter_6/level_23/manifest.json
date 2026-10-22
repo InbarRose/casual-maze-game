@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "sunset"
+    "theme": "crypt"
   },
   "spawn": {
-    "x": 2,
-    "y": 7,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 17,
-    "y": 7,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 30,
-  "parTime": 18,
-  "architectNote": "The dual seals are entangled. Break the rune ward to access the Dynamo Lever, lowering the barrier to the Cipher Sanctum.",
+  "parSteps": 78,
+  "parTime": 47,
+  "architectNote": "Architect's Journal: Entangled wards create an interlocking puzzle. Dispersing the outer rune ward grants access to the dynamo switch, lowering the barrier into the inner cipher chamber.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

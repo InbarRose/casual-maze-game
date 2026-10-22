@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "sunset"
+    "theme": "crypt"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 12,
-    "y": 10,
+    "x": 13,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 22,
-  "parTime": 14,
-  "architectNote": "The ancient gate is bound by arcane runes. Recall the celestial sequence to dispel the barrier.",
+  "parSteps": 36,
+  "parTime": 22,
+  "architectNote": "Architect's Journal: Ancient runic locks seal the scriptorium. Replicating the four-glyph sequence in exact order dispels the arcane barrier.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

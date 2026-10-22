@@ -3,11 +3,11 @@
 **Chapter**: Chapter 6  
 **Zone**: zone_6  
 **Dimensions**: 17 × 15  
-**Par Steps**: 38 | **Par Time**: 23s  
-**Theme**: sunset  
+**Par Steps**: 82 | **Par Time**: 50s  
+**Theme**: crypt  
 
 ## Narrative Lore & Overview
-Align the stellar dials according to the celestial dance: first the Sun, second the Moon, third the Horizon.
+Architect's Journal: Three concentric planetary dials lock the central gallery. Aligning their celestial symbols disengages the seal, granting passage to the Azure Key.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

@@ -42,7 +42,8 @@ This document tracks project milestones, current release status, active developm
 - [x] **Chapter 5 Rigor & Molten Gauntlet Overhaul (Levels 17–20) (BL-182, ADR-0056)**:
   - Redesign Levels 17–20 ("The Fire Vents", "The Molten Sentinels", "The Crucible Crossing", "The Caldera Gauntlet"): 1-tile winding basalt caldera labyrinths, $\ge 70\%$ corridor inertia (81%–89%), 0 dead spaces $\ge 4\times 4$, rhythmic flame vents, obsidian patroller sentinels, mid-run checkpoint monoliths, North wall portals, and lectern folios. ([PR #126](https://github.com/InbarRose/casual-maze-game/pull/126))
 
-- [ ] **Chapter 6 Rigor & Arcane Enigmas Overhaul (Levels 21–24) (BL-183, ADR-0057)**:
+- [x] **Chapter 6 Rigor & Arcane Enigmas Overhaul (Levels 21–24) (BL-183, ADR-0057)**:
+  - Redesign Levels 21–24 ("The Rune Lock", "The Cipher Dials", "The Entangled Wards", "The Grand Archive"): 1-tile winding arcane archive labyrinths, $\ge 70\%$ corridor inertia (82%–84%), 0 dead spaces $\ge 4\times 4$, 4-glyph rune memory puzzle gates, 3-ring concentric celestial cipher dials, conduit dynamo levers with barrier walls, Gold sanctum keys and gates, North wall portals, and stone lecterns with coordinate tracking.
 
 ---
 

@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "sunset"
+    "theme": "crypt"
   },
   "spawn": {
-    "x": 2,
-    "y": 9,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 18,
-    "y": 9,
+    "x": 19,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 52,
-  "parTime": 32,
-  "architectNote": "The Grand Archive holds the accumulated wisdom of all celestial trials. Decipher the rune script, align the stargazer cipher, and claim the Master Golden Key.",
+  "parSteps": 213,
+  "parTime": 128,
+  "architectNote": "Architect's Journal: The innermost archives require master-level mastery of both runic syntax and stellar alignment before the golden sanctum yields its secrets.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

@@ -3,11 +3,11 @@
 **Chapter**: Chapter 6  
 **Zone**: zone_6  
 **Dimensions**: 15 × 13  
-**Par Steps**: 22 | **Par Time**: 14s  
-**Theme**: sunset  
+**Par Steps**: 36 | **Par Time**: 22s  
+**Theme**: crypt  
 
 ## Narrative Lore & Overview
-The ancient gate is bound by arcane runes. Recall the celestial sequence to dispel the barrier.
+Architect's Journal: Ancient runic locks seal the scriptorium. Replicating the four-glyph sequence in exact order dispels the arcane barrier.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

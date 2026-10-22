@@ -3,11 +3,11 @@
 **Chapter**: Chapter 6  
 **Zone**: zone_6  
 **Dimensions**: 21 × 19  
-**Par Steps**: 52 | **Par Time**: 32s  
-**Theme**: sunset  
+**Par Steps**: 213 | **Par Time**: 128s  
+**Theme**: crypt  
 
 ## Narrative Lore & Overview
-The Grand Archive holds the accumulated wisdom of all celestial trials. Decipher the rune script, align the stargazer cipher, and claim the Master Golden Key.
+Architect's Journal: The innermost archives require master-level mastery of both runic syntax and stellar alignment before the golden sanctum yields its secrets.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

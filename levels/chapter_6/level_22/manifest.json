@@ -15,25 +15,25 @@
     "viewRadius": 7,
     "allowFreePan": true,
     "tileSize": 32,
-    "theme": "sunset"
+    "theme": "crypt"
   },
   "spawn": {
-    "x": 2,
-    "y": 2,
+    "x": 3,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 14,
-    "y": 12,
+    "x": 15,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 38,
-  "parTime": 23,
-  "architectNote": "Align the stellar dials according to the celestial dance: first the Sun, second the Moon, third the Horizon.",
+  "parSteps": 82,
+  "parTime": 50,
+  "architectNote": "Architect's Journal: Three concentric planetary dials lock the central gallery. Aligning their celestial symbols disengages the seal, granting passage to the Azure Key.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

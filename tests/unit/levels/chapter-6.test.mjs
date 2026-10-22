@@ -37,8 +37,8 @@ describe('Levels > Chapter 6 Arcane Minigames & Celestial Seals', () => {
   it('Level 21 (Ki): The Rune Lock introduces Rune Memory puzzle gates', () => {
     const sol = solveLevel(l21);
     assert(sol !== null, 'Level 21 must be solvable');
-    assertEqual(sol.length, 19, 'Optimal path is 19 steps');
-    assertEqual(l21.parSteps, Math.ceil(19 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 31, 'Optimal path is 31 steps');
+    assertEqual(l21.parSteps, Math.ceil(31 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without solving rune memory puzzle
     assertEqual(solveLevel(l21, { allowPuzzles: false }), null, 'Level 21 requires solving rune memory gate');
@@ -47,8 +47,8 @@ describe('Levels > Chapter 6 Arcane Minigames & Celestial Seals', () => {
   it('Level 22 (Shō): The Cipher Dials develops Cipher Dial puzzles and colored keys', () => {
     const sol = solveLevel(l22);
     assert(sol !== null, 'Level 22 must be solvable');
-    assertEqual(sol.length, 33, 'Optimal path is 33 steps');
-    assertEqual(l22.parSteps, Math.ceil(33 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 71, 'Optimal path is 71 steps');
+    assertEqual(l22.parSteps, Math.ceil(71 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without cipher dial
     assertEqual(solveLevel(l22, { allowPuzzles: false }), null, 'Level 22 requires solving cipher dial gate');
@@ -65,8 +65,8 @@ describe('Levels > Chapter 6 Arcane Minigames & Celestial Seals', () => {
   it('Level 23 (Ten): The Entangled Wards twists mechanics with dual puzzle types and dynamo lever', () => {
     const sol = solveLevel(l23);
     assert(sol !== null, 'Level 23 must be solvable');
-    assertEqual(sol.length, 26, 'Optimal path is 26 steps');
-    assertEqual(l23.parSteps, Math.ceil(26 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 67, 'Optimal path is 67 steps');
+    assertEqual(l23.parSteps, Math.ceil(67 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without puzzles
     assertEqual(solveLevel(l23, { allowPuzzles: false }), null, 'Level 23 requires solving puzzle gates');
@@ -83,8 +83,8 @@ describe('Levels > Chapter 6 Arcane Minigames & Celestial Seals', () => {
   it('Level 24 (Ketsu): The Grand Archive synthesizes Rune Memory, Cipher Dial, Golden Key, and Barrier Lever', () => {
     const sol = solveLevel(l24);
     assert(sol !== null, 'Level 24 must be solvable');
-    assertEqual(sol.length, 45, 'Optimal path is 45 steps');
-    assertEqual(l24.parSteps, Math.ceil(45 * 1.15), 'Par steps calibrated with 15% margin');
+    assertEqual(sol.length, 185, 'Optimal path is 185 steps');
+    assertEqual(l24.parSteps, Math.ceil(185 * 1.15), 'Par steps calibrated with 15% margin');
 
     // Unsolvable without puzzles
     assertEqual(solveLevel(l24, { allowPuzzles: false }), null, 'Level 24 requires solving arcane puzzle gates');
