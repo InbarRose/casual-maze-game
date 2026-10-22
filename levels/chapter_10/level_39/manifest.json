@@ -22,7 +22,8 @@
     "x": 1,
     "y": 1,
     "elevation": 0,
-    "style": "floor_symbol"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 13,
@@ -32,12 +33,13 @@
     "label": "Heart Portal"
   },
   "parSteps": 88,
-  "parTime": 46,
+  "parTime": 53,
   "architectNote": "Align the harmonic mirror seals. Retrieve the silver key from the east wing to enter the Inner Sanctum.",
   "help": {
     "title": "Level 39: Harmonic Mirror Seals",
     "message": "The inner hall is shielded by harmonic forcefields. Explore the resonating corridors to secure the silver tuning key."
   },
+  "packageSource": "level_39",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

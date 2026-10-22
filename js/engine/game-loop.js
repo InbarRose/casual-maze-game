@@ -261,7 +261,7 @@ export class GameLoop {
       if (e.type === ENTITY_TYPES.HAZARD) return new TimedHazard(e);
       if (e.type === ENTITY_TYPES.PATROLLER) return new Patroller(e);
       if (e.type === ENTITY_TYPES.PUZZLE_GATE) return new PuzzleGate(e);
-      if (e.type === ENTITY_TYPES.SIGNPOST) return new Signpost(e);
+      if (e.type === ENTITY_TYPES.SIGNPOST || e.type === 'architect_note') return new Signpost(e);
       if (e.type === ENTITY_TYPES.WALL_DECOR) return new WallDecor(e);
       if (e.type === ENTITY_TYPES.CHECKPOINT) return new Checkpoint(e);
       if (e.type === ENTITY_TYPES.COLLECTIBLE) return new Collectible(e);
@@ -2368,7 +2368,7 @@ export class GameLoop {
       return true;
     }
 
-    if (candidate.type === 'signpost' || (entity && entity.type === ENTITY_TYPES.SIGNPOST)) {
+    if (candidate.type === 'signpost' || candidate.type === 'architect_note' || (entity && (entity.type === ENTITY_TYPES.SIGNPOST || entity.type === 'architect_note'))) {
       const data = entity.readSign();
       data.levelId = this.level?.id || '';
       data.levelTitle = this.level?.title || '';

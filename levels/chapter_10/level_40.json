@@ -33,12 +33,13 @@
     "label": "Heart of the Prism"
   },
   "parSteps": 190,
-  "parTime": 99,
+  "parTime": 114,
   "architectNote": "The climax macro-labyrinth. Traverse the four elemental quadrant sanctums and claim the Crown of the Prism at the central altar.",
   "help": {
     "title": "Level 40: Heart of the Prism",
     "message": "Four elemental seals guard the heart of the prism. Explore all four quadrants, cross elevated viaducts, and breach the central sanctuary."
   },
+  "packageSource": "level_40",
   "layers": {
     "ground": [
       [
@@ -2013,7 +2014,20 @@
       "x": 16,
       "y": 16,
       "elevation": 0
+    },
+    {
+      "id": "sign_arch_40",
+      "type": "signpost",
+      "title": "Architect's Folio #40",
+      "style": "lectern_stone",
+      "chapter": "chapter_10",
+      "levelId": "40",
+      "x": 1,
+      "y": 4,
+      "z": 0,
+      "elevation": 0,
+      "coordString": "(1, 4, 0)",
+      "text": "Architect's Folio #40: At the Heart of the Prism, all colors converge. Master the four quadrants—Ruby, Emerald, Sapphire, and Apex Core—to awaken the final sanctum."
     }
-  ],
-  "packageSource": "level_40"
+  ]
 }

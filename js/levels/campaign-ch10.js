@@ -39,12 +39,13 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
       "wallDirection": "north"
     },
     "parSteps": 87,
-    "parTime": 45,
+    "parTime": 53,
     "architectNote": "The refracting crystal prisms cast elusive shadows. Locate the amber key, ascend the viaduct to toggle the refraction barrier, and unseal the spectral gate.",
     "help": {
       "title": "Level 37: The Spectral Gate",
       "message": "The way forward is locked by dual crystal seals and chromatic barriers. Use the elevated viaduct to reach the focal lever."
     },
+    "packageSource": "level_37",
     "layers": {
       "ground": [
         [
@@ -1377,9 +1378,22 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
         "x": 20,
         "y": 4,
         "elevation": 0
+      },
+      {
+        "id": "sign_arch_37",
+        "type": "signpost",
+        "title": "Architect's Folio #37",
+        "style": "lectern_stone",
+        "chapter": "chapter_10",
+        "levelId": "37",
+        "x": 1,
+        "y": 4,
+        "z": 0,
+        "elevation": 0,
+        "coordString": "(1, 4, 0)",
+        "text": "Architect's Folio #37: The spectral prisms divide primordial radiance into discrete spectra. Follow the chromatic frequencies to align the amber and violet seals."
       }
-    ],
-    "packageSource": "level_37"
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -1416,12 +1430,13 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
       "label": "Apex Altar"
     },
     "parSteps": 94,
-    "parTime": 49,
+    "parTime": 57,
     "architectNote": "Traverse the multi-elevation concentric trestles, toggle the battlement lever, and claim the keystone to enter the Apex Altar.",
     "help": {
       "title": "Level 38: Concentric Trestles",
       "message": "The inner sanctum is surrounded by concentric ring galleries. Cross the elevated trestle bridges to navigate between tiers."
     },
+    "packageSource": "level_38",
     "layers": {
       "ground": [
         [
@@ -2910,9 +2925,22 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
         "x": 6,
         "y": 18,
         "elevation": 0
+      },
+      {
+        "id": "sign_arch_38",
+        "type": "signpost",
+        "title": "Architect's Folio #38",
+        "style": "lectern_stone",
+        "chapter": "chapter_10",
+        "levelId": "38",
+        "x": 1,
+        "y": 3,
+        "z": 0,
+        "elevation": 0,
+        "coordString": "(1, 3, 0)",
+        "text": "Architect's Folio #38: The concentric trestles span the crystalline abyss. Over half the passage requires traversal along high battlements and directional ramps."
       }
-    ],
-    "packageSource": "level_38"
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -2938,7 +2966,8 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
       "x": 1,
       "y": 1,
       "elevation": 0,
-      "style": "floor_symbol"
+      "style": "wall_doorway",
+      "wallDirection": "north"
     },
     "exit": {
       "x": 13,
@@ -2948,12 +2977,13 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
       "label": "Heart Portal"
     },
     "parSteps": 88,
-    "parTime": 46,
+    "parTime": 53,
     "architectNote": "Align the harmonic mirror seals. Retrieve the silver key from the east wing to enter the Inner Sanctum.",
     "help": {
       "title": "Level 39: Harmonic Mirror Seals",
       "message": "The inner hall is shielded by harmonic forcefields. Explore the resonating corridors to secure the silver tuning key."
     },
+    "packageSource": "level_39",
     "layers": {
       "ground": [
         [
@@ -4682,9 +4712,22 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
         "x": 14,
         "y": 16,
         "elevation": 0
+      },
+      {
+        "id": "sign_arch_39",
+        "type": "signpost",
+        "title": "Architect's Folio #39",
+        "style": "lectern_stone",
+        "chapter": "chapter_10",
+        "levelId": "39",
+        "x": 1,
+        "y": 3,
+        "z": 0,
+        "elevation": 0,
+        "coordString": "(1, 3, 0)",
+        "text": "Architect's Folio #39: Mirror harmonics resonate through the crystalline chambers. Tune the focal levers to collapse the concentric forcefields."
       }
-    ],
-    "packageSource": "level_39"
+    ]
   },
   {
     "$schema": "https://casual-maze-game.inbarrose.com/schemas/maze-v1.json",
@@ -4721,12 +4764,13 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
       "label": "Heart of the Prism"
     },
     "parSteps": 190,
-    "parTime": 99,
+    "parTime": 114,
     "architectNote": "The climax macro-labyrinth. Traverse the four elemental quadrant sanctums and claim the Crown of the Prism at the central altar.",
     "help": {
       "title": "Level 40: Heart of the Prism",
       "message": "Four elemental seals guard the heart of the prism. Explore all four quadrants, cross elevated viaducts, and breach the central sanctuary."
     },
+    "packageSource": "level_40",
     "layers": {
       "ground": [
         [
@@ -6701,8 +6745,21 @@ export const CAMPAIGN_CH10_LEVELS = Object.freeze([
         "x": 16,
         "y": 16,
         "elevation": 0
+      },
+      {
+        "id": "sign_arch_40",
+        "type": "signpost",
+        "title": "Architect's Folio #40",
+        "style": "lectern_stone",
+        "chapter": "chapter_10",
+        "levelId": "40",
+        "x": 1,
+        "y": 4,
+        "z": 0,
+        "elevation": 0,
+        "coordString": "(1, 4, 0)",
+        "text": "Architect's Folio #40: At the Heart of the Prism, all colors converge. Master the four quadrants—Ruby, Emerald, Sapphire, and Apex Core—to awaken the final sanctum."
       }
-    ],
-    "packageSource": "level_40"
+    ]
   }
 ]);

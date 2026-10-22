@@ -33,12 +33,13 @@
     "label": "Heart of the Prism"
   },
   "parSteps": 190,
-  "parTime": 99,
+  "parTime": 114,
   "architectNote": "The climax macro-labyrinth. Traverse the four elemental quadrant sanctums and claim the Crown of the Prism at the central altar.",
   "help": {
     "title": "Level 40: Heart of the Prism",
     "message": "Four elemental seals guard the heart of the prism. Explore all four quadrants, cross elevated viaducts, and breach the central sanctuary."
   },
+  "packageSource": "level_40",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",
