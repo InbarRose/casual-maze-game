@@ -3,11 +3,11 @@
 **Chapter**: Chapter 2  
 **Zone**: zone_2  
 **Dimensions**: 17 × 15  
-**Par Steps**: 48 | **Par Time**: 27s  
+**Par Steps**: 50 | **Par Time**: 30s  
 **Theme**: jungle  
 
 ## Narrative Lore & Overview
-Architect's Journal: Dual traversal is demanded here. First, brave the low underpass tunnel beneath the canopy viaduct to claim the amber key in the lower glen. Only then will the southern ramp unlock, granting access to the high bridge deck.
+Architect's Journal: Twin trestles span the emerald mist. The lower underpass canal unlocks the western mechanism, whilst the upper eastern crossing delivers the key to the sanctuary door.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.

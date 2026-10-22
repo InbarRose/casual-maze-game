@@ -12,28 +12,28 @@
   },
   "config": {
     "fogOfWar": true,
-    "viewRadius": 7,
+    "viewRadius": 8,
     "allowFreePan": true,
     "tileSize": 32,
     "theme": "jungle"
   },
   "spawn": {
-    "x": 9,
-    "y": 8,
+    "x": 1,
+    "y": 1,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 9,
-    "y": 2,
+    "x": 17,
+    "y": 1,
     "elevation": 0,
     "style": "wall_archway",
     "wallDirection": "north"
   },
-  "parSteps": 71,
-  "parTime": 40,
-  "architectNote": "Architect's Journal: The Citadel commands twin parallel viaducts crowning the western and eastern horizons. Claim the Ruby Horizon Key from the west ramparts to release the eastern portcullis, then ascend the second horizon to breach the northern high keep.",
+  "parSteps": 68,
+  "parTime": 41,
+  "architectNote": "Architect's Journal: At the apex of the canopy stands the Citadel of the Two Horizons. One vista looks back upon the moss-grown labyrinth; the other gazes forward into the subterranean volcanic halls.",
   "package": {
     "layers": "./layers.json",
     "entities": "./entities.json",

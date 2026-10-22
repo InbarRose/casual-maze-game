@@ -4,22 +4,33 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Active Milestone: `v1.30.0` — Architect's Codex, Diegetic Wall Art & Visual Diversity (Active Development)
+### Active Milestone: `v1.30.0` — Architect's Codex, Visual Diversity & Rigorous Labyrinths (Active Development)
 
-- [ ] **The Architect's Codex & Collectible Journal System (BL-176, ADR-0050)**:
-  - Overhaul signposts into diegetic collectable folios resting on carved stone pedestals, reading lecterns, or wall niches.
-  - Implement pick-up and collection behavior: particle flourish, chime, and coordinate logging `(X, Y, Z)`.
-  - Extend `StorageManager` with persistent codex schema (`casual_maze_architect_codex`) tracking all discovered folios with coordinates, timestamp, and step counts.
-  - Construct `ArchitectCodexModal` (accessible via hotkey `J`, topbar 📖, and Profile Modal) with illuminated parchment book layout.
-  - Implement Chapter Archivist achievements and profile badges in `ProfileModal`.
+- [x] **The Architect's Codex & Collectible Journal System (BL-176, ADR-0050)**:
+  - Overhauled signposts into diegetic collectable folios resting on carved stone pedestals, reading lecterns, or wall niches.
+  - Implemented pick-up and collection behavior: particle flourish, chime, and coordinate logging `(X, Y, Z)`.
+  - Extended `StorageManager` with persistent codex schema (`casual_maze_architect_codex`) tracking all discovered folios with coordinates, timestamp, and step counts.
+  - Constructed `ArchitectCodexModal` (accessible via hotkey `J`, topbar 📖, and Profile Modal) with illuminated parchment book layout.
+  - Implemented Chapter Archivist achievements and profile badges in `ProfileModal`.
 
-- [ ] **Separation of Clues into Diegetic Wall Inscriptions & Bas-Relief Art (BL-177, ADR-0051)**:
-  - Convert all mechanical puzzle clues, directional signs, and secret wall hints across levels into wall-mounted art (`wall_decor`: stone bas-reliefs, frescoes, tapestries, bronze rune plates).
-  - Enhance wall decor inspection prompts, visual glyphs, and Activity Feed integration.
+- [x] **Separation of Clues into Diegetic Wall Inscriptions & Bas-Relief Art (BL-177, ADR-0051)**:
+  - Converted all mechanical puzzle clues, directional signs, and secret wall hints across levels into wall-mounted art (`wall_decor`: stone bas-reliefs, frescoes, tapestries, bronze rune plates).
+  - Enhanced wall decor inspection prompts, visual glyphs, and Activity Feed integration.
 
-- [ ] **Visual Diversity & Multi-Variant Biome Art Overhaul (BL-178, ADR-0052)**:
-  - Implement 3–4 distinct floor paving styles per biome (cobblestones, flagstone mosaics, cracked slabs, geometric medallions).
-  - Implement relief wall variants with deterministic spatial hashing.
+- [x] **Visual Diversity & Multi-Variant Biome Art Overhaul (BL-178, ADR-0052)**:
+  - Implemented 3–4 distinct floor paving styles per biome (cobblestones, flagstone mosaics, cracked slabs, geometric medallions) and wall relief variants via 2D spatial hash sampling.
+  - Added deterministic procedural environmental accents (pebbles, moss, runes, scorch marks, crystal clusters) overlaid across all 8 biomes.
+  - Added architectural relief panels, iron shackles, ivy vines, icicle fringes, sun disc carvings, and wall-top stone joints.
+
+- [x] **Chapter 2 Rigor & Verticality Overhaul (Levels 5–8) (BL-179, ADR-0053)**:
+  - Redesigned Levels 5–8 ("The Canopy Bridge", "Canopy Crossings", "The Sunken Chasm", "Citadel of the Two Horizons"): 1-tile winding labyrinth topology ($\ge 70\%$ corridor inertia, 0 dead spaces $\ge 4\times 4$).
+  - Multi-elevation 3D bridges with clean ground underpasses (`B_EW`, `B_NS`) and directional ramps (`R_*`).
+  - Architectural North wall drop-face entrance doorways (`wall_doorway`, `north`) and subterranean archway exits (`wall_archway`, `north`).
+  - Stone lecterns with coordinate tracking `(X, Y, Z)` and diegetic wall carvings/runic plates for hints and secret rooms.
+  - Verified 100% zero-bypass gating solvability and calibrated par budgets across all 4 stages.
+
+- [ ] **Chapter 3 Rigor & Clockwork Foundry Overhaul (Levels 9–12) (BL-180, ADR-0054)**:
+  - Redesign Levels 9–12 ("The Iron Lever", "Clockwork Gates", "Shifting Foundations", "Master of Wheels"): 1-tile winding foundry labyrinths, $\ge 70\%$ corridor inertia, 0 dead spaces $\ge 4\times 4$, clockwork levers, dynamic shifting barrier gates, North wall portals, and lectern folios.
 
 ---
 

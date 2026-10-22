@@ -3,7 +3,7 @@
 **Chapter**: Chapter 2  
 **Zone**: zone_2  
 **Dimensions**: 15 × 13  
-**Par Steps**: 25 | **Par Time**: 14s  
+**Par Steps**: 61 | **Par Time**: 37s  
 **Theme**: jungle  
 
 ## Narrative Lore & Overview
