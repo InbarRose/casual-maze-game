@@ -387,5 +387,49 @@ casual-maze-game/
   * Toggles available in both the in-game Pause Menu and global Settings modal.
   * When disabled ("Simple Keyboard Mode"), single-letter shortcut keys (`Q`, `R`, `T`, `M`, `V`, `L`) are ignored, restricting active input strictly to directional navigation (`WASD`, Arrows) and interaction (`Space`, `Enter`).
 
+### O. The Architect's Codex, Collectible Folios & Telemetry Standard (ADR-0050)
+* **Collectible Lost Folios on Stone Lecterns (`style: "lectern_stone"`):**
+  * Signpost entities overhauled into physical carved stone pedestals with illuminated golden glyph beacons and ambient particle motes.
+  * Approaching and interacting triggers folio recovery: particle burst, audio chime, and registration in the player's journal.
+* **Persistent Discovery Telemetry (`StorageManager.saveArchitectFolio`):**
+  * Tracks every collected note in `casual_maze_architect_codex`:
+    * Level ID and Chapter identifier.
+    * Exact world coordinates `(X, Y, Z)` where the folio was discovered.
+    * Discovery timestamp and player step count at the moment of reading.
+* **Architect's Codex Modal (`ArchitectCodexModal`):**
+  * Accessible at any time via HUD topbar button (`📖`), keyboard shortcut (<kbd>J</kbd>), or Player Profile.
+  * Two-column illuminated medieval manuscript book layout with chapter progress ribbons, parchment texture, discovery coordinates, and archivist achievements.
+
+### P. Diegetic Wall Art, Bas-Reliefs & Runic Clues (ADR-0051)
+* **Separation of Concerns**:
+  * Narrative worldbuilding and historical lore are housed strictly on collectible lectern folios.
+  * Mechanical puzzle clues, lever sequence guides, and secret wall (`SW`) hints are mounted directly on corridor walls as diegetic art (`wall_decor`).
+* **Wall Art Types**:
+  * `carving`: Chiseled stone bas-reliefs displaying mechanical schematics, directional hints, or brittle wall seams.
+  * `fresco`: Ancient painted wall murals depicting multi-elevation viaduct pathways.
+  * `tapestry`: Woven heraldic banners marking concealed alcoves.
+  * `runic_plate`: Cast bronze inscription plates with runic cipher glyphs (`ᚲᛁᛈᚺ`) hinting at secret gem vaults.
+
+### Q. Visual Diversity, Multi-Variant Biome Art & Spatial Hashing (ADR-0052)
+* **Deterministic Spatial Hashing (`BiomeSurfaceShaders.getDecorHash`):**
+  * Samples coordinates `(x, y, seed)` with high-frequency prime multiplication to produce stable pseudo-random seeds without per-tile storage overhead.
+* **Multi-Variant Floor Paving & Wall Reliefs:**
+  * Deterministically selects between standard, cracked, and runic floor tiles (`GameRenderer.getFloorAssetImage`).
+  * Selects wall relief panels, iron shackles, wall grates, and torch sconces (`GameRenderer.getWallAssetImage`).
+  * Procedurally overlays biome-specific micro-accents across all 8 biomes (pebbles, moss, runes, frost fissures, scorch marks, crystal clusters) on both SVG and canvas fallback floors.
+* **Architectural Wall Top & Drop-Face Details:**
+  * Renders drop-face reliefs, ivy overgrowth, icicle fringes, sun disc carvings, and wall-top stone joints.
+
+### R. Artisanal 1-Tile Labyrinth Topology & Zero Dead Space Standard (ADR-0048, ADR-0049, ADR-0053, ADR-0054)
+* **Corridor Directional Inertia ($\ge 70\%$):**
+  * Corridors follow disciplined, winding 1-tile paths with high directional friction, eliminating open runways and flat rectilinear boxes.
+* **Zero Dead Space Standard ($\text{DeadSpace}_{\ge 4\times 4} = 0$):**
+  * Solid voids exceeding $3\times 3$ are converted into winding labyrinth corridors, safe harbors, and secret alcoves (`SW` + gems).
+* **Architectural North Wall Drop-Face Portals:**
+  * Spawns utilize North wall drop-face doorways (`wall_doorway`, `north`) with open doors and ascending stone stairs.
+  * Exits utilize North wall subterranean archways (`wall_archway`, `north`) with descending stone stairs into torchlit depths.
+* **100% Zero-Bypass Gating Solvability:**
+  * Automated BFS shortest-path solvers verify that every level is solvable, and omitting any required key or lever strictly returns `null`.
+
 
 
