@@ -21,8 +21,8 @@
     "x": 7,
     "y": 11,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 7,
@@ -31,8 +31,8 @@
     "style": "wall_archway",
     "wallDirection": "north"
   },
-  "parSteps": 31,
-  "parTime": 18,
+  "parSteps": 41,
+  "parTime": 21,
   "architectNote": "Architect's Journal: The North Sanctuary lies sealed by the ancient Ruby Lock. The western labyrinth winds into the deep vault where the Ruby Key is kept. Beware deceptive dead-ends.",
   "package": {
     "layers": "./layers.json",

@@ -23,9 +23,9 @@ This document maintains the official quality audit register, critical evaluation
 | **tutorial_5** | The Shrouded Path | Tutorial Academy | Ten | 13x13 | 0 | 67% | 0 | 5.73 | 3.60 | 5.93 | 5.67 | 5.33 | 6.13 | 3.47 | 6.10 | **41.96** (52.4%) | **B-** | Overhauled Foundation 🛠️ |
 | **tutorial_6** | Master's Trial | Tutorial Academy | Ketsu | 17x17 | 0 | 72% | 3 | 5.73 | 3.60 | 5.93 | 5.67 | 5.33 | 6.13 | 3.47 | 6.10 | **41.96** (52.4%) | **B-** | Overhauled Foundation 🛠️ |
 | **1** | First Footsteps | Ch 1: Foundations | Ki | 13x13 | 0 | 69% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
-| **2** | The Ruby Lock | Ch 1: Foundations | Shō | 15x13 | 0 | 90% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
-| **3** | Prismatic Corridors | Ch 1: Foundations | Ten | 17x15 | 0 | 80% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
-| **4** | The Shrouded Vault | Ch 1: Foundations | Ketsu | 19x17 | 0 | 84% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
+| **2** | The Ruby Lock | Ch 1: Foundations | Shō | 15x13 | 0 | 71% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
+| **3** | Prismatic Corridors | Ch 1: Foundations | Ten | 17x15 | 0 | 72% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
+| **4** | The Shrouded Vault | Ch 1: Foundations | Ketsu | 19x17 | 0 | 77% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
 | **5** | The Canopy Bridge | Ch 2: Canopy Bridges | Ki | 15x13 | 0 | 70% | 15 | 6.33 | 6.40 | 6.47 | 6.33 | 6.33 | 6.40 | 4.27 | 6.47 | **49.00** (61.3%) | **B-** | Overhauled Foundation 🛠️ |
 | **6** | Canopy Crossings | Ch 2: Canopy Bridges | Shō | 17x15 | 0 | 67% | 17 | 6.33 | 6.40 | 6.47 | 6.33 | 6.33 | 6.40 | 4.27 | 6.47 | **49.00** (61.3%) | **B-** | Overhauled Foundation 🛠️ |
 | **7** | The Sunken Chasm | Ch 2: Canopy Bridges | Ten | 17x15 | 0 | 75% | 20 | 6.33 | 6.40 | 6.47 | 6.33 | 6.33 | 6.40 | 4.27 | 6.47 | **49.00** (61.3%) | **B-** | Overhauled Foundation 🛠️ |
@@ -301,7 +301,7 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 2: The Ruby Lock (Shō (Development))
 * **Package**: `levels/chapter_1/level_2/`
-* **Telemetry**: Dimensions: **15x13** | Biome: **dungeon** | Playable Area: **47%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **90%** | 3D Elements: **0** | Entities: **10** | Par: **31 steps (26 optimal, 1.19x ratio) / 18s**
+* **Telemetry**: Dimensions: **15x13** | Biome: **dungeon** | Playable Area: **42%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **71%** | 3D Elements: **0** | Entities: **10** | Par: **41 steps (34 optimal, 1.21x ratio) / 21s**
 * **Ground-Truth Score**: **46.50 / 80.00 (58.1% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
   * *Chair 1 (Spatial Architecture: 6.27/10)*: Inertia: 6.4/10 | Anchors: 6.2/10 | Loopbacks: 6.2/10
@@ -313,14 +313,14 @@ Every level scorecard below details the exact reasons for deductions under Rubri
   * *Chair 7 (Tension & Suspense: 4.53/10)*: Hazard Rhythm: 4.6/10 | Sentinel Evasion: 4.2/10 | Fog Dread: 4.8/10
   * *Chair 8 (Challenge & Gating: 6.33/10)*: Zero-Bypass Gating: 6.6/10 | Entity Logic: 6.2/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (90% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (71% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
   - **3D Verticality**: Operates on a completely flat 2D plane with zero vertical elevation or overpass mechanics (Score 4.40/10).
   - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.37/10).
   - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.33/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "Architect's Journal: The North Sanctuary lies sealed by the ancient Ruby Lock. The western labyrinth winds into the deep vault where the Ruby Key is kept. Beware deceptive dead-ends."
-  - *Ancient Wall Inscription*: "The ruby glow beckons through the winding dark." — Explorer: "West holds the key; North holds the gate."
-  - *Collectibles*: 2 bonus item(s) (gem_bonus_2, Hidden Bloodstone).
+  - *Ancient Wall Inscription*: "Ancient script: West holds the ruby keystore; North holds the locked portal." — Explorer: "I must explore the western corridors first."
+  - *Collectibles*: 2 bonus item(s) (Hidden Bloodstone, Dungeon Ruby).
 * **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.
@@ -329,7 +329,7 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 3: Prismatic Corridors (Ten (Twist))
 * **Package**: `levels/chapter_1/level_3/`
-* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **44%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **80%** | 3D Elements: **0** | Entities: **11** | Par: **57 steps (48 optimal, 1.19x ratio) / 32s**
+* **Telemetry**: Dimensions: **17x15** | Biome: **dungeon** | Playable Area: **42%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **72%** | 3D Elements: **0** | Entities: **11** | Par: **63 steps (53 optimal, 1.19x ratio) / 32s**
 * **Ground-Truth Score**: **46.50 / 80.00 (58.1% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
   * *Chair 1 (Spatial Architecture: 6.27/10)*: Inertia: 6.4/10 | Anchors: 6.2/10 | Loopbacks: 6.2/10
@@ -341,7 +341,7 @@ Every level scorecard below details the exact reasons for deductions under Rubri
   * *Chair 7 (Tension & Suspense: 4.53/10)*: Hazard Rhythm: 4.6/10 | Sentinel Evasion: 4.2/10 | Fog Dread: 4.8/10
   * *Chair 8 (Challenge & Gating: 6.33/10)*: Zero-Bypass Gating: 6.6/10 | Entity Logic: 6.2/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (80% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (72% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
   - **3D Verticality**: Operates on a completely flat 2D plane with zero vertical elevation or overpass mechanics (Score 4.40/10).
   - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.37/10).
   - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.33/10).
@@ -357,7 +357,7 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 4: The Shrouded Vault (Ketsu (Synthesis))
 * **Package**: `levels/chapter_1/level_4/`
-* **Telemetry**: Dimensions: **19x17** | Biome: **dungeon** | Playable Area: **48%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **84%** | 3D Elements: **0** | Entities: **14** | Par: **72 steps (61 optimal, 1.18x ratio) / 40s**
+* **Telemetry**: Dimensions: **19x17** | Biome: **dungeon** | Playable Area: **42%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **77%** | 3D Elements: **0** | Entities: **15** | Par: **107 steps (92 optimal, 1.16x ratio) / 55s**
 * **Ground-Truth Score**: **46.50 / 80.00 (58.1% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
   * *Chair 1 (Spatial Architecture: 6.27/10)*: Inertia: 6.4/10 | Anchors: 6.2/10 | Loopbacks: 6.2/10
@@ -369,14 +369,14 @@ Every level scorecard below details the exact reasons for deductions under Rubri
   * *Chair 7 (Tension & Suspense: 4.53/10)*: Hazard Rhythm: 4.6/10 | Sentinel Evasion: 4.2/10 | Fog Dread: 4.8/10
   * *Chair 8 (Challenge & Gating: 6.33/10)*: Zero-Bypass Gating: 6.6/10 | Entity Logic: 6.2/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (84% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (77% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
   - **3D Verticality**: Operates on a completely flat 2D plane with zero vertical elevation or overpass mechanics (Score 4.40/10).
   - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.37/10).
   - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.33/10).
 * **Diegetic Package Lore**:
   - *Architect's Lore*: "Architect's Journal: The Triune Sanctum to the south requires all three resonance keys—Ruby, Emerald, and Sapphire. The labyrinth wings connect all three cathedral chambers beneath the shrouded mist."
   - *Ancient Wall Inscription*: "The cathedral bells echo through the fog. Seek the three sacred chambers in any order." — Explorer: "The corridors branch into three deep wings."
-  - *Collectibles*: 1 bonus item(s) (Abyssal Sapphire).
+  - *Collectibles*: 2 bonus item(s) (Cathedral Starstone, Sanctum Ruby).
 * **Actionable Overhaul Directives (Target: Elevate from B- to B-Tier $\ge 55%$)**:
   1. *Eradicate Linear Fetch Chores*: Redesign key placement so retrieving a key requires choosing between divergent paths or manipulating multi-state levers rather than walking down a single dead-end hallway.
   2. *Elevate Visual Depth*: Upgrade flat static vector wall decorations to cast radial dynamic lighting on adjacent pavers, and introduce particle effects for fluids and torches.

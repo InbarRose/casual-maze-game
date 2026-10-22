@@ -21,18 +21,18 @@
     "x": 9,
     "y": 8,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
-    "x": 9,
+    "x": 10,
     "y": 15,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 72,
-  "parTime": 40,
+  "parSteps": 107,
+  "parTime": 55,
   "architectNote": "Architect's Journal: The Triune Sanctum to the south requires all three resonance keys—Ruby, Emerald, and Sapphire. The labyrinth wings connect all three cathedral chambers beneath the shrouded mist.",
   "package": {
     "layers": "./layers.json",

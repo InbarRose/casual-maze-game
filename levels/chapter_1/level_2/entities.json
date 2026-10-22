@@ -3,8 +3,8 @@
     "id": "sign_ch1_2",
     "type": "signpost",
     "title": "Architect's Note #2",
-    "x": 7,
-    "y": 10,
+    "x": 6,
+    "y": 11,
     "elevation": 0,
     "text": "Architect's Journal: The North Sanctuary lies sealed by the ancient Ruby Lock. The western labyrinth winds into the deep vault where the Ruby Key is kept. Beware deceptive dead-ends."
   },
@@ -12,18 +12,28 @@
     "id": "inscr_ruby_altar",
     "type": "wall_decor",
     "decorType": "carving",
-    "text": "The ruby glow beckons through the winding dark.",
-    "playerDialogue": "West holds the key; North holds the gate.",
-    "x": 7,
-    "y": 9,
+    "text": "Ancient script: West holds the ruby keystore; North holds the locked portal.",
+    "playerDialogue": "I must explore the western corridors first.",
+    "x": 8,
+    "y": 11,
+    "elevation": 0
+  },
+  {
+    "id": "inscr_secret_hint_2",
+    "type": "wall_decor",
+    "decorType": "carving",
+    "text": "Carved runes: The stone here rings hollow. A blood-red crystal glimmers behind the cracked masonry.",
+    "playerDialogue": "This dead end wall feels fragile. I should search for a seam.",
+    "x": 13,
+    "y": 6,
     "elevation": 0
   },
   {
     "id": "key_ruby_2",
     "type": "key",
     "color": "red",
-    "x": 2,
-    "y": 4,
+    "x": 1,
+    "y": 3,
     "elevation": 0
   },
   {
@@ -32,16 +42,7 @@
     "color": "red",
     "requiresKey": "key_ruby_2",
     "x": 7,
-    "y": 3,
-    "elevation": 0
-  },
-  {
-    "id": "gem_bonus_2",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "scoreValue": 150,
-    "x": 13,
-    "y": 5,
+    "y": 2,
     "elevation": 0
   },
   {
@@ -49,39 +50,41 @@
     "type": "collectible",
     "name": "Hidden Bloodstone",
     "points": 250,
-    "x": 12,
-    "y": 1,
+    "x": 13,
+    "y": 8,
+    "elevation": 0
+  },
+  {
+    "id": "gem_bonus_2",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Dungeon Ruby",
+    "points": 150,
+    "x": 1,
+    "y": 9,
     "elevation": 0
   },
   {
     "id": "torch_ch1_2_spawn",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 7,
-    "y": 11,
-    "elevation": 0
-  },
-  {
-    "id": "torch_ch1_2_cross",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 7,
-    "y": 7,
+    "x": 8,
+    "y": 10,
     "elevation": 0
   },
   {
     "id": "torch_ch1_2_key",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 2,
-    "y": 3,
+    "x": 1,
+    "y": 2,
     "elevation": 0
   },
   {
     "id": "torch_ch1_2_gate",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 7,
+    "x": 8,
     "y": 2,
     "elevation": 0
   }

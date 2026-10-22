@@ -19,19 +19,19 @@
   },
   "spawn": {
     "x": 2,
-    "y": 7,
+    "y": 2,
     "elevation": 0,
-    "style": "stairs_down",
-    "wallDirection": "none"
+    "style": "wall_doorway",
+    "wallDirection": "north"
   },
   "exit": {
     "x": 8,
-    "y": 7,
+    "y": 1,
     "elevation": 0,
-    "style": "portal",
-    "wallDirection": "none"
+    "style": "wall_archway",
+    "wallDirection": "north"
   },
-  "parSteps": 57,
+  "parSteps": 63,
   "parTime": 32,
   "architectNote": "Architect's Journal: The central dais is locked under royal purple seal. To break it, claim the Emerald Key in the southern cistern, open the eastern passage, and retrieve the Purple Keystone.",
   "package": {
