@@ -3,11 +3,11 @@
 **Chapter**: Chapter 6  
 **Zone**: zone_6  
 **Dimensions**: 19 × 15  
-**Par Steps**: 30 | **Par Time**: 18s  
-**Theme**: sunset  
+**Par Steps**: 78 | **Par Time**: 47s  
+**Theme**: crypt  
 
 ## Narrative Lore & Overview
-The dual seals are entangled. Break the rune ward to access the Dynamo Lever, lowering the barrier to the Cipher Sanctum.
+Architect's Journal: Entangled wards create an interlocking puzzle. Dispersing the outer rune ward grants access to the dynamo switch, lowering the barrier into the inner cipher chamber.
 
 ## Kishōtenketsu Architectural Structure
 - **Ki (Introduction)**: Entry sequence introducing corridor orientation and initial pathway forks.
