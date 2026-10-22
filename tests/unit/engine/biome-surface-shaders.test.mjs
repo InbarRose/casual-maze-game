@@ -22,6 +22,7 @@ function createMockContext() {
     ellipse: (x, y, rx, ry, rot, sa, ea) => calls.push(['ellipse', x, y, rx, ry, rot, sa, ea]),
     moveTo: (x, y) => calls.push(['moveTo', x, y]),
     lineTo: (x, y) => calls.push(['lineTo', x, y]),
+    bezierCurveTo: (cp1x, cp1y, cp2x, cp2y, x, y) => calls.push(['bezierCurveTo', cp1x, cp1y, cp2x, cp2y, x, y]),
     createRadialGradient: () => ({
       addColorStop: () => {},
     }),
@@ -84,5 +85,20 @@ describe('Engine Suite > Biome Surface Shaders & Environmental Props', () => {
       }
     }
     assert(ctx.calls.length > 0, 'Perimeter decor draw operations executed');
+  });
+
+  it('renders wall face and top cap details across all supported biomes (BL-178, ADR-0052)', () => {
+    const ctx = createMockContext();
+    const biomes = ['dungeon', 'jungle', 'emerald', 'lava', 'magma', 'snow', 'glacial', 'sunset', 'temple', 'aqueduct', 'prismatic'];
+
+    for (const biome of biomes) {
+      for (let x = 0; x < 6; x++) {
+        for (let y = 0; y < 6; y++) {
+          BiomeSurfaceShaders.renderWallFaceDetails(ctx, x * 32, y * 32, 32, 12, biome, 42, x, y, 1.0);
+          BiomeSurfaceShaders.renderWallTopDetails(ctx, x * 32, y * 32, 32, 12, biome, 42, x, y);
+        }
+      }
+    }
+    assert(ctx.calls.length > 0, 'Wall face and top cap operations executed');
   });
 });

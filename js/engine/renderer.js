@@ -68,6 +68,72 @@ export class GameRenderer {
   }
 
   /**
+   * Helper to resolve multi-variant floor asset image based on deterministic spatial hash (BL-178, ADR-0052)
+   * @param {string} themeKey
+   * @param {number} x
+   * @param {number} y
+   * @param {number} seed
+   * @returns {HTMLImageElement|null}
+   */
+  getFloorAssetImage(themeKey, x, y, seed = 42) {
+    const themeAliases = {
+      lava: 'magma',
+      snow: 'glacial',
+      sunset: 'temple',
+      emerald: 'jungle',
+      sanctuary: 'dungeon',
+    };
+    const baseKey = themeAliases[themeKey] || themeKey;
+    const h = BiomeSurfaceShaders.getDecorHash(x, y, seed + 101);
+
+    let candidate = null;
+    if (h > 0.88) {
+      candidate = this.getAssetImage(`tile_floor_${baseKey}_runic`);
+    } else if (h > 0.68) {
+      candidate = this.getAssetImage(`tile_floor_${baseKey}_cracked`);
+    }
+
+    return candidate ||
+      this.getAssetImage(`tile_floor_${baseKey}`) ||
+      this.getAssetImage(`tile_floor_${themeKey}`) ||
+      this.getAssetImage('tile_floor_generic');
+  }
+
+  /**
+   * Helper to resolve multi-variant wall asset image based on deterministic spatial hash (BL-178, ADR-0052)
+   * @param {string} themeKey
+   * @param {number} x
+   * @param {number} y
+   * @param {number} seed
+   * @returns {HTMLImageElement|null}
+   */
+  getWallAssetImage(themeKey, x, y, seed = 42) {
+    const themeAliases = {
+      lava: 'magma',
+      snow: 'glacial',
+      sunset: 'temple',
+      emerald: 'jungle',
+      sanctuary: 'dungeon',
+    };
+    const baseKey = themeAliases[themeKey] || themeKey;
+    const h = BiomeSurfaceShaders.getDecorHash(x, y, seed + 307);
+
+    let candidate = null;
+    if (h > 0.86) {
+      candidate = this.getAssetImage(`tile_wall_${baseKey}_torch`);
+    } else if (h > 0.72) {
+      candidate = this.getAssetImage(`tile_wall_${baseKey}_grate`);
+    } else if (h > 0.58 && baseKey === 'jungle') {
+      candidate = this.getAssetImage('tile_wall_overgrowth');
+    }
+
+    return candidate ||
+      this.getAssetImage(`tile_wall_${baseKey}`) ||
+      this.getAssetImage(`tile_wall_${themeKey}`) ||
+      this.getAssetImage('tile_wall_dungeon');
+  }
+
+  /**
    * Switch perspective mode ('angled' | 'topdown')
    * @param {'angled'|'topdown'} mode
    */
@@ -446,10 +512,8 @@ export class GameRenderer {
 
         const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
-        // Check for vector SVG floor asset (plain or cracked variation)
-        const isCracked = ((x * 13 + y * 7) % 17 === 0);
-        const variationId = isCracked ? `tile_floor_${themeKey}_cracked` : `tile_floor_${themeKey}`;
-        const floorImg = this.getAssetImage(variationId) || this.getAssetImage(`tile_floor_${themeKey}`) || this.getAssetImage('tile_floor_generic');
+        // Multi-variant SVG floor asset selection (BL-178, ADR-0052)
+        const floorImg = this.getFloorAssetImage(themeKey, x, y, seed);
 
         if (floorImg) {
           ctx.drawImage(floorImg, screen.x, screen.y, tileSize, tileSize);
@@ -457,10 +521,10 @@ export class GameRenderer {
           const isAlt = (x + y) % 2 === 0;
           ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
           ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
-
-          // Rich procedural floor micro-textures and masonry variety (BL-101)
-          this.renderProceduralFloorDetails(ctx, x, y, screen.x, screen.y, tileSize, themeKey, seed);
         }
+
+        // Apply procedural floor micro-textures and masonry variety across all floors (BL-178)
+        this.renderProceduralFloorDetails(ctx, x, y, screen.x, screen.y, tileSize, themeKey, seed);
 
         // Ambient Occlusion / Corner drop shadows from adjacent walls (BL-101)
         this.renderFloorAmbientOcclusion(ctx, x, y, screen.x, screen.y, tileSize, ground);
@@ -630,7 +694,7 @@ export class GameRenderer {
     // 5. Render sorted items
     for (const item of drawables) {
       if (item.type === 'wall') {
-        this.renderAngledWall(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, ground, camera, item.isSecret, revealedSecrets);
+        this.renderAngledWall(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, ground, camera, item.isSecret, revealedSecrets, seed);
         this.renderThematicPerimeterDecorTile(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, themeKey, seed, ground, 0, level);
         this.renderWallIntegratedPortals(ctx, item.x, item.y, item.screen.x, item.screen.y, tileSize, theme, level, camera);
       } else if (item.type === 'player') {
@@ -667,12 +731,13 @@ export class GameRenderer {
   renderAngledWalls(ctx, level, bounds, camera, theme) {
     const ground = level.layers.ground;
     const tileSize = camera.tileSize;
+    const seed = (level.id ? String(level.id).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 42);
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
         if (ground[y]?.[x] === TILES.WALL) {
           const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
-          this.renderAngledWall(ctx, x, y, screen.x, screen.y, tileSize, theme, ground, camera);
+          this.renderAngledWall(ctx, x, y, screen.x, screen.y, tileSize, theme, ground, camera, false, null, seed);
         }
       }
     }
@@ -681,11 +746,11 @@ export class GameRenderer {
   /**
    * Render single 2.5D wall block with front drop face and bevels relative to active camera rotation
    */
-  renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground, camera, isSecret = false, revealedSecrets = null) {
+  renderAngledWall(ctx, x, y, screenX, screenY, tileSize, theme, ground, camera, isSecret = false, revealedSecrets = null, seed = 42) {
     const wallH = Math.round(tileSize * 0.38); // e.g. 12px for 32px tile
     const angle = camera ? camera.getDiscreteRotation() : 0;
     const themeKey = theme?.id || 'dungeon';
-    const wallImg = this.getAssetImage(`tile_wall_${themeKey}`) || this.getAssetImage('tile_wall_dungeon');
+    const wallImg = this.getWallAssetImage(themeKey, x, y, seed);
 
     const isSecretRevealed = isSecret && revealedSecrets && (
       (typeof revealedSecrets.has === 'function' && revealedSecrets.has(`${x},${y}`)) ||
@@ -750,6 +815,9 @@ export class GameRenderer {
       ctx.fillRect(screenX, screenY - wallH, tileSize, 2);
     }
 
+    // Top cap masonry details (BL-178, ADR-0052)
+    BiomeSurfaceShaders.renderWallTopDetails(ctx, screenX, screenY, tileSize, wallH, themeKey, seed, x, y);
+
     // 2. Front Face (Facing downward towards camera view)
     if (!hasFrontWall) {
       if (wallImg) {
@@ -768,6 +836,9 @@ export class GameRenderer {
         ctx.fillRect(screenX + tileSize * brickSplit, screenY - wallH + tileSize, 1.5, wallH * 0.5);
         ctx.fillRect(screenX + tileSize * (1 - brickSplit), screenY - wallH + tileSize + wallH * 0.5, 1.5, wallH * 0.5);
       }
+
+      // Architectural wall face relief and biome details (BL-178, ADR-0052)
+      BiomeSurfaceShaders.renderWallFaceDetails(ctx, screenX, screenY, tileSize, wallH, themeKey, seed, x, y, this.exitPulseTimer || 0);
 
       // Shadow cast onto floor beneath
       ctx.fillStyle = 'rgba(0, 0, 0, 0.35)';
@@ -1446,7 +1517,7 @@ export class GameRenderer {
     const ground = level.layers.ground;
     const tileSize = camera.tileSize;
     const themeKey = theme?.id || level.config?.theme || 'dungeon';
-    const wallImg = this.getAssetImage(`tile_wall_${themeKey}`) || this.getAssetImage('tile_wall_dungeon');
+    const seed = (level.id ? String(level.id).split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 42);
 
     for (let y = bounds.startRow; y <= bounds.endRow; y++) {
       for (let x = bounds.startCol; x <= bounds.endCol; x++) {
@@ -1454,6 +1525,7 @@ export class GameRenderer {
         const screen = camera.tileToScreen ? camera.tileToScreen(x, y) : camera.worldToScreen(x * tileSize, y * tileSize, true);
 
         if (tile === TILES.WALL) {
+          const wallImg = this.getWallAssetImage(themeKey, x, y, seed);
           if (wallImg) {
             ctx.drawImage(wallImg, screen.x, screen.y, tileSize, tileSize);
           } else {
@@ -1476,10 +1548,8 @@ export class GameRenderer {
             ctx.strokeRect(screen.x, screen.y, tileSize, tileSize);
           }
         } else {
-          // Check for vector SVG floor asset (plain or cracked variation)
-          const isCracked = ((x * 13 + y * 7) % 17 === 0);
-          const variationId = isCracked ? `tile_floor_${themeKey}_cracked` : `tile_floor_${themeKey}`;
-          const floorImg = this.getAssetImage(variationId) || this.getAssetImage(`tile_floor_${themeKey}`) || this.getAssetImage('tile_floor_generic');
+          // Multi-variant SVG floor asset selection (BL-178, ADR-0052)
+          const floorImg = this.getFloorAssetImage(themeKey, x, y, seed);
 
           if (floorImg) {
             ctx.drawImage(floorImg, screen.x, screen.y, tileSize, tileSize);
@@ -1489,6 +1559,9 @@ export class GameRenderer {
             ctx.fillStyle = isAlt ? theme.floorAlt : theme.floor;
             ctx.fillRect(screen.x, screen.y, tileSize, tileSize);
           }
+
+          // Apply procedural floor micro-textures and masonry variety (BL-178)
+          this.renderProceduralFloorDetails(ctx, x, y, screen.x, screen.y, tileSize, themeKey, seed);
 
           // Floor grid outline
           ctx.strokeStyle = theme.floorGrid || 'rgba(255, 255, 255, 0.02)';
