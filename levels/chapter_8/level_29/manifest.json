@@ -7,10 +7,11 @@
   "author": "Inbar Rose",
   "version": 1,
   "dimensions": {
-    "width": 15,
-    "height": 15
+    "width": 19,
+    "height": 17
   },
   "config": {
+    "allowRotation": true,
     "fogOfWar": true,
     "viewRadius": 6,
     "allowFreePan": true,
@@ -19,23 +20,23 @@
     "viewPerspective": "angled"
   },
   "spawn": {
-    "x": 1,
+    "x": 3,
     "y": 1,
     "elevation": 0,
     "style": "wall_doorway",
     "wallDirection": "north"
   },
   "exit": {
-    "x": 13,
-    "y": 13,
+    "x": 15,
+    "y": 1,
     "elevation": 0,
     "style": "wall_archway",
     "label": "Needle Sanctum",
     "wallDirection": "north"
   },
-  "parSteps": 29,
-  "parTime": 18,
-  "architectNote": "Rotate the camera [Q / R] to view the cardinal corridors. Seek the golden key in the south-west wing.",
+  "parSteps": 61,
+  "parTime": 37,
+  "architectNote": "Rotate the camera [Q / R] to view the cardinal corridors. Screen controls adapt automatically to your camera heading.",
   "help": {
     "title": "Level 29: The Cardinal Needle",
     "message": "Press [Q] and [R] to rotate the view. Screen controls adapt automatically to your camera heading."

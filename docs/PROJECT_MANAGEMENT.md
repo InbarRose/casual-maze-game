@@ -46,9 +46,10 @@ This document tracks project milestones, current release status, active developm
   - Redesign Levels 21–24 ("The Rune Lock", "The Cipher Dials", "The Entangled Wards", "The Grand Archive"): 1-tile winding arcane archive labyrinths, $\ge 70\%$ corridor inertia (82%–84%), 0 dead spaces $\ge 4\times 4$, 4-glyph rune memory puzzle gates, 3-ring concentric celestial cipher dials, conduit dynamo levers with barrier walls, Gold sanctum keys and gates, North wall portals, and stone lecterns with coordinate tracking. ([PR #127](https://github.com/InbarRose/casual-maze-game/pull/127))
 
 - [x] **Chapter 7 Rigor & Citadel Trials Overhaul (Levels 25–28) (BL-184, ADR-0058)**:
-  - Redesign Levels 25–28 ("The Sovereign Rampart", "The Frostfire Conduit", "The Prismatic Bastion", "The Sovereign's Ascent"): 1-tile winding citadel rampart labyrinths, $\ge 70\%$ corridor inertia (77%–82%), 0 dead spaces $\ge 4\times 4$, high viaduct ramparts at $Z=1$, patrolling sentinels in moats, frostfire conduit levers, aerial vortex warps, North wall portals, and stone lecterns with coordinate tracking.
+  - Redesign Levels 25–28 ("The Sovereign Rampart", "The Frostfire Conduit", "The Prismatic Bastion", "The Sovereign's Ascent"): 1-tile winding citadel rampart labyrinths, $\ge 70\%$ corridor inertia (77%–82%), 0 dead spaces $\ge 4\times 4$, high viaduct ramparts at $Z=1$, patrolling sentinels in moats, frostfire conduit levers, aerial vortex warps, North wall portals, and stone lecterns with coordinate tracking. ([PR #128](https://github.com/InbarRose/casual-maze-game/pull/128))
 
-- [ ] **Chapter 8 Rigor & World Rotation Overhaul (Levels 29–32) (BL-185, ADR-0059)**:
+- [x] **Chapter 8 Rigor & World Rotation Overhaul (Levels 29–32) (BL-185, ADR-0059)**:
+  - Redesign Levels 29–32 ("The Cardinal Needle", "The Hidden Underpass", "The Four-Faced Pillar", "The Prismatic Spire"): 1-tile winding monolith labyrinths, $\ge 70\%$ corridor inertia (81%–85%), 0 dead spaces $\ge 4\times 4$, 4-way camera rotation (`allowRotation: true`), 3D occluded underpass bridge at (7, 7), 4-faced cardinal monolith carvings, branching exits contract on Level 32, North wall portals, and stone lecterns with coordinate tracking.
 
 ---
 
@@ -1027,6 +1028,18 @@ All architectural decisions are documented in `docs/adr/`:
 | [0045](adr/0045-level-design-and-visual-scoring-framework.md) | Level Game Design & Visual Aesthetics Scoring Framework | Accepted | 2026-10-19 |
 | [0046](adr/0046-ground-truth-empirical-level-scoring-rubric.md) | Ground-Truth Empirical Level Scoring Rubric (v5.0.0) & Sub-50% Reality Ceiling | Accepted | 2026-10-20 |
 | [0047](adr/0047-game-design-philosophy-expansion-and-level-overhaul-framework.md) | Master Game Design Philosophy Expansion (v2.0.0) & 7-Phase Methodical Overhaul Framework | Accepted | 2026-10-20 |
+| [0048](adr/0048-level-1-true-labyrinth-and-wall-portal-visuals.md) | Chapter 1 Level 1 True Labyrinth Topology, Secret Alcove & Wall Portal Architectural Visuals | Accepted | 2026-10-22 |
+| [0049](adr/0049-chapter-1-foundation-rigor-overhaul.md) | Chapter 1 Foundation Rigor Overhaul (Labyrinth Topology, Secrets & Architectural Portals) | Accepted | 2026-10-22 |
+| [0050](adr/0050-the-architect-codex-and-collectible-folio-system.md) | The Architect's Codex, Collectible Journal Folios & Spatial Coordinate Telemetry | Accepted | 2026-10-22 |
+| [0051](adr/0051-separation-of-puzzle-clues-into-diegetic-wall-art.md) | Separation of Puzzle Clues into Diegetic Wall Art & Carvings | Accepted | 2026-10-22 |
+| [0052](adr/0052-visual-diversity-and-multi-variant-biome-art.md) | Visual Diversity, Multi-Variant Biome Art & Deterministic Architectural Masonry | Accepted | 2026-10-22 |
+| [0053](adr/0053-chapter-2-verticality-rigor-and-architectural-portals.md) | Chapter 2 Verticality Rigor, Labyrinth Topology & Architectural Portals | Accepted | 2026-10-22 |
+| [0054](adr/0054-chapter-3-clockwork-foundry-rigor-and-dynamic-levers.md) | Chapter 3 Clockwork Foundry Rigor, Dynamic Levers & Shifting Labyrinth Topology | Accepted | 2026-10-22 |
+| [0055](adr/0055-chapter-4-astral-warp-rigor-and-teleporters.md) | Chapter 4 Astral Warp Rigor, Spatial Teleporters & Non-Euclidean Labyrinth Topology | Accepted | 2026-10-22 |
+| [0056](adr/0056-chapter-5-molten-gauntlet-rigor-and-hazards.md) | Chapter 5 Molten Gauntlet Rigor, Dynamic Hazards, Patroller Sentinels & Caldera Labyrinth Topology | Accepted | 2026-10-22 |
+| [0057](adr/0057-chapter-6-arcane-enigmas-rigor-and-puzzle-gates.md) | Chapter 6 Arcane Enigmas Rigor, Puzzle Gates, Cipher Dials & Scriptorium Labyrinth Topology | Accepted | 2026-10-22 |
+| [0058](adr/0058-chapter-7-citadel-trials-rigor-and-rampart-synthesis.md) | Chapter 7 Citadel Trials Rigor, High Viaduct Ramparts, Frostfire Conduits & Grand Synthesis Labyrinth Topology | Accepted | 2026-10-22 |
+| [0059](adr/0059-chapter-8-world-rotation-rigor-and-monolith-synthesis.md) | Chapter 8 World Rotation Rigor, 3D Occluded Underpasses, Cardinal Monoliths & Spire Bifurcation Labyrinth Topology | Accepted | 2026-10-22 |
 
 ---
 

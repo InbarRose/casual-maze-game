@@ -1,94 +1,123 @@
 [
   {
-    "id": "key_emerald_32",
-    "type": "key",
-    "color": "#10b981",
-    "name": "Spire Apex Key",
-    "x": 15,
-    "y": 1,
-    "elevation": 0
-  },
-  {
-    "id": "door_emerald_32",
-    "type": "door",
-    "color": "#10b981",
-    "name": "Crown Barrier",
-    "requiresKey": "key_emerald_32",
-    "x": 15,
-    "y": 14,
-    "elevation": 0
+    "id": "note_32",
+    "type": "architect_note",
+    "title": "Architect's Folio #32",
+    "text": "At the apex of the world, perspective is mastery. Rotate [Q / R] to pierce the blinding blizzard and align the spire's bifurcated gateways.",
+    "author": "The Grand Architect",
+    "x": 1,
+    "y": 3,
+    "elevation": 0,
+    "style": "lectern_stone"
   },
   {
     "id": "checkpoint_32",
     "type": "checkpoint",
-    "style": "shrine",
-    "name": "Spire Sanctuary Waypoint",
-    "x": 8,
-    "y": 8,
-    "elevation": 1,
-    "color": "#38bdf8"
-  },
-  {
-    "id": "gem_apex_crown",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Diamond of the Monolith",
-    "scoreValue": 500,
-    "color": "#ffffff",
-    "x": 8,
-    "y": 2,
+    "name": "Summit Redoubt Checkpoint",
+    "x": 5,
+    "y": 7,
     "elevation": 0
   },
   {
-    "id": "gem_monolith_apex_core_32",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Apex Monolith Core Crystal",
-    "scoreValue": 300,
-    "x": 2,
-    "y": 8,
+    "id": "lever_32_spire",
+    "type": "lever",
+    "name": "Spire Dynamo Switch",
+    "x": 9,
+    "y": 19,
+    "elevation": 0,
+    "state": false,
+    "targets": [
+      {
+        "action": "toggle_tile",
+        "layer": "ground",
+        "x": 13,
+        "y": 11,
+        "stateA": 0,
+        "stateB": 1
+      }
+    ]
+  },
+  {
+    "id": "key_gold_32",
+    "type": "key",
+    "color": "#eab308",
+    "name": "Golden Apex Key",
+    "x": 21,
+    "y": 17,
     "elevation": 0
   },
   {
-    "id": "secret_spire_32",
+    "id": "door_gold_32",
+    "type": "door",
+    "color": "#eab308",
+    "name": "Golden Spire Gate",
+    "requiresKey": "key_gold_32",
+    "x": 19,
+    "y": 5,
+    "elevation": 0
+  },
+  {
+    "id": "secret_gem_32",
     "type": "collectible",
     "collectibleType": "gem",
-    "name": "Crown Monolith Prismatic Core",
+    "name": "Prismatic Spire Heart",
     "scoreValue": 500,
+    "color": "#ec4899",
+    "x": 1,
+    "y": 19,
+    "elevation": 0
+  },
+  {
+    "id": "gem_spire_summit",
+    "type": "collectible",
+    "collectibleType": "gem",
+    "name": "Glacial Apex Sapphire",
+    "scoreValue": 250,
+    "color": "#38bdf8",
+    "x": 7,
+    "y": 11,
+    "elevation": 1
+  },
+  {
+    "id": "plate_spire_bifurcation",
+    "type": "wall_decor",
+    "decorType": "runic_plate",
+    "title": "Monolith Apex Stele",
+    "text": "Two gates crown this spire: East leads back to the origin of all trials; West delves deep into the Whispering Citadel.",
+    "author": "High Chronicler",
     "x": 15,
-    "y": 1,
+    "y": 3,
+    "facing": "north",
     "elevation": 0
   },
   {
-    "id": "torch_32_nw",
+    "id": "carving_spire_secret",
     "type": "wall_decor",
-    "decorType": "torch",
-    "x": 4,
-    "y": 4,
+    "decorType": "carving",
+    "title": "Glacial Frost Relief",
+    "text": "The southwestern ice shelf conceals the beating heart of the spire.",
+    "author": "Frost Sculptor",
+    "x": 3,
+    "y": 19,
+    "facing": "west",
     "elevation": 0
   },
   {
-    "id": "torch_32_ne",
+    "id": "torch_32_entry",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 12,
-    "y": 4,
-    "elevation": 0
+    "x": 3,
+    "y": 2,
+    "elevation": 0,
+    "facing": "west"
   },
   {
-    "id": "torch_32_sw",
+    "id": "torch_32_exit",
     "type": "wall_decor",
     "decorType": "torch",
-    "x": 4,
-    "y": 12,
-    "elevation": 0
-  },
-  {
-    "id": "torch_32_se",
-    "type": "wall_decor",
-    "decorType": "torch",
-    "x": 12,
-    "y": 12,
-    "elevation": 0
+    "x": 21,
+    "y": 2,
+    "elevation": 0,
+    "facing": "west"
   }
 ]
