@@ -60,8 +60,8 @@
     "id": "wall_note_18",
     "type": "wall_decor",
     "decorType": "carving",
-    "text": "Forged from living magma and black glass, the sentinels follow their endless circuit.",
-    "playerDialogue": "If I circle the central pillar, the sentinel will pace ahead of me.",
+    "text": "The sentinel traces a clockwise ring around the foundry pillars.",
+    "playerDialogue": "I need to slip behind the molten sentry to claim the bronze key.",
     "x": 2,
     "y": 1,
     "elevation": 0
@@ -69,31 +69,51 @@
   {
     "id": "gem_obsidian_eye_18",
     "type": "collectible",
-    "collectibleType": "gem",
     "name": "Obsidian Sentinel Eye",
-    "scoreValue": 200,
+    "points": 300,
     "x": 1,
-    "y": 9,
+    "y": 12,
     "elevation": 0
   },
   {
-    "id": "gem_pyrite_cluster_18",
+    "id": "secret_pyrite_18",
     "type": "collectible",
-    "collectibleType": "gem",
     "name": "Pyrite Cluster",
-    "scoreValue": 150,
-    "x": 15,
+    "points": 350,
+    "x": 14,
+    "y": 6,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_18_north_w",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 5,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_18_north_e",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 13,
+    "y": 1,
+    "elevation": 0
+  },
+  {
+    "id": "torch_ch5_18_west",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 1,
     "y": 7,
     "elevation": 0
   },
   {
-    "id": "secret_basalt_18",
-    "type": "collectible",
-    "collectibleType": "gem",
-    "name": "Crystalline Basalt Rose",
-    "scoreValue": 350,
-    "x": 1,
-    "y": 13,
+    "id": "torch_ch5_18_pillar",
+    "type": "wall_decor",
+    "decorType": "torch",
+    "x": 9,
+    "y": 7,
     "elevation": 0
   }
 ]

@@ -732,6 +732,38 @@
       "x": 14,
       "y": 5,
       "elevation": 0
+    },
+    {
+      "id": "torch_ch4_15_foyer",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 6,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch4_15_east",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 1,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch4_15_ascent",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 6,
+      "y": 7,
+      "elevation": 0
+    },
+    {
+      "id": "torch_ch4_15_sanctum",
+      "type": "wall_decor",
+      "decorType": "torch",
+      "x": 11,
+      "y": 7,
+      "elevation": 0
     }
   ],
   "packageSource": "level_15"

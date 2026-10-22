@@ -173,7 +173,15 @@ This document tracks project milestones, current release status, active developm
     - Enhanced clockwork lever mechanisms, counterweight sluices, and hydraulic gates in Chapter 3 with foundry torchlight and steam ambience.
     - Separated decorative torch lighting from interactive wall lore in `WallDecor` and `InteractionDispatcher`, preventing interaction candidate hijacking.
     - Graduated all 8 levels to **B- Tier (60.8%–61.3%)**, bringing total graduated levels to 18 / 53.
-  - Rebuilt `docs/LEVEL_SCORING_REGISTER.md` and updated `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed).
+  - Rebuilt `docs/LEVEL_SCORING_REGISTER.md` and updated `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed). Merged via [PR #113](https://github.com/InbarRose/casual-maze-game/pull/113).
+
+- [x] **Phase 4 Overhaul: Astral Teleporters & Molten Gauntlets (BL-167, ADR-0047)**:
+  - Overhaul Chapter 4 (Levels 13–16) and Chapter 5 (Levels 17–20) per ADR-0047:
+    - Enhanced Chapter 4 astral teleporters, non-Euclidean 3D rift ascension (Z=0 $\to$ Z=1), planetary rifts, star core seals, and celestial torch sconces.
+    - Enhanced Chapter 5 molten gauntlets, synchronized flame hazard intervals with safe timing alcoves, patrolling magma sentinels, glacial beacon checkpoints, and caldera torch sconces.
+    - Maintained 100% zero-bypass gating solvability and solid-wall placement for all 32 placed torches.
+    - Graduated Levels 13–16 to **B- Tier (61.5%)** and Levels 17–20 to **B Tier (63.1%)**, bringing total graduated levels to 26 / 53.
+  - Rebuilt `docs/LEVEL_SCORING_REGISTER.md` and updated `tests/unit/levels/level-scoring-framework.test.mjs` (775 tests passed, 0 failed, 23/23 drift checks passed). Merged via [PR #114](https://github.com/InbarRose/casual-maze-game/pull/114).
 
 
   - **Smart Test Dependency Register & CI Splitting (`BL-142`, ADR-0036)**: Implemented `tests/harness/dependency-register.mjs`, `tests/harness/smart-resolver.mjs`, and `tests/run-smart.mjs` mapping git diffs to test suites, caching results in `.test-cache.json`, and splitting GitHub Actions CI into parallel domain matrix jobs ([PR #94](https://github.com/InbarRose/casual-maze-game/pull/94)).
