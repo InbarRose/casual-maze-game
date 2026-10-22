@@ -1869,174 +1869,243 @@ export class GameRenderer {
   }
 
   /**
-   * Render an imposing dungeon entrance door cut into the North wall drop face
+   * Render an authentic architectural dungeon entrance door cut into the North wall drop face,
+   * featuring open heavy studded timber doors framing a flight of stone stairs ascending up
+   * into a sunlit open exterior vista (BL-174).
    */
   renderWallEntranceDoorway(ctx, screenX, screenY, tileSize, theme, style) {
     const wallH = Math.round(tileSize * 0.38);
     const faceBottom = screenY + tileSize;
-    const doorW = Math.round(tileSize * 0.64);
+    const doorW = Math.round(tileSize * 0.72);
     const doorX = screenX + Math.round((tileSize - doorW) / 2);
-    const doorH = Math.round(wallH + tileSize * 0.34);
+    const doorH = Math.round(wallH + tileSize * 0.44);
     const doorY = faceBottom - doorH;
     const cx = screenX + tileSize / 2;
 
     ctx.save();
 
-    // 1. Shadowed archway recess cut into wall
-    ctx.fillStyle = '#020617';
+    // 1. Archway Opening
     ctx.beginPath();
     ctx.moveTo(doorX, faceBottom);
-    ctx.lineTo(doorX, doorY + doorW * 0.5);
+    ctx.lineTo(doorX, doorY + doorW * 0.45);
     if (typeof ctx.quadraticCurveTo === 'function') {
-      ctx.quadraticCurveTo(cx, doorY, doorX + doorW, doorY + doorW * 0.5);
+      ctx.quadraticCurveTo(cx, doorY, doorX + doorW, doorY + doorW * 0.45);
     } else {
       ctx.lineTo(cx, doorY);
-      ctx.lineTo(doorX + doorW, doorY + doorW * 0.5);
+      ctx.lineTo(doorX + doorW, doorY + doorW * 0.45);
     }
     ctx.lineTo(doorX + doorW, faceBottom);
     ctx.closePath();
+
+    // 2. Open Exterior Vista / Sky behind entrance arch
+    const themeKey = theme?.id || 'dungeon';
+    if (typeof ctx.createLinearGradient === 'function') {
+      const skyGrad = ctx.createLinearGradient(cx, doorY, cx, faceBottom - doorH * 0.25);
+      if (themeKey === 'sunset') {
+        skyGrad.addColorStop(0, '#f97316');
+        skyGrad.addColorStop(0.5, '#fbbf24');
+        skyGrad.addColorStop(1, '#86efac');
+      } else if (themeKey === 'cyber') {
+        skyGrad.addColorStop(0, '#06b6d4');
+        skyGrad.addColorStop(0.6, '#3b82f6');
+        skyGrad.addColorStop(1, '#1e1b4b');
+      } else {
+        // Welcoming bright daylight sky
+        skyGrad.addColorStop(0, '#38bdf8');
+        skyGrad.addColorStop(0.45, '#bae6fd');
+        skyGrad.addColorStop(0.8, '#fef08a');
+        skyGrad.addColorStop(1, '#86efac');
+      }
+      ctx.fillStyle = skyGrad;
+    } else {
+      ctx.fillStyle = '#60a5fa';
+    }
     ctx.fill();
 
-    // 2. Heavy Stone Jambs & Keystone Arch Ring
+    // 3. Distant horizon landscape silhouette (green hill / distant ridge)
+    ctx.fillStyle = themeKey === 'sunset' ? '#78350f' : (themeKey === 'cyber' ? '#1e1b4b' : '#15803d');
+    ctx.beginPath();
+    ctx.moveTo(doorX, faceBottom - Math.round(doorH * 0.38));
+    if (typeof ctx.quadraticCurveTo === 'function') {
+      ctx.quadraticCurveTo(cx - doorW * 0.2, faceBottom - Math.round(doorH * 0.46), cx, faceBottom - Math.round(doorH * 0.40));
+      ctx.quadraticCurveTo(cx + doorW * 0.2, faceBottom - Math.round(doorH * 0.44), doorX + doorW, faceBottom - Math.round(doorH * 0.38));
+    } else {
+      ctx.lineTo(cx, faceBottom - Math.round(doorH * 0.42));
+      ctx.lineTo(doorX + doorW, faceBottom - Math.round(doorH * 0.38));
+    }
+    ctx.lineTo(doorX + doorW, faceBottom);
+    ctx.lineTo(doorX, faceBottom);
+    ctx.closePath();
+    ctx.fill();
+
+    // Radiant sun glare streaming down from outside
+    if (typeof ctx.createRadialGradient === 'function') {
+      const sunGrad = ctx.createRadialGradient(cx, doorY + doorH * 0.15, 1, cx, doorY + doorH * 0.15, doorW * 0.7);
+      sunGrad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+      sunGrad.addColorStop(0.35, 'rgba(254, 240, 138, 0.55)');
+      sunGrad.addColorStop(1, 'rgba(254, 240, 138, 0)');
+      ctx.fillStyle = sunGrad;
+      ctx.beginPath();
+      ctx.arc(cx, doorY + doorH * 0.15, doorW * 0.7, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // 4. Stone Stairs Leading UP and Back into the Vista
+    // 4 perspective stone steps climbing away from the dungeon entrance into daylight
+    const stepCount = 4;
+    for (let i = 0; i < stepCount; i++) {
+      const sy = faceBottom - Math.round(i * (doorH * 0.12));
+      const sw = Math.round(doorW * (0.84 - i * 0.12));
+      const sx = cx - sw / 2;
+      const sh = Math.round(doorH * 0.10);
+
+      // Tread top surface (catching bright outdoor sunlight)
+      const bright = Math.floor(220 - i * 16);
+      ctx.fillStyle = `rgb(${bright}, ${Math.floor(bright * 0.95)}, ${Math.floor(bright * 0.82)})`;
+      ctx.fillRect(sx, sy - sh, sw, sh);
+
+      // Riser front face (cast in shadow below)
+      ctx.fillStyle = `rgba(0, 0, 0, ${0.45 - i * 0.08})`;
+      ctx.fillRect(sx, sy - sh + Math.max(1, Math.round(sh * 0.55)), sw, Math.max(1, Math.round(sh * 0.45)));
+
+      // Step edge highlight
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+      ctx.fillRect(sx, sy - sh, sw, 1);
+    }
+
+    // 5. Heavy Timber Double-Doors pushed open inward against the stone jambs
+    const doorPanW = Math.max(3, Math.round(doorW * 0.16));
+    const doorPanH = Math.round(doorH * 0.72);
+    const doorPanY = faceBottom - doorPanH;
+
+    // Left door (open inward against left wall)
+    ctx.fillStyle = '#5c2c16';
+    ctx.fillRect(doorX + 2, doorPanY, doorPanW, doorPanH);
+    ctx.strokeStyle = '#291107';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(doorX + 2, doorPanY, doorPanW, doorPanH);
+
+    // Left door iron strap hinges
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(doorX + 2, doorPanY + Math.round(doorPanH * 0.22), doorPanW, Math.max(2, Math.round(tileSize * 0.04)));
+    ctx.fillRect(doorX + 2, doorPanY + Math.round(doorPanH * 0.75), doorPanW, Math.max(2, Math.round(tileSize * 0.04)));
+
+    // Right door (open inward against right wall)
+    ctx.fillStyle = '#5c2c16';
+    ctx.fillRect(doorX + doorW - doorPanW - 2, doorPanY, doorPanW, doorPanH);
+    ctx.strokeStyle = '#291107';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(doorX + doorW - doorPanW - 2, doorPanY, doorPanW, doorPanH);
+
+    // Right door iron strap hinges & brass ring
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(doorX + doorW - doorPanW - 2, doorPanY + Math.round(doorPanH * 0.22), doorPanW, Math.max(2, Math.round(tileSize * 0.04)));
+    ctx.fillRect(doorX + doorW - doorPanW - 2, doorPanY + Math.round(doorPanH * 0.75), doorPanW, Math.max(2, Math.round(tileSize * 0.04)));
+    ctx.fillStyle = '#fbbf24';
+    ctx.beginPath();
+    ctx.arc(doorX + doorW - doorPanW / 2 - 2, doorPanY + Math.round(doorPanH * 0.52), Math.max(2, Math.round(tileSize * 0.04)), 0, Math.PI * 2);
+    ctx.fill();
+
+    // 6. Heavy Carved Stone Arch Surround & Keystone
+    ctx.beginPath();
+    ctx.moveTo(doorX, faceBottom);
+    ctx.lineTo(doorX, doorY + doorW * 0.45);
+    if (typeof ctx.quadraticCurveTo === 'function') {
+      ctx.quadraticCurveTo(cx, doorY, doorX + doorW, doorY + doorW * 0.45);
+    } else {
+      ctx.lineTo(cx, doorY);
+      ctx.lineTo(doorX + doorW, doorY + doorW * 0.45);
+    }
+    ctx.lineTo(doorX + doorW, faceBottom);
     ctx.strokeStyle = theme.wallTop || '#64748b';
     ctx.lineWidth = Math.max(2, Math.round(tileSize * 0.08));
     ctx.stroke();
 
     // Keystone at top peak
-    ctx.fillStyle = theme.wallTop || '#94a3b8';
-    ctx.fillRect(cx - Math.round(doorW * 0.12), doorY - 2, Math.round(doorW * 0.24), Math.round(tileSize * 0.12));
+    const kw = Math.round(doorW * 0.24);
+    const kh = Math.round(tileSize * 0.14);
+    ctx.fillStyle = '#f1f5f9';
+    ctx.fillRect(cx - kw / 2, doorY - 3, kw, kh);
     ctx.strokeStyle = '#0f172a';
     ctx.lineWidth = 1;
-    ctx.strokeRect(cx - Math.round(doorW * 0.12), doorY - 2, Math.round(doorW * 0.24), Math.round(tileSize * 0.12));
+    ctx.strokeRect(cx - kw / 2, doorY - 3, kw, kh);
 
-    // 3. Warm welcoming lantern / torchlight interior glow
-    if (typeof ctx.createRadialGradient === 'function') {
-      const intGrad = ctx.createRadialGradient(cx, faceBottom - doorH * 0.4, 2, cx, faceBottom - doorH * 0.4, doorW * 0.7);
-      intGrad.addColorStop(0, 'rgba(251, 146, 60, 0.65)');
-      intGrad.addColorStop(0.5, 'rgba(249, 115, 22, 0.25)');
-      intGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
-      ctx.fillStyle = intGrad;
-    } else {
-      ctx.fillStyle = 'rgba(251, 146, 60, 0.35)';
-    }
-    ctx.beginPath();
-    ctx.arc(cx, faceBottom - doorH * 0.4, doorW * 0.65, 0, Math.PI * 2);
-    ctx.fill();
-
-    // 4. Wooden plank door set slightly ajar (swung inward to the left)
-    const doorAjarW = Math.round(doorW * 0.48);
-    const doorAjarX = doorX + Math.round(doorW * 0.08);
-    const doorAjarH = Math.round(doorH * 0.85);
-    const doorAjarY = faceBottom - doorAjarH;
-
-    ctx.fillStyle = '#78350f'; // Dark oak wood
-    ctx.fillRect(doorAjarX, doorAjarY, doorAjarW, doorAjarH);
-
-    // Wood plank vertical grain lines
-    ctx.strokeStyle = '#451a03';
-    ctx.lineWidth = 1;
-    for (let p = 1; p <= 2; p++) {
-      ctx.beginPath();
-      ctx.moveTo(doorAjarX + p * (doorAjarW / 3), doorAjarY);
-      ctx.lineTo(doorAjarX + p * (doorAjarW / 3), faceBottom);
-      ctx.stroke();
-    }
-
-    // Heavy iron hinge straps
+    // 7. Flanking Iron Wall Torch with flickering flame
+    const torchX = doorX + doorW + Math.round(tileSize * 0.07);
+    const torchY = faceBottom - Math.round(doorH * 0.50);
     ctx.fillStyle = '#1e293b';
-    ctx.fillRect(doorAjarX, doorAjarY + doorAjarH * 0.25, doorAjarW * 0.85, Math.max(2, Math.round(tileSize * 0.05)));
-    ctx.fillRect(doorAjarX, doorAjarY + doorAjarH * 0.75, doorAjarW * 0.85, Math.max(2, Math.round(tileSize * 0.05)));
-
-    // Brass door ring/knocker
-    ctx.fillStyle = '#fbbf24';
-    ctx.beginPath();
-    ctx.arc(doorAjarX + doorAjarW * 0.7, doorAjarY + doorAjarH * 0.52, Math.max(2, Math.round(tileSize * 0.05)), 0, Math.PI * 2);
-    ctx.fill();
-
-    // 5. Mounted Wall Torch/Lantern beside the door
-    const torchX = doorX + doorW + Math.round(tileSize * 0.06);
-    const torchY = faceBottom - Math.round(doorH * 0.55);
-    ctx.fillStyle = '#1e293b'; // Iron sconce
-    ctx.fillRect(torchX - 1, torchY, 3, Math.round(tileSize * 0.18));
-    ctx.fillStyle = '#f97316'; // Torch flame
+    ctx.fillRect(torchX - 1, torchY, 3, Math.round(tileSize * 0.16));
+    ctx.fillStyle = '#f97316';
     ctx.beginPath();
     ctx.arc(torchX, torchY - 2, Math.max(2, Math.round(tileSize * 0.07)), 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = '#fef08a';
+    ctx.beginPath();
+    ctx.arc(torchX, torchY - 3, Math.max(1, Math.round(tileSize * 0.04)), 0, Math.PI * 2);
     ctx.fill();
 
     ctx.restore();
   }
 
   /**
-   * Render a majestic exit portal or daylight doorway on the North wall drop face
+   * Render an authentic architectural exit doorway on the North wall drop face,
+   * featuring a carved stone arch with stairs descending down into the subterranean deep (BL-174).
    */
   renderWallExitDoorway(ctx, screenX, screenY, tileSize, theme, exit) {
     const wallH = Math.round(tileSize * 0.38);
     const faceBottom = screenY + tileSize;
-    const doorW = Math.round(tileSize * 0.68);
+    const doorW = Math.round(tileSize * 0.72);
     const doorX = screenX + Math.round((tileSize - doorW) / 2);
-    const doorH = Math.round(wallH + tileSize * 0.36);
+    const doorH = Math.round(wallH + tileSize * 0.44);
     const doorY = faceBottom - doorH;
     const cx = screenX + tileSize / 2;
     const pulse = Math.sin(this.exitPulseTimer) * 0.15 + 0.85;
 
     ctx.save();
 
-    // 1. Deep arch recess
-    ctx.fillStyle = '#020617';
+    // 1. Deep arch recess cut into stone wall
     ctx.beginPath();
     ctx.moveTo(doorX, faceBottom);
-    ctx.lineTo(doorX, doorY + doorW * 0.5);
+    ctx.lineTo(doorX, doorY + doorW * 0.45);
     if (typeof ctx.quadraticCurveTo === 'function') {
-      ctx.quadraticCurveTo(cx, doorY, doorX + doorW, doorY + doorW * 0.5);
+      ctx.quadraticCurveTo(cx, doorY, doorX + doorW, doorY + doorW * 0.45);
     } else {
       ctx.lineTo(cx, doorY);
-      ctx.lineTo(doorX + doorW, doorY + doorW * 0.5);
+      ctx.lineTo(doorX + doorW, doorY + doorW * 0.45);
     }
     ctx.lineTo(doorX + doorW, faceBottom);
     ctx.closePath();
+    ctx.fillStyle = '#020617';
     ctx.fill();
 
-    // 2. Grand Carved Stone Arch with Arch Keystone
-    ctx.strokeStyle = theme.accent || '#38bdf8';
-    ctx.shadowColor = theme.accent || '#38bdf8';
-    ctx.shadowBlur = 10 * pulse;
-    ctx.lineWidth = Math.max(2, Math.round(tileSize * 0.09));
-    ctx.stroke();
-    ctx.shadowBlur = 0;
+    const style = exit.style || 'wall_archway';
 
-    // Keystone at top peak
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(cx - Math.round(doorW * 0.12), doorY - 3, Math.round(doorW * 0.24), Math.round(tileSize * 0.14));
-
-    const style = exit.style || 'portal';
-    if (style === 'stairs' || style === 'stairs_up') {
-      // Ascending stairs climbing up into the wall tunnel towards daylight
-      for (let i = 0; i < 4; i++) {
-        const sy = faceBottom - Math.round(i * (doorH * 0.2));
-        const sw = Math.round(doorW * (0.85 - i * 0.1));
+    if (style === 'stairs_up') {
+      // Ascending stairs climbing up towards daylight
+      const stepCount = 4;
+      for (let i = 0; i < stepCount; i++) {
+        const sy = faceBottom - Math.round(i * (doorH * 0.18));
+        const sw = Math.round(doorW * (0.85 - i * 0.11));
         const sx = cx - sw / 2;
-        const sh = Math.round(doorH * 0.14);
-        const bright = Math.floor(150 + i * 30);
+        const sh = Math.round(doorH * 0.13);
+        const bright = Math.floor(160 + i * 28);
         ctx.fillStyle = `rgb(${bright}, ${Math.floor(bright * 0.95)}, ${Math.floor(bright * 0.8)})`;
         ctx.fillRect(sx, sy - sh, sw, sh);
         ctx.strokeStyle = '#fbbf24';
         ctx.lineWidth = 1;
         ctx.strokeRect(sx, sy - sh, sw, sh);
       }
-      // Daylight beam radiating from tunnel peak
       if (typeof ctx.createRadialGradient === 'function') {
         const daylight = ctx.createRadialGradient(cx, doorY + doorH * 0.2, 2, cx, doorY + doorH * 0.2, doorW * 0.8);
         daylight.addColorStop(0, '#ffffff');
         daylight.addColorStop(0.4, 'rgba(254, 240, 138, 0.85)');
         daylight.addColorStop(1, 'rgba(251, 191, 36, 0)');
         ctx.fillStyle = daylight;
-      } else {
-        ctx.fillStyle = 'rgba(254, 240, 138, 0.6)';
+        ctx.beginPath();
+        ctx.arc(cx, doorY + doorH * 0.25, doorW * 0.65 * pulse, 0, Math.PI * 2);
+        ctx.fill();
       }
-      ctx.beginPath();
-      ctx.arc(cx, doorY + doorH * 0.25, doorW * 0.65 * pulse, 0, Math.PI * 2);
-      ctx.fill();
-    } else {
+    } else if (style === 'portal') {
       // Swirling dimensional portal rift
       if (typeof ctx.createRadialGradient === 'function') {
         const portalGrad = ctx.createRadialGradient(cx, faceBottom - doorH * 0.45, 2, cx, faceBottom - doorH * 0.45, doorW * 0.65);
@@ -2045,20 +2114,97 @@ export class GameRenderer {
         portalGrad.addColorStop(0.8, 'rgba(168, 85, 247, 0.5)');
         portalGrad.addColorStop(1, 'rgba(2, 6, 23, 0)');
         ctx.fillStyle = portalGrad;
-      } else {
-        ctx.fillStyle = theme.accent || '#38bdf8';
+        ctx.beginPath();
+        ctx.arc(cx, faceBottom - doorH * 0.45, doorW * 0.6 * pulse, 0, Math.PI * 2);
+        ctx.fill();
       }
-      ctx.beginPath();
-      ctx.arc(cx, faceBottom - doorH * 0.45, doorW * 0.6 * pulse, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Pulsing rune chevron
       ctx.fillStyle = '#ffffff';
       ctx.font = `bold ${Math.floor(tileSize * 0.32)}px sans-serif`;
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
       ctx.fillText('▲', cx, faceBottom - doorH * 0.45);
+    } else {
+      // DEFAULT: Architectural doorway with stairs descending DOWN into the subterranean deep (BL-174)
+      const stepCount = 5;
+      for (let i = 0; i < stepCount; i++) {
+        // Steps step downward into the doorway towards the deep
+        const sy = faceBottom - Math.round(doorH * 0.65) + Math.round(i * (doorH * 0.14));
+        const sw = Math.round(doorW * (0.42 + (stepCount - 1 - i) * 0.11));
+        const sx = cx - sw / 2;
+        const sh = Math.max(2, Math.round(doorH * 0.12));
+
+        // Progressive subterranean dark stone shading
+        const stoneVal = Math.floor(40 + (stepCount - 1 - i) * 25);
+        ctx.fillStyle = `rgb(${stoneVal}, ${Math.floor(stoneVal * 1.05)}, ${Math.floor(stoneVal * 1.2)})`;
+        ctx.fillRect(sx, sy, sw, sh);
+
+        // Tread highlight on step edge
+        ctx.strokeStyle = i === 0 ? 'rgba(251, 191, 36, 0.6)' : 'rgba(148, 163, 184, 0.3)';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(sx, sy, sw, sh);
+      }
+
+      // Warm subterranean torchlight glow radiating up from the depths below
+      if (typeof ctx.createRadialGradient === 'function') {
+        const deepGrad = ctx.createRadialGradient(cx, faceBottom - doorH * 0.62, 2, cx, faceBottom - doorH * 0.62, doorW * 0.65);
+        deepGrad.addColorStop(0, 'rgba(251, 146, 60, 0.85)'); // warm golden-orange subterranean hearth
+        deepGrad.addColorStop(0.4, 'rgba(217, 119, 6, 0.35)');
+        deepGrad.addColorStop(1, 'rgba(2, 6, 23, 0)');
+        ctx.fillStyle = deepGrad;
+        ctx.beginPath();
+        ctx.arc(cx, faceBottom - doorH * 0.62, doorW * 0.6 * pulse, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      // Subtle downward descending indicator chevron
+      ctx.fillStyle = '#fbbf24';
+      ctx.font = `bold ${Math.floor(tileSize * 0.24)}px sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('▼', cx, faceBottom - doorH * 0.38);
     }
+
+    // Grand Carved Stone Arch with Keystone
+    ctx.beginPath();
+    ctx.moveTo(doorX, faceBottom);
+    ctx.lineTo(doorX, doorY + doorW * 0.45);
+    if (typeof ctx.quadraticCurveTo === 'function') {
+      ctx.quadraticCurveTo(cx, doorY, doorX + doorW, doorY + doorW * 0.45);
+    } else {
+      ctx.lineTo(cx, doorY);
+      ctx.lineTo(doorX + doorW, doorY + doorW * 0.45);
+    }
+    ctx.lineTo(doorX + doorW, faceBottom);
+    ctx.strokeStyle = theme.accent || '#38bdf8';
+    ctx.shadowColor = theme.accent || '#38bdf8';
+    ctx.shadowBlur = 8 * pulse;
+    ctx.lineWidth = Math.max(2, Math.round(tileSize * 0.09));
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Keystone at top peak
+    const kw = Math.round(doorW * 0.24);
+    const kh = Math.round(tileSize * 0.14);
+    ctx.fillStyle = '#ffffff';
+    ctx.fillRect(cx - kw / 2, doorY - 3, kw, kh);
+    ctx.strokeStyle = '#0f172a';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(cx - kw / 2, doorY - 3, kw, kh);
+
+    // Flanking torches on wall
+    const torchLeftX = doorX - Math.round(tileSize * 0.08);
+    const torchRightX = doorX + doorW + Math.round(tileSize * 0.08);
+    const torchY = faceBottom - Math.round(doorH * 0.50);
+
+    ctx.fillStyle = '#1e293b';
+    ctx.fillRect(torchLeftX - 1, torchY, 3, Math.round(tileSize * 0.16));
+    ctx.fillRect(torchRightX - 1, torchY, 3, Math.round(tileSize * 0.16));
+
+    ctx.fillStyle = '#f97316';
+    ctx.beginPath();
+    ctx.arc(torchLeftX, torchY - 2, Math.max(2, Math.round(tileSize * 0.07)), 0, Math.PI * 2);
+    ctx.arc(torchRightX, torchY - 2, Math.max(2, Math.round(tileSize * 0.07)), 0, Math.PI * 2);
+    ctx.fill();
 
     ctx.restore();
   }
@@ -2130,12 +2276,19 @@ export class GameRenderer {
     ctx.lineTo(stoneX + stoneW * 0.66, stoneY + stoneH);
     ctx.stroke();
 
-    // Subtle arrival welcome marker
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.4)';
-    ctx.font = `bold ${Math.floor(tileSize * 0.2)}px monospace`;
-    ctx.textAlign = 'center';
-    ctx.textBaseline = 'middle';
-    ctx.fillText('ENTRY', cx, screenY + tileSize * 0.68);
+    // Subtle arrival stone inlay (decorative geometric diamond / welcome motif)
+    const diamondR = Math.max(2, Math.round(tileSize * 0.09));
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.25)';
+    ctx.beginPath();
+    ctx.moveTo(cx, screenY + tileSize * 0.60 - diamondR);
+    ctx.lineTo(cx + diamondR, screenY + tileSize * 0.60);
+    ctx.lineTo(cx, screenY + tileSize * 0.60 + diamondR);
+    ctx.lineTo(cx - diamondR, screenY + tileSize * 0.60);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = 'rgba(0, 0, 0, 0.3)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
 
     ctx.restore();
   }

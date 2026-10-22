@@ -22,7 +22,7 @@ This document maintains the official quality audit register, critical evaluation
 | **tutorial_4** | Bridges & Elevation | Tutorial Academy | Shō | 13x13 | 0 | 79% | 3 | 5.73 | 3.60 | 5.93 | 5.67 | 5.33 | 6.13 | 3.47 | 6.10 | **41.96** (52.4%) | **B-** | Overhauled Foundation 🛠️ |
 | **tutorial_5** | The Shrouded Path | Tutorial Academy | Ten | 13x13 | 0 | 67% | 0 | 5.73 | 3.60 | 5.93 | 5.67 | 5.33 | 6.13 | 3.47 | 6.10 | **41.96** (52.4%) | **B-** | Overhauled Foundation 🛠️ |
 | **tutorial_6** | Master's Trial | Tutorial Academy | Ketsu | 17x17 | 0 | 72% | 3 | 5.73 | 3.60 | 5.93 | 5.67 | 5.33 | 6.13 | 3.47 | 6.10 | **41.96** (52.4%) | **B-** | Overhauled Foundation 🛠️ |
-| **1** | First Footsteps | Ch 1: Foundations | Ki | 13x13 | 0 | 85% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
+| **1** | First Footsteps | Ch 1: Foundations | Ki | 13x13 | 0 | 69% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
 | **2** | The Ruby Lock | Ch 1: Foundations | Shō | 15x13 | 0 | 90% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
 | **3** | Prismatic Corridors | Ch 1: Foundations | Ten | 17x15 | 0 | 80% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
 | **4** | The Shrouded Vault | Ch 1: Foundations | Ketsu | 19x17 | 0 | 84% | 0 | 6.27 | 4.40 | 6.37 | 6.20 | 6.00 | 6.40 | 4.53 | 6.33 | **46.50** (58.1%) | **B-** | Overhauled Foundation 🛠️ |
@@ -273,7 +273,7 @@ Every level scorecard below details the exact reasons for deductions under Rubri
 
 #### Level 1: First Footsteps (Ki (Introduction))
 * **Package**: `levels/chapter_1/level_1/`
-* **Telemetry**: Dimensions: **13x13** | Biome: **dungeon** | Playable Area: **48%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **85%** | 3D Elements: **0** | Entities: **9** | Par: **26 steps (23 optimal, 1.13x ratio) / 14s**
+* **Telemetry**: Dimensions: **13x13** | Biome: **dungeon** | Playable Area: **40%** | DeadSpace $\ge 4\times 4$: **0** | Corridor Inertia: **69%** | 3D Elements: **0** | Entities: **9** | Par: **61 steps (52 optimal, 1.17x ratio) / 30s**
 * **Ground-Truth Score**: **46.50 / 80.00 (58.1% — B- Tier)** — *Status: Overhauled Foundation 🛠️*
 * **Expert Panel 8-Chair Reality Ratings (1–10 Scale)**:
   * *Chair 1 (Spatial Architecture: 6.27/10)*: Inertia: 6.4/10 | Anchors: 6.2/10 | Loopbacks: 6.2/10
@@ -285,7 +285,7 @@ Every level scorecard below details the exact reasons for deductions under Rubri
   * *Chair 7 (Tension & Suspense: 4.53/10)*: Hazard Rhythm: 4.6/10 | Sentinel Evasion: 4.2/10 | Fog Dread: 4.8/10
   * *Chair 8 (Challenge & Gating: 6.33/10)*: Zero-Bypass Gating: 6.6/10 | Entity Logic: 6.2/10 | Par Calibration: 6.2/10
 * **Critical Gameplay & Visual Reality Critique**:
-  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (85% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
+  - **Spatial Architecture**: Operates as a predominantly 1-tile wide hallway network (69% corridor inertia). While mechanically sound, it lacks grand rooms, plaza breathing space, or multi-scale room contrast (Score 6.27/10).
   - **3D Verticality**: Operates on a completely flat 2D plane with zero vertical elevation or overpass mechanics (Score 4.40/10).
   - **Visual Polish & Shaders**: Palettes are clean and legible, but decorative assets act as flat static decals that do not cast light cones, project dynamic shadows, or emit particle debris (Score 6.37/10).
   - **Puzzle Deductions & Gating**: While zero-bypass integrity is verified mathematically, key retrieval operates predominantly as a linear corridor fetch chore without branching dilemmas or deduction friction (Score 6.33/10).
