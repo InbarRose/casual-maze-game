@@ -63,6 +63,26 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
+### Active Milestone: `v1.37.0` — Inventory Architecture, Note Despawning & Art Demarcation
+
+- [ ] **Interactive Note Pick-up, Despawn & Tabbed Inventory Journal Architecture (BL-188)**:
+  - When player steps on or inspects a note/lectern: despawn the physical entity from the active map level (`level.entities`) with gentle dissolve particles.
+  - Add the collected note/folio to the player's inventory under a dedicated "Folios / Journal" section.
+  - Upgrade the Inventory HUD & modal into a structured tabbed layout:
+    1. **Active Level Items**: Keys, carried torches, and puzzle components relevant ONLY to the current level or chamber.
+    2. **Architect's Journal & Folios**: All collected notes and folios with level context, coordinates, and full readable text.
+    3. **Trophies & Artifacts**: Permanent saga relics and gems.
+  - Filter out inactive items from previous levels/chapters so the active HUD is clean and focused.
+
+- [ ] **Visual Noise Reduction & Procedural Biome Art Demarcation (BL-189)**:
+  - Reduce frequency of procedural decorative floor variations (e.g., from 35% down to a sparse 5-8% distribution).
+  - Demarcate functional elements from decorative art:
+    - Decorative floor runes must have subdued alpha, weathered outlines, or zero glowing accents to ensure players immediately recognize them as non-interactive masonry.
+    - Interactive runes (e.g. puzzle gates, memory glyphs, teleporters) retain distinct high-contrast pulsing luminance, particle embers, and clear borders.
+  - Ensure decorative relief walls and torches are placed with intention and breathing room rather than dense clusters.
+
+---
+
 ### Previous Milestone: `v1.29.0` (Completed & Verified)
 
 - [x] **Dynamic Campaign Upper Bound & Victory Progression (BL-145, ADR-0038)**:
