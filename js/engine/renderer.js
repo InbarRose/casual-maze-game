@@ -86,10 +86,12 @@ export class GameRenderer {
     const baseKey = themeAliases[themeKey] || themeKey;
     const h = BiomeSurfaceShaders.getDecorHash(x, y, seed + 101);
 
+    // BL-189: Visual noise attenuation — keep carved floor variants sparse (~4% total)
+    // so corridors are clean, serene, and never overbearing or confusing.
     let candidate = null;
-    if (h > 0.88) {
+    if (h > 0.96) {
       candidate = this.getAssetImage(`tile_floor_${baseKey}_runic`);
-    } else if (h > 0.68) {
+    } else if (h > 0.88) {
       candidate = this.getAssetImage(`tile_floor_${baseKey}_cracked`);
     }
 
@@ -100,7 +102,7 @@ export class GameRenderer {
   }
 
   /**
-   * Helper to resolve multi-variant wall asset image based on deterministic spatial hash (BL-178, ADR-0052)
+   * Helper to resolve multi-variant wall asset image based on deterministic spatial hash (BL-178, ADR-0052, BL-189)
    * @param {string} themeKey
    * @param {number} x
    * @param {number} y
@@ -118,12 +120,13 @@ export class GameRenderer {
     const baseKey = themeAliases[themeKey] || themeKey;
     const h = BiomeSurfaceShaders.getDecorHash(x, y, seed + 307);
 
+    // BL-189: Sconces and grates are sparse accents (~6% torches, ~4% grates)
     let candidate = null;
-    if (h > 0.86) {
+    if (h > 0.94) {
       candidate = this.getAssetImage(`tile_wall_${baseKey}_torch`);
-    } else if (h > 0.72) {
+    } else if (h > 0.90) {
       candidate = this.getAssetImage(`tile_wall_${baseKey}_grate`);
-    } else if (h > 0.58 && baseKey === 'jungle') {
+    } else if (h > 0.84 && baseKey === 'jungle') {
       candidate = this.getAssetImage('tile_wall_overgrowth');
     }
 
