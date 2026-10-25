@@ -41,6 +41,8 @@ export class Player {
     this.worldY = startY * tileSize + tileSize / 2;
 
     this.inventory = Array.isArray(initialInventory) ? [...initialInventory] : []; // Array of key IDs e.g. ["key_gold_1"]
+    this.journalFolios = []; // Collected Architect folios and journal notes (BL-188)
+    this.collectedFolioIds = new Set();
     this.score = 0;
     this.carriedItems = [];
     this.carriedRiddleItem = null;
@@ -187,6 +189,54 @@ export class Player {
     if (!this.inventory.includes(keyId)) {
       this.inventory.push(keyId);
     }
+  }
+
+  /**
+   * Add a collected journal folio / architect note to player inventory journal (BL-188)
+   * @param {object} folio
+   * @returns {boolean} Whether newly recorded
+   */
+  addFolio(folio) {
+    if (!folio || !folio.id) return false;
+    if (!this.journalFolios) this.journalFolios = [];
+    if (!this.collectedFolioIds) this.collectedFolioIds = new Set();
+    if (this.collectedFolioIds.has(folio.id)) return false;
+
+    this.collectedFolioIds.add(folio.id);
+    const folioEntry = {
+      id: folio.id,
+      title: folio.title || "Architect's Note",
+      text: folio.text || folio.message || '',
+      author: folio.author || 'The Architect',
+      style: folio.style || 'lectern_stone',
+      x: folio.x,
+      y: folio.y,
+      z: folio.z ?? folio.elevation ?? 0,
+      coordString: folio.coordString || (folio.getCoordString ? folio.getCoordString() : `(${folio.x}, ${folio.y}, ${folio.z ?? 0})`),
+      levelId: folio.levelId || '',
+      chapter: folio.chapter || '',
+      zone: folio.zone || '',
+      collectedAt: new Date().toISOString()
+    };
+    this.journalFolios.push(folioEntry);
+    return true;
+  }
+
+  /**
+   * Retrieve all collected journal folios
+   * @returns {Array<object>}
+   */
+  getJournalFolios() {
+    return this.journalFolios || [];
+  }
+
+  /**
+   * Check if player holds a specific folio in journal
+   * @param {string} folioId
+   * @returns {boolean}
+   */
+  hasFolio(folioId) {
+    return this.collectedFolioIds ? this.collectedFolioIds.has(folioId) : false;
   }
 
   /**

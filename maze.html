@@ -91,13 +91,16 @@
           ⏸️ <span class="hide-mobile">Menu [P]</span>
         </button>
 
-        <!-- Compact Inventory Keys & Held Items -->
-        <div class="hud-card hud-inventory-card" id="hud-inventory-card" title="Player Inventory">
+        <!-- Compact Inventory Keys & Held Items (BL-188) -->
+        <div class="hud-card hud-inventory-card" id="hud-inventory-card" title="Open Inventory &amp; Journal [I]" tabindex="0" role="button" aria-label="Open Inventory &amp; Journal" style="cursor: pointer;">
           <span class="inventory-icon">🎒</span>
           <span class="inventory-label hide-mobile">Holding:</span>
           <span class="inventory-count-badge" id="hud-inventory-count">0</span>
           <div class="inventory-list" id="hud-keys-list">
             <span class="inventory-empty-slot">Empty</span>
+          </div>
+          <div class="hud-journal-pill" id="hud-journal-pill" title="Collected Folios &amp; Notes [J]" style="display: none; align-items: center; gap: 0.25rem; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 12px; padding: 0.1rem 0.45rem; font-size: 0.72rem; color: #fde047; cursor: pointer;">
+            <span>📜</span><span id="hud-journal-count">0</span>
           </div>
         </div>
 
@@ -483,21 +486,65 @@
       </div>
     </div>
 
-    <!-- Level Lore Journal Modal (BL-81) -->
+    <!-- Level Lore & Explorer Inventory Modal (BL-81, BL-188) -->
     <div id="journal-modal" class="modal-backdrop journal-modal-backdrop" style="display: none;">
       <div class="modal-card journal-card" role="dialog" aria-modal="true" aria-labelledby="journal-modal-title">
-        <div class="modal-header">
+        <div class="modal-header" style="padding-bottom: 0.5rem;">
           <div style="display: flex; align-items: center; gap: 0.6rem;">
-            <span style="font-size: 1.5rem;">📖</span>
+            <span style="font-size: 1.5rem;" id="journal-modal-main-icon">🎒</span>
             <div>
-              <h3 id="journal-modal-title" style="margin: 0; font-size: 1.25rem;">Labyrinth Journal</h3>
-              <div style="font-size: 0.75rem; color: var(--text-muted);" id="journal-modal-subtitle">Notes &amp; Inscriptions Collected This Level</div>
+              <h3 id="journal-modal-title" style="margin: 0; font-size: 1.25rem;">Inventory &amp; Journal</h3>
+              <div style="font-size: 0.75rem; color: var(--text-muted);" id="journal-modal-subtitle">Equipment, Folios &amp; Architectural Codex</div>
             </div>
           </div>
-          <button type="button" class="btn-close" id="btn-close-journal" title="Close Journal [Escape / J]">&times;</button>
+          <button type="button" class="btn-close" id="btn-close-journal" title="Close [Escape / I / J]">&times;</button>
         </div>
 
-        <div class="journal-layout">
+        <!-- Tab Navigation (BL-188) -->
+        <div class="journal-nav-tabs" style="display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.12)); padding-bottom: 0.5rem; margin-top: 0.2rem;">
+          <button type="button" class="btn btn-sm journal-tab-btn" id="tab-btn-inventory" data-tab="inventory" style="display: flex; align-items: center; gap: 0.4rem; border-radius: 6px; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(255, 255, 255, 0.06); color: var(--text, #f8fafc); border: 1px solid rgba(255, 255, 255, 0.1);">
+            <span>🎒</span> <span>Active Inventory</span>
+          </button>
+          <button type="button" class="btn btn-sm journal-tab-btn active" id="tab-btn-journal" data-tab="journal" style="display: flex; align-items: center; gap: 0.4rem; border-radius: 6px; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(56, 189, 248, 0.2); color: #38bdf8; border: 1px solid rgba(56, 189, 248, 0.4);">
+            <span>📜</span> <span>Architect's Journal (<span id="journal-nav-count">0</span>)</span>
+          </button>
+          <button type="button" class="btn btn-sm journal-tab-btn" id="tab-btn-relics" data-tab="relics" style="display: flex; align-items: center; gap: 0.4rem; border-radius: 6px; padding: 0.35rem 0.75rem; font-size: 0.8rem; background: rgba(255, 255, 255, 0.06); color: var(--text, #f8fafc); border: 1px solid rgba(255, 255, 255, 0.1);">
+            <span>👑</span> <span>Relics &amp; Codex</span>
+          </button>
+        </div>
+
+        <!-- Tab 1: Active Inventory Pane -->
+        <div class="journal-tab-pane" id="journal-tab-pane-inventory" style="display: none; flex-direction: column; gap: 0.85rem; flex: 1; min-height: 0; margin-top: 0.8rem; overflow-y: auto;">
+          <div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 8px; padding: 0.85rem;">
+            <div style="font-size: 0.82rem; font-weight: 700; color: #fbbf24; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>🔑</span> <span>Current Chamber Keys &amp; Equipment (Prominent)</span>
+            </div>
+            <div id="inventory-modal-active-keys" style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+              <span class="journal-empty-state" style="padding: 0.3rem 0;">No active keys held for this chamber.</span>
+            </div>
+          </div>
+
+          <div style="background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 8px; padding: 0.85rem;">
+            <div style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>📦</span> <span>Carried Gear &amp; Utility Items</span>
+            </div>
+            <div id="inventory-modal-carried-items" style="display: flex; flex-wrap: wrap; gap: 0.6rem;">
+              <span class="journal-empty-state" style="padding: 0.3rem 0;">No utility tools currently carried.</span>
+            </div>
+          </div>
+
+          <div id="inventory-modal-archive-section" style="background: rgba(15, 23, 42, 0.5); border: 1px dashed rgba(255, 255, 255, 0.1); border-radius: 8px; padding: 0.75rem;">
+            <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.35rem; display: flex; align-items: center; gap: 0.4rem;">
+              <span>🗄️</span> <span>Archived Items from Other Chambers (Inactive Here)</span>
+            </div>
+            <div id="inventory-modal-archived-items" style="display: flex; flex-wrap: wrap; gap: 0.4rem; font-size: 0.75rem; color: var(--text-muted);">
+              <span>None</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tab 2: Journal Layout (Architect's Notes & Folios) -->
+        <div class="journal-layout journal-tab-pane" id="journal-tab-pane-journal">
           <!-- Left Column: Discovered Entries List -->
           <div class="journal-entries-pane">
             <div class="journal-entries-header">Discovered Inscriptions (<span id="journal-total-count">0</span>)</div>
@@ -529,8 +576,15 @@
           </div>
         </div>
 
+        <!-- Tab 3: Relics & Codex Pane -->
+        <div class="journal-tab-pane" id="journal-tab-pane-relics" style="display: none; flex-direction: column; gap: 0.8rem; flex: 1; min-height: 0; margin-top: 0.8rem; overflow-y: auto;">
+          <div id="inventory-modal-relics-list" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.8rem;">
+            <div class="journal-empty-state" style="grid-column: 1 / -1; padding: 2rem 1rem;">No ancient relics or story trophies in possession yet.</div>
+          </div>
+        </div>
+
         <div class="modal-footer" style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border-glass); padding-top: 0.8rem; margin-top: 0.6rem;">
-          <span style="font-size: 0.75rem; color: var(--text-muted);">Shortcut: <kbd style="background: #1e293b; padding: 2px 5px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">[J]</kbd> or <kbd style="background: #1e293b; padding: 2px 5px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">[Esc]</kbd></span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">Shortcuts: <kbd style="background: #1e293b; padding: 2px 5px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">[I]</kbd> Inventory • <kbd style="background: #1e293b; padding: 2px 5px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">[J]</kbd> Journal • <kbd style="background: #1e293b; padding: 2px 5px; border-radius: 4px; font-family: var(--font-mono); border: 1px solid #334155;">[Esc]</kbd></span>
           <button type="button" class="btn btn-primary btn-sm" id="btn-done-journal">Close</button>
         </div>
       </div>
@@ -1094,12 +1148,13 @@
 
     if (btnCloseLore) btnCloseLore.addEventListener('click', closeLoreCard);
 
-    // Level Lore Journal Controller (BL-81)
+    // Level Lore Journal & Inventory Modal Controller (BL-81, BL-188)
     const hudJournalBtn = document.getElementById('hud-journal-btn');
     const hudJournalCount = document.getElementById('hud-journal-count');
     const journalModal = document.getElementById('journal-modal');
     const journalEntriesList = document.getElementById('journal-entries-list');
     const journalTotalCount = document.getElementById('journal-total-count');
+    const journalNavCount = document.getElementById('journal-nav-count');
     const journalReaderEmpty = document.getElementById('journal-reader-empty');
     const journalReaderContent = document.getElementById('journal-reader-content');
     const journalReaderIcon = document.getElementById('journal-reader-icon');
@@ -1111,11 +1166,183 @@
     const btnCloseJournal = document.getElementById('btn-close-journal');
     const btnDoneJournal = document.getElementById('btn-done-journal');
     let selectedJournalIndex = -1;
+    let activeInventoryModalTab = 'journal';
 
     function updateJournalBadge() {
       const entries = window.gameLoop ? window.gameLoop.getJournalEntries() : [];
       if (hudJournalCount) hudJournalCount.textContent = entries.length;
       if (journalTotalCount) journalTotalCount.textContent = entries.length;
+      if (journalNavCount) journalNavCount.textContent = entries.length;
+    }
+
+    function switchInventoryModalTab(tabName) {
+      activeInventoryModalTab = tabName;
+      const tabBtns = document.querySelectorAll('.journal-tab-btn');
+      tabBtns.forEach(btn => {
+        const isCurrent = btn.dataset.tab === tabName;
+        btn.classList.toggle('active', isCurrent);
+        if (isCurrent) {
+          btn.style.background = 'rgba(56, 189, 248, 0.2)';
+          btn.style.color = '#38bdf8';
+          btn.style.borderColor = 'rgba(56, 189, 248, 0.4)';
+        } else {
+          btn.style.background = 'rgba(255, 255, 255, 0.06)';
+          btn.style.color = 'var(--text, #f8fafc)';
+          btn.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+        }
+      });
+
+      const paneInv = document.getElementById('journal-tab-pane-inventory');
+      const paneJrn = document.getElementById('journal-tab-pane-journal');
+      const paneRel = document.getElementById('journal-tab-pane-relics');
+      const modalIcon = document.getElementById('journal-modal-main-icon');
+      const modalTitle = document.getElementById('journal-modal-title');
+      const modalSubtitle = document.getElementById('journal-modal-subtitle');
+
+      if (paneInv) paneInv.style.display = tabName === 'inventory' ? 'flex' : 'none';
+      if (paneJrn) paneJrn.style.display = tabName === 'journal' ? 'grid' : 'none';
+      if (paneRel) paneRel.style.display = tabName === 'relics' ? 'flex' : 'none';
+
+      if (tabName === 'inventory') {
+        if (modalIcon) modalIcon.textContent = '🎒';
+        if (modalTitle) modalTitle.textContent = 'Explorer Inventory';
+        if (modalSubtitle) modalSubtitle.textContent = 'Active Keys & Carried Gear';
+        renderInventoryModalPane();
+      } else if (tabName === 'journal') {
+        if (modalIcon) modalIcon.textContent = '📖';
+        if (modalTitle) modalTitle.textContent = "Architect's Journal";
+        if (modalSubtitle) modalSubtitle.textContent = 'Notes & Inscriptions Collected';
+        renderJournalModal();
+      } else if (tabName === 'relics') {
+        if (modalIcon) modalIcon.textContent = '👑';
+        if (modalTitle) modalTitle.textContent = 'Relics & Story Codex';
+        if (modalSubtitle) modalSubtitle.textContent = 'Ancient Relics & Chapter Trophies';
+        renderRelicsModalPane();
+      }
+    }
+
+    function renderInventoryModalPane() {
+      const activeKeysContainer = document.getElementById('inventory-modal-active-keys');
+      const carriedContainer = document.getElementById('inventory-modal-carried-items');
+      const archivedContainer = document.getElementById('inventory-modal-archived-items');
+      const archiveSection = document.getElementById('inventory-modal-archive-section');
+      if (!activeKeysContainer) return;
+
+      const player = window.gameLoop?.player;
+      const allInv = player?.inventory || [];
+      const carried = player?.carriedItems || [];
+      const riddleItem = player?.carriedRiddleItem;
+      const levelEntities = currentLevel?.entities || [];
+
+      // Active keys matching current level
+      const activeKeys = allInv
+        .filter(id => levelEntities.some(e => e.id === id && e.type === 'key'))
+        .map(id => levelEntities.find(e => e.id === id) || { id, name: 'Key', color: '#fbbf24' });
+
+      // Inactive keys from other levels/chapters
+      const archivedKeyIds = allInv.filter(id => !levelEntities.some(e => e.id === id && e.type === 'key'));
+
+      activeKeysContainer.innerHTML = '';
+      if (activeKeys.length > 0) {
+        activeKeys.forEach(key => {
+          const shapeInfo = getKeyColorblindShape(key.color || key.name || key.id);
+          const badge = document.createElement('div');
+          badge.style.display = 'flex';
+          badge.style.alignItems = 'center';
+          badge.style.gap = '0.5rem';
+          badge.style.background = 'rgba(255, 255, 255, 0.05)';
+          badge.style.border = `1px solid ${key.color || '#fbbf24'}`;
+          badge.style.borderRadius = '6px';
+          badge.style.padding = '0.5rem 0.8rem';
+          badge.innerHTML = `
+            <span style="font-size: 1.25rem;">🔑</span>
+            <div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: ${key.color || '#fbbf24'};">${key.name || 'Labyrinth Key'}</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">${shapeInfo.symbol} ${shapeInfo.label} Glyph • Active</div>
+            </div>
+          `;
+          activeKeysContainer.appendChild(badge);
+        });
+      } else {
+        activeKeysContainer.innerHTML = '<span class="journal-empty-state" style="padding: 0.4rem 0;">No active keys held for this chamber.</span>';
+      }
+
+      // Carried tools
+      carriedContainer.innerHTML = '';
+      const allCarried = [...carried];
+      if (riddleItem) allCarried.push(riddleItem);
+
+      if (allCarried.length > 0) {
+        allCarried.forEach(item => {
+          const badge = document.createElement('div');
+          badge.style.display = 'flex';
+          badge.style.alignItems = 'center';
+          badge.style.gap = '0.5rem';
+          badge.style.background = 'rgba(255, 255, 255, 0.05)';
+          badge.style.border = '1px solid rgba(249, 115, 22, 0.4)';
+          badge.style.borderRadius = '6px';
+          badge.style.padding = '0.5rem 0.8rem';
+          const icon = item.symbol || (item.itemType === 'torch' ? '🔥' : '👑');
+          badge.innerHTML = `
+            <span style="font-size: 1.25rem;">${icon}</span>
+            <div>
+              <div style="font-weight: 700; font-size: 0.85rem; color: #f97316;">${item.name || 'Utility Gear'}</div>
+              <div style="font-size: 0.72rem; color: var(--text-muted);">Ready to use</div>
+            </div>
+          `;
+          carriedContainer.appendChild(badge);
+        });
+      } else {
+        carriedContainer.innerHTML = '<span class="journal-empty-state" style="padding: 0.4rem 0;">No utility tools currently carried.</span>';
+      }
+
+      // Archived keys
+      if (archivedContainer && archiveSection) {
+        if (archivedKeyIds.length > 0) {
+          archiveSection.style.display = 'block';
+          archivedContainer.innerHTML = '';
+          archivedKeyIds.forEach(id => {
+            const pill = document.createElement('span');
+            pill.style.background = 'rgba(255, 255, 255, 0.04)';
+            pill.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+            pill.style.borderRadius = '4px';
+            pill.style.padding = '0.2rem 0.5rem';
+            pill.textContent = `🗝️ ${id} (Inactive)`;
+            archivedContainer.appendChild(pill);
+          });
+        } else {
+          archiveSection.style.display = 'none';
+        }
+      }
+    }
+
+    function renderRelicsModalPane() {
+      const listEl = document.getElementById('inventory-modal-relics-list');
+      if (!listEl) return;
+      const player = window.gameLoop?.player;
+      const carriedRiddle = player?.carriedRiddleItem;
+      listEl.innerHTML = '';
+
+      if (carriedRiddle) {
+        const card = document.createElement('div');
+        card.style.background = 'rgba(251, 191, 36, 0.08)';
+        card.style.border = '1px solid rgba(251, 191, 36, 0.35)';
+        card.style.borderRadius = '8px';
+        card.style.padding = '0.85rem';
+        card.style.display = 'flex';
+        card.style.alignItems = 'center';
+        card.style.gap = '0.75rem';
+        card.innerHTML = `
+          <span style="font-size: 1.8rem;">${carriedRiddle.symbol || '🦅'}</span>
+          <div>
+            <div style="font-weight: 700; font-size: 0.9rem; color: #fbbf24;">${carriedRiddle.name || 'Riddle Relic'}</div>
+            <div style="font-size: 0.75rem; color: var(--text-muted);">Offering for Chamber Pedestal</div>
+          </div>
+        `;
+        listEl.appendChild(card);
+      } else {
+        listEl.innerHTML = '<div class="journal-empty-state" style="grid-column: 1 / -1; padding: 2rem 1rem;">No ancient relics or story trophies in possession yet.</div>';
+      }
     }
 
     function renderJournalModal() {
@@ -1188,13 +1415,18 @@
       }
     }
 
-    function openJournalModal() {
+    function openInventoryModal(defaultTab = 'inventory') {
       if (!journalModal) return;
       audioFX.playModalOpen();
-      renderJournalModal();
+      updateJournalBadge();
+      switchInventoryModalTab(defaultTab);
       journalModal.style.display = 'flex';
       journalModal.classList.add('active');
       setViewObscured(true, 'journal_modal');
+    }
+
+    function openJournalModal() {
+      openInventoryModal('journal');
     }
 
     function closeJournalModal() {
@@ -1205,12 +1437,38 @@
       setViewObscured(false, 'journal_modal');
     }
 
-    function toggleJournalModal() {
+    function toggleJournalModal(defaultTab = 'journal') {
       if (journalModal && (journalModal.classList.contains('active') || journalModal.style.display === 'flex')) {
         closeJournalModal();
       } else {
-        openJournalModal();
+        openInventoryModal(defaultTab);
       }
+    }
+
+    document.querySelectorAll('.journal-tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tab = btn.dataset.tab;
+        switchInventoryModalTab(tab);
+        audioFX.playTabClick();
+      });
+    });
+
+    if (inventoryCardEl) {
+      inventoryCardEl.addEventListener('click', () => openInventoryModal('inventory'));
+      inventoryCardEl.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          openInventoryModal('inventory');
+        }
+      });
+    }
+
+    const hudJournalPillEl = document.getElementById('hud-journal-pill');
+    if (hudJournalPillEl) {
+      hudJournalPillEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openInventoryModal('journal');
+      });
     }
 
     if (hudJournalBtn) hudJournalBtn.addEventListener('click', toggleJournalModal);
@@ -1422,10 +1680,19 @@
             hudScoreEl.textContent = state.score || 0;
           }
 
-          // Render inventory items and carried items in top HUD bar
-          const heldKeyIds = state.inventory || (state.keys ? state.keys.map(k => k.id) : []) || [];
+          // BL-188: Active level items prominence.
+          // Filter prominent HUD key badges so only keys matching the active level/chamber entities are displayed.
+          const levelEntities = currentLevel?.entities || [];
+          const activeLevelKeys = (state.keys && state.keys.length > 0)
+            ? state.keys
+            : (state.inventory || [])
+                .filter(id => levelEntities.some(e => e.id === id && e.type === 'key'))
+                .map(id => levelEntities.find(e => e.id === id) || { id, name: 'Key', color: '#fbbf24' });
+          const heldKeyIds = activeLevelKeys.map(k => k.id);
           const carriedItemIds = (state.carriedItems || []).map(i => i.id);
-          const currentKeyIds = heldKeyIds.join(',') + '|' + carriedItemIds.join(',');
+          const folios = state.journalFolios || (window.gameLoop ? window.gameLoop.player?.getJournalFolios() : []) || [];
+          const currentKeyIds = heldKeyIds.join(',') + '|' + carriedItemIds.join(',') + '|' + folios.length;
+
           if (currentKeyIds !== lastRenderedKeyIds) {
             lastRenderedKeyIds = currentKeyIds;
             keysListEl.innerHTML = '';
@@ -1438,9 +1705,20 @@
               inventoryCardEl.classList.toggle('has-items', totalItemCount > 0);
             }
 
+            // Update Journal pill on HUD
+            const hudJournalPill = document.getElementById('hud-journal-pill');
+            const hudJournalCount = document.getElementById('hud-journal-count');
+            if (hudJournalPill && hudJournalCount) {
+              if (folios.length > 0) {
+                hudJournalPill.style.display = 'inline-flex';
+                hudJournalCount.textContent = folios.length;
+              } else {
+                hudJournalPill.style.display = 'none';
+              }
+            }
+
             if (totalItemCount > 0) {
-              for (const keyId of heldKeyIds) {
-                const key = currentLevel.entities.find(e => e.id === keyId) || (state.keys ? state.keys.find(k => k.id === keyId) : null) || { name: 'Key', color: '#fbbf24' };
+              for (const key of activeLevelKeys) {
                 const shapeInfo = getKeyColorblindShape(key.color || key.name || key.id);
                 const pill = document.createElement('div');
                 pill.className = 'key-pill';
@@ -2184,9 +2462,9 @@
         }
       }
 
-      // If journal modal is active (BL-81)
+      // If inventory & journal modal is active (BL-81, BL-188)
       if (journalModal && (journalModal.classList.contains('active') || journalModal.style.display === 'flex')) {
-        if (e.code === 'Escape' || e.code === 'KeyJ') {
+        if (e.code === 'Escape' || e.code === 'KeyJ' || e.code === 'KeyI') {
           e.preventDefault();
           closeJournalModal();
           return;
@@ -2195,9 +2473,12 @@
 
       const hotkeysActive = !window.gameLoop || window.gameLoop.areHotkeysEnabled();
 
-      if (e.code === 'KeyJ' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
+      if (e.code === 'KeyI' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
-        toggleJournalModal();
+        toggleJournalModal('inventory');
+      } else if (e.code === 'KeyJ' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        e.preventDefault();
+        toggleJournalModal('journal');
       } else if (e.code === 'KeyO' && hotkeysActive && !e.ctrlKey && !e.metaKey && !e.altKey) {
         e.preventDefault();
         audioFX.playModalOpen();

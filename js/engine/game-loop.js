@@ -1660,14 +1660,14 @@ export class GameLoop {
       }
     }
 
-    // 4. Signposts
+    // 4. Signposts (BL-176, BL-188)
     for (const s of this.entities) {
-      if (s.type === ENTITY_TYPES.SIGNPOST && canEntityInteract(s)) {
+      if (s.type === ENTITY_TYPES.SIGNPOST && !s.collected && !s.isCollected && !s.read && canEntityInteract(s)) {
         rawCandidates.push({
           id: s.id || `signpost_${s.x}_${s.y}`,
           type: 'signpost',
-          label: s.title ? `Read "${s.title}"` : 'Read Signpost',
-          name: s.title || 'Signpost',
+          label: s.title ? `Collect "${s.title}"` : 'Collect Folio',
+          name: s.title || "Architect's Folio",
           icon: '📜',
           x: s.x,
           y: s.y,
@@ -2129,11 +2129,11 @@ export class GameLoop {
       this.handleTeleport(teleporter, dest);
     }
 
-    // 4. Check Signpost step trigger (BL-81)
+    // 4. Check Signpost step trigger (BL-81, BL-188)
     // Note stepping does not blast modals or toasts; it registers as an active
     // interaction candidate so only a single prompt [E] appears.
     const signpost = this.entities.find(
-      e => e.type === ENTITY_TYPES.SIGNPOST && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
+      e => e.type === ENTITY_TYPES.SIGNPOST && !e.collected && !e.isCollected && !e.read && e.x === px && e.y === py && (e.elevation ?? ELEVATION.GROUND) === pe
     );
     if (signpost) {
       globalEvents.emit('signpost:stepped', { signpost, x: px, y: py });
@@ -2370,6 +2370,8 @@ export class GameLoop {
 
     if (candidate.type === 'signpost' || candidate.type === 'architect_note' || (entity && (entity.type === ENTITY_TYPES.SIGNPOST || entity.type === 'architect_note'))) {
       const data = entity.readSign();
+      entity.isCollected = true;
+      entity.collected = true;
       data.levelId = this.level?.id || '';
       data.levelTitle = this.level?.title || '';
       data.chapter = this.level?.chapter || '';
@@ -2380,6 +2382,16 @@ export class GameLoop {
       StorageManager.saveArchitectFolio(data);
 
       this.recordJournalEntry(data);
+      if (this.player && typeof this.player.addFolio === 'function') {
+        this.player.addFolio(data);
+      }
+
+      // Despawn note entity from runtime active entities and level entities (BL-188)
+      this.entities = this.entities.filter(e => e !== entity && e.id !== entity.id);
+      if (this.level && Array.isArray(this.level.entities)) {
+        this.level.entities = this.level.entities.filter(e => e !== entity && e.id !== entity.id);
+      }
+
       this.renderer.spawnFloatingText(this.player.worldX, this.player.worldY - 22, `📜 Collected: ${data.title}`, '#fbbf24');
       this.renderer.spawnParticles(entity.x * this.camera.tileSize + this.camera.tileSize / 2, entity.y * this.camera.tileSize + this.camera.tileSize / 2, '#fbbf24', 20);
       this.renderer.spawnShockwave(entity.x * this.camera.tileSize + this.camera.tileSize / 2, entity.y * this.camera.tileSize + this.camera.tileSize / 2, '#fbbf24', 24);
@@ -2389,6 +2401,7 @@ export class GameLoop {
       if (this.uiCallbacks.onSignpostRead) {
         this.uiCallbacks.onSignpostRead(data);
       }
+      this.notifyUI();
       return true;
     }
 
@@ -3008,7 +3021,9 @@ export class GameLoop {
         help: this.level.help || null,
         elevation: this.player.elevation === ELEVATION.OVERHEAD ? 'Bridge (Elevation 1)' : 'Ground Floor',
         inventory: [...this.player.inventory],
+        allInventory: [...this.player.inventory],
         keys: this.entities.filter(e => e.type === 'key' && this.player.inventory.includes(e.id)),
+        journalFolios: this.player ? (this.player.getJournalFolios ? this.player.getJournalFolios() : (this.player.journalFolios || [])) : [],
         score: this.player.score || 0,
         activeCheckpoint: this.activeCheckpoint ? this.activeCheckpoint.name : null,
         carriedItems: [...(this.player.carriedItems || [])],
