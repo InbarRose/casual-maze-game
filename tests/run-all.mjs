@@ -52,6 +52,7 @@ import './unit/engine/fog-expansion.test.mjs';
 import './unit/engine/game-state-manager.test.mjs';
 import './unit/engine/biome-surface-shaders.test.mjs';
 import './unit/engine/dynamic-lighting-and-juice.test.mjs';
+import './unit/engine/inventory-journal-and-visual-noise.test.mjs';
 
 // 3. Entity Subsystem Unit Tests
 import './unit/entities/base-entity.test.mjs';

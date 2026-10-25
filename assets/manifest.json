@@ -1,7 +1,7 @@
 {
   "$schema": "./schema.json",
   "version": "1.5.0",
-  "generatedAt": "2026-10-22T23:52:02.856Z",
+  "generatedAt": "2026-10-25T01:44:38.294Z",
   "totalAssets": 160,
   "themes": [
     "dungeon",
@@ -1868,8 +1868,8 @@
         "magic",
         "dungeon"
       ],
-      "hash": "3580a0e4a6b4bc29153ee81573748fcadcf1b29da3b4417effee961fcd765ad2",
-      "size": 611
+      "hash": "f56deb55c7b09145c0687d4d07fc0555c94665dab9ea3861be76ada1c03f109d",
+      "size": 736
     },
     {
       "id": "tile_floor_generic",
@@ -1941,8 +1941,8 @@
         "magic",
         "glacial"
       ],
-      "hash": "05a92a26c7fd34980a108a60ff5b4465f81d2720eb6839ee0b578c2adc771282",
-      "size": 611
+      "hash": "999085cb51b89e2d1ff84652bf680074905ce86419f444f910b50167aad8c2b6",
+      "size": 735
     },
     {
       "id": "tile_floor_jungle",
@@ -1996,8 +1996,8 @@
         "magic",
         "jungle"
       ],
-      "hash": "eef2c1d554c0ec82e15b4440c6df187e4ffffac9c448fc0c42eb4d1601379ae6",
-      "size": 611
+      "hash": "76e8f0ddacdce5c49d619bfaffaa3cc82703da7b59930d5b53b8ffafb7aa3ad2",
+      "size": 735
     },
     {
       "id": "tile_floor_magma",
@@ -2051,8 +2051,8 @@
         "magic",
         "magma"
       ],
-      "hash": "68799a40d06fad413cb94e01b828b373421634e868c25e71e25f83b550a9a81d",
-      "size": 611
+      "hash": "9800595bdaafd69ef5ed153c94ca4a7676391a291c092d6374f385437ad1fb67",
+      "size": 736
     },
     {
       "id": "tile_floor_temple",
@@ -2106,8 +2106,8 @@
         "magic",
         "temple"
       ],
-      "hash": "30b45e2391314a5735eac38d5867664d4f8998a39fb21150f4072dc2e591826a",
-      "size": 611
+      "hash": "f0445647dbde75bc9675d0c811fdebc45cb8842ee5be2dc282efd19e01ed1d2d",
+      "size": 736
     },
     {
       "id": "tile_ramp_dungeon_east",

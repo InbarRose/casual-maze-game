@@ -118,16 +118,15 @@ export class InteractionDispatcher {
       }
     }
 
-    // 4. Signposts / Architect's Folios (BL-176)
+    // 4. Signposts / Architect's Folios (BL-176, BL-188)
     for (const s of this.entities) {
-      if (s.type === ENTITY_TYPES.SIGNPOST && canEntityInteract(s)) {
-        const isCollected = s.collected || s.read;
+      if (s.type === ENTITY_TYPES.SIGNPOST && !s.collected && !s.isCollected && !s.read && canEntityInteract(s)) {
         rawCandidates.push({
           id: s.id || `signpost_${s.x}_${s.y}`,
           type: 'signpost',
-          label: s.title ? (isCollected ? `Read "${s.title}"` : `Collect "${s.title}"`) : (isCollected ? 'Read Journal' : 'Collect Folio'),
+          label: s.title ? `Collect "${s.title}"` : 'Collect Folio',
           name: s.title || "Architect's Folio",
-          icon: isCollected ? '📖' : '📜',
+          icon: '📜',
           x: s.x,
           y: s.y,
           elevation: s.elevation ?? ELEVATION.GROUND,

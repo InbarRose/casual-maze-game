@@ -27,7 +27,8 @@ export class Signpost {
     // Styles: 'lectern_stone' (default) | 'lectern_wood' | 'wall_niche' | 'floating_folio' | 'stone_tablet' | 'wooden_sign' | 'astral_scroll'
     this.style = config.style || 'lectern_stone';
     this.read = !!config.read;
-    this.collected = !!config.collected || !!config.read;
+    this.collected = !!config.collected || !!config.read || !!config.isCollected;
+    this.isCollected = this.collected;
     this.levelId = config.levelId || '';
     this.chapter = config.chapter || '';
     this.zone = config.zone || '';
@@ -36,6 +37,14 @@ export class Signpost {
     // Visual animation states
     this.glowTimer = Math.random() * Math.PI * 2;
     this.sparkleTimer = Math.random() * 10;
+  }
+
+  get isCollected() {
+    return this.collected;
+  }
+
+  set isCollected(value) {
+    this.collected = !!value;
   }
 
   get elevation() {
@@ -62,6 +71,7 @@ export class Signpost {
    * @returns {boolean}
    */
   canInteract(playerX, playerY, playerZ = ELEVATION.GROUND) {
+    if (this.collected || this.isCollected) return false;
     if (this.z !== playerZ) return false;
     const dist = Math.abs(this.x - playerX) + Math.abs(this.y - playerY);
     if (dist > 1) return false;
@@ -75,6 +85,7 @@ export class Signpost {
   readSign() {
     this.read = true;
     this.collected = true;
+    this.isCollected = true;
     return {
       id: this.id,
       title: this.title,
@@ -90,6 +101,7 @@ export class Signpost {
       chapter: this.chapter,
       zone: this.zone,
       collected: true,
+      isCollected: true,
       discoveredAtDate: new Date().toISOString(),
     };
   }
@@ -99,6 +111,7 @@ export class Signpost {
    * @param {number} dt
    */
   update(dt) {
+    if (this.collected || this.isCollected) return;
     this.glowTimer += dt * 2.5;
     this.sparkleTimer += dt;
   }
@@ -112,6 +125,11 @@ export class Signpost {
    * @param {string} [perspective='topdown']
    */
   render(ctx, screenX, screenY, tileSize, perspective = 'topdown') {
+    // BL-188: Once collected, notes / folios despawn completely from the map
+    if (this.collected || this.isCollected) {
+      return;
+    }
+
     const cx = screenX + tileSize / 2;
     const cy = screenY + tileSize / 2;
     const s = tileSize * 0.75;

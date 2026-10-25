@@ -536,6 +536,15 @@ describe('Engine > Directional Proximity & Multi-Target Disambiguation (BL-85)',
     assert(signpostRead, 'Second triggerInteract() executes primary candidate #1');
     assertEqual(gameLoop.isDisambiguating, false, 'isDisambiguating reset to false after confirmation');
 
+    // BL-188: Signpost was collected & despawned; replenish an adjacent interactable to test multi-target move cancellation
+    gameLoop.entities.push(new Signpost({
+      id: 'sign_stage1_b',
+      title: 'Second Sign',
+      text: 'Notice B',
+      x: 5,
+      y: 4,
+    }));
+
     // Test player movement clears disambiguation mode
     gameLoop.triggerInteract();
     assertEqual(gameLoop.isDisambiguating, true, 'Stage 2 active before move');
