@@ -63,23 +63,24 @@ This document tracks project milestones, current release status, active developm
 
 ---
 
-### Active Milestone: `v1.37.0` — Inventory Architecture, Note Despawning & Art Demarcation
+### Active Milestone: `v1.37.0` — Inventory Architecture, Note Despawning & Art Demarcation (Completed & Verified)
 
-- [ ] **Interactive Note Pick-up, Despawn & Tabbed Inventory Journal Architecture (BL-188)**:
-  - When player steps on or inspects a note/lectern: despawn the physical entity from the active map level (`level.entities`) with gentle dissolve particles.
-  - Add the collected note/folio to the player's inventory under a dedicated "Folios / Journal" section.
-  - Upgrade the Inventory HUD & modal into a structured tabbed layout:
-    1. **Active Level Items**: Keys, carried torches, and puzzle components relevant ONLY to the current level or chamber.
-    2. **Architect's Journal & Folios**: All collected notes and folios with level context, coordinates, and full readable text.
-    3. **Trophies & Artifacts**: Permanent saga relics and gems.
-  - Filter out inactive items from previous levels/chapters so the active HUD is clean and focused.
+- [x] **Interactive Note Pick-up, Despawn & Tabbed Inventory Journal Architecture (BL-188, ADR-0063)**:
+  - Note and folio interaction / collection marks entity collected and despawns it completely from canvas and minimap rendering.
+  - Implemented `Player.journalFolios` and `Player.addFolio(folio)` preserving backward compatibility with `player.inventory` array tests.
+  - Integrated full tabbed Inventory & Journal modal (`#journal-modal`) with three dedicated partitions:
+    1. **Active Inventory**: Prominently shows active chamber keys and carried tools. Separates archived items from prior chambers into an inactive collapsible section.
+    2. **Architect's Journal & Folios**: Full list of discovered folios and manuscripts with two-column parchment reader.
+    3. **Relics & Codex**: Story trophies and socketable riddle relics.
+  - Filtered top HUD quick-bar to display only items relevant to the current chamber/level, adding a `📜 X Folios` pill to access the journal.
+  - Added hotkey bindings `[I]` for Inventory and `[J]` for Journal.
 
-- [ ] **Visual Noise Reduction & Procedural Biome Art Demarcation (BL-189)**:
-  - Reduce frequency of procedural decorative floor variations (e.g., from 35% down to a sparse 5-8% distribution).
-  - Demarcate functional elements from decorative art:
-    - Decorative floor runes must have subdued alpha, weathered outlines, or zero glowing accents to ensure players immediately recognize them as non-interactive masonry.
-    - Interactive runes (e.g. puzzle gates, memory glyphs, teleporters) retain distinct high-contrast pulsing luminance, particle embers, and clear borders.
-  - Ensure decorative relief walls and torches are placed with intention and breathing room rather than dense clusters.
+- [x] **Visual Noise Reduction & Procedural Biome Art Demarcation (BL-189, ADR-0064)**:
+  - Overhauled all 5 biome `tile_floor_*_runic.svg` vector assets into subtle, debossed masonry relief engravings with muted dual-tone shadow lines and zero glowing magic circles, dashed lines, or center dots.
+  - Reduced procedural floor variant density in `getFloorAssetImage()`: runic floor reduced to ~4% (`h > 0.96`), cracked to ~8% (`h > 0.88`), leaving 88% of corridor floors clean, serene, and uncluttered.
+  - Reduced wall torches in `getWallAssetImage()` to ~6% (`h > 0.94`) and grates to ~4% (`h > 0.90`).
+  - Added master decor gate in `BiomeSurfaceShaders.renderFloorDetails()` capping procedural floor embellishments to ~8% of tiles, stripping high-alpha `Math.sin()` pulsing glows and ensuring floor art never appears functional or interactive.
+  - Synchronized cryptographic asset manifest (`assets/manifest.json`) with zero drift across 23 audit checks.
 
 ---
 
