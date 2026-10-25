@@ -45,6 +45,16 @@ This document outlines the standard operating procedures, architectural principl
   5. **Open PR via GitHub MCP**: Call `github:create_pull_request` targeting `main` with summary and test report.
   6. **CI Verification**: Ensure GitHub Actions CI status remains green.
 
+### G. Mandatory Semantic Version Progression
+* **Always Bump Version on Changes**: Never complete a feature, bug fix, refactor, or overhaul without bumping the project version. The version must progress with every change.
+* **Semantic Versioning Rules**:
+  * **Patch Increment (`1.X.Y` $\to$ `1.X.(Y+1)`)**: Bug fixes, minor visual adjustments, UX tweaks, test additions, or documentation adjustments.
+  * **Minor Increment (`1.X.Y` $\to$ `1.(X+1).0`)**: New game features, new mechanics, milestone completions, architectural capabilities, or level overhauls.
+  * **Major Increment (`1.X.Y` $\to$ `2.0.0`)**: Breaking paradigm shifts, engine rewrites, or platform revolutions.
+* **Synchronized Dual-Declaration**:
+  * Whenever bumping the version, update **both** `package.json` (`"version": "..."`) and `js/core/version.js` (`ENGINE_VERSION = '...'`).
+  * Verify alignment using `npm run validate:drift` (Phase 1 checks that `package.json version matches ENGINE_VERSION`).
+
 ---
 
 ## 2. Technical References in `docs/`
@@ -74,5 +84,7 @@ Before concluding any task or reporting back to the user, ensure:
 - [ ] All user requests, plans, and architectural decisions are tracked as items in [`docs/BACKLOG.md`](docs/BACKLOG.md) and [`docs/PROJECT_MANAGEMENT.md`](docs/PROJECT_MANAGEMENT.md).
 - [ ] Any architectural shift, entity behavior change, or mechanics separation is documented in a dedicated ADR in [`docs/adr/`](docs/adr/).
 - [ ] Relevant documentation (`docs/PROJECT_MANAGEMENT.md`, `docs/ARCHITECTURE.md`, `docs/LEVEL_SCHEMA.md`, or `docs/adr/`) is updated.
+- [ ] Version is progressed in both `package.json` and `js/core/version.js` matching semantic versioning rules.
+- [ ] `npm run validate:drift` passes Phase 1 version matching and all integrity checks.
 - [ ] Work is committed with conventional, atomic git commit messages referencing the ticket / ADR.
 - [ ] Branch is pushed and Pull Request is opened via GitHub MCP targeting `main` for review.
